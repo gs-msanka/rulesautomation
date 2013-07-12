@@ -1,0 +1,49 @@
+<project name="gainsight" default="run" basedir=".">
+	<property name="classes.dir" value="bin"/>
+	<property name="src.dir" value="src"/>
+	<property name="targets.dir" value="target"/>	
+	<property name="reports.dir" value="reports"/>	
+	<property name="tests" value="com.gs.selenium.tests.surveys.SurveyCreation.testDesginNPSSurvey"/>
+	
+	<path id="libs">
+		<fileset dir="${basedir}/lib">
+					<include name="*.jar"/>
+		</fileset>
+		<pathelement path="${basedir}/${classes.dir}"/>
+	</path>
+	<target name="run">
+		<antcall target="init"/>		
+		<antcall target="runtests"/>
+	</target>
+	<!-- Delete old data and create new directories -->
+	<target name="init">
+		<echo>Initlizing tests...</echo>
+		<delete dir="${reports.dir}"/>
+		<mkdir dir="${reports.dir}"/>
+		<delete dir="${targets.dir}"/>
+		<mkdir dir="${targets.dir}"/>
+	</target>
+	<!-- Complies the java files
+	<target name="compile">
+		<echo>Compiling...</echo>
+		<javac debug="false" srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" classpathref="libs"/>
+	</target> -->
+	<!-- Runs the file and generates Reportng report
+	<target name="runtests">
+		
+	    <junit printsummary="yes" >	      
+	        <classpath refid="libs" />
+	    	<test name="com.gs.selenium.tests.surveys.SurveyCreation" methods="testDesginNPSSurvey" haltonfailure="no" outfile="result">
+	    	    <formatter type="xml"/>
+	    	  </test> 	
+	    </junit>
+	</target> -->
+	<target  name="runtests" description="Running tests">
+			<echo>Running Tests...</echo>
+			<taskdef resource="testngtasks" classpathref="libs"/>
+			<testng mode="mixed" outputDir="${reports.dir}" haltonfailure="false" useDefaultListeners="true"  classpathref="libs">
+				<xmlfileset dir="." includes="testng.xml"/>
+				
+			</testng>
+		</target>
+</project>

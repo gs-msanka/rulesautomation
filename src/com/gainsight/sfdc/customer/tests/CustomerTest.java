@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.customer.tests;
 
-public class CustomerTest {
+import com.gainsight.sfdc.tests.BaseTest;
+
+public class CustomerTest extends BaseTest {
 
 }
