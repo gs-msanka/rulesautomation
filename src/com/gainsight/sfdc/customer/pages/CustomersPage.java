@@ -9,25 +9,24 @@ public class CustomersPage extends CustomerBasePage {
 
 	public CustomersPage addCustomer(String customerName, String status,
 			String stage, String comments) {
-		link.click("//input[@value='New']");
-		wait.waitTillElementPresent("//input[@class='jbaraDummyAccountName']", MIN_TIME, MAX_TIME);
-		field.setTextField("//input[@class='jbaraDummyAccountName']",
-				customerName);
-		button.click("//img[@title='Account Name Lookup']");
-		link.click("//a[text()='" + customerName + "']");
-		field.setSelectField(
-				"//td[text()='Status: ']/following-sibling::td//select", status);
-		field.setSelectField(
-				"//td[text()='Stage: ']/following-sibling::td//select", stage);
-		button.click("//input[@value='Save']");
-		return this;
+		item.click("//input[@value='New']");
+        wait.waitTillElementPresent("//input[@class='jbaraDummyAccountName']", MIN_TIME, MAX_TIME);
+        field.setTextField("//input[@class='jbaraDummyAccountName']",
+                        customerName);
+        button.click("//img[@title='Account Name Lookup']");
+        item.click("//a[text()='" + customerName + "']");
+        field.setSelectField(
+                        "//td[text()='Status: ']/following-sibling::td//select", status);
+        field.setSelectField(
+                        "//td[text()='Stage: ']/following-sibling::td//select", stage);
+        button.click("//input[@value='Save']");
+        return this;
 	}
 
 	public boolean isCustomerPresent(String customerName) {
 		setFilter("CustomerLink", customerName);
-		pauseMe(2);
-		int customerRownNo = getValueInListRow(
-				"customerList_IdOfJBaraStandardView", customerName);
+		sleep(2);
+		int customerRownNo = table.getValueInListRow("customerList_IdOfJBaraStandardView", customerName);
 		if (customerRownNo == -1)
 			return false;
 		else
@@ -35,8 +34,7 @@ public class CustomersPage extends CustomerBasePage {
 	}
 
 	public CustomersPage setFilter(String filterFiledName, String value) {
-		field.setTextField("//input[@name='" + filterFiledName + "']", value,
-				true);
+		field.setTextField("//input[@name='" + filterFiledName + "']", value);
 		return this;
 	}
 

@@ -7,21 +7,22 @@ import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.utils.TestDataHolder;
 
-
 public class BaseTest {
 	protected TestDataHolder testDataLoader=new TestDataHolder();
 	String[] dirs={"testdata","sfdc"};
 	public final String TEST_DATA_PATH_PREFIX=generatePath(dirs);
     TestEnvironment env=new TestEnvironment();	
-	public BasePage basepage=new BasePage();
+	public BasePage basepage;
 	
 	@BeforeSuite
 	public void init(){
-		env.starting();
+		env.start();
+		basepage = new BasePage();
 	}
+	
 	@AfterSuite
 	public void fini(){
-		env.finished();
+		env.stop();
 	}
 	
 	public String generatePath(String[] dirs){
@@ -31,8 +32,4 @@ public class BaseTest {
 		}
 		return path;
 	}
-	
-	
-
-
 }
