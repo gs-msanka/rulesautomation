@@ -28,6 +28,7 @@ public class TransactionsPage extends BasePage{
 		
 		//set field values
 		element.click("//input[@value='New']");
+		sleep(20);
 		element.switchToFrame("//iframe");
 		field.setTextField("//input[contains(@class,'customer-name-text')]",
 				customerName);
@@ -41,13 +42,14 @@ public class TransactionsPage extends BasePage{
 			field.setSelectField(
 					"//input[@class='jbaraDummyBookingOrderSelectCtrl']", bookingType);
 		if (bookingDate != null && !bookingDate.equals("")){
-			field.setTextField(
+			field.selectFromDropDown(
 					"//input[@class='transactionDate transactionBookingdate']", bookingDate);
+			sleep(2);
 		}
 		if (startDate != null && !startDate.equals("")){
 			field.setTextField(
 					"//input[@class='transactionDate transSubStartDate']", startDate);
-			sleep(1);
+			sleep(2);
 		}
 		
         field.setTextField("//input[@class='transactionDate transSubEndDate']", testData.get("enddate"));

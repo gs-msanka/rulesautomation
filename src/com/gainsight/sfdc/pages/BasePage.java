@@ -47,7 +47,7 @@ public class BasePage extends WebPage implements Constants{
 	}
 	
 	public TransactionsBasePage clickOnTransactionTab(){
-		link.click("//a[contains(@title,'Transactions Tab')]");
+		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
 	//End of Top Level Navigation
