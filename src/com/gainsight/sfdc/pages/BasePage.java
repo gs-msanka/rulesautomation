@@ -1,9 +1,17 @@
 package com.gainsight.sfdc.pages;
 
+import java.text.DecimalFormat;
+
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
+import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
+/**
+ * Base Class to hold all the Top Level Navigations
+ * @author gainsight1
+ *
+ */
 public class BasePage extends WebPage implements Constants{
 	private final String READY_INDICATOR="//div[@id='userNavButton']";
 	
@@ -32,9 +40,24 @@ public class BasePage extends WebPage implements Constants{
 		return this;
 	}
 	
+	//Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab(){
 		item.click("//a[contains(@title,'Customers Tab')]");
 		return new CustomerBasePage();		
 	}
-
+	
+	public TransactionsBasePage clickOnTransactionTab(){
+		link.click("//a[contains(@title,'Transactions Tab')]");
+		return new TransactionsBasePage();		
+	}
+	//End of Top Level Navigation
+	
+	public void setFilter(String filterFiledName, String value) {
+		field.setTextField("//input[@name='" + filterFiledName + "']", value);	
+	}
+	
+	public String currencyFormat(String amt){
+		DecimalFormat moneyFormat = new DecimalFormat("$0");
+		return moneyFormat.format(new Long(amt));
+	}
 }

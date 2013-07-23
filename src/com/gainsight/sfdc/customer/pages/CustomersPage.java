@@ -32,10 +32,4 @@ public class CustomersPage extends CustomerBasePage {
 		else
 			return true;
 	}
-
-	public CustomersPage setFilter(String filterFiledName, String value) {
-		field.setTextField("//input[@name='" + filterFiledName + "']", value);
-		return this;
-	}
-
 }

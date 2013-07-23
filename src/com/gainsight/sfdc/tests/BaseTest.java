@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.tests;
 
+import java.text.DecimalFormat;
+
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
@@ -31,5 +33,10 @@ public class BaseTest {
 			path=path+dir+"/";			
 		}
 		return path;
+	}
+	
+	public String currencyFormat(String amt){
+		DecimalFormat moneyFormat = new DecimalFormat("$###,###");
+		return moneyFormat.format(new Long(amt)).replace("$", "$ ");
 	}
 }

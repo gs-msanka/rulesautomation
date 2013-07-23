@@ -1,0 +1,51 @@
+<project name="test-driver" default="copy_lib" basedir="../../">
+	
+	<property name="testDriverLocation" value="${basedir}/../test-driver"/>
+	<property name="buildOutput" location="${testDriverLocation}/bin" />
+	<property name="dist" location="${testDriverLocation}/dist" />
+	<property name="destLocation" location="${basedir}/lib"/>
+
+	<path id="cpath">
+		<fileset dir="${testDriverLocation}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="copy_lib" depends="mkjar">
+		<copy todir="${destLocation}" overwrite="true">
+			<fileset file="${dist}/*.jar"/>
+		</copy>
+	</target>
+	
+	<target name="mkjar" depends="compile">
+		<jar destfile="${dist}/testdriver.jar">
+			<fileset dir="${buildOutput}" />
+			<fileset dir="${testDriverLocation}/src" includes="**/*.java"/>
+			<manifest>
+				<!-- Who is building this jar? -->
+				<attribute name="Built-By" value="admin"/>
+				<!-- Information about the program itself -->
+				<attribute name="Implementation-Vendor" value="Gainsight"/>
+				<attribute name="Implementation-Title" value="Test-Driver"/>
+				<attribute name="Implementation-Version" value="0.1"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="init_dir">
+		<echo message="Compiling Gainsight Test Driver" />
+		<javac srcdir="${testDriverLocation}/src" destdir="${buildOutput}" classpathref="cpath" 
+			nowarn="on" debug="on" debuglevel="lines,vars,source">
+		</javac>
+	</target>
+
+	<target name="init_dir" depends="clean">
+		<mkdir dir="${buildOutput}" />
+		<mkdir dir="${dist}"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${buildOutput}" />
+		<delete dir="${dist}" />
+	</target>
+</project>
