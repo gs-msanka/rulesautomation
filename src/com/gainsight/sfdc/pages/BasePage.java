@@ -53,7 +53,7 @@ public class BasePage extends WebPage implements Constants{
 	//End of Top Level Navigation
 	
 	public void setFilter(String filterFiledName, String value) {
-		field.setTextField("//input[@name='" + filterFiledName + "']", value);	
+		field.clearAndSetText("//input[@name='" + filterFiledName + "']", value);	
 	}
 	
 	public String currencyFormat(String amt){

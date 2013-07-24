@@ -62,9 +62,12 @@ public class AcceptanceTest extends BaseTest {
 				.clickOnTransactionsSubTab().addTransaction(testData);
 		Timer.sleep(10);
 		Report.logInfo("Transaction Values : " + transactionValues);
+		
+		//TransactionsPage transactionsPage = basepage.clickOnTransactionTab().clickOnTransactionsSubTab();
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,transactionValues),
 				"Verify that newly added customer present in the grid");
 		Customer360Page customerPage=transactionsPage.selectCustomer(customerName);
+		Timer.sleep(5);
 		customerPage.verifyCustomerSummary(testData);		
 
 	}

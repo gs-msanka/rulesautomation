@@ -42,12 +42,16 @@ public class TransactionsPage extends BasePage{
 			field.setSelectField(
 					"//input[@class='jbaraDummyBookingOrderSelectCtrl']", bookingType);
 		if (bookingDate != null && !bookingDate.equals("")){
-			field.selectFromDropDown(
+			field.click("//input[@class='transactionDate transactionBookingdate']");
+			sleep(2);
+			field.clearAndSetText(
 					"//input[@class='transactionDate transactionBookingdate']", bookingDate);
 			sleep(2);
 		}
 		if (startDate != null && !startDate.equals("")){
-			field.setTextField(
+			field.click("//input[@class='transactionDate transSubStartDate']");
+			sleep(2);
+			field.clearAndSetText(
 					"//input[@class='transactionDate transSubStartDate']", startDate);
 			sleep(2);
 		}
@@ -77,7 +81,7 @@ public class TransactionsPage extends BasePage{
 	
 	public boolean isTransactionPresent(String customerName,String values){
 		setFilter("Customer_link", customerName);
-		sleep(2);
+		sleep(5);
 		int rowNo = table.getValueInListRow(
 				"transactionList_IdOfJBaraStandardView", values);
 		if (rowNo == -1)
