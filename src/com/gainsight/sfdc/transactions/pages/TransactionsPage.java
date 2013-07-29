@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 
-public class TransactionsPage extends BasePage{
+public class TransactionsPage extends TransactionsBasePage {
 	private final String READY_INDICATOR = "//div[@id='Transactions-Usage']";
 
 	public TransactionsPage() {

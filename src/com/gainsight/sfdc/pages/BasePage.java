@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
@@ -49,6 +50,11 @@ public class BasePage extends WebPage implements Constants{
 	public TransactionsBasePage clickOnTransactionTab(){
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
+	}
+	
+	public AdoptionBasePage clickOnAdoptionTab() {
+		item.click("//a[contains(@title,'Adoption Tab')]");
+		return new AdoptionBasePage();
 	}
 	//End of Top Level Navigation
 	
