@@ -40,7 +40,7 @@
 	<target name="compile" depends="init_dir">
 		<echo message="compiling tests" />
 		<javac srcdir="src" destdir="${buildOutput}" classpathref="cpath" nowarn="on" debug="on" 
-				source="1.6", target="1.6", debuglevel="lines,vars,source">
+				source="1.6" target="1.6" debuglevel="lines,vars,source">
 		</javac>
 	</target>
 
