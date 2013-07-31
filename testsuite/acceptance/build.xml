@@ -1,0 +1,72 @@
+<project name="Acceptance Test" default="" basedir="../../.">
+	<property name="buildOutput" location="${basedir}/bin" />
+	<property name="resultOutput" location="${basedir}/result" />
+	<property environment="env"/>
+	
+	<!-- TestNG file name for pre and post tests -->
+	<property name="testngFileName" value="testng.xml"/>
+
+	<target name="runTest" depends="compile, bat"/>
+
+	<taskdef resource="testngtasks" classpathref="cpath"/>
+
+	<!-- Classpath files required for compiling -->
+	<path id="cpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Classpath files required at run-time -->
+	<path id="runpath">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement location="${buildOutput}"/>
+	</path>
+
+	<!-- Run Tests by specifying testNG file name -->
+	<target name="bat" depends="">
+		<echo message="Starting Acceptance Tests" />	
+		<testng haltonfailure="no" classpathref="runpath" outputDir="${resultOutput}">
+			<sysproperty key="em.build.number" value="${em.build.number}" />
+			<sysproperty key="run" value="BAT" />
+			<sysproperty key="basedir" value="${basedir}" />
+
+			<xmlfileset dir="testsuite/bat" includes="${testngFileName}"/>
+		</testng>
+	</target>
+
+	<target name="compile" depends="init_dir">
+		<echo message="compiling tests" />
+		<javac srcdir="src" destdir="${buildOutput}" classpathref="cpath" nowarn="on" debug="on" 
+				debuglevel="lines,vars,source">
+		</javac>
+	</target>
+
+	<!-- Edit Property file by replacing default values with run-time values -->
+	<!--  <target name="editPropertyFile">
+		<propertyfile file="${basedir}/config/application.properties">
+			<entry  key="addressEM" value="${addressEM}"/>
+			<entry  key="loginPassword" value="${loginPassword}"/>
+			<entry  key="addressEC" value="${addressEC}"/>
+			<entry  key="addressSC" value="${addressSC}"/>
+			<entry  key="addressScanAgents" value="${addressScanAgents}"/>
+			<entry  key="gridWorkerIp" value="${gridWorkerIp}"/>
+			<entry  key="endPointComputerName" value="${endPointComputerName}"/>
+			<entry  key="endPointInstallPath" value="${endPointInstallPath}"/>
+		</propertyfile>
+	</target> -->
+
+	<target name="init_dir" depends="clean">
+		<echo>Initializing Acceptance Test...</echo>
+		<mkdir dir="${buildOutput}" />
+		<mkdir dir="${resultOutput}" />
+	</target>
+
+	<target name="clean">
+		<echo>Clean up....</echo>
+		<delete dir="${buildOutput}" failonerror="false" />
+		<delete dir="${resultOutput}" failonerror="false" />
+	</target>
+</project>
