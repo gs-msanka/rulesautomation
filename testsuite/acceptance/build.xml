@@ -6,7 +6,7 @@
 	<!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="testng.xml"/>
 
-	<target name="runTest" depends="compile, bat"/>1
+	<target name="runTest" depends="compile, bat"/>
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
