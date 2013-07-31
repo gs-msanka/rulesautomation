@@ -6,9 +6,7 @@
 	<!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="testng.xml"/>
 
-	<target name="runTest" depends="compile, bat"/>
-
-	<taskdef resource="testngtasks" classpathref="cpath"/>
+	<target name="runTest" depends="compile, bat"/>1
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
@@ -24,6 +22,9 @@
 		</fileset>
 		<pathelement location="${buildOutput}"/>
 	</path>
+
+	<!-- TestNG Ant Task Def -->
+	<taskdef resource="testngtasks" classpathref="cpath"/>
 
 	<!-- Run Tests by specifying testNG file name -->
 	<target name="bat" depends="">
