@@ -30,11 +30,10 @@
 	<target name="bat" depends="">
 		<echo message="Starting Acceptance Tests" />	
 		<testng haltonfailure="no" classpathref="runpath" outputDir="${resultOutput}">
-			<sysproperty key="em.build.number" value="${em.build.number}" />
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
 
-			<xmlfileset dir="testsuite/bat" includes="${testngFileName}"/>
+			<xmlfileset dir="testsuite/acceptance" includes="${testngFileName}"/>
 		</testng>
 	</target>
 
