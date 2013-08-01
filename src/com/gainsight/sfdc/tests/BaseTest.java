@@ -12,7 +12,7 @@ import com.gainsight.utils.TestDataHolder;
 public class BaseTest {
 	protected TestDataHolder testDataLoader=new TestDataHolder();
 	String[] dirs={"testdata","sfdc"};
-	public String TEST_DATA_PATH_PREFIX;
+	public final String TEST_DATA_PATH_PREFIX=generatePath(dirs);
     TestEnvironment env=new TestEnvironment();	
 	public BasePage basepage;
 	
@@ -20,7 +20,6 @@ public class BaseTest {
 	public void init(){
 		env.start();
 		basepage = new BasePage();
-		TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/" + generatePath(dirs);
 	}
 	
 	@AfterSuite

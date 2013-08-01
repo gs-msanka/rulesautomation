@@ -10,6 +10,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.customer.pages.CustomersPage;
@@ -28,7 +29,7 @@ public class AcceptanceTest extends BaseTest {
 	@DataProvider(name = "addCustomerDataProvider")
 	public Object[][] getTestData1() throws FileNotFoundException {
 		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TEST_DATA_PATH_PREFIX
+		testDataLoader.addDataLocation(TestEnvironment.basedir + TEST_DATA_PATH_PREFIX
 				+ generatePath(dirs) + "addCustomer.csv");
 		return testDataLoader.getAllDataRows();
 	}
@@ -43,7 +44,7 @@ public class AcceptanceTest extends BaseTest {
 	@DataProvider(name = "addCustomerAndTransactionDataProvider")
 	public Object[][] getTestData2() throws FileNotFoundException {
 		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TEST_DATA_PATH_PREFIX
+		testDataLoader.addDataLocation(TestEnvironment.basedir + TEST_DATA_PATH_PREFIX
 				+ generatePath(dirs) + "addCustomerAndTransaction.csv");
 		return testDataLoader.getAllDataRows();
 	}
