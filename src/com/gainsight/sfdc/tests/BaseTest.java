@@ -32,7 +32,7 @@ public class BaseTest {
 		for(String dir : dirs){
 			path=path+dir+"/";			
 		}
-		return  TestEnvironment.basedir + path;
+		return  TestEnvironment.basedir + "/" + path;
 	}
 	
 	public String currencyFormat(String amt){
