@@ -29,7 +29,7 @@ public class AcceptanceTest extends BaseTest {
 	@DataProvider(name = "addCustomerDataProvider")
 	public Object[][] getTestData1() throws FileNotFoundException {
 		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TestEnvironment.basedir + TEST_DATA_PATH_PREFIX
+		testDataLoader.addDataLocation(TestEnvironment.basedir + "/" + TEST_DATA_PATH_PREFIX
 				+ generatePath(dirs) + "addCustomer.csv");
 		return testDataLoader.getAllDataRows();
 	}
@@ -44,7 +44,7 @@ public class AcceptanceTest extends BaseTest {
 	@DataProvider(name = "addCustomerAndTransactionDataProvider")
 	public Object[][] getTestData2() throws FileNotFoundException {
 		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TestEnvironment.basedir + TEST_DATA_PATH_PREFIX
+		testDataLoader.addDataLocation(TestEnvironment.basedir + "/" + TEST_DATA_PATH_PREFIX
 				+ generatePath(dirs) + "addCustomerAndTransaction.csv");
 		return testDataLoader.getAllDataRows();
 	}
