@@ -1,7 +1,6 @@
 package com.gainsight.sfdc.pages;
 
 import java.text.DecimalFormat;
-
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
@@ -51,19 +50,34 @@ public class BasePage extends WebPage implements Constants{
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
-	
-	public AdoptionBasePage clickOnAdoptionTab() {
-		item.click("//a[contains(@title,'Adoption Tab')]");
-		return new AdoptionBasePage();
-	}
+	  public AdoptionBasePage clickOnAdoptionTab() {
+          item.click("//a[contains(@title,'Adoption Tab')]");
+          return new AdoptionBasePage();
+  }
 	//End of Top Level Navigation
 	
 	public void setFilter(String filterFiledName, String value) {
-		field.clearAndSetText("//input[@name='" + filterFiledName + "']", value);	
+		field.setTextByKeys("//input[@name='" + filterFiledName + "']", value);	
 	}
 	
 	public String currencyFormat(String amt){
 		DecimalFormat moneyFormat = new DecimalFormat("$0");
 		return moneyFormat.format(new Long(amt));
 	}
+	public void enterDate(String identifier,String date){
+		field.click(identifier);
+		field.click("//td[@class='weekday']");
+		field.clearAndSetText(identifier, date);
+	}
+	/**
+	 * Even we are handling stale element exceptions at framework level it is time consuming
+	 * hence if see any element happens to bound to this exception because of frequent DOM updates,
+	 * please call this  method before performing any action on that element 
+	 * so that webdriver finds elements after DOM got updated( 2 seconds is optimal time) 
+	 */
+	public void stalePause(){
+		sleep(2);
+	}
+	
+
 }

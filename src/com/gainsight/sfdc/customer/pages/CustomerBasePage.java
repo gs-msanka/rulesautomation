@@ -10,7 +10,7 @@ public class CustomerBasePage extends BasePage {
 	}
 	
 	public CustomersPage clickOnCustomersSubTab(){
-		item.click("//a[text()='Customers']");
+		item.click("//div[@id='CustomersTabs']//a[text()='Customers']");
 		return new CustomersPage();		
 	}
 	

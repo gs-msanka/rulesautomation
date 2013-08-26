@@ -1,11 +1,7 @@
 package com.gainsight.sfdc.customer.pages;
 
-import java.util.HashMap;
 
 import org.openqa.selenium.By;
-import org.testng.Assert;
-
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
 import com.gainsight.sfdc.pages.BasePage;
 
@@ -27,7 +23,7 @@ public class Customer360Page extends BasePage {
 		summary.setUsers(stripNumber(field
 				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[4]/span")));
 		summary.setARPU(stripNumber(field
-				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[5]/span")));
+				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[5]/span").replace("ARPU", "")));
 		summary.setStage(field.getTextFieldText(
 				"//div[@id='jbCustomerSnapshot']//div[6]/span[2]").replace(
 				"Stage:", ""));
@@ -51,19 +47,11 @@ public class Customer360Page extends BasePage {
 
 	public boolean isTransactionPresent(String stage, String endDate) {
 		String xpath = "//div[@class='transSummaryListDiv timelineLiListOpenClass']/span[contains(.,'"
-				+ stage + "') and contains(.,'" + endDate + "')]";
+				+ stage + "') and contains(.,'" + endDate + "')]";		
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
 
-	public void verifyCustomerSummary(HashMap<String, String> testData) {
-		CustomerSummary summary = getSummaryDetails();
-		Report.logInfo("Customer Summary:\n" + summary.toString());
-		Assert.assertEquals(testData.get("asv").trim(), summary.getASV().trim());
-//		Assert.assertEquals(testData.get("users").trim(), summary.getUsers().trim());
-		Assert.assertEquals(testData.get("otr").trim(), summary.getOTR().trim());
-		/*Assert.assertEquals(testData.get("startdate"), summary.getOCD());
-		Assert.assertEquals(testData.get("enddate"), summary.getRD());*/
-	}
+
 
 	private String stripNumber(String text) {
 		return text.replace("$", "").replace(",", "");

@@ -1,6 +1,11 @@
 package com.gainsight.sfdc.tests;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -39,4 +44,31 @@ public class BaseTest {
 		DecimalFormat moneyFormat = new DecimalFormat("$###,###");
 		return moneyFormat.format(new Long(amt)).replace("$", "$ ");
 	}
+	public String getCurrentDate(){
+	    Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+       return sdf.format(cal.getTime());
+     
+}
+	public String getFormattedDate(String dateStr) throws ParseException{
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date=formatter.parse(dateStr);	    
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+       return sdf.format(date);
+     
+}
+	public String getFormattedDate(String dateStr, int days) throws ParseException{
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date=formatter.parse(dateStr);	
+		Calendar c = Calendar.getInstance();
+		c.setTime(date); 
+		c.add(Calendar.DATE, 1); 
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+       return sdf.format(c.getTime());
+     
+}
+	public String[] getArrayFromData(String data){
+		return data.substring(1, data.length()-1).split("\\|");
+	}
+	
 }
