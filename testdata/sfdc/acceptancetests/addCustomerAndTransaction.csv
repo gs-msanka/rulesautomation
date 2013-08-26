@@ -1,2 +1,3 @@
-customername,status,stage,comments,asv,otr,startdate,enddate,users
-Abberley Kooiman,Active,New Business,none,20000,1500,07/15/2013,08/15/2013,100
+customer,firstTRN
+{Burlington Textiles Corp of America|Active|New Business|none},{Burlington Textiles Corp of America||||07/15/2013|08/15/2013||20000|100|1500|none}
+

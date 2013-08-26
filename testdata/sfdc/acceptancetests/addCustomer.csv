@@ -1,2 +1,3 @@
-customerName,status,stage,comments
-Abacus Programming Corporation,Active,New Business,none
+customer
+{Abacus Programming Corporation|Active|New Business|none}
+
