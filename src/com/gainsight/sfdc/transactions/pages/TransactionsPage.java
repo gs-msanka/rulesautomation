@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.transactions.pages;
 
+import java.util.HashMap;
+
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 
@@ -10,50 +12,50 @@ public class TransactionsPage extends BasePage {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
-	public TransactionsPage addNewBusiness(String[] dataArray) {
+	public TransactionsPage addNewBusiness(HashMap<String, String> data) {
 		// fields that need to be read more than once
 
-		String customerName = dataArray[0];
-		String opportunity = dataArray[1];
-		String bookingType = dataArray[2];
-		String bookingDate = dataArray[3];
-		String startDate = dataArray[4];
-		String endDate = dataArray[5];
-		String mrr = dataArray[6];
-		String asv = dataArray[7];
-		String userCount = dataArray[8];
-		String otr = dataArray[9];
-		String comments = dataArray[10];
+		String customerName = data.get("customerName");
+		String opportunity = data.get("opportunity");
+		String bookingType = data.get("bookingType");
+		String bookingDate = data.get("bookingDate");
+		String startDate = data.get("startDate");
+		String endDate = data.get("endDate");
+		String mrr = data.get("mrr");
+		String asv = data.get("asv");
+		String userCount = data.get("userCount");
+		String otr = data.get("otr");
+		String comments = data.get("comments");
 
 		// set field values
-		addTransaction_init(customerName,opportunity, bookingType);
-		if (bookingDate != null && !bookingDate.isEmpty()) {
+		addTransaction_init(customerName, opportunity, bookingType);
+		if (!bookingDate.equals("nil")) {
 			enterDate(
 					"//input[@class='transactionDate transactionBookingdate']",
 					bookingDate);
 
 		}
-		if (startDate != null && !startDate.isEmpty()) {
+		if (!startDate.equals("nil")) {
 			stalePause();
 			enterDate("//input[@class='transactionDate transSubStartDate']",
 					startDate);
 
 		}
 		enterDate("//input[@class='transactionDate transSubEndDate']", endDate);
-		if (mrr != null && !mrr.isEmpty())
+		if (mrr.equals("nil"))
 			field.setTextField("//input[@class='recurringMRR lineItemVal']",
 					mrr);
-		if (asv != null && !asv.isEmpty())
+		if (!asv.equals("nil"))
 			field.setTextField("//input[@class='recurringASV lineItemVal']",
 					asv);
-		if (userCount != null && !userCount.isEmpty())
+		if (!userCount.equals("nil"))
 			field.setTextField("//input[@class='lineItemVal lineItemUsers']",
 					userCount);
-		if (otr != null && !otr.isEmpty())
+		if (!otr.equals("nil"))
 			field.setTextField(
 					"//input[@class='lineItemVal lineItemOnetimeRevenue']", otr);
 		addTransaction_fini(comments);
-		
+
 		return this;
 	}
 
@@ -83,18 +85,19 @@ public class TransactionsPage extends BasePage {
 		return new Customer360Page();
 	}
 
-	private void addTransaction_init(String customerName,String opportunity,String bookingType) {
+	private void addTransaction_init(String customerName, String opportunity,
+			String bookingType) {
 		element.click("//input[@value='New']");
 		element.switchToFrame("//iframe");
 		field.setTextField("//input[contains(@class,'customer-name-text')]",
 				customerName);
 		button.click("//img[@title='Customer Name Lookup']");
 		element.click("//a[text()='" + customerName + "']");
-		if (opportunity != null && !opportunity.isEmpty())
+		if (!opportunity.equals("nil"))
 			field.setSelectField(
 					"//input[@class='jbaraDummyOpportunitySelectCtrl']",
 					opportunity);
-		if (bookingType != null && !bookingType.isEmpty())
+		if (!bookingType.equals("nil"))
 			field.setSelectField(
 					"//input[@class='jbaraDummyBookingOrderSelectCtrl']",
 					bookingType);
@@ -102,11 +105,10 @@ public class TransactionsPage extends BasePage {
 	}
 
 	private void addTransaction_fini(String comments) {
-		if (comments != null && !comments.isEmpty())
+		if (!comments.equals("nil"))
 			field.setTextField(
 					"//textarea[@class='jbaraDummyCommentInputCtrl transactionComments']",
 					comments);
-
 		button.click("//a[text()='Save']");
 		wait.waitTillElementPresent(
 				"//div[@class='gridPanelDiv' and contains(@style,'inline')]",

@@ -1,13 +1,14 @@
 package com.gainsight.sfdc.acceptance.tests;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
+
+import jxl.read.biff.BiffException;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
@@ -18,52 +19,37 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 
 public class AcceptanceTest extends BaseTest {
+	String[] dirs = { "acceptancetests" };
+	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
+			+ generatePath(dirs);
 
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Acceptance Test Case...");
 		basepage.login();
 	}
-
-	/* Test to verify account is added as a customer in Gainsight */
-	@DataProvider(name = "addCustomerDataProvider")
-	public Object[][] getTestData1() throws FileNotFoundException {
-		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TEST_DATA_PATH_PREFIX
-				+ generatePath(dirs) + "addCustomer.csv");
-		return testDataLoader.getAllDataRows();
-	}
-
-	@Test(dataProvider = "addCustomerDataProvider")
-	public void testAddNewCustomer(HashMap<String, String> testData) {
+    @Test
+	public void testAddNewCustomer() throws BiffException, IOException {
+		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+				TESTDATA_DIR + "AcceptanceTests.xls", "AT1");
 		addCustomer(testData.get("customer"));
 	}
-
-	// Add Customer & Transaction.
-	@DataProvider(name = "addCustomerAndTransactionDataProvider")
-	public Object[][] getTestData2() throws FileNotFoundException {
-		String[] dirs = { "acceptancetests" };
-		testDataLoader.addDataLocation(TEST_DATA_PATH_PREFIX
-				+ generatePath(dirs) + "addCustomerAndTransaction.csv");
-		return testDataLoader.getAllDataRows();
-	}
-
-	@Test(dataProvider = "addCustomerAndTransactionDataProvider")
-	public void testAddNewCustomerAndTransaction(
-			HashMap<String, String> testData) throws ParseException {
-		// data
-		String[] dataArray = getArrayFromData(testData.get("firstTRN"));
-		String customerName = dataArray[0];
-		String startDate = dataArray[4];
-		String endDate = dataArray[5];
-		String asv = dataArray[7];
-		String userCount = dataArray[8];
+    @Test
+	public void testAddNewCustomerAndTransaction() throws ParseException, BiffException, IOException {
+		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+				TESTDATA_DIR + "AcceptanceTests.xls", "AT2");
+		HashMap<String, String> data = getMapFromData(testData.get("firstTRN"));
+		String customerName = data.get("customerName");
+		String startDate =data.get("startDate");
+		String endDate = data.get("endDate");
+		String asv = data.get("asv");
+		String userCount =data.get("userCount");
 		String transactionValues = customerName + "|" + startDate + "|"
 				+ endDate + "|" + currencyFormat(asv);
 		// flow
 		addCustomer(testData.get("customer"));
 		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
-				.clickOnTransactionsSubTab().addNewBusiness(dataArray);
+				.clickOnTransactionsSubTab().addNewBusiness(data);
 		Report.logInfo("Transaction Values : " + transactionValues);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
@@ -74,16 +60,16 @@ public class AcceptanceTest extends BaseTest {
 		Report.logInfo("Customer Summary:\n" + summary.toString());
 		int ASV = Integer.parseInt(asv.trim());
 		int users = Integer.parseInt(userCount.trim());
-		Assert.assertEquals(testData.get("asv").trim(), summary.getASV().trim());
+		Assert.assertEquals(data.get("asv").trim(), summary.getASV().trim());
 		Assert.assertTrue(Math.ceil(ASV / 12.0) == new Double(summary.getMRR()
 				.trim()));
 		Assert.assertEquals(users + "", summary.getUsers().trim());
-		Assert.assertEquals(testData.get("otr").trim(), summary.getOTR().trim());
+		Assert.assertEquals(data.get("otr").trim(), summary.getOTR().trim());
 		// Assert.assertEquals(Math.ceil((ASV/12.0)/users),new
 		// Double(summary.getARPU().trim()));
 		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
 		Assert.assertTrue(summary.getRD().contains(
-				getFormattedDate(testData.get("enddate"), 1)));
+				getFormattedDate(data.get("enddate"), 1)));
 
 	}
 
@@ -93,11 +79,11 @@ public class AcceptanceTest extends BaseTest {
 	}
 
 	private CustomersPage addCustomer(String testData) {
-		String[] dataArray = getArrayFromData(testData);
-		String customerName = dataArray[0];
-		String status = dataArray[1];
-		String stage = dataArray[2];
-		String comments = dataArray[3];
+		HashMap<String, String> data = getMapFromData(testData);
+		String customerName = data.get("customerName");
+		String status = data.get("status");
+		String stage =  data.get("stage");
+		String comments = data.get("comments");
 		CustomersPage customersPage = basepage.clickOnCustomersTab()
 				.clickOnCustomersSubTab()
 				.addCustomer(customerName, status, stage, comments);

@@ -4,7 +4,7 @@
 		<classes>
 			<class name="com.gainsight.sfdc.acceptance.tests.AcceptanceTest">
 				<methods>
-					<include name="testAddNewCustomer" />
+					<include name="testAddNewCustomerAndTransaction" />
 				</methods>
 			</class>
 		</classes>

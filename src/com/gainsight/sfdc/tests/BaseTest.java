@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -67,8 +68,19 @@ public class BaseTest {
        return sdf.format(c.getTime());
      
 }
-	public String[] getArrayFromData(String data){
-		return data.substring(1, data.length()-1).split("\\|");
+	public HashMap<String, String> getMapFromData(String data){
+		HashMap<String, String> hm = new HashMap<String, String>();
+		System.out.println(data);
+		String[] dataArray=data.substring(1, data.length()-1).split("\\|");
+		for (String record: dataArray){
+			if(record!= null){
+			System.out.println(record);
+			String[] pair=record.split("\\:");
+			hm.put(pair[0], pair[1]);
+			}
+			
+		}
+		return hm;
 	}
 	
 }
