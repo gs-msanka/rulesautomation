@@ -70,7 +70,7 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(data.get("enddate"), 1)));
-
+		
 	}
 
 	@AfterClass
@@ -89,6 +89,7 @@ public class AcceptanceTest extends BaseTest {
 				.addCustomer(customerName, status, stage, comments);
 		Assert.assertTrue(customersPage.isCustomerPresent(customerName),
 				"Verify that newly added customer present in the grid");
+		
 		return customersPage;
 	}
 }
