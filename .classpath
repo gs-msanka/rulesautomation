@@ -9,5 +9,22 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/jxl.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/httpclient-4.2.5.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/httpmime-4.2.5.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-runtime-3.5.jar"/>
+	<classpathentry kind="lib" path="lib/force-wsc-28.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/partner.jar"/>
+	<classpathentry kind="lib" path="lib/ST4-4.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/stringtemplate-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

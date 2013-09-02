@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.pages;
 
 import java.text.DecimalFormat;
+
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;

@@ -1,0 +1,97 @@
+[
+    {
+        "row_data": [
+            {
+                "name": [
+                    "Animal & House Sitting",
+                    "St.Louis"
+                ],
+                "data": [
+                    [
+                        "408",
+                        "448"
+                    ]
+                ]
+            },
+            {
+                "name": [
+                    "Animal & House Sitting",
+                    "New York"
+                ],
+                "data": [
+                    [
+                        "57",
+                        "110"
+                    ]
+                ]
+            },
+            {
+                "name": [
+                    "Dryer Vent Cleaning",
+                    "New York"
+                ],
+                "data": [
+                    [
+                        "0",
+                        "0"
+                    ]
+                ]
+            },
+            {
+                "name": [
+                    "Wallpapering",
+                    "SFO"
+                ],
+                "data": [
+                    [
+                        "60",
+                        "60"
+                    ]
+                ]
+            },
+            {
+                "name": [
+                    "Roof Ice/Snow Removal",
+                    "SFO"
+                ],
+                "data": [
+                    [
+                        "12",
+                        "12"
+                    ]
+                ]
+            },
+            {
+                "name": [
+                    "Roof Ice/Snow Removal",
+                    "New York"
+                ],
+                "data": [
+                    [
+                        "8",
+                        "8"
+                    ]
+                ]
+            }
+        ],
+        "ReportLayoutInfo": {
+            "rowLabels": [
+                "Category",
+                "Market"
+            ],
+            "cols": [
+                {
+                    "name": [],
+                    "data": [
+                        []
+                    ]
+                }
+            ],
+            "measureLables": [
+                "CurrentReviews",
+                "TotalReviews"
+            ],
+            "pages": []
+        }
+    }
+]

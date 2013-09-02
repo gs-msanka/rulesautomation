@@ -1,0 +1,85 @@
+{
+    "row_data": [
+        {
+            "name": [],
+            "data": [
+                [
+                    "630"
+                ],
+                [
+                    "571"
+                ],
+                [
+                    "487"
+                ],
+                [
+                    "210"
+                ],
+                [
+                    "196"
+                ],
+                [
+                    "1936"
+                ],
+                [
+                    "267"
+                ],
+                [
+                    "832"
+                ],
+                [
+                    "468"
+                ],
+                [
+                    "836"
+                ]
+            ]
+        }
+    ],
+    "ReportLayoutInfo": {
+        "rowLabels": [],
+        "cols": [
+            {
+                "name": [
+                    "Category"
+                ],
+                "data": [
+                    [
+                        "Alarms"
+                    ],
+                    [
+                        "Animal & House Sitting"
+                    ],
+                    [
+                        "Appliance Repair - Small"
+                    ],
+                    [
+                        "Bathtub Refinishing & Liners"
+                    ],
+                    [
+                        "Drapery Cleaning"
+                    ],
+                    [
+                        "Dryer Vent Cleaning"
+                    ],
+                    [
+                        "Excavating"
+                    ],
+                    [
+                        "Roof Ice/Snow Removal"
+                    ],
+                    [
+                        "Shoe Repair"
+                    ],
+                    [
+                        "Snow Removal"
+                    ]
+                ]
+            }
+        ],
+        "measureLables": [
+            "CurrentReviews"
+        ],
+        "pages": []
+    }
+}
