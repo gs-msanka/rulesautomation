@@ -42,7 +42,7 @@ public class TransactionsPage extends BasePage {
 
 		}
 		enterDate("//input[@class='transactionDate transSubEndDate']", endDate);
-		if (mrr.equals("nil"))
+		if (!mrr.equals("nil"))
 			field.setTextField("//input[@class='recurringMRR lineItemVal']",
 					mrr);
 		if (!asv.equals("nil"))
