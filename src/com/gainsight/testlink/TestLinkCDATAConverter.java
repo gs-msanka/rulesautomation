@@ -16,10 +16,14 @@ import org.jdom2.Attribute;
 import org.jdom2.CDATA;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+/**
+ * Class is written to Convert excel sheet usecases to Test link format.
+ * @author gainsight1
+ *
+ */
 public class TestLinkCDATAConverter {
 
 	/**
@@ -30,9 +34,19 @@ public class TestLinkCDATAConverter {
 	public static void main(String[] args) throws BiffException, IOException {
 		// TODO Auto-generated method stub
 
-		Workbook workbook = Workbook.getWorkbook(new File("TestLinkTemplate.xls"));
+		System.out.println("Usage Java TestLinkCDATAConverter <path of excel file> <sheet name>");
+		Workbook workbook;
+		Sheet dataSheet;
+		if(args.length == 1)
+			workbook = Workbook.getWorkbook(new File(args[0]));
+		else
+			workbook = Workbook.getWorkbook(new File("TestLinkTemplate.xls"));
+		
 		// Get the sheet name
-		Sheet dataSheet = workbook.getSheet("Sheet5");
+		if(args.length == 2)
+			dataSheet = workbook.getSheet(args[1]);
+		else
+			dataSheet = workbook.getSheet("Sheet5");
 		
 		//GATHERING ALL COLUMN DATA
 		Cell[] c = dataSheet.getColumn(0);
@@ -49,36 +63,46 @@ public class TestLinkCDATAConverter {
 	}
 
 	private static void businessLogic1(Sheet dataSheet, ArrayList<String> tcList) {
-		// TODO Auto-generated method stub
 		//BUILDING LOGIC to loop through test case id
+		File xmlFile = new File("testLinkFinalOutput1.xml");
+		Element rootNode = new Element("testcases");
+		Document doc = new Document(rootNode);
+		FileOutputStream fos = null;
+		
 		for(int i = 0 ; i < tcList.size(); i++) {
 			if(tcList.get(i).equals("End")) break;
 			if(tcList.get(i).equals("Testcase ID")) continue;
 			int cellStart = dataSheet.findCell(tcList.get(i)).getRow();
 			int cellEnd = dataSheet.findCell(tcList.get(i+1)).getRow();
-			businessLogic2(dataSheet, cellStart, cellEnd);		
+			//Adding testcase to root note testcases
+			businessLogic2(rootNode, dataSheet, cellStart, cellEnd);		
+		}
+		
+		XMLOutputter xmlOutput = new XMLOutputter(); 
+		// display nice
+		xmlOutput.setFormat(Format.getPrettyFormat());
+		try {
+			fos = new FileOutputStream(xmlFile, false);
+			Writer writer = new OutputStreamWriter(fos, "utf-8");
+			xmlOutput.output(doc, writer);
+			xmlOutput.output(doc, System.out);
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
-	private static void businessLogic2(Sheet dataSheet, int cellStart,
+	private static void businessLogic2(Element rootNode, Sheet dataSheet, int cellStart,
 			int cellEnd) {
 		// TODO Auto-generated method stub
 		System.out.println("logic 2 " + cellStart + " " + cellEnd);
-		FileOutputStream fos = null;
+		
 		try {
-//			String valStart = "<![CDATA[";
-//			String valEnd = "]]";
-			
-//			SAXBuilder builder = new SAXBuilder();
-			File xmlFile = new File("testLinkFinalOutput1.xml");
-			//Document doc = (Document) builder.build(xmlFile);
-			Element rootNode = new Element("testcases");
-			Document doc = new Document(rootNode);
-//			Element rootNode = doc.getRootElement();
 			Element testCase = new Element("testcase");
-			Element nodeOrder = new Element("node_order");
+			/*Element nodeOrder = new Element("node_order");
 			Element externalId = new Element("externalid");
-			Element version = new Element("version");
+			Element version = new Element("version");*/
 			Element summary = new Element("summary");
 			Element preconditions = new Element("preconditions");
 			Element executionType = new Element("execution_type");
@@ -95,6 +119,8 @@ public class TestLinkCDATAConverter {
 			testCase.addContent(executionType);
 			testCase.addContent(importance);
 			testCase.addContent(steps);
+			
+			//Reading Cell data to construct the test link xml data.
 			for(int i = cellStart ; i < cellEnd ; i++){
 				Cell[] c = dataSheet.getRow(i);
 				if(i == cellStart) {
@@ -129,26 +155,10 @@ public class TestLinkCDATAConverter {
 					expectedresults.setContent(new CDATA("Please Enter the Expected Result"));
 				execution_type.setContent(new CDATA("2"));
 			}
-			
-			XMLOutputter xmlOutput = new XMLOutputter(); 
-			// display nice
-			xmlOutput.setFormat(Format.getPrettyFormat());
-			fos = new FileOutputStream(xmlFile, true);
-			Writer writer = new OutputStreamWriter(fos, "utf-8");
-			xmlOutput.output(doc, writer);
-			xmlOutput.output(doc, System.out);
 		}
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		}
-		finally {
-			try {
-				fos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 }
