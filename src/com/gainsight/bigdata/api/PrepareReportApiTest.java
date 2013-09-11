@@ -1,4 +1,4 @@
-package com.gainsight.bigdata.report;
+package com.gainsight.bigdata.api;
 
 import java.io.File;
 import java.io.IOException;

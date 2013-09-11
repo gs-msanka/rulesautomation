@@ -12,6 +12,9 @@ public class NsResponseObj {
 
 	private Map data;
 
+	public NsResponseObj() {
+	}
+	
 	public NsResponseObj(boolean result, Map data, String errorCode,
 			String errorDesc) {
 		this.result = result;

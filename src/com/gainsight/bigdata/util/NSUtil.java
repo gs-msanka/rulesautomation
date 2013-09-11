@@ -11,6 +11,7 @@ import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.pojo.NSInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.SFDCInfo;
+import com.gainsight.pageobject.core.Report;
 import com.google.gson.Gson;
 
 public class NSUtil {
@@ -50,16 +51,17 @@ public class NSUtil {
 		
 		HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/sflogin",
 				rawBody, h);
+		Report.logInfo(result.toString());
+		
 		NsResponseObj obj = gson.fromJson(result.getContent(), NsResponseObj.class);
-
-		System.out.println(result);
 		Assert.assertTrue(obj.isResult(),
 				"Fetching Access Token failed : " + result);
+		
 		NSInfo ns = new NSInfo();
 		ns.setAuthToken((String) obj.getData().get("acess_token"));
 		ns.setTenantID((String) obj.getData().get("TenantId"));
 
-		System.out.println("NS Info: " + ns.toString());
+		Report.logInfo("NS Info: " + ns.toString());
 		return ns;
 	}
 

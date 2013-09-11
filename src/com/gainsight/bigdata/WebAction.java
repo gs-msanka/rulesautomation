@@ -1,12 +1,15 @@
 package com.gainsight.bigdata;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -18,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import com.gainsight.bigdata.pojo.Header;
 import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.util.ReaderUtil;
+import com.gainsight.pageobject.core.Report;
 
 
 public class WebAction {
@@ -43,8 +47,11 @@ public class WebAction {
 		return httpResponse(post);
 	}
 	
-	public HttpResponseObj httpResponse(HttpUriRequest request) throws Exception {
+	public HttpResponseObj httpResponse(HttpUriRequest request) throws ClientProtocolException, IOException {
 		HttpClient client = new DefaultHttpClient();
+		//For Burp Purpose
+		/*HttpHost target = new HttpHost("127.0.0.1", 8080, "http");
+		HttpResponse response = client.execute(target, request);*/
 		HttpResponse response = client.execute(request);
 
 		// Reading Response
@@ -57,13 +64,14 @@ public class WebAction {
 				// do something useful
 				InputStreamReader reader = new InputStreamReader(instream);
 				ReaderUtil.readContent(reader, buf);
+				System.out.println(buf);
 				obj.setStatusCode(response.getStatusLine().getStatusCode());
 				obj.setStatusLine(response.getStatusLine().toString());
 				obj.setContent(buf.toString());
 				obj.setContentType(resEntity.getContentType().getValue());
 				obj.setContentLength(resEntity.getContentLength());
 				obj.setHeaders(response.getAllHeaders());
-				System.out.println(obj.toString());
+				Report.logInfo("Response Obj: " + obj.toString());
 			} finally {
 				instream.close();
 			}
