@@ -1,0 +1,71 @@
+<project name="9.6 Service Pack" default="" basedir="../../.">
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+	<property name="buildOutput" location="${basedir}/bin" />
+	<property name="resultOutput" location="${basedir}/result" />
+	<property name="output" location="${resultOutput}/output" />
+	<property environment="env" />
+
+	<!-- TestNG file name for pre and post tests -->
+	<property name="testNGFileName" value="ApiTest.xml" />
+		
+	<propertyregex property="subStr" input="${patchExeName}" 
+		regexp="\.([^\.]*)\.exe" 
+		select="\1" 
+		casesensitive="false" />
+
+	<!-- Classpath files required for compiling -->
+	<path id="cpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Classpath files required at run-time -->
+	<path id="runpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${buildOutput}" />
+	</path>
+
+	<taskdef resource="testngtasks" classpathref="cpath" />
+
+	<target name="runApiTest" depends="testng" />
+
+	<target name="collectArtifacts">
+		<copy todir="${destLocation}">
+			<fileset dir="${resultOutput}" />
+		</copy>
+	</target>
+
+	<target name="testng" depends="build">
+		<testng haltonfailure="no" classpathref="runpath" outputDir="${resultOutput}">
+			<!-- <sysproperty key="run" value="DVT" /> -->
+			<sysproperty key="basedir" value="${basedir}" />
+
+			<xmlfileset dir="testsuite/newstack" includes="${testNGFileName}" />
+	 	</testng>
+
+	 	<!-- <antcall target="collectArtifacts">
+			<param name="destLocation" value="${basedir}/Results_${subStr}" />
+		</antcall> -->
+	</target>
+
+	<target name="build" depends="init_dir">
+		<echo message="compiling tests" />
+		<javac srcdir="src" destdir="${buildOutput}" classpathref="cpath" 
+					nowarn="on" debug="on" debuglevel="lines,vars,source">
+		</javac>
+	</target>
+
+	<target name="init_dir" depends="clean">
+		<mkdir dir="${buildOutput}" />
+		<mkdir dir="${resultOutput}" />
+		<mkdir dir="${output}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${buildOutput}" failonerror="false" />
+		<delete dir="${resultOutput}" failonerror="false" />
+	</target>
+</project>
