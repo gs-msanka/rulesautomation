@@ -6,6 +6,7 @@ import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
 /**
@@ -51,10 +52,18 @@ public class BasePage extends WebPage implements Constants{
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
-	  public AdoptionBasePage clickOnAdoptionTab() {
+	
+	public AdoptionBasePage clickOnAdoptionTab() {
           item.click("//a[contains(@title,'Adoption Tab')]");
           return new AdoptionBasePage();
-  }
+	}
+	  
+	public SurveyBasePage clickOnSurveyTab() {
+          item.click("//a[contains(text(),'Survey')]");
+          return new SurveyBasePage();
+	}
+	  
+	  
 	//End of Top Level Navigation
 	
 	public void setFilter(String filterFiledName, String value) {
