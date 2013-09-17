@@ -4,8 +4,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
-import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.survey.pages.CreateSurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.tests.BaseTest;

@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.survey.pages;
 
-import com.gainsight.pageobject.core.Field;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class CreateSurveyPage extends BasePage{
