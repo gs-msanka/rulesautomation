@@ -11,6 +11,7 @@ import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -55,7 +56,6 @@ public class BasePage extends WebPage implements Constants{
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
-
 	  public AdoptionBasePage clickOnAdoptionTab() {
           item.click("//a[contains(@title,'Adoption Tab')]");
           return new AdoptionBasePage();
