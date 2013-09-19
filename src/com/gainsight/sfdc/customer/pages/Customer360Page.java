@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.customer.pages;
 
-
 import org.openqa.selenium.By;
 
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
@@ -23,8 +22,9 @@ public class Customer360Page extends BasePage {
 				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[3]/span")));
 		summary.setUsers(stripNumber(field
 				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[4]/span")));
-		summary.setARPU(stripNumber(field
-				.getTextFieldText("//div[@id='jbCustomerSnapshot']//div[5]/span").replace("ARPU", "")));
+		summary.setARPU(stripNumber(field.getTextFieldText(
+				"//div[@id='jbCustomerSnapshot']//div[5]/span").replace("ARPU",
+				"")));
 		summary.setStage(field.getTextFieldText(
 				"//div[@id='jbCustomerSnapshot']//div[6]/span[2]").replace(
 				"Stage:", ""));
@@ -40,19 +40,18 @@ public class Customer360Page extends BasePage {
 		return summary;
 	}
 
-	public int getPositionOfTransaction(String stage, String endDate) {
-		String xpath = "//div[@class='transSummaryListDiv timelineLiListOpenClass']/span[contains(.,'"
-				+ stage + "') and contains(.,'" + endDate + "')]";
-		return item.getElement(By.xpath(xpath)).getLocation().x;
+	public int getPositionOfTransaction(String stage, String bookingDate) {
+		String xpath = "//div[contains(@class,'transSummaryListDiv') and contains(.,'"
+				+ stage + "') and contains(.,'" + bookingDate + "')]";
+
+		return getWebElement(By.xpath(xpath)).getLocation().x;
 	}
 
 	public boolean isTransactionPresent(String stage, String endDate) {
 		String xpath = "//div[@class='transSummaryListDiv timelineLiListOpenClass']/span[contains(.,'"
-				+ stage + "') and contains(.,'" + endDate + "')]";		
+				+ stage + "') and contains(.,'" + endDate + "')]";
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
-
-
 
 	private String stripNumber(String text) {
 		return text.replace("$", "").replace(",", "");

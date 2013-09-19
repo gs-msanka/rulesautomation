@@ -11,7 +11,6 @@ import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
-import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -98,6 +97,7 @@ public SurveyBasePage clickOnSurveyTab() {
 		}	    
         SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
        return sdf.format(date);  
+	}
 	
 
 }
