@@ -1,0 +1,51 @@
+{
+    "row_data": [
+        {
+            "name": [
+                "St.Louis"
+            ],
+            "data": [
+                [
+                    "293372"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "SFO"
+            ],
+            "data": [
+                [
+                    "33867"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "New York"
+            ],
+            "data": [
+                [
+                    "16411"
+                ]
+            ]
+        }
+    ],
+    "ReportLayoutInfo": {
+        "rowLabels": [
+            "Market"
+        ],
+        "cols": [
+            {
+                "name": [],
+                "data": [
+                    []
+                ]
+            }
+        ],
+        "measureLables": [
+            "CurrentReviews"
+        ],
+        "pages": []
+    }
+}

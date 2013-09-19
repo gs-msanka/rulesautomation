@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="BigDataAPI_Test" parallel="false">
+	<listeners>
+		<listener class-name="com.gainsight.bigdata.AutTestListener" />
+	</listeners>
+	
+	<test verbose="3" name="api" preserve-order="true">
+		<parameter name="" value="" />
+		<classes>
+			<!-- Auth API -->
+			<class name="com.gainsight.bigdata.api.SalesForceLoginTest" />
+			
+			<!-- Infrastructure API's -->
+			<class name="com.gainsight.bigdata.api.CreateTenantTest" />
+			<class name="com.gainsight.bigdata.api.CreateCollectionTest" />
+			<class name="com.gainsight.bigdata.api.GetCollectionTest" />
+
+			<!-- Query API's -->
+			<class name="com.gainsight.bigdata.api.PrepareReportApiTest" />
+			<class name="com.gainsight.bigdata.api.UpsertReportTest" />
+			<class name="com.gainsight.bigdata.api.SavedReportTest" />
+			<class name="com.gainsight.bigdata.api.DimensionBrowserTest" />
+		</classes>
+	</test>
+</suite>

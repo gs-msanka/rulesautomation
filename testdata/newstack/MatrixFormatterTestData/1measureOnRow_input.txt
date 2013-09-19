@@ -1,0 +1,12 @@
+{
+	"TenantId":"ea745732-af3d-4216-b68d-f10375348c66",
+	"ReportInfo":[
+		{
+			"SchemaName":"Angies.UsageData","limit":10,"Type":"adhoc",
+			"Dimensions":[
+				{"col":"CurrentReviews","axis":"row","agg_func":"sum"}
+			]
+		}
+	],
+	"FormatOfReport":"matrix"
+}

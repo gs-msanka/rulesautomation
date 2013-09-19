@@ -5,12 +5,12 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -55,10 +55,15 @@ public class BasePage extends WebPage implements Constants{
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
+
 	  public AdoptionBasePage clickOnAdoptionTab() {
           item.click("//a[contains(@title,'Adoption Tab')]");
           return new AdoptionBasePage();
   }
+public SurveyBasePage clickOnSurveyTab() {
+          item.click("//a[contains(text(),'Survey')]");
+          return new SurveyBasePage();
+	}
 	//End of Top Level Navigation
 	
 	public void setFilter(String filterFiledName, String value) {
@@ -92,7 +97,7 @@ public class BasePage extends WebPage implements Constants{
 			throw new RuntimeException("unable to  parse date string " + e.getMessage());
 		}	    
         SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
-       return sdf.format(date);     
-}
+       return sdf.format(date);  
+	
 
 }

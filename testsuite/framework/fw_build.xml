@@ -34,7 +34,8 @@
 
 	<target name="compile" depends="init_dir">
 		<echo message="Compiling Gainsight Test Driver" />
-		<javac srcdir="${testDriverLocation}/src" destdir="${buildOutput}" classpathref="cpath" 
+		<javac srcdir="${testDriverLocation}/src" destdir="${buildOutput}" classpathref="cpath" source="1.6"
+			target="1.6"
 			nowarn="on" debug="on" debuglevel="lines,vars,source">
 		</javac>
 	</target>
