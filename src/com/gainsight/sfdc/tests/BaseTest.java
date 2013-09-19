@@ -33,6 +33,7 @@ public class BaseTest {
 		soql.deleteQuery(DELTE_TRANS_HEADERS);
 		soql.deleteQuery(DELTE_TRANS_LINES);
 		soql.deleteQuery(DELTE_CUSTOMERS);
+		env.launchBrower();
 		basepage = new BasePage();
 	}
 	
@@ -59,13 +60,13 @@ public class BaseTest {
        return sdf.format(cal.getTime());
      
 }
-	public String getFormattedDate(String dateStr) throws ParseException{
+
+	public String getFormattedDate(String dateStr) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		Date date=formatter.parse(dateStr);	    
-        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
-       return sdf.format(date);
-     
-}
+		Date date = formatter.parse(dateStr);
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+		return sdf.format(date);
+	}
 	public String getFormattedDate(String dateStr, int days) throws ParseException{
 		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		Date date=formatter.parse(dateStr);	
@@ -89,6 +90,13 @@ public class BaseTest {
 			
 		}
 		return hm;
+	}
+	public Double calcMRR(int ASV){
+		return Math.ceil(ASV / 12.0);		
+	}
+	
+	public Double calcARPU(int ASV,int users){
+		return Math.ceil((ASV/12.0)/users);	
 	}
 	
 }

@@ -1,6 +1,11 @@
 package com.gainsight.sfdc.pages;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
@@ -78,6 +83,16 @@ public class BasePage extends WebPage implements Constants{
 	public void stalePause(){
 		sleep(2);
 	}
-	
+	public String getFormattedDate(String dateStr) {
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date;
+		try {
+			date = formatter.parse(dateStr);
+		} catch (ParseException e) {
+			throw new RuntimeException("unable to  parse date string " + e.getMessage());
+		}	    
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+       return sdf.format(date);     
+}
 
 }
