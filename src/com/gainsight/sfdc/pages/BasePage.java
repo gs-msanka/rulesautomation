@@ -1,13 +1,16 @@
 package com.gainsight.sfdc.pages;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
-import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -52,18 +55,14 @@ public class BasePage extends WebPage implements Constants{
 		item.click("//a[contains(@title,'Transactions Tab')]");
 		return new TransactionsBasePage();		
 	}
-	
-	public AdoptionBasePage clickOnAdoptionTab() {
+	  public AdoptionBasePage clickOnAdoptionTab() {
           item.click("//a[contains(@title,'Adoption Tab')]");
           return new AdoptionBasePage();
-	}
-	  
-	public SurveyBasePage clickOnSurveyTab() {
+  }
+public SurveyBasePage clickOnSurveyTab() {
           item.click("//a[contains(text(),'Survey')]");
           return new SurveyBasePage();
 	}
-	  
-	  
 	//End of Top Level Navigation
 	
 	public void setFilter(String filterFiledName, String value) {
@@ -87,6 +86,17 @@ public class BasePage extends WebPage implements Constants{
 	 */
 	public void stalePause(){
 		sleep(2);
+	}
+	public String getFormattedDate(String dateStr) {
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date;
+		try {
+			date = formatter.parse(dateStr);
+		} catch (ParseException e) {
+			throw new RuntimeException("unable to  parse date string " + e.getMessage());
+		}	    
+        SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+       return sdf.format(date);  
 	}
 	
 
