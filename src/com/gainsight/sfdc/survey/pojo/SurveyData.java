@@ -9,6 +9,10 @@ public class SurveyData {
 	private String toption;
 	private String imagename;
 	private String url;
+	private boolean ananymous;
+	private String filepath;
+	private String startdate;
+	private String enddate;
 	
 	public void setCode(String code) {
 		this.code = code;
@@ -62,7 +66,7 @@ public class SurveyData {
 	
 	public String getImageName(){
 		
-		return toption;
+		return imagename;
 	}
 	
 	
@@ -74,6 +78,37 @@ public class SurveyData {
 		
 		return url;
 	}
+
+	public void setAnanymous(boolean flag) {
+		this.ananymous = flag;
+	}
 	
+	public boolean getAnanymous() {
+		return ananymous;
+	}
+	
+	public void setFilePath(String filepath) {
+		this.filepath = filepath;
+	}
+	
+	public String getFilePath() {
+		return filepath;
+	}
+	
+	public void setStartDate(String startdate) {
+		this.startdate = startdate;
+	}
+	
+	public String getStartDate() {
+		return startdate;
+	}
+	
+	public void setEndDate(String enddate) {
+		this.enddate = enddate;
+	}
+	
+	public String getEndDate() {
+		return enddate;
+	}
 }
 

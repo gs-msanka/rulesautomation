@@ -30,9 +30,9 @@ public class BaseTest {
 	@BeforeSuite
 	public void init(){		
 		env.start();
-		soql.deleteQuery(DELTE_TRANS_HEADERS);
+		/*soql.deleteQuery(DELTE_TRANS_HEADERS);
 		soql.deleteQuery(DELTE_TRANS_LINES);
-		soql.deleteQuery(DELTE_CUSTOMERS);
+		soql.deleteQuery(DELTE_CUSTOMERS);*/
 		env.launchBrower();
 		basepage = new BasePage();
 	}
