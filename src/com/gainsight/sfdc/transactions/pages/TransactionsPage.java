@@ -28,6 +28,7 @@ public class TransactionsPage extends BasePage {
 	private final String  NEW_BUTTON="//input[@value='New']";
 	private final String TRANS_TABLE="transactionList_IdOfJBaraStandardView";
 	private final String CUSTOMER_FILTER="Customer_link";
+	private final String SAVE_BUTTON="//a[text()='Save']";
 
 	public TransactionsPage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -36,7 +37,7 @@ public class TransactionsPage extends BasePage {
 	public TransactionsPage addChurnTransaction(HashMap<String, String> data) {
 		addTransactionInit(data.get("customerName"), data.get("opportunity"),
 				data.get("bookingType"));
-		fileChurnFields(data.get("bookingDate"), data.get("effectiveDate"),
+		fillChurnFields(data.get("bookingDate"), data.get("effectiveDate"),
 				data.get("reason"));
 		transactionFini(data.get("comments"));
 		return this;
@@ -150,7 +151,7 @@ public class TransactionsPage extends BasePage {
 			field.setTextField(
 					COMMENTS_FIELD,
 					comments);
-		button.click("//a[text()='Save']");
+		button.click(SAVE_BUTTON);
 		wait.waitTillElementPresent(
 				TRANS_GRID,
 				MIN_TIME, MAX_TIME);
@@ -206,13 +207,13 @@ public class TransactionsPage extends BasePage {
 	public TransactionsPage editChurnTransaction(String customerName,
 			String keyValues, HashMap<String, String> data) {
 		editTransactionInit(customerName, keyValues);
-		fileChurnFields(data.get("bookingDate"), data.get("effectiveDate"),
+		fillChurnFields(data.get("bookingDate"), data.get("effectiveDate"),
 				data.get("reason"));
 		transactionFini(data.get("comments"));
 		return this;
 	}
 
-	private void fileChurnFields(String bookingDate, String effectiveDate,
+	private void fillChurnFields(String bookingDate, String effectiveDate,
 			String reason) {
 		if (!bookingDate.equals("nil"))
 			enterDate(
