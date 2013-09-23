@@ -59,8 +59,8 @@ public class CustomersPage extends CustomerBasePage {
 			stalePause();
 			try {
 				modal.accept();
-				Report.logInfo("Modal dialog not present ,Customer can't be deleted");
-			} catch (Exception e) {
+				Report.logInfo("Modal dialog present ,Customer can't be deleted");
+			} catch (Exception e) { //need to change it to exact exception type
 				Report.logInfo("Modal dialog not present ,Customer can be deleted");
 				status = true;
 			}
