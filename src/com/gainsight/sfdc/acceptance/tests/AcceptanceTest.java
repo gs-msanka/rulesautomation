@@ -99,7 +99,7 @@ public class AcceptanceTest extends BaseTest {
 	@AfterClass
 	public void tearDown() {
 		if (loggedIn)
-			basepage.logout();
+		basepage.logout();
 	}
 
 	private CustomersPage addCustomer(String testData) {
