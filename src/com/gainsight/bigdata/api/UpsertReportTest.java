@@ -19,7 +19,7 @@ import com.gainsight.pageobject.core.Report;
 public class UpsertReportTest extends TestBase {
 
 	String baseuri;
-	String testDataBasePath = "./testdata/newstack/UpsertReportTestData/";
+	String testDataLoc = testDataBasePath + "/UpsertReportTestData/";
 	String rid = "f4e1f1a7-c887-4972-93e5-d446d231b77e";
 	
 	@BeforeClass
@@ -31,12 +31,13 @@ public class UpsertReportTest extends TestBase {
 	@Test
 	public void upsertReport() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput1.txt")).toString();
+		String rawBody = mapper.readTree(new File(testDataLoc + "UpsertReportInput1.txt")).toString();
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		JsonNode reportId = mapper.readTree(result.getContent());
-		rid = reportId.get("ReportId").toString();
+		JsonNode data = reportId.findPath("data");
+		rid = data.get("ReportId").toString();
 		Report.logInfo(rid);
 		Assert.assertNotNull(reportId, "Report ID not found.");
 	}
@@ -44,26 +45,28 @@ public class UpsertReportTest extends TestBase {
 	@Test
 	public void upsertExistingReport() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput2.txt")).toString();
+		String rawBody = mapper.readTree(new File(testDataLoc + "UpsertReportInput2.txt")).toString();
 		rawBody = rawBody.replaceFirst("\"ReportId\":\"\"", "\"ReportId\":\""+rid+"\"");
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		JsonNode reportId = mapper.readTree(result.getContent());
-		Report.logInfo(reportId.get("ReportId").toString());
+		JsonNode data = reportId.findPath("data");
+		Report.logInfo(data.get("ReportId").toString());
 		Assert.assertNotNull(reportId, "Report ID not found.");
 	}
 	
 	@Test
 	public void upsertExistingReportWithEmptyReportId() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput2.txt")).toString();
+		String rawBody = mapper.readTree(new File(testDataLoc + "UpsertReportInput2.txt")).toString();
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		JsonNode reportId = mapper.readTree(result.getContent());
-		Report.logInfo(reportId.get("ReportId").toString());
-		Assert.assertNull(reportId, "Report ID not found.");
+		JsonNode data = reportId.findPath("data");
+		Report.logInfo(data.get("ReportId").toString());
+		Assert.assertNull(reportId, "Report ID found instead of an Error");
 	}
 	
 	@Test
@@ -91,12 +94,13 @@ public class UpsertReportTest extends TestBase {
 	@Test
 	public void upsertReportWithInvalidAuthHeader() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput2.txt")).toString();
+		String rawBody = mapper.readTree(new File(testDataLoc + "UpsertReportInput2.txt")).toString();
 		Report.logInfo(rawBody);
 		
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
 		
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());

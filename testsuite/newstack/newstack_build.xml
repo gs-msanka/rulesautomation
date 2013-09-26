@@ -1,5 +1,5 @@
-<project name="9.6 Service Pack" default="" basedir="../../.">
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+<project name="9.6 Service Pack" default="runApiTest" basedir="../../.">
+	<!-- <taskdef resource="net/sf/antcontrib/antcontrib.properties" /> -->
 	<property name="buildOutput" location="${basedir}/bin" />
 	<property name="resultOutput" location="${basedir}/result" />
 	<property name="output" location="${resultOutput}/output" />
@@ -8,11 +8,6 @@
 	<!-- TestNG file name for pre and post tests -->
 	<property name="testNGFileName" value="ApiTest.xml" />
 		
-	<propertyregex property="subStr" input="${patchExeName}" 
-		regexp="\.([^\.]*)\.exe" 
-		select="\1" 
-		casesensitive="false" />
-
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
 		<fileset dir="lib">

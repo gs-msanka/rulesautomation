@@ -111,6 +111,8 @@ public class DimensionBrowserTest extends TestBase {
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");

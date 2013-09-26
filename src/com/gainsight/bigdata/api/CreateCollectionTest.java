@@ -118,6 +118,8 @@ public class CreateCollectionTest extends TestBase{
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");
@@ -134,6 +136,8 @@ public class CreateCollectionTest extends TestBase{
 		Header h = new Header();
 		h.addHeader("Content-Type", "text/plain");
 		h.addHeader("authToken", nsinfo.getAuthToken());
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		JsonNode collectionId = mapper.readTree(result.getContent());

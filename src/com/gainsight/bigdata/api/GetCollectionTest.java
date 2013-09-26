@@ -25,7 +25,7 @@ public class GetCollectionTest extends TestBase {
 	@BeforeClass
 	public void setUp() throws Exception {
 		init();
-		baseuri = PropertyReader.nsAppUrl + "/getcollection/"+ nsinfo.getTenantID();
+		baseuri = PropertyReader.nsAppUrl + "/getcollection/"+ nsinfo.getTenantID() +"/ALL";
 	}
 	
 	@Test
@@ -53,13 +53,14 @@ public class GetCollectionTest extends TestBase {
 		JsonNode node = mapper.readTree(result.getContent());
 		JsonNode outputNode  = node.findValue("Columns");
 		
+		Assert.assertNotNull(outputNode, "No Data Found for Columns");
 		Report.logInfo("PRINTING OUTPUT: "  + outputNode.toString());
 		Assert.assertTrue(outputNode.equals(inputNode), "The Collection Response didn't Match");
 	}
 	
 	@Test
 	public void getCollectionForInvalidTenantId() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/getcollection/GarbageTenantID";
+		String uri = PropertyReader.nsAppUrl + "/getcollection/GarbageTenantID/ALL";
 		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
@@ -74,6 +75,8 @@ public class GetCollectionTest extends TestBase {
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doGet(baseuri, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");

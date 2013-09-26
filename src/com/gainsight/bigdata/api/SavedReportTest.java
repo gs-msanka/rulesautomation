@@ -20,7 +20,7 @@ public class SavedReportTest extends TestBase {
 	@BeforeClass
 	public void setUp() throws Exception {
 		init();
-		baseuri = PropertyReader.nsAppUrl + "/savedreports/"+ nsinfo.getTenantID();
+		baseuri = PropertyReader.nsAppUrl + "/savedreports/"+ nsinfo.getTenantID()+"/ALL";
 	}
 	
 	@Test
@@ -34,7 +34,7 @@ public class SavedReportTest extends TestBase {
 	
 	@Test
 	public void getSavedReportsWithInvalidTenantId() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/savedreports/InvalidTenantId";
+		String uri = PropertyReader.nsAppUrl + "/savedreports/InvalidTenantId/ALL";
 		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
@@ -44,10 +44,13 @@ public class SavedReportTest extends TestBase {
 	
 	@Test
 	public void getSavedReportsWithInvalidAuthHeader() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/savedreports/InvalidTenantId";
+		String uri = PropertyReader.nsAppUrl + "/savedreports/InvalidTenantId/ALL";
+		
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");

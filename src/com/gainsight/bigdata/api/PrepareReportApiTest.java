@@ -12,47 +12,33 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.WebAction;
-import com.gainsight.bigdata.pojo.Header;
+import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.pojo.HttpResponseObj;
-import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.bigdata.pojo.SFDCInfo;
-import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.bigdata.util.SFDCUtil;
 import com.gainsight.pageobject.core.Report;
 
-public class PrepareReportApiTest {
+public class PrepareReportApiTest extends TestBase {
 
-	private NSInfo nsinfo;
-	private WebAction wa;
-	private Header h;
 	String uri;
-	String testDataBasePath = "./testdata/newstack/MatrixFormatterTestData/";
+	String testDataLoc = testDataBasePath + "/MatrixFormatterTestData/";
 
 	@BeforeClass
 	public void setUp() throws Exception {
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		nsinfo = NSUtil.fetchNewStackInfo(sfinfo);
-		wa = new WebAction();
-
-		h = new Header();
-		h.addHeader("Content-Type", "application/json");
-		h.addHeader("authToken", nsinfo.getAuthToken());
+		init();
 
 		uri = PropertyReader.nsAppUrl + "/preparereport";
 	}
 	
 	@Test
 	public void test_1Col_1Measure() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "1col_1measure_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 		
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "1col_1measure_output.txt"));
+				testDataLoc + "1col_1measure_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -63,14 +49,14 @@ public class PrepareReportApiTest {
 
 	@Test
 	public void test_1Measure() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "1measure_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "1measure_output.txt"));
+				testDataLoc + "1measure_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -81,14 +67,14 @@ public class PrepareReportApiTest {
 	
 	@Test
 	public void test_1MeasureOnRow() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "1measureOnRow_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "1measureOnRow_output.txt"));
+				testDataLoc + "1measureOnRow_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -99,14 +85,14 @@ public class PrepareReportApiTest {
 	
 	@Test
 	public void test_1Row_1Measure() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "1row_1measure_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "1row_1measure_output.txt"));
+				testDataLoc + "1row_1measure_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -117,14 +103,14 @@ public class PrepareReportApiTest {
 	
 	@Test
 	public void test_1Row_1MeasureOnRow() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "1row_1measureOnRow_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "1row_1measureOnRow_output.txt"));
+				testDataLoc + "1row_1measureOnRow_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -135,14 +121,14 @@ public class PrepareReportApiTest {
 	
 	@Test
 	public void test_2Row_2Col_2Measure() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "2row_2col_2measure_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "2row_2col_2measure_output.txt"));
+				testDataLoc + "2row_2col_2measure_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
@@ -153,14 +139,14 @@ public class PrepareReportApiTest {
 	
 	@Test
 	public void test_2Row_2Measure() throws Exception {
-		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
+		String rawBody = FileUtils.readFileToString(new File(testDataLoc
 				+ "2row_2measure_input.txt"));
 		Report.logInfo("Request:\n"+rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo("Actual JSON:\n" + result.getContent());
 
 		String expectedJson = FileUtils.readFileToString(new File(
-				testDataBasePath + "2row_2measure_output.txt"));
+				testDataLoc + "2row_2measure_output.txt"));
 		Report.logInfo("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),

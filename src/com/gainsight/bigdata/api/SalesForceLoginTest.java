@@ -28,6 +28,7 @@ public class SalesForceLoginTest extends TestBase {
 
 		h = new Header();
 		h.addHeader("Content-Type", "application/json");
+		h.addHeader("Origin", origin);
 	}
 	
 	@Test
@@ -52,7 +53,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("600"), "Wrng Error Code Returned : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("600"), "Wrong Error Code Returned : " + result);
 	}
 	
 	@Test
@@ -80,6 +81,7 @@ public class SalesForceLoginTest extends TestBase {
 		sfinfo.setEndpoint("InvalidEndpoint");
 		sfinfo.setSessionId("InvalidSessionId");
 		String rawBody = mapper.writeValueAsString(sfinfo);
+		Report.logInfo(rawBody.toString());
 		
 		HttpResponseObj result = wa.doPost(baseuri,	rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());

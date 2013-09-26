@@ -28,7 +28,7 @@ public class CreateTenantTest extends TestBase{
 	
 	@Test
 	public void createTenant() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenant";
+		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantFromPgm";
 		TenantInfo info = new TenantInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
 		info.setExternalTenantID(sfinfo.getOrg());
@@ -73,7 +73,7 @@ public class CreateTenantTest extends TestBase{
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
+		Assert.assertFalse(obj.isResult(), "Result Returned was false : " + result.getContent());
 	}
 	
 	@Test
@@ -131,9 +131,12 @@ public class CreateTenantTest extends TestBase{
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
 		Report.logInfo(rawBody);
+		
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");
@@ -149,9 +152,12 @@ public class CreateTenantTest extends TestBase{
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
 		Report.logInfo(rawBody);
+		
 		Header h = new Header();
 		h.addHeader("Content-Type", "text/plain");
-		h.addHeader("authToken", "AddingGarbage");
+		h.addHeader("authToken", nsinfo.getAuthToken());
+		h.addHeader("Origin", origin);
+		
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);

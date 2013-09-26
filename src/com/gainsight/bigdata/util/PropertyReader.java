@@ -14,10 +14,12 @@ public class PropertyReader {
 	public static String password;
 	public static String stoken;
 	public static String nsAppUrl;
+	public static String baseDir;
 	
 	static {
-		PropertyConfigurator.configure("./conf/log4j.properties");
-		File confFile = new File("./conf/application.properties");
+		baseDir = System.getProperty("basedir", ".");
+		PropertyConfigurator.configure(baseDir + "/conf/log4j.properties");
+		File confFile = new File(baseDir + "/conf/application.properties");
 		Properties p = new Properties();
 		try {
 			p.load(new FileReader(confFile));

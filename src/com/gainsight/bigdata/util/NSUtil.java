@@ -1,8 +1,5 @@
 package com.gainsight.bigdata.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.testng.Assert;
 
 import com.gainsight.bigdata.WebAction;
@@ -43,15 +40,13 @@ public class NSUtil {
 		String rawBody = gson.toJson(info);
 		System.out.println("POST Request: " + rawBody);
 
-		List<Header> h = new ArrayList<Header>();
 		Header hr = new Header();
-		hr.setName("Content-Type"); 
-		hr.setValue("application/json");
-		h.add(hr);
+		hr.addHeader("Content-Type", "application/json");
+		hr.addHeader("Origin", "https://c.na13.force.com");
 		
 		HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/sflogin",
-				rawBody, h);
-		Report.logInfo(result.toString());
+				rawBody, hr.getAllHeaders());
+		Report.logInfo("Sf Login Response: " + result.toString());
 		
 		NsResponseObj obj = gson.fromJson(result.getContent(), NsResponseObj.class);
 		Assert.assertTrue(obj.isResult(),

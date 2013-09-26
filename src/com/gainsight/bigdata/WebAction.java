@@ -64,7 +64,7 @@ public class WebAction {
 				// do something useful
 				InputStreamReader reader = new InputStreamReader(instream);
 				ReaderUtil.readContent(reader, buf);
-				System.out.println(buf);
+				Report.logInfo("Status Code: " + response.getStatusLine().getStatusCode());
 				obj.setStatusCode(response.getStatusLine().getStatusCode());
 				obj.setStatusLine(response.getStatusLine().toString());
 				obj.setContent(buf.toString());
