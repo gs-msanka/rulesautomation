@@ -1,5 +1,4 @@
-﻿package com.gainsight.sfdc.survey.pages;
-
+package com.gainsight.sfdc.survey.pages;
 
 import static org.testng.AssertJUnit.assertTrue;
 
