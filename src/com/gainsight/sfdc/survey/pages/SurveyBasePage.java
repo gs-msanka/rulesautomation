@@ -1,4 +1,4 @@
-package com.gainsight.sfdc.survey.pages;
+﻿package com.gainsight.sfdc.survey.pages;
 
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -17,7 +17,7 @@ public class SurveyBasePage extends BasePage {
 	private final String ANALYZE_SURVEY = "css=span.gridLinkAnalyzeSurvey";
 	private final String DELETE_SURVEY = "css=span.gridLinkDeleteSurvey";
 
-	private final String BACK = "//a[contains(text(),'� Back')]";
+	private final String BACK = "//a[contains(text(),'« Back')]";
 
 	private boolean ACCEPT_NEXT_ALERT = true;
 
