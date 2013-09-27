@@ -29,13 +29,13 @@ public class ChurnPage extends BasePage {
 		field.setTextField(CUSTOMER_NAME_FIELD, data.get("customerName"));
 		button.click(NAME_LOOPUP_IMG);
 		element.click("//a[text()='" + data.get("customerName") + "']");
-		stalePause();
-		String bookingDate=data.get("bookingDate");
-		if(!bookingDate.equals("nil"))
-		enterDate(BOOKING_DATE_FIELD,bookingDate );
-		String effectiveDate=data.get("effectiveDate");
-		if(!effectiveDate.equals("nil"))			
-		enterDate(START_DATE_FIELD, effectiveDate);
+		amtDateUtil.stalePause();
+		String bookingDate = data.get("bookingDate");
+		if (!bookingDate.equals("nil"))
+			amtDateUtil.enterDate(BOOKING_DATE_FIELD, bookingDate);
+		String effectiveDate = data.get("effectiveDate");
+		if (!effectiveDate.equals("nil"))
+			amtDateUtil.enterDate(START_DATE_FIELD, effectiveDate);
 		field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
 		String comments = data.get("comments");
 		if (!comments.equals("nil"))
@@ -49,7 +49,7 @@ public class ChurnPage extends BasePage {
 
 	public Customer360Page gotoCustomer360(String customerName) {
 		setFilter(CUSTOMER_FILTER, customerName);
-		stalePause();
+		amtDateUtil.stalePause();
 		item.click("//a[text()='" + customerName + "']");
 		return new Customer360Page();
 	}

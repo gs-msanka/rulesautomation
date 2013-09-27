@@ -25,7 +25,7 @@ public class CustomersPage extends CustomerBasePage {
 			String stage, String comments) {
 		item.click(NEW_BUTTON);
 		wait.waitTillElementPresent(ACCT_NAME_TEXT, MIN_TIME, MAX_TIME);
-		stalePause();
+		amtDateUtil.stalePause();
 		field.setTextField(ACCT_NAME_FIELD, customerName);
 		button.click(ACCT_LOOKUP_IMG);
 		item.click("//a[text()='" + customerName + "']");
@@ -54,9 +54,9 @@ public class CustomersPage extends CustomerBasePage {
 		int rowNo = getRowNumberOfCustm(customerName, customerName);
 		if (rowNo > 0) {
 			item.click(String.format(CUSTOMER_DEL_LINK, rowNo));
-			stalePause();
+			amtDateUtil.stalePause();
 			modal.accept();
-			stalePause();
+			amtDateUtil.stalePause();
 			try {
 				modal.accept();
 				Report.logInfo("Modal dialog present ,Customer can't be deleted");
@@ -90,7 +90,7 @@ public class CustomersPage extends CustomerBasePage {
 
 	private int getRowNumberOfCustm(String customerName, String values) {
 		setFilter(CUSTOMER_NAME_FIELD, customerName);
-		stalePause();
+		amtDateUtil.stalePause();
 		return table.getValueInListRow(CUSTOMER_TABLE, values);
 	}
 

@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.customer.pages;
 
+import java.util.HashMap;
+
 import org.openqa.selenium.By;
 
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
@@ -7,6 +9,10 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class Customer360Page extends BasePage {
 	private final String READY_INDICATOR = "//div[@class='dummysummaryDetail']";
+	private final String NEW_TRANSACTION_IMG="//img[@alt='Transaction']";
+	private final String TRANSACTION_FRAME="//iframe";
+	private final String BACK_LINK="//a[contains(text(),'Back')]";
+	private final String NEW_MENU="//div[text()='New ']";
 
 	public Customer360Page() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -51,6 +57,19 @@ public class Customer360Page extends BasePage {
 		String xpath = "//div[@class='transSummaryListDiv timelineLiListOpenClass']/span[contains(.,'"
 				+ stage + "') and contains(.,'" + endDate + "')]";
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
+	}
+	
+	public Customer360Page addNewBusinessTransaction(HashMap<String,String> nbData){
+		item.click(NEW_MENU);
+		item.click(NEW_TRANSACTION_IMG);
+		field.switchToFrame(TRANSACTION_FRAME);
+		transactionUtil.addNewBusiness(nbData);
+		field.switchToMainWindow();	
+		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
+		return this;
+	}
+	public void clickBack(){
+		item.click(BACK_LINK);		
 	}
 
 	private String stripNumber(String text) {

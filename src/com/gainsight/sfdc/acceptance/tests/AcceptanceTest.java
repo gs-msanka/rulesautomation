@@ -16,6 +16,7 @@ import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.customer.pages.CustomersPage;
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
+import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 
@@ -77,29 +78,62 @@ public class AcceptanceTest extends BaseTest {
 	}
 
 	@Test
-	public void testChurnTransaction() throws BiffException, IOException, ParseException {
+	public void testChurnTransaction() throws BiffException, IOException,
+			ParseException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AcceptanceTests.xls", "AT6");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("firstTRN"));
 		HashMap<String, String> chData = getMapFromData(testData
 				.get("churnTRN"));
-		String customerName=chData.get("customerName");
-		String values=customerName+"|"+chData.get("reason");
-		Customer360Page customer360Page=addCustomerAndTransaction(testData);
-		ChurnPage churnPage=customer360Page.clickOnChurnTab().addChurnTransaction(chData);
+		String customerName = chData.get("customerName");
+		String values = customerName + "|" + chData.get("reason");
+		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		ChurnPage churnPage = customer360Page.clickOnChurnTab()
+				.addChurnTransaction(chData);
 		Assert.assertTrue(churnPage.isTransactionPresent(customerName, values));
-		CustomerSummary customerSummary=churnPage.gotoCustomer360(customerName).getSummaryDetails();
+		CustomerSummary customerSummary = churnPage.gotoCustomer360(
+				customerName).getSummaryDetails();
 		Assert.assertEquals("", customerSummary.getASV().trim());
 		Assert.assertEquals("", customerSummary.getMRR().trim());
-		Assert.assertEquals(nbData.get("otr").trim(), customerSummary.getOTR().trim());
+		Assert.assertEquals(nbData.get("otr").trim(), customerSummary.getOTR()
+				.trim());
 		Assert.assertTrue(customerSummary.getLifetime().contains("0 Months"));
+	}
+
+	@Test
+	public void testOpportunityWithoutSettings() throws BiffException,
+			IOException, ParseException {
+		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+				TESTDATA_DIR + "AcceptanceTests.xls", "AT15");
+		HashMap<String, String> nbData = getMapFromData(testData
+				.get("NewBusinessTRN"));
+		HashMap<String, String> snbData = getMapFromData(testData
+				.get("SecondNewBusinessTRN"));
+		String oppName = testData.get("oppName");
+		CustomerSuccessPage csPage = basepage.clickOnOpportunitiesTab()
+				.selectRecentOpportunity(oppName).getCustomerSuccessSection();
+		csPage.verifyTextPresent(testData.get("AddCustomerMessage"));
+		csPage.clickOnAddCustomer();
+		csPage.verifyTextPresent(testData.get("NewBusinessMessage"));
+		csPage.clickOn360View().addNewBusinessTransaction(nbData).clickBack();
+		csPage.verifyTextPresent(testData.get("NoSettingsMessage"));
+		CustomerSummary cSummary = csPage.clickHere().addNewBusiness(snbData)
+				.clickOn360View().getSummaryDetails();
+		HashMap<String, String> expData = getMapFromData(testData
+				.get("ExpectedSummary"));
+		Assert.assertEquals(expData.get("asv").trim(), cSummary.getASV().trim());
+		Assert.assertEquals(expData.get("mrr"), cSummary.getMRR().trim());
+		Assert.assertEquals(expData.get("users"), cSummary.getUsers().trim());
+		Assert.assertEquals(expData.get("otr"), cSummary.getOTR().trim());
+		Assert.assertEquals(expData.get("arpu"),cSummary.getARPU().trim());
+		Assert.assertTrue(cSummary.getRD().contains(expData.get("endDate")));
 	}
 
 	@AfterClass
 	public void tearDown() {
 		if (loggedIn)
-		basepage.logout();
+			basepage.logout();
 	}
 
 	private CustomersPage addCustomer(String testData) {
