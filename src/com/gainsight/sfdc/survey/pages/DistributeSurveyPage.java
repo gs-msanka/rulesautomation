@@ -8,4 +8,8 @@ public class DistributeSurveyPage extends SurveyBasePage{
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
+	public SurveyBasePage addParticipants(){
+		
+		return new SurveyBasePage();
+	}
 }

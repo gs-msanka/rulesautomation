@@ -8,4 +8,8 @@ public class CloseSurveyPage extends SurveyBasePage{
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
+	public void clickOnYes(){
+		
+		
+	}
 }

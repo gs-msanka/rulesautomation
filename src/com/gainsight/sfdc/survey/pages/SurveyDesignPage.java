@@ -1,8 +1,6 @@
 package com.gainsight.sfdc.survey.pages;
 
-import com.gainsight.sfdc.pages.BasePage;
-
-public class SurveyDesignPage extends BasePage{
+public class SurveyDesignPage extends SurveyBasePage{
 	
 	private final String READY_INDICATOR="//a[contains(text(),'Design')]";
 	private final String NEW_SURVEY = "//input[@value='New']";
@@ -14,7 +12,7 @@ public class SurveyDesignPage extends BasePage{
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 	
-	public AddQuestionsPage clickOnNew() {
+	public AddQuestionsPage clickOnNewQuestion() {
 		item.click(NEW_SURVEY);
 		return new AddQuestionsPage();
 	}
@@ -25,10 +23,10 @@ public class SurveyDesignPage extends BasePage{
 		return new QuestionsReorderPage();
 	}
 	
-	public LoginRulesPage clickOnLoginRules(){
+	public LogicRulesPage clickOnLoginRules(){
 		
 		item.click(LOGIC_RULES_SURVEY);
-		return new LoginRulesPage();
+		return new LogicRulesPage();
 	}
 	
 	public AlertRulesPage clickOnAlertRules(){
