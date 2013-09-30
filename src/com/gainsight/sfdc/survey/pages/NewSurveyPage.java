@@ -1,10 +1,9 @@
 package com.gainsight.sfdc.survey.pages;
 
-import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyData;
 import com.gainsight.sfdc.util.FileUpload;
 
-public class NewSurveyPage extends BasePage {
+public class NewSurveyPage extends SurveyBasePage {
 
 	/***
 	 * Create Survey Page IDs
