@@ -2,9 +2,11 @@ package com.gainsight.sfdc.helpers;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.gainsight.pageobject.core.WebPage;
 
@@ -43,6 +45,11 @@ public class AmountsAndDatesUtil extends WebPage{
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
 		return sdf.format(date);
+	}
+	
+	public String formatNumber(String number){
+		NumberFormat numberFormatter= NumberFormat.getNumberInstance(Locale.ENGLISH);
+		return numberFormatter.format(Integer.parseInt(number));
 	}
 
 }

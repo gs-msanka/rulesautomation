@@ -16,6 +16,7 @@ import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.customer.pages.CustomersPage;
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
+import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
@@ -46,11 +47,11 @@ public class AcceptanceTest extends BaseTest {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AcceptanceTests.xls", "AT2");
 		HashMap<String, String> nbData = getMapFromData(testData
-				.get("firstTRN"));
+				.get("NewBusinessTRN"));
 		Customer360Page customer360Page = addCustomerAndTransaction(testData);
 		/* Renewal Transaction */
 		HashMap<String, String> rnlData = getMapFromData(testData
-				.get("renewalTRN"));
+				.get("RenewalTRN"));
 		String customerName = rnlData.get("customerName");
 		customer360Page = customer360Page.clickOnTransactionTab()
 				.clickOnTransactionsSubTab().addRenewalTransaction(rnlData)
@@ -83,9 +84,9 @@ public class AcceptanceTest extends BaseTest {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AcceptanceTests.xls", "AT6");
 		HashMap<String, String> nbData = getMapFromData(testData
-				.get("firstTRN"));
+				.get("NewBusinessTRN"));
 		HashMap<String, String> chData = getMapFromData(testData
-				.get("churnTRN"));
+				.get("ChurnTRN"));
 		String customerName = chData.get("customerName");
 		String values = customerName + "|" + chData.get("reason");
 		Customer360Page customer360Page = addCustomerAndTransaction(testData);
@@ -129,6 +130,32 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertEquals(expData.get("arpu"),cSummary.getARPU().trim());
 		Assert.assertTrue(cSummary.getRD().contains(expData.get("endDate")));
 	}
+	@Test
+	public void testC360Operations() throws BiffException,
+			IOException, ParseException {
+		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+				TESTDATA_DIR + "AcceptanceTests.xls", "AT4");
+		HashMap<String, String> nbData = getMapFromData(testData
+				.get("NewBusinessTRN"));
+		HashMap<String, String> churnData = getMapFromData(testData
+				.get("ChurnTRN"));
+		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		TimeLineItem lineItem=new TimeLineItem();
+		lineItem.setBookingDate(getCurrentDate());
+		lineItem.setType("New Business");
+		lineItem.setMRR(nbData.get("asv"));
+		lineItem.setUsers(nbData.get("users"));
+		lineItem.setOTR(nbData.get("otr"));		
+		Assert.assertTrue(customer360Page.isTransactionPresent(lineItem));
+		customer360Page=customer360Page.addChurnTransaction(churnData);
+		Assert.assertTrue(customer360Page.isTransactionPresent("Churn",getCurrentDate()));
+		CustomerSummary cSummary = customer360Page.getSummaryDetails();
+		Assert.assertEquals(cSummary.getASV().trim(), "");
+		Assert.assertEquals(cSummary.getMRR().trim(),"");
+		Assert.assertEquals(cSummary.getARPU().trim(),"");	
+		Assert.assertTrue(cSummary.getStatus().contains("Churn"), "verify customer status is churn");
+	}
+
 
 	@AfterClass
 	public void tearDown() {
@@ -153,7 +180,7 @@ public class AcceptanceTest extends BaseTest {
 	private Customer360Page addCustomerAndTransaction(
 			HashMap<String, String> testData) throws ParseException {
 		HashMap<String, String> nbData = getMapFromData(testData
-				.get("firstTRN"));
+				.get("NewBusinessTRN"));
 		String customerName = nbData.get("customerName");
 		String transactionValues = customerName + "|" + nbData.get("startDate")
 				+ "|" + nbData.get("endDate") + "|"
@@ -183,6 +210,6 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(nbData.get("endDate"), 1)));
 		return customer360Page;
-
 	}
+	
 }

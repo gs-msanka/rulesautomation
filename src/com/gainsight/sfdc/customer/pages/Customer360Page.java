@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.openqa.selenium.By;
 
 import com.gainsight.sfdc.customer.pojo.CustomerSummary;
+import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class Customer360Page extends BasePage {
@@ -42,6 +43,8 @@ public class Customer360Page extends BasePage {
 				.getTextFieldText("//span[@class='jbCustomerSnapOCDclass']"));
 		summary.setRD(field
 				.getTextFieldText("//span[@class='jbCustomerSnapNextRenclass']"));
+		summary.setStatus(field
+				.getTextFieldText("//span[@class='ptCustomerStatus']"));
 
 		return summary;
 	}
@@ -54,9 +57,13 @@ public class Customer360Page extends BasePage {
 	}
 
 	public boolean isTransactionPresent(String stage, String endDate) {
-		String xpath = "//div[@class='transSummaryListDiv timelineLiListOpenClass']/span[contains(.,'"
+		String xpath = "//div[contains(@class,'transSummaryListDiv') and contains(.,'"
 				+ stage + "') and contains(.,'" + endDate + "')]";
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
+	}
+		
+	public boolean isTransactionPresent(TimeLineItem transaction) {		
+		return isElementPresentBy(element.getElementBy(getXpathForTimeLineItem(transaction)), MAX_TIME);
 	}
 	
 	public Customer360Page addNewBusinessTransaction(HashMap<String,String> nbData){
@@ -68,12 +75,42 @@ public class Customer360Page extends BasePage {
 		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
 		return this;
 	}
+	public Customer360Page addChurnTransaction(HashMap<String,String> churnData){
+		item.click(NEW_MENU);
+		item.click(NEW_TRANSACTION_IMG);
+		field.switchToFrame(TRANSACTION_FRAME);
+		transactionUtil.addChurnTransaction(churnData);
+		field.switchToMainWindow();	
+		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
+		return this;
+	}
 	public void clickBack(){
 		item.click(BACK_LINK);		
 	}
 
 	private String stripNumber(String text) {
 		return text.replace("$", "").replace(",", "");
+	}
+	
+	private String getXpathForTimeLineItem(TimeLineItem transaction){
+		StringBuffer xpath=new StringBuffer();		
+		String sContains=" and contains(.,'";
+		String cContains="') ";
+		xpath.append("//div[contains(@class,'transSummaryListDiv') and contains(.,'"); 
+		xpath.append(transaction.getBookingDate()+cContains);
+		xpath.append(sContains+transaction.getType()+cContains);
+		if (transaction.getMRR() !=null)
+			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getMRR())+cContains);
+		if (transaction.getASV() !=null)
+			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getASV())+cContains);
+		if (transaction.getUsers() !=null)
+			xpath.append(sContains+transaction.getUsers()+cContains);
+		if (transaction.getOTR() !=null)
+			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getOTR())+cContains);
+		if (transaction.getTerm() !=null)
+			xpath.append(sContains+transaction.getTerm()+cContains);
+		xpath.append("]");
+		return xpath.toString();		
 	}
 
 }

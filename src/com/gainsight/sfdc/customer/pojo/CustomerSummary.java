@@ -13,6 +13,15 @@ public class CustomerSummary {
 	private String RD;
 	private String timeToRenew;
 	private String lifetime;
+    private String status;
+    
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getASV() {
 		return ASV;
