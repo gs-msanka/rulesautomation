@@ -3,9 +3,10 @@ package com.gainsight.sfdc.pages;
 import java.util.HashMap;
 
 import com.gainsight.sfdc.customer.pages.Customer360Page;
+import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 
 public class CustomerSuccessPage extends BasePage {
-	private final String IFRAME = "//iframe[@title='CustomerSuccessOpportunity']";
+	private final String IFRAME = "//iframe[contains(@title,'CustomerSuccess')]";
 	private final String TRANSACTIONS_TAB = "//a[@id='Transactions']";
 	private final String ADOPTION_TAB = "//a[@id='UserAdoption']";
 	private final String C360_LINK = "//a[@id='cust360']";
@@ -15,6 +16,7 @@ public class CustomerSuccessPage extends BasePage {
 	private final String CLICK_HERE_LINK="//a[text()='click here']";
 	private final String TRANSACTION_DIV="OppWidgetTransactions";
 	private final String WIDGET_TEXT="//body[contains(.,'%s')]";
+	private final String NEW_BUTTON="//a/span[text()='New']";
 
 	public CustomerSuccessPage() {
 		wait.waitTillElementPresent(IFRAME, MIN_TIME, MAX_TIME);
@@ -57,7 +59,7 @@ public class CustomerSuccessPage extends BasePage {
 	public CustomerSuccessPage addNewBusiness(HashMap<String, String> data) {
 		field.switchToFrame(IFRAME);
 		transactionUtil.addNewBusiness(data);
-		wait.waitTillElementDisplayed(EDIT_BUTTON, MIN_TIME, MAX_TIME);
+		wait.waitTillElementDisplayed(TRANSACTIONS_TAB, MIN_TIME, MAX_TIME);
 		field.switchToMainWindow();
 		return this;
 	}
@@ -92,6 +94,22 @@ public class CustomerSuccessPage extends BasePage {
 		wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
 		field.switchToMainWindow();
 		return this;		
+	}
+	
+	public CustomerSuccessPage clickTransactionNew(){
+		field.switchToFrame(IFRAME);
+		item.click(NEW_BUTTON);
+		wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
+		field.switchToMainWindow();
+		return this;		
+	}
+	
+	public boolean isLineItemPresent(TimeLineItem transaction){
+		field.switchToFrame(IFRAME);
+		boolean flag=transactionUtil.isLineItemPresent(transaction);
+		field.switchToMainWindow();
+		return flag;
+		
 	}
 
 }

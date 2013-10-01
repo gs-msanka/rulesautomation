@@ -127,12 +127,13 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertEquals(expData.get("mrr"), cSummary.getMRR().trim());
 		Assert.assertEquals(expData.get("users"), cSummary.getUsers().trim());
 		Assert.assertEquals(expData.get("otr"), cSummary.getOTR().trim());
-		Assert.assertEquals(expData.get("arpu"),cSummary.getARPU().trim());
+		Assert.assertEquals(expData.get("arpu"), cSummary.getARPU().trim());
 		Assert.assertTrue(cSummary.getRD().contains(expData.get("endDate")));
 	}
+
 	@Test
-	public void testC360Operations() throws BiffException,
-			IOException, ParseException {
+	public void testC360Operations() throws BiffException, IOException,
+			ParseException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AcceptanceTests.xls", "AT4");
 		HashMap<String, String> nbData = getMapFromData(testData
@@ -140,22 +141,49 @@ public class AcceptanceTest extends BaseTest {
 		HashMap<String, String> churnData = getMapFromData(testData
 				.get("ChurnTRN"));
 		Customer360Page customer360Page = addCustomerAndTransaction(testData);
-		TimeLineItem lineItem=new TimeLineItem();
+		TimeLineItem lineItem = new TimeLineItem();
 		lineItem.setBookingDate(getCurrentDate());
 		lineItem.setType("New Business");
 		lineItem.setMRR(nbData.get("asv"));
 		lineItem.setUsers(nbData.get("users"));
-		lineItem.setOTR(nbData.get("otr"));		
-		Assert.assertTrue(customer360Page.isTransactionPresent(lineItem));
-		customer360Page=customer360Page.addChurnTransaction(churnData);
-		Assert.assertTrue(customer360Page.isTransactionPresent("Churn",getCurrentDate()));
+		lineItem.setOTR(nbData.get("otr"));
+		Assert.assertTrue(customer360Page.isLineItemPresent(lineItem));
+		customer360Page = customer360Page.addChurnTransaction(churnData);
+		Assert.assertTrue(customer360Page.isTransactionPresent("Churn",
+				getCurrentDate()));
 		CustomerSummary cSummary = customer360Page.getSummaryDetails();
 		Assert.assertEquals(cSummary.getASV().trim(), "");
-		Assert.assertEquals(cSummary.getMRR().trim(),"");
-		Assert.assertEquals(cSummary.getARPU().trim(),"");	
-		Assert.assertTrue(cSummary.getStatus().contains("Churn"), "verify customer status is churn");
+		Assert.assertEquals(cSummary.getMRR().trim(), "");
+		Assert.assertEquals(cSummary.getARPU().trim(), "");
+		Assert.assertTrue(cSummary.getStatus().contains("Churn"),
+				"verify customer status is churn");
 	}
 
+	@Test
+	public void testAddCustomerFromAccPage() throws BiffException, IOException,
+			ParseException {
+		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+				TESTDATA_DIR + "AcceptanceTests.xls", "AT5");
+		String accName = testData.get("AccName");
+		HashMap<String, String> nbData = getMapFromData(testData
+				.get("NewBusinessTRN"));
+		CustomerSuccessPage csPage = basepage.clickOnAccountsTab()
+				.selectAccount(accName).getCustomerSuccessSection();
+		csPage.verifyTextPresent(testData.get("AddCustomerMessage"));
+		csPage.clickOnAddCustomer();
+		CustomersPage cPage=csPage.clickOnCustomersTab().clickOnCustomersSubTab();
+		Assert.assertTrue(cPage.isCustomerPresent(accName));
+		csPage=cPage.clickOnAccountsTab()
+		.selectAccount(accName).getCustomerSuccessSection();
+		csPage.selectTransactionSection().clickTransactionNew().addNewBusiness(nbData);		
+		TimeLineItem lineItem = new TimeLineItem();
+		lineItem.setBookingDate(getCurrentDate());
+		lineItem.setType("New Business");
+		lineItem.setMRR(nbData.get("mrr"));
+		lineItem.setUsers(nbData.get("users"));
+		lineItem.setOTR(nbData.get("otr"));
+		Assert.assertTrue(csPage.isLineItemPresent(lineItem));		
+	}
 
 	@AfterClass
 	public void tearDown() {
@@ -211,5 +239,5 @@ public class AcceptanceTest extends BaseTest {
 				getFormattedDate(nbData.get("endDate"), 1)));
 		return customer360Page;
 	}
-	
+
 }

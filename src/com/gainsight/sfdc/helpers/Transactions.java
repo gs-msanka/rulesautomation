@@ -3,6 +3,7 @@ package com.gainsight.sfdc.helpers;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.Constants;
 
 public class Transactions extends WebPage implements Constants {
@@ -90,6 +91,9 @@ public class Transactions extends WebPage implements Constants {
 				data.get("userCount"), data.get("otr"));
 		transactionFini(data.get("comments"));
 
+	}
+	public boolean isLineItemPresent(TimeLineItem transaction) {		
+		return isElementPresentBy(element.getElementBy(getXpathForTimeLineItem(transaction)), MAX_TIME);
 	}
 
 	private void addTransactionAmts(String mrr, String asv, String userCount,
@@ -198,6 +202,26 @@ public class Transactions extends WebPage implements Constants {
 			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
 		if (!effectiveDate.equals("nil"))
 			util.enterDate(START_DATE_FIELD, effectiveDate);
+	}
+	private String getXpathForTimeLineItem(TimeLineItem transaction){
+		StringBuffer xpath=new StringBuffer();		
+		String sContains=" and contains(.,'";
+		String cContains="') ";
+		xpath.append("//div[contains(@class,'transSummaryListDiv') and contains(.,'"); 
+		xpath.append(transaction.getBookingDate()+cContains);
+		xpath.append(sContains+transaction.getType()+cContains);
+		if (transaction.getMRR() !=null)
+			xpath.append(sContains+util.formatNumber(transaction.getMRR())+cContains);
+		if (transaction.getASV() !=null)
+			xpath.append(sContains+util.formatNumber(transaction.getASV())+cContains);
+		if (transaction.getUsers() !=null)
+			xpath.append(sContains+transaction.getUsers()+cContains);
+		if (transaction.getOTR() !=null)
+			xpath.append(sContains+util.formatNumber(transaction.getOTR())+cContains);
+		if (transaction.getTerm() !=null)
+			xpath.append(sContains+transaction.getTerm()+cContains);
+		xpath.append("]");
+		return xpath.toString();		
 	}
 
 }

@@ -62,8 +62,8 @@ public class Customer360Page extends BasePage {
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
 		
-	public boolean isTransactionPresent(TimeLineItem transaction) {		
-		return isElementPresentBy(element.getElementBy(getXpathForTimeLineItem(transaction)), MAX_TIME);
+	public boolean isLineItemPresent(TimeLineItem transaction) {		
+		return transactionUtil.isLineItemPresent(transaction);
 	}
 	
 	public Customer360Page addNewBusinessTransaction(HashMap<String,String> nbData){
@@ -90,27 +90,6 @@ public class Customer360Page extends BasePage {
 
 	private String stripNumber(String text) {
 		return text.replace("$", "").replace(",", "");
-	}
-	
-	private String getXpathForTimeLineItem(TimeLineItem transaction){
-		StringBuffer xpath=new StringBuffer();		
-		String sContains=" and contains(.,'";
-		String cContains="') ";
-		xpath.append("//div[contains(@class,'transSummaryListDiv') and contains(.,'"); 
-		xpath.append(transaction.getBookingDate()+cContains);
-		xpath.append(sContains+transaction.getType()+cContains);
-		if (transaction.getMRR() !=null)
-			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getMRR())+cContains);
-		if (transaction.getASV() !=null)
-			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getASV())+cContains);
-		if (transaction.getUsers() !=null)
-			xpath.append(sContains+transaction.getUsers()+cContains);
-		if (transaction.getOTR() !=null)
-			xpath.append(sContains+amtDateUtil.formatNumber(transaction.getOTR())+cContains);
-		if (transaction.getTerm() !=null)
-			xpath.append(sContains+transaction.getTerm()+cContains);
-		xpath.append("]");
-		return xpath.toString();		
-	}
+	}	
 
 }

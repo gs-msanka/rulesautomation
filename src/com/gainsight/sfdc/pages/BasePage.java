@@ -2,6 +2,7 @@ package com.gainsight.sfdc.pages;
 
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.accounts.pages.AccountsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
@@ -21,6 +22,7 @@ public class BasePage extends WebPage implements Constants {
 	private final String READY_INDICATOR = "//div[@id='userNavButton']";
     private final String OPPORTUNITIES_TAB="//img[@title='Opportunities']";
     private final String ALL_TABS="//img[@title='All Tabs']";
+    private final String ACCOUNTS_TAB="//a[@title='Accounts Tab']";
 	public Transactions transactionUtil=new Transactions();
 	public AmountsAndDatesUtil amtDateUtil=new AmountsAndDatesUtil();
 
@@ -81,6 +83,10 @@ public class BasePage extends WebPage implements Constants {
 		}
 		item.click(OPPORTUNITIES_TAB);		
 		return new OpportunitiesPage();
+	}
+	public AccountsPage clickOnAccountsTab() {
+		item.click(ACCOUNTS_TAB);		
+		return new AccountsPage();
 	}
 
 	public void setFilter(String filterFiledName, String value) {
