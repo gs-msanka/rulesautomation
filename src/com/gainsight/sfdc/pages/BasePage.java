@@ -3,6 +3,7 @@ package com.gainsight.sfdc.pages;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
+import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
@@ -91,6 +92,13 @@ public class BasePage extends WebPage implements Constants {
 	public AccountsPage clickOnAccountsTab() {
 		item.click(ACCOUNTS_TAB);		
 		return new AccountsPage();
+	}
+	
+	public AdministrationBasepage clickOnAdminTab()
+	{   driver.manage().window().maximize();
+		item.click("//a[contains(@title,'Administration')]");
+		return new AdministrationBasepage();
+		
 	}
 
 	public void setFilter(String filterFiledName, String value) {

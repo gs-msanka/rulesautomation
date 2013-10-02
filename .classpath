@@ -28,6 +28,5 @@
 	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/webservice-api.jar"/>
 	<classpathentry kind="lib" path="lib/wsc-23.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/test-driver"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
