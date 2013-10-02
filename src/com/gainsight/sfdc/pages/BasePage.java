@@ -50,6 +50,10 @@ public class BasePage extends WebPage implements Constants {
 
 		return this;
 	}
+	
+	public void comeOutOfIframe() {
+		element.switchToMainWindow();
+	}
 
 	// Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab() {

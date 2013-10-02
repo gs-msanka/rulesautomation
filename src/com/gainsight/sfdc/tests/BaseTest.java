@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
 
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
@@ -40,6 +41,11 @@ public class BaseTest {
 	@AfterSuite
 	public void fini(){
 		env.stop();
+	}
+	
+	@BeforeTest
+	public void beInMainWindow(){
+		basepage.comeOutOfIframe();		
 	}
 	
 	public String generatePath(String[] dirs){

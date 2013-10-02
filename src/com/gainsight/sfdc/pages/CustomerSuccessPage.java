@@ -17,6 +17,7 @@ public class CustomerSuccessPage extends BasePage {
 	private final String TRANSACTION_DIV="OppWidgetTransactions";
 	private final String WIDGET_TEXT="//body[contains(.,'%s')]";
 	private final String NEW_BUTTON="//a/span[text()='New']";
+	private final String OVERLAY_BLOCK="//div[@class='overlayBackground jbaraDummyOverLayFormForOpp']";
 
 	public CustomerSuccessPage() {
 		wait.waitTillElementPresent(IFRAME, MIN_TIME, MAX_TIME);
@@ -59,7 +60,7 @@ public class CustomerSuccessPage extends BasePage {
 	public CustomerSuccessPage addNewBusiness(HashMap<String, String> data) {
 		field.switchToFrame(IFRAME);
 		transactionUtil.addNewBusiness(data);
-		wait.waitTillElementDisplayed(TRANSACTIONS_TAB, MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotDisplayed(OVERLAY_BLOCK, MIN_TIME, MAX_TIME);
 		field.switchToMainWindow();
 		return this;
 	}
