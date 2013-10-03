@@ -57,14 +57,14 @@ public class DimensionBrowserTest extends TestBase {
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
+		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
 	
 	@Test
 	public void dimensionBrowserWithInvalidColName() throws Exception {
 		DimensionBrowserInfo info = new DimensionBrowserInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
-		info.setTenantId("Invalid Tenant ID");
+		info.setTenantId(nsinfo.getTenantID());
 		info.setCollectionName("Angies.InvalidCollectionName");
 		info.setColumn("Year");
 		
@@ -82,7 +82,7 @@ public class DimensionBrowserTest extends TestBase {
 	public void dimensionBrowserWithInvalidColumn() throws Exception {
 		DimensionBrowserInfo info = new DimensionBrowserInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
-		info.setTenantId("Invalid Tenant ID");
+		info.setTenantId(nsinfo.getTenantID());
 		info.setCollectionName("Angies.UsageData");
 		info.setColumn("InvalidColumn");
 		
@@ -100,7 +100,7 @@ public class DimensionBrowserTest extends TestBase {
 	public void dimensionBrowserWithInvalidAuthHeader() throws Exception {
 		DimensionBrowserInfo info = new DimensionBrowserInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
-		info.setTenantId("Invalid Tenant ID");
+		info.setTenantId(nsinfo.getTenantID());
 		info.setCollectionName("Angies.UsageData");
 		info.setColumn("InvalidColumn");
 		

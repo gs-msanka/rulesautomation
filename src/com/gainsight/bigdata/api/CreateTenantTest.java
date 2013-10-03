@@ -57,7 +57,7 @@ public class CreateTenantTest extends TestBase{
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertFalse(obj.isResult(), "Result Returned was false : " + result.getContent());
+		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
 	
 	@Test
@@ -73,7 +73,7 @@ public class CreateTenantTest extends TestBase{
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertFalse(obj.isResult(), "Result Returned was false : " + result.getContent());
+		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
 	
 	@Test
