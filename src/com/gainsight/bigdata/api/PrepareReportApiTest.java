@@ -116,7 +116,6 @@ public class PrepareReportApiTest extends TestBase {
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
 				"Json Output did not match the expected report. " +
 				"It happens in 2 conditions either the format is wrong or the values are wrong");
-		
 	}
 	
 	@Test

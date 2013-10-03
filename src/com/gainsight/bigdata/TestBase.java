@@ -14,7 +14,7 @@ public class TestBase {
 	public WebAction wa;
 	public Header h;
 	public String testDataBasePath = PropertyReader.baseDir + "/testdata/newstack";
-	public String origin = "https://test.na15.force.com";
+	public String origin = "https://c.ap1.visual.force.com";
 	
 	public void init() throws Exception {
 		sfinfo = SFDCUtil.fetchSFDCinfo();
@@ -24,6 +24,6 @@ public class TestBase {
 		h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", nsinfo.getAuthToken());
-		h.addHeader("Origin", "https://c.na13.force.com");
+		h.addHeader("Origin", "https://c.ap1.visual.force.com");
 	}
 }

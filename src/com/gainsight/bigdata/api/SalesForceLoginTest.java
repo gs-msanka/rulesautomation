@@ -50,10 +50,12 @@ public class SalesForceLoginTest extends TestBase {
 		HttpResponseObj result = wa.doPost(baseuri,	rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		
-		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
+		Assert.assertNotEquals(result.getStatusCode(), 200, "Response was 200 OK");
+		
+		/*NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("600"), "Wrong Error Code Returned : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("gs_1001"), "Wrong Error Code Returned : " + result);*/
 	}
 	
 	@Test
@@ -89,7 +91,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("601"), "Missing Org Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("gs_2001"), "Missing Org Id is not Recognized : " + result);
 	}
 	
 	@Test
@@ -107,7 +109,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("604"), "Missing User Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("gs_2004"), "Missing User Id is not Recognized : " + result);
 	}
 	
 	@Test
@@ -125,7 +127,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("603"), "Missing User Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("gs_2003"), "Missing User Id is not Recognized : " + result);
 	}
 	
 	@Test

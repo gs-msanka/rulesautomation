@@ -15,6 +15,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
 import com.gainsight.bigdata.pojo.Header;
 import com.gainsight.bigdata.pojo.HttpResponseObj;
+import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
 
@@ -80,13 +81,13 @@ public class CreateCollectionTest extends TestBase{
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
-		JsonNode collectionId = mapper.readTree(result.getContent());
-		Assert.assertNull(collectionId, "Collection ID should be Empty found.");
+		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
+		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
 	
 	@Test
 	public void createCollectionWithImproperInput() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createcollection/DummyTenantID/AutImproperInput";
+		String uri = baseuri + "/AutImproperInput";
 		
 		CollectionInfo cinfo = new CollectionInfo();
 		cinfo.setTenantName("DummyTenantName");
@@ -109,7 +110,7 @@ public class CreateCollectionTest extends TestBase{
 	
 	@Test
 	public void createCollectionWithInvalidAuthHeader() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createcollection/DummyTenantID/AutIvalidAuthHeader";
+		String uri = baseuri + "/AutIvalidAuthHeader";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);
@@ -127,7 +128,7 @@ public class CreateCollectionTest extends TestBase{
 	
 	@Test
 	public void createCollectionWithInvalidContentType() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createcollection/DummyTenantID/AutInvalidContentType";
+		String uri = baseuri+ "/AutInvalidContentType";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);

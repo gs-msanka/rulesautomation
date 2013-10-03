@@ -14,6 +14,7 @@ import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.Header;
 import com.gainsight.bigdata.pojo.HttpResponseObj;
+import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
@@ -60,14 +61,13 @@ public class GetCollectionTest extends TestBase {
 	
 	@Test
 	public void getCollectionForInvalidTenantId() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/getcollection/GarbageTenantID/ALL";
+		String uri = PropertyReader.nsAppUrl + "/getcollection/asdasdas/ALL";
+		Report.logInfo(uri);
 		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
 		Report.logInfo(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode node = mapper.readTree(result.getContent());
-		Report.logInfo(node.toString());
-//		Report.logInfo("" + node.get(0).toString().isEmpty());
-		Assert.assertNotNull(node.get(0), "No input Returned or even an error message returned");
+		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
+		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
 	
 	@Test

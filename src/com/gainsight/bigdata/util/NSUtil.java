@@ -42,7 +42,7 @@ public class NSUtil {
 
 		Header hr = new Header();
 		hr.addHeader("Content-Type", "application/json");
-		hr.addHeader("Origin", "https://c.na13.force.com");
+		hr.addHeader("Origin", "https://ap1.visual.force.com");
 		
 		HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/sflogin",
 				rawBody, hr.getAllHeaders());
