@@ -45,7 +45,6 @@ public class SalesForceLoginTest extends TestBase {
 	
 	@Test
 	public void sfLoginWithInvalidJson() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = "asdasd";
 		HttpResponseObj result = wa.doPost(baseuri,	rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
@@ -91,7 +90,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("gs_2001"), "Missing Org Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("GS_2001"), "Missing Org Id is not Recognized : " + result);
 	}
 	
 	@Test
@@ -109,7 +108,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("gs_2004"), "Missing User Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("GS_2004"), "Missing User Id is not Recognized : " + result);
 	}
 	
 	@Test
@@ -127,7 +126,7 @@ public class SalesForceLoginTest extends TestBase {
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result should return false : " + result);
 		
-		Assert.assertTrue(obj.getErrorCode().equals("gs_2003"), "Missing User Id is not Recognized : " + result);
+		Assert.assertTrue(obj.getErrorCode().equals("GS_2003"), "Missing User Id is not Recognized : " + result);
 	}
 	
 	@Test
