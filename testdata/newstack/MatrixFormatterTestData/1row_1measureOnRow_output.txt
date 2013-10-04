@@ -2,36 +2,42 @@
     "row_data": [
         {
             "name": [
-                "St.Louis",
-                "322740"
+                "New York",
+                "TotalReviews"
             ],
             "data": [
-                []
+                [
+                    "23373"
+                ]
             ]
         },
         {
             "name": [
                 "SFO",
-                "49222"
+                "TotalReviews"
             ],
             "data": [
-                []
+                [
+                    "49222"
+                ]
             ]
         },
         {
             "name": [
-                "New York",
-                "23373"
+                "St.Louis",
+                "TotalReviews"
             ],
             "data": [
-                []
+                [
+                    "322740"
+                ]
             ]
         }
     ],
     "ReportLayoutInfo": {
         "rowLabels": [
             "Market",
-            "TotalReviews"
+            "Measures"
         ],
         "cols": [
             {

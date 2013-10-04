@@ -2,16 +2,18 @@
     "row_data": [
         {
             "name": [
-                "343650"
+                "CurrentReviews"
             ],
             "data": [
-                []
+                [
+                    "343650"
+                ]
             ]
         }
     ],
     "ReportLayoutInfo": {
         "rowLabels": [
-            "CurrentReviews"
+            "Measures"
         ],
         "cols": [
             {

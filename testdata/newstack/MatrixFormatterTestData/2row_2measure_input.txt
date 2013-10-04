@@ -1,14 +1,20 @@
 {
-	"TenantId":"ea745732-af3d-4216-b68d-f10375348c66",
-	"ReportInfo":[
-		{
-			"SchemaName":"Angies.UsageData","limit":10,"Type":"adhoc",
+    "TenantId": "e51d3578-a68d-4ecf-add2-ee971c50634f",
+    "ReportInfo": [
+        {
+            "SchemaName": "Angies.UsageData",
+            "CollectionID": "20d2e26d-7123-490a-b863-6d478f3f5e24",
+			"limit":10,"Type":"adhoc",
 			"Dimensions":[
 				{"col":"Category","axis":"row"},
 				{"col":"Market","axis":"row"},
 				{"col":"CurrentReviews","axis":"measure","agg_func":"sum"},
 				{"col":"TotalReviews","axis":"measure","agg_func":"sum"}
-			]
+			],
+			"ReportReadLimit": 10,
+			"DimensionBrowserReadLimit": 0,
+			"SortField": "",
+			"SortOption": "asc"
 		}
 	],
 	"FormatOfReport":"matrix"

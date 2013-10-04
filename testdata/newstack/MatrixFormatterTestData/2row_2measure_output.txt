@@ -1,97 +1,143 @@
-[
-    {
-        "row_data": [
-            {
-                "name": [
-                    "Animal & House Sitting",
-                    "St.Louis"
-                ],
-                "data": [
-                    [
-                        "408",
-                        "448"
-                    ]
+{
+    "row_data": [
+        {
+            "name": [
+                "Air Duct Cleaning",
+                "New York"
+            ],
+            "data": [
+                [
+                    "20",
+                    "20"
                 ]
-            },
-            {
-                "name": [
-                    "Animal & House Sitting",
-                    "New York"
-                ],
-                "data": [
-                    [
-                        "57",
-                        "110"
-                    ]
+            ]
+        },
+        {
+            "name": [
+                "Air Duct Cleaning",
+                "SFO"
+            ],
+            "data": [
+                [
+                    "79",
+                    "79"
                 ]
-            },
-            {
-                "name": [
-                    "Dryer Vent Cleaning",
-                    "New York"
-                ],
-                "data": [
-                    [
-                        "0",
-                        "0"
-                    ]
+            ]
+        },
+        {
+            "name": [
+                "Air Duct Cleaning",
+                "St.Louis"
+            ],
+            "data": [
+                [
+                    "2544",
+                    "2800"
                 ]
-            },
-            {
-                "name": [
-                    "Wallpapering",
-                    "SFO"
-                ],
-                "data": [
-                    [
-                        "60",
-                        "60"
-                    ]
+            ]
+        },
+        {
+            "name": [
+                "Alarms",
+                "New York"
+            ],
+            "data": [
+                [
+                    "0",
+                    "0"
                 ]
-            },
-            {
-                "name": [
-                    "Roof Ice/Snow Removal",
-                    "SFO"
-                ],
-                "data": [
-                    [
-                        "12",
-                        "12"
-                    ]
+            ]
+        },
+        {
+            "name": [
+                "Alarms",
+                "SFO"
+            ],
+            "data": [
+                [
+                    "2",
+                    "2"
                 ]
-            },
+            ]
+        },
+        {
+            "name": [
+                "Alarms",
+                "St.Louis"
+            ],
+            "data": [
+                [
+                    "628",
+                    "692"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "Animal & House Sitting",
+                "New York"
+            ],
+            "data": [
+                [
+                    "57",
+                    "110"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "Animal & House Sitting",
+                "SFO"
+            ],
+            "data": [
+                [
+                    "106",
+                    "213"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "Animal & House Sitting",
+                "St.Louis"
+            ],
+            "data": [
+                [
+                    "408",
+                    "448"
+                ]
+            ]
+        },
+        {
+            "name": [
+                "Animal Boarding Kennels",
+                "New York"
+            ],
+            "data": [
+                [
+                    "19",
+                    "19"
+                ]
+            ]
+        }
+    ],
+    "ReportLayoutInfo": {
+        "rowLabels": [
+            "Category",
+            "Market"
+        ],
+        "cols": [
             {
-                "name": [
-                    "Roof Ice/Snow Removal",
-                    "New York"
-                ],
+                "name": [],
                 "data": [
-                    [
-                        "8",
-                        "8"
-                    ]
+                    []
                 ]
             }
         ],
-        "ReportLayoutInfo": {
-            "rowLabels": [
-                "Category",
-                "Market"
-            ],
-            "cols": [
-                {
-                    "name": [],
-                    "data": [
-                        []
-                    ]
-                }
-            ],
-            "measureLables": [
-                "CurrentReviews",
-                "TotalReviews"
-            ],
-            "pages": []
-        }
+        "measureLables": [
+            "CurrentReviews",
+            "TotalReviews"
+        ],
+        "pages": []
     }
-]
+}

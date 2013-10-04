@@ -2,11 +2,11 @@
     "row_data": [
         {
             "name": [
-                "St.Louis"
+                "New York"
             ],
             "data": [
                 [
-                    "293372"
+                    "16411"
                 ]
             ]
         },
@@ -22,11 +22,11 @@
         },
         {
             "name": [
-                "New York"
+                "St.Louis"
             ],
             "data": [
                 [
-                    "16411"
+                    "293372"
                 ]
             ]
         }
