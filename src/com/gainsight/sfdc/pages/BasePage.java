@@ -52,7 +52,7 @@ public class BasePage extends WebPage implements Constants {
 		return this;
 	}
 	
-	public void comeOutOfIframe() {
+	public void beInMainWindow() {
 		element.switchToMainWindow();
 	}
 

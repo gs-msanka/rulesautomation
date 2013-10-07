@@ -24,15 +24,15 @@ public class BaseTest {
     TestEnvironment env=new TestEnvironment();	
     public SOQLUtil soql =new SOQLUtil();
 	public BasePage basepage;
-	private final String DELTE_TRANS_HEADERS="Select id from TransHeader__c";
 	private final String DELTE_TRANS_LINES="Select id from TransLines__c";
+	private final String DELTE_TRANS_HEADERS="Select id from TransHeader__c";	
 	private final String DELTE_CUSTOMERS="Select id from CustomerInfo__c";
 	
 	@BeforeSuite
 	public void init(){		
 		env.start();
-		soql.deleteQuery(DELTE_TRANS_HEADERS);
 		soql.deleteQuery(DELTE_TRANS_LINES);
+		soql.deleteQuery(DELTE_TRANS_HEADERS);		
 		soql.deleteQuery(DELTE_CUSTOMERS);
 		env.launchBrower();
 		basepage = new BasePage();
@@ -45,7 +45,7 @@ public class BaseTest {
 	
 	@BeforeTest
 	public void beInMainWindow(){
-		basepage.comeOutOfIframe();		
+		basepage.beInMainWindow();		
 	}
 	
 	public String generatePath(String[] dirs){

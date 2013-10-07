@@ -75,10 +75,16 @@ public class TransactionsPage extends BasePage {
 
 	public TransactionsPage deleteTransaction(String customerName, String values) {
 		int rowNo = getRowNumberOfTran(customerName, values);
+		if (rowNo>=0){
 		element.click(String.format(TRANS_DLT_LINK, rowNo));
 		amtDateUtil.stalePause();
 		modal.accept();
 		return this;
+		}
+		else {
+			throw new RuntimeException("Transaction not found : with "+ customerName+" "+values);
+		}
+		
 	}
 
 	public TransactionsPage editChurnTransaction(String customerName,

@@ -90,6 +90,17 @@ public class Customer360Page extends BasePage {
 
 	private String stripNumber(String text) {
 		return text.replace("$", "").replace(",", "");
+	}
+
+	public Customer360Page addRenewalTransaction(HashMap<String,String> dbData) {
+		item.click(NEW_MENU);
+		item.click(NEW_TRANSACTION_IMG);
+		field.switchToFrame(TRANSACTION_FRAME);
+		transactionUtil.addDebookTransaction(dbData);
+		modal.accept();
+		field.switchToMainWindow();	
+		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
+		return this;
 	}	
 
 }
