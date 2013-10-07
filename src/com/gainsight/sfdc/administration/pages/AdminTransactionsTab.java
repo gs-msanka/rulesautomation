@@ -1,7 +1,10 @@
 package com.gainsight.sfdc.administration.pages;
 
 import java.util.List;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.pageobject.core.Report;
@@ -42,7 +45,7 @@ public class AdminTransactionsTab extends BasePage {
 	    sleep(7);        
 		return this;
 	}
-                 //Validation the table	
+                 //Validation 
 	public boolean IsBookingTypePresent(String values){
 		//WebElement table =	driver.findElement(By.xpath("TABLE_VALUES"));
 		WebElement table =item.getElement(TABLE_VALUES_BTYPES);
@@ -69,12 +72,15 @@ public class AdminTransactionsTab extends BasePage {
 			return result;
 		}
 		                    //Edit Booking Types
-	public AdminTransactionsTab editbookingType(String s, String Name, String displayorder,String shortname) {
-			                              
+	public AdminTransactionsTab editbookingType(String s, String Name, String displayorder,String shortname) {                       
 		Report.logInfo("*************In the Edit addBookingTypes method***********************");
 		wait.waitTillElementPresent("//td/span[text()='"+s+"']/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[text()='"+s+"']/parent::td/preceding-sibling::td/a[text()='Edit']");
-		fillFewFields(Name,displayorder,shortname);          
+		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm')]", MIN_TIME, MAX_TIME);
+		field.clearAndSetText(NAME,Name);
+		field.clearAndSetText(DISPLAY_ORDER,displayorder);
+		field.clearAndSetText(SHORT_NAME,shortname);
+		button.click(SAVE);
 		return this;
 	}
 	                         //Map Booking Types
@@ -93,9 +99,22 @@ public class AdminTransactionsTab extends BasePage {
 		Report.logInfo("*************In the Delete addBookingTypes method***********************");
 		wait.waitTillElementPresent("//td/span[text()='"+s+"']/parent::td/preceding-sibling::td/span/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[text()='"+s+"']/parent::td/preceding-sibling::td/span/a[text()='Delete']");
-		sleep(2);
-		modal.accept();
+		acceptAlert();
 		return this;
+	}
+	public void acceptAlert() {
+		int i=0;
+		while(i++< 5) {
+			try {
+				modal.accept();
+				break;
+			} catch(NoAlertPresentException e) {
+				Report.logInfo("No Alert found, sleep for 1 sec");
+				sleep(1);
+				continue;
+			}
+		}
+		
 	}
                         	//Create Transaction Line Items
 	public AdminTransactionsTab addTransactionLinesItems(String Name,String type) {

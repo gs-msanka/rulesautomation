@@ -26,8 +26,7 @@ public class AdminTest extends BaseTest {
 		basepage.login();
 	}
 
-	@Test
-	// Admin:-- Add Transaction Booking Types
+	@Test     // Admin:-- Add Transaction Booking Types
 	public void adminAddBookingTypes() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -35,7 +34,6 @@ public class AdminTest extends BaseTest {
 		addBookingTypes(testData.get("Booking Types1"));
 		addBookingTypes(testData.get("Booking Types2"));
 	}
-
 	private AdminTransactionsTab addBookingTypes(String testData) {
 		// String testData = "Abacus | Active | New Business";
 		HashMap<String, String> data = getMapFromData(testData);
@@ -50,9 +48,7 @@ public class AdminTest extends BaseTest {
 				"Verifying Bokking Type is added in the grid");
 		return adTrPage;
 	}
-
-	@Test//(dependsOnMethods="adminAddBookingTypes")
-	// Edit Transaction Booking Types
+	@Test (dependsOnMethods={"adminAddBookingTypes"})     // Edit Transaction Booking Types         
 	public void adminEditBookingTypes() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -72,9 +68,7 @@ public class AdminTest extends BaseTest {
 		adTrPage.editbookingType(dummy, Name, displayorder, shortname);
 		return adTrPage;
 	}
-
-	@Test//(dependsOnMethods="adminEditBookingTypes")
-	// MapBooking types
+	@Test(dependsOnMethods={"adminEditBookingTypes"})       // MapBooking types
 	public void mapBookingTypes() throws Throwable, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -85,15 +79,12 @@ public class AdminTest extends BaseTest {
 				.clickOnTransactionsTab();
 		adTrPage.mapBookingTypes(previous);
 	}
-
-	@Test//(dependsOnMethods="adminDeleteBookingTypes")
-	// Delete Transaction Booking Types
+	@Test (dependsOnMethods={"mapBookingTypes"})          // Delete Transaction Booking Types
 	public void adminDeleteBookingTypes() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
 		deleteBookingTypes(testData.get("DeleteBookingTypes"));
 	}
-
 	private AdminTransactionsTab deleteBookingTypes(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -102,9 +93,7 @@ public class AdminTest extends BaseTest {
 		adTrPage.deleteBookingTypes(previous);
 		return adTrPage;
 	}
-
-	@Test
-	// Add Transaction Line Item
+    @Test                    // Add Transaction Line Item
 	public void addTransactionLinesItems() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -122,9 +111,7 @@ public class AdminTest extends BaseTest {
 				"Verifying Transaction Line Item is added in the grid");
 		return adTrPage;
 	}
-
-	@Test
-	// Edit TransactionLineItem
+	@Test (dependsOnMethods={"addTransactionLinesItems"})        // Edit TransactionLineItem
 	public void editTransactionLineItem() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -137,9 +124,7 @@ public class AdminTest extends BaseTest {
 				.clickOnTransactionsTab();
 		adTrPage.editTransactionLineItem(previous, Name, type);
 	}
-
-	@Test
-	// deleteTransactionLineItem
+	@Test (dependsOnMethods={"editTransactionLineItem"})        // deleteTransactionLineItem
 	public void deleteTransactionLineItem() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -150,15 +135,12 @@ public class AdminTest extends BaseTest {
 				.clickOnTransactionsTab();
 		adTrPage.deleteTransactionLineItem(previous);
 	}
-
-	@Test
-	// Add Churn Reason
+	@Test                                                      // Add Churn Reason
 	public void adminAddChurnReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
 		addChurnReason(testData.get("AddChurnReason"));
 	}
-
 	private AdminTransactionsTab addChurnReason(String testData) {
 		// String testData = "Abacus | Active | New Business";
 		HashMap<String, String> data = getMapFromData(testData);
@@ -173,10 +155,8 @@ public class AdminTest extends BaseTest {
 				"Verifying Churn Reason added in the grid");
 		return adTrPage;
 	}
-
-	@Test
-	// Edit churn Reason
-	public void editChurnReason() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminAddChurnReason"})   	// Edit churn Reason
+	public void adminEditChurnReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
 		String s = testData.get("EditChurnReason");
@@ -189,10 +169,8 @@ public class AdminTest extends BaseTest {
 				.clickOnTransactionsTab();
 		adTrPage.editChurnReason(Previous, Name, displayorder, shortname);
 	}
-
-	@Test
-	// Delete Churn Reason
-	public void deleteChurnReason() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminEditChurnReason"})        // Delete Churn Reason
+	public void adminDeleteChurnReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
 		String s = testData.get("DeleteChurnReason");
@@ -202,9 +180,7 @@ public class AdminTest extends BaseTest {
 				.clickOnTransactionsTab();
 		adTrPage.deleteChurnReason(Previous);
 	}
-
-	@Test
-	// Create Alert Type
+	@Test                             	// Create Alert Type
 	public void adminCreateAlertType() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
@@ -212,7 +188,6 @@ public class AdminTest extends BaseTest {
 		createAlertType(testData.get("CreateAlertType1"));
 		createAlertType(testData.get("CreateAlertType2"));
 	}
-
 	private AdminRetentionTab createAlertType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Name = data.get("Name");
@@ -228,10 +203,8 @@ public class AdminTest extends BaseTest {
 				"Verifying Alert Type added in the grid");
 		return adRetPage;
 	}
-
-	@Test
-	// Edit Alert Type
-	public void editAlertType1() throws BiffException, IOException {
+	@Test   (dependsOnMethods={"adminCreateAlertType"})     // Edit Alert Type
+	public void adminEditAlertType1() throws BiffException, IOException {
 		Report.logInfo("calling edit");
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
@@ -247,10 +220,8 @@ public class AdminTest extends BaseTest {
 		adRetPage.editAlertType(Previous, Name, displayorder, shortname,
 				includeinWidget);
 	}
-
-	@Test
-	// delete Alert Type
-	public void deleteAlertType2() throws BiffException, IOException {
+	@Test  (dependsOnMethods={"adminEditAlertType1"})              // delete Alert Type
+	public void adminDeleteAlertType2() throws BiffException, IOException {
 		Report.logInfo("calling Delete");
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
@@ -261,16 +232,13 @@ public class AdminTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.deleteAlertType(Previous);
 	}
-
-	@Test
-	// Admin:--Admin Create Alert Severity
-	public void createAlertSeverity() throws BiffException, IOException {
+	@Test                                                	// Create Alert Severity
+	public void adminCreateAlertSeverity() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		createAlertSeverity(testData.get("CreateAlertSeverity"));
 		createAlertSeverity(testData.get("CreateAlertSeverity1"));
 	}
-
 	private AdminRetentionTab createAlertSeverity(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Name = data.get("Name");
@@ -286,15 +254,12 @@ public class AdminTest extends BaseTest {
 				"Verifying Alert Severity added in the grid");
 		return adRetPage;
 	}
-
-	@Test
-	// Edit Alert Severity
-	public void editAlertSeverity() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminCreateAlertSeverity"})        // Edit Alert Severity
+	public void adminEditAlertSeverity() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		editAlertSeverity(testData.get("EditAlertSeverity"));
 	}
-
 	private AdminRetentionTab editAlertSeverity(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Previous = data.get("Previous");
@@ -308,10 +273,8 @@ public class AdminTest extends BaseTest {
 				includeinWidget);
 		return adRetPage;
 	}
-
-	@Test
-	// Delete Alert Severity
-	public void deleteAlertSeverity() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminEditAlertSeverity"})          // Delete Alert Severity
+	public void adminDeleteAlertSeverity() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		String s = testData.get("DeleteAlertSeverity");
@@ -321,16 +284,13 @@ public class AdminTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.deleteAlertSeverity(Previous);
 	}
-
-	@Test
-	// Admin:--Admin Create Alert Reason
-	public void createAlertReason() throws BiffException, IOException {
+	@Test                     	                           // Create Alert Reason
+	public void adminCreateAlertReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		createAlertReason(testData.get("CreateAlertReason"));
 		createAlertReason(testData.get("CreateAlertReason1"));
 	}
-
 	private AdminRetentionTab createAlertReason(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Name = data.get("Name");
@@ -344,15 +304,12 @@ public class AdminTest extends BaseTest {
 				"Verifying Alert Reason added in the grid");
 		return adRetPage;
 	}
-
-	@Test
-	// Edit Alert Reason
-	public void editAlertReason() throws BiffException, IOException {
+	@Test  (dependsOnMethods={"adminCreateAlertReason"})       // Edit Alert Reason
+	public void adminEditAlertReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		editAlertReason(testData.get("EditAlertReason"));
 	}
-
 	private AdminRetentionTab editAlertReason(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Previous = data.get("Previous");
@@ -364,10 +321,8 @@ public class AdminTest extends BaseTest {
 		adRetPage.editAlertReason(Previous, Name, displayorder, shortname);
 		return adRetPage;
 	}
-
-	@Test
-	// Delete Alert Reason
-	public void deleteAlertReason() throws BiffException, IOException {
+	@Test    (dependsOnMethods={"adminEditAlertReason"})        	//Delete Alert Reason
+	public void adminDeleteAlertReason() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		String s = testData.get("DeleteAlertReason");
@@ -377,16 +332,13 @@ public class AdminTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.deleteAlertReason(Previous);
 	}
-
-	@Test
-	// Admin:--Admin Create Alert Status
-	public void createAlertStatus() throws BiffException, IOException {
+	@Test            // Create Alert Status
+	public void adminCreateAlertStatus() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		createAlertStatus(testData.get("CreateAlertStatus"));
 		createAlertStatus(testData.get("CreateAlertStatus1"));
 	}
-
 	private AdminRetentionTab createAlertStatus(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Name = data.get("Name");
@@ -400,15 +352,12 @@ public class AdminTest extends BaseTest {
 				"Verifying Alert Status added in the grid");
 		return adRetPage;
 	}
-
-	@Test
-	// Edit Alert Status
-	public void editAlertStatus() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminCreateAlertStatus"})       	// Edit Alert Status
+	public void adminEditAlertStatus() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		editAlertStatus(testData.get("editAlertStatus"));
 	}
-
 	private AdminRetentionTab editAlertStatus(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Previous = data.get("Previous");
@@ -418,13 +367,10 @@ public class AdminTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab()
 				.clickOnRetentionSubTab();
 		adRetPage.editAlertStatus(Previous, Name, displayorder, shortname);
-
 		return adRetPage;
 	}
-
-	@Test
-	// Delete Alert Status
-	public void deleteAlertStatus() throws BiffException, IOException {
+	@Test  (dependsOnMethods={"adminEditAlertStatus"})        // Delete Alert Status
+	public void adminDeleteAlertStatus() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		String s = testData.get("deleteAlertStatus");
@@ -434,16 +380,13 @@ public class AdminTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.deleteAlertStatus(Previous);
 	}
-
-	@Test
-	// Create Event Type
-	public void createEventType() throws BiffException, IOException {
+	@Test       // Create Event Type
+	public void adminCreateEventType() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
 		createEventType(testData.get("CreateEventType"));
 		createEventType(testData.get("CreateEventType1"));
 	}
-
 	private AdminRetentionTab createEventType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Name = data.get("Name");
@@ -457,15 +400,12 @@ public class AdminTest extends BaseTest {
 				"Verify that newly added customer present in the grid");
 		return adRetPage;
 	}
-
-	@Test
-	// Edit Event Type
-	public void editEventType() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminCreateEventType"})         	// Edit Event Type
+	public void adminEditEventType() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
 		editEventType(testData.get("editEventType"));
 	}
-
 	private AdminRetentionTab editEventType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String Previous = data.get("Previous");
@@ -477,10 +417,8 @@ public class AdminTest extends BaseTest {
 		adRetPage.editEventType(Previous, Name, displayorder, shortname);
 		return adRetPage;
 	}
-
-	@Test
-	// Delete Event Type
-	public void deleteEventType() throws BiffException, IOException {
+	@Test (dependsOnMethods={"adminEditEventType"})         // Delete Event Type
+	public void adminDeleteEventType() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
 		String s1 = testData.get("deleteEventType");
@@ -490,9 +428,7 @@ public class AdminTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.deleteEventType(Previous);
 	}
-
-	@Test
-	// Configuration
+	@Test          	// Configuration
 	public void taskConfiguration() {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab()
 				.clickOnRetentionSubTab();
