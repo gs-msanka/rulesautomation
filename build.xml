@@ -3,8 +3,7 @@
 	<property name="src.dir" value="src"/>
 	<property name="targets.dir" value="target"/>	
 	<property name="reports.dir" value="reports"/>	
-	<property name="tests" value="com.gs.selenium.tests.surveys.SurveyCreation.testDesginNPSSurvey"/>
-	
+		
 	<path id="libs">
 		<fileset dir="${basedir}/lib">
 					<include name="*.jar"/>
@@ -41,9 +40,9 @@
 	<target  name="runtests" description="Running tests">
 			<echo>Running Tests...</echo>
 			<taskdef resource="testngtasks" classpathref="libs"/>
-			<testng mode="mixed" outputDir="${reports.dir}" haltonfailure="false" useDefaultListeners="true"  classpathref="libs">
-				<xmlfileset dir="." includes="testng.xml"/>
-				
+			<testng mode="mixed" outputDir="${reports.dir}" haltonfailure="false" useDefaultListeners="false"
+	            listeners="org.uncommons.reportng.HTMLReporter,org.uncommons.reportng.JUnitXMLReporter"  classpathref="libs">
+				<xmlfileset dir="." includes="testng.xml"/>				
 			</testng>
 		</target>
 </project>
