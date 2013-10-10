@@ -76,8 +76,7 @@ public class UpsertReportTest extends TestBase {
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
-		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertTrue(obj.getErrorCode().equals("600"), "Wrong Status Code being Sent");
+		Assert.assertNotEquals(result.getStatusCode(), 200, "Response was 200 OK");
 	}
 	
 	@Test
@@ -87,8 +86,7 @@ public class UpsertReportTest extends TestBase {
 		Report.logInfo(rawBody);
 		HttpResponseObj result = wa.doPost(baseuri, rawBody, h.getAllHeaders());
 		Report.logInfo(result.toString());
-		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertTrue(obj.getErrorCode().equals("601"), "Wrong Status Code being Sent");
+		Assert.assertNotEquals(result.getStatusCode(), 200, "Response was 200 OK");
 	}
 	
 	@Test
