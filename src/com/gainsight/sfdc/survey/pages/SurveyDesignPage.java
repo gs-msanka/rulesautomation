@@ -3,7 +3,7 @@ package com.gainsight.sfdc.survey.pages;
 public class SurveyDesignPage extends SurveyBasePage{
 	
 	private final String READY_INDICATOR="//a[contains(text(),'Design')]";
-	private final String NEW_SURVEY = "//input[@value='New']";
+	private final String NEW_QUESTION = "//input[@value='New']";
 	private final String REORDER_SURVEY = "//input[@value='New']";
 	private final String LOGIC_RULES_SURVEY = "//input[@value='New']";
 	private final String ALERT_RULES_SURVEY = "//input[@value='New']";
@@ -13,7 +13,7 @@ public class SurveyDesignPage extends SurveyBasePage{
 	}
 	
 	public AddQuestionsPage clickOnNewQuestion() {
-		item.click(NEW_SURVEY);
+		item.click(NEW_QUESTION);
 		return new AddQuestionsPage();
 	}
 	
