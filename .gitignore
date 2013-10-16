@@ -1,7 +1,9 @@
-/bin/**/*
-/reports/**/*
+/bin
+/test-output
+/result
 .settings/org.eclipse.jdt.core.prefs
 selenium.properties
 /Automation.log
 /reports
 /testdata/sfdc/acceptancetests/.~lock.AcceptanceTests.xls#
+

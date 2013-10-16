@@ -1,25 +1,36 @@
 {
-	"TenantId":"ea745732-af3d-4216-b68d-f10375348c66",
-	"ReportInfo":[
-		{
-			"reportName":"AutUpsertReport1","Type":"adhoc","NonEmpty":"true","ReportId":"",
-			"SchemaName":"Angies.UsageData","limit":"500","sortby":"MonthNum","sort":"1",
-			"Dimensions":[
-				{"col":"Category","axis":"row"},
-				{"col":"Market","axis":"row"},
-				{"col":"YearNum","axis":"page","filter_value":"2013"},
-				{"col":"MonthNum","axis":"column"},
-				{"col":"CurrentReviews","axis":"measure","agg_func":"sum"},
-				{"col":"TotalReviews","axis":"measure","agg_func":"sum"}
-			],
-			"Calc_Measure":[
-				{"calc_type":"case","calc_measure_nm":"SumEligibleReviews",
-					"operation":[
-						{"col":"EligibilityType","colcond":"Eligible","val1":"TotalReviews","val2":0,"cond_op":"eq","agg_func":"sum"}
-					]
-				}
-			]
-		}
-	]
+	"TenantId": "e51d3578-a68d-4ecf-add2-ee971c50634f",
+	"ReportInfo": [
+        {
+            "SchemaName": "Angies.UsageData",
+            "CollectionID": "20d2e26d-7123-490a-b863-6d478f3f5e24",
+            "limit": 500,
+            "Type": "adhoc",
+            "Dimensions": [
+                {
+                    "col": "Category",
+                    "axis": "row"
+                },
+                {
+                    "col": "Market",
+                    "axis": "row"
+                },
+                {
+                    "col": "Year",
+                    "axis": "column"
+                },
+                {
+                    "col": "WebRevenue",
+                    "axis": "measure",
+                    "agg_func": "sum"
+                }
+            ],
+            "ReportReadLimit": 0,
+            "DimensionBrowserReadLimit": 0,
+            "SortField": "",
+            "SortOption": "asc",
+            "reportName": "AutUpsertReport1"
+        }
+    ]
 }
 
