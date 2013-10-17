@@ -11,7 +11,8 @@
 		<pathelement path="${basedir}/${classes.dir}"/>
 	</path>
 	<target name="run">
-		<antcall target="init"/>		
+		<antcall target="init"/>	
+		<antcall target="compile"/>
 		<antcall target="runtests"/>
 	</target>
 	<!-- Delete old data and create new directories -->
@@ -22,11 +23,11 @@
 		<delete dir="${targets.dir}"/>
 		<mkdir dir="${targets.dir}"/>
 	</target>
-	<!-- Complies the java files
+	
 	<target name="compile">
 		<echo>Compiling...</echo>
 		<javac debug="false" srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" classpathref="libs"/>
-	</target> -->
+	</target>
 	<!-- Runs the file and generates Reportng report
 	<target name="runtests">
 		
@@ -42,7 +43,7 @@
 			<taskdef resource="testngtasks" classpathref="libs"/>
 			<testng mode="mixed" outputDir="${reports.dir}" haltonfailure="false" useDefaultListeners="false"
 	            listeners="org.uncommons.reportng.HTMLReporter,org.uncommons.reportng.JUnitXMLReporter"  classpathref="libs">
-				<xmlfileset dir="." includes="testng.xml"/>				
+				<xmlfileset dir="." includes="${testngfile}"/>				
 			</testng>
 		</target>
 </project>
