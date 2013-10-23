@@ -32,10 +32,10 @@ public class BaseTest {
 	public void init() throws Exception {
 		env.start();
 		try {
-			String deleteFlag = env.getProperty("deleteRecords");
-			String namesapce = env.getProperty("managedPackage");
-			String setAsDefaultApp = env.getProperty("setAsDefaultApp");
-			String loadDefaultData = env.getProperty("loadDefaultData");
+			String deleteFlag = env.getProperty("sfdc.deleteRecords");
+			String namesapce = env.getProperty("sfdc.managedPackage");
+			String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
+			String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
 			if (deleteFlag != null && deleteFlag.equals("true")) {
 				if (namesapce != null && namesapce.equals("true"))
 					soql.deleteQuery(DELETE_RECORDS_NAMESPACE);

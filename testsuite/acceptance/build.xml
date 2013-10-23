@@ -1,12 +1,14 @@
 <project name="Acceptance Test" default="" basedir="../../.">
-	<property name="buildOutput" location="${basedir}/bin" />
-	<property name="resultOutput" location="${basedir}/result" />
+	<property name="build.dir" location="${basedir}/bin" />
+	<property name="result.dir" location="${basedir}/result" />
+	<property name="screenshots.dir" value="${basedir}/screenshots" />
+	<property name="failures.dir" value="${screenshots.dir}/failures" />
 	<property environment="env"/>
 	
 	<!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="testng.xml"/>
 
-	<target name="runTest" depends="compile, bat"/>
+	<target name="runTest" depends="init, editPropertyFile, compile, bat"/>
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
@@ -20,7 +22,7 @@
 		<fileset dir="lib">
 			<include name="**/*.jar"/>
 		</fileset>
-		<pathelement location="${buildOutput}"/>
+		<pathelement location="${build.dir}"/>
 	</path>
 
 	<!-- TestNG Ant Task Def -->
@@ -29,7 +31,7 @@
 	<!-- Run Tests by specifying testNG file name -->
 	<target name="bat" depends="">
 		<echo message="Starting Acceptance Tests" />	
-		<testng haltonfailure="no" classpathref="runpath" outputDir="${resultOutput}">
+		<testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}">
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
 
@@ -37,36 +39,39 @@
 		</testng>
 	</target>
 
-	<target name="compile" depends="init_dir">
+	<target name="compile" depends="">
 		<echo message="compiling tests" />
-		<javac srcdir="src" destdir="${buildOutput}" classpathref="cpath" nowarn="on" debug="on" 
-				source="1.6" target="1.6" debuglevel="lines,vars,source">
+		<javac srcdir="src" destdir="${build.dir}" classpathref="cpath" nowarn="on" debug="on" debuglevel="lines,vars,source">
 		</javac>
 	</target>
 
 	<!-- Edit Property file by replacing default values with run-time values -->
-	<!--  <target name="editPropertyFile">
-		<propertyfile file="${basedir}/config/application.properties">
-			<entry  key="addressEM" value="${addressEM}"/>
-			<entry  key="loginPassword" value="${loginPassword}"/>
-			<entry  key="addressEC" value="${addressEC}"/>
-			<entry  key="addressSC" value="${addressSC}"/>
-			<entry  key="addressScanAgents" value="${addressScanAgents}"/>
-			<entry  key="gridWorkerIp" value="${gridWorkerIp}"/>
-			<entry  key="endPointComputerName" value="${endPointComputerName}"/>
-			<entry  key="endPointInstallPath" value="${endPointInstallPath}"/>
+	<target name="editPropertyFile">
+		<propertyfile file="${basedir}/conf/application.properties">
+			<entry  key="sfdc.username" value="${sfdc.username}"/>
+			<entry  key="sfdc.password" value="${sfdc.password}"/>
+			<entry  key="sfdc.stoken" value="${sfdc.stoken}"/>
+			<entry  key="sfdc.appurl" value="${sfdc.appurl}"/>
+			<entry  key="sfdc.deleteRecords" value="${sfdc.deleteRecords}"/>
+			<entry  key="sfdc.managedPackage" value="${sfdc.managedPackage}"/>
+			<entry  key="sfdc.setAsDefaultApp" value="${sfdc.setAsDefaultApp}"/>
+			<entry  key="sfdc.loadDefaultData" value="${sfdc.loadDefaultData}"/>
 		</propertyfile>
-	</target> -->
+	</target>
 
-	<target name="init_dir" depends="clean">
+	<target name="init" depends="clean">
 		<echo>Initializing Acceptance Test...</echo>
-		<mkdir dir="${buildOutput}" />
+		<mkdir dir="${build.dir}" />
 		<mkdir dir="${resultOutput}" />
+		<mkdir dir="${screenshots.dir}" />
+		<mkdir dir="${failures.dir}" />
 	</target>
 
 	<target name="clean">
 		<echo>Clean up....</echo>
-		<delete dir="${buildOutput}" failonerror="false" />
+		<delete dir="${build.dir}" failonerror="false" />
 		<delete dir="${resultOutput}" failonerror="false" />
+		<delete dir="${screenshots.dir}" failonerror="false" />
+		<delete dir="${failures.dir}" failonerror="false" />
 	</target>
 </project>
