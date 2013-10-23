@@ -9,6 +9,7 @@ import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
@@ -21,6 +22,7 @@ import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 
+@Listeners({ com.gainsight.utils.GSTestListener.class })
 public class AcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
 	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
@@ -270,7 +272,7 @@ public class AcceptanceTest extends BaseTest {
 		lineItem.setOTR(nbData.get("otr"));
 		Assert.assertTrue(csPage.isLineItemPresent(lineItem));
 	}
-
+	
 	@AfterClass
 	public void tearDown() {
 		if (loggedIn)

@@ -73,7 +73,7 @@ public class BaseTest {
 	public String generatePath(String[] dirs) {
 		String path = "";
 		for (String dir : dirs) {
-			path = path + dir + File.pathSeparator;
+			path = path + dir + File.separator;
 		}
 		return path;
 	}
