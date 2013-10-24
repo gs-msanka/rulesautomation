@@ -62,7 +62,7 @@
 	<target name="init" depends="clean">
 		<echo>Initializing Acceptance Test...</echo>
 		<mkdir dir="${build.dir}" />
-		<mkdir dir="${resultOutput}" />
+		<mkdir dir="${result.dir}" />
 		<mkdir dir="${screenshots.dir}" />
 		<mkdir dir="${failures.dir}" />
 	</target>
@@ -70,7 +70,7 @@
 	<target name="clean">
 		<echo>Clean up....</echo>
 		<delete dir="${build.dir}" failonerror="false" />
-		<delete dir="${resultOutput}" failonerror="false" />
+		<delete dir="${result.dir}" failonerror="false" />
 		<delete dir="${screenshots.dir}" failonerror="false" />
 		<delete dir="${failures.dir}" failonerror="false" />
 	</target>
