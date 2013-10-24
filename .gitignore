@@ -6,4 +6,4 @@ selenium.properties
 /Automation.log
 /reports
 /testdata/sfdc/acceptancetests/.~lock.AcceptanceTests.xls#
-
+/screenshots
