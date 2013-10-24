@@ -21,8 +21,10 @@ import com.gainsight.utils.TestDataHolder;
 public class BaseTest {
 	protected TestDataHolder testDataLoader = new TestDataHolder();
 	String[] dirs = { "testdata", "sfdc" };
-	public final String TEST_DATA_PATH_PREFIX = generatePath(dirs);
+	
 	TestEnvironment env = new TestEnvironment();
+	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/" + generatePath(dirs);
+	
 	public SOQLUtil soql = new SOQLUtil();
 	public BasePage basepage;
 	private final String DELETE_RECORDS = "Select id from TransHeader__c | Select id from CustomerInfo__c";
