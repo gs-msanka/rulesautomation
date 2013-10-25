@@ -12,6 +12,7 @@ import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.helpers.Transactions;
+import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
@@ -73,6 +74,11 @@ public class BasePage extends WebPage implements Constants {
 		item.click("//a[contains(@title,'Adoption Tab')]");
 		return new AdoptionBasePage();
 	}
+
+    public RetentionBasePage clickOnRetentionTab() {
+        item.click("//a[contains(@tile, 'Retention Tab')]");
+        return new RetentionBasePage();
+    }
 
 	public SurveyBasePage clickOnSurveyTab() {
 		item.click("//a[contains(text(),'Survey')]");
