@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <suite name="Automation Project">
-	<test name="Acceptance Tests">
+
+	<listeners>
+		<listener class-name="com.gainsight.bigdata.AutTestListener" />
+	</listeners>
+	
+	<test verbose="3" name="Acceptance Tests" preserve-order="true">
 		<classes>
 			<!-- Srinivas Test -->
 			<class name="com.gainsight.sfdc.acceptance.tests.AcceptanceTest">
