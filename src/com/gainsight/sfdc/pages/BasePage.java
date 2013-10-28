@@ -104,7 +104,6 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public AdministrationBasepage clickOnAdminTab() {
-		driver.manage().window().maximize();
 		item.click("//a[contains(@title,'Administration')]");
 		return new AdministrationBasepage();
 	}
