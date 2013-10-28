@@ -33,6 +33,7 @@ public class BaseTest {
 
 	@BeforeSuite
 	public void init() throws Exception {
+		Report.logInfo("Initializing Environment");
 		env.start();
 		try {
 			String deleteFlag = env.getProperty("sfdc.deleteRecords");
@@ -47,6 +48,8 @@ public class BaseTest {
 			}
 			env.launchBrower();
 			basepage = new BasePage();
+			Report.logInfo("Initializing Base Page : " + basepage);
+			
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();
 				basepage.setDefaultApplication("JBara");
@@ -60,6 +63,7 @@ public class BaseTest {
 		} catch (Exception e) {
 			env.stop();
 			Report.logInfo(e.getLocalizedMessage());
+			e.printStackTrace();
 			throw e;
 		}
 	}
