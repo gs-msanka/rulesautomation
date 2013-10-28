@@ -7,14 +7,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
-import com.gainsight.bigdata.WebAction;
-import com.gainsight.bigdata.pojo.Header;
-import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.SFDCInfo;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.bigdata.util.SFDCUtil;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.Header;
+import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.webaction.WebAction;
 
 public class SalesForceLoginTest extends TestBase {
 

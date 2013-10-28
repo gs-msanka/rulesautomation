@@ -15,13 +15,13 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
 import com.gainsight.bigdata.pojo.DimensionBrowserInfo;
-import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
-import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.HttpResponseObj;
 
 public class BurpSuiteTest extends TestBase {
 	

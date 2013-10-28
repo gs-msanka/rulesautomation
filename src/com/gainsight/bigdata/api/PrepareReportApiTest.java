@@ -13,9 +13,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
-import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.HttpResponseObj;
 
 public class PrepareReportApiTest extends TestBase {
 

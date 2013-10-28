@@ -2,13 +2,13 @@ package com.gainsight.bigdata.util;
 
 import org.testng.Assert;
 
-import com.gainsight.bigdata.WebAction;
-import com.gainsight.bigdata.pojo.Header;
-import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.pojo.NSInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.SFDCInfo;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.Header;
+import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.webaction.WebAction;
 import com.google.gson.Gson;
 
 public class NSUtil {
