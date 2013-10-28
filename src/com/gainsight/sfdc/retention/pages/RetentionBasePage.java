@@ -36,7 +36,7 @@ public class RetentionBasePage extends BasePage{
 	 * Clicks on playbooks sub tab under retention tab.
 	 * @return
 	 */
-	public PlayBooksPage clickOnAnalyticsTab() {
+	public PlayBooksPage clickOnPlaybooksTab() {
 		item.click(PLAYBOOKS_TAB);
 		return new PlayBooksPage();
 	}
