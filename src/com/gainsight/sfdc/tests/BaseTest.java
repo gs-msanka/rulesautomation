@@ -13,6 +13,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.utils.SOQLUtil;
@@ -58,6 +59,7 @@ public class BaseTest {
 			}
 		} catch (Exception e) {
 			env.stop();
+			Report.logInfo(e.getLocalizedMessage());
 			throw e;
 		}
 	}
