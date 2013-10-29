@@ -54,7 +54,7 @@ public class BaseTest {
 			if (loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();
 				basepage.loadDefaultData();
-				basepage.logout();
+				
 			}
 		} catch (Exception e) {
 			env.stop();
