@@ -8,11 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
@@ -22,12 +20,11 @@ import com.gainsight.utils.TestDataHolder;
 public class BaseTest {
 	protected TestDataHolder testDataLoader = new TestDataHolder();
 	String[] dirs = { "testdata", "sfdc" };
-	
 	TestEnvironment env = new TestEnvironment();
-	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/" + generatePath(dirs);
-	
+	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
+			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
-	public BasePage basepage;
+	protected static BasePage basepage;
 	private final String DELETE_RECORDS = "Select id from TransHeader__c | Select id from CustomerInfo__c";
 	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c | Select id from JBCXM__CustomerInfo__c";
 
@@ -49,7 +46,6 @@ public class BaseTest {
 			env.launchBrower();
 			basepage = new BasePage();
 			Report.logInfo("Initializing Base Page : " + basepage);
-			
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();
 				basepage.setDefaultApplication("JBara");
