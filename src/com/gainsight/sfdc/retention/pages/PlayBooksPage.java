@@ -6,11 +6,10 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.excelUtil.TestUtil;
-import com.gainsight.sfdc.excelUtil.Xls_Reader;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
-public class PlayBooksPage extends BasePage {
+public class PlayBooksPage extends RetentionBasePage {
 
     private final String READY_INDICATOR = "//div[@class='ga-addPlaybookIcon btn']";
     private final String DELETE_PLAYBOOK = "//a[@title='Delete playbook']";
