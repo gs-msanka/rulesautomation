@@ -11,6 +11,33 @@ import com.gainsight.sfdc.customer.pages.Customer360Page;
 
 
 public class AdoptionUsagePage extends AdoptionBasePage {
+    private final String EXPORT_SUCCESS_MSG		= "exportApexMsgId";
+    private final String GRID_EXPORT_LINK		= "//div[@id='AdoptionUsageGridNavigationBar']/div/a[@title='export']";
+    private final String GRID_CUST_STATUS_BLOCK = "//div[@class='dummyDDStatusFilterList ui-corner-bottom']";
+    private final String GRID_CUST_STATUS_IMG 	= "//img[@class='jbarahideListButton dummyHideChurnAnalyticIcon' and @title='Select to filter']";
+    private final String WARNING_MESSAGE 		= "//div[@class='additionalCountSection']";
+    private final String ADOPTION_GRID	 		= "containerAdoptionTableList";
+    private final String READY_INDICATOR 		= "//div[@id='Adoption-Usage']";
+    private final String PIN_ICON 				= "//img[@id='pinIcon']";
+    private final String MONTH_SELECT 			= "//div[@class='JbaraMonthlyFilter hideForOldAdoption']/select";
+    private final String YEAR_SELECT 			= "//div[@class='JbaraMonthlyFilter changeMyFloat']/select";
+    private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']"; //"//div[@class='newFilters']/div[2]/select";
+    private final String GO_BUTTON 				= "//div[@class='newFilters']/div[2]/input[@value='View Results']";
+    private final String DATAVIEW_SELECT 		= "//select[@class='jbaraDummyAdoptionDataViewSelectControl min-width']";
+    private final String WEEK_PERIOD_SELECT		= "//select[@class='dummyJbaraWeeksPeriodsSelectionCntrl min-width']";
+    private final String WEEKDATE_UPTO_INPUT	=	"//input[@class='jbaraAdoptionGridInputField min-width']";
+    private final String ADVANCEDSEARCH_BUTTON	=	"//span[@class='dummygrdAdvancedSearch' and @title='Search']";
+    private final String ASEARCH_SEARCH_BUTTON 	= "//input[@class='Search' and @type='button']";
+    private final String ASEARCH_RESET_BUTTON 	= "//input[@class='Reset' and @type='button']";
+    private final String ASEARCH_CLOSE_BUTTON 	= "//input[@class='Close' and @type='button']";
+    private final String ASEARCH_CLOSE 			= "//a[@class='ui-dialog-titlebar-close ui-corner-all']/span[text()='close']";
+
+    String month 		= "";
+    String year 		= "";
+    String measure 		= "";
+    String byDataGran 	= "";
+    String noOfWeeks	= "";
+    String date			= "";
 
 
 
@@ -235,10 +262,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                     break;
                 }
             }
-            //implemented to get the row where actually the data matched.
-            //will be removing this part.
             if(result) {
-                viewEle = row;
                 break;
             }
             index++;
@@ -276,12 +300,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     public boolean exportGrid() {
         boolean result = false;
-        Report.logInfo("Clicking to export link to export the grid data");
+        Report.logInfo("Clicking to export the grid data");
         item.click(GRID_EXPORT_LINK);
         wait.waitTillElementDisplayed(EXPORT_SUCCESS_MSG, MIN_TIME, MAX_TIME);
-        if(item.isElementPresent(EXPORT_SUCCESS_MSG)) {
-            result= true;
-        }
+        result = element.getElement(EXPORT_SUCCESS_MSG).isDisplayed();
         Report.logInfo("Clicked on export & returing the result : "+result);
         return result;
     }
@@ -327,33 +349,5 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return this;
     }
 
-    public WebElement viewEle 					= null;
-    private final String EXPORT_SUCCESS_MSG		= "//span[text()='Your request to export data is added to the queue and you will receive an email notification upon completion.']";
-    private final String GRID_EXPORT_LINK		= "//a[@title='export' and contains(text(), 'Export')]";
-    private final String GRID_CUST_STATUS_BLOCK = "//div[@class='dummyDDStatusFilterList ui-corner-bottom']";
-    private final String GRID_CUST_STATUS_IMG 	= "//img[@class='jbarahideListButton dummyHideChurnAnalyticIcon' and @title='Select to filter']";
-    private final String WARNING_MESSAGE 		= "//div[@class='additionalCountSection']";
-    private final String ADOPTION_GRID	 		= "containerAdoptionTableList";
-    private final String READY_INDICATOR 		= "//div[@id='Adoption-Usage']";
-    private final String PIN_ICON 				= "//img[@id='pinIcon']";
-    private final String MONTH_SELECT 			= "//div[@class='JbaraMonthlyFilter hideForOldAdoption']/select";
-    private final String YEAR_SELECT 			= "//div[@class='JbaraMonthlyFilter changeMyFloat']/select";
-    private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']"; //"//div[@class='newFilters']/div[2]/select";
-    private final String GO_BUTTON 				= "//div[@class='newFilters']/div[2]/input[@value='View Results']";
-    private final String DATAVIEW_SELECT 		= "//select[@class='jbaraDummyAdoptionDataViewSelectControl min-width']";
-    private final String WEEK_PERIOD_SELECT		= "//select[@class='dummyJbaraWeeksPeriodsSelectionCntrl min-width']";
-    private final String WEEKDATE_UPTO_INPUT	=	"//input[@class='jbaraAdoptionGridInputField min-width']";
-    private final String ADVANCEDSEARCH_BUTTON	=	"//span[@class='dummygrdAdvancedSearch' and @title='Search']";
-    private final String ASEARCH_SEARCH_BUTTON 	= "//input[@class='Search' and @type='button']";
-    private final String ASEARCH_RESET_BUTTON 	= "//input[@class='Reset' and @type='button']";
-    private final String ASEARCH_CLOSE_BUTTON 	= "//input[@class='Close' and @type='button']";
-    private final String ASEARCH_CLOSE 			= "//a[@class='ui-dialog-titlebar-close ui-corner-all']/span[text()='close']";
-
-    String month 		= "";
-    String year 		= "";
-    String measure 		= "";
-    String byDataGran 	= "";
-    String noOfWeeks	= "";
-    String date			= "";
 
 }

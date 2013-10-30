@@ -30,7 +30,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 															String tPeriod, String date) {
 		
 		selectCustomer(cName);
-		
+
 		if(instance != null && !instance.isEmpty()) {
 			if(isInstDropDownLoaded(instance)) {
 				field.selectFromDropDown(INSTANCE_SELECT, instance);
@@ -99,15 +99,22 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 	
 	public boolean isInstDropDownLoaded(String instName) {
 		boolean result = false;
-		wait.waitTillElementDisplayed(INSTANCE_SELECT, MIN_TIME, MAX_TIME);
-		//stalePause();
+        wait.waitTillElementDisplayed(INSTANCE_SELECT, MIN_TIME, MAX_TIME);
+		String[] instList = instName.split("\\|");
 		Select s = new Select(item.getElement(INSTANCE_SELECT));
 		List<WebElement> opList = s.getOptions();
+        String dropDownValue = null;
 		for(WebElement wE : opList) {
-			if(wE.getText().equalsIgnoreCase(instName)) {
-				result = true;
-			}
-		}
+             dropDownValue += wE.getText().trim() +" | ";
+        }
+        for(String str : instList) {
+            if(dropDownValue.contains(str.trim())) {
+                result = true;
+            } else {
+                result = false;
+                break;
+            }
+        }
 		return result;
 	}
 	
