@@ -1,8 +1,9 @@
 package com.gainsight.sfdc.util;
 
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 public class FileUpload {
 

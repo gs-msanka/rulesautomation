@@ -8,11 +8,11 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.pojo.DimensionBrowserInfo;
-import com.gainsight.bigdata.pojo.Header;
-import com.gainsight.bigdata.pojo.HttpResponseObj;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.Header;
+import com.gainsight.pojo.HttpResponseObj;
 
 public class DimensionBrowserTest extends TestBase {
 

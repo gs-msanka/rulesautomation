@@ -3,15 +3,12 @@ package com.gainsight.sfdc.acceptance.tests;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
-
 import jxl.read.biff.BiffException;
-
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
@@ -132,7 +129,6 @@ public class AcceptanceTest extends BaseTest {
 		lineItem.setUsers(dbData.get("users"));
 		lineItem.setOTR(dbData.get("otr"));
 		Assert.assertTrue(c360Page.isLineItemPresent(lineItem));
-
 	}
 
 	@Test
@@ -161,7 +157,7 @@ public class AcceptanceTest extends BaseTest {
 				.clickOnTransactionsSubTab()
 				.deleteTransaction(customerName, "Churn")
 				.gotoCustomer360(customerName).getSummaryDetails();
-		validateSummary(nbData,summary);	
+		validateSummary(nbData, summary);
 	}
 
 	@Test
@@ -272,12 +268,13 @@ public class AcceptanceTest extends BaseTest {
 		lineItem.setOTR(nbData.get("otr"));
 		Assert.assertTrue(csPage.isLineItemPresent(lineItem));
 	}
-	
+
 	@AfterClass
 	public void tearDown() {
-		if (loggedIn)
+		if (loggedIn) {
 			basepage.beInMainWindow();
-		basepage.logout();
+			basepage.logout();
+		}
 	}
 
 	private CustomersPage addCustomer(String testData) {
@@ -302,7 +299,6 @@ public class AcceptanceTest extends BaseTest {
 		String transactionValues = customerName + "|" + nbData.get("startDate")
 				+ "|" + nbData.get("endDate") + "|"
 				+ currencyFormat(nbData.get("asv"));
-
 		CustomersPage customerPage = addCustomer(testData.get("customer"));
 		TransactionsPage transactionsPage = customerPage
 				.clickOnTransactionTab().clickOnTransactionsSubTab()
@@ -315,11 +311,12 @@ public class AcceptanceTest extends BaseTest {
 				.gotoCustomer360(customerName);
 		CustomerSummary summary = customer360Page.getSummaryDetails();
 		Report.logInfo("Customer Summary:\n" + summary.toString());
-		validateSummary(nbData,summary);
+		validateSummary(nbData, summary);
 		return customer360Page;
 	}
-	
-	private void validateSummary(HashMap<String, String> data, CustomerSummary summary) throws ParseException{
+
+	private void validateSummary(HashMap<String, String> data,
+			CustomerSummary summary) throws ParseException {
 		int asv = Integer.parseInt(data.get("asv").trim());
 		int users = Integer.parseInt(data.get("userCount").trim());
 		Assert.assertEquals(data.get("asv").trim(), summary.getASV().trim());
@@ -332,6 +329,4 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(data.get("endDate"), 1)));
 	}
-
-
 }

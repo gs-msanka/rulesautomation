@@ -1,7 +1,8 @@
 <project name="Acceptance Test" default="" basedir="../../.">
 	<property name="build.dir" location="${basedir}/bin" />
 	<property name="result.dir" location="${basedir}/result" />
-	<property name="screenshots.dir" value="${basedir}/screenshots" />
+	<property name="failed.dir" location="${result.dir}/failed" />
+	<property name="screenshots.dir" value="${result.dir}/screenshots" />
 	<property name="failures.dir" value="${screenshots.dir}/failures" />
 	<property environment="env"/>
 	
@@ -65,6 +66,7 @@
 		<echo>Initializing Acceptance Test...</echo>
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${result.dir}" />
+		<mkdir dir="${failed.dir}" />
 		<mkdir dir="${screenshots.dir}" />
 		<mkdir dir="${failures.dir}" />
 	</target>
@@ -73,6 +75,7 @@
 		<echo>Clean up....</echo>
 		<delete dir="${build.dir}" failonerror="false" />
 		<delete dir="${result.dir}" failonerror="false" />
+		<delete dir="${failed.dir}" failonerror="false" />
 		<delete dir="${screenshots.dir}" failonerror="false" />
 		<delete dir="${failures.dir}" failonerror="false" />
 	</target>

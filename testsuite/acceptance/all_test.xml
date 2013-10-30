@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project">
+<suite name="Automation Project" preserve-order="true">
 
 	<listeners>
-		<listener class-name="com.gainsight.bigdata.AutTestListener" />
+		<listener class-name="com.gainsight.utils.AutTestListener" />
 	</listeners>
 	
 	<test verbose="3" name="Acceptance Tests" preserve-order="true">
 		<classes>
 			<!-- Srinivas Test -->
 			<class name="com.gainsight.sfdc.acceptance.tests.AcceptanceTest">
-				<methods>
+				<!--<methods>
 					<include name="testAddNewCustomer" />
-					<include name="testAddNewCustomerAndTransaction" />
+					 <include name="testAddNewCustomerAndTransaction" />
 					<include name="testChurnTransaction" />
 					<include name="testOpportunityWithoutSettings" />
-				</methods>
+				</methods> -->
 			</class>
 			
 			<!-- Soujanya's Test -->
 			<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
 			<class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
 			
-			<!-- Giri's Test -->
-			<class name="com.gainsight.sfdc.adoption.tests.AdoptionUsageTest"/>
-			
 			<!-- Sai Ram's Tests -->
 			<class name="com.gainsight.sfdc.administration.tests.AdminTest" />
 			<class name="com.gainsight.sfdc.administration.tests.AdminCustomersTabTest" />
+			
+			<!-- Giri's Test -->
+			<class name="com.gainsight.sfdc.adoption.tests.AdoptionUsageTest"/>
 		</classes>
 	</test>
 </suite>

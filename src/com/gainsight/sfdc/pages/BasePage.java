@@ -12,10 +12,10 @@ import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.helpers.Transactions;
-import com.gainsight.sfdc.retention.pages.RetentionBasePage;
-import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
+import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -42,6 +42,9 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public BasePage login(String username, String pwd) {
+		if(!driver.getCurrentUrl().contains("login")){
+			driver.get(env.getDefaultUrl());
+		}
 		field.setTextField("username", username);
 		field.setTextField("password", pwd);
 		button.click("Login");
@@ -50,6 +53,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public BasePage logout() {
+		element.switchToMainWindow();
 		item.click("userNavButton");
 		item.click("//a[text()='Logout']");
 		return this;
@@ -104,7 +108,6 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public AdministrationBasepage clickOnAdminTab() {
-		driver.manage().window().maximize();
 		item.click("//a[contains(@title,'Administration')]");
 		return new AdministrationBasepage();
 	}
@@ -153,7 +156,7 @@ public class BasePage extends WebPage implements Constants {
 		String loadButton="//input[@value='Load']";
 		if(element.isElementPresent(loadButton)){
 			item.click(loadButton);
-			wait.waitTillElementDisplayed("loadSetupDatatable", MIN_TIME, MAX_TIME);
+			wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
 		}
 		
 	}
