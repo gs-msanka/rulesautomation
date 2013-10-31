@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
+import org.junit.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -38,6 +39,11 @@ public class SurveyAcceptanceTests extends BaseTest{
 		AddQuestionsPage addquestion = design.clickOnNewQuestion();
 		addquestion.multiChoiceSingleAnswerRadioQuestion("testing?");
 		addquestion.addQuestion();
+	}
+	
+	@AfterClass
+	public void tearDown() {
+		basepage.logout();
 	}
 
 }

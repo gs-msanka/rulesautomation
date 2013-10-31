@@ -1,9 +1,11 @@
 package com.gainsight.sfdc.survey.tests;
 
+import org.junit.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.survey.pages.NewSurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyData;
@@ -84,7 +86,7 @@ public class SurveyCreationTest extends BaseTest {
 		SurveyBasePage base = basepage.clickOnSurveyTab();
 		NewSurveyPage newsurvey = base.clickOnNew();
 		sdata.setCode(Utilities.getRandomString());
-		sdata.setFilePath("/testdata/sfdc/images/TestImage.png");
+		sdata.setFilePath(TestEnvironment.basedir + "/testdata/sfdc/images/TestImage.png");
 		newsurvey.createNewSurvey(sdata);
 
 	}
@@ -104,6 +106,11 @@ public class SurveyCreationTest extends BaseTest {
 		NewSurveyPage newsurvey = base.clickOnNew();
 		sdata.setCode(Utilities.getRandomString());
 		newsurvey.cancelSurvey();
+	}
+	
+	@AfterClass
+	public void tearDown() {
+		basepage.logout();
 	}
 
 }
