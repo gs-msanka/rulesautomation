@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 import jxl.read.biff.BiffException;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -80,7 +81,7 @@ public class AdminCustomersTabTest extends BaseTest {
 		adCustPage.deleteStage(previous);
 		return adCustPage;
 	}
-
+	
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();

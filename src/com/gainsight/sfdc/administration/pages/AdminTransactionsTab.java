@@ -21,6 +21,9 @@ public class AdminTransactionsTab extends BasePage {
     private final String BOOKINGTYPESELECT    = "//select[@class='mapToBookingTypeSelectClass']";
 	private final String BOOKING_SAVE         = "//span[contains(text(),'Booking Type')]/parent::h2/parent::div//following::div/input[@value='Save']";
 	private final String TABLE_VALUES_BTYPES  = "//table[contains(@id,'transactionBookingTypesPanel')]";
+	private final String BOOKING_FORM_BLOCK   = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]";
+	private final String BOOKING_FORM_NONE    = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]";
+	private final String BOOKING_TEXT_PRESENT =  "//span[contains(text(),'Booking Type')]";
 	
 	         //Map Booking Types
 	private final String CHECK_ACTIVATION     = "//table[@id='tableSortable']/tbody/tr[contains(.,'Activation')]//input";
@@ -34,7 +37,9 @@ public class AdminTransactionsTab extends BasePage {
 	private final String TABLE_VALUES_LITEMS  = "//table[contains(@id,'Transactions')]";
 	private final String SAVE_LITEMS          = "//input[@onclick='disableBtn(this);actionSaveAdminTransactionLine()']";
 	private final String CANCEL_LITEMS        = "//input[@onclick='jbaraCloseAdminTransactionLineInputForm()' and @class='btn']";
-	
+	private final String TRANS_FORM_BLOCK     = "//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: block')]";
+	private final String TRANS_FORM_NONE      = "//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: none')]";
+	private final String TRANS_TEXT_PRESENT   = "//h2[@id='InlineEditDialogTitle' and text()= 'Transaction Line Items']";
 	                                    //CHURN REASON
 	private final String NEW_CHURN_REASON     = "//td[contains(@id,'churnReasonAdminIdBlock')]/div/input";
 	private final String CREASON_NAME         = "//span[contains(text(),'Churn Reason')]/parent::h2/parent::div//following::div/input";
@@ -43,7 +48,7 @@ public class AdminTransactionsTab extends BasePage {
 	private final String CREASON_SHOT_NAME    = "//span[contains(text(),'Churn Reason')]/parent::h2//following::tbody/tr[5]/td[2]/input";
 	private final String CREASON_SAVE         = "//span[contains(text(),'Churn Reason')]/parent::h2/parent::div//following::div/input[@value='Save']";   
 	private final String CREASON_CANCEL       = "//span[contains(text(),'Churn Reason')]/parent::h2/parent::div//following::div/input[@value='Cancel']";
-	
+	private final String CHURN_TEXT_PRESENT   =  "//span[contains(text(),'Churn Reason')]";
 	                                  //Edit Settings
 	private final String CHURN_EDIT_SETTINGS      = "//td/div/input[@class='btn dummyAllAdminNewBtn' and @value='Edit Settings']";
 	private final String CHURN_SETTINGS_DOWNSELL  = "//input[@class='jbaraDummyAdminCheckboxCtrl checkboxChurnInput']";
@@ -56,7 +61,7 @@ public class AdminTransactionsTab extends BasePage {
 	                               //Create Booking Types
 	public AdminTransactionsTab addBookingTypes(String Name, String displayorder,String systemname ,String shortname, String bookingtypeselect) {       
 		Report.logInfo("*************In the addBookingTypes method***********************");
-		wait.waitTillElementPresent(NEW_BOOKINGTYPES, MIN_TIME, MAX_TIME);
+		//wait.waitTillElementPresent(NEW_BOOKINGTYPES, MIN_TIME, MAX_TIME);
 		item.click(NEW_BOOKINGTYPES);
 		fillFieldsForBookingTypes(Name, displayorder, systemname ,shortname, bookingtypeselect);
 		return this;
@@ -106,8 +111,7 @@ public class AdminTransactionsTab extends BasePage {
 			System.out.println("Unable to delete the element");
 		} else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Booking Type:**********");
+		} System.out.println("**End of Delete Booking Type:**");
 		return this;
 	}
                         	       //Create Transaction Line Items
@@ -115,15 +119,15 @@ public class AdminTransactionsTab extends BasePage {
 		Report.logInfo("*************In the  addTransactionLinesItems method***********************");
 		wait.waitTillElementPresent(NEW_TRANS_LINE_ITEMS, MIN_TIME, MAX_TIME);
 		item.click(NEW_TRANS_LINE_ITEMS);
-		 wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//h2[@id='InlineEditDialogTitle' and text()= 'Transaction Line Items']")) {
+		 wait.waitTillElementDisplayed(TRANS_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(TRANS_TEXT_PRESENT)) {
 		     field.setTextField(LINT_ITEM_NAME,Name);
 		   field.setSelectField(LINE_ITEM_TYPE,type);
 		   button.click(SAVE_LITEMS);
-		   wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		   wait.waitTillElementPresent(TRANS_FORM_NONE, MIN_TIME, MAX_TIME);
 		   refreshPage();
 		   wait.waitTillElementPresent("//label[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		      System.out.println("****End of Transaction Line Items****");
+		      System.out.println("**End of Transaction Line Items**");
 		} else {
 			System.out.println("This is not Transactions Line Items light box. This is :"+ item.getText("//span[@class='DialogTitleClass']")+"LightBox");
 		}
@@ -138,7 +142,6 @@ public class AdminTransactionsTab extends BasePage {
 		if(a != -1) {
 			result = true;
 		}
-		System.out.println("****Result:***"+ result);
 		return result;
 	}
 		                               // Edit Transaction Line Items
@@ -146,12 +149,12 @@ public class AdminTransactionsTab extends BasePage {
 		Report.logInfo("*************In the edit  addTransactionLinesItems method***********************");
 		   wait.waitTillElementPresent("//td/label[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[contains(text(),'Edit')]", MIN_TIME, MAX_TIME);
 			item.click("//td/label[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[contains(text(),'Edit')]");
-			wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-			if(item.isElementPresent("//h2[@id='InlineEditDialogTitle' and text()= 'Transaction Line Items']")) {
+			wait.waitTillElementDisplayed(TRANS_FORM_BLOCK, MIN_TIME, MAX_TIME);
+			if(item.isElementPresent(TRANS_TEXT_PRESENT)) {
 			field.clearAndSetText(LINT_ITEM_NAME,Name);
 			field.setSelectField(LINE_ITEM_TYPE,type);
 			button.click(SAVE_LITEMS);
-			//wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminTransactionLineInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+			//wait.waitTillElementPresent(TRANS_FORM_NONE, MIN_TIME, MAX_TIME);
 			wait.waitTillElementPresent("//label[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 			refreshPage();
 			 System.out.println("End of Edit Trans line Item");
@@ -172,8 +175,7 @@ public class AdminTransactionsTab extends BasePage {
 			System.out.println("Unable to delete the element");
 		} else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Alert Type:**********");
+		}  System.out.println("**End of Delete Alert Type:**");
 		return this;
 	}
 	                                        //--add Churn Reason
@@ -183,15 +185,15 @@ public class AdminTransactionsTab extends BasePage {
         wait.waitTillElementPresent(NEW_CHURN_REASON, MIN_TIME, MAX_TIME);
 		item.click(NEW_CHURN_REASON);
 		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Churn Reason')]")) {
-		field.clearAndSetText(CREASON_NAME,Name);
-		field.clearAndSetText(CREASON_DISPORDER,displayorder);
-		field.clearAndSetText(CREASON_SYSTEM_NAME,systemname);
-		field.clearAndSetText(CREASON_SHOT_NAME,shortname);  
+	if(item.isElementPresent(CHURN_TEXT_PRESENT)) {
+		  field.clearAndSetText(CREASON_NAME,Name);
+		  field.clearAndSetText(CREASON_DISPORDER,displayorder);
+		  field.clearAndSetText(CREASON_SYSTEM_NAME,systemname);
+		  field.clearAndSetText(CREASON_SHOT_NAME,shortname);  
 		button.click(CREASON_SAVE);
-		wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+	wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
 		refreshPage();
-        wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
+    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 		} else {
 			System.out.println("This is not add churn Reason light box. This is :"+ item.getText("//span[@class='DialogTitleClass']")+"LightBox");	
 		}return this;
@@ -204,7 +206,6 @@ public class AdminTransactionsTab extends BasePage {
 			if(a != -1) {
 				result = true;
 			}
-			System.out.println("****Result:***"+ result);
 			return result;
 		}
 	                                        //Edit ChurnReason
@@ -213,7 +214,7 @@ public class AdminTransactionsTab extends BasePage {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Churn Reason')]")) {
+		if(item.isElementPresent(CHURN_TEXT_PRESENT)) {
 			field.clearAndSetText(CREASON_NAME,Name);
 			field.clearAndSetText(CREASON_DISPORDER,displayorder);
 			field.clearAndSetText(CREASON_SHOT_NAME,shortname);  
@@ -229,7 +230,7 @@ public class AdminTransactionsTab extends BasePage {
 	}
 	                                            //Delete Churn Reason
 	public AdminTransactionsTab deleteChurnReason(String Name) {
-		Report.logInfo("*************In the Delete addChurnReason method***********************");
+		Report.logInfo("**In the Delete addChurnReason method**");
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
 		modal.accept();
@@ -240,8 +241,8 @@ public class AdminTransactionsTab extends BasePage {
 				System.out.println("Unable to delete the element");
 			} else {
 				System.out.println("Element got deleted");
-			}
-			System.out.println("**********End of Delete Alert Reason:**********");
+			} System.out.println("**End of Delete Alert Reason:**");
+			
 	return null;
 	}
 	public AdminTransactionsTab churnTabSettings(){
@@ -251,15 +252,15 @@ public class AdminTransactionsTab extends BasePage {
 		return null;
 	}
 	private AdminTransactionsTab fillFieldsForBookingTypes(String Name, String displayorder, String systemname, String shortname, String bookingtypeselect) {
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Booking Type')]")) {			
+		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(BOOKING_TEXT_PRESENT)) {			
 		field.clearAndSetText(BOOKINGT_NAME,Name);
 		field.clearAndSetText(BOOKINGT_DISPLYORDER,displayorder);
 		field.clearAndSetText(BOOKINGT_SYSTEM_NAME,systemname);
 		field.clearAndSetText(BOOKINGT_SHORT_NAME,shortname);
 		field.selectFromDropDown(BOOKINGTYPESELECT,bookingtypeselect);
 		button.click(BOOKING_SAVE);
-		wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(BOOKING_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
 	    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 		} else {
@@ -267,14 +268,15 @@ public class AdminTransactionsTab extends BasePage {
 		}
 		return this;
 	}
+	
 	private AdminTransactionsTab fillFewFields(String Name, String displayorder, String shortname) {
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Booking Type')]")) {
+		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(BOOKING_TEXT_PRESENT)) {
 		field.clearAndSetText(BOOKINGT_NAME,Name);
 		field.clearAndSetText(BOOKINGT_DISPLYORDER,displayorder);
 		field.clearAndSetText(BOOKINGT_SHORT_NAME,shortname);
 		button.click(BOOKING_SAVE);	
-		wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(BOOKING_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
 	    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 		} else {

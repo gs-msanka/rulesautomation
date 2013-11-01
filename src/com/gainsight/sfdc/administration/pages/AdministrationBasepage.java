@@ -35,7 +35,7 @@ public class AdministrationBasepage extends BasePage{
 
 	public AdminAdoptionSubTab clickOnAdoptionSubTab()
 	{
-		item.click("//a[contains(@href,'Administration-Adotpion')]");
+		item.click("//a[contains(@href,'Administration-Adoption')]");
 		
 		return new AdminAdoptionSubTab();
 	}
@@ -55,5 +55,19 @@ public class AdministrationBasepage extends BasePage{
 		return new AdminUISettingsTab();
 	}
 	
+	public AdminFeaturesSubTab ClickOnFeaturesTab()
+	{
+		
+		item.click("//a[contains(@href,'Administration-Features')]");
+		
+		return new AdminFeaturesSubTab();
+	}
 	
+	public AdminNotificationsSubTab ClickOnNotificationSubTab()
+	{
+		
+		item.click("//a[contains(@href,'Administration-Notifications')]");
+		
+		return new AdminNotificationsSubTab();
+	}
 }

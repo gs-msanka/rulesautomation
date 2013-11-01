@@ -21,6 +21,10 @@ public class AdminRetentionTab extends BasePage {
 	private final String INCLUDE_IN_WIDGET    = "//input[@class='jbaraDummyAdminCheckboxCtrl checkboxSystemDefinedInput']";
 	private final String ACTIVE               = "//input[@class='jbaraDummyAdminCheckboxCtrlActive checkboxActiveInput']";
 	private final String SAVE                 = "//input[@class='btn dummyAllAdminSaveBtn']";
+	private final String ATYPE_FORM_BLOCK     = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]";
+	private final String ATYPE_FORM_NONE      = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]";
+	private final String ATYPE_TEXT_PRESENT   = "//span[contains(text(),'Alert Type')]";
+
 	
 	private final String ALERT_SEVERITY_NAME   = "//span[contains(text(),'Alert Severity')]/parent::h2/parent::div//following::div/input";
 	private final String SEVERITY_DISPLAYORDER = "//span[contains(text(),'Alert Severity')]/parent::h2/parent::div//following::div/input[contains(@class,'DisplayOrderInput')]";
@@ -28,12 +32,18 @@ public class AdminRetentionTab extends BasePage {
 	private final String SEVERITY_SHOTNAME     = "//span[contains(text(),'Alert Severity')]/parent::h2//following::tbody/tr[5]/td[2]/input";
 	private final String SEVERITY_SAVE         = "//span[contains(text(),'Alert Severity')]/parent::h2/parent::div//following::div/input[@value='Save']";
 	private final String SEVERITY_CANCEL       = "//span[contains(text(),'Alert Severity')]/parent::h2/parent::div//following::div/input[@value='Cancel']";
+	private final String ASEVERITY_FORM_BLOCK  = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]";
+	private final String ASEVERITY_FORM_NONE   = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]";
+	private final String ASEVERITY_TEXT_PRESENT= "//span[contains(text(),'Alert Severity')]";
 	
 	private final String ALERT_REASON_NAME    = "//span[contains(text(),'Alert Reason')]/parent::h2/parent::div//following::div/input";
 	private final String AREASON_DISPLAYORDER = "//span[contains(text(),'Alert Reason')]/parent::h2/parent::div//following::div/input[contains(@class,'DisplayOrderInput')]";
 	private final String AREASON_SYSNAME      = "//span[contains(text(),'Alert Reason')]/parent::h2/parent::div//following::div/input[contains(@class,'systemNameInputClass')]";
 	private final String AREASON_SHOTNAME     = "//span[contains(text(),'Alert Reason')]/parent::h2//following::tbody/tr[5]/td[2]/input";
 	private final String AREASON_SAVE         = "//span[contains(text(),'Alert Reason')]/parent::h2/parent::div//following::div/input[@value='Save']";
+	private final String AREASON_FORM_BLOCK   = "//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: block')]";
+	private final String AREASON_FORM_NONE    = "//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: none')]";
+	private final String AREASON_TEXT_PRESENT = "//span[contains(text(),'Alert Reason')]";
 	
 	private final String ALERT_STATUS_NAME    = "//span[contains(text(),'Alert Status')]/parent::h2/parent::div//following::div/input";
 	private final String ASTATUS_DISPLAYORDER = "//span[contains(text(),'Alert Status')]/parent::h2/parent::div//following::div/input[contains(@class,'DisplayOrderInput')]";
@@ -83,8 +93,7 @@ public class AdminRetentionTab extends BasePage {
 		int a = table.getValueInListRow(tableId, values);
 		if(a != -1) {
 			result = true;
-		} System.out.println("****Result:***"+ result);
-		return result;
+		}return result;
 	}
                 //--Edit Alert type
 	public AdminRetentionTab editAlertType(String s,String Name,String displayorder,String shortname, String includeinWidget) {
@@ -105,20 +114,19 @@ public class AdminRetentionTab extends BasePage {
 		Report.logInfo("Checking whether the element is deleted");
 		if(item.isElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']")) {
 			System.out.println("Unable to delete the element");
-		}
-		else {
+		} else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Alert Type:**********");
+		} System.out.println("**End of Delete Alert Type:**");
 		return this;
 	}
 	                        //Create Alert Severity
+	
 	public AdminRetentionTab createAlertSeverity(String Name,String displayorder,String systemname,String shortname, String includeinWidget) {  
 		Report.logInfo("************In the createAlertSeverity method**********");
 		wait.waitTillElementPresent(NEW_ALERT_SEVERITY, MIN_TIME, MAX_TIME);
 		button.click(NEW_ALERT_SEVERITY);
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Alert Severity')]")) {
+		wait.waitTillElementDisplayed(ASEVERITY_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(ASEVERITY_TEXT_PRESENT)) {
 			field.clearAndSetText(ALERT_SEVERITY_NAME,Name);
 			field.clearAndSetText(SEVERITY_DISPLAYORDER,displayorder);
 			field.clearAndSetText(SEVERITY_SYSNAME,systemname);
@@ -141,7 +149,7 @@ public class AdminRetentionTab extends BasePage {
 		int a = table.getValueInListRow(tableId, values);
 		if(a != -1) {
 			result = true;
-		} System.out.println("****Result:***"+ result);
+		} 
 		return result;
 	}
 	                                                 //Edit Alert Severity
@@ -149,16 +157,15 @@ public class AdminRetentionTab extends BasePage {
 		Report.logInfo("************In the edit createAlertSeverity method**********");
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Alert Severity')]")) {
+		wait.waitTillElementDisplayed(ASEVERITY_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(ASEVERITY_TEXT_PRESENT)) {
 			field.clearAndSetText(ALERT_SEVERITY_NAME,Name);
 			field.clearAndSetText(SEVERITY_DISPLAYORDER,displayorder);
 			field.clearAndSetText(SEVERITY_SHOTNAME,shortname);
 			button.click(SEVERITY_SAVE);
-			wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+			wait.waitTillElementPresent(ASEVERITY_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
 		    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		   
 		} else {
 			System.out.println("This is not an alert Severity light box.This is:"+ item.getText("//span[@class='DialogTitleClass']")+"Window");
 		}
@@ -173,28 +180,26 @@ public class AdminRetentionTab extends BasePage {
 		wait.waitTillElementNotPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		refreshPage();
 		Report.logInfo("Checking whether the element is deleted");
-		if(item.isElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']")) {
+	if(item.isElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']")) {
 			System.out.println("Unable to delete the element");
-		}
-		else {
+	    } else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Alert Severity:**********");
+		} System.out.println("**End of Delete Alert Severity:**");
 	return this;
 	}
-	                                 //Create Alert Reason
+	                        //Create Alert Reason
 	public AdminRetentionTab createAlertReason(String Name,String displayorder,String systemname,String shortname) {
 		Report.logInfo("************In the createAlertReason method**********");
 		wait.waitTillElementPresent(NEW_ALERT_REASON, MIN_TIME, MAX_TIME);
 		button.click(NEW_ALERT_REASON);
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Alert Reason')]")) {
+		wait.waitTillElementDisplayed(AREASON_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(AREASON_TEXT_PRESENT)) {
 		field.clearAndSetText(ALERT_REASON_NAME,Name);
 		field.clearAndSetText(AREASON_DISPLAYORDER,displayorder);
 		field.clearAndSetText(AREASON_SYSNAME,systemname);
 		field.clearAndSetText(AREASON_SHOTNAME,shortname);
 		button.click(AREASON_SAVE);
-		wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(AREASON_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
         wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 		} else {
@@ -209,25 +214,22 @@ public class AdminRetentionTab extends BasePage {
 		int a = table.getValueInListRow(tableId, values);
 		if(a != -1) {
 			result = true;
-		}
-		System.out.println("****Result:***"+ result);
-		return result;
+		} return result;
 	}
 	                                  //Edit Alert Reason
 	public AdminRetentionTab editAlertReason(String s,String Name,String displayorder,String shortname) {
 		Report.logInfo("************In the edit createAlertReason method**********");
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm')and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Alert Reason')]")) {
+		wait.waitTillElementDisplayed(AREASON_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(AREASON_TEXT_PRESENT)) {
 			field.clearAndSetText(ALERT_REASON_NAME,Name);
 			field.clearAndSetText(AREASON_DISPLAYORDER,displayorder);
 			field.clearAndSetText(AREASON_SHOTNAME,shortname);
 			button.click(AREASON_SAVE);
-			wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+			wait.waitTillElementPresent(AREASON_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
 		    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		   
 		} else {
 			System.out.println("The is not an alert Reason light box to edit.This is:"+ item.getText("//span[@class='DialogTitleClass']") +"Window");
 		}
@@ -245,8 +247,7 @@ public class AdminRetentionTab extends BasePage {
 			System.out.println("Unable to delete the element");
 		} else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Alert Reason:**********");
+		}  System.out.println("**End of Delete Alert Reason:**");
 		return this;
 	}
 	                         //Create Alert Status
@@ -276,9 +277,7 @@ public class AdminRetentionTab extends BasePage {
 		int a = table.getValueInListRow(tableId, values);
 		if(a != -1) {
 			result = true;
-		}
-		System.out.println("****Result:***"+ result);
-		return result;
+		} return result;
 	}
 	                      //Edit Alert Status
 	public AdminRetentionTab editAlertStatus(String s,String Name,String displayorder,String shortname) {
@@ -294,14 +293,11 @@ public class AdminRetentionTab extends BasePage {
 			wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
 			refreshPage();
 		    wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		   
 		} else {
 			System.out.println("The is not an alert Status light box.This is :"+ item.getText("//span[@class='DialogTitleClass']")+"Window");
-		}
-		
-		return this;
+		} return this;
 	}
-           //Retention:-- Delete Alert Status
+                                  //Delete Alert Status
 	public AdminRetentionTab deleteAlertStatus(String s) {
 		Report.logInfo("************In the delete  createAlertStatus method**********");
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
@@ -312,11 +308,10 @@ public class AdminRetentionTab extends BasePage {
 		Report.logInfo("Checking whether the element is deleted");
 		if(item.isElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']")) {
 			System.out.println("Element is still present");
-		}
-		else {
+		} else {
 			System.out.println("Element got deleted");
 		}
-		return this;
+		return this;	
 	}
                                    //Task Configuration
 	public AdminRetentionTab taskConfiguration()
@@ -329,18 +324,22 @@ public class AdminRetentionTab extends BasePage {
 		//button.click(CANCEL_CONFIG);
 		return this;
 	}
+  
+	private final String EVENT_FORM_BLOCK   = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]";
+	private final String EVENT_FORM_NONE    = "//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]";
+	private final String EVENT_TEXT_PRESENT = "//span[contains(text(),'Event Type')]";
                                         //Create Event Type
 	public AdminRetentionTab createEventType(String Name,String displayorder,String systemname,String shortname) {
 		Report.logInfo("************In the  createEventType method**********");
 	    button.click(NEW_EVENT_TYPE);
-	    if(item.isElementPresent("//span[contains(text(),'Event Type')]")) {
-	    wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
+	    if(item.isElementPresent(EVENT_TEXT_PRESENT)) {
+	    wait.waitTillElementDisplayed(EVENT_FORM_BLOCK, MIN_TIME, MAX_TIME);
 		field.clearAndSetText(EVENT_NAME,Name);
 		field.clearAndSetText(EVENT_DISPLAYORDER,displayorder);
 		field.clearAndSetText(EVENT_SYSNAME,systemname);
 		field.clearAndSetText(EVENT_SHOTNAME,shortname);
 		button.click(EVENT_SAVE);
-		wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(EVENT_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
 		wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME); 
 	    }  else {
@@ -362,16 +361,15 @@ public class AdminRetentionTab extends BasePage {
 	public AdminRetentionTab editEventType(String s,String Name,String displayorder,String shortname) {
 		Report.logInfo("************In the edit createEventType method**********");
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
-		  if(item.isElementPresent("//span[contains(text(),'Event Type')]")) {
-			  wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
+		  if(item.isElementPresent(EVENT_TEXT_PRESENT)) {
+			  wait.waitTillElementDisplayed(EVENT_FORM_BLOCK, MIN_TIME, MAX_TIME);
 			    field.clearAndSetText(EVENT_NAME,Name);
 				field.clearAndSetText(EVENT_DISPLAYORDER,displayorder);
 				field.clearAndSetText(EVENT_SHOTNAME,shortname);
 				button.click(EVENT_SAVE);
-				wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+				wait.waitTillElementPresent(EVENT_FORM_NONE, MIN_TIME, MAX_TIME);
 				refreshPage();
 			     wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-			   
 		  } else {
 			  System.out.println("The is not an event light box. This is:"+ item.getText("//span[@class='DialogTitleClass']")+"Light box");
 		  }
@@ -392,38 +390,36 @@ public class AdminRetentionTab extends BasePage {
 			System.out.println("Element not deleted");
 		} else {
 			System.out.println("Element got deleted");
-		}
-		System.out.println("**********End of Delete Event Type:**********");
+		} System.out.println("**End of Delete Event Type:**");
 		return this;
 	}
 	             //Common Functionality to fill all the fields
-	public AdminRetentionTab fillAllFileds(String Name,String displayorder,String systemname,String shortname, String includeinWidget) {
-		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		if(item.isElementPresent("//span[contains(text(),'Alert Type')]")) {
+		public AdminRetentionTab fillAllFileds(String Name,String displayorder,String systemname,String shortname, String includeinWidget) {
+		wait.waitTillElementDisplayed(ATYPE_FORM_BLOCK, MIN_TIME, MAX_TIME);
+		if(item.isElementPresent(ATYPE_TEXT_PRESENT)) {
 		field.clearAndSetText(ALERT_TYPE_NAME,Name);
 		field.clearAndSetText(ATYPE_DISPLAY_ORDER,displayorder);
 		field.clearAndSetText(ATYPE_SYSTEM_NAME,systemname);
 		field.clearAndSetText(ATYPE_SHORT_NAME,shortname);
 		field.selectCheckBox(INCLUDE_IN_WIDGET);
 		button.click(SAVE);
-        wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+        wait.waitTillElementPresent(ATYPE_FORM_NONE, MIN_TIME, MAX_TIME);
         refreshPage();
         wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-        System.out.println("**********End of Create Alert Type:**********");  
+        System.out.println("**End of Create Alert Type:**");  
 		} else {
 			System.out.println("This is not an alert Type light box:"+ item.getText("//span[@class='DialogTitleClass']"));
 		}
 		return this;
 	}
 	public AdminRetentionTab fillFewFileds(String Name,String displayorder,String shortname) {
-		  wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-	if(item.isElementPresent("//span[contains(text(),'Alert Type')]")) {
+		  wait.waitTillElementDisplayed(ATYPE_FORM_BLOCK, MIN_TIME, MAX_TIME);
+	if(item.isElementPresent(ATYPE_TEXT_PRESENT)) {
 		field.clearAndSetText(ALERT_TYPE_NAME,Name);
 		field.clearAndSetText(ATYPE_DISPLAY_ORDER,displayorder);
 		field.clearAndSetText(ATYPE_SHORT_NAME,shortname);
-		//wait.waitTillElementPresent(SAVE, MIN_TIME, MAX_TIME);
 		button.click(SAVE);	
-		 wait.waitTillElementPresent("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: none')]", MIN_TIME, MAX_TIME);
+		 wait.waitTillElementPresent(ATYPE_FORM_NONE, MIN_TIME, MAX_TIME);
 		 refreshPage();
 	     wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
 		  } else {

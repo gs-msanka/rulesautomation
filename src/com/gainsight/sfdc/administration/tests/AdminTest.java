@@ -30,7 +30,7 @@ public class AdminTest extends BaseTest {
 	public void testAdminAddBookingTypesTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-		addBookingTypes(testData.get("Booking Types"));
+	   //addBookingTypes(testData.get("Booking Types"));
 		addBookingTypes(testData.get("Booking Types1"));
 		//addBookingTypes(testData.get("Booking Types2"));
 	}
@@ -91,7 +91,7 @@ public class AdminTest extends BaseTest {
 		adTrPage.deleteBookingTypes(previous);
 		return adTrPage;
 	}
-    @Test(priority=20)  // @Test                    // Add Transaction Line Item
+  @Test(priority=20)  // @Test                    // Add Transaction Line Item
 	public void testAddTransactionLinesItemsTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
@@ -182,7 +182,7 @@ public class AdminTest extends BaseTest {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
 		createAlertType(testData.get("CreateAlertType"));
-		createAlertType(testData.get("CreateAlertType1"));
+		//createAlertType(testData.get("CreateAlertType1"));
 		//createAlertType(testData.get("CreateAlertType2"));
 	}
 	private AdminRetentionTab createAlertType(String testData) {
