@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import com.gainsight.pageobject.core.Report;
@@ -69,7 +70,7 @@ public class BaseTest {
 		env.stop();
 	}
 
-	@BeforeTest
+	@BeforeMethod
 	public void beInMainWindow() {
 		basepage.beInMainWindow();
 	}
