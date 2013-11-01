@@ -31,9 +31,9 @@ public class PropertyReader {
 			e.printStackTrace();
 		}
 		
-		userName = p.getProperty("username");
-		password = p.getProperty("password");
-		stoken = p.getProperty("stoken");
-		nsAppUrl = p.getProperty("ns_appurl");
+		userName = p.getProperty("sfdc.username");
+		password = p.getProperty("sfdc.password");
+		stoken = p.getProperty("sfdc.stoken");
+		nsAppUrl = p.getProperty("ns.appurl");
 	}
 }
