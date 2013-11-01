@@ -90,14 +90,14 @@ public class NewSurveyPage extends SurveyBasePage {
 		button.click(SURVEY_CLONE_OPTION);
 		field.selectFromDropDown(CLONE_SURVEY_SELECT, sdata.getCode() + ":"
 				+ sdata.getTitle());
-		wait.waitInSeconds(2000);
+		wait.waitInSeconds(2);
 		field.click(CLONE_LOGIC_RULES);
-		wait.waitInSeconds(2000);
+		wait.waitInSeconds(2);
 		field.click(CLONE_ALERT_RULES);
-		wait.waitInSeconds(2000);
+		wait.waitInSeconds(2);
 		field.click(CLONE_PARTICIPANTS);
 		button.click(SAVE_CLONE_SURVEY);
-		wait.waitInSeconds(2000);
+		wait.waitInSeconds(2);
 		return new SurveyDesignPage();
 
 	}
