@@ -27,7 +27,7 @@ public class AdminAdoptionTabTest extends BaseTest {
 	}
 	
 	
-	@Test(priority=5)                        // measureCloumnMapping
+/*	@Test(priority=5)                        // measureCloumnMapping
 	public void testAdminMapMeasureTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminAdoptionTab");
@@ -116,7 +116,7 @@ public class AdminAdoptionTabTest extends BaseTest {
 				.clickOnAdoptionSubTab();
 		usgeConfig.usageConfiguration(UsageConfig, Granularity ,WeekStartsOn ,WeekLabel);
 		return usgeConfig;
-	} 
+	} */
 	
 
 	@AfterClass
