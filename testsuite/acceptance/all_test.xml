@@ -24,6 +24,7 @@
 			
 			<!-- Giri's Test -->
 			<class name="com.gainsight.sfdc.adoption.tests.AdoptionUsageTest"/>
+            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests"/>
 			
 			<!-- Soujanya's Test -->
 			<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
