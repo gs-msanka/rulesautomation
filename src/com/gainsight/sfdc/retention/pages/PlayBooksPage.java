@@ -1,13 +1,15 @@
 package com.gainsight.sfdc.retention.pages;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.pages.BasePage;
 
-public class PlayBooksPage extends RetentionBasePage {
+public class PlayBooksPage extends BasePage {
 
     private final String READY_INDICATOR = "//div[@class='ga-addPlaybookIcon btn']";
     private final String DELETE_PLAYBOOK = "//a[@title='Delete playbook']";
@@ -28,59 +30,147 @@ public class PlayBooksPage extends RetentionBasePage {
     private final String TASK_SEARCH_CLEAR_BUTTON = "//input[@class='ga-clearBtn ga-searchTaskClearBtn']";
     private final String PB_EDIT_LINK =  "//a[@class='ga-icn ga-edit ga-editPlaybook']";
 
-
-
-    /*
-     * Constructor wait for the first element to be displayed in the page.
+    /**
+     * Constructor of the page, Waits for the ready indicator to be present on the page.
      */
     public PlayBooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
-    /*
-     * Adds playbook from the testdata sent.
+    /**
+     * Adds Playbook for the user on supplied paramters.  
+     * <pre>
+     * {@code
+     * 	1. Clicks on "Add Playbook" button.
+     * 	2. Fills the Playbook details.
+     * 	3. Fills the Event details.	
+     * 	4. Clicks on create button.
+     * }
+     * @param playbookData - a HashMap where all the data needed a Playbook exists.
+     * @param taskData - a HashMap where  all the data needed a Task exists.
+     * @return void
+     * </pre>
      */
-    public void addplaybook(Hashtable<String, String> playbookData, Hashtable<String, String> taskData) {
-        Report.logInfo("Started Adding the playbook");
+    public void addplaybook(HashMap<String, String> playbookData, HashMap<String, String> taskData) {
         item.click(ADD_PLAYBOOK_BUTTON);
         wait.waitTillElementDisplayed(CREATE_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(playbookData);
         fillTaskDetails(taskData);
         item.click(CREATE_BUTTON);
-        Report.logInfo("Completed Adding the playbook");
         amtDateUtil.stalePause();
     }
 
-    /*
-     * Fills the playbook form.
+    /**
+     * Fills the Playbook form.
+     * @param testdata - a HashMap where all the data needed a Playbook exists
+     * @return void
      */
-    public void fillPlaybookDetails(Hashtable<String, String> testdata) {
+    public void fillPlaybookDetails(HashMap<String, String> testdata) {
         Report.logInfo("Started filling the playbook details.");
         if(testdata.get("alert") != null &&  testdata.get("alert").equalsIgnoreCase("true")){
-            item.click(ISALERT_PLAYBOOK_CHECK);
+            String isChecked = element.getElement(ISALERT_PLAYBOOK_CHECK).getAttribute("checked");
+            if(isChecked == null) {
+                item.click(ISALERT_PLAYBOOK_CHECK);
+            }
+        } else if(testdata.get("alert").equalsIgnoreCase("false")) {
+            String isChecked = element.getElement(ISALERT_PLAYBOOK_CHECK).getAttribute("checked");
+            if(isChecked != null) {
+                item.click(ISALERT_PLAYBOOK_CHECK);
+            }
         }
         if(testdata.get("event") != null  && testdata.get("event").equalsIgnoreCase("true")) {
-            item.click(ISEVENT_PLAYBOOK_CHECK);
+            String isChecked = element.getElement(ISEVENT_PLAYBOOK_CHECK).getAttribute("checked");
+            if(isChecked == null) {
+                item.click(ISEVENT_PLAYBOOK_CHECK);
+            }
+        } else if(testdata.get("event") != null  && testdata.get("event").equalsIgnoreCase("false")) {
+            String isChecked = element.getElement(ISEVENT_PLAYBOOK_CHECK).getAttribute("checked");
+            if(isChecked != null) {
+                item.click(ISEVENT_PLAYBOOK_CHECK);
+            }
         }
         if(testdata.get("playbookname")!=null) {
-            field.setTextField(PBNAME_INPUT, testdata.get("playbookname"));
+            field.clearAndSetText(PBNAME_INPUT, testdata.get("playbookname"));
         }
         if(testdata.get("description") != null) {
-            field.setTextField(PBDES_INPTU, testdata.get("description"));
+            field.clearAndSetText(PBDES_INPTU, testdata.get("description"));
         }
         Report.logInfo("Finished filling the playbook details");
     }
-    /*
-     * Fills the task details.
+
+    /**
+     * Checks for the playbook name in the tree hierarchy.
+     * @param playbookname - Name of the Playbook to search for.
+     * @return boolean - true if Playbook found, false Playbook not found. 
      */
-    public void fillTaskDetails(Hashtable<String, String> testdata) {
-        Report.logInfo("Stated filling the task form details.");
+    public boolean isplaybookpresent(String playbookname) {
+        Report.logInfo("Started Checking for the playbook present :" +playbookname);
+        boolean result = false;
+        List<WebElement> eleList = element.getAllElement("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
+        if(eleList != null && eleList.size() >0) {
+            result =true;
+        }
+        Report.logInfo("Finished Checking for playbook present & returning result :" +result);
+        return result;
+    }
+
+    /**
+     * Opens the Playbook by searching the tree hierarchy 
+     * @param playbookname - Name of the Playbook to open.
+     * @return void
+     */
+    public void openPlaybook(String playbookname) {
+        wait.waitTillElementDisplayed("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
+        item.click("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
+        wait.waitTillElementDisplayed("//div[@class='ga-content ga-contentDetails']/h4[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(ADD_TASK_BUTTON, MIN_TIME, MAX_TIME);
+    }
+
+    /**
+     * Searches for the Playbook in tree hirerachy & deletes the Playbook
+     * @param playbookname - Name of the Playbook to delete.
+     * @return void
+     */
+    public void deletePlaybook(String playbookname) {
+        Report.logInfo("Started Deleting the playbook");
+        openPlaybook(playbookname);
+        wait.waitTillElementDisplayed(DELETE_PLAYBOOK, MIN_TIME, MAX_TIME);
+        item.click(DELETE_PLAYBOOK);
+        modal.accept();
         amtDateUtil.stalePause();
+        Report.logInfo("Finished deleting the playbook");
+    }
+
+    /**
+     * Edits the existing Playbook.
+     * @param oldplaybookname - Name of the Playbook to edit.
+     * @param testdata - Playbook data.
+     */
+    public void editPlaybook(String oldplaybookname, HashMap<String, String> testdata) {
+        Report.logInfo("Started editing the Playbook");
+        openPlaybook(oldplaybookname);
+        wait.waitTillElementDisplayed(PB_EDIT_LINK, MIN_TIME, MAX_TIME);
+        item.click(PB_EDIT_LINK);
+        wait.waitTillElementDisplayed(UPDATE_BUTTON, MIN_TIME, MAX_TIME);
+        fillPlaybookDetails(testdata);
+        item.click(UPDATE_BUTTON);
+        wait.waitTillElementNotDisplayed(UPDATE_BUTTON, MIN_TIME, MAX_TIME);
+        amtDateUtil.stalePause();
+        Report.logInfo("Finished editing the playbook.");
+    }
+
+    /**
+     * Fills the Task form details.
+     * @param testdata - a HashMap comprising of tasks data.
+     * @return void
+     */
+    public void fillTaskDetails(HashMap<String, String> testdata) {
+        Report.logInfo("Stated filling the task form details.");
         if(testdata.get("subject") != null) {
-            field.setTextField(TASK_SUB_INPUT, testdata.get("subject"));
+            field.clearAndSetText(TASK_SUB_INPUT, testdata.get("subject"));
         }
         if(testdata.get("date") != null) {
-            field.setTextField(TASK_RELDATECOUNT_INPUT, testdata.get("date"));
+            field.clearAndSetText(TASK_RELDATECOUNT_INPUT, testdata.get("date"));
         }
         if(testdata.get("priority") != null) {
             element.selectFromDropDown(TASK_PRIORITY_SELECT, testdata.get("priority"));
@@ -91,57 +181,12 @@ public class PlayBooksPage extends RetentionBasePage {
         Report.logInfo("Fininshed filling the task form details.");
     }
 
-    /*
-     * Checks weather playbook exists in the left tree structure.
+    /**
+     * Checks for the task in the Playbook
+     * @param testdata
+     * @return boolean  - true - task present, false - if task not present.
      */
-    public boolean isplaybookpresent(String playbookname) {
-        Report.logInfo("Started Checking for the playbook present :" +playbookname);
-        boolean result = false;
-        //result = field.isElementPresent("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-        try {
-            WebElement ele = element.getElement("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-            if(ele!=null) {
-                if(ele.isDisplayed()) {
-                    result =true;
-                }
-            }
-        } catch(RuntimeException e) {
-            result = false;
-        }
-        Report.logInfo("Finished Checking for playbook present & returning result :" +result);
-        return result;
-    }
-
-    /*
-     * Adds a task to the playbook.
-     */
-    public void addTask(Hashtable<String, String> testdata) {
-        addTask(testdata, testdata.get("playbookname"));
-    }
-
-    /*
-     * Adds a task to the playbook.
-     */
-    public void addTask(Hashtable<String, String> testdata, String playbookname) {
-        Report.logInfo("Started adding the task on the playbook :" +playbookname);
-        wait.waitTillElementDisplayed("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        item.click("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-        amtDateUtil.stalePause();
-        wait.waitTillElementDisplayed("//div[@class='ga-content ga-contentDetails']/h4[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        wait.waitTillElementDisplayed(ADD_TASK_BUTTON, MIN_TIME, MAX_TIME);
-        item.click(ADD_TASK_BUTTON);
-        fillTaskDetails(testdata);
-        item.click(CREATE_BUTTON);
-        wait.waitTillElementDisplayed("//h4[@class='ga-fltl taskHeader' and" +
-                "@title='"+testdata.get("subject")+"']", MIN_TIME, MAX_TIME);
-        amtDateUtil.stalePause();
-        Report.logInfo("Finished adding task on the playbook :" +playbookname);
-    }
-
-    /*
-     * Verifies the task present
-     */
-    public boolean isTaskPresent(Hashtable<String, String> testdata) {
+    public boolean isTaskPresent(HashMap<String, String> testdata) {
         Report.logInfo("Verifying the task is dispalyed");
         boolean result = false;
         List<WebElement> eleList = null;
@@ -157,7 +202,7 @@ public class PlayBooksPage extends RetentionBasePage {
         System.out.println("Element : " +eleString);
         eleList = element.getAllElement(eleString);
         if(eleList != null && eleList.size() > 0) {
-            System.out.println("No of Tasks :" +noOfTasksinPlaybook());
+            System.out.println("No of Tasks :" +eleList.size());
             for(WebElement ele : eleList) {
                 if(ele.isDisplayed()) {
                     result = true;
@@ -169,8 +214,47 @@ public class PlayBooksPage extends RetentionBasePage {
         return result;
     }
 
-    /*
-     * Verifies the task present based on task subject only.
+    public boolean isTaskDisplayed(HashMap<String, String> testdata) {
+        boolean result = false;
+        WebElement ele = getTask(testdata);
+        if(ele != null) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Adds a Task to the Playbook.
+     * @param testdata
+     * @return void
+     */
+    public void addTask(HashMap<String, String> testdata) {
+        wait.waitTillElementDisplayed(ADD_TASK_BUTTON, MIN_TIME, MAX_TIME);
+        item.click(ADD_TASK_BUTTON);
+        wait.waitTillElementDisplayed(CREATE_BUTTON, MIN_TIME, MAX_TIME);
+        fillTaskDetails(testdata);
+        item.click(CREATE_BUTTON);
+        wait.waitTillElementDisplayed("//h4[@class='ga-fltl taskHeader' and" +
+                "@title='"+testdata.get("subject")+"']", MIN_TIME, MAX_TIME);
+        amtDateUtil.stalePause();
+    }
+
+    /**
+     * Adds a Task to the Playbook Specified.
+     * @param testdata - a HashMap comprising of Task data 
+     * @param playbookname - Name of the Playbook on which task should be added. 
+     */
+    public void addTask(HashMap<String, String> testdata, String playbookname) {
+        Report.logInfo("Started adding the task on the playbook :" +playbookname);
+        openPlaybook(playbookname);
+        addTask(testdata);
+        Report.logInfo("Finished adding task on the playbook :" +playbookname);
+    }
+
+    /**
+     * Verify weather the task is present or not.
+     * @param taskSubject
+     * @return true - task present, false - task not present
      */
     public boolean isTaskPresent(String taskSubject) {
         Report.logInfo("Started verifying the task present based on subject : " +taskSubject);
@@ -190,68 +274,102 @@ public class PlayBooksPage extends RetentionBasePage {
         return result;
     }
 
-    /*
-     * Deletes the task based on task subject.
+    /**
+     * Deletes Task from the Playbook.
+     * @param testdata - a HashMap comprising of Task data.
+     * @param playbookname - a Playbook name on which the task should be deleted.
+     * @return void
      */
-    public boolean deleteTask(String taskSubject, String playbookname) {
+    public void deleteTask(HashMap<String, String> testdata, String playbookname) {
         Report.logInfo("Started deleting the task from playbook :" +playbookname);
-        boolean result = false;
-        wait.waitTillElementDisplayed("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        item.click("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-        wait.waitTillElementDisplayed("//div[@class='ga-content ga-contentDetails']/h4[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        wait.waitTillElementDisplayed(ADD_TASK_BUTTON, MIN_TIME, MAX_TIME);
-        List<WebElement> eleList = element.getAllElement("//h4[@class='ga-fltl taskHeader'and @title='"+taskSubject+"']/following-sibling::span/a[@title='Delete task']");
-        if(eleList !=null && eleList.size() > 0) {
-            System.out.println("No task found :" +noOfTasksinPlaybook());
-            System.out.println("Deleting the First Task Found in the List");
-            //item.click("//h4[@class='ga-fltl taskHeader'and @title='"+taskSubject+"']/following-sibling::span/a[@title='Delete task']");
+        openPlaybook(playbookname);
+        deleteTask(testdata);
+        Report.logInfo("Finished deleting the task from playbook");
+    }
+
+    /**
+     * Deletes the Task.
+     * @param testdata - a HashMap comprising of Task data.
+     * @return void
+     */
+    public void deleteTask(HashMap<String, String> testdata) {
+        WebElement task = getTask(testdata);
+        WebElement taskDeleteIcon = task.findElement(By.cssSelector("a.ga-icn.ga-ignore.ga-ignoreTaskItem"));
+        taskDeleteIcon.click();
+        modal.accept();
+        amtDateUtil.stalePause();
+    }
+
+    /**
+     * Edits the Task of the Playbook specified.
+     * @param oldtaskdata - a HashMap comprising Task data.
+     * @param newtaskdata - a HashMap comprising updated task data.
+     * @param playbookname - Playbook Name.
+     * @return void
+     */
+    public void editTask(HashMap<String, String> oldtaskdata, HashMap<String, String> newtaskdata, String playbookname) {
+        openPlaybook(playbookname);
+        editTask(oldtaskdata, newtaskdata);
+    }
+
+    /**
+     * Edits the Task.
+     * @param oldtaskdata - a HashMap comprsing of tasks data.
+     * @param newtaskdata - a HashMap comprising updated task data.
+     * @return void
+     */
+    public void editTask(HashMap<String, String> oldtaskdata, HashMap<String, String> newtaskdata) {
+        Report.logInfo("Started editing the Playbook");
+        WebElement task = getTask(oldtaskdata);
+        WebElement taskEditIcon = task.findElement(By.cssSelector("a.ga-icn.ga-edit.ga-editTaskItem"));
+        taskEditIcon.click();
+        wait.waitTillElementDisplayed(UPDATE_BUTTON, MIN_TIME, MAX_TIME);
+        fillTaskDetails(newtaskdata);
+        item.click(UPDATE_BUTTON);
+        wait.waitTillElementNotDisplayed(UPDATE_BUTTON, MIN_TIME, MAX_TIME);
+        amtDateUtil.stalePause();
+        Report.logInfo("Update the task");
+    }
+    /**
+     * Searches on all tasks with the data sent & returns the Task card a WebElement.
+     * @param testdata - a HashMap comprising of Task data.
+     * @return WebElement - Task Card.
+     */
+    public WebElement getTask(HashMap<String, String> testdata) {
+        String expsubject = testdata.get("subject");
+        String expstatus = testdata.get("status");
+        String exppriority = testdata.get("priority");
+        String expdate = testdata.get("date");
+        WebElement task = null;
+        amtDateUtil.stalePause();
+        List<WebElement> eleList = element.getAllElement("//div[@class='ga-badge ga-typeSupport']");
+        System.out.println(eleList.size());
+        if(eleList != null && eleList.size() > 0) {
             for(WebElement ele : eleList) {
-                if(eleList.get(0).isDisplayed()) {
-                    ele.click();
-                    break;
+                if(ele.isDisplayed()) {
+                    String subject = ele.findElement(By.cssSelector("h4.ga-fltl.taskHeader")).getText().trim();
+                    String status = ele.findElement(By.cssSelector("div.ga-value")).getText().trim();
+                    String priorityanddate = ele.findElement(By.className("ga-data")).getText().trim();
+                    if(subject.equalsIgnoreCase(expsubject) && status.equalsIgnoreCase(expstatus)
+                            && priorityanddate.contains(exppriority) && priorityanddate.contains(expdate)) {
+                        task = ele;
+                        Report.logInfo("SUCCESS: Found the task");
+                        break;
+                    }
                 }
             }
-            modal.accept();
-            result = true;
+            if(task ==null) {
+                Report.logInfo("FAIL: Task is not found in playbook");
+            }
+        } else {
+            Report.logInfo("FAIL: No Tasks where found for playbook :");
         }
-        Report.logInfo("Finished deleting the task from playbook & returing result : " +result);
-        return result;
+        return task;
     }
 
-    /*
-     * Deletes the task based on test data of the task i.e. checking for status, priority.
-     */
-    public boolean deleteTask(Hashtable<String, String> testdata) {
-        boolean result = false;
-        //Yet to be implemented.
-        return result;
-    }
-
-    /*
-     * Deletes the playbook.
-     */
-    public boolean deletePlaybook(String playbookname) {
-        Report.logInfo("Started Deleting the playbook");
-        boolean result = false;
-        wait.waitTillElementDisplayed("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        WebElement ele = element.getElement("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-        if(ele.isDisplayed()) {
-            item.click("//td[@class='standartTreeRow']/span[text()='"+playbookname+"']");
-            wait.waitTillElementDisplayed("//div[@class='ga-content ga-contentDetails']/h4[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-            wait.waitTillElementDisplayed(ADD_TASK_BUTTON, MIN_TIME, MAX_TIME);
-            wait.waitTillElementDisplayed(DELETE_PLAYBOOK, MIN_TIME, MAX_TIME);
-            item.click(DELETE_PLAYBOOK);
-            modal.accept();
-            amtDateUtil.stalePause();
-            result = true;
-        }
-        Report.logInfo("Finished deleting the playbook & returing the result :" +result);
-        return result;
-
-    }
-
-    /*
-     * Count no of tasks on the playbook.
+    /**
+     * Counts the number of Tasks in the Playbook.
+     * @return int - count of tasks.
      */
     public int noOfTasksinPlaybook() {
         Report.logInfo("Started counting the number of tasks in a playbook.");
@@ -266,8 +384,10 @@ public class PlayBooksPage extends RetentionBasePage {
         return count;
     }
 
-    /*
-     * Verifies that the playbook is displayed under All playbook types.
+    /**
+     * Searches weather the Playbook is of ALL type. 
+     * @param playbookname - Playbook Name.
+     * @return true - All Playbook, else false. 
      */
     public boolean isAllPlaybook(String playbookname) {
         Report.logInfo("Strarted verifying the playbook "+playbookname+" is All type of playbook");
@@ -292,8 +412,10 @@ public class PlayBooksPage extends RetentionBasePage {
         return result;
     }
 
-    /*
-     * Verifies that the playbook is displayed under Alert playbook type.
+    /**
+     * Searches weather the Playbook is of Alert type. 
+     * @param playbookname - Playbook Name.
+     * @return true - Alert Playbook, else false. 
      */
     public boolean isAlertPlaybook(String playbookname) {
         Report.logInfo("Strarted verifying the playbook "+playbookname+" is Alert type of playbook");
@@ -317,11 +439,13 @@ public class PlayBooksPage extends RetentionBasePage {
         return result;
     }
 
-    /*
-     * Verifies that the playbook is displayed under Event playbook type.
+    /**
+     * Searches weather the Playbook is of Event type. 
+     * @param playbookname - Playbook Name.
+     * @return true - Event Playbook, else false. 
      */
     public boolean isEventPlaybook(String playbookname) {
-        Report.logInfo("Strarted verifying the playbook "+playbookname+" is Event type of playbook");
+        Report.logInfo("Started verifying the playbook "+playbookname+" is Event type of playbook");
         boolean result = false;
         try {
             String eleString = "//span[text()='Alert']/ancestor::tr/following-sibling"+
