@@ -26,8 +26,10 @@ public class BaseTest {
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
 	protected static BasePage basepage;
-	private final String DELETE_RECORDS = "Select id from TransHeader__c | Select id from CustomerInfo__c";
-	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c | Select id from JBCXM__CustomerInfo__c";
+	private final String DELETE_RECORDS = "Select id from TransHeader__c" +
+            " | Select id from CustomerInfo__c | Select id from Playbook__c";
+	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c" +
+            " | Select id from JBCXM__CustomerInfo__c | Select id from JBCXM__Playbook__c";
 
 	@BeforeSuite
 	public void init() throws Exception {
