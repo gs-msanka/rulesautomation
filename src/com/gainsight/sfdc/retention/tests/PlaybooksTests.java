@@ -170,7 +170,7 @@ public class PlaybooksTests extends BaseTest {
         Assert.assertEquals(true, pbPage.isTaskDisplayed(newtaskdata));
     }
 
-    @Test//(dependsOnMethods ={"testAddTasksForPlaybook"})
+    @Test(dependsOnMethods ={"testAddTasksForPlaybook"})
     public void testDeleteTask() throws BiffException, IOException {
         PlayBooksPage pbPage = basepage.clickOnRetentionTab().clickOnPlaybooksTab();
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
