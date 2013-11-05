@@ -26,19 +26,20 @@ public class ChurnPage extends BasePage {
 	public ChurnPage addChurnTransaction(HashMap<String, String> data) {
 		element.click(NEW_BUTTON);
 		element.switchToFrame("//iframe");
-		field.setTextField(CUSTOMER_NAME_FIELD, data.get("customerName"));
+		System.out.println(data.get("customerName"));
+		field.clearAndSetText(CUSTOMER_NAME_FIELD, data.get("customerName"));
 		button.click(NAME_LOOPUP_IMG);
 		element.click("//a[text()='" + data.get("customerName") + "']");
 		amtDateUtil.stalePause();
 		String bookingDate = data.get("bookingDate");
-		if (!bookingDate.equals("nil"))
+		if (bookingDate != null)
 			amtDateUtil.enterDate(BOOKING_DATE_FIELD, bookingDate);
 		String effectiveDate = data.get("effectiveDate");
-		if (!effectiveDate.equals("nil"))
+		if (effectiveDate != null)
 			amtDateUtil.enterDate(START_DATE_FIELD, effectiveDate);
 		field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
 		String comments = data.get("comments");
-		if (!comments.equals("nil"))
+		if (comments != null)
 			field.setTextField(COMMENTS_FIELD, comments);
 		button.click(SAVE_BUTTON);
 		element.switchToMainWindow();

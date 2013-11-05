@@ -18,12 +18,14 @@ import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
+import com.gainsight.utils.DataProviderArguments;
 
 @Listeners({ com.gainsight.utils.GSTestListener.class })
 public class AcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
 	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
 			+ generatePath(dirs);
+	final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
 	private boolean loggedIn = false;
 
 	@BeforeClass
@@ -33,18 +35,18 @@ public class AcceptanceTest extends BaseTest {
 		loggedIn = true;
 	}
 
-	@Test
-	public void testAddNewCustomer() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT1");
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT1")
+	public void testAddNewCustomer(HashMap<String, String> testData)
+			throws BiffException, IOException {
 		addCustomer(testData.get("customer"));
 	}
 
-	@Test
-	public void testAddNewCustomerAndTransaction() throws ParseException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT2")
+	public void testAddNewCustomerAndTransaction(
+			HashMap<String, String> testData) throws ParseException,
 			BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT2");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		Customer360Page customer360Page = addCustomerAndTransaction(testData);
@@ -77,11 +79,10 @@ public class AcceptanceTest extends BaseTest {
 				"Verify the timeline position of renewal transaction");
 	}
 
-	@Test
-	public void testTransactionFlow() throws BiffException, IOException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT8")
+	public void testTransactionFlow(HashMap<String, String> testData) throws BiffException, IOException,
 			ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT8");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		HashMap<String, String> snbData = getMapFromData(testData
@@ -131,11 +132,10 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(c360Page.isLineItemPresent(lineItem));
 	}
 
-	@Test
-	public void testStatusAfterChurn() throws BiffException, IOException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT9")
+	public void testStatusAfterChurn(HashMap<String, String> testData) throws BiffException, IOException,
 			ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT9");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		HashMap<String, String> chData = getMapFromData(testData
@@ -160,11 +160,10 @@ public class AcceptanceTest extends BaseTest {
 		validateSummary(nbData, summary);
 	}
 
-	@Test
-	public void testChurnTransaction() throws BiffException, IOException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT6")
+	public void testChurnTransaction(HashMap<String, String> testData) throws BiffException, IOException,
 			ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT6");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		HashMap<String, String> chData = getMapFromData(testData
@@ -184,11 +183,10 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(customerSummary.getLifetime().contains("0 Months"));
 	}
 
-	@Test
-	public void testOpportunityWithoutSettings() throws BiffException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT15")
+	public void testOpportunityWithoutSettings(HashMap<String, String> testData) throws BiffException,
 			IOException, ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT15");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		HashMap<String, String> snbData = getMapFromData(testData
@@ -213,11 +211,10 @@ public class AcceptanceTest extends BaseTest {
 		Assert.assertTrue(cSummary.getRD().contains(expData.get("renewalDate")));
 	}
 
-	@Test
-	public void testC360Operations() throws BiffException, IOException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT4")
+	public void testC360Operations(HashMap<String, String> testData) throws BiffException, IOException,
 			ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT4");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		HashMap<String, String> churnData = getMapFromData(testData
@@ -241,11 +238,10 @@ public class AcceptanceTest extends BaseTest {
 				"verify customer status is churn");
 	}
 
-	@Test
-	public void testAddCustomerFromAccPage() throws BiffException, IOException,
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT5")
+	public void testAddCustomerFromAccPage(HashMap<String, String> testData) throws BiffException, IOException,
 			ParseException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AcceptanceTests.xls", "AT5");
 		String accName = testData.get("AccName");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));

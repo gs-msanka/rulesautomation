@@ -98,11 +98,11 @@ public class TransactionsPage extends BasePage {
 
 	private void fillChurnFields(String bookingDate, String effectiveDate,
 			String reason) {
-		if (!bookingDate.equals("nil"))
+		if (bookingDate != null)
 			amtDateUtil.enterDate(BOOKING_DATE_FIELD, bookingDate);
-		if (!effectiveDate.equals("nil"))
+		if (effectiveDate != null)
 			amtDateUtil.enterDate(START_DATE_FIELD, effectiveDate);
-		if (!reason.equals("nil"))
+		if (reason != null)
 			field.setSelectField(CHURN_REASON_SELECT, reason);
 	}
 

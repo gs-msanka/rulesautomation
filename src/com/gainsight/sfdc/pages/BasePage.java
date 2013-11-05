@@ -34,6 +34,9 @@ public class BasePage extends WebPage implements Constants {
 	public AmountsAndDatesUtil amtDateUtil = new AmountsAndDatesUtil();
 
 	public BasePage login() {
+		if(!driver.getCurrentUrl().contains("login")){
+			driver.get(env.getDefaultUrl());
+		}
 		field.setTextField("username", TestEnvironment.get().getUserName());
 		field.setTextField("password", TestEnvironment.get().getUserPassword());
 		button.click("Login");

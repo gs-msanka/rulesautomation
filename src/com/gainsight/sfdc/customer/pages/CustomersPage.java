@@ -97,7 +97,7 @@ public class CustomersPage extends CustomerBasePage {
 	private void fillFields(String status, String stage, String comments) {
 		field.setSelectField(STATUS_FIELD, status);
 		field.setSelectField(STAGE_FIELD, stage);
-		if (!comments.equals("nil"))
+		if (comments != null)
 			item.setText(COMMENTS_FIELD,
 					comments);
 	}

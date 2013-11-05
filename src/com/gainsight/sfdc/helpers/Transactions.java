@@ -73,7 +73,7 @@ public class Transactions extends WebPage implements Constants {
 		addTransactionDates(data.get("bookingDate"), data.get("startDate"),
 				data.get("endDate"));
 		String parent = data.get("transaction");
-		if (!parent.equals("nil"))
+		if (parent != null)
 			item.click(getXpathForTran(parent, "1"));
 		addTransactionAmts(data.get("mrr"), data.get("asv"),
 				data.get("userCount"), data.get("otr"));
@@ -98,40 +98,40 @@ public class Transactions extends WebPage implements Constants {
 
 	private void addTransactionAmts(String mrr, String asv, String userCount,
 			String otr) {
-		if (!mrr.equals("nil"))
+		if (mrr != null)
 			field.setTextField(MRR_FIELD, mrr);
-		if (!asv.equals("nil"))
+		if (asv != null)
 			field.setTextField(ASV_FIELD, asv);
-		if (!userCount.equals("nil"))
+		if (userCount != null)
 			field.setTextField(USERS_FIELD, userCount);
-		if (!otr.equals("nil"))
+		if (otr != null)
 			field.setTextField(OTR_FIELD, otr);
 	}
 
 	private void addTransactionDates(String bookingDate, String startDate,
 			String endDate) {
-		if (!bookingDate.equals("nil")) {
+		if (bookingDate != null) {
 			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
 		}
-		if (!startDate.equals("nil")) {
+		if (startDate != null) {
 			util.stalePause();
 			util.enterDate(START_DATE_FIELD, startDate);
 		}
-		if (!endDate.equals("nil"))
+		if (endDate != null)
 			util.enterDate(END_DATE_FIELD, endDate);
 
 	}
 
 	private void addTransactionInit(String customerName, String opportunity,
 			String bookingType) {
-		if (!customerName.equals("nil")) {
+		if (customerName != null) {
 			field.setTextField(CUSTOMER_NAME_FIELD, customerName);
 			button.click(NAME_LOOPUP_IMG);
 			element.click("//a[text()='" + customerName + "']");
 		}
-		if (!opportunity.equals("nil"))
+		if (opportunity != null)
 			field.setSelectField(OPPRT_SELECT, opportunity);
-		if (!bookingType.equals("nil"))
+		if (bookingType != null)
 			field.setSelectField(BOOKING_TYPE_SELECT, bookingType);
 		util.stalePause();
 	}
@@ -147,11 +147,11 @@ public class Transactions extends WebPage implements Constants {
 
 	private void fillChurnFields(String bookingDate, String effectiveDate,
 			String reason) {
-		if (!bookingDate.equals("nil"))
+		if (bookingDate != null)
 			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
-		if (!effectiveDate.equals("nil"))
+		if (effectiveDate != null)
 			util.enterDate(START_DATE_FIELD, effectiveDate);
-		if (!reason.equals("nil"))
+		if (reason != null)
 			field.setSelectField(CHURN_REASON_SELECT, reason);
 	}
 
@@ -180,27 +180,27 @@ public class Transactions extends WebPage implements Constants {
 
 	private void fillDebookFields(String transaction, String bookingDate,
 			String effectiveDate) {
-		if (!transaction.equals("nil"))
+		if (transaction != null)
 			item.click(getXpathForTran(transaction, "2"));
-		if (!bookingDate.equals("nil"))
+		if (bookingDate != null)
 			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
-		if (!effectiveDate.equals("nil"))
+		if (effectiveDate != null)
 			util.enterDate(START_DATE_FIELD, effectiveDate);
 	}
 
 	private void transactionFini(String comments) {
-		if (!comments.equals("nil"))
+		if (comments != null)
 			field.setTextField(COMMENTS_FIELD, comments);
 		button.click(SAVE_BUTTON);
 	}
 
 	private void fillDownsellFields(String transaction, String bookingDate,
 			String effectiveDate) {
-		if (!transaction.equals("nil"))
+		if (transaction != null)
 			item.click(getXpathForTran(transaction, "2"));
-		if (!bookingDate.equals("nil"))
+		if (bookingDate != null)
 			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
-		if (!effectiveDate.equals("nil"))
+		if (effectiveDate != null)
 			util.enterDate(START_DATE_FIELD, effectiveDate);
 	}
 	private String getXpathForTimeLineItem(TimeLineItem transaction){
