@@ -28,7 +28,7 @@
 			
 			<!-- Soujanya's Test -->
 			<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
-			<class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
+			<!-- class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/ -->
 		</classes>
 	</test>
 </suite>
