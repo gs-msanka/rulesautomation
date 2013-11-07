@@ -70,4 +70,14 @@ public class AdministrationBasepage extends BasePage{
 		
 		return new AdminNotificationsSubTab();
 	}
+	
+	public AdminUIViewssSubTab ClickOnUIViewssettingsSubTab()
+	{
+		
+		item.click("//a[contains(@href,'Administration-UIViews')]");
+		
+		return new AdminUIViewssSubTab();
+	}
+	
+	
 }
