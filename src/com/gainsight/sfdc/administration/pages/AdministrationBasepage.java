@@ -47,13 +47,13 @@ public class AdministrationBasepage extends BasePage{
 		return new AdminMilestoneTab();
 	}
 	
-	public AdminUISettingsTab ClickOnUISettingsTab()
+	/*public AdminUISettingsTab ClickOnUISettingsTab()
 	{
 		
 		item.click("//a[contains(@href,'Administration-UI Settings')]");
 		
 		return new AdminUISettingsTab();
-	}
+	}*/
 	
 	public AdminFeaturesSubTab ClickOnFeaturesTab()
 	{
@@ -71,13 +71,13 @@ public class AdministrationBasepage extends BasePage{
 		return new AdminNotificationsSubTab();
 	}
 	
-	public AdminUIViewssSubTab ClickOnUIViewssettingsSubTab()
+	/*public AdminUIViewssSubTab ClickOnUIViewssettingsSubTab()
 	{
 		
 		item.click("//a[contains(@href,'Administration-UIViews')]");
 		
 		return new AdminUIViewssSubTab();
-	}
+	}*/
 	
 	
 }
