@@ -27,23 +27,20 @@ public class AdminFeaturesSubTab extends BasePage{
 	}
 	  
 	
-	public AdminFeaturesSubTab createFeatureType(String Name, String systemname , String productName) {
+	public AdminFeaturesSubTab createFeatureType(String name, String systemName , String productName) {
 		
 		button.click(FEATURES_NEW);
 		wait.waitTillElementDisplayed(FEATURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		if(item.isElementPresent(FEATURE_TEXT_PRESENT)) {
-			field.clearAndSetText(FEATURE_NAME, Name);
+		item.isElementPresent(FEATURE_TEXT_PRESENT);
+			field.clearAndSetText(FEATURE_NAME, name);
 			productSelection(productName);
-			field.clearAndSetText(FEATURE_SYSTEMNAME, systemname);
+			field.clearAndSetText(FEATURE_SYSTEMNAME, systemName);
 			button.click(FEATUR_SAVE);
 			wait.waitTillElementPresent(FEATURE_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
-			wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		} else {
-			System.out.println("Text Missmatch with the light box:--");
-		} return this;
+			wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
+		 return this;
 	}
-	
 	public boolean IsFeatureTypePresent(String values){
 		Boolean result = false;
 		WebElement Linetable2 =item.getElement(FEATURE_TABLE_VALUES);
@@ -55,32 +52,47 @@ public class AdminFeaturesSubTab extends BasePage{
 		return result;
 	}
 	
-	public AdminFeaturesSubTab editFeatureType(String s, String Name, String systemname , String productName) {
-		
+	public AdminFeaturesSubTab editFeatureType(String s, String name, String systemName , String productName) {
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed(FEATURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		if(item.isElementPresent(FEATURE_TEXT_PRESENT)) {
-			field.clearAndSetText(FEATURE_NAME, Name);
+		item.isElementPresent(FEATURE_TEXT_PRESENT);
+			field.clearAndSetText(FEATURE_NAME, name);
 			productSelection(productName);
-			field.clearAndSetText(FEATURE_SYSTEMNAME, systemname);
+			field.clearAndSetText(FEATURE_SYSTEMNAME, systemName);
 			button.click(FEATUR_SAVE);
 			wait.waitTillElementPresent(FEATURE_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
-			wait.waitTillElementPresent("//span[contains(text(),'"+Name+"')]", MIN_TIME, MAX_TIME);
-		} else {
-			System.out.println("Text Missmatch with the light box:--");
-		} return this;
+			wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
+		 return this;
 	}
-	
-	public AdminFeaturesSubTab deleteFeatureType(String Name) {
+	public boolean IsFeatureTypeEdited(String values){
+		Boolean result = false;
+		WebElement Linetable2 =item.getElement(FEATURE_TABLE_VALUES);
+		String tableId = Linetable2.getAttribute("Id");
+		int a = table.getValueInListRow(tableId, values);
+		if(a != -1) {
+			result = true;
+		}
+		return result;
+	}
+	public AdminFeaturesSubTab deleteFeatureType(String name) {
 		
-		item.click("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
+		item.click("//td/span[contains(text(),'"+name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
 		modal.accept();
-		wait.waitTillElementNotPresent("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotPresent("//td/span[contains(text(),'"+name+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		refreshPage();
 		return this;
 	}
-	
+	public boolean IsFeatureTypeDeleted(String values){
+		Boolean result = false;
+		WebElement Linetable2 =item.getElement(FEATURE_TABLE_VALUES);
+		String tableId = Linetable2.getAttribute("Id");
+		int a = table.getValueInListRow(tableId, values);
+		if(a != -1) {
+			result = true;
+		}
+		return result;
+	}
 	
 	/** If product name exists, then this will select the existing product name   
 	 * @param if product name doesn't exists, then it will create the product name.
@@ -88,8 +100,8 @@ public class AdminFeaturesSubTab extends BasePage{
 	public AdminFeaturesSubTab productSelection(String productName ) {
 		
 		boolean result = false;
-		Select s = new Select(item.getElement(FEATURE_SELECT_GRUP));
-		List<WebElement> opList = s.getOptions();
+		Select seclt = new Select(item.getElement(FEATURE_SELECT_GRUP));
+		List<WebElement> opList = seclt.getOptions();
 		for(WebElement webEle : opList) {
    if(webEle.getText().equalsIgnoreCase(productName)) {
 		result = true;

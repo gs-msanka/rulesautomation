@@ -36,12 +36,13 @@ public class AdminFeatureTabTest extends BaseTest {
 	}
 	private AdminFeaturesSubTab createFeatureType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Name = data.get("Name");
+		String name = data.get("name");
 		String productName = data.get("productName");
-		String systemname =data.get("systemname");
+		String systemName =data.get("systemName");
 		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();
-		adFeturTpe.createFeatureType(Name, systemname ,productName ); 
-			Assert.assertTrue(adFeturTpe.IsFeatureTypePresent(Name),
+		adFeturTpe.createFeatureType(name, systemName ,productName ); 
+		String featureType = name +"|"+ systemName +"|"+ productName;
+			Assert.assertTrue(adFeturTpe.IsFeatureTypePresent(featureType),
 					"Verifying Feature Type is added to the grid");
 		return adFeturTpe;
 	}
@@ -54,12 +55,15 @@ public class AdminFeatureTabTest extends BaseTest {
 	private AdminFeaturesSubTab editFeatureType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
-		String Name = data.get("Name");
+		String name = data.get("name");
 		String productName = data.get("productName");
-		String systemname =data.get("systemname");
-		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab()
-				.ClickOnFeaturesTab();
-		adFeturTpe.editFeatureType( previous, Name, systemname, productName);
+		String systemName =data.get("systemName");
+		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();
+		adFeturTpe.editFeatureType( previous, name, systemName ,productName);
+		String edtFeatureType = name +"|"+ systemName +"|"+ productName;
+		Assert.assertTrue(adFeturTpe.IsFeatureTypeEdited(edtFeatureType),
+				"Verifying Feature Type is edited in the grid");
+		
 		return adFeturTpe;
 	}
 	@Test(priority=3)                        // Delete Feature Type
@@ -71,9 +75,14 @@ public class AdminFeatureTabTest extends BaseTest {
 	private AdminFeaturesSubTab deleteFeatureType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
-		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab()
-				.ClickOnFeaturesTab();
+		String name = data.get("name");
+		String productName = data.get("productName");
+		String systemName =data.get("systemName");
+		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();			
 		adFeturTpe.deleteFeatureType(previous);
+		String delFeatureType = name +"|"+ systemName +"|"+ productName;
+		Assert.assertFalse(adFeturTpe.IsFeatureTypeDeleted(delFeatureType),
+				"Verifying Feature Type is deleted in the grid");
 		return adFeturTpe;
 	}
 	
