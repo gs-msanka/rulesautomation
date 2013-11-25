@@ -328,6 +328,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String systemName = bTypeData.get("systemName");
 		String shortName = bTypeData.get("shortName");
 		String bType = bTypeData.get("bookingType");
+		String lineItemTypes = bTypeData.get("lineItemTypes");
 		String values = makeRowValues(name, displayOrder, systemName, "Custom-"
 				+ bType);
 		AdminTransactionsTab adminTransTab = basepage
@@ -336,7 +337,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.addBookingTypes(name, displayOrder, systemName, shortName,
 						bType);
 		Assert.assertTrue(adminTransTab.isBookingTypePresent(values));
-		adminTransTab.mapBookingTypes(name);
+		adminTransTab.mapBookingTypes(name,lineItemTypes);
 		Customer360Page c360Page = addCustomerAndTransaction(testData);
 		TransactionsPage transactionsPage = c360Page.clickOnTransactionTab()
 				.clickOnTransactionsSubTab();
