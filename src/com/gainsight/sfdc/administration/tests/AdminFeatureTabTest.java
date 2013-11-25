@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminFeaturesSubTab;
 import com.gainsight.sfdc.tests.BaseTest;
-
+//Sairam want to test.
 public class AdminFeatureTabTest extends BaseTest {
 
 	String[] dirs = { "acceptancetests" };
