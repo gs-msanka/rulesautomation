@@ -26,10 +26,10 @@ public class BaseTest {
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
 	protected static BasePage basepage;
-	private final String DELETE_RECORDS = "Select id from TransHeader__c" +
-            " | Select id from CustomerInfo__c | Select id from Playbook__c";
-	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c" +
-            " | Select id from JBCXM__CustomerInfo__c | Select id from JBCXM__Playbook__c";
+	private final String DELETE_RECORDS = "Select id from TransHeader__c"
+			+ " | Select id from CustomerInfo__c | Select id from Playbook__c";
+	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c"
+			+ " | Select id from JBCXM__CustomerInfo__c | Select id from JBCXM__Playbook__c";
 
 	@BeforeSuite
 	public void init() throws Exception {
@@ -57,7 +57,6 @@ public class BaseTest {
 			if (loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();
 				basepage.loadDefaultData();
-				
 			}
 		} catch (Exception e) {
 			env.stop();
@@ -134,5 +133,20 @@ public class BaseTest {
 
 	public Double calcARPU(int ASV, int users) {
 		return Math.ceil((ASV / 12.0) / users);
+	}
+
+	public String makeRowValues(String... values) {
+		String row = "";
+		int counter = 1;
+		int size = values.length;
+		for (String value : values) {
+			if (counter == size) {
+				row = row + value;
+			} else {
+				row = row + value + "|";
+			}
+			counter++;
+		}
+		return row;
 	}
 }

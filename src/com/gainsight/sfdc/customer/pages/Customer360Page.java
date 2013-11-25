@@ -92,15 +92,24 @@ public class Customer360Page extends BasePage {
 		return text.replace("$", "").replace(",", "");
 	}
 
-	public Customer360Page addRenewalTransaction(HashMap<String,String> dbData) {
+	public Customer360Page addRenewalTransaction(HashMap<String,String> rData) {
 		item.click(NEW_MENU);
 		item.click(NEW_TRANSACTION_IMG);
 		field.switchToFrame(TRANSACTION_FRAME);
-		transactionUtil.addDebookTransaction(dbData);
+		transactionUtil.addRenewalTransaction(rData);
 		modal.accept();
 		field.switchToMainWindow();	
 		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
 		return this;
 	}	
+	public Customer360Page addDebookTransaction(HashMap<String,String> dbData) {
+		item.click(NEW_MENU);
+		item.click(NEW_TRANSACTION_IMG);
+		field.switchToFrame(TRANSACTION_FRAME);
+		transactionUtil.addDebookTransaction(dbData);
+		field.switchToMainWindow();	
+		wait.waitTillElementNotDisplayed(TRANSACTION_FRAME, MIN_TIME, MAX_TIME);			
+		return this;
+	}
 
 }
