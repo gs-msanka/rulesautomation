@@ -149,4 +149,17 @@ public class BaseTest {
 		}
 		return row;
 	}
+
+    /**
+     * @return true is the execution context is packaged environment.
+     */
+    public boolean isPackageInstance() {
+        Boolean namesapce = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        if(namesapce) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }
