@@ -36,14 +36,15 @@ public class AdminCustomersTabTest extends BaseTest {
 	}
 	private AdminCustomersTab addNewStage(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String systemname =data.get("systemname");
-		String shortname = data.get("shortname");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName =data.get("systemName");
+		String shortName = data.get("shortName");
 		String active = data.get("active");
 		AdminCustomersTab adCustPage = basepage.clickOnAdminTab().clickOnCustomersSubTab();
-		adCustPage.addNewStage(Name,displayorder,systemname,shortname, active); 
-			Assert.assertTrue(adCustPage.isStagePresent(Name),
+		adCustPage.addNewStage(name,displayOrder,systemName,shortName, active); 
+		String custStage = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+			Assert.assertTrue(adCustPage.isStagePresent(custStage),
 					"Verifying Stage is added to the grid");
 		return adCustPage;
 	}
@@ -54,16 +55,17 @@ public class AdminCustomersTabTest extends BaseTest {
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminCustomersTab");
 		editStage(testData.get("EditStage"));
 	}
-
 	private AdminCustomersTab editStage(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String dummy = data.get("previous");
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String shortname = data.get("shortname");
-		AdminCustomersTab adCustPage = basepage.clickOnAdminTab()
-				.clickOnCustomersSubTab();
-		adCustPage.editStage(dummy, Name, displayorder, shortname);
+		String previous = data.get("previous");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String shortName = data.get("shortName");
+		AdminCustomersTab adCustPage = basepage.clickOnAdminTab().clickOnCustomersSubTab();
+		adCustPage.editStage(previous, name, displayOrder, shortName);
+		String edtCustStage = name +"|"+ displayOrder +"|"+ shortName;
+			Assert.assertTrue(adCustPage.isStageEdited(edtCustStage),
+					"Verifying Stage is edited in the grid");
 		return adCustPage;
 	}
 	
@@ -76,9 +78,15 @@ public class AdminCustomersTabTest extends BaseTest {
 	private AdminCustomersTab deleteStage(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
-		AdminCustomersTab adCustPage = basepage.clickOnAdminTab()
-				.clickOnCustomersSubTab();
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName =data.get("systemName");
+		String shortName = data.get("shortName");
+		AdminCustomersTab adCustPage = basepage.clickOnAdminTab().clickOnCustomersSubTab();
 		adCustPage.deleteStage(previous);
+		String delCustStage = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+		Assert.assertFalse(adCustPage.isEditStageDeleted(delCustStage),
+				"Verifying Stage is deleted to the grid");
 		return adCustPage;
 	}
 	

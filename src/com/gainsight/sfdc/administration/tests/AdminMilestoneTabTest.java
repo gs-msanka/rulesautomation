@@ -36,13 +36,14 @@ public class AdminMilestoneTabTest extends BaseTest {
 	}
 	private AdminMilestoneTab createMilestoneType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String systemname =data.get("systemname");
-		String shortname = data.get("shortname");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName =data.get("systemName");
+		String shortName = data.get("shortName");
 		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab().clickOnMilestoneTab();
-		adCrteMstne.createMilestoneType(Name,displayorder,systemname,shortname ); 
-			Assert.assertTrue(adCrteMstne.IsMilestoneTypePresent(Name),
+		adCrteMstne.createMilestoneType(name,displayOrder,systemName,shortName );
+		String milestoneType = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+			Assert.assertTrue(adCrteMstne.IsMilestoneTypePresent(milestoneType),
 					"Verifying Stage is added to the grid");
 		return adCrteMstne;
 	}
@@ -56,13 +57,15 @@ public class AdminMilestoneTabTest extends BaseTest {
 
 	private AdminMilestoneTab editMilestoneType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Previous = data.get("Previous");
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String shortname = data.get("shortname");
-		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab()
-				.clickOnMilestoneTab();
-		adCrteMstne.editMilestoneType(Previous, Name, displayorder, shortname);
+		String previous = data.get("previous");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String shortName = data.get("shortName");
+		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab().clickOnMilestoneTab();
+		adCrteMstne.editMilestoneType(previous, name, displayOrder, shortName);
+		String edtMilestoneType = name +"|"+ displayOrder +"|"+ shortName;
+		Assert.assertTrue(adCrteMstne.IsMilestoneTypeEdited(edtMilestoneType),
+				"Verifying Stage is edited in the grid");
 		return adCrteMstne;
 	}
 	
@@ -74,10 +77,16 @@ public class AdminMilestoneTabTest extends BaseTest {
 	}
 	private AdminMilestoneTab deleteMilestoneType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Previous = data.get("Previous");
-		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab()
-				.clickOnMilestoneTab();
-		adCrteMstne.deleteMilestoneType(Previous);
+		String previous = data.get("previous");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName =data.get("systemName");
+		String shortName = data.get("shortName");
+		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab().clickOnMilestoneTab();			
+		adCrteMstne.deleteMilestoneType(previous);
+		String delMilestoneType = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+		Assert.assertFalse(adCrteMstne.IsMilestoneTypeDeleted(delMilestoneType),
+				"Verifying Stage is deleted in the grid");
 		return adCrteMstne;
 	}
 	

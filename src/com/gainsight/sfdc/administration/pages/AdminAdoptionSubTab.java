@@ -51,23 +51,20 @@ public class AdminAdoptionSubTab extends BasePage {
 	}
 	
 	                      //Create New Adoption Measure
-   public AdminAdoptionSubTab createAdoptionMeasure(String Name, String displayorder, String systemname, String Shortname) {
+   public AdminAdoptionSubTab createAdoptionMeasure(String name, String displayOrder, String systemName, String shortName) {
 		button.click(NEW);
 		wait.waitTillElementDisplayed(MESURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	if(item.isElementPresent(TEXT_PRESENT)) {
-		field.clearAndSetText(AMEASURE_NAME,Name);
-		field.clearAndSetText(AMESURE_DISPLYORDER, displayorder);
-		field.clearAndSetText(AMESURE_SYSTEM_NAME, systemname);
-		field.clearAndSetText(AMESURE_SHORT_NAME, Shortname);
+	item.isElementPresent(TEXT_PRESENT);
+		field.clearAndSetText(AMEASURE_NAME,name);
+		field.clearAndSetText(AMESURE_DISPLYORDER, displayOrder);
+		field.clearAndSetText(AMESURE_SYSTEM_NAME, systemName);
+		field.clearAndSetText(AMESURE_SHORT_NAME, shortName);
 		item.click(INCLUDE_IN_ADOPTION);
 		item.click(INCLUDE_USAGETRACKER);
 		button.click(MEASURE_SAVE);
 		wait.waitTillElementPresent(MESURE_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
-	} else {
-			System.out.println("Text is:"+ item.getText("//span[@class='DialogTitleClass']")+"LightBox");
-			button.click(MEASURE_CANCEL);
-		} return this;
+	return this;
 	}
    public boolean isAdoptionMeasurePresent(String values){
 		Boolean result = false;
@@ -81,22 +78,28 @@ public class AdminAdoptionSubTab extends BasePage {
 	}
    
                  //Edit Adoption Measure
-   public AdminAdoptionSubTab editAdoptionMeasure(String s,String Name, String displayorder, String Shortname) {
+   public AdminAdoptionSubTab editAdoptionMeasure(String s,String name, String displayOrder, String shortName) {
 	   wait.waitTillElementPresent("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a", MIN_TIME, MAX_TIME);
 		item.click("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a");
 		wait.waitTillElementDisplayed(MESURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	if(item.isElementPresent(TEXT_PRESENT)) {
-		field.clearAndSetText(AMEASURE_NAME,Name);
-		field.clearAndSetText(AMESURE_DISPLYORDER, displayorder);
-		field.clearAndSetText(AMESURE_SHORT_NAME, Shortname);
+	item.isElementPresent(TEXT_PRESENT);
+		field.clearAndSetText(AMEASURE_NAME,name);
+		field.clearAndSetText(AMESURE_DISPLYORDER, displayOrder);
+		field.clearAndSetText(AMESURE_SHORT_NAME, shortName);
 		button.click(MEASURE_SAVE);
 		wait.waitTillElementPresent(MESURE_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
-	}  else {
-			System.out.println("Text is:"+ item.getText("//span[@class='DialogTitleClass']")+"LightBox");
-			button.click(MEASURE_CANCEL);
+	return this;
+	}
+   public boolean isAdoptionMeasureEdited(String values){
+		Boolean result = false;
+		WebElement Measuretable =item.getElement(TABLE_VALUES_MESURE);
+		String tableId = Measuretable.getAttribute("Id");
+		int a = table.getValueInListRow(tableId, values);
+		if(a != -1) {
+			result = true;
 		}
-		return this;
+		return result;
 	}
                                    //Delete Adoption Measure
    public AdminAdoptionSubTab deleteAdoptionMeasure(String s ) {
@@ -105,13 +108,17 @@ public class AdminAdoptionSubTab extends BasePage {
 		modal.accept();
 		wait.waitTillElementNotPresent("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		refreshPage();
-		Report.logInfo("Checking whether the element is deleted");
-	if(item.isElementPresent("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']")) {
-			System.out.println("Unable to delete the element");
-	} else {
-			System.out.println("Element got deleted");
+	return this;
+	}
+   public boolean isAdoptionMeasureDeleted(String values){
+		Boolean result = false;
+		WebElement Measuretable =item.getElement(TABLE_VALUES_MESURE);
+		String tableId = Measuretable.getAttribute("Id");
+		int a = table.getValueInListRow(tableId, values);
+		if(a != -1) {
+			result = true;
 		}
-		return this;
+		return result;
 	}
        
       	/** This method will take care for Usage configuration..
@@ -136,14 +143,14 @@ public class AdminAdoptionSubTab extends BasePage {
 	private final String CLOSE_PRESENT     = "//img[@onclick='jbaraCloseMeasureColumnMapForm()']/.";
 	
 	
-	public AdminAdoptionSubTab measureCloumnMapping () {
+/*	public AdminAdoptionSubTab measureCloumnMapping () {
 		
 		button.click(COLUMN_MAP);
 		wait.waitTillElementDisplayed(COLMAP_FORM_BLOCK, MIN_TIME , MAX_TIME);
 	if(item.isElementPresent(CLOSE_PRESENT)) {
 		
 		
-		
+
 		
 		
 		} 
@@ -159,8 +166,8 @@ public class AdminAdoptionSubTab extends BasePage {
 		}
 		return result;
 	}
-	
-	private final String AGGRE_FORM_BLOCK   = "//div[contains(@class,'jbaraDummyColumnAggregationTypeForm') and contains(@style,'display: block')]";
+	*/
+	/*private final String AGGRE_FORM_BLOCK   = "//div[contains(@class,'jbaraDummyColumnAggregationTypeForm') and contains(@style,'display: block')]";
 	private final String AGGRE_FORM_NONE   = "//div[contains(@class,'jbaraDummyColumnAggregationTypeForm') and contains(@style,'display: none')]";
 	private final String AGGRE_TEXT_PRESENT = "//img[@onclick='jbaraCloseColumnAggregationTypeForm()']";
 	
@@ -175,7 +182,7 @@ public class AdminAdoptionSubTab extends BasePage {
 		
 		return null;
 	}
-	
+	*/
 	
 	
 

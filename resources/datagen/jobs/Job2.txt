@@ -1,0 +1,81 @@
+{
+    "jobName": "job2",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "Account",
+        "fields": [
+            "Id",
+            "Name"
+        ],
+        "output": "./resources/datagen/process/account.csv"
+    },
+    "transform": {
+    	"query" : "",
+    	"useQuery" : false,
+        "tableInfo": [
+            {
+                "file": "./resources/datagen/process/account.csv",
+                "table": "account",
+                "joinColumnName": "name",
+                "columns": [
+                    {
+                        "name": "Id",
+                        "alias": "JBCXM__Account__c"
+                    }
+                ]
+            },
+            {
+                "file": "./testdata/sfdc/UsageDataFinal.csv",
+                "table": "usagedata",
+                "joinColumnName": "Account",
+                "columns": [
+                	{
+                        "name": "Name",
+                        "alias": "Name"
+                    },
+                    {
+                        "name": "INSTANCEID",
+                        "alias": "JBCXM__InstanceId__c"
+                    },
+                    {
+                        "name": "INSTANCE_NAME",
+                        "alias": "JBCXM__InstanceName__c"
+                    },
+                    {
+                        "name": "Date",
+                        "alias": "JBCXM__Date__c"
+                    },
+                    {
+                        "name": "Page_Visits",
+                        "alias": "Page_Visits__c"
+                    },
+                    {
+                        "name": "Page_Views",
+                        "alias": "Page_Views__c"
+                    },
+                    {
+                        "name": "No_Of_Reports_Run",
+                        "alias": "No_Of_Reports_Run__c"
+                    },
+                    {
+                        "name": "Files_Downloaded",
+                        "alias": "Files_Downloaded__c"
+                    }
+                ]
+            }
+        ],
+        "join": true,
+        "picklist": false,
+        "output": "./resources/datagen/process/job2.csv"
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__UsageData__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "./resources/datagen/process/job2.csv"
+    }
+}

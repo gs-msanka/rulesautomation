@@ -83,7 +83,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
     public RetentionBasePage clickOnRetentionTab() {
-        item.click("//a[contains(@tile, 'Retention Tab')]");
+        item.click("//a[contains(@title, 'Retention Tab')]");
         return new RetentionBasePage();
     }
 
