@@ -42,10 +42,10 @@ public class AdminAdoptionTabTest extends BaseTest {
 		Assert.assertTrue(adAdopMsure.isAdoptionMeasureColPresent(previous),
 				"Verifying Stage is added to the grid");
 		return adAdopMsure;
-	}
+	}*/
 	
 	
-	@Test(priority=1)                         //Add Measure
+	/*@Test(priority=1)                         //Add Measure
 	public void testAdmincreateAdoptionMeasure() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminAdoptionTab");
@@ -54,13 +54,14 @@ public class AdminAdoptionTabTest extends BaseTest {
 	}
 	private AdminAdoptionSubTab createAdoptionMeasure(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String systemname =data.get("systemname");
-		String shortname = data.get("shortname");
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName = data.get("systemName");
+		String shortName = data.get("shortName");
 		AdminAdoptionSubTab adAdopMsure = basepage.clickOnAdminTab().clickOnAdoptionSubTab();
-		adAdopMsure.createAdoptionMeasure(Name,displayorder,systemname,shortname ); 
-			Assert.assertTrue(adAdopMsure.isAdoptionMeasurePresent(Name),
+		adAdopMsure.createAdoptionMeasure(name,displayOrder,systemName,shortName ); 
+		String adoptionMeasure = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+			Assert.assertTrue(adAdopMsure.isAdoptionMeasurePresent(adoptionMeasure),
 					"Verifying Measure is added to the grid");
 		return adAdopMsure;
 	}
@@ -75,12 +76,14 @@ public class AdminAdoptionTabTest extends BaseTest {
 	private AdminAdoptionSubTab editAdoptionMeasure(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
-		String Name = data.get("Name");
-		String displayorder = data.get("displayorder");
-		String shortname = data.get("shortname");
-		AdminAdoptionSubTab adAdopMsure = basepage.clickOnAdminTab()
-				.clickOnAdoptionSubTab();
-		adAdopMsure.editAdoptionMeasure(previous, Name, displayorder, shortname);
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String shortName = data.get("shortName");
+		AdminAdoptionSubTab adAdopMsure = basepage.clickOnAdminTab().clickOnAdoptionSubTab();
+		adAdopMsure.editAdoptionMeasure(previous,name,displayOrder,shortName);
+		String edtAdoptionMeasure = name +"|"+ displayOrder +"|"+ shortName;
+		Assert.assertTrue(adAdopMsure.isAdoptionMeasureEdited(edtAdoptionMeasure),
+				"Verifying the fields got edited or not");
 		return adAdopMsure;
 	}
 	
@@ -93,14 +96,20 @@ public class AdminAdoptionTabTest extends BaseTest {
 	private AdminAdoptionSubTab deleteAdoptionMeasure(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
-		AdminAdoptionSubTab adAdopMsure = basepage.clickOnAdminTab()
-				.clickOnAdoptionSubTab();
+		String name = data.get("name");
+		String displayOrder = data.get("displayOrder");
+		String systemName = data.get("systemName");
+		String shortName = data.get("shortName");
+		AdminAdoptionSubTab adAdopMsure = basepage.clickOnAdminTab().clickOnAdoptionSubTab();
 		adAdopMsure.deleteAdoptionMeasure(previous);
+		String delAdoptionMeasure = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
+		Assert.assertFalse(adAdopMsure.isAdoptionMeasureDeleted(delAdoptionMeasure),
+				"Verifying Measure is deleted in the grid");
 		return adAdopMsure;
 	}
 	
 
-	@Test(priority=4)               //Usage Configuration                                
+	/*@Test(priority=4)               //Usage Configuration                                
 	public void testusageConfigurationTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminAdoptionTab");

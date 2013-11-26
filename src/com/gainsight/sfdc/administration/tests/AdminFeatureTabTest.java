@@ -32,14 +32,14 @@ public class AdminFeatureTabTest extends BaseTest {
 	public void testAdmincreateFeatureType() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminFeatureTab");
-		createFeatureType(testData.get("CreateFeatureType"));
+		createFeatureType(testData.get("CreateFeatureType1"));
 	}
 	private AdminFeaturesSubTab createFeatureType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
 		String productName = data.get("productName");
 		String systemName =data.get("systemName");
-		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();
+		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().clickOnFeaturesTab();
 		adFeturTpe.createFeatureType(name, systemName ,productName ); 
 		String featureType = name +"|"+ systemName +"|"+ productName;
 			Assert.assertTrue(adFeturTpe.IsFeatureTypePresent(featureType),
@@ -58,7 +58,7 @@ public class AdminFeatureTabTest extends BaseTest {
 		String name = data.get("name");
 		String productName = data.get("productName");
 		String systemName =data.get("systemName");
-		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();
+		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().clickOnFeaturesTab();
 		adFeturTpe.editFeatureType( previous, name, systemName ,productName);
 		String edtFeatureType = name +"|"+ systemName +"|"+ productName;
 		Assert.assertTrue(adFeturTpe.IsFeatureTypeEdited(edtFeatureType),
@@ -78,7 +78,7 @@ public class AdminFeatureTabTest extends BaseTest {
 		String name = data.get("name");
 		String productName = data.get("productName");
 		String systemName =data.get("systemName");
-		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().ClickOnFeaturesTab();			
+		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().clickOnFeaturesTab();			
 		adFeturTpe.deleteFeatureType(previous);
 		String delFeatureType = name +"|"+ systemName +"|"+ productName;
 		Assert.assertFalse(adFeturTpe.IsFeatureTypeDeleted(delFeatureType),

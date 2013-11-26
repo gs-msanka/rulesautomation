@@ -38,7 +38,7 @@ public class AdminNotificationTabTest extends BaseTest {
 		String day = data.get("day");
 		String hour = data.get("hour");
 		String Minutes =data.get("Minutes");
-		AdminNotificationsSubTab adNotiSubTab = basepage.clickOnAdminTab().ClickOnNotificationSubTab();
+		AdminNotificationsSubTab adNotiSubTab = basepage.clickOnAdminTab().clickOnNotificationSubTab();
 		adNotiSubTab.setNotificationFrequency(day,hour,Minutes); 
 		return adNotiSubTab;
 	}
@@ -46,7 +46,7 @@ public class AdminNotificationTabTest extends BaseTest {
 	@Test(priority=2)                               // set AutoSubscription    
 	public void testsetAutoSubscription() throws BiffException, IOException {
 		AdminNotificationsSubTab adNotiSubTab = basepage.clickOnAdminTab()
-				.ClickOnNotificationSubTab();
+				.clickOnNotificationSubTab();
 		adNotiSubTab.setAutoSubscription();
 		}
 		
