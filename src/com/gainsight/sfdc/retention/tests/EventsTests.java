@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.gainsight.utils.ApexUtil;
-import com.gainsight.utils.SOQLUtil;
 import jxl.read.biff.BiffException;
 
 
@@ -23,25 +22,28 @@ public class EventsTests extends BaseTest {
     String[] dirs = {"eventtests"};
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
-    SOQLUtil soqlUtil = new SOQLUtil();
     ApexUtil apexUtil = new ApexUtil();
-
+    Date date = new Date();
 
     @BeforeClass
     public void setUp() {
         Report.logInfo("Starting Playbook Test Case...");
         basepage.login();
-        if(isPackageInstance()) {
-            //soqlUtil.deleteQuery("SELECT ID FROM JBCXM__CSEvent__c limit 10000");
-            apexUtil.runApex("List<JBCXM__CSEvent__c> cs = [SELECT ID FROM JBCXM__CSEvent__c limit 10000]; delete cs;");
-           // apexUtil.runApexCodeFromFile(System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscriptJBCXM.txt");
-        } else {
-            soqlUtil.deleteQuery("SELECT ID FROM CSEvent__c  limit 10000");
-            //apexUtil.runApexCodeFromFile(System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscript.txt");
+        String file;
+        try{
+            if(isPackageInstance()) {
+                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscriptJBCXM.txt";
+                Report.logInfo("File :" +file);
+                apexUtil.runApexCodeFromFile(file);
+            } else {
+                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscript.txt";
+                Report.logInfo("File :" +file);
+                apexUtil.runApexCodeFromFile(System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscript.txt");
+            }
+            Report.logInfo("Start Time:"+date);
+        } catch (Exception e) {
+            Report.logInfo(e.getLocalizedMessage());
         }
-
-        Date date = new Date();
-        Report.logInfo("Start Time:"+date);
     }
 
     @Test
@@ -103,10 +105,10 @@ public class EventsTests extends BaseTest {
         int recordCount;
         if(isPackageInstance()) {
             System.out.println("Query" +nameSpaceQuery);
-            recordCount = soqlUtil.getRecordCount(nameSpaceQuery);
+            recordCount = soql.getRecordCount(nameSpaceQuery);
         }  else {
             System.out.println("Query" +query);
-            recordCount = soqlUtil.getRecordCount(query);
+            recordCount = soql.getRecordCount(query);
         }
 
         System.out.println("Count of Records: " +recordCount);
@@ -138,10 +140,10 @@ public class EventsTests extends BaseTest {
         int recordCount;
         if(isPackageInstance()) {
             System.out.println("Query" +nameSpaceQuery);
-            recordCount = soqlUtil.getRecordCount(nameSpaceQuery);
+            recordCount = soql.getRecordCount(nameSpaceQuery);
         }  else {
             System.out.println("Query" +query);
-            recordCount = soqlUtil.getRecordCount(query);
+            recordCount = soql.getRecordCount(query);
         }
 
         System.out.println("Count of Records: " +recordCount);
@@ -173,10 +175,10 @@ public class EventsTests extends BaseTest {
         int recordCount;
         if(isPackageInstance()) {
             System.out.println("Query" +nameSpaceQuery);
-            recordCount = soqlUtil.getRecordCount(nameSpaceQuery);
+            recordCount = soql.getRecordCount(nameSpaceQuery);
         }  else {
             System.out.println("Query" +query);
-            recordCount = soqlUtil.getRecordCount(query);
+            recordCount = soql.getRecordCount(query);
         }
 
         System.out.println("Count of Records: " +recordCount);
@@ -208,10 +210,10 @@ public class EventsTests extends BaseTest {
         int recordCount;
         if(isPackageInstance()) {
             System.out.println("Query" +nameSpaceQuery);
-            recordCount = soqlUtil.getRecordCount(nameSpaceQuery);
+            recordCount = soql.getRecordCount(nameSpaceQuery);
         }  else {
             System.out.println("Query" +query);
-            recordCount = soqlUtil.getRecordCount(query);
+            recordCount = soql.getRecordCount(query);
         }
 
         System.out.println("Count of Records: " +recordCount);
@@ -243,10 +245,10 @@ public class EventsTests extends BaseTest {
         int recordCount;
         if(isPackageInstance()) {
             System.out.println("Query" +nameSpaceQuery);
-            recordCount = soqlUtil.getRecordCount(nameSpaceQuery);
+            recordCount = soql.getRecordCount(nameSpaceQuery);
         }  else {
             System.out.println("Query" +query);
-            recordCount = soqlUtil.getRecordCount(query);
+            recordCount = soql.getRecordCount(query);
         }
 
         System.out.println("Count of Records: " +recordCount);
@@ -449,8 +451,6 @@ public class EventsTests extends BaseTest {
     @AfterClass
     public void tearDown(){
         basepage.logout();
-        Date date = new Date();
         Report.logInfo("End Time:"+date);
-
     }
 }
