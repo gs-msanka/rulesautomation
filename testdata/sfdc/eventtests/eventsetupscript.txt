@@ -1,16 +1,15 @@
-List<PickList__c> todeleteList = [SELECT id from PickList__c WHERE CATEGORY__C = category];
+List<CSEvent__c> cust = [Select id from CSEvent__c limit 500];
+delete cust;
+List<PickList__c> todeleteList = [SELECT id from PickList__c WHERE CATEGORY__C = 'SalesRep Name'];
 System.debug('Total event picklist that will be deleted : '+todeleteList.size());
 delete todeleteList;
 List<PickList__c> pkList = new List<PickList__c>();
-List<String> eventNameList = new List<String>{'Quarterly Business Review', 'Quarterly Business Review', 'Weekly Business Review',
-								'Sprint Planning', 'Sprint Review', 'Sprint Retrospection', 'Low NPS Score Event', 'Customer On-Boarding',
-								'Survey Response Event'};
-String category = 'SalesRep Name';
-PickList__c event = null
+List<String> eventNameList = new List<String>{'Quarterly Business Review', 'Weekly Business Review','Sprint Planning', 'Sprint Review', 'Sprint Retrospection', 'Low NPS Score Event', 'Customer On-Boarding', 'Survey Response Event'};
+PickList__c event = null;
 integer i =1;
 for(String eventName : eventNameList) {
 	event = new PickList__c(Name = eventName,
-											CATEGORY__C = category,
+											CATEGORY__C = 'SalesRep Name',
 											DISPLAYORDER__C = i,
 											SYSTEMNAME__C = eventName);
 
