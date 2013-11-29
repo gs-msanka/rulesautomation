@@ -4,7 +4,7 @@ List<JBCXM__PickList__c> todeleteList = [SELECT id from JBCXM__PickList__c WHERE
 System.debug('Total event picklist that will be deleted : '+todeleteList.size());
 delete todeleteList;
 List<JBCXM__PickList__c> pkList = new List<JBCXM__PickList__c>();
-List<String> eventNameList = new List<String>{'Quarterly Business Review', 'Weekly Business Review','Sprint Planning', 'Sprint Review', 'Sprint Retrospection', 'Low NPS Score Event', 'Customer On-Boarding', 'Survey Response Event'};
+List<String> eventNameList = new List<String>{'Monthly Business Review', 'Quarterly Business Review', 'Weekly Business Review','Sprint Planning', 'Sprint Review', 'Sprint Retrospection', 'Low NPS Score Event', 'Customer On-Boarding', 'Survey Response Event'};
 JBCXM__PickList__c event = null;
 integer i =1;
 for(String eventName : eventNameList) {
