@@ -18,12 +18,12 @@ import com.gainsight.sfdc.retention.pojos.Event;
 import com.gainsight.sfdc.retention.pojos.Task;
 
 public class EventsPage extends RetentionBasePage {
-    private final String READY_INDICATOR = "calhomeBtn";
-    private final String EVENT_CARD = "//div[@class='event-card view-card event-card-maindiv']";
-    private final String WEEKLABEL_SELECT = "//select[@class='weekLabelsCls']";
-    private final String MONTHLABEL_SELECT = "//select[@class='monthLabelsCls']";
-    private final String QUARTERLABEL_SELECT = "//select[@class='quarterLabelsCls']";
-    private final String HOME_BUTTON = "calhomeBtn";
+    private final String READY_INDICATOR        = "calhomeBtn";
+    private final String EVENT_CARD             = "//div[@class='event-card view-card event-card-maindiv']";
+    private final String WEEKLABEL_SELECT       = "//select[@class='weekLabelsCls']";
+    private final String MONTHLABEL_SELECT      = "//select[@class='monthLabelsCls']";
+    private final String QUARTERLABEL_SELECT    = "//select[@class='quarterLabelsCls']";
+    private final String HOME_BUTTON     = "calhomeBtn";
     private final String NEXT_BUTTON = "calNextBtn";
     private final String PREVIOUS_BUTTON = "calPrevBtn";
     private final String WEEK_BUTTON = "calWeekBtn";
@@ -816,7 +816,7 @@ public class EventsPage extends RetentionBasePage {
             }
             amtDateUtil.stalePause();
             List<WebElement> filterButtonList = element.getAllElement("//div[@class='filter-check-options filter-check-on']");
-            System.out.println("Total Filters Applied :" +filterButtonList.size());
+            Report.logInfo("Total Filters Applied :" +filterButtonList.size());
             if(filterButtonList.size() == noOfFilterstoApply) {
                 Report.logInfo(" Event filters are applied");
             }
@@ -827,9 +827,9 @@ public class EventsPage extends RetentionBasePage {
         hideFilters();
     }
 
-    public boolean isFiltersOn(String testdata1) {
+    public boolean isFiltersOn(String testdata) {
         boolean result = false;
-        String testdata = "Open | In Progress | SprintPlanning";
+        //"Open | In Progress | SprintPlanning";
         String[] s = testdata.split("\\|");
         Report.logInfo("No of Filters should be On :" +s.length);
         showFilters();

@@ -22,37 +22,93 @@ public class EventsTests extends BaseTest {
     String[] dirs = {"eventtests"};
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
-    ApexUtil apexUtil = new ApexUtil();
-    Date date = new Date();
-
+    Calendar date = Calendar.getInstance();
+    Boolean isEventCreateScriptExecuted = false;
     @BeforeClass
     public void setUp() {
-        Report.logInfo("Starting Playbook Test Case...");
         basepage.login();
         String file;
         try{
             if(isPackageInstance()) {
-                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscriptJBCXM.txt";
+                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
                 Report.logInfo("File :" +file);
                 apexUtil.runApexCodeFromFile(file);
             } else {
-                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscript.txt";
+                /*file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
                 Report.logInfo("File :" +file);
-                apexUtil.runApexCodeFromFile(System.getProperty("user.dir")+"/testdata/sfdc/eventtests/eventsetupscript.txt");
+                apexUtil.runApexCodeFromFile(file);*/
             }
-            Report.logInfo("Start Time:"+date);
         } catch (Exception e) {
+            e.printStackTrace();
             Report.logInfo(e.getLocalizedMessage());
         }
     }
 
+    public void createEventsFromScript() {
+        try {
+            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+            Report.logInfo("File :" +file);
+            apexUtil.runApexCodeFromFile(file);
+            isEventCreateScriptExecuted = true;
+        } catch (Exception e) {
+            Report.logInfo(e.getLocalizedMessage());
+        }
+    }
+    /*@Test
+    public void Event_07() {
+        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.applyFilter("In Progress");
+        Assert.assertTrue(eventsPage.isFiltersOn("In Progress"));
+
+
+    }*/
+    @Test
+    public void Event_30() throws IOException, BiffException {
+        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
+        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("startdate", getDatewithFormat(0));
+        eventData.put("enddate", getDatewithFormat(365));
+        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
+        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
+        eventsPage.addEventandTask(eventData, taskData);
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+                "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearly' " +
+                "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        int recordCount;
+        recordCount = getQueryRecordCount(query);
+        Assert.assertEquals(1, recordCount);
+    }
+
+    @Test
+    public void Event_31() throws IOException, BiffException {
+        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
+        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("startdate", getDatewithFormat(0));
+        eventData.put("enddate", getDatewithFormat(365));
+        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
+        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
+        eventsPage.addEventandTask(eventData, taskData);
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+                "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearlyNth' " +
+                "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        int recordCount;
+        recordCount = getQueryRecordCount(query);
+        Assert.assertEquals(1, recordCount);
+    }
+
     @Test
     public void Event_033() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_033");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
@@ -61,7 +117,6 @@ public class EventsTests extends BaseTest {
         Assert.assertTrue(eventsPage.verifyEventCardStatus(eventData, "In Progress"), "Verifying wether the status of the event changed to In progress.");
         eventsPage.changeStatus(eventData, "Complete");
         Assert.assertTrue(eventsPage.verifyEventCardStatus(eventData, "Complete"), "Verifying the status of event is complete or not");
-        Report.logInfo("Test Case Start: Event_033");
     }
 
     @Test
@@ -73,6 +128,7 @@ public class EventsTests extends BaseTest {
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(2));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
@@ -86,184 +142,118 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_029() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_029");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(60));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
-        String nameSpaceQuery = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthlyNth' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        String query = "Select id from CSEvent__c WHERE Account__r.Name Like '"+eventData.get("customer")+
-                "' and IsRecurrence__c = true and RecurrenceType__c = 'RecursEveryWeekDay' " +
-                "and Status__c = '"+eventData.get("status")+"' and Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
-        if(isPackageInstance()) {
-            System.out.println("Query" +nameSpaceQuery);
-            recordCount = soql.getRecordCount(nameSpaceQuery);
-        }  else {
-            System.out.println("Query" +query);
-            recordCount = soql.getRecordCount(query);
-        }
-
-        System.out.println("Count of Records: " +recordCount);
+        recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
-        Report.logInfo("Test Case Start: Event_029");
     }
 
     @Test
     public void Event_028() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_028");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(40));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
-        //Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
-        //Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
-       // eventsPage.clickOnCloseEventCard();
-        String nameSpaceQuery = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        String query = "Select id from CSEvent__c WHERE Account__r.Name Like '"+eventData.get("customer")+
-                "' and IsRecurrence__c = true and RecurrenceType__c = 'RecursEveryWeekDay' " +
-                "and Status__c = '"+eventData.get("status")+"' and Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        int recordCount;
-        if(isPackageInstance()) {
-            System.out.println("Query" +nameSpaceQuery);
-            recordCount = soql.getRecordCount(nameSpaceQuery);
-        }  else {
-            System.out.println("Query" +query);
-            recordCount = soql.getRecordCount(query);
-        }
-
-        System.out.println("Count of Records: " +recordCount);
+        int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
-        Report.logInfo("Test Case Start: Event_028");
     }
 
     @Test
     public void Event_027() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_027");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(3));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
         eventsPage.clickOnCloseEventCard();
-        String nameSpaceQuery = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursWeekly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        String query = "Select id from CSEvent__c WHERE Account__r.Name Like '"+eventData.get("customer")+
-                "' and IsRecurrence__c = true and RecurrenceType__c = 'RecursEveryWeekDay' " +
-                "and Status__c = '"+eventData.get("status")+"' and Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        int recordCount;
-        if(isPackageInstance()) {
-            System.out.println("Query" +nameSpaceQuery);
-            recordCount = soql.getRecordCount(nameSpaceQuery);
-        }  else {
-            System.out.println("Query" +query);
-            recordCount = soql.getRecordCount(query);
-        }
-
-        System.out.println("Count of Records: " +recordCount);
+        int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
-        Report.logInfo("Test Case Start: Event_027");
     }
 
     @Test
     public void Event_026() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_026");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(4));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
         eventsPage.clickOnCloseEventCard();
-        String nameSpaceQuery = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        String query = "Select id from CSEvent__c WHERE Account__r.Name Like '"+eventData.get("customer")+
-                "' and IsRecurrence__c = true and RecurrenceType__c = 'RecursEveryWeekDay' " +
-                "and Status__c = '"+eventData.get("status")+"' and Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        int recordCount;
-        if(isPackageInstance()) {
-            System.out.println("Query" +nameSpaceQuery);
-            recordCount = soql.getRecordCount(nameSpaceQuery);
-        }  else {
-            System.out.println("Query" +query);
-            recordCount = soql.getRecordCount(query);
-        }
-
-        System.out.println("Count of Records: " +recordCount);
+        int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
-        Report.logInfo("Test Case Start: Event_026");
     }
 
     @Test
     public void Event_025() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_025");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(1));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
         eventsPage.clickOnCloseEventCard();
-        String nameSpaceQuery = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursEveryWeekDay' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        String query = "Select id from CSEvent__c WHERE Account__r.Name Like '"+eventData.get("customer")+
-                "' and IsRecurrence__c = true and RecurrenceType__c = 'RecursEveryWeekDay' " +
-                "and Status__c = '"+eventData.get("status")+"' and Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        int recordCount;
-        if(isPackageInstance()) {
-            System.out.println("Query" +nameSpaceQuery);
-            recordCount = soql.getRecordCount(nameSpaceQuery);
-        }  else {
-            System.out.println("Query" +query);
-            recordCount = soql.getRecordCount(query);
-        }
-
-        System.out.println("Count of Records: " +recordCount);
+        int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
-        Report.logInfo("Test Case Start: Event_025");
     }
 
     @Test
     public void Event_024() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_024");
         HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_024");
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        task1.put("date", getDatewithFormat(0));
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
@@ -279,7 +269,6 @@ public class EventsTests extends BaseTest {
         eventsPage.openEventCard(eventData);
         Assert.assertFalse(eventsPage.isTaskDisplayed(task1));
         eventsPage.clickOnCloseEventCard();
-        Report.logInfo("Test Case End: Event_024");
     }
 
     @Test
@@ -290,10 +279,15 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        task1.put("date", getDatewithFormat(1));
         HashMap<String, String> task2 = getMapFromData(testData.get("task2"));
+        task2.put("date", getDatewithFormat(2));
         HashMap<String, String> task3 = getMapFromData(testData.get("task3"));
+        task3.put("date", getDatewithFormat(3));
         HashMap<String, String> task4 = getMapFromData(testData.get("task4"));
+        task4.put("date", getDatewithFormat(4));
         List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
         taskDataList.add(task1);
         taskDataList.add(task2);
@@ -319,7 +313,9 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        task1.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         List<HashMap<String, String>> taskDataList =  new ArrayList<HashMap<String, String>>();
@@ -339,6 +335,7 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.changeStatus(eventData, "In Progress");
@@ -353,6 +350,7 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.changeStatus(eventData, "Complete");
@@ -368,6 +366,7 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.deleteEvent(eventData);
@@ -382,6 +381,7 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
     }
@@ -451,6 +451,5 @@ public class EventsTests extends BaseTest {
     @AfterClass
     public void tearDown(){
         basepage.logout();
-        Report.logInfo("End Time:"+date);
     }
 }
