@@ -1,0 +1,17 @@
+List<JBCXM__ApplicationSettings__c> appSettingsList = [SELECT ID, JBCXM__AdoptionAggregationType__c, JBCXM__AdoptionGranularity__c,
+													JBCXM__AdoptionAggregationColumns__c, JBCXM__AdoptionMeasureColMap__c, JBCXM__WeekStartsOn__c,
+													JBCXM__UsesEndDateAsWeekName__c from JBCXM__ApplicationSettings__c LIMIT 1];
+JBCXM__ApplicationSettings__c appSettings;
+if(appSettingsList != null && appSettingsList.size() > 0) {
+	 appSettings = appSettingsList.get(0);
+	 appSettings.JBCXM__AdoptionAggregationType__c = 'USERLEVEL';
+	 appSettings.JBCXM__AdoptionGranularity__c = 'MONTHLY';
+	 appSettings.JBCXM__AdoptionAggregationColumns__c  = '[{"ColumnName":"Files_Downloaded__c","Type":"SUM","OnColumn":"Files_Downloaded__c"},'+
+	 														'{"ColumnName":"No_of_Report_Run__c","Type":"AVG","OnColumn":"No_of_Report_Run__c"},'+
+	 														'{"ColumnName":"Page_Views__c","Type":"Count","OnColumn":"Page_Views__c"},'+
+	 														'{"ColumnName":"Page_Visits__c","Type":"SUM","OnColumn":"Page_Visits__c"}]';
+	 appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Files Downloaded":"Files_Downloaded__c","No of Report Run":"No_of_Report_Run__c","Page Views":"Page_Views__c","Page Visits":"Page_Visits__c"}';
+	 update appSettings;
+}
+
+
