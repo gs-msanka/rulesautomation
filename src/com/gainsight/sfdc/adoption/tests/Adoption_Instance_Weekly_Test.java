@@ -10,7 +10,7 @@ import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
 
-public class AdoptionUsageTest extends BaseTest {
+public class Adoption_Instance_Weekly_Test extends BaseTest {
 
     @BeforeClass
     public void setUp() {
