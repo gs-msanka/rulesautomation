@@ -1,0 +1,21 @@
+List<JBCXM__ApplicationSettings__c> appSettingsList = [SELECT ID, JBCXM__SFTaskAssociated__c, JBCXM__TaskFields__c
+                                                         from JBCXM__ApplicationSettings__c LIMIT 1];
+JBCXM__ApplicationSettings__c appSettings;
+if(appSettingsList != null && appSettingsList.size() > 0) {
+    appSettings = appSettingsList.get(0);
+    appSettings.JBCXM__SFTaskAssociated__c = true;
+    appSettings.JBCXM__TaskFields__c = '[{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],'
+        +'"label":"Subject","fieldType":"STRING","isRequired":"true","value":[]},{"fieldName":"Priority__c","objectName":"CSTask__c",'
+        +'"ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],'
+        +'"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Normal","value":"Normal"}]},'
+        +'{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date",'
+        +'"fieldType":"DATE","isRequired":"false","value":[]},{"fieldName":"Assigned__c","objectName":"CSTask__c",'
+        +'"ctrlType":"userlookup","ctrlData":[],"label":"Assigned","fieldType":"REFERENCE","isRequired":"true","value":[]},'
+        +'{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},'
+        +'{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},'
+        +'{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],'
+        +'"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Not Started","value":"Not Started"}]},'
+        +'{"fieldName":"Description__c","objectName":"CSTask__c","ctrlType":"textarea","ctrlData":[],"label":"Description",'
+        +'"fieldType":"TEXTAREA","isRequired":"false","value":[]}]';
+    update appSettings;
+}
