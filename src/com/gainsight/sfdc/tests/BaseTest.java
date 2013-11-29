@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+
+import com.gainsight.utils.ApexUtil;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -25,7 +27,8 @@ public class BaseTest {
 	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
-	protected static BasePage basepage;
+    public ApexUtil apexUtil = new ApexUtil();
+    protected static BasePage basepage;
 	private final String DELETE_RECORDS = "Select id from TransHeader__c"
 			+ " | Select id from CustomerInfo__c | Select id from Playbook__c";
 	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c"
@@ -151,15 +154,43 @@ public class BaseTest {
 	}
 
     /**
-     * @return true is the execution context is packaged environment.
+     * @return true if the execution context is packaged environment.
      */
     public boolean isPackageInstance() {
-        Boolean namesapce = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-        if(namesapce) {
-            return true;
-        } else {
-            return false;
-        }
+        Boolean namespace = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        System.out.println("Is Managed Package :" +namespace);
+        return namespace;
 
+    }
+
+    /**
+     * This Method queries the data base with the query specified.
+     * @param query - The Query to Execute on salesforce.
+     * @return  integer - Count of records that the query returned.
+     */
+    public int getQueryRecordCount(String query) {
+        int result = 0;
+        if(isPackageInstance()) {
+            Report.logInfo("Query : " +query);
+            result = soql.getRecordCount(query);
+        }  else {
+            query = removeNameSpace(query);
+            Report.logInfo("Query : " +query);
+            result = soql.getRecordCount(query);
+        }
+        return result;
+    }
+
+    /**
+     * Method to remove the name space from the string "JBCXM__".
+     * @param str  -The string where name space should be removed.
+     * @return  String - with name space removed.
+     */
+    public String removeNameSpace(String str) {
+        String result = null;
+        if(result != null ) {
+            result = str.replaceAll("JBCXM__", "");
+        }
+        return result;
     }
 }
