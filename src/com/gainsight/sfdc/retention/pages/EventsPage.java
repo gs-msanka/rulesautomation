@@ -23,83 +23,83 @@ public class EventsPage extends RetentionBasePage {
     private final String WEEKLABEL_SELECT       = "//select[@class='weekLabelsCls']";
     private final String MONTHLABEL_SELECT      = "//select[@class='monthLabelsCls']";
     private final String QUARTERLABEL_SELECT    = "//select[@class='quarterLabelsCls']";
-    private final String HOME_BUTTON     = "calhomeBtn";
-    private final String NEXT_BUTTON = "calNextBtn";
-    private final String PREVIOUS_BUTTON = "calPrevBtn";
-    private final String WEEK_BUTTON = "calWeekBtn";
-    private final String MONTH_BUTTON = "calMonthBtn";
-    private final String QUARTER_BUTTON = "calQuarterBtn";
-    private final String AUTO_OWNER_LIST = "//li[@role='menuitem']";
-    private final String ADD_EVENT_BUTTON = "//div[@class='ge-addEventCls btn']";
-    private final String CUST_SEARCH_RESULT = "//div[contains(@id, 'CustomerSearchPanel')]";
-    private final String CUST_NAME_INPUT = "//input[contains(@class, 'custComponentIdjbaraDummyCustomerName customer-name-text')]";
-    private final String EVENT_TYPE_SELECT = "//select[@class='ga_eventTypeCls']";
-    private final String EVENT_OWNER_INPUT = "//input[@class='eventOwnerIdInputCls ui-autocomplete-input']";
-    private final String EVENT_SUBJECT_INPUT = "ga_subjectFld";
-    private final String EVENT_SCHEDULEDATE_INPUT = "ga_sEventDateFld";
-    private final String EVENT_STATUS_OPEN_RADIO = "eventOpen";
-    private final String EVENT_STATUS_INPROGRESS_RADIO = "eventProgress";
-    private final String EVENT_STATUS_COMPLETE_RADIO = "eventComplete";
-    private final String EVENT_DESRP_INPUT = "ga_eventDescription";
-    private final String TASK_ASSIGNE_INPUT = "//input[@class='Assigned__cInputCls userlookupCls taskParamControlDataInput ui-autocomplete-input']";
-    private final String TASK_SUBJECT_INPUT = "//input[@class='Subject__cInputCls taskParamControlDataInput']";
-    private final String TASK_DUEDATE_INPUT = "Date__cInputId";
-    private final String TASK_PRIORITY_SELECT = "//select[@class='Priority__cInputCls taskParamControlDataInput']";
-    private final String TASK_STATUS_SELECT = "//select[@class='Status__cInputCls taskParamControlDataInput']";
-    private final String TASK_DESC_INPUT = "//textarea[@class='Description__cInputCls taskParamControlDataInput']";
-    private final String TASK_ADD_BUTTON = "//button[@class='btn taskActionBtn taskSaveBtn']";
-    private final String TASK_CANCEL_BUTTON = "//button[@class='btn taskActionBtn taskCancelBtn']";
-    private final String EVENT_CREATE_BUTTON = "createButton";
-    private final String EVENT_CANCEL_BUTTON = "//select[@class='ga_btnSecondary ga_eventClose']";
-    private final String EVENT_UPDATE_BUTTON = "createButton";
-    private final String ADD_TASK_BUTTON = "//input[@class='btn dummyAddTaskText dummyETAddText overlayBtn' and @value='+ Add Task']";
-    private final String ADD_PLAYBOOK_BUTTON ="//input[@class='dummyAddPBText dummyETAddText btn']";
-    private final String PLAYBOOK_SELECT = "//select[@class='loadPlaybookCls']";
-    private final String CUST_SEARCH_IMG = "//img[@title='Customer Name Lookup']";
-    private final String EVENT_REC_CHECK = "IsRecurrence";
-    private final String EVENT_REC_DAILY_RADIO = "rectypeftd";
-    private final String EVENT_REC_MONTHLY_RADIO = "rectypeftm";
-    private final String EVENT_REC_YERALY_RADIO = "rectypefty";
-    private final String EVENT_REC_WEEKLY_RADIO = "rectypeftw";
-    private final String EVENT_REC_STARTDATE_INPUT = "ga_eSDateFld";
-    private final String EVENT_REC_ENDDATE_INPUT = "ga_eEDateFld";
-    private final String EVENT_REC_DAILY_EVERYWEEKDAY = "recdd0";
-    private final String EVENT_REC_DAILY_EVERYNDAYS = "recdd1";
-    private final String EVENT_REC_DAILY_EVERYNDAYS_INPUT = "di";
-    private final String EVENT_REC_WEEK_RECURING_INPUT = "wi";
-    private final String EVENT_REC_WEEK_SUN = "//div[@class='weekIntervalValuesCount']/input[@id='1']";
-    private final String EVENT_REC_WEEK_MON = "//div[@class='weekIntervalValuesCount']/input[@id='2']";
-    private final String EVENT_REC_WEEK_TUE = "//div[@class='weekIntervalValuesCount']/input[@id='4']";
-    private final String EVENT_REC_WEEK_WED = "//div[@class='weekIntervalValuesCount']/input[@id='8']";
-    private final String EVENT_REC_WEEK_THU = "//div[@class='weekIntervalValuesCount']/input[@id='16']";
-    private final String EVENT_REC_WEEK_FRI = "//div[@class='weekIntervalValuesCount']/input[@id='32']";
-    private final String EVENT_REC_WEEK_SAT = "//div[@class='weekIntervalValuesCount']/input[@id='64']";
-    private final String EVENT_REC_MONTH_OP1 = "recmm0";
-    private final String EVENT_REC_MONTH_OP2 = "recmm1";
-    private final String EVENT_REC_MONTH_OP1_DAY_SELECT = "mdom";
-    private final String EVENT_REC_MONTH_OP1_INPUT = "mint";
-    private final String EVENT_REC_MONTH_OP2_SELECT = "mnins";
-    private final String EVENT_REC_MONTH_OP2_DAY_SELECT = "mndow";
-    private final String EVENT_REC_MONTH_OP2_INPUT = "mnint";
-    private final String EVENT_REC_YEAR_OP1 = "recyy0";
-    private final String EVENT_REC_YEAR_OP2 = "recyy1";
-    private final String EVENT_REC_YEAR_OP1_MONTH_SELECT = "ymoy";
-    private final String EVENT_REC_YEAR_OP1_DAY_SELECT = "ydom";
-    private final String EVENT_REC_YEAR_OP2_OPTION_SELECT = "ynins";
-    private final String EVENT_REC_YEAR_OP2_DAY_SELECT = "yndow";
-    private final String EVENT_REC_YEAR_OP2_MONTH_SELECT = "ynmoy";
-    private final String HIDE_FILTER_IMG = "//div[@class='clickToBringIn']/img[@title='Hide filters']";
-    private final String SHOW_FILTER_IMG = "//div[@class='clickToBringIn']/img[@title='Show filters']";
-    private final String EVENT_CLOSE_BUTTON = "//div[@class='ui-dialog-titlebar ui-widget-header ui-helper-clearfix']/a";
-    private final String EVENT_REC_TABLE = "//table[@class='ga_recurringTable']";
-    private final String EVENT_SEC_HEADER = "ge-sectionHeadDates";
-    private final String TASK_CARD = "//div[@class='taskDetailsCls taskDetailsBorderCls']";
-    private final String EVENT_TYPE_VALUE = "eventType";
-    private final String EVENT_OWNER_VALUE = "eventAssigned";
-    private final String EVENT_SUBJECT_VALUE = "eventSubject";
-    private final String EVENT_STATUS_VALUE = "eventStatus";
-    private final String EVENT_DATE_VALUE = "eventSDate";
-    private final String EVENT_DESC_VALUE = "eventDescription";
+    private final String HOME_BUTTON            = "calhomeBtn";
+    private final String NEXT_BUTTON            = "calNextBtn";
+    private final String PREVIOUS_BUTTON        = "calPrevBtn";
+    private final String WEEK_BUTTON            = "calWeekBtn";
+    private final String MONTH_BUTTON           = "calMonthBtn";
+    private final String QUARTER_BUTTON         = "calQuarterBtn";
+    private final String AUTO_OWNER_LIST        = "//li[@role='menuitem']";
+    private final String ADD_EVENT_BUTTON       = "//div[@class='ge-addEventCls btn']";
+    private final String CUST_SEARCH_RESULT     = "//div[contains(@id, 'CustomerSearchPanel')]";
+    private final String CUST_NAME_INPUT        = "//input[contains(@class, 'custComponentIdjbaraDummyCustomerName customer-name-text')]";
+    private final String EVENT_TYPE_SELECT      = "//select[@class='ga_eventTypeCls']";
+    private final String EVENT_OWNER_INPUT      = "//input[@class='eventOwnerIdInputCls ui-autocomplete-input']";
+    private final String EVENT_SUBJECT_INPUT    = "ga_subjectFld";
+    private final String EVENT_SCHEDULEDATE_INPUT       = "ga_sEventDateFld";
+    private final String EVENT_STATUS_OPEN_RADIO        = "eventOpen";
+    private final String EVENT_STATUS_INPROGRESS_RADIO  = "eventProgress";
+    private final String EVENT_STATUS_COMPLETE_RADIO    = "eventComplete";
+    private final String EVENT_DESRP_INPUT      = "ga_eventDescription";
+    private final String TASK_ASSIGNE_INPUT     = "//input[@class='Assigned__cInputCls userlookupCls taskParamControlDataInput ui-autocomplete-input']";
+    private final String TASK_SUBJECT_INPUT     = "//input[@class='Subject__cInputCls taskParamControlDataInput']";
+    private final String TASK_DUEDATE_INPUT     = "Date__cInputId";
+    private final String TASK_PRIORITY_SELECT   = "//select[@class='Priority__cInputCls taskParamControlDataInput']";
+    private final String TASK_STATUS_SELECT     = "//select[@class='Status__cInputCls taskParamControlDataInput']";
+    private final String TASK_DESC_INPUT        = "//textarea[@class='Description__cInputCls taskParamControlDataInput']";
+    private final String TASK_ADD_BUTTON        = "//button[@class='btn taskActionBtn taskSaveBtn']";
+    private final String TASK_CANCEL_BUTTON     = "//button[@class='btn taskActionBtn taskCancelBtn']";
+    private final String EVENT_CREATE_BUTTON    = "createButton";
+    private final String EVENT_CANCEL_BUTTON    = "//select[@class='ga_btnSecondary ga_eventClose']";
+    private final String EVENT_UPDATE_BUTTON    = "createButton";
+    private final String ADD_TASK_BUTTON        = "//input[@class='btn dummyAddTaskText dummyETAddText overlayBtn' and @value='+ Add Task']";
+    private final String ADD_PLAYBOOK_BUTTON    ="//input[@class='dummyAddPBText dummyETAddText btn']";
+    private final String PLAYBOOK_SELECT        = "//select[@class='loadPlaybookCls']";
+    private final String CUST_SEARCH_IMG        = "//img[@title='Customer Name Lookup']";
+    private final String EVENT_REC_CHECK        = "IsRecurrence";
+    private final String EVENT_REC_DAILY_RADIO  = "rectypeftd";
+    private final String EVENT_REC_MONTHLY_RADIO    = "rectypeftm";
+    private final String EVENT_REC_YERALY_RADIO     = "rectypefty";
+    private final String EVENT_REC_WEEKLY_RADIO     = "rectypeftw";
+    private final String EVENT_REC_STARTDATE_INPUT  = "ga_eSDateFld";
+    private final String EVENT_REC_ENDDATE_INPUT    = "ga_eEDateFld";
+    private final String EVENT_REC_DAILY_EVERYWEEKDAY       = "recdd0";
+    private final String EVENT_REC_DAILY_EVERYNDAYS         = "recdd1";
+    private final String EVENT_REC_DAILY_EVERYNDAYS_INPUT   = "di";
+    private final String EVENT_REC_WEEK_RECURING_INPUT      = "wi";
+    private final String EVENT_REC_WEEK_SUN     = "//div[@class='weekIntervalValuesCount']/input[@id='1']";
+    private final String EVENT_REC_WEEK_MON     = "//div[@class='weekIntervalValuesCount']/input[@id='2']";
+    private final String EVENT_REC_WEEK_TUE     = "//div[@class='weekIntervalValuesCount']/input[@id='4']";
+    private final String EVENT_REC_WEEK_WED     = "//div[@class='weekIntervalValuesCount']/input[@id='8']";
+    private final String EVENT_REC_WEEK_THU     = "//div[@class='weekIntervalValuesCount']/input[@id='16']";
+    private final String EVENT_REC_WEEK_FRI     = "//div[@class='weekIntervalValuesCount']/input[@id='32']";
+    private final String EVENT_REC_WEEK_SAT     = "//div[@class='weekIntervalValuesCount']/input[@id='64']";
+    private final String EVENT_REC_MONTH_OP1    = "recmm0";
+    private final String EVENT_REC_MONTH_OP2    = "recmm1";
+    private final String EVENT_REC_MONTH_OP1_DAY_SELECT     = "mdom";
+    private final String EVENT_REC_MONTH_OP1_INPUT          = "mint";
+    private final String EVENT_REC_MONTH_OP2_SELECT         = "mnins";
+    private final String EVENT_REC_MONTH_OP2_DAY_SELECT     = "mndow";
+    private final String EVENT_REC_MONTH_OP2_INPUT          = "mnint";
+    private final String EVENT_REC_YEAR_OP1                 = "recyy0";
+    private final String EVENT_REC_YEAR_OP2                 = "recyy1";
+    private final String EVENT_REC_YEAR_OP1_MONTH_SELECT    = "ymoy";
+    private final String EVENT_REC_YEAR_OP1_DAY_SELECT      = "ydom";
+    private final String EVENT_REC_YEAR_OP2_OPTION_SELECT   = "ynins";
+    private final String EVENT_REC_YEAR_OP2_DAY_SELECT      = "yndow";
+    private final String EVENT_REC_YEAR_OP2_MONTH_SELECT    = "ynmoy";
+    private final String HIDE_FILTER_IMG        = "//div[@class='clickToBringIn']/img[@title='Hide filters']";
+    private final String SHOW_FILTER_IMG        = "//div[@class='clickToBringIn']/img[@title='Show filters']";
+    private final String EVENT_CLOSE_BUTTON     = "//div[@class='ui-dialog-titlebar ui-widget-header ui-helper-clearfix']/a";
+    private final String EVENT_REC_TABLE        = "//table[@class='ga_recurringTable']";
+    private final String EVENT_SEC_HEADER       = "ge-sectionHeadDates";
+    private final String TASK_CARD              = "//div[@class='taskDetailsCls taskDetailsBorderCls']";
+    private final String EVENT_TYPE_VALUE       = "eventType";
+    private final String EVENT_OWNER_VALUE      = "eventAssigned";
+    private final String EVENT_SUBJECT_VALUE    = "eventSubject";
+    private final String EVENT_STATUS_VALUE     = "eventStatus";
+    private final String EVENT_DATE_VALUE       = "eventSDate";
+    private final String EVENT_DESC_VALUE       = "eventDescription";
 
     public EventsPage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -133,6 +133,10 @@ public class EventsPage extends RetentionBasePage {
         amtDateUtil.stalePause();
         wait.waitTillElementDisplayed(CUST_NAME_INPUT, MIN_TIME, MAX_TIME);
     }
+
+    /**
+     * Clicks on Event Close button.
+     */
     public void clickOnCloseEventCard( ) {
         item.click(EVENT_CLOSE_BUTTON);
         try {
@@ -143,6 +147,11 @@ public class EventsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(ADD_EVENT_BUTTON, MIN_TIME, MAX_TIME);
     }
 
+    /**
+     * Add's a Event & Task on the event.
+     * @param eventdata - Event to be created.
+     * @param taskData - Task to be created.
+     */
     public void addEventandTask(HashMap<String, String> eventdata, HashMap<String, String> taskData) {
         Report.logInfo("Started adding the event & task on the event");
         int taskNo = 0;
@@ -161,6 +170,10 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Finished adding the event & task on the event");
     }
 
+    /**
+     * Fills the event form based on the test data supplied.
+     * @param testdata - Event data provided has HashMap
+     */
     public void fillEventForm(HashMap<String, String> testdata) {
         Report.logInfo("Filling in the events field values.");
         wait.waitTillElementDisplayed(CUST_NAME_INPUT, MIN_TIME, MAX_TIME);
@@ -208,6 +221,10 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Filled values of event form");
     }
 
+    /**
+     * Selects the Owner/Assigne of event/task.
+     * @param ownerName - Name of the user to be selected.
+     */
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner of event");
         for(int i =0; i<15; i++) {
@@ -250,6 +267,10 @@ public class EventsPage extends RetentionBasePage {
         }
     }
 
+    /**
+     * Fills the task form based on the data supplied.
+     * @param taskData - Data to fill the task form (GonG - Task Model)
+     */
     public void fillTaskForm(HashMap<String, String> taskData) {
         Report.logInfo("Started filling the task form on Task card.");
         wait.waitTillElementDisplayed(TASK_ASSIGNE_INPUT, MIN_TIME, MAX_TIME);
@@ -278,6 +299,10 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Completed filling the task form on event card.");
     }
 
+    /**
+     * Adds a Task on the event (Event Card Should be opened).
+     * @param testData - Task data for the task to be created.
+     */
     public void addTask(HashMap<String, String> testData) {
         Report.logInfo("Started adding a task on the event.");
         clickOnAddTask();
@@ -288,6 +313,11 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Finished adding a task on the event");
     }
 
+    /**
+     * Adds a task on event.
+     * @param eventData
+     * @param taskDataList
+     */
     public void addTask(HashMap<String, String> eventData, List<HashMap<String, String>> taskDataList) {
         if(eventData != null) {
             openEventCard(eventData);
@@ -397,7 +427,7 @@ public class EventsPage extends RetentionBasePage {
     public boolean verifyWeekLevelDropdown(String expValue) {
         boolean result = false;
         try {
-            Select s = (Select) element.getElement(WEEKLABEL_SELECT);
+            Select s            = (Select) element.getElement(WEEKLABEL_SELECT);
             String actualValue  = s.getFirstSelectedOption().getText().trim();
             if(expValue != null) {
                 if(expValue.equalsIgnoreCase(actualValue)) {
@@ -613,6 +643,9 @@ public class EventsPage extends RetentionBasePage {
         return eventCard;
     }
 
+    /**
+     * Waits for the event card to be loaded like event data & list of tasks.
+     */
     public void waitforEventCardtoLoad() {
         boolean tasksDisplayed = false;
         boolean eventDataLoaded = false;
@@ -699,6 +732,12 @@ public class EventsPage extends RetentionBasePage {
 
     }
 
+    /**
+     * Verifies the status of event.
+     * @param testdata - event data.
+     * @param status - Status to check for.
+     * @return True - if the status of the event card maps.
+     */
     public boolean verifyEventCardStatus(HashMap<String, String> testdata, String status) {
         boolean result = false;
         WebElement eventCard = getEventInCardLayout(testdata);
@@ -803,6 +842,10 @@ public class EventsPage extends RetentionBasePage {
         return result;
     }
 
+    /**
+     * Applies the filters.
+     * @param testdata - Expected format : "Open | In Progress | SprintPlanning".
+     */
     public void applyFilter(String testdata) {
         // "Open | In Progress | SprintPlanning";
         showFilters();
@@ -827,9 +870,13 @@ public class EventsPage extends RetentionBasePage {
         hideFilters();
     }
 
+    /**
+     * Checks weather the filters are "ON"
+     * @param testdata Expected format : "Open | In Progress | SprintPlanning".
+     * @return true if the filters are "ON".
+     */
     public boolean isFiltersOn(String testdata) {
         boolean result = false;
-        //"Open | In Progress | SprintPlanning";
         String[] s = testdata.split("\\|");
         Report.logInfo("No of Filters should be On :" +s.length);
         showFilters();
@@ -860,6 +907,12 @@ public class EventsPage extends RetentionBasePage {
         return result;
     }
 
+    /**
+     * Fills the recurring part of the event form.
+     * @param testData - recurring event data.
+     * @param startDate  - Start date of the recurring event.
+     * @param endDate - End date of the recurring event.
+     */
     public void recEventForm(String testData, String startDate, String endDate) {
         item.click(EVENT_REC_CHECK);
         wait.waitTillElementDisplayed(EVENT_REC_TABLE, MIN_TIME, MAX_TIME);
@@ -978,6 +1031,11 @@ public class EventsPage extends RetentionBasePage {
         return event;
     }
 
+    /**
+     * Verifies weather the event is displayed.
+     * @param eventdata - Event data to check for.
+     * @return true - if the event is displayed on the screen.
+     */
     private boolean verifyEventDetails(HashMap<String, String> eventdata) {
         boolean result = false;
         String expType = eventdata.get("type").trim();
@@ -995,6 +1053,11 @@ public class EventsPage extends RetentionBasePage {
         return result;
     }
 
+    /**
+     * Verifies weather list of tasks are displayed on the event card.
+     * @param tasksList - List of tasks that need to be verified.
+     * @return true - if all the tasks are present on the event card.
+     */
     private boolean verifyTaskDetails(List<HashMap<String, String>> tasksList) {
         boolean result = false;
         for(HashMap<String, String> task : tasksList) {
@@ -1014,6 +1077,11 @@ public class EventsPage extends RetentionBasePage {
         return result;
     }
 
+    /**
+     * Verifies that the event is a recurring or not.
+     * @param eventdata - Event to verify.
+     * @return true/false based on recurring/non-recurring.
+     */
     public boolean verifyisRecurringEvent(HashMap<String, String> eventdata) {
         boolean result = false;
         openEventCard(eventdata);
@@ -1025,4 +1093,6 @@ public class EventsPage extends RetentionBasePage {
         }
         return result;
     }
+
+
 }

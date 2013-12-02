@@ -5,9 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.gainsight.utils.ApexUtil;
+import com.gainsight.sfdc.retention.pojos.Event;
 import jxl.read.biff.BiffException;
-
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -22,7 +21,7 @@ public class EventsTests extends BaseTest {
     String[] dirs = {"eventtests"};
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
-    Calendar date = Calendar.getInstance();
+    Calendar c = Calendar.getInstance();
     Boolean isEventCreateScriptExecuted = false;
     @BeforeClass
     public void setUp() {
@@ -44,34 +43,31 @@ public class EventsTests extends BaseTest {
         }
     }
 
-    public void createEventsFromScript() {
-        try {
-            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-            Report.logInfo("File :" +file);
-            apexUtil.runApexCodeFromFile(file);
-            isEventCreateScriptExecuted = true;
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-        }
-    }
-    /*@Test
+    @Test
     public void Event_07() {
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        if(!isEventCreateScriptExecuted) {
+            createEventsFromScript();
+            isEventCreateScriptExecuted = true;
+        }
         eventsPage.applyFilter("In Progress");
         Assert.assertTrue(eventsPage.isFiltersOn("In Progress"));
+        List<Event> eventList = eventsPage.getAllEvents();
+        for(Event e : eventList) {
+                  Assert.assertEquals("In Progess", e.getStatus());
+        }
+    }
 
-
-    }*/
     @Test
     public void Event_30() throws IOException, BiffException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(365));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -84,14 +80,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_31() throws IOException, BiffException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(365));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -104,12 +100,12 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_033() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -122,14 +118,14 @@ public class EventsTests extends BaseTest {
     @Test
     public void Event_032() throws BiffException, IOException {
         Report.logInfo("Test Case Start: Event_032");
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_032");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_032");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(2));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -142,14 +138,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_029() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(60));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -162,14 +158,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_028() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(40));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -181,14 +177,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_027() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(3));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -203,14 +199,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_026() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(4));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -225,14 +221,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_025() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(1));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -247,18 +243,18 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_024() throws BiffException, IOException {
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_024");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        List<HashMap<String, String>> taskDataList  =  new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> testData            = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_024");
+        HashMap<String, String> eventData           = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData            = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        HashMap<String, String> task1               = getMapFromData(testData.get("task1"));
         task1.put("date", getDatewithFormat(0));
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage                       = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
-        List<HashMap<String, String>> taskDataList =  new ArrayList<HashMap<String, String>>();
         taskDataList.add(task1);
         eventsPage.addTask(eventData, taskDataList);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -273,20 +269,20 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_018() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_018");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_018");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        HashMap<String, String> task1       = getMapFromData(testData.get("task1"));
         task1.put("date", getDatewithFormat(1));
-        HashMap<String, String> task2 = getMapFromData(testData.get("task2"));
+        HashMap<String, String> task2       = getMapFromData(testData.get("task2"));
         task2.put("date", getDatewithFormat(2));
-        HashMap<String, String> task3 = getMapFromData(testData.get("task3"));
+        HashMap<String, String> task3       = getMapFromData(testData.get("task3"));
         task3.put("date", getDatewithFormat(3));
-        HashMap<String, String> task4 = getMapFromData(testData.get("task4"));
+        HashMap<String, String> task4       = getMapFromData(testData.get("task4"));
         task4.put("date", getDatewithFormat(4));
         List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
         taskDataList.add(task1);
@@ -307,14 +303,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_017() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_017");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_017");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        HashMap<String, String> task1 = getMapFromData(testData.get("task1"));
+        HashMap<String, String> task1       = getMapFromData(testData.get("task1"));
         task1.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
@@ -329,12 +325,12 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_016() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_016");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_016");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
@@ -344,12 +340,12 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_004() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_004");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_004");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
@@ -360,12 +356,12 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_003() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_003");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_003");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
@@ -375,12 +371,12 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_001() throws BiffException, IOException {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
-        HashMap<String, String> testData = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_001");
-        HashMap<String, String> eventData = getMapFromData(testData.get("eventdetails"));
+        HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_001");
+        HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
-        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
@@ -391,61 +387,69 @@ public class EventsTests extends BaseTest {
      * @return String - today day with the locale format for USER.
      */
     public String getDatewithFormat(int i) {
-        String date = null;
-        String userLocale = "US";//soqlUtil.buildQuery("");
+        String date                 = null;
+        String userLocale           = "US";//soqlUtil.buildQuery("");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, i);
         if(userLocale.contains("US")) {
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/YYYY");
+            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/YYYY");
             date = dateFormat.format(c.getTime());
 
         } else if(userLocale.contains("IN")) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
+            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/YYYY");
             date = dateFormat.format(c.getTime());
         }
         return date;
     }
 
     public String getCalendarCurrentMonthandYear() {
-        String month;
-        Calendar c = Calendar.getInstance();
-        DateFormat df = new SimpleDateFormat("MMM-yyyy");
-        month = df.format(c.getTime());
-        System.out.println(month);
-        return month;
+        String monthYear;
+        Calendar c      = Calendar.getInstance();
+        DateFormat df   = new SimpleDateFormat("MMM-yyyy");
+        monthYear       = df.format(c.getTime());
+        return monthYear;
     }
     public String getCalendarCurrentWeek() {
-        String week = "Current week  (";
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
+        String week     = "Current week  (";
+        Calendar c      = Calendar.getInstance();
+        int year        = c.get(Calendar.YEAR);
         c.set(Calendar.YEAR, year-1);
         c.add(Calendar.YEAR,1) ;
-        // Set the calendar to monday of the current week
         c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         // Print dates of the current week starting on Monday
         //DateFormat df = new SimpleDateFormat("EEE dd/MM/yyyy");
-        DateFormat df1 = new SimpleDateFormat("dd-MMM");
-        week  =  week+df1.format(c.getTime())+"  ";
+        DateFormat df  = new SimpleDateFormat("dd-MMM");
+        week            =  week+df.format(c.getTime())+"  ";
         c.add(Calendar.DATE,6);
-        week  =  week+df1.format(c.getTime())+")";
-        System.out.println(week);
+        week            =  week+df.format(c.getTime())+")";
         return week;
     }
 
     public String getCalendarCurrentQuarter() {
-        String quar ="";
-        Calendar c = Calendar.getInstance();
-        int month = c.get(Calendar.MONTH);
+        String quar     ="";
+        Calendar c      = Calendar.getInstance();
+        int month       = c.get(Calendar.MONTH);
         if(month <3 ) {
-            quar = "Q1-"+Calendar.YEAR;
+            quar        = "Q1-"+Calendar.YEAR;
         } else if(month >=3 && month < 6) {
-            quar = "Q2-"+Calendar.YEAR;
+            quar        = "Q2-"+Calendar.YEAR;
         } else if(month >=6 && month < 9) {
-            quar = "Q3-"+Calendar.YEAR;
+            quar        = "Q3-"+Calendar.YEAR;
         } else if(month >= 9) {
-            quar = "Q4-"+Calendar.YEAR;
+            quar        = "Q4-"+Calendar.YEAR;
         }
         return quar;
+    }
+
+    public void createEventsFromScript() {
+        try {
+            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+            Report.logInfo("File :" +file);
+            apexUtil.runApexCodeFromFile(file);
+            isEventCreateScriptExecuted = true;
+        } catch (Exception e) {
+            Report.logInfo(e.getLocalizedMessage());
+        }
     }
 
     @AfterClass
