@@ -163,4 +163,9 @@ public class BasePage extends WebPage implements Constants {
 		}
 		
 	}
+
+	public void goBack() {
+		driver.navigate().back();
+		
+	}
 }

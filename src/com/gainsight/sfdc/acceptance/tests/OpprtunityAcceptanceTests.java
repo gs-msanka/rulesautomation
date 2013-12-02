@@ -36,13 +36,14 @@ public class OpprtunityAcceptanceTests extends BaseTest {
 				.get("NewBusinessTRN"));
 		HashMap<String, String> snbData = getMapFromData(testData
 				.get("SecondNewBusinessTRN"));
-		String oppName = testData.get("oppName");
+		String oppName = testData.get("OppName");
 		CustomerSuccessPage csPage = basepage.clickOnOpportunitiesTab()
 				.selectRecentOpportunity(oppName).getCustomerSuccessSection();
 		csPage.verifyTextPresent(testData.get("AddCustomerMessage"));
 		csPage.clickOnAddCustomer();
 		csPage.verifyTextPresent(testData.get("NewBusinessMessage"));
-		csPage.clickOn360View().addNewBusinessTransaction(nbData).clickBack();
+		csPage.clickOn360View().addNewBusinessTransaction(nbData);
+		basepage.goBack();
 		csPage.verifyTextPresent(testData.get("NoSettingsMessage"));
 		CustomerSummary cSummary = csPage.clickHere().addNewBusiness(snbData)
 				.clickOn360View().getSummaryDetails();

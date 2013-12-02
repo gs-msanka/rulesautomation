@@ -1,7 +1,7 @@
 package com.gainsight.sfdc.churn.pages;
 
 import java.util.HashMap;
-
+import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 

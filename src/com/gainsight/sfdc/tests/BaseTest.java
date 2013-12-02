@@ -8,8 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import com.gainsight.utils.ApexUtil;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -17,18 +15,19 @@ import org.testng.annotations.BeforeTest;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.utils.ApexUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.utils.TestDataHolder;
 
 public class BaseTest {
 	protected TestDataHolder testDataLoader = new TestDataHolder();
 	String[] dirs = { "testdata", "sfdc" };
-	TestEnvironment env = new TestEnvironment();
+	protected TestEnvironment env = new TestEnvironment();
 	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
-    public ApexUtil apexUtil = new ApexUtil();
-    protected static BasePage basepage;
+	public ApexUtil apex=new ApexUtil();
+	protected static BasePage basepage;
 	private final String DELETE_RECORDS = "Select id from TransHeader__c"
 			+ " | Select id from CustomerInfo__c | Select id from Playbook__c";
 	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c"
@@ -130,12 +129,12 @@ public class BaseTest {
 		return hm;
 	}
 
-	public Double calcMRR(int ASV) {
-		return Math.ceil(ASV / 12.0);
+	public int calcMRR(int ASV) {
+		return ASV / 12;
 	}
 
-	public Double calcARPU(int ASV, int users) {
-		return Math.ceil((ASV / 12.0) / users);
+	public int calcARPU(int ASV, int users) {
+		return (ASV / 12) / users;
 	}
 
 	public String makeRowValues(String... values) {

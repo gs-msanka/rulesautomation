@@ -29,16 +29,31 @@ public class TransactionsAcceptanceTest extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Acceptance Test Case...");
-		basepage.login();
-		loggedIn = true;
+		try {
+			Report.logInfo("Starting Acceptance Test Case...");
+			apex.runApexCodeFromFile("apex_scripts/acceptance_tests/transactions.apex");
+			basepage.login();
+			loggedIn = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			env.stop();
+		}
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT1")
 	public void testAddNewCustomer(HashMap<String, String> testData)
 			throws BiffException, IOException {
-		addCustomer(testData.get("customer"));
+		HashMap<String, String> data = getMapFromData(testData.get("Customer"));
+		String customerName = data.get("customerName");
+		String status = data.get("status");
+		String stage = data.get("stage");
+		String comments = data.get("comments");
+		CustomersPage customersPage = basepage.clickOnCustomersTab()
+				.clickOnCustomersSubTab()
+				.addCustomer(customerName, status, stage, comments);
+		Assert.assertTrue(customersPage.isCustomerPresent(customerName),
+				"Verify that newly added customer present in the grid");
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -48,7 +63,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			BiffException, IOException {
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
-		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		Customer360Page customer360Page = addNewBusinessTransaction(testData);
 		/* Renewal Transaction */
 		HashMap<String, String> rnlData = getMapFromData(testData
 				.get("RenewalTRN"));
@@ -61,16 +76,19 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				"New Business", getCurrentDate());
 		int rtPosition = customer360Page.getPositionOfTransaction("Renewal",
 				getCurrentDate());
+		System.out.println("Transaction position is "+ fnPosition);
+		System.out.println("Transaction position is "+ rtPosition);
 		int asv = Integer.parseInt(rnlData.get("asv").trim());
 		int users = Integer.parseInt(rnlData.get("userCount").trim());
 		Assert.assertEquals(rnlData.get("asv").trim(), summary.getASV().trim());
-		Assert.assertEquals(calcMRR(asv), new Double(summary.getMRR().trim()));
+		Assert.assertEquals(calcMRR(asv),
+				Integer.parseInt(summary.getMRR().trim()));
 		Assert.assertEquals(users + "", summary.getUsers().trim());
 		Assert.assertEquals(
 				(Integer.parseInt(rnlData.get("otr")) + Integer.parseInt(nbData
 						.get("otr"))) + "", summary.getOTR().trim());
-		// Assert.assertEquals(calcARPU(asv,users),new
-		// Double(summary.getARPU().trim()));
+		//Assert.assertEquals(calcARPU(asv, users),
+		//		Integer.parseInt(summary.getARPU().trim()));
 		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(rnlData.get("endDate"), 1)));
@@ -92,10 +110,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String transactionValues = customerName + "|" + nbData.get("startDate")
 				+ "|" + nbData.get("endDate") + "|"
 				+ currencyFormat(nbData.get("asv"));
-		CustomersPage customerPage = addCustomer(testData.get("customer"));
-		TransactionsPage transactionsPage = customerPage
-				.clickOnTransactionTab().clickOnTransactionsSubTab()
-				.addNewBusiness(nbData);
+		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
+				.clickOnTransactionsSubTab().addNewBusiness(nbData);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
 				"Verify that newly added transaction present in the grid");
@@ -111,7 +127,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		CustomerSummary cSummary = c360Page.getSummaryDetails();
 		Assert.assertTrue(cSummary.getRD().contains(
 				getFormattedDate(snbData.get("endDate"), 1)));
-		c360Page = c360Page.addRenewalTransaction(dbData);
+		c360Page = c360Page.addDebookTransaction(dbData);
 		c360Page.refreshPage();
 		cSummary = c360Page.getSummaryDetails();
 		HashMap<String, String> expData = getMapFromData(testData
@@ -128,7 +144,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		lineItem.setMRR(dbData.get("asv"));
 		lineItem.setUsers(dbData.get("users"));
 		lineItem.setOTR(dbData.get("otr"));
-		Assert.assertTrue(c360Page.isLineItemPresent(lineItem));
+		Assert.assertTrue(c360Page.isTransactionPresent(lineItem));
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -141,22 +157,18 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.get("ChurnTRN"));
 		String customerName = chData.get("customerName");
 		String values = customerName + "|" + chData.get("reason");
-		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		Customer360Page customer360Page = addNewBusinessTransaction(testData);
 		ChurnPage churnPage = customer360Page.clickOnChurnTab()
 				.addChurnTransaction(chData);
 		Assert.assertTrue(churnPage.isTransactionPresent(customerName, values));
 		customer360Page = churnPage.gotoCustomer360(customerName);
 		CustomerSummary customerSummary = customer360Page.getSummaryDetails();
-		Assert.assertEquals("", customerSummary.getASV().trim());
-		Assert.assertEquals("", customerSummary.getMRR().trim());
+		Assert.assertEquals("0", customerSummary.getASV().trim());
+		Assert.assertEquals("0", customerSummary.getMRR().trim());
 		Assert.assertEquals(nbData.get("otr").trim(), customerSummary.getOTR()
 				.trim());
-		Assert.assertTrue(customerSummary.getLifetime().contains("0 Months"));
-		CustomerSummary summary = customer360Page.clickOnTransactionTab()
-				.clickOnTransactionsSubTab()
-				.deleteTransaction(customerName, "Churn")
-				.gotoCustomer360(customerName).getSummaryDetails();
-		validateSummary(nbData, summary);
+		Assert.assertEquals("0", customerSummary.getLifetime().trim());
+		Assert.assertTrue(customerSummary.getStatus().contains("Churn"));
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -169,17 +181,18 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.get("ChurnTRN"));
 		String customerName = chData.get("customerName");
 		String values = customerName + "|" + chData.get("reason");
-		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		Customer360Page customer360Page = addNewBusinessTransaction(testData);
 		ChurnPage churnPage = customer360Page.clickOnChurnTab()
 				.addChurnTransaction(chData);
 		Assert.assertTrue(churnPage.isTransactionPresent(customerName, values));
 		CustomerSummary customerSummary = churnPage.gotoCustomer360(
 				customerName).getSummaryDetails();
-		Assert.assertEquals("", customerSummary.getASV().trim());
-		Assert.assertEquals("", customerSummary.getMRR().trim());
+		Assert.assertEquals("0", customerSummary.getASV().trim());
+		Assert.assertEquals("0", customerSummary.getMRR().trim());
 		Assert.assertEquals(nbData.get("otr").trim(), customerSummary.getOTR()
 				.trim());
-		Assert.assertTrue(customerSummary.getLifetime().contains("0 Months"));
+		Assert.assertEquals("0", customerSummary.getLifetime().trim());
+		Assert.assertTrue(customerSummary.getStatus().contains("Churn"));
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -190,21 +203,23 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.get("NewBusinessTRN"));
 		HashMap<String, String> churnData = getMapFromData(testData
 				.get("ChurnTRN"));
-		Customer360Page customer360Page = addCustomerAndTransaction(testData);
+		Customer360Page customer360Page = addNewBusinessTransaction(testData);
 		TimeLineItem lineItem = new TimeLineItem();
 		lineItem.setBookingDate(getCurrentDate());
 		lineItem.setType("New Business");
 		lineItem.setMRR(nbData.get("asv"));
 		lineItem.setUsers(nbData.get("users"));
 		lineItem.setOTR(nbData.get("otr"));
-		Assert.assertTrue(customer360Page.isLineItemPresent(lineItem));
+		Assert.assertTrue(customer360Page.isTransactionPresent(lineItem));
 		customer360Page = customer360Page.addChurnTransaction(churnData);
-		Assert.assertTrue(customer360Page.isTransactionPresent("Churn",
-				getCurrentDate()));
+		TimeLineItem churnItem = new TimeLineItem();
+		churnItem.setType("Churn");
+		churnItem.setBookingDate(getCurrentDate());
+		Assert.assertTrue(customer360Page.isTransactionPresent(churnItem));
 		CustomerSummary cSummary = customer360Page.getSummaryDetails();
-		Assert.assertEquals(cSummary.getASV().trim(), "");
-		Assert.assertEquals(cSummary.getMRR().trim(), "");
-		Assert.assertEquals(cSummary.getARPU().trim(), "");
+		Assert.assertEquals(cSummary.getASV().trim(), "0");
+		Assert.assertEquals(cSummary.getMRR().trim(), "0");
+		Assert.assertEquals(cSummary.getARPU().trim(), "0");
 		Assert.assertTrue(cSummary.getStatus().contains("Churn"),
 				"verify customer status is churn");
 	}
@@ -242,19 +257,24 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			throws BiffException, IOException, ParseException {
 		testCustomBookingType(testData);
 	}
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT33")
-	public void testAddBookingTypeDownsell(HashMap<String, String> testData)
-			throws BiffException, IOException, ParseException {
-		testCustomBookingType(testData);
-	}
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34")
-	public void testAddBookingTypeUpsell(HashMap<String, String> testData)
-			throws BiffException, IOException, ParseException {
-		testCustomBookingType(testData);
-	}
 
+	/*
+	 * @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,
+	 * dataProvider = "excel")
+	 * 
+	 * @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT33") public
+	 * void testAddBookingTypeDownsell(HashMap<String, String> testData) throws
+	 * BiffException, IOException, ParseException {
+	 * testCustomBookingType(testData); }
+	 * 
+	 * @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,
+	 * dataProvider = "excel")
+	 * 
+	 * @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34") public
+	 * void testAddBookingTypeUpsell(HashMap<String, String> testData) throws
+	 * BiffException, IOException, ParseException {
+	 * testCustomBookingType(testData); }
+	 */
 	@AfterClass
 	public void tearDown() {
 		if (loggedIn) {
@@ -263,21 +283,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		}
 	}
 
-	private CustomersPage addCustomer(String testData) {
-		HashMap<String, String> data = getMapFromData(testData);
-		String customerName = data.get("customerName");
-		String status = data.get("status");
-		String stage = data.get("stage");
-		String comments = data.get("comments");
-		CustomersPage customersPage = basepage.clickOnCustomersTab()
-				.clickOnCustomersSubTab()
-				.addCustomer(customerName, status, stage, comments);
-		Assert.assertTrue(customersPage.isCustomerPresent(customerName),
-				"Verify that newly added customer present in the grid");
-		return customersPage;
-	}
-
-	private Customer360Page addCustomerAndTransaction(
+	private Customer360Page addNewBusinessTransaction(
 			HashMap<String, String> testData) throws ParseException {
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
@@ -285,10 +291,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String transactionValues = customerName + "|" + nbData.get("startDate")
 				+ "|" + nbData.get("endDate") + "|"
 				+ currencyFormat(nbData.get("asv"));
-		CustomersPage customerPage = addCustomer(testData.get("customer"));
-		TransactionsPage transactionsPage = customerPage
-				.clickOnTransactionTab().clickOnTransactionsSubTab()
-				.addNewBusiness(nbData);
+		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
+				.clickOnTransactionsSubTab().addNewBusiness(nbData);
 		Report.logInfo("Transaction Values : " + transactionValues);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
@@ -306,15 +310,17 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		int asv = Integer.parseInt(data.get("asv").trim());
 		int users = Integer.parseInt(data.get("userCount").trim());
 		Assert.assertEquals(data.get("asv").trim(), summary.getASV().trim());
-		Assert.assertEquals(calcMRR(asv), new Double(summary.getMRR().trim()));
+		Assert.assertEquals(calcMRR(asv),
+				Integer.parseInt(summary.getMRR().trim()));
 		Assert.assertEquals(users + "", summary.getUsers().trim());
 		Assert.assertEquals(data.get("otr").trim(), summary.getOTR().trim());
-		// Assert.assertEquals(calcARPU(asv,users),new
-		// Double(summary.getARPU().trim()));
+		//Assert.assertEquals(calcARPU(asv, users), Integer.parseInt(summary.getARPU()
+		//		.trim()));
 		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(data.get("endDate"), 1)));
 	}
+
 	private void testCustomBookingType(HashMap<String, String> testData)
 			throws BiffException, IOException, ParseException {
 		HashMap<String, String> bTypeData = getMapFromData(testData
@@ -337,18 +343,19 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.addBookingTypes(name, displayOrder, systemName, shortName,
 						bType);
 		Assert.assertTrue(adminTransTab.isBookingTypePresent(values));
-		adminTransTab.mapBookingTypes(name,lineItemTypes);
-		Customer360Page c360Page = addCustomerAndTransaction(testData);
+		adminTransTab.mapBookingTypes(name, lineItemTypes);
+		Customer360Page c360Page = addNewBusinessTransaction(testData);
 		TransactionsPage transactionsPage = c360Page.clickOnTransactionTab()
 				.clickOnTransactionsSubTab();
-		if(bType.equals("Debook")){
+		if (bType.equals("Debook")) {
 			transactionsPage.addDebookTransaction(tData);
-		}else if (bType.equals("Downsell")){
+		} else if (bType.equals("Downsell")) {
 			transactionsPage.addDownsellTransaction(tData);
-		}else if(bType.equals("Upsell")){
+		} else if (bType.equals("Upsell")) {
 			transactionsPage.addUpsellTransaction(tData);
 		}
-		CustomerSummary c360Summary=transactionsPage.gotoCustomer360(tData.get("customerName")).getSummaryDetails();
+		CustomerSummary c360Summary = transactionsPage.gotoCustomer360(
+				tData.get("customerName")).getSummaryDetails();
 		Assert.assertEquals(eSummary.get("asv").trim(), c360Summary.getASV()
 				.trim());
 		Assert.assertEquals(eSummary.get("mrr").trim(), c360Summary.getMRR()
