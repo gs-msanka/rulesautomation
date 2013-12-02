@@ -31,7 +31,7 @@ public class EventsTests extends BaseTest {
             if(isPackageInstance()) {
                 file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
                 Report.logInfo("File :" +file);
-                apexUtil.runApexCodeFromFile(file);
+                apex.runApexCodeFromFile(file);
             } else {
                 /*file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
                 Report.logInfo("File :" +file);
@@ -445,7 +445,7 @@ public class EventsTests extends BaseTest {
         try {
             String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
             Report.logInfo("File :" +file);
-            apexUtil.runApexCodeFromFile(file);
+            apex.runApexCodeFromFile(file);
             isEventCreateScriptExecuted = true;
         } catch (Exception e) {
             Report.logInfo(e.getLocalizedMessage());
