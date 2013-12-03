@@ -64,7 +64,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
                 month = month-1; //Need to move backward for executing the aggregation.
             }
             reader.close();
-            for(int i= 0; i < 30; i++) {
+            for(int i= 0; i < 100; i++) {
                 String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
                         "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
                         "and ApexClass.Name = 'AdoptionAggregation'";
