@@ -1,7 +1,7 @@
 delete [select id from opportunity where name ='Acceptance Test Account 15 Generator'];
-List<Picklist__c> ids= new List<Picklist__c>([select id from picklist__c where name='ATDebook']);
+List<JBCXM__Picklist__c> ids= new List<JBCXM__Picklist__c>([select id from JBCXM__picklist__c where name='ATDebook']);
 if (!ids.isEmpty()){
-delete [Select id from ordertransactionmap__c where OrderType__c =: ids.get(0).id];
+delete [Select id from JBCXM__ordertransactionmap__c where JBCXM__OrderType__c =: ids.get(0).id];
 delete ids.get(0);
 }
 List<Account> accounts=[select id from Account where name like '%Acceptance Test%'];
@@ -14,17 +14,17 @@ for(integer i=1; i<25 ; i++) {
 }
 insert accList;
 
-List<PickList__c> pkList = [SELECT id FROM PickList__c WHERE Category__c = 'Customer Status' AND
-                                 SystemName__c = 'ActiveCustomer'];
-List<CustomerInfo__c> custList = new List<CustomerInfo__c>();
-CustomerInfo__c cust = null;
+List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
+                                 JBCXM__SystemName__c = 'ActiveCustomer'];
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+JBCXM__CustomerInfo__c cust = null;
 for(Account acc : [SELECT id FROM Account where name like 'Acceptance Test Account%']) {
-            cust = new CustomerInfo__c(Account__c         = acc.id,
-                                         Status__c                 = (pkList.get(0)).id);
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c         = acc.id,
+                                         JBCXM__Status__c                 = (pkList.get(0)).id);
    custList.add(cust);
    
 }
 insert custList;
-delete [select id from CustomerInfo__c where CustomerName__c ='Acceptance Test Account 1'];
-delete [select id from CustomerInfo__c where CustomerName__c ='Acceptance Test Account 5'];
+delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c ='Acceptance Test Account 1'];
+delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c ='Acceptance Test Account 5'];
 }
