@@ -21,10 +21,11 @@
 			<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest" />
 			
 			<!-- Giri's Test -->
-			<class name="com.gainsight.sfdc.adoption.tests.AdoptionUsageTest"/>
+            <!--<class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly__Test"/>-->
             <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests"/>
-			
-			<!-- Soujanya's Test -->
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests"/>
+
+            <!-- Soujanya's Test -->
 			<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
 			<!-- class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/ -->
 		</classes>
