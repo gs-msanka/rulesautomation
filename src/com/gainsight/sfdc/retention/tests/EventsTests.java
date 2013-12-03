@@ -28,14 +28,13 @@ public class EventsTests extends BaseTest {
         basepage.login();
         String file;
         try{
+            file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+            String userupdate = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
             if(isPackageInstance()) {
-                file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-                Report.logInfo("File :" +file);
-                apex.runApexCodeFromFile(file);
+                 apex.runApexCodeFromFile(file);
+                apex.runApexCodeFromFile(userupdate);
             } else {
-                /*file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-                Report.logInfo("File :" +file);
-                apexUtil.runApexCodeFromFile(file);*/
+                //Name Space Removal need to be handled.
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,6 +73,9 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -94,6 +96,9 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearlyNth' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -152,6 +157,9 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthlyNth' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -171,6 +179,9 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -193,6 +204,9 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursWeekly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -215,6 +229,9 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -237,6 +254,9 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursEveryWeekDay' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
         int recordCount = getQueryRecordCount(query);
         Assert.assertEquals(1, recordCount);
     }
@@ -443,7 +463,7 @@ public class EventsTests extends BaseTest {
 
     public void createEventsFromScript() {
         try {
-            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
             Report.logInfo("File :" +file);
             apex.runApexCodeFromFile(file);
             isEventCreateScriptExecuted = true;

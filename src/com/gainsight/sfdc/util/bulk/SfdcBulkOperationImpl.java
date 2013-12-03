@@ -213,7 +213,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	 * Parse XML file Using JDOM to get the value of specific Node from Root Node.
 	 * Mainly to fetch values of Job ID, batch ID, Result ID etc.
 	 * @param content
-	 * @param first level nodeToSearch
+	 * @param nodeToSearch
 	 * @return
 	 */
 	public static String parseXMLResponse(String content,

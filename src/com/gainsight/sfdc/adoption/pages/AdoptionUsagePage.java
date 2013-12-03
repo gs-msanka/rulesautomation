@@ -241,6 +241,9 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         for(String v : s.split("\\|")) {
             values.add(v.trim());
         }
+        //setFilter("gs_cl", values.get(0).toString());
+        field.clearAndSetText("gs_cl", values.get(0).toString());
+        amtDateUtil.stalePause();
         boolean result = false;
         WebElement table = driver.findElement(By.id("adoptionTableList_IdOfJBaraStandardView"));
         List<WebElement> rows = table.findElements(By.tagName("tr"));

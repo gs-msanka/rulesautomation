@@ -54,12 +54,13 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             String dateStr;
             //Max of only 5 jobs can run in an organization at a given time
             //Care to be taken that there are no apex jobs are running in the organization.
-            int i= 7;
-            for(int k = 0; k< 2;k++) {
-                for(; i < 5; i=i+7) {
+            int i= -7;
+            for(int k = 0; k< 11;k++) {
+                for(int m=0; m < 5; m++, i=i-7) {
                     //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                     // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
                     dateStr     = getWeekLabelDate("Sun", i);
+                    System.out.println(dateStr);
                     year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
                     month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
                     day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
@@ -101,7 +102,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
     public String getWeekLabelDate(String weekStartDay, int daysToAdd) {
         String date= null;
         try {
-            Calendar c               = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
             Map<String,Integer> days = new HashMap<String, Integer>();
             days.put("Sun", 1);
             days.put("Mon", 2);
@@ -111,8 +112,13 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             days.put("Fri", 6);
             days.put("Sat", 7);
             c.set(Calendar.DAY_OF_WEEK, days.get(weekStartDay));
+            System.out.println(c.get(Calendar.DATE));
             c.add(Calendar.DATE, daysToAdd);
-            date = c.get(Calendar.YEAR) + "|" + c.get(Calendar.MONTH) + "|"+c.get(Calendar.DATE);
+            int day = c.get(Calendar.DATE);
+            int month = c.get(Calendar.MONTH);
+            month += 1;
+            int year = c.get(Calendar.YEAR);
+            date = year + "|" + month + "|"+day;
         } catch (NullPointerException e) {
             Report.logInfo(e.getLocalizedMessage());
         }
