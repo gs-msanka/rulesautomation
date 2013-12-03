@@ -24,13 +24,12 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         basepage.login();
         String measureFile          = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Usage_Measure_Create.txt";
         String advUsageConfigFile   = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Instance_Level_Weekly.txt";
-/*
         try{
             apex.runApexCodeFromFile(measureFile);
             apex.runApexCodeFromFile(advUsageConfigFile);
-            *//**
+            /**
              * Data Should be loaded here.
-             *//*
+             */
             BufferedReader reader;
             String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
             String line     = null;
@@ -80,7 +79,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         } catch (Exception e) {
             Report.logInfo(e.getLocalizedMessage());
             e.printStackTrace();
-        }*/
+        }
     }
 
 
