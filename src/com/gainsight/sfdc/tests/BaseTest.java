@@ -11,7 +11,6 @@ import java.util.HashMap;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.pages.BasePage;
@@ -28,26 +27,14 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex=new ApexUtil();
 	protected static BasePage basepage;
-	private final String DELETE_RECORDS = "Select id from TransHeader__c"
-			+ " | Select id from CustomerInfo__c | Select id from Playbook__c";
-	private final String DELETE_RECORDS_NAMESPACE = "Select id from JBCXM__TransHeader__c"
-			+ " | Select id from JBCXM__CustomerInfo__c | Select id from JBCXM__Playbook__c";
-
+	
 	@BeforeSuite
 	public void init() throws Exception {
 		Report.logInfo("Initializing Environment");
 		env.start();
 		try {
-			String deleteFlag = env.getProperty("sfdc.deleteRecords");
-			String namesapce = env.getProperty("sfdc.managedPackage");
 			String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
 			String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
-			if (deleteFlag != null && deleteFlag.equals("true")) {
-				if (namesapce != null && namesapce.equals("true"))
-					soql.deleteQuery(DELETE_RECORDS_NAMESPACE);
-				else
-					soql.deleteQuery(DELETE_RECORDS);
-			}
 			env.launchBrower();
 			basepage = new BasePage();
 			Report.logInfo("Initializing Base Page : " + basepage);

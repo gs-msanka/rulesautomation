@@ -31,7 +31,9 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	public void setUp() {
 		try {
 			Report.logInfo("Starting Acceptance Test Case...");
-			apex.runApexCodeFromFile("apex_scripts/acceptance_tests/transactions.apex",isPackageInstance());
+			apex.runApexCodeFromFile(
+					"apex_scripts/acceptance_tests/transactions.apex",
+					isPackageInstance());
 			basepage.login();
 			loggedIn = true;
 		} catch (Exception e) {
@@ -76,8 +78,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				"New Business", getCurrentDate());
 		int rtPosition = customer360Page.getPositionOfTransaction("Renewal",
 				getCurrentDate());
-		System.out.println("Transaction position is "+ fnPosition);
-		System.out.println("Transaction position is "+ rtPosition);
+		System.out.println("Transaction position is " + fnPosition);
+		System.out.println("Transaction position is " + rtPosition);
 		int asv = Integer.parseInt(rnlData.get("asv").trim());
 		int users = Integer.parseInt(rnlData.get("userCount").trim());
 		Assert.assertEquals(rnlData.get("asv").trim(), summary.getASV().trim());
@@ -87,8 +89,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		Assert.assertEquals(
 				(Integer.parseInt(rnlData.get("otr")) + Integer.parseInt(nbData
 						.get("otr"))) + "", summary.getOTR().trim());
-		//Assert.assertEquals(calcARPU(asv, users),
-		//		Integer.parseInt(summary.getARPU().trim()));
+		// Assert.assertEquals(calcARPU(asv, users),
+		// Integer.parseInt(summary.getARPU().trim()));
 		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(rnlData.get("endDate"), 1)));
@@ -258,23 +260,20 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		testCustomBookingType(testData);
 	}
 
-	/*
-	 * @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,
-	 * dataProvider = "excel")
-	 * 
-	 * @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT33") public
-	 * void testAddBookingTypeDownsell(HashMap<String, String> testData) throws
-	 * BiffException, IOException, ParseException {
-	 * testCustomBookingType(testData); }
-	 * 
-	 * @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,
-	 * dataProvider = "excel")
-	 * 
-	 * @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34") public
-	 * void testAddBookingTypeUpsell(HashMap<String, String> testData) throws
-	 * BiffException, IOException, ParseException {
-	 * testCustomBookingType(testData); }
-	 */
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT33")
+	public void testAddBookingTypeUpsell(HashMap<String, String> testData)
+			throws BiffException, IOException, ParseException {
+		testCustomBookingType(testData);
+	}
+
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34")
+	public void testAddBookingTypeDownsell(HashMap<String, String> testData)
+			throws BiffException, IOException, ParseException {
+		testCustomBookingType(testData);
+	}
+
 	@AfterClass
 	public void tearDown() {
 		if (loggedIn) {
@@ -314,9 +313,16 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				Integer.parseInt(summary.getMRR().trim()));
 		Assert.assertEquals(users + "", summary.getUsers().trim());
 		Assert.assertEquals(data.get("otr").trim(), summary.getOTR().trim());
-		//Assert.assertEquals(calcARPU(asv, users), Integer.parseInt(summary.getARPU()
-		//		.trim()));
-		Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
+		// Assert.assertEquals(calcARPU(asv, users),
+		// Integer.parseInt(summary.getARPU()
+		// .trim()));
+		String bookingDate = data.get("bookingDate");
+		if (data.get("bookingDate") == null) {
+			Assert.assertTrue(summary.getOCD().contains(getCurrentDate()));
+		} else {
+			Assert.assertTrue(summary.getOCD().contains(
+					getFormattedDate(bookingDate)));
+		}
 		Assert.assertTrue(summary.getRD().contains(
 				getFormattedDate(data.get("endDate"), 1)));
 	}
@@ -326,7 +332,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		HashMap<String, String> bTypeData = getMapFromData(testData
 				.get("BookingType"));
 		HashMap<String, String> tData = getMapFromData(testData
-				.get("DebookTRN"));
+				.get("CustomTRN"));
 		HashMap<String, String> eSummary = getMapFromData(testData
 				.get("ExpectedSummary"));
 		String name = bTypeData.get("name");
@@ -366,7 +372,13 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.trim());
 		Assert.assertEquals(eSummary.get("arpu").trim(), c360Summary.getARPU()
 				.trim());
+		String ocDate=eSummary.get("ocDate");
+		if(ocDate==null){
 		Assert.assertTrue(c360Summary.getOCD().contains(getCurrentDate()));
+		}
+		else{
+			Assert.assertTrue(c360Summary.getOCD().contains(getFormattedDate(ocDate)));	
+		}
 		Assert.assertTrue(c360Summary.getRD().contains(
 				eSummary.get("renewalDate")));
 	}
