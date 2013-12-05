@@ -25,9 +25,7 @@
             <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests"/>
             <class name="com.gainsight.sfdc.retention.tests.EventsTests"/>
 
-            <!-- Soujanya's Test -->
-			<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
-			<!-- class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/ -->
+          
 		</classes>
 	</test>
 </suite>
