@@ -4,6 +4,16 @@ if (!ids.isEmpty()){
 delete [Select id from JBCXM__ordertransactionmap__c where JBCXM__OrderType__c =: ids.get(0).id];
 delete ids.get(0);
 }
+ids= new List<JBCXM__Picklist__c>([select id from JBCXM__picklist__c where name='ATUpsell']);
+if (!ids.isEmpty()){
+delete [Select id from JBCXM__ordertransactionmap__c where JBCXM__OrderType__c =: ids.get(0).id];
+delete ids.get(0);
+}
+ids= new List<JBCXM__Picklist__c>([select id from JBCXM__picklist__c where name='ATDownsell']);
+if (!ids.isEmpty()){
+delete [Select id from JBCXM__ordertransactionmap__c where JBCXM__OrderType__c =: ids.get(0).id];
+delete ids.get(0);
+}
 List<Account> accounts=[select id from Account where name like '%Acceptance Test%'];
 if (! accounts.isEmpty()){
     delete accounts;
