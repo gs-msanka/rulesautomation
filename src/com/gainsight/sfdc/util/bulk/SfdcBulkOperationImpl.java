@@ -78,7 +78,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 			Report.logInfo("Adding Batch to Job URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
-			h.addHeader("Content-Type", "application/xml");
+			h.addHeader("Content-Type", "text/csv");
 			resp = wa.doPost(uri, h.getAllHeaders(), entity);
 		} catch (Exception e) {
 			e.printStackTrace();
