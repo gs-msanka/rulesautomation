@@ -30,12 +30,8 @@ public class EventsTests extends BaseTest {
         try{
             file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
             String userupdate = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
-            if(isPackageInstance()) {
-                 apex.runApexCodeFromFile(file);
-                apex.runApexCodeFromFile(userupdate);
-            } else {
-                //Name Space Removal need to be handled.
-            }
+            apex.runApexCodeFromFile(file, isPackageInstance());
+            apex.runApexCodeFromFile(userupdate);
         } catch (Exception e) {
             e.printStackTrace();
             Report.logInfo(e.getLocalizedMessage());
@@ -465,7 +461,7 @@ public class EventsTests extends BaseTest {
         try {
             String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
             Report.logInfo("File :" +file);
-            apex.runApexCodeFromFile(file);
+            apex.runApexCodeFromFile(file, isPackageInstance());
             isEventCreateScriptExecuted = true;
         } catch (Exception e) {
             Report.logInfo(e.getLocalizedMessage());
