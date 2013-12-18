@@ -221,7 +221,7 @@ public class AdminAdoptionSubTab extends BasePage {
 	
 
 /** Data Granularity :Select Time Granularity:--Like Weekly/Monthly WeekStartson and Week Label based on(Start of the day) 
- * @param should be sent from xlsheet.
+ * @param - should be sent from xlsheet.
  */
  	 public AdminAdoptionSubTab selectTimeGranularity(String Granularity ,String WeekStartsOn, String WeekLabel) {
 		  if(Granularity.equalsIgnoreCase("Month")) {
