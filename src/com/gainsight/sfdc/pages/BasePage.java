@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
+import com.gainsight.sfdc.customer.pages.Customer360Page;
 import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
@@ -30,6 +31,7 @@ public class BasePage extends WebPage implements Constants {
 	private final String ACCOUNTS_TAB = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
 	private final String TAB_SELECT = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
+	private final String C360_TAB = "//a[contains(@title,'Customer Success 360 Tab')]";
 	public Transactions transactionUtil = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil = new AmountsAndDatesUtil();
 
@@ -96,7 +98,10 @@ public class BasePage extends WebPage implements Constants {
 		item.click("//a[contains(@title,'Churn Tab')]");
 		return new ChurnPage();
 	}
-
+	public Customer360Page clickOnC360Tab() {
+		item.click(C360_TAB);
+		return new Customer360Page();
+	}
 	public OpportunitiesPage clickOnOpportunitiesTab() {
 		if (!field.isElementPresent(OPPORTUNITIES_TAB)) {
 			item.click(ALL_TABS);
