@@ -2,8 +2,8 @@ package com.gainsight.sfdc.pages;
 
 import java.util.HashMap;
 
-import com.gainsight.sfdc.customer.pages.Customer360Page;
-import com.gainsight.sfdc.customer.pojo.TimeLineItem;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 
 public class CustomerSuccessPage extends BasePage {
 	private final String IFRAME = "//iframe[contains(@title,'CustomerSuccess')]";
