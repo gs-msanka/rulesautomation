@@ -6,9 +6,13 @@ import com.gainsight.sfdc.customer.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.customer360Page.pages.Customer360Features;
+
 
 public class Customer360Page extends BasePage {
-	private final String READY_INDICATOR = "//div[@class='custmor_comp_name']";
+	//private final String READY_INDICATOR = "//div[@class='custmor_comp_name']";
+	// changing the ready indicator to search box on the right corner of page
+	private final String READY_INDICATOR = "//div[@class='gs_search_section']";
 	private final String LOADING_IMAGES = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String SUMMARY_NUM_FIELDS = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
@@ -52,9 +56,32 @@ public class Customer360Page extends BasePage {
 	public Customer360Page goToSection(String name) {
 		item.click(String.format(NAVIGATE_SECTION, name));
 		wait.waitTillElementNotPresent(LOADING_IMAGES, MIN_TIME, MAX_TIME);
+		if (name.equals("Features")) {
+			return new Customer360Features();
+		}
 		return this;
 	}
+	
+	public Customer360Page gotoCustomer360(String customerName) {
 
+		/*
+		 * field.setTextByKeys("//input[@name='search_text']", customerName);
+		 * item.click("//div[@class='search_input_btn']");
+		 * wait.waitTillElementDisplayed("//li[@role='presentation']", MIN_TIME,
+		 * MAX_TIME); item.click("//a[text()='"+customerName+"']");
+		 */
+		field.clearAndSetText(
+				"//input[@class='search_input ui-autocomplete-input']",
+				customerName);
+		/*
+		 * wait.waitTillElementDisplayed("//li[@role='presentation']", MIN_TIME,
+		 * MAX_TIME); item.click("//a[text()='"+customerName+"']");
+		 */
+		driver.get("https://jbcxm.ap1.visual.force.com/apex/CustomerSuccess360?cid=0019000000jhBghAAE");
+
+		return new Customer360Page();
+	}
+	
 	public int getPositionOfTransaction(String stage, String bookingDate) {
 		String xpath = "//div[contains(@class,'transaction ') and contains(.,'"
 				+ bookingDate + "') and contains(.,'" + stage + "')]";
