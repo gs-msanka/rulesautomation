@@ -25,7 +25,9 @@ public class Customer360FeaturesTests extends BaseTest {
 		Report.logInfo("Starting Customer 360 Features module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Features module Test Cases...");
-
+		apex.runApexCodeFromFile(
+				"apex_scripts/Features/features.apex",
+				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
 		cp.gotoCustomer360("Via Systems");
