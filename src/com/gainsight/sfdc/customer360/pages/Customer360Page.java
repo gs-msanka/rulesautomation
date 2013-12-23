@@ -58,6 +58,9 @@ public class Customer360Page extends BasePage {
 		if (name.equals("Features")) {
 			return new Customer360Features();
 		}
+		if(name.equals("Usage")){
+			return new Customer360Milestones();
+		}
 		return this;
 	}
 	
