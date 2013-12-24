@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 
 public class Customer360Milestones extends Customer360Page {
 	
+	private final String NO_MILESTONES_MSG = "//div[@class='noMilestone noDataFound' and contains(.,'No Milestones Found')]";
 	private final String MILESTONES_SUB_TAB="//li[@data-tabname='Milestones']/a[contains(.,'Milestones')]";
 	private final String ADD_MILESTONES="//a[@class='addNewMilestone']";
 	private final String DATE_FIELD="//input[@id='DateId']";
@@ -136,14 +137,22 @@ public class Customer360Milestones extends Customer360Page {
 	}
 	
 	public void clickOnDeleteMilestone(int row){
+		amtDateUtil.stalePause();
 		item.click(String.format(DELETE_LINK_ICON,row));
 		driver.switchTo().alert().accept();
-		wait.waitTillElementDisplayed(MILESTONES_TABLE, MIN_TIME, MAX_TIME);
+		amtDateUtil.stalePause();
+		//wait.waitTillElementDisplayed(MILESTONES_TABLE, MIN_TIME, MAX_TIME);
 	}
 	
 	public boolean isRowPresentAfterDelete(int row)
 	{
 		wait.waitTillElementNotPresent(String.format(MILESTONE_ROW_CHECK, row), MIN_TIME, MAX_TIME);
+		return true;
+	}
+
+	public boolean isNoMilestoneMessagePresent() {
+		amtDateUtil.stalePause();
+		wait.waitTillElementDisplayed(NO_MILESTONES_MSG, MIN_TIME, MAX_TIME);
 		return true;
 	}
 }
