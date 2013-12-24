@@ -1,4 +1,4 @@
-package com.gainsight.sfdc.customer.pojo;
+package com.gainsight.sfdc.customer360.pojo;
 
 public class SummaryLabels {
 	private String ASV="ASV";

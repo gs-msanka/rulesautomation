@@ -3,7 +3,7 @@ package com.gainsight.sfdc.helpers;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.core.WebPage;
-import com.gainsight.sfdc.customer.pojo.TimeLineItem;
+import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.Constants;
 
 public class Transactions extends WebPage implements Constants {

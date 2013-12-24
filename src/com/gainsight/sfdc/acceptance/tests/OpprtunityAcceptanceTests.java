@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer.pojo.CustomerSummary;
+import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;

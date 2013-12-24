@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.*;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -115,7 +116,20 @@ public class BaseTest {
 		}
 		return hm;
 	}
-
+	public List<HashMap<String,String>> getMapFromDataList(String data) {
+		List<HashMap<String,String>> hm=new ArrayList();
+		System.out.println(data);
+		String[] dataArray = data.substring(1, data.length() - 1).split(",");
+		int i=0;
+		for (String record : dataArray) {
+			if (record != null) {
+				System.out.println(record);
+				hm.add(getMapFromData(record));
+				i++;
+			}
+		}
+		return hm;
+	}
 	public int calcMRR(int ASV) {
 		return ASV / 12;
 	}

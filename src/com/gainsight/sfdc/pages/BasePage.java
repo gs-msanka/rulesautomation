@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
@@ -30,6 +31,7 @@ public class BasePage extends WebPage implements Constants {
 	private final String ACCOUNTS_TAB = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
 	private final String TAB_SELECT = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
+	private final String C360_TAB = "//a[contains(@title,'Customer Success 360 Tab')]";
 	public Transactions transactionUtil = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil = new AmountsAndDatesUtil();
 
@@ -96,7 +98,10 @@ public class BasePage extends WebPage implements Constants {
 		item.click("//a[contains(@title,'Churn Tab')]");
 		return new ChurnPage();
 	}
-
+	public Customer360Page clickOnC360Tab() {
+		item.click(C360_TAB);
+		return new Customer360Page();
+	}
 	public OpportunitiesPage clickOnOpportunitiesTab() {
 		if (!field.isElementPresent(OPPORTUNITIES_TAB)) {
 			item.click(ALL_TABS);
@@ -123,17 +128,17 @@ public class BasePage extends WebPage implements Constants {
 		item.click("userNavButton");
 		link.clickLink("Setup");
 		wait.waitTillElementPresent("//a[text()='Manage Users']", MIN_TIME,
-				MAX_TIME);
+                MAX_TIME);
 		link.clickLink("Manage Users");
 		link.clickLink("Profiles");
 		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]",
-				MIN_TIME, MAX_TIME);
+                MIN_TIME, MAX_TIME);
 		item.click("//td[@id='bodyCell']//tr[contains(.,'System Administrator')]//a[contains(.,'Edit')]");
 		wait.waitTillElementPresent("//input[@title='Save']", MIN_TIME,
-				MAX_TIME);
+                MAX_TIME);
 		item.click(String.format(DEFAULT_APP_RADIO, appName));
 		field.selectFromDropDown(String.format(TAB_SELECT, "Administration"),
-				"Default On");
+                "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Adoption"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Churn"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Customers"), "Default On");
@@ -141,6 +146,7 @@ public class BasePage extends WebPage implements Constants {
 		field.selectFromDropDown(String.format(TAB_SELECT, "Retention"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Survey"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Transactions"), "Default On");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Customer Success 360"), "Default On");
 		item.click("//input[@title='Save']");
 		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]",
 				MIN_TIME, MAX_TIME);

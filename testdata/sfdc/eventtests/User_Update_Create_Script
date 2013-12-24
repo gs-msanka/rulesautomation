@@ -7,7 +7,7 @@ List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias,
                      AND Alias = 'testuser' AND
                        ProfileId =: s];
 System.debug(extuser);
-If(extuser != null && extuser.size() <= 0) {
+if(extuser != null && extuser.size() <= 0) {
     User sampleUser = new User();
     sampleUser.Username= 'ggolla@testuser.com';
     sampleUser.Email = 'ggolla@gainsight.com';

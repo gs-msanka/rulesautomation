@@ -1,4 +1,4 @@
-package com.gainsight.sfdc.customer.pojo;
+package com.gainsight.sfdc.customer360.pojo;
 
 public class TimeLineItem {
 	private String ASV;

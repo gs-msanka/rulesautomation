@@ -25,8 +25,8 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         String measureFile          = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Usage_Measure_Create.txt";
         String advUsageConfigFile   = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Instance_Level_Weekly.txt";
         try{
-            apex.runApexCodeFromFile(measureFile);
-            apex.runApexCodeFromFile(advUsageConfigFile);
+          //  apex.runApexCodeFromFile(measureFile);
+           // apex.runApexCodeFromFile(advUsageConfigFile);
             /**
              * Data Should be loaded here.
              */
@@ -45,11 +45,11 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
             //Max of only 5 jobs can run in an organization at a given time
             //Care to be taken that there are no apex jobs are running in the organization.
             int i= -7;
-            for(int k = 0; k< 11;k++) {
+            for(int k = 0; k< 45;k++) {
                 for(int m=0; m < 5; m++, i=i-7) {
                     //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                     // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                    dateStr     = getWeekLabelDate("Sun", i);
+                    dateStr     = getWeekLabelDate("Wed", i);
                     System.out.println(dateStr);
                     year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
                     month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
@@ -58,9 +58,13 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                     code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                             .replaceAll("THEYEARCHANGE", String.valueOf(year))
                             .replace("THEDAYCHANGE", String.valueOf(day));
+                    if(!isPackageInstance()) {
+                        code    = code.replace("JBCXM__", "").replace("JBCXM.", "");
+                    }
                     apex.runApex(code);
                 }
-                for(int l= 0; l < 100; l++) {
+                Thread.sleep(60000L);
+                for(int l= 0; l < 200; l++) {
                     String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
                             "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
                             "and ApexClass.Name = 'AdoptionAggregation'";
@@ -87,6 +91,8 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     public void viewWeeklyInsData() {
 
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
+    }
+        /*
         usage.setMeasure("Page Visits");
         usage.setNoOfWeeks("9 Weeks");
         usage.setByDataGran("By Instance");

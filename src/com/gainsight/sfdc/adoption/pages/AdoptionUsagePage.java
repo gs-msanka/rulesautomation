@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
 
 
 public class AdoptionUsagePage extends AdoptionBasePage {
