@@ -132,5 +132,16 @@ public class Customer360MilestonesTests extends BaseTest {
 		cm.isMsTableDataPresent();
 		Assert.assertTrue(cm.isRowPresentAfterDelete(MsNum));
 	}
-
+	
+	
+	@Test(priority = 5)
+	public void verifyNoMilestonesMessage(){
+		//Assuming there are 4 milestones left in the page
+		int MsNum=4;
+		for(int i =1;i<= MsNum;i++)
+		{
+			cm.clickOnDeleteMilestone(1);
+		}
+		Assert.assertTrue(cm.isNoMilestoneMessagePresent());
+	}
 }
