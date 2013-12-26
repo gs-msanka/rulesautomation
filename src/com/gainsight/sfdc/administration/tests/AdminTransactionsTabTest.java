@@ -13,12 +13,14 @@ import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class AdminTransactionsTabTest extends BaseTest {
 	// private static final String String = null;
 		String[] dirs = { "acceptancetests" };
 		private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
 				+ generatePath(dirs);
+		final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminTransactionTestdata.xls";
 
 		@BeforeClass
 		public void setUp() {
@@ -26,12 +28,11 @@ public class AdminTransactionsTabTest extends BaseTest {
 			basepage.login();
 		}
 
-		@Test(priority=16)  //@Test     //  Add Transaction Booking Types
-		public void testAdminAddBookingTypesTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			addBookingTypes(testData.get("Booking Types1"));
-			
+		                     //  Add Transaction Booking Types
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		public void testAdminAddBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
+			addBookingTypes(testData.get("BookingTypes"));
 		}
 		private AdminTransactionsTab addBookingTypes(String testData) {
 			HashMap<String, String> data = getMapFromData(testData);
@@ -47,13 +48,10 @@ public class AdminTransactionsTabTest extends BaseTest {
 					"Verifying Booking Type is added in the grid");
 			return adTrPage;
 		}
-		
-		
-		@Test(priority=17)  //@Test (dependsOnMethods={"adminAddBookingTypes"})     // Edit Transaction Booking Types         
-		public void testAdminEditBookingTypesTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			//editbookingType(testData.get("EditBookingTypes"));
+		           // Edit Transaction Booking Types
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		public void testAdminEditBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
 			editbookingType(testData.get("EditBookingTypes1"));
 		}
 
@@ -68,16 +66,17 @@ public class AdminTransactionsTabTest extends BaseTest {
 					.clickOnTransactionsTab();
 			adTrPage.editbookingType(dummy, name, displayOrder, shortName, selectBookingType);
 			String TransBookingTypes= name +"|"+ displayOrder +"|Custom-"+selectBookingType ;
-			Assert.assertTrue(adTrPage.isBookingTypeEdited(TransBookingTypes),
+			Assert.assertTrue(adTrPage.isBookingTypePresent(TransBookingTypes),
 					"Verifying Booking Type is edited in the grid");
 			return adTrPage;
 		}
 		
-		@Test(priority=18)  //@Test(dependsOnMethods={"adminAddBookingTypes","adminEditBookingTypes"})       // MapBooking types
-		public void testMapBookingTypesTest() throws Throwable, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			mapBookingTypes(testData.get("MapBooking Types"));
+		
+		// MapBooking types
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		public void testMapBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
+			mapBookingTypes(testData.get("MapBookingTypes"));
 		}
 			private AdminTransactionsTab mapBookingTypes(String testData) {
 			HashMap<String, String> data = getMapFromData(testData);
@@ -91,10 +90,11 @@ public class AdminTransactionsTabTest extends BaseTest {
 			return adTrPage;
 		}
 		
-		@Test(priority=19)  //@Test (dependsOnMethods={"adminAddBookingTypes","adminEditBookingTypes","mapBookingTypes"})    // Delete Booking Types
-		public void testAdminDeleteBookingTypesTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
+		
+		
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		public void testAdminDeleteBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
 			deleteBookingTypes(testData.get("DeleteBookingTypes"));
 		}
 		private AdminTransactionsTab deleteBookingTypes(String testData) {
@@ -107,16 +107,16 @@ public class AdminTransactionsTabTest extends BaseTest {
 			AdminTransactionsTab adTrPage = basepage.clickOnAdminTab().clickOnTransactionsTab();
 			adTrPage.deleteBookingTypes(previous);
 			String TransBookingTypes= name +"|"+ systemName +"|"+ displayOrder +"|Custom-"+selectBookingType ;
-			Assert.assertFalse(adTrPage.isBookingTypeDeleted(TransBookingTypes),
+			Assert.assertFalse(adTrPage.isBookingTypePresent(TransBookingTypes),
 					"Verifying Booking Type is deleted from the grid");
 			return adTrPage;
 		}
-		
-	  @Test(priority=20)  // @Test                                             // Add Transaction Line Item
-		public void testAddTransactionLinesItemsTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			addTransactionLinesItems(testData.get("CreateTransactionLineITem"));
+		  
+	           // Add Transaction Line Item
+	  @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
+		public void testAddTransactionLinesItemsTest(HashMap<String, String> testData) throws BiffException, IOException {
+		  addTransactionLinesItems(testData.get("CreateTransactionLineITem"));
 		}
 		private AdminTransactionsTab addTransactionLinesItems(String testData) {
 			HashMap<String, String> data = getMapFromData(testData);
@@ -129,12 +129,14 @@ public class AdminTransactionsTabTest extends BaseTest {
 					"Verifying Transaction Line Item is added to the grid");
 			return adTrPage;
 		}
-			@Test(priority=21)  //@Test (dependsOnMethods={"addTransactionLinesItems"})        // Edit TransactionLineItem
-		public void testEditTransactionLineItemTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			String s = testData.get("EditTransactionLineItem");
-			HashMap<String, String> data = getMapFromData(s);
+			//Edit Transactions.
+	 @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
+		public void testEditTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
+		 EditTransactionLineItem(testData.get("EditTransactionLineItem"));
+		}
+	 private AdminTransactionsTab EditTransactionLineItem(String testData) {
+			HashMap<String, String> data = getMapFromData(testData);
 			String previous = data.get("previous");
 			String name = data.get("name");
 			String type = data.get("type");
@@ -142,32 +144,36 @@ public class AdminTransactionsTabTest extends BaseTest {
 					.clickOnTransactionsTab();
 			adTrPage.editTransactionLineItem(previous, name, type);
 			String lineItem = name+"|"+type;
-			Assert.assertTrue(adTrPage.isTransactionLineItemEdited(lineItem),
+			Assert.assertTrue(adTrPage.isTransactionLineItemPresent(lineItem),
 					"Verifying Transaction Line Item is edited in the grid");
+			return adTrPage;
 		}
-			
-		@Test(priority=22)  //	@Test (dependsOnMethods={"addTransactionLinesItems","editTransactionLineItem"})   // deleteTransactionLineItem
-		public void testDeleteTransactionLineItemTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			String s = testData.get("DeleteTransactionLineItem");
-			HashMap<String, String> data = getMapFromData(s);
+				
+			       // deleteTransactionLineItem
+  @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
+	  public void testDeleteTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
+	deleteTransactionLineItem(testData.get("DeleteTransactionLineItem"));
+			}
+    private AdminTransactionsTab deleteTransactionLineItem(String testData) {	
+			HashMap<String, String> data = getMapFromData(testData);
 			String previous = data.get("previous");
 			String name = data.get("name");
 			String type = data.get("type");
 			AdminTransactionsTab adTrPage = basepage.clickOnAdminTab().clickOnTransactionsTab();
 			adTrPage.deleteTransactionLineItem(previous);
 			String lineItem = name+"|"+type;
-			Assert.assertFalse(adTrPage.isTransactionLineItemDeleted(lineItem),
+			Assert.assertFalse(adTrPage.isTransactionLineItemPresent(lineItem),
 					"Verifying Transaction Line Item is edited in the grid");
+			return adTrPage;
 		}
 		
-			@Test(priority=23)  //@Test                                             // Add Churn Reason
-		public void testAdminAddChurnReasonTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			addChurnReason(testData.get("AddChurnReason"));
-		}
+		      	// Add Churn Reason
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
+	  public void testAdminAddChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		addChurnReason(testData.get("AddChurnReason"));
+	}		
 		private AdminTransactionsTab addChurnReason(String testData) {
 			HashMap<String, String> data = getMapFromData(testData);
 			String name = data.get("name");
@@ -181,10 +187,11 @@ public class AdminTransactionsTabTest extends BaseTest {
 					"Verifying Churn Reason added in the grid");
 			return adTrPage;
 		}
-		@Test(priority=24)  // @Test (dependsOnMethods={"adminAddChurnReason"})   	// Edit churn Reason
-		public void testAdminEditChurnReasonTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
+		
+		             // Edit churn Reason
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
+		  public void testAdminEditChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
 			editChurnReason(testData.get("EditChurnReason"));
 		}
 			private AdminTransactionsTab editChurnReason(String testData) {
@@ -196,16 +203,19 @@ public class AdminTransactionsTabTest extends BaseTest {
 			AdminTransactionsTab adTrPage = basepage.clickOnAdminTab().clickOnTransactionsTab();
 			adTrPage.editChurnReason(previous, name, displayOrder, shortName);
 			String edtChurnReason= name +"|"+ shortName +"|"+displayOrder ;
-			Assert.assertTrue(adTrPage.isChurnEdited(edtChurnReason),
+			Assert.assertTrue(adTrPage.isChurnPresent(edtChurnReason),
 					"Verifying Churn Reason edited in the grid");
 			return adTrPage;
 		}
-		@Test(priority=25)  //@Test (dependsOnMethods={"adminAddChurnReason","adminEditChurnReason"})   // Delete Churn Reason
-		public void testAdminDeleteChurnReasonTest() throws BiffException, IOException {
-			HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-					TESTDATA_DIR + "AdministrationTestdata.xls", "AdminTrans");
-			String s = testData.get("DeleteChurnReason");
-			HashMap<String, String> data = getMapFromData(s);
+		
+			 // Delete Churn Reason
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=9)
+	  @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
+	  public void testAdminDeleteChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		deleteChurnReason(testData.get("DeleteChurnReason"));
+			}		
+	private AdminTransactionsTab deleteChurnReason(String testData) {	
+			HashMap<String, String> data = getMapFromData(testData);
 			String previous = data.get("previous");
 			AdminTransactionsTab adTrPage = basepage.clickOnAdminTab().clickOnTransactionsTab();
 			adTrPage.deleteChurnReason(previous);
@@ -214,8 +224,9 @@ public class AdminTransactionsTabTest extends BaseTest {
 			String shortName = data.get("shortName");
 			String systemName = data.get("systemName");
 			String churnReason= name +"|"+ systemName +"|"+ displayOrder +"|"+shortName ;
-			Assert.assertFalse(adTrPage.isChurnDeleted(churnReason),
+			Assert.assertFalse(adTrPage.isChurnPresent(churnReason),
 					"Verifying Churn Reason deleted in the grid");
+			return adTrPage;
 		}
 		
 		@AfterClass

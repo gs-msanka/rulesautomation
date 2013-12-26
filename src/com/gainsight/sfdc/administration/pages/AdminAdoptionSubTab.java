@@ -54,7 +54,6 @@ public class AdminAdoptionSubTab extends BasePage {
    public AdminAdoptionSubTab createAdoptionMeasure(String name, String displayOrder, String systemName, String shortName) {
 		button.click(NEW);
 		wait.waitTillElementDisplayed(MESURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	item.isElementPresent(TEXT_PRESENT);
 		field.clearAndSetText(AMEASURE_NAME,name);
 		field.clearAndSetText(AMESURE_DISPLYORDER, displayOrder);
 		field.clearAndSetText(AMESURE_SYSTEM_NAME, systemName);
@@ -91,16 +90,7 @@ public class AdminAdoptionSubTab extends BasePage {
 		refreshPage();
 	return this;
 	}
-   public boolean isAdoptionMeasureEdited(String values){
-		Boolean result = false;
-		WebElement Measuretable =item.getElement(TABLE_VALUES_MESURE);
-		String tableId = Measuretable.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		}
-		return result;
-	}
+  
                                    //Delete Adoption Measure
    public AdminAdoptionSubTab deleteAdoptionMeasure(String s ) {
 	   wait.waitTillElementPresent("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
@@ -110,17 +100,7 @@ public class AdminAdoptionSubTab extends BasePage {
 		refreshPage();
 	return this;
 	}
-   public boolean isAdoptionMeasureDeleted(String values){
-		Boolean result = false;
-		WebElement Measuretable =item.getElement(TABLE_VALUES_MESURE);
-		String tableId = Measuretable.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		}
-		return result;
-	}
-       
+         
       	/** This method will take care for Usage configuration..
    	 * This will internally call the selectDataGranularity , selectTimeGranularity methods ..  
    	 * 
@@ -221,7 +201,7 @@ public class AdminAdoptionSubTab extends BasePage {
 	
 
 /** Data Granularity :Select Time Granularity:--Like Weekly/Monthly WeekStartson and Week Label based on(Start of the day) 
- * @param - should be sent from xlsheet.
+ * @param should be sent from xlsheet.
  */
  	 public AdminAdoptionSubTab selectTimeGranularity(String Granularity ,String WeekStartsOn, String WeekLabel) {
 		  if(Granularity.equalsIgnoreCase("Month")) {

@@ -35,7 +35,6 @@ public class AdminNotificationsSubTab extends BasePage {
 		
 		  button.click(NOTIFI_FREQ_CONFIG);
 		  wait.waitTillElementDisplayed(NOTI_FEQ_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		if(item.isElementPresent(NFORM_IMG_PRESENT)) {
 			field.selectCheckbox(EMAIL_NOTIFICATIONS);
 			field.selectFromDropDown(SELECT_DAY, day);//Monday or sunday or any day
 			field.selectFromDropDown(SELECT_HOUR, hour);//01 0r 02
@@ -43,28 +42,20 @@ public class AdminNotificationsSubTab extends BasePage {
 			button.click(NOTI_FEQ_SAVE);
 			wait.waitTillElementPresent(NOTI_FEQ_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
-		} else {
-				System.out.println("No Element found so clickong on cancel");
-				button.click(NOTI_FEQ_CANCEL);
-			} return this;	
+			 return this;	
 	}
 	
     public AdminNotificationsSubTab setAutoSubscription() {
-    	
     	button.click(AUTOSUBSCRIPTION_CONFIG);
     	wait.waitTillElementDisplayed(AUTOSUB_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		if(item.isElementPresent(FORM_IMG_PRESENT)) {
 			field.selectCheckbox(CREATE_BY_ID_CBOX);
 			field.selectCheckbox(OWNER_ID_CBOX);
 			field.selectCheckbox(LASTMODI_ID_CBOX);
 		  button.click(AUTOSUB_SAVE);
 		wait.waitTillElementPresent(AUTOSUB_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
-		}  else {
-			System.out.println("No Element found so clickong on cancel");
-			button.click(AUTOSUB_CANCEL);
-		}
-		return this;	
+		return this;
+		
 	 }
 	
 	

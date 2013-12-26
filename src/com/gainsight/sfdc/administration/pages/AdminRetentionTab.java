@@ -106,15 +106,7 @@ public class AdminRetentionTab extends BasePage {
 		fillFewFileds(name,displayOrder,shortName);
 		return this;
 	}
-	public boolean isAlertTypeEdited(String values) {
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(ALERT_TYPE_VALUES);
-		String tableId = ATtable2.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		} return result;
-	}
+	
 	                              //--Delete Alert Type
 	public AdminRetentionTab deleteAlertType(String s) {
         wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
@@ -124,21 +116,12 @@ public class AdminRetentionTab extends BasePage {
 		refreshPage();
 		return this;
 	}
-	public boolean isAlertTypeDeleted(String values) {
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(ALERT_TYPE_VALUES);
-		String tableId = ATtable2.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		} return result;
-	}
+	
 	                        //Create Alert Severity
 	public AdminRetentionTab createAlertSeverity(String name,String displayOrder ,String systemName,String shortName, String includeinWidget) {  
 		wait.waitTillElementPresent(NEW_ALERT_SEVERITY, MIN_TIME, MAX_TIME);
 		button.click(NEW_ALERT_SEVERITY);
 		wait.waitTillElementDisplayed(ASEVERITY_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(ASEVERITY_TEXT_PRESENT);
 			field.clearAndSetText(ALERT_SEVERITY_NAME,name);
 			field.clearAndSetText(SEVERITY_DISPLAYORDER,displayOrder);
 			field.clearAndSetText(SEVERITY_SYSNAME,systemName);
@@ -165,7 +148,6 @@ public class AdminRetentionTab extends BasePage {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 	  wait.waitTillElementDisplayed(ASEVERITY_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(ASEVERITY_TEXT_PRESENT);
 			field.clearAndSetText(ALERT_SEVERITY_NAME,name);
 			field.clearAndSetText(SEVERITY_DISPLAYORDER,displayOrder);
 			field.clearAndSetText(SEVERITY_SHOTNAME,shortName);
@@ -175,16 +157,7 @@ public class AdminRetentionTab extends BasePage {
 	     wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 		return this;
 	}
-	public boolean isAlertSeverityEdited(String values){
-		Boolean result = false;
-		WebElement AStable2 =item.getElement(ASEVERITY_TABLE_VALUES);
-		String tableId = AStable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} 
-		return result;
-	}
+	
 	                                          //Delete Alert Severity
 	public AdminRetentionTab deleteAlertSeverity(String s) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
@@ -194,22 +167,12 @@ public class AdminRetentionTab extends BasePage {
 		refreshPage();
 	return this;
 	}
-	public boolean isAlertSeverityDeleted(String values){
-		Boolean result = false;
-		WebElement AStable2 =item.getElement(ASEVERITY_TABLE_VALUES);
-		String tableId = AStable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} 
-		return result;
-	}
+	
 	                        //Create Alert Reason
 	public AdminRetentionTab createAlertReason(String name ,String displayOrder,String systemName,String shortName) {
 		wait.waitTillElementPresent(NEW_ALERT_REASON, MIN_TIME, MAX_TIME);
 		button.click(NEW_ALERT_REASON);
 		wait.waitTillElementDisplayed(AREASON_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	item.isElementPresent(AREASON_TEXT_PRESENT);
 		field.clearAndSetText(ALERT_REASON_NAME,name);
 		field.clearAndSetText(AREASON_DISPLAYORDER,displayOrder);
 		field.clearAndSetText(AREASON_SYSNAME,systemName);
@@ -234,7 +197,6 @@ public class AdminRetentionTab extends BasePage {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed(AREASON_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(AREASON_TEXT_PRESENT);
 			field.clearAndSetText(ALERT_REASON_NAME,name);
 			field.clearAndSetText(AREASON_DISPLAYORDER,displayOrder);
 			field.clearAndSetText(AREASON_SHOTNAME,shortName);
@@ -244,16 +206,7 @@ public class AdminRetentionTab extends BasePage {
 		    wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 	return this;	
 	}        
-	public boolean isAlertReasonEdited(String values){
-		Boolean result = false;
-		WebElement ARtable2 =item.getElement(AREASON_TABLE_VALUES);
-		String tableId = ARtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
-	                        //Delete Alert Reason
+	                    //Delete Alert Reason
 	public AdminRetentionTab deleteAlertReason(String s) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -262,20 +215,10 @@ public class AdminRetentionTab extends BasePage {
 		refreshPage();
 		return this;
 	}
-	public boolean isAlertReasonDeleted(String values){
-		Boolean result = false;
-		WebElement ARtable2 =item.getElement(AREASON_TABLE_VALUES);
-		String tableId = ARtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
-	                         //Create Alert Status
+		                         //Create Alert Status
 	public AdminRetentionTab createAlertStatus(String name ,String displayOrder,String systemName ,String shortName) {
 		wait.waitTillElementPresent(NEW_ALERT_STATUS, MIN_TIME, MAX_TIME);
 		button.click(NEW_ALERT_STATUS);
-		item.isElementPresent("//span[contains(text(),'Alert Status')]");
 		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
 		field.clearAndSetText(ALERT_STATUS_NAME,name);
 		field.clearAndSetText(ASTATUS_DISPLAYORDER,displayOrder);
@@ -289,19 +232,19 @@ public class AdminRetentionTab extends BasePage {
 	}	
 	public boolean isAlertStatusPresent(String values){
 		Boolean result = false;
-		WebElement ASTtable2 =item.getElement(ASTATUS_TABLE_VLAUES);
-		String tableId = ASTtable2.getAttribute("Id");
+		WebElement ARtable2 =item.getElement(ASTATUS_TABLE_VLAUES);
+		String tableId = ARtable2.getAttribute("Id");
 		int a = table.getValueInListRow(tableId, values);
 		if(a != -1) {
 			result = true;
 		} return result;
 	}
+	
 	                      //Edit Alert Status
 	public AdminRetentionTab editAlertStatus(String s,String name,String displayOrder,String shortName) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed("//div[contains(@class,'jbaraDummyAdminInputForm') and contains(@style,'display: block')]", MIN_TIME, MAX_TIME);
-		item.isElementPresent("//span[contains(text(),'Alert Status')]");
 			field.clearAndSetText(ALERT_STATUS_NAME,name);
 			field.clearAndSetText(ASTATUS_DISPLAYORDER,displayOrder);
 			field.clearAndSetText(ASTATUS_SHOTNAME,shortName);
@@ -311,16 +254,7 @@ public class AdminRetentionTab extends BasePage {
 		    wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 		 return this;
 	}
-	public boolean isAlertStatusEdited(String values){
-		Boolean result = false;
-		WebElement ASTtable2 =item.getElement(ASTATUS_TABLE_VLAUES);
-		String tableId = ASTtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
-                                  //Delete Alert Status
+	                       //Delete Alert Status
 	public AdminRetentionTab deleteAlertStatus(String s) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -329,15 +263,7 @@ public class AdminRetentionTab extends BasePage {
 		refreshPage();
 		return this;	
 	}
-	public boolean isAlertStatusDeleted(String values){
-		Boolean result = false;
-		WebElement ASTtable2 =item.getElement(ASTATUS_TABLE_VLAUES);
-		String tableId = ASTtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
+	
                                    //Task Configuration
 	public AdminRetentionTab taskConfiguration()
 	{
@@ -353,7 +279,6 @@ public class AdminRetentionTab extends BasePage {
                                         //Create Event Type
 	public AdminRetentionTab createEventType(String name ,String displayOrder,String systemName ,String shortName) {
 	    button.click(NEW_EVENT_TYPE);
-	    item.isElementPresent(EVENT_TEXT_PRESENT);
 	    wait.waitTillElementDisplayed(EVENT_FORM_BLOCK, MIN_TIME, MAX_TIME);
 		field.clearAndSetText(EVENT_NAME,name);
 		field.clearAndSetText(EVENT_DISPLAYORDER,displayOrder);
@@ -377,7 +302,6 @@ public class AdminRetentionTab extends BasePage {
                                     //Edit Event Type
 	public AdminRetentionTab editEventType(String s,String name,String displayOrder,String shortName) {
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
-		  item.isElementPresent(EVENT_TEXT_PRESENT);
 			wait.waitTillElementDisplayed(EVENT_FORM_BLOCK, MIN_TIME, MAX_TIME);
 			    field.clearAndSetText(EVENT_NAME,name);
 				field.clearAndSetText(EVENT_DISPLAYORDER,displayOrder);
@@ -388,16 +312,7 @@ public class AdminRetentionTab extends BasePage {
 			  wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 		return this;
 	}
-	public boolean isEventTypeEdited(String values){
-		Boolean result = false;
-		WebElement ASTtable2 =item.getElement(EVENT_TABLE_VALUES);
-		String tableId = ASTtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
-                            	       //  Delete Event Type
+	                   	       //  Delete Event Type
 	public AdminRetentionTab deleteEventType(String s) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -406,19 +321,10 @@ public class AdminRetentionTab extends BasePage {
        refreshPage();
 		return this;
 	}
-	public boolean isEventTypeDeleted(String values){
-		Boolean result = false;
-		WebElement ASTtable2 =item.getElement(EVENT_TABLE_VALUES);
-		String tableId = ASTtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
+	
 	             //Common Functionality to fill all the fields
 		public AdminRetentionTab fillAllFileds(String name,String displayOrder,String systemName,String shortName, String includeinWidget) {
 		wait.waitTillElementDisplayed(ATYPE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(ATYPE_TEXT_PRESENT);
 		field.clearAndSetText(ALERT_TYPE_NAME,name);
 		field.clearAndSetText(ATYPE_DISPLAY_ORDER,displayOrder);
 		field.clearAndSetText(ATYPE_SYSTEM_NAME,systemName);
@@ -432,7 +338,6 @@ public class AdminRetentionTab extends BasePage {
 	}
 public AdminRetentionTab fillFewFileds(String name,String displayOrder,String shortName) {
   wait.waitTillElementDisplayed(ATYPE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	item.isElementPresent(ATYPE_TEXT_PRESENT);
 		field.clearAndSetText(ALERT_TYPE_NAME,name);
 		field.clearAndSetText(ATYPE_DISPLAY_ORDER,displayOrder);
 		field.clearAndSetText(ATYPE_SHORT_NAME,shortName);

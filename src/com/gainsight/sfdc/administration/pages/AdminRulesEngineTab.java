@@ -45,20 +45,19 @@ public class AdminRulesEngineTab extends BasePage {
 	private final String SUM_CHECKBOX         = "//input[@class='usageRulesConfigInputCls trendvaluebased SUM']";
 	private final String SUM_SELECT_MONTHS    = "//select[@class='averageTrailingMonths monthsSelect inputMonths previewClass']";
 	private final String SUM_VALUE            = "//select[@class='averageTrailingMonths monthsSelect inputMonths previewClass']/following::span/input";
-	private final String EDIT_RULE            = "//span/a[contains(text(),'Edit')]";
+	private final String EDIT_RULE            = "//div[@data-name='"+RULE_TITLE+"']/div/span[@class='ruleEditCls editIcon ruleOperationsCls']";
 	private final String DELETE_RULE          = "//span[@class='ruleDeleteCls deleteIcon ruleOperationsCls']/a";
 	
 	public AdminRulesEngineTab() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 	
-	
 	public AdminRulesEngineTab createNewRule(String ruleTitle, String selectSeverity, String alertType,
-			                                              String status, String reason, 
-			                              String selectPlaybook, String taskOwner,String defaultTaskOwner,String selectActivity,
-			                             String selectParity,String percent, String selectMonths ,String  sumValue,
-		                                       String firstName, String lastName, String email, 
-                                                                                      String userLicense, String role ) {
+			                                String status, String reason, String selectPlaybook, 
+			                             String taskOwner,String defaultTaskOwner,String selectActivity,
+			                           String selectParity,String percent, String selectMonths ,String  sumValue, 
+		                             String firstName, String lastName, String email, String userLicense, String role) { 
+                                                                             
 		item.click(NEW_RULE);
 		wait.waitTillElementPresent(RULE_TITLE, MIN_TIME, MAX_TIME);
 		System.out.println("Clicked on New Rule");
@@ -94,13 +93,25 @@ public class AdminRulesEngineTab extends BasePage {
 		return this;
 	}
 	
+	/*public boolean isAlertRuleCreated(String values,String ruleTitle) {
+		
+			Boolean result = false;
+			WebElement ATtable2 =item.getElement("//div[@class='eachRuleWrapper' and @data-name='"+ruleTitle+"']");
+			String ruledta = ATtable2.getAttribute("index");
+		String index =	item.getText(ruledta);
+			System.out.println("The  index values are :"+ index);
+			
+			return result;
+			
+		}*/
+
 	                        //Edit Alert Rules	
 	public AdminRulesEngineTab editAlertRules(String ruleTitle, String selectSeverity, String alertType,
-                                            String status, String reason, 
-               String selectPlaybook, String taskOwner,String defaultTaskOwner,String selectActivity,
-String selectParity,String percent, String selectMonths ,String  sumValue) {
+                                                  String status, String reason,String selectPlaybook,  
+                                                       String taskOwner, String selectActivity,String selectParity,
+                                                            String percent, String selectMonths ,String sumValue) {
 		
-		item.click(EDIT_RULE);
+		item.click("//div[@data-name='"+ruleTitle+"']/div/span[@class='ruleEditCls editIcon ruleOperationsCls']");          
 		wait.waitTillElementDisplayed("//div/h1[@class='pageType noSecondHeader']", MIN_TIME, MAX_TIME);
 		item.clearAndSetText(RULE_TITLE, ruleTitle);
 		field.selectFromDropDown(SELECT_SEVERITY, selectSeverity);
@@ -132,8 +143,8 @@ String selectParity,String percent, String selectMonths ,String  sumValue) {
 	}
 		
 	
-	public AdminRulesEngineTab deleteAlertRules(){
-		item.click(DELETE_RULE);
+	public AdminRulesEngineTab deleteAlertRules(String ruleTitle){
+		item.click("//div[@data-name='"+ruleTitle+"']/div/span[@class='ruleDeleteCls deleteIcon ruleOperationsCls']");
 		modal.accept();
 		wait.waitTillElementDisplayed(NEW_RULE, MIN_TIME, MAX_TIME);
 		return this;

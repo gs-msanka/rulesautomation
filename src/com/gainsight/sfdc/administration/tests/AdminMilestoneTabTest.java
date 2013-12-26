@@ -14,26 +14,27 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminMilestoneTab;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class AdminMilestoneTabTest extends BaseTest {
 	
 	String[] dirs = { "acceptancetests" };
 	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
 			+ generatePath(dirs);
-	
+	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminMilestoneTestdata.xls";
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
 	}
 
-	@Test(priority=1)                         //Add Milestone
-	public void testAdmincreateAdoptionMeasure() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminMilestoneTab");
+		                     //Add Milestone
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	public void testAdmincreateAdoptionMeasure(HashMap<String, String> testData) throws BiffException, IOException {
 		createMilestoneType(testData.get("CreateNewMilestone"));
-		
 	}
+	
 	private AdminMilestoneTab createMilestoneType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
@@ -48,13 +49,12 @@ public class AdminMilestoneTabTest extends BaseTest {
 		return adCrteMstne;
 	}
 	
-	@Test(priority=2)                         // Edit  Milestone   
-	public void testAdminEditMeasureTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminMilestoneTab");
+	            //Edit MileStone
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	public void testAdminEditMeasureTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editMilestoneType(testData.get("EditMilestone"));
 	}
-
 	private AdminMilestoneTab editMilestoneType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -64,15 +64,15 @@ public class AdminMilestoneTabTest extends BaseTest {
 		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab().clickOnMilestoneTab();
 		adCrteMstne.editMilestoneType(previous, name, displayOrder, shortName);
 		String edtMilestoneType = name +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertTrue(adCrteMstne.IsMilestoneTypeEdited(edtMilestoneType),
+		Assert.assertTrue(adCrteMstne.IsMilestoneTypePresent(edtMilestoneType),
 				"Verifying Stage is edited in the grid");
 		return adCrteMstne;
 	}
 	
-	@Test(priority=3)                        // Delete Milestone
-	public void testAdminDeleteMeasureTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminMilestoneTab");
+		                // Delete Milestone
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	public void testAdminDeleteMeasureTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteMilestoneType(testData.get("DeleteMilestone"));
 	}
 	private AdminMilestoneTab deleteMilestoneType(String testData) {
@@ -85,7 +85,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 		AdminMilestoneTab adCrteMstne = basepage.clickOnAdminTab().clickOnMilestoneTab();			
 		adCrteMstne.deleteMilestoneType(previous);
 		String delMilestoneType = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertFalse(adCrteMstne.IsMilestoneTypeDeleted(delMilestoneType),
+		Assert.assertFalse(adCrteMstne.IsMilestoneTypePresent(delMilestoneType),
 				"Verifying Stage is deleted in the grid");
 		return adCrteMstne;
 	}

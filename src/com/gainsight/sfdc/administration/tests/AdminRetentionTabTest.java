@@ -12,24 +12,23 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminRetentionTab;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class AdminRetentionTabTest extends BaseTest {
 
 	String[] dirs = { "acceptancetests" };
 	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
 			+ generatePath(dirs);
-
+	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminRetentionTestdata.xls";
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
 	}
 	
-	
-	@Test(priority=1)                             	// Create Alert Type    
-	public void testAdminCreateAlertTypeTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+	public void testAdminCreateAlertTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertType(testData.get("CreateAlertType"));
 	}
 	private AdminRetentionTab createAlertType(String testData) {
@@ -46,11 +45,10 @@ public class AdminRetentionTabTest extends BaseTest {
 				"Verifying Alert Type added in the grid");
 		return adRetPage;
 	}
-	@Test(priority=2)//@Test   //(dependsOnMethods={"adminCreateAlertTypeTest"})                  // Edit Alert Type
-	public void testAdminEditAlertType1Test() throws BiffException, IOException {
-		Report.logInfo("calling edit");
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+	public void testAdminEditAlertType1Test(HashMap<String, String> testData) throws BiffException, IOException {
 		editAlertType(testData.get("EditAlertType"));
 	}
 		private AdminRetentionTab editAlertType(String testData) {
@@ -64,18 +62,19 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		adRetPage.editAlertType(previous, name, displayOrder, shortName,includeinWidget);
 		String editAlertType = name +"|"+displayOrder +"|"+ shortName;
-		Assert.assertTrue(adRetPage.isAlertTypeEdited(editAlertType),
+		Assert.assertTrue(adRetPage.isAlertTypePresent(editAlertType),
 				"Verifying Alert Type edited in the grid");	
 		return adRetPage;
 	}
+		//Delete Alert Type
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+		public void testAdminDeleteAlertType2Test(HashMap<String, String> testData) throws BiffException, IOException {
+			deleteAlertType(testData.get("DeleteAlertType"));
+		}
 		
-	@Test(priority=3)//@Test  (dependsOnMethods={"adminCreateAlertTypeTest","adminEditAlertType1Test"})     // delete Alert Type
-	public void testAdminDeleteAlertType2Test() throws BiffException, IOException {
-		Report.logInfo("calling Delete");
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
-		String s = testData.get("DeleteAlertType");
-		HashMap<String, String> data = getMapFromData(s);
+		private AdminRetentionTab deleteAlertType(String testData) {
+		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
 		String name = data.get("name");
 		String displayOrder = data.get("displayOrder");
@@ -84,16 +83,16 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		adRetPage.deleteAlertType(previous);
 		String delAlertType = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertFalse(adRetPage.isAlertTypeDeleted(delAlertType),
+		Assert.assertFalse(adRetPage.isAlertTypePresent(delAlertType),
 				"Verifying Alert Type deleted from the grid");	
+		return adRetPage;
 	}
 	
-	@Test(priority=4)//@Test                                             	// Create Alert Severity
-	public void testAdminCreateAlertSeverityTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	                                     	// Create Alert Severity
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+	public void testAdminCreateAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertSeverity(testData.get("CreateAlertSeverity"));
-		//createAlertSeverity(testData.get("CreateAlertSeverity1"));
 	}
 	private AdminRetentionTab createAlertSeverity(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
@@ -110,10 +109,10 @@ public class AdminRetentionTabTest extends BaseTest {
 				"Verifying Alert Severity added in the grid");
 		return adRetPage;
 	}
-		@Test(priority=5)//@Test (dependsOnMethods={"adminCreateAlertSeverityTest"})        // Edit Alert Severity
-	public void testAdminEditAlertSeverityTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+		      // Edit Alert Severity
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5)
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+		public void testAdminEditAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editAlertSeverity(testData.get("EditAlertSeverity"));
 	}
 	private AdminRetentionTab editAlertSeverity(String testData) {
@@ -126,16 +125,16 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		adRetPage.editAlertSeverity(previous, name, displayOrder, shortName, includeinWidget);
 		String editAlertSeverity = name +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertTrue(adRetPage.isAlertSeverityEdited(editAlertSeverity),
+		Assert.assertTrue(adRetPage.isAlertSeverityPresent(editAlertSeverity),
 				"Verifying Alert Severity added in the grid");
 		return adRetPage;
 	}
-	@Test(priority=6)//@Test (dependsOnMethods={"adminCreateAlertSeverityTest","adminEditAlertSeverityTest"})  // Delete Alert Severity
-	public void testAdminDeleteAlertSeverityTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
-		      deleteAlertSeverity(testData.get("DeleteAlertSeverity"));
-	}
+		
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+	public void testAdminDeleteAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
+		deleteAlertSeverity(testData.get("DeleteAlertSeverity"));
+    }
 	
 	private AdminRetentionTab deleteAlertSeverity(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
@@ -147,17 +146,17 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		adRetPage.deleteAlertSeverity(previous);
 		String delAlertSeverity = name +"|"+systemName +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertFalse(adRetPage.isAlertSeverityDeleted(delAlertSeverity),
+		Assert.assertFalse(adRetPage.isAlertSeverityPresent(delAlertSeverity),
 				"Verifying Alert Severity added in the grid");
 		return adRetPage;
 	}
-	      @Test(priority=7)              	                               // Create Alert Reason
-	public void testAdminCreateAlertReasonTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
-		//createAlertReason(testData.get("CreateAlertReason"));
-		createAlertReason(testData.get("CreateAlertReason1"));
-	}
+	                       // Create Alert Reason	
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	public void testAdminCreateAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertReason(testData.get("CreateAlertReason"));
+    }
+	
 	private AdminRetentionTab createAlertReason(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
@@ -172,12 +171,13 @@ public class AdminRetentionTabTest extends BaseTest {
 		return adRetPage;
 	}
 	
-	@Test(priority=8)//@Test  (dependsOnMethods={"adminCreateAlertReasonTest"})       // Edit Alert Reason
-	public void testAdminEditAlertReasonTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	                  // Edit Alert Reason
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	public void testAdminEditAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editAlertReason(testData.get("EditAlertReason"));
-	}
+    }
+	
 	private AdminRetentionTab editAlertReason(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -188,16 +188,17 @@ public class AdminRetentionTabTest extends BaseTest {
 				.clickOnRetentionSubTab();
 		adRetPage.editAlertReason(previous, name, displayOrder, shortName);
 		String edtAlertReason = name +"|"+displayOrder +"|"+ shortName;
-		Assert.assertTrue(adRetPage.isAlertReasonEdited(edtAlertReason),
+		Assert.assertTrue(adRetPage.isAlertReasonPresent(edtAlertReason),
 				"Verifying Alert Reason added in the grid");
 		return adRetPage;
 	}
-	@Test(priority=9)//@Test    (dependsOnMethods={"adminCreateAlertReasonTest","adminEditAlertReasonTest"})   //Delete Alert Reason
-	public void testAdminDeleteAlertReasonTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	                 //Delete Alert Reason
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=9)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	public void testAdminDeleteAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteAlertReason(testData.get("DeleteAlertReason"));
-	}
+    }
+	
 	private AdminRetentionTab deleteAlertReason(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -208,18 +209,18 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		 adRetPage.deleteAlertReason(previous);
 		 String delAlertReason = name +"|"+systemName +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertFalse(adRetPage.isAlertReasonDeleted(delAlertReason),
+			Assert.assertFalse(adRetPage.isAlertReasonPresent(delAlertReason),
 					"Verifying Alert Reason added in the grid");
 		return adRetPage;
 	}
 	
-	@Test(priority=10)//@Test                                                                // Create Alert Status
-	public void testAdminCreateAlertStatusTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
-		//createAlertStatus(testData.get("CreateAlertStatus"));
-		createAlertStatus(testData.get("CreateAlertStatus1"));
-	}
+	                                              // Create Alert Status
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=10)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	public void testAdminCreateAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertStatus(testData.get("CreateAlertStatus"));
+    }
+	
 	private AdminRetentionTab createAlertStatus(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
@@ -233,12 +234,13 @@ public class AdminRetentionTabTest extends BaseTest {
 				"Verifying Alert Status added in the grid");
 		return adRetPage;
 	}
-	@Test(priority=11)//@Test (dependsOnMethods={"adminCreateAlertStatusTest"})       	// Edit Alert Status
-	public void testAdminEditAlertStatusTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	      	          // Edit Alert Status
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=11)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	public void testAdminEditAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editAlertStatus(testData.get("editAlertStatus"));
-	}
+    }
+	
 	private AdminRetentionTab editAlertStatus(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -248,16 +250,17 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();				
 		adRetPage.editAlertStatus(previous, name, displayOrder,  shortName);
 		 String edtAlertStatus = name +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertTrue(adRetPage.isAlertStatusEdited(edtAlertStatus),
+			Assert.assertTrue(adRetPage.isAlertStatusPresent(edtAlertStatus),
 					"Verifying Alert Status added in the grid");
 		return adRetPage;
 	}
-	@Test(priority=12)//@Test  (dependsOnMethods={"adminCreateAlertStatusTest","adminEditAlertStatusTest"})        // Delete Alert Status
-	public void testAdminDeleteAlertStatusTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin Retention");
+	                 // Delete Alert Status
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=12)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	public void testAdminDeleteAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteAlertStatus(testData.get("deleteAlertStatus"));
-	}
+    }
+	
 	private AdminRetentionTab deleteAlertStatus(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -268,17 +271,17 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();
 		adRetPage.deleteAlertStatus(previous);
 		 String delAlertStatus = name +"|"+systemName +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertFalse(adRetPage.isAlertStatusDeleted(delAlertStatus),
+			Assert.assertFalse(adRetPage.isAlertStatusPresent(delAlertStatus),
 					"Verifying Alert Status added in the grid");
 			return adRetPage;
 	}
-	@Test(priority=13)//@Test                                                              // Create Event Type
-	public void testAdminCreateEventTypeTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
-		//createEventType(testData.get("CreateEventType"));
-		createEventType(testData.get("CreateEventType1"));
-	}
+	                            // Create Event Type
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=13)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+	public void testAdminCreateEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createEventType(testData.get("CreateEventType"));
+    }
+	
 	private AdminRetentionTab createEventType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
@@ -290,15 +293,15 @@ public class AdminRetentionTabTest extends BaseTest {
 		adRetPage.createEventType(name, displayOrder, systemName, shortName);
 		 String eventType = name +"|"+systemName +"|"+ displayOrder +"|"+ shortName;
 		Assert.assertTrue(adRetPage.isEventTypePresent(eventType),
-				"Verify that newly added customer present in the grid");
+				"Verify that newly Event Type present in the grid");
 		return adRetPage;
 	}
-	@Test(priority=14)//@Test (dependsOnMethods={"adminCreateEventTypeTest"})         	// Edit Event Type
-	public void testAdminEditEventTypeTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
+	         	// Edit Event Type
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=14)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+	public void testAdminEditEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editEventType(testData.get("editEventType"));
-	}
+    }
 	private AdminRetentionTab editEventType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -308,17 +311,16 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();			
 		adRetPage.editEventType(previous, name, displayOrder, shortName);
 		 String edtEventType = name +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertTrue(adRetPage.isEventTypeEdited(edtEventType),
-					"Verify that newly added customer present in the grid");
+			Assert.assertTrue(adRetPage.isEventTypePresent(edtEventType),
+					"Verify that Event Type present in the grid");
 		return adRetPage;
 	}
-	@Test(priority=15)//@Test (dependsOnMethods={"adminCreateEventTypeTest","adminEditEventTypeTest"})         // Delete Event Type
-	public void testAdminDeleteEventTypeTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "Admin EventType");
+	                  // Delete Event Type
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=15)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+	public void testAdminDeleteEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteEventType(testData.get("deleteEventType"));
-	}
-	
+    }
 	private AdminRetentionTab deleteEventType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
@@ -329,8 +331,8 @@ public class AdminRetentionTabTest extends BaseTest {
 		AdminRetentionTab adRetPage = basepage.clickOnAdminTab().clickOnRetentionSubTab();			
 		adRetPage.deleteEventType(previous);
 		 String delEventType = name +"|"+systemName +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertFalse(adRetPage.isEventTypeDeleted(delEventType),
-					"Verify that newly added customer present in the grid");
+			Assert.assertFalse(adRetPage.isEventTypePresent(delEventType),
+					"Verify that Event Type present in the grid");
 			return adRetPage;
 	}
 	

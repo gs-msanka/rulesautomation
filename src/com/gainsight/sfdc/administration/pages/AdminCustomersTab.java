@@ -52,17 +52,7 @@ public class AdminCustomersTab extends BasePage {
 		fillFewFields(name, displayOrder, shortName); 
 		return this;
 	}
-	public boolean isStageEdited(String values){
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(TABLE_VALUES_STAGE);
-		String tableId = ATtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
-	}
-	
-	                  //Delete Stage
+		                  //Delete Stage
 	public AdminCustomersTab deleteStage(String s) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -70,15 +60,6 @@ public class AdminCustomersTab extends BasePage {
 		wait.waitTillElementNotPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		refreshPage();
 		return this;
-	}
-	public boolean isEditStageDeleted(String values){
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(TABLE_VALUES_STAGE);
-		String tableId = ATtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		} return result;
 	}
 	
     public AdminCustomersTab revenueBandConfiguration() {
@@ -97,7 +78,6 @@ public class AdminCustomersTab extends BasePage {
                       //Common Method
     public AdminCustomersTab fillFields(String name, String displayOrder, String systemName, String shortName , String active) {
     	wait.waitTillElementDisplayed(FROM_BLOCK ,MIN_TIME , MAX_TIME);
-    item.isElementPresent(STAGE_TEXT);
 		field.clearAndSetText(STAGE_NAME, name);
 		field.clearAndSetText(STAGE_DISPLAY_ORDER, displayOrder);
 		field.clearAndSetText(STAGE_SYSTEM_NAME, systemName);
@@ -110,7 +90,6 @@ public class AdminCustomersTab extends BasePage {
     }
     public AdminCustomersTab fillFewFields(String name, String displayOrder, String shortName ) {
     	wait.waitTillElementDisplayed(FROM_BLOCK ,MIN_TIME , MAX_TIME);
-    item.isElementPresent(STAGE_TEXT);
 		field.clearAndSetText(STAGE_NAME, name);
 		field.clearAndSetText(STAGE_DISPLAY_ORDER, displayOrder);
 		field.clearAndSetText(STAGE_SHORT_NAME, shortName);
