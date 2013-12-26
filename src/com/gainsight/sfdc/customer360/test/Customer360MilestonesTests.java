@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.util.HashMap;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -143,5 +144,10 @@ public class Customer360MilestonesTests extends BaseTest {
 			cm.clickOnDeleteMilestone(1);
 		}
 		Assert.assertTrue(cm.isNoMilestoneMessagePresent());
+	}
+	
+	@AfterClass
+	public void tearDown() {
+		basepage.logout();
 	}
 }
