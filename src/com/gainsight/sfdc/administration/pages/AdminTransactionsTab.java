@@ -87,16 +87,7 @@ public class AdminTransactionsTab extends BasePage {
 		fillFewFields(name,displayOrder,shortName, selectBookingType);
 		return this;
 	}
-	public boolean isBookingTypeEdited(String values){
-		Boolean result = false;
-		WebElement Booktable1 =item.getElement(TABLE_VALUES_BTYPES);
-		String tableId = Booktable1.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
+
                                 //Map Booking Types   String activation, String services, String users, String subscription
 	public AdminTransactionsTab mapBookingTypes(String name, String mapBookingType ) {
 		wait.waitTillElementPresent("//td/span[text()='"+name+"']/parent::td/preceding-sibling::td/span/a[text()='Map']", MIN_TIME, MAX_TIME);
@@ -134,29 +125,17 @@ public class AdminTransactionsTab extends BasePage {
 	    refreshPage();
 		return this;
 	}
-	public boolean isBookingTypeDeleted(String values){
-		Boolean result = false;
-		WebElement Booktable1 =item.getElement(TABLE_VALUES_BTYPES);
-		String tableId = Booktable1.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
-                        	       //Create Transaction Line Items
+	                       	       //Create Transaction Line Items
 	public AdminTransactionsTab addTransactionLinesItems(String name,String type) {
 		wait.waitTillElementPresent(NEW_TRANS_LINE_ITEMS, MIN_TIME, MAX_TIME);
 		item.click(NEW_TRANS_LINE_ITEMS);
 		 wait.waitTillElementDisplayed(TRANS_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(TRANS_TEXT_PRESENT);
 		     field.setTextField(LINT_ITEM_NAME,name);
 		   field.setSelectField(LINE_ITEM_TYPE,type);
 		   button.click(SAVE_LITEMS);
 		   wait.waitTillElementPresent(TRANS_FORM_NONE, MIN_TIME, MAX_TIME);
 		   refreshPage();
 		   wait.waitTillElementPresent("//label[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-		   item.isElementPresent("//label[contains(text(),'"+name+"')]");
 		   amtDateUtil.stalePause();
 		return this;
 	}                
@@ -178,7 +157,6 @@ public class AdminTransactionsTab extends BasePage {
 		   wait.waitTillElementPresent("//td/label[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[contains(text(),'Edit')]", MIN_TIME, MAX_TIME);
 			item.click("//td/label[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[contains(text(),'Edit')]");
 			wait.waitTillElementDisplayed(TRANS_FORM_BLOCK, MIN_TIME, MAX_TIME);
-			if(item.isElementPresent(TRANS_TEXT_PRESENT)) {
 			field.clearAndSetText(LINT_ITEM_NAME,name);
 			field.setSelectField(LINE_ITEM_TYPE,type);
 			button.click(SAVE_LITEMS);
@@ -186,18 +164,9 @@ public class AdminTransactionsTab extends BasePage {
 			refreshPage();
 			wait.waitTillElementPresent("//label[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 			 amtDateUtil.stalePause();
-			} return this;
+			return this;
 	}
-	public boolean isTransactionLineItemEdited(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(TABLE_VALUES_LITEMS);
-		String tableId = Linetable2.getAttribute("Id");
-		int rowNo  = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
+	
 	                     //Delete Transaction Line Items
 	public AdminTransactionsTab deleteTransactionLineItem(String name) {
 		wait.waitTillElementPresent("//td/label[contains(text(),'"+name+"')]/parent::td/preceding-sibling::td/a[contains(text(),'Delete')]", MIN_TIME, MAX_TIME);
@@ -207,22 +176,11 @@ public class AdminTransactionsTab extends BasePage {
 		refreshPage();
 	return this;
 	}
-	public boolean isTransactionLineItemDeleted(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(TABLE_VALUES_LITEMS);
-		String tableId = Linetable2.getAttribute("Id");
-		int rowNo  = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
-	                                        //--add Churn Reason
+	                                 //--add Churn Reason
 	public AdminTransactionsTab addChurnReason(String name, String displayOrder, String systemName , String shortName) {
         wait.waitTillElementPresent(NEW_CHURN_REASON, MIN_TIME, MAX_TIME);
 		item.click(NEW_CHURN_REASON);
 		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	     item.isElementPresent(CHURN_TEXT_PRESENT);
 		  field.clearAndSetText(CREASON_NAME,name);
 		  field.clearAndSetText(CREASON_DISPORDER,displayOrder);
 		  field.clearAndSetText(CREASON_SYSTEM_NAME,systemName);
@@ -249,7 +207,6 @@ public class AdminTransactionsTab extends BasePage {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(CHURN_TEXT_PRESENT);
 			field.clearAndSetText(CREASON_NAME,name);
 			field.clearAndSetText(CREASON_DISPORDER,displayOrder);
 			field.clearAndSetText(CREASON_SHOT_NAME,shortName);  
@@ -260,17 +217,7 @@ public class AdminTransactionsTab extends BasePage {
 			 amtDateUtil.stalePause();
 	return this;
 	}
-	public boolean isChurnEdited(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(TABLE_VALUES_CHURN);
-		String tableId = Linetable2.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
-	                                            //Delete Churn Reason
+                                          //Delete Churn Reason
 	public AdminTransactionsTab deleteChurnReason(String Name) {
 		wait.waitTillElementPresent("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+Name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -279,17 +226,7 @@ public class AdminTransactionsTab extends BasePage {
 		 refreshPage();
 	return this;
 	}
-	public boolean isChurnDeleted(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(TABLE_VALUES_CHURN);
-		String tableId = Linetable2.getAttribute("Id");
-		int rowNo = table.getValueInListRow(tableId, values);
-		if(rowNo != -1) {
-			result = true;
-		}
-		return result;
-	}
-	
+		
 	public AdminTransactionsTab churnTabSettings(){
 		item.click(CHURN_EDIT_SETTINGS);
 		item.click(CHURN_SETTINGS_DOWNSELL);
@@ -297,8 +234,7 @@ public class AdminTransactionsTab extends BasePage {
 		return this;
 	}
 	private AdminTransactionsTab fillFieldsForBookingTypes(String name, String displayOrder, String systemName, String shortName, String selectbookingtype) {
-		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(BOOKING_TEXT_PRESENT);			
+		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);		
 		field.clearAndSetText(BOOKINGT_NAME,name);
 		field.clearAndSetText(BOOKINGT_DISPLYORDER,displayOrder);
 		field.clearAndSetText(BOOKINGT_SYSTEM_NAME,systemName);
@@ -315,7 +251,6 @@ public class AdminTransactionsTab extends BasePage {
 	
 	private AdminTransactionsTab fillFewFields(String name, String displayOrder, String shortName, String selectbookingtype) {
 		wait.waitTillElementDisplayed(BOOKING_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(BOOKING_TEXT_PRESENT);
 		field.clearAndSetText(BOOKINGT_NAME,name);
 		field.clearAndSetText(BOOKINGT_DISPLYORDER,displayOrder);
 		field.clearAndSetText(BOOKINGT_SHORT_NAME,shortName);

@@ -48,17 +48,7 @@ public class AdminMilestoneTab extends BasePage {
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		fillFewFileds(name,displayOrder,shortName);
 		return this;
-	}
-	public boolean IsMilestoneTypeEdited(String values){
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(MSTONE_TYPE_VALUES);
-		String tableId = ATtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-	if(a != -1) {
-			result = true;
-		}return result;
-	}
-	          
+	}         
 	public AdminMilestoneTab deleteMilestoneType(String s) {
         wait.waitTillElementPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -66,17 +56,7 @@ public class AdminMilestoneTab extends BasePage {
 		wait.waitTillElementNotPresent("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Delete']", MIN_TIME, MAX_TIME);
 		refreshPage();
 		return this;
-	}
-	public boolean IsMilestoneTypeDeleted(String values){
-		Boolean result = false;
-		WebElement ATtable2 =item.getElement(MSTONE_TYPE_VALUES);
-		String tableId = ATtable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-	if(a != -1) {
-			result = true;
-		}return result;
-	}
-	                     
+	}        
                                //Common Functionality to fill all the fields
 public AdminMilestoneTab fillAllFileds(String name,String displayOrder,String systemName,String shortName) {
 		wait.waitTillElementDisplayed(MSTONE_FORM_BLOCK, MIN_TIME, MAX_TIME);
@@ -94,7 +74,6 @@ public AdminMilestoneTab fillAllFileds(String name,String displayOrder,String sy
 	}
 	public AdminMilestoneTab fillFewFileds(String name ,String displayOrder,String shortName) {
 		  wait.waitTillElementDisplayed(MSTONE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	item.isElementPresent(MSTONE_TEXT_PRESENT);
 		field.clearAndSetText(MILESTONE_NAME,name);
 		field.clearAndSetText(MILESTON_DISPLAYORDER,displayOrder);
 		field.clearAndSetText(MILESTONE_SHOTNAME,shortName);

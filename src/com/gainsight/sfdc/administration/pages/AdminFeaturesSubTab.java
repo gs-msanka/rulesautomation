@@ -31,7 +31,6 @@ public class AdminFeaturesSubTab extends BasePage{
 		
 		button.click(FEATURES_NEW);
 		wait.waitTillElementDisplayed(FEATURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(FEATURE_TEXT_PRESENT);
 			field.clearAndSetText(FEATURE_NAME, name);
 			productSelection(productName);
 			field.clearAndSetText(FEATURE_SYSTEMNAME, systemName);
@@ -55,7 +54,6 @@ public class AdminFeaturesSubTab extends BasePage{
 	public AdminFeaturesSubTab editFeatureType(String s, String name, String systemName , String productName) {
 		item.click("//td/span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a[text()='Edit']");
 		wait.waitTillElementDisplayed(FEATURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-		item.isElementPresent(FEATURE_TEXT_PRESENT);
 			field.clearAndSetText(FEATURE_NAME, name);
 			productSelection(productName);
 			field.clearAndSetText(FEATURE_SYSTEMNAME, systemName);
@@ -65,16 +63,6 @@ public class AdminFeaturesSubTab extends BasePage{
 			wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 		 return this;
 	}
-	public boolean IsFeatureTypeEdited(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(FEATURE_TABLE_VALUES);
-		String tableId = Linetable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		}
-		return result;
-	}
 	public AdminFeaturesSubTab deleteFeatureType(String name) {
 		
 		item.click("//td/span[contains(text(),'"+name+"')]/parent::td/preceding-sibling::td/a[text()='Delete']");
@@ -83,18 +71,7 @@ public class AdminFeaturesSubTab extends BasePage{
 		refreshPage();
 		return this;
 	}
-	public boolean IsFeatureTypeDeleted(String values){
-		Boolean result = false;
-		WebElement Linetable2 =item.getElement(FEATURE_TABLE_VALUES);
-		String tableId = Linetable2.getAttribute("Id");
-		int a = table.getValueInListRow(tableId, values);
-		if(a != -1) {
-			result = true;
-		}
-		return result;
-	}
-	
-	/** If product name exists, then this will select the existing product name   
+		/** If product name exists, then this will select the existing product name   
 	 * @param if product name doesn't exists, then it will create the product name.
 	 */
 	public AdminFeaturesSubTab productSelection(String productName ) {

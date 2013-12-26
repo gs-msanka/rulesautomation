@@ -14,25 +14,26 @@ import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class AdminCustomersTabTest extends BaseTest {
 	
 	String[] dirs = { "acceptancetests" };
-	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-			+ generatePath(dirs);
-	
+	//private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
+		//	+ generatePath(dirs);
+	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminCustomersTestdata.xls";
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
 	}
 	
-	@Test(priority=1)  //Add Stage
-	public void testAdminAddCustomerStage() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminCustomersTab");
+	
+	             //Add Stage
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	public void testAdminAddCustomerStage(HashMap<String, String> testData) throws BiffException, IOException {
 		addNewStage(testData.get("CreateNewStage"));
-		
 	}
 	private AdminCustomersTab addNewStage(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
@@ -49,10 +50,10 @@ public class AdminCustomersTabTest extends BaseTest {
 		return adCustPage;
 	}
 	
-	@Test(priority=2)                                           // Edit  Stage      
-	public void testAdminEditStageTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminCustomersTab");
+		               // Edit  Stage      
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	public void testAdminEditStageTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editStage(testData.get("EditStage"));
 	}
 	private AdminCustomersTab editStage(String testData) {
@@ -64,15 +65,15 @@ public class AdminCustomersTabTest extends BaseTest {
 		AdminCustomersTab adCustPage = basepage.clickOnAdminTab().clickOnCustomersSubTab();
 		adCustPage.editStage(previous, name, displayOrder, shortName);
 		String edtCustStage = name +"|"+ displayOrder +"|"+ shortName;
-			Assert.assertTrue(adCustPage.isStageEdited(edtCustStage),
+			Assert.assertTrue(adCustPage.isStagePresent(edtCustStage),
 					"Verifying Stage is edited in the grid");
 		return adCustPage;
 	}
 	
-	@Test(priority=3)                                                // Delete Stage
-	public void testAdminDeleteStageTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminCustomersTab");
+		                 //  Delete Stage
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	public void testAdminDeleteStageTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteStage(testData.get("DeleteStage"));
 	}
 	private AdminCustomersTab deleteStage(String testData) {
@@ -85,7 +86,7 @@ public class AdminCustomersTabTest extends BaseTest {
 		AdminCustomersTab adCustPage = basepage.clickOnAdminTab().clickOnCustomersSubTab();
 		adCustPage.deleteStage(previous);
 		String delCustStage = name +"|"+ systemName +"|"+ displayOrder +"|"+ shortName;
-		Assert.assertFalse(adCustPage.isEditStageDeleted(delCustStage),
+		Assert.assertFalse(adCustPage.isStagePresent(delCustStage),
 				"Verifying Stage is deleted to the grid");
 		return adCustPage;
 	}

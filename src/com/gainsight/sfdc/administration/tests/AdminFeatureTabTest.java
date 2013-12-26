@@ -13,13 +13,14 @@ import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminFeaturesSubTab;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class AdminFeatureTabTest extends BaseTest {
 
 	String[] dirs = { "acceptancetests" };
 	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
 			+ generatePath(dirs);
-	
+	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminFeaturesTestdata.xls";
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
@@ -27,13 +28,15 @@ public class AdminFeatureTabTest extends BaseTest {
 	}
 	
 	
+	              
 	
-	@Test(priority=1)                         //create Feature Type
-	public void testAdmincreateFeatureType() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminFeatureTab");
-		createFeatureType(testData.get("CreateFeatureType1"));
+	            //create Feature Type
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminFeaturesTab")
+	public void testAdmincreateFeatureType(HashMap<String, String> testData) throws BiffException, IOException {
+		createFeatureType(testData.get("CreateFeatureType"));
 	}
+	
 	private AdminFeaturesSubTab createFeatureType(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
@@ -46,10 +49,11 @@ public class AdminFeatureTabTest extends BaseTest {
 					"Verifying Feature Type is added to the grid");
 		return adFeturTpe;
 	}
-	@Test(priority=2)                         // Edit  Feature Type     
-	public void testAdminEditFeatureTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminFeatureTab");
+	
+	                 // Edit  Feature Type     
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminFeaturesTab")
+	public void testAdminEditFeatureTest(HashMap<String, String> testData) throws BiffException, IOException {
 		editFeatureType(testData.get("EditFeatureType"));
 	}
 	private AdminFeaturesSubTab editFeatureType(String testData) {
@@ -61,15 +65,16 @@ public class AdminFeatureTabTest extends BaseTest {
 		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().clickOnFeaturesTab();
 		adFeturTpe.editFeatureType( previous, name, systemName ,productName);
 		String edtFeatureType = name +"|"+ systemName +"|"+ productName;
-		Assert.assertTrue(adFeturTpe.IsFeatureTypeEdited(edtFeatureType),
+		Assert.assertTrue(adFeturTpe.IsFeatureTypePresent(edtFeatureType),
 				"Verifying Feature Type is edited in the grid");
 		
 		return adFeturTpe;
 	}
-	@Test(priority=3)                        // Delete Feature Type
-	public void testAdminDeletFeatureTest() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
-				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminFeatureTab");
+	
+	                       // Delete Feature Type
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminFeaturesTab")
+	public void testAdminDeletFeatureTest(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteFeatureType(testData.get("DeleteFeatureType"));
 	}
 	private AdminFeaturesSubTab deleteFeatureType(String testData) {
@@ -81,7 +86,7 @@ public class AdminFeatureTabTest extends BaseTest {
 		AdminFeaturesSubTab adFeturTpe = basepage.clickOnAdminTab().clickOnFeaturesTab();			
 		adFeturTpe.deleteFeatureType(previous);
 		String delFeatureType = name +"|"+ systemName +"|"+ productName;
-		Assert.assertFalse(adFeturTpe.IsFeatureTypeDeleted(delFeatureType),
+		Assert.assertFalse(adFeturTpe.IsFeatureTypePresent(delFeatureType),
 				"Verifying Feature Type is deleted in the grid");
 		return adFeturTpe;
 	}

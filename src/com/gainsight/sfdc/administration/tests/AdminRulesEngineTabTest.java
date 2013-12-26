@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminRulesEngineTab;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
+import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
 import com.gainsight.sfdc.tests.BaseTest;
 
@@ -33,20 +34,30 @@ public class AdminRulesEngineTabTest extends BaseTest {
 	public void testAdminNewRuleTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminRulesEngineTab");
-		createNewRule(testData.get("createRuleForEqualsWithUsers"));
+		createNewRule(testData);
 	}
 	
-	private AdminRulesEngineTab createNewRule(String testData) {
-		HashMap<String, String> data = getMapFromData(testData);
+	private AdminRulesEngineTab createNewRule(HashMap<String, String> testData) {
+		HashMap<String, String> data = getMapFromData(testData.get("createRuleForEqualsWithUsers"));
 		
 		String firstName = data.get("firstName");
 		String lastName = data.get("lastName");
 		String email = data.get("email");
 		String userLicense = data.get("userLicense");
 		String role = data.get("role");
-		CreateSalesforceUsers crtUsers = new CreateSalesforceUsers();
+		/*CreateSalesforceUsers crtUsers = new CreateSalesforceUsers();
 		crtUsers.createUsers(firstName, lastName, email, userLicense, role);
-		String ruleTitle = data.get("ruleTitle");
+		
+		
+		PlayBooksPage pbPage = basepage.clickOnRetentionTab().clickOnPlaybooksTab();
+       HashMap<String, String> pbData = getMapFromData(testData.get("playbookdetails"));
+        HashMap<String, String> taskData = getMapFromData(testData.get("taskdetails"));
+        pbPage.addplaybook(pbData, taskData);
+       Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname")));
+       Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
+       Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
+	    */    
+	    String ruleTitle = data.get("ruleTitle");
 		String selectSeverity = data.get("selectSeverity");
 		String alertType = data.get("alertType");
 		String status = data.get("status");
@@ -59,10 +70,13 @@ public class AdminRulesEngineTabTest extends BaseTest {
 	    String percent     = data.get("percent");
 	    String selectMonths = data.get("selectMonths");
 	    String  sumValue   = data.get("sumValue");
+	    //String rName = data.get("rName");
 		AdminRulesEngineTab adRulsEng = basepage.clickOnAdminTab().clickOnRulesEngineSubTab();	
 		adRulsEng.createNewRule(ruleTitle, selectSeverity, alertType, status , reason, 
 				         selectPlaybook, taskOwner, defaultTaskOwner , selectActivity, selectParity, percent ,
-				                   selectMonths,sumValue, firstName,lastName,email,userLicense,role);//
+				                   selectMonths,sumValue, firstName,lastName,email,userLicense,role);
+		String crtRuleEng = ruleTitle+"|"+ selectSeverity +"|"+ selectPlaybook +"|"+ reason;
+		//Assert.assertEquals(true, adRulsEng.isAlertRuleCreated(crtRuleEng,ruleTitle));
 		return adRulsEng;
 	}
 	    @Test(priority=2)                         //Edit  Rules    
@@ -71,11 +85,9 @@ public class AdminRulesEngineTabTest extends BaseTest {
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminRulesEngineTab");
 		editAlertRules(testData.get("editRuleForEqualsWithUsers"));
 	}
-	
 	private AdminRulesEngineTab editAlertRules(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);
-		
-		
+	
 		String ruleTitle = data.get("ruleTitle");
 		String selectSeverity = data.get("selectSeverity");
 		String alertType = data.get("alertType");
@@ -83,7 +95,6 @@ public class AdminRulesEngineTabTest extends BaseTest {
 		String reason = data.get("reason");
 		String selectPlaybook = data.get("selectPlaybook");
 		String taskOwner = data.get("taskOwner");
-		String defaultTaskOwner = data.get("defaultTaskOwner");
 		String selectActivity = data.get("selectActivity");
 		String selectParity = data.get("selectParity");
 	    String percent     = data.get("percent");
@@ -91,22 +102,23 @@ public class AdminRulesEngineTabTest extends BaseTest {
 	    String  sumValue   = data.get("sumValue");
 		AdminRulesEngineTab adRulsEng = basepage.clickOnAdminTab().clickOnRulesEngineSubTab();	
 		adRulsEng.editAlertRules(ruleTitle, selectSeverity, alertType, status , reason, 
-				         selectPlaybook, taskOwner, defaultTaskOwner , selectActivity, selectParity, percent ,
-				                   selectMonths,sumValue);//firstName,lastName,email,userLicense,role
+				         selectPlaybook, taskOwner, selectActivity, selectParity, percent ,
+				                   selectMonths,sumValue );//,firstName,lastName,email,userLicense,role);
 		return adRulsEng;
 	}
 	@Test(priority=3)                         //delete  Rules    
 	public void testAdmindeleteRuleTest() throws BiffException, IOException {
 		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminRulesEngineTab");
-		deleteAlertRules(testData.get("createNewRuleForDropedBy"));
+		deleteAlertRules(testData.get("deleteAlertRule"));
 	}
 	
 	private AdminRulesEngineTab deleteAlertRules(String testData) {
+		HashMap<String, String> data = getMapFromData(testData);
+		String ruleTitle = data.get("ruleTitle");
 		
 		AdminRulesEngineTab adRulsEng = basepage.clickOnAdminTab().clickOnRulesEngineSubTab();	
-		adRulsEng.deleteAlertRules();
-		
+		adRulsEng.deleteAlertRules(ruleTitle);
 		return adRulsEng;
 	
 	}
