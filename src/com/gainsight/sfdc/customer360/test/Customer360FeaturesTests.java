@@ -70,14 +70,15 @@ public class Customer360FeaturesTests extends BaseTest {
 			// get data for a product from the excel
 			ProdFeatureList = getMapFromDataList(testData.get(ProdList
 					.get("Product" + i)));
-			int rowspan = 0;
+			int rowspan = 1;
 			// if the no.of features is >1 then check if rowspan = no.of
 			// features for cell containing the product name
 
 			if (ProdFeatureList.size() > 1) {
 				rowspan = ProdFeatureList.size();
 			}
-            if(cf.checkProductWithRowspan(ProdList.get("product"+i),rowspan)){
+			
+            if(cf.checkProductWithRowspan(ProdList.get("Product"+i),rowspan)){
 			// and then just check if all the data is present as per the test input form the xpath and then check once per row
 			for (int f = 0; f < ProdFeatureList.size(); f++) {
 				cf.checkFeatureForProduct(ProdList.get("Product" + i),
