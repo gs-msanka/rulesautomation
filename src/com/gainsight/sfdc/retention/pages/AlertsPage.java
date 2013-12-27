@@ -5,6 +5,8 @@ import com.gainsight.sfdc.retention.pojos.Alert;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.retention.pojos.Task;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,7 @@ public class AlertsPage extends RetentionBasePage {
 
 	public AlertsPage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+
 	}
 
     public void addAlert(HashMap<String, String> alertData) {
@@ -115,17 +118,19 @@ public class AlertsPage extends RetentionBasePage {
     //owner, subject, date, priority, status.
     public void addTask(HashMap<String, String> taskData) {
         item.click(ADD_TASK_BUTTON);
+        amtDateUtil.sleep(3);
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);
+        wait.waitTillElementDisplayed(taskXPath(taskData), MIN_TIME, MAX_TIME);
     }
 
     private void fillTaskForm(HashMap<String, String> taskData) {
         if(taskData.get("owner") != null) {
-            selectCustomer(taskData.get("owner"));
+            ownerSelect(taskData.get("owner"));
         }
         if(taskData.get("subject") != null) {
-            field.setText(GS_TASK_ASSIGN_INPUT, taskData.get("subject"));
+            field.setText(GS_TASK_SUBJECT_INPUT, taskData.get("subject"));
         }
         if(taskData.get("date") != null) {
             field.setText(GS_TASK_DATE_INPUT, taskData.get("date"));
@@ -138,10 +143,47 @@ public class AlertsPage extends RetentionBasePage {
         }
     }
 
-    private void selectOwner(String owner) {
-        field.setText(GS_TASK_ASSIGN_INPUT, owner);
-        wait.waitTillElementDisplayed("//ul[@class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all']",MIN_TIME,MAX_TIME);
-        item.click("//a[contains(text(), '"+owner+"')]");
+    public void ownerSelect(String ownerName) {
+        field.clearAndSetText(GS_TASK_ASSIGN_INPUT, ownerName);
+        Report.logInfo("Started selecting the owner of event");
+        for(int i =0; i<15; i++) {
+            List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
+            boolean isOwnerDisplayed = false;
+            for(WebElement e : eleList) {
+                if(e.isDisplayed()) {
+                    isOwnerDisplayed = true;
+                    break;
+                } else {
+                    amtDateUtil.sleep(1);
+                }
+            }
+            if(isOwnerDisplayed) {
+                break;
+            }
+        }
+        WebElement wEle = null;
+        List<WebElement> eleList = element.getAllElement("//a[contains(@class, 'ui-corner-all')]");
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()){
+                String s = ele.getText();
+                System.out.println("AccText :" +s);
+                System.out.println("Exp Text:" +ownerName);
+                if(s.contains(ownerName)){
+                    wEle = ele;
+                    break;
+                }
+            }
+        }
+        if(wEle != null) {
+            Actions builder = new Actions(driver);
+            builder.moveToElement(wEle);
+            builder.click(wEle);
+            Action selectedAction = builder.build();
+            selectedAction.perform();
+            Report.logInfo("Finished selecting the owner for event");
+        } else {
+            Report.logInfo("FAIL: Failed to select the owner for the event");
+        }
     }
 
     public int countOfTasks() {
@@ -173,12 +215,19 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     private String taskXPath(HashMap<String, String> taskData) {
+        String newXpath = "//span[@class='taskTitleCls' and contains(text(), '"+taskData.get("subject")+"')]" +
+                "/following-sibling::div/div/span[@class='taskDataCls' and contains(text(), '"+taskData.get("owner")+"')]" +
+                "/following-sibling::span[@class='taskDataCls' and contains(text(), '"+taskData.get("date")+"')]" +
+                "/parent::div/following-sibling::div[@class='showMoreDetailsCls']" +
+                "/div/descendant::span[@class='taskDataCls']/b[contains(text(),'"+taskData.get("priority")+"')]" +
+                "/parent::span/following-sibling::span/span[contains(text(), '"+taskData.get("status")+"')]" +
+                "/ancestor::div[@class='taskItemCls']";
         String xPath = "//span[@class='taskTitleCls' and contains(text(), '"+taskData.get("subject")+"')]" +
                 "/following-sibling::div/div[contains(text(), '"+taskData.get("owner")+"') and contains(text(), '"+taskData.get("date")+"')]" +
                 "/following-sibling::div[contains(text(),'"+taskData.get("priority")+"') and contains(text(),'"+taskData.get("status")+"')]" +
                 "/ancestor::div[@class='taskItemCls']";
-        Report.logInfo("xpath of Task : " +xPath);
-        return xPath;
+        Report.logInfo("xpath of Task : " +newXpath);
+        return newXpath;
     }
 
     private WebElement getTaskCard(HashMap<String, String> taskData) {
@@ -219,6 +268,9 @@ public class AlertsPage extends RetentionBasePage {
         amtDateUtil.stalePause();
     }
 
+    public void closeAlertForm()  {
+        item.click(ALERT_FORM_CLOSE);
+    }
     private String buildXpath(AlertCardLabel alertLabel, HashMap<String, String> alertData) {
         String xPath = "//";
         if(alertLabel.getLabel5()!=null && alertLabel.getLabel5() != "") {
@@ -308,11 +360,14 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     public void addAlertandTasks(HashMap<String, String> alertData, List<HashMap<String, String>> taskDataList) {
-        addAlert(alertData);
+        item.click(ADD_ALERT_BUTTON);
+        wait.waitTillElementDisplayed(SUBJECT_INPUT, MIN_TIME, MAX_TIME);
+        fillAlertForm(alertData);
         item.click(ALERT_SAVE_ADD_TASK_BUTTON);
         for(HashMap<String, String> taskData : taskDataList) {
             addTask(taskData);
         }
+        item.click(ALERT_FORM_CLOSE);
     }
 
     //under construction.
@@ -364,9 +419,4 @@ public class AlertsPage extends RetentionBasePage {
             }
         }
     }
-
-
-
-
-
 }

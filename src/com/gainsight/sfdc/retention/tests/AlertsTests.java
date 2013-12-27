@@ -10,6 +10,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,13 +24,17 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
-
+    String userLocale = "en_IN";
 
     @BeforeClass
     public void setUp() {
         basepage.login();
         String script = "List<JBCXM__Alert__c> alertsList = [SELECT ID FROM JBCXM__Alert__c]; DELETE alertsList;";
-        apex.runApex(script, isPackageInstance());
+        if(!isPackageInstance()) {
+            script = removeNameSpace(script);
+        }
+        apex.runApex(script);
+        userLocale = soql.getUserLocale();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -36,6 +42,7 @@ public class AlertsTests extends BaseTest {
     public  void addAlert(HashMap<String, String> testData) {
         AlertsPage alertsPage = basepage.clickOnRetentionTab().clickOnAlertsTab();
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
+        alertData.put("date", getDatewithFormat(0));
         alertsPage.addAlert(alertData);
         AlertCardLabel alertCardLabel = new AlertCardLabel();
         alertCardLabel.setLabel4("Renewal Date");
@@ -52,17 +59,19 @@ public class AlertsTests extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Alert_Test_2")
     public  void addTasksOnAlert(HashMap<String, String> testData) {
-        AlertsPage alertsPage = basepage.clickOnRetentionTab().clickOnAlertsTab();
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
+        alertData.put("date", getDatewithFormat(0));
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
         try {
-            for(int i=0; i < 20; i++) {
+            for(int i=1; i < 20; i++) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+i));
+                taskData.put("date", getDatewithFormat(i));
                 tasksList.add(taskData);
             }
         } catch (Exception e) {
             Report.logInfo("Tasks added to list");
         }
+        AlertsPage alertsPage = basepage.clickOnRetentionTab().clickOnAlertsTab();
         alertsPage.addAlertandTasks(alertData, tasksList);
         alertsPage.groupExpandOrCollapse(alertData.get("status"), true);
         AlertCardLabel alertCardLabel = new AlertCardLabel();
@@ -72,12 +81,28 @@ public class AlertsTests extends BaseTest {
         alertCardLabel.setLabel1("Type");
         alertData.put("Type", alertData.get("type"));
         alertData.put("Reason", alertData.get("reason"));
-        boolean alertPresent = alertsPage.isAlertDisplayed(alertCardLabel, alertData);
+        Assert.assertTrue(alertsPage.isAlertDisplayed(alertCardLabel, alertData));
         alertsPage.openAlertCard(alertData, alertCardLabel);
         for(HashMap<String, String> taskData : tasksList) {
             Assert.assertEquals(true, alertsPage.isTaskDisplayed(taskData));
         }
-        Assert.assertTrue(alertPresent);
+        alertsPage.closeAlertForm();
+    }
+
+    public String getDatewithFormat(int i) {
+        String date                 = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, i);
+        if(userLocale.contains("en_US")) {
+            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
+            date = dateFormat.format(c.getTime());
+
+        } else if(userLocale.contains("en_IN")) {
+            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
+            date = dateFormat.format(c.getTime());
+        }
+        Report.logInfo(String.valueOf(date));
+        return date;
     }
 
 
