@@ -28,7 +28,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	private boolean loggedIn = false;
 
 	@BeforeClass
-	public void setUp() {
+	public void setUp() throws Exception {
 		try {
 			Report.logInfo("Starting Acceptance Test Case...");
 			apex.runApexCodeFromFile(
@@ -37,8 +37,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			basepage.login();
 			loggedIn = true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			env.stop();
+			Report.logInfo(e.getMessage());
+			throw e;
 		}
 	}
 

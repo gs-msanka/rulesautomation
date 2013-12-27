@@ -5,11 +5,9 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.*;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import com.gainsight.pageobject.core.Report;
@@ -26,9 +24,9 @@ public class BaseTest {
 	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
-	public ApexUtil apex=new ApexUtil();
+	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
-	
+
 	@BeforeSuite
 	public void init() throws Exception {
 		Report.logInfo("Initializing Environment");
@@ -59,6 +57,13 @@ public class BaseTest {
 	@AfterSuite
 	public void fini() {
 		env.stop();
+	}
+
+	@BeforeClass
+	public void failureRecovery() {
+		if (env.getDriver() == null) {
+			env.start();
+		}
 	}
 
 	@BeforeMethod
@@ -116,11 +121,12 @@ public class BaseTest {
 		}
 		return hm;
 	}
-	public List<HashMap<String,String>> getMapFromDataList(String data) {
-		List<HashMap<String,String>> hm=new ArrayList();
+
+	public List<HashMap<String, String>> getMapFromDataList(String data) {
+		List<HashMap<String, String>> hm = new ArrayList();
 		System.out.println(data);
 		String[] dataArray = data.substring(1, data.length() - 1).split(",");
-		int i=0;
+		int i = 0;
 		for (String record : dataArray) {
 			if (record != null) {
 				System.out.println(record);
@@ -130,6 +136,7 @@ public class BaseTest {
 		}
 		return hm;
 	}
+
 	public int calcMRR(int ASV) {
 		return ASV / 12;
 	}
@@ -153,44 +160,48 @@ public class BaseTest {
 		return row;
 	}
 
-    /**
-     * @return true if the execution context is packaged environment.
-     */
-    public boolean isPackageInstance() {
-        Boolean namespace = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-        Report.logInfo("Is Managed Package :" +namespace);
-        return namespace;
+	/**
+	 * @return true if the execution context is packaged environment.
+	 */
+	public boolean isPackageInstance() {
+		Boolean namespace = Boolean.valueOf(env
+				.getProperty("sfdc.managedPackage"));
+		System.out.println("Is Managed Package :" + namespace);
+		return namespace;
+	}
 
-    }
+	/**
+	 * This Method queries the data base with the query specified.
+	 * 
+	 * @param query
+	 *            - The Query to Execute on salesforce.
+	 * @return integer - Count of records that the query returned.
+	 */
+	public int getQueryRecordCount(String query) {
+		int result = 0;
+		if (isPackageInstance()) {
+			Report.logInfo("Query : " + query);
+			result = soql.getRecordCount(query);
+		} else {
+			query = removeNameSpace(query);
+			Report.logInfo("Query : " + query);
+			result = soql.getRecordCount(query);
+		}
+		return result;
+	}
 
-    /**
-     * This Method queries the data base with the query specified.
-     * @param query - The Query to Execute on salesforce.
-     * @return  integer - Count of records that the query returned.
-     */
-    public int getQueryRecordCount(String query) {
-        int result = 0;
-        if(isPackageInstance()) {
-            Report.logInfo("Query : " +query);
-            result = soql.getRecordCount(query);
-        }  else {
-            query = removeNameSpace(query);
-            Report.logInfo("Query : " +query);
-            result = soql.getRecordCount(query);
-        }
-        return result;
-    }
-
-    /**
-     * Method to remove the name space from the string "JBCXM__".
-     * @param str  -The string where name space should be removed.
-     * @return  String - with name space removed.
-     */
-    public String removeNameSpace(String str) {
-        String result = "";
-        if(str != null ) {
-            result = str.replaceAll("JBCXM__", "");
-        }
-        return result;
-    }
+	/**
+	 * Method to remove the name space from the string "JBCXM__".
+	 * 
+	 * @param str
+	 *            -The string where name space should be removed.
+	 * @return String - with name space removed.
+	 */
+	public String removeNameSpace(String str) {
+		String result = "";
+		if (str != null) {
+			result = str.replaceAll("JBCXM__", "");
+		}
+		return result;
+	}
 }
