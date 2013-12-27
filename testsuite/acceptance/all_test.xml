@@ -28,7 +28,7 @@
 
 			<!-- Giri's Test -->
 			<class
-				name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly__Test" />
+				name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test" />
 			-->
 			<class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
 			<class name="com.gainsight.sfdc.retention.tests.EventsTests" />
