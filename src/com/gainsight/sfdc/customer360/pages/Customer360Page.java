@@ -6,18 +6,24 @@ import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NotFoundException;
 
 
 public class Customer360Page extends BasePage {
 	//private final String READY_INDICATOR = "//div[@class='custmor_comp_name']";
 	// changing the ready indicator to search box on the right corner of page
-	private final String READY_INDICATOR = "//div[@class='gs_search_section']";
+    private final String READY_INDICATOR        = "//input[@class='search_input ui-autocomplete-input' and @name='search_text']";
 	private final String LOADING_IMAGES = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String SUMMARY_NUM_FIELDS = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
 	private final String SUMMARY_STR_FIELDS = "//div[@class='gs_summary_details']//li[contains(.,'%s')]/span";
 	private final String ADD_TRAN = "//a[text()='Add Transaction']";
 	private final String TRANSACTION_FRAME = "//iframe";
+    private final String CUST_SERCHBY_SELECT    = "//select[@class='gs_filterOptions']";
+    private final String SEARCH_ICON            = "//div[@class='search_input_btn']";
+    private final String CUST_SELECT_LIST       = "//li[@class='ui-menu-item' and @role = 'presentation']";
+    private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
 
 	public Customer360Page() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -63,26 +69,32 @@ public class Customer360Page extends BasePage {
 		}
 		return this;
 	}
-	
-	public Customer360Page gotoCustomer360(String customerName) {
 
-		/*
-		 * field.setTextByKeys("//input[@name='search_text']", customerName);
-		 * item.click("//div[@class='search_input_btn']");
-		 * wait.waitTillElementDisplayed("//li[@role='presentation']", MIN_TIME,
-		 * MAX_TIME); item.click("//a[text()='"+customerName+"']");
-		 */
-		field.clearAndSetText(
-				"//input[@class='search_input ui-autocomplete-input']",
-				customerName);
-		/*
-		 * wait.waitTillElementDisplayed("//li[@role='presentation']", MIN_TIME,
-		 * MAX_TIME); item.click("//a[text()='"+customerName+"']");
-		 */
-		driver.get("https://jbcxm.ap1.visual.force.com/apex/CustomerSuccess360?cid=0019000000jhBghAAE");
-
-		return new Customer360Page();
-	}
+    public Customer360Page searchCustomer(String cName, Boolean startsWith) {
+        wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
+        for(int i =0; i< 3 ; i++) {
+            try {
+                if(!startsWith) {
+                    item.selectFromDropDown(CUST_SERCHBY_SELECT, "Customer name contains ");
+                }
+                field.clearAndSetText(READY_INDICATOR, cName);
+                driver.findElement(By.xpath(READY_INDICATOR)).sendKeys(Keys.ENTER);
+                try {
+                    wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                    item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
+                    break;
+                } catch(NotFoundException e ) {
+                    item.click(SEARCH_ICON);
+                    wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                }
+                item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
+                break;
+            } catch (Exception globalException) {
+                refreshPage();
+            }
+        }
+        return this;
+    }
 	
 	public int getPositionOfTransaction(String stage, String bookingDate) {
 		String xpath = "//div[contains(@class,'transaction ') and contains(.,'"

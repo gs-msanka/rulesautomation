@@ -187,8 +187,8 @@ public class BaseTest {
      * @return  String - with name space removed.
      */
     public String removeNameSpace(String str) {
-        String result = null;
-        if(result != null ) {
+        String result = "";
+        if(str != null ) {
             result = str.replaceAll("JBCXM__", "");
         }
         return result;

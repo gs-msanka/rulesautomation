@@ -30,7 +30,7 @@ public class Customer360FeaturesTests extends BaseTest {
 				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
-		cp.gotoCustomer360("Via Systems");
+		cp.searchCustomer("Via Systems", true);
 		cf = (Customer360Features) cp.goToSection("Features");
 	}
 
