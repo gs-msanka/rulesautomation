@@ -23,15 +23,23 @@ public class EventsTests extends BaseTest {
             + generatePath(dirs);
     Calendar c = Calendar.getInstance();
     Boolean isEventCreateScriptExecuted = false;
+    String userLocale = "en_IN";
+    String deleteScript = "List<JBCXM__CSEvent__c> csList = [SELECT Id FROM JBCXM__CSEvent__c]; Delete csList;";
     @BeforeClass
     public void setUp() {
         basepage.login();
+        userLocale           = soql.getUserLocale();
         String file;
         try{
+            if(!isPackageInstance()) {
+                deleteScript = removeNameSpace(deleteScript);
+            }
+            apex.runApex(deleteScript);
             file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
             String userupdate = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
             apex.runApexCodeFromFile(file, isPackageInstance());
             apex.runApexCodeFromFile(userupdate);
+
         } catch (Exception e) {
             e.printStackTrace();
             Report.logInfo(e.getLocalizedMessage());
@@ -45,12 +53,13 @@ public class EventsTests extends BaseTest {
             isEventCreateScriptExecuted = true;
         }
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.applyFilter("In Progress");
-        Assert.assertTrue(eventsPage.isFiltersOn("In Progress"));
+        eventsPage.applyFilter("Sprint Planning");
+        Assert.assertTrue(eventsPage.isFiltersOn("Sprint Planning"));
         List<Event> eventList = eventsPage.getAllEvents();
         for(Event e : eventList) {
-                  Assert.assertEquals("In Progess", e.getStatus());
+                  Assert.assertEquals("Sprint Planning", e.getType());
         }
+        eventsPage.clearAllFilters();
     }
 
     @Test
@@ -82,7 +91,7 @@ public class EventsTests extends BaseTest {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(365));
+        eventData.put("enddate", getDatewithFormat(300));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
@@ -131,7 +140,6 @@ public class EventsTests extends BaseTest {
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
-        eventsPage.clickOnCloseEventCard();
         eventsPage.deleteEvent(eventData);
         Assert.assertFalse(eventsPage.isEventDisplayed(eventData), "Verifying weather Event Deleted successfully.");
         Report.logInfo("Test Case Start: Event_032");
@@ -196,7 +204,6 @@ public class EventsTests extends BaseTest {
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
-        eventsPage.clickOnCloseEventCard();
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursWeekly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
@@ -221,7 +228,6 @@ public class EventsTests extends BaseTest {
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
-        eventsPage.clickOnCloseEventCard();
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
@@ -246,7 +252,6 @@ public class EventsTests extends BaseTest {
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
-        eventsPage.clickOnCloseEventCard();
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursEveryWeekDay' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
@@ -404,7 +409,6 @@ public class EventsTests extends BaseTest {
      */
     public String getDatewithFormat(int i) {
         String date                 = null;
-        String userLocale           = soql.getUserLocale();
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, i);
         if(userLocale.contains("en_US")) {

@@ -158,7 +158,7 @@ public class BaseTest {
      */
     public boolean isPackageInstance() {
         Boolean namespace = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-        System.out.println("Is Managed Package :" +namespace);
+        Report.logInfo("Is Managed Package :" +namespace);
         return namespace;
 
     }

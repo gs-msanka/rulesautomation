@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
@@ -154,15 +150,15 @@ public class EventsPage extends RetentionBasePage {
 
     /**
      * Add's a Event & Task on the event.
-     * @param eventdata - Event to be created.
+     * @param eventData - Event to be created.
      * @param taskData - Task to be created.
      */
-    public void addEventandTask(HashMap<String, String> eventdata, HashMap<String, String> taskData) {
+    public void addEventandTask(HashMap<String, String> eventData, HashMap<String, String> taskData) {
         Report.logInfo("Started adding the event & task on the event");
         int taskNo = 0;
         clickOnAddEvent();
-        fillEventForm(eventdata, true);
-        if(taskData.get("tasks") != null && taskData.get("tasks").equalsIgnoreCase("true") ) {
+        fillEventForm(eventData, true);
+        if(eventData.get("tasks") != null && eventData.get("tasks").equalsIgnoreCase("true") ) {
             addTask(taskData);
         }
         clickOnCreateEvent();
@@ -657,17 +653,12 @@ public class EventsPage extends RetentionBasePage {
         boolean tasksDisplayed = false;
         boolean eventDataLoaded = false;
         amtDateUtil.sleep(5);
-        for(int i=0; i< 30 ; i++) {
-            try {
-                if(isEventDataLoaded() && isTasksLoaded()) {
-                    Report.logInfo("Event Card loaded successfully");
-                    break;
-                } else {
-                    amtDateUtil.sleep(1);
-                }
-            } catch(RuntimeException e) {
-                Report.logInfo("Run time Exception");
-                Report.logInfo("Wait for event card load failed:" +e.getLocalizedMessage());
+        for(int i=0; i< 15 ; i++) {
+            if(isEventDataLoaded() && isTasksLoaded()) {
+                Report.logInfo("Event Card loaded successfully");
+                break;
+            } else {
+                amtDateUtil.sleep(1);
             }
         }
     }
@@ -676,20 +667,11 @@ public class EventsPage extends RetentionBasePage {
         boolean isEventDataLoaded = false;
         String s = null;
         try {
-            //s = element.getElement("eventType").getText();
-            List<WebElement> eleList  = element.getAllElement(EVENT_SCHEDULEDATE_INPUT);
-            for(WebElement wEle : eleList) {
-                if(wEle.isDisplayed()) {
-                    s = wEle.getAttribute("value");
-                    break;
-                }
-            }
-
-        } catch (NoSuchElementException ex) {
-            Report.logInfo("Event Cars is not opened in Read Mode");
+            s = field.getText(EVENT_DATE_VALUE);
+        } catch (Exception e) {
             s = field.getTextFieldValue(EVENT_SCHEDULEDATE_INPUT);
         }
-            if(s == null || s.length() <=1) {
+        if(s == null || s.length() <=1) {
             Report.logInfo("Event details are not loaded still.");
         } else {
             isEventDataLoaded = true;
@@ -714,7 +696,6 @@ public class EventsPage extends RetentionBasePage {
             if(eventCard != null) {
                 eventCard.click();
                 waitforEventCardtoLoad();
-                amtDateUtil.stalePause();
                 Report.logInfo("Event card found & opened the card successfully");
             } else {
                 Report.logInfo("Event Card is not found, failed to open the event card");
@@ -725,7 +706,6 @@ public class EventsPage extends RetentionBasePage {
             if(eventCard != null) {
                 eventCard.click();
                 waitforEventCardtoLoad();
-                amtDateUtil.stalePause();
                 Report.logInfo("Event card found & opened the card successfully");
             } else {
                 Report.logInfo("Event Card is not found, failed to open the event card");
@@ -857,6 +837,7 @@ public class EventsPage extends RetentionBasePage {
             Report.logInfo("Switched all the filters");
         }
         hideFilters();
+        amtDateUtil.sleep(3);
     }
 
     public boolean isFiltersDisplayed() {
@@ -1122,7 +1103,9 @@ public class EventsPage extends RetentionBasePage {
         if(recText.contains("Occurs")) {
             result = true;
         }
+        clickOnCloseEventCard();
         return result;
+
     }
 
 
