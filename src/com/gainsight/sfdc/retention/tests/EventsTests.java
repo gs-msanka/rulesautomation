@@ -40,11 +40,11 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_07() {
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         if(!isEventCreateScriptExecuted) {
             createEventsFromScript();
             isEventCreateScriptExecuted = true;
         }
+        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.applyFilter("In Progress");
         Assert.assertTrue(eventsPage.isFiltersOn("In Progress"));
         List<Event> eventList = eventsPage.getAllEvents();
@@ -404,17 +404,18 @@ public class EventsTests extends BaseTest {
      */
     public String getDatewithFormat(int i) {
         String date                 = null;
-        String userLocale           = "US";//soqlUtil.buildQuery("");
+        String userLocale           = soql.getUserLocale();
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, i);
-        if(userLocale.contains("US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/YYYY");
+        if(userLocale.contains("en_US")) {
+            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
             date = dateFormat.format(c.getTime());
 
-        } else if(userLocale.contains("IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/YYYY");
+        } else if(userLocale.contains("en_IN")) {
+            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
             date = dateFormat.format(c.getTime());
         }
+        Report.logInfo(String.valueOf(date));
         return date;
     }
 

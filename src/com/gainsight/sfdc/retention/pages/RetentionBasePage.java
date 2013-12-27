@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.retention.pages;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class RetentionBasePage extends BasePage{
@@ -11,6 +12,10 @@ public class RetentionBasePage extends BasePage{
 
     public RetentionBasePage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+    }
+
+    public RetentionBasePage(String val) {
+        Report.logInfo("Page Constructor Instantiated From :" +val);
     }
 
     /**
