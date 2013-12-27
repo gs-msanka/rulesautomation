@@ -81,7 +81,6 @@ public class AdminAdoptionSubTab extends BasePage {
 	   wait.waitTillElementPresent("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a", MIN_TIME, MAX_TIME);
 		item.click("//span[contains(text(),'"+s+"')]/parent::td/preceding-sibling::td/a");
 		wait.waitTillElementDisplayed(MESURE_FORM_BLOCK, MIN_TIME, MAX_TIME);
-	item.isElementPresent(TEXT_PRESENT);
 		field.clearAndSetText(AMEASURE_NAME,name);
 		field.clearAndSetText(AMESURE_DISPLYORDER, displayOrder);
 		field.clearAndSetText(AMESURE_SHORT_NAME, shortName);

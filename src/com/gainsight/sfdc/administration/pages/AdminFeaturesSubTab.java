@@ -26,7 +26,7 @@ public class AdminFeaturesSubTab extends BasePage{
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 	  
-	
+	                      //create Features
 	public AdminFeaturesSubTab createFeatureType(String name, String systemName , String productName) {
 		
 		button.click(FEATURES_NEW);

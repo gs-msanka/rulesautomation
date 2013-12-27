@@ -12,7 +12,7 @@ public class AdminCustomersTab extends BasePage {
 	
 	
 	private final String NEW_CUSTOMERS        = "//input[@class='btn dummyAllAdminNewBtn']";
-	private final String STAGE_TEXT           =  "//span[contains(text(),'Stage')]";
+	private final String STAGE_TEXT           = "//span[contains(text(),'Stage')]";
 	private final String STAGE_NAME           = "//span[contains(text(),'Stage')]/parent::h2/parent::div//following::div/input";
 	private final String STAGE_DISPLAY_ORDER  = "//span[contains(text(),'Stage')]/parent::h2/parent::div//following::div/input[contains(@class,'DisplayOrderInput')]";
 	private final String STAGE_SYSTEM_NAME    = "//span[contains(text(),'Stage')]/parent::h2/parent::div//following::div/input[contains(@class,'systemNameInputClass')]";
