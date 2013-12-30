@@ -32,10 +32,12 @@ public class AdminMilestoneTabTest extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
 	public void testAdmincreateAdoptionMeasure(HashMap<String, String> testData) throws BiffException, IOException {
+		createMilestoneFromScript();
 		createMilestoneType(testData.get("CreateNewMilestone"));
 	}
 	
 	private AdminMilestoneTab createMilestoneType(String testData) {
+		
 		HashMap<String, String> data = getMapFromData(testData);
 		String name = data.get("name");
 		String displayOrder = data.get("displayOrder");
@@ -56,6 +58,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 		editMilestoneType(testData.get("EditMilestone"));
 	}
 	private AdminMilestoneTab editMilestoneType(String testData) {
+		
 		HashMap<String, String> data = getMapFromData(testData);
 		String previous = data.get("previous");
 		String name = data.get("name");
@@ -90,6 +93,18 @@ public class AdminMilestoneTabTest extends BaseTest {
 		return adCrteMstne;
 	}
 	
+	
+	 public void createMilestoneFromScript() {
+	       try {
+	           String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Create_Script.txt";
+	           Report.logInfo("File :" +file);
+	           Report.logInfo("Pack :" +isPackageInstance());
+	           apex.runApexCodeFromFile(file, isPackageInstance());
+	          // isEventCreateScriptExecuted = true;
+	       } catch (Exception e) {
+	           Report.logInfo(e.getLocalizedMessage());
+	       }
+	   }
 		
 	@AfterClass
 	public void tearDown() {
