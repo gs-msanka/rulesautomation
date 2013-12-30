@@ -8,9 +8,10 @@
     <test verbose="3" name="GIRIBABU TEST CASES" preserve-order="true">
         <classes>
 
+
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
             <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
-            <!--<class name="com.gainsight.sfdc.retention.tests.EventsTests" />
-            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />-->
         </classes>
     </test>
 </suite>
