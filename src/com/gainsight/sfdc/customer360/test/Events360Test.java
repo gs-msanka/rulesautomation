@@ -25,10 +25,12 @@ public class Events360Test extends BaseTest {
     String customerName = "Galbreath Co";
     Customer360Page c360Page;
     Retention360 ret;
-    String script = "List<JBCXM__CSEvent__c> csEventsList = [SELECT id FROM JBCXM__CSEvent__c " +
-            "WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'];" +
-            "DELETE csEventsList;";
+    String userLocale  = "en_IN";
 
+    String RECORDS_DELETE = "SELECT id FROM JBCXM__CSEvent__c " +
+            "WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
+    String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
+    String playbookScriptfile = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
 
     @BeforeClass
     public void setUp() {
@@ -36,16 +38,18 @@ public class Events360Test extends BaseTest {
         c360Page    = basepage.clickOnC360Tab().searchCustomer(customerName, true);
         ret         = new Retention360("Events Page");
         if(!isPackageInstance()) {
-            script = script.replace("JBCXM__", "");
+            RECORDS_DELETE = removeNameSpace(RECORDS_DELETE);
+            deletPlaybookScript = removeNameSpace(deletPlaybookScript);
         }
-        apex.runApex(script);
+        soql.deleteQuery(RECORDS_DELETE);
+        soql.deleteQuery(RECORDS_DELETE);
+        userLocale = soql.getUserLocale();
+        apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_1")
     public void addEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("customer", customerName);
         eventData.put("schedule", getDatewithFormat(0));
@@ -58,8 +62,6 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_2")
     public void changeEventStatus(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
@@ -73,8 +75,6 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_3")
     public void deleteEvent( HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
@@ -90,15 +90,12 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_4")
     public void addTasksToEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        ret.clickOnEventSubTab();
         ret.openEventCard(eventData);
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
         for(int a =1 ; a< 20; a++) {
@@ -123,8 +120,6 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_5")
     public void addTasksToEventFromPlaybook(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         String pName = testData.get("playbook");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -132,8 +127,6 @@ public class Events360Test extends BaseTest {
         taskData.put("date", getDatewithFormat(0));
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        Report.logInfo(String.valueOf(ret.getlistofIframes()));
-        ret.clickOnEventSubTab();
         ret.openEventCard(eventData);
         ret.selectPlaybook(pName);
         ret.clickOnUpdateEvent();
@@ -148,24 +141,21 @@ public class Events360Test extends BaseTest {
                 break;
             }
         }
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         ret.openEventCard(eventData);
         for(HashMap<String, String> task : tasksList) {
             Assert.assertTrue(ret.isTaskDisplayed(task), "Checking task is displayed on event");
         }
+        ret.clickOnUpdateEvent();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_6")
     public void addRecurringEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        String script = "List<JBCXM__CSEvent__c> csEventsList = [SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'];" +
-                "DELETE csEventsList;";
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
         if(!isPackageInstance()) {
-            script = script.replace("JBCXM__", "");
+            script = removeNameSpace(script);
         }
-        apex.runApex(script);
-        ret.refreshPage();
+        soql.deleteQuery(script);
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
@@ -188,12 +178,11 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_7")
     public void infoMessageVerification(HashMap<String, String> testData) throws IOException, BiffException {
-        String script = "List<JBCXM__CSEvent__c> csEventsList = [SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'];" +
-                "DELETE csEventsList;";
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
         if(!isPackageInstance()) {
-            script = script.replace("JBCXM__", "");
+            script = removeNameSpace(script);
         }
-        apex.runApex(script);
+        soql.deleteQuery(script);;
         ret.refreshPage();
         ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
@@ -202,7 +191,6 @@ public class Events360Test extends BaseTest {
         eventData.put("enddate", getDatewithFormat(70));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        ret.clickOnEventSubTab();
         Assert.assertTrue(ret.isInfoMessageDisplayed(), "Checking the information message displayed");
         ret.addEvent(eventData, taskData);
         ret.deleteAllEvents();
@@ -212,19 +200,14 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_8")
     public void editEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         HashMap<String, String> updateEventData   = getMapFromData(testData.get("updateeventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         updateEventData.put("schedule", getDatewithFormat(3));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        ret.clickOnEventSubTab();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         ret.openEventCard(eventData);
         ret.fillEventForm(updateEventData);
         ret.clickOnUpdateEvent();
@@ -238,15 +221,14 @@ public class Events360Test extends BaseTest {
 
     public String getDatewithFormat(int i) {
         String date                 = null;
-        String userLocale           = soql.getUserLocale();
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, i);
         if(userLocale.contains("en_US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
+            DateFormat dateFormat   = new SimpleDateFormat("M/d/yyyy");
             date = dateFormat.format(c.getTime());
 
         } else if(userLocale.contains("en_IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
             date = dateFormat.format(c.getTime());
         }
         Report.logInfo(String.valueOf(date));

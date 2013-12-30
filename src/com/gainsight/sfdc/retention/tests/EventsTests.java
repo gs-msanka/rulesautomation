@@ -25,21 +25,25 @@ public class EventsTests extends BaseTest {
     Boolean isEventCreateScriptExecuted = false;
     String userLocale = "en_IN";
     String deleteScript = "SELECT Id FROM JBCXM__CSEvent__c";
+    String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
+    String file = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+    String userupdate = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+    String playbookScriptfile = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale           = soql.getUserLocale();
-        String file;
+
         try{
             if(!isPackageInstance()) {
                 deleteScript = removeNameSpace(deleteScript);
+                deletPlaybookScript = removeNameSpace(deletPlaybookScript);
             }
             soql.deleteQuery(deleteScript);
-            file = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-            String userupdate = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+            soql.deleteQuery(deletPlaybookScript);
             apex.runApexCodeFromFile(file, isPackageInstance());
             apex.runApexCodeFromFile(userupdate);
-
+            apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
         } catch (Exception e) {
             e.printStackTrace();
             Report.logInfo(e.getLocalizedMessage());
@@ -412,11 +416,11 @@ public class EventsTests extends BaseTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, i);
         if(userLocale.contains("en_US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
+            DateFormat dateFormat   = new SimpleDateFormat("M/d/yyyy");
             date = dateFormat.format(c.getTime());
 
         } else if(userLocale.contains("en_IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
             date = dateFormat.format(c.getTime());
         }
         Report.logInfo(String.valueOf(date));
@@ -464,7 +468,7 @@ public class EventsTests extends BaseTest {
 
     public void createEventsFromScript() {
         try {
-            String file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
+            String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
             Report.logInfo("File :" +file);
             apex.runApexCodeFromFile(file, isPackageInstance());
             isEventCreateScriptExecuted = true;
