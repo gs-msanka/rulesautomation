@@ -4,8 +4,7 @@ String s = profileList.get(0).Id;
 System.debug(s);
 List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias, 
                      ProfileId FROM User WHERE Lastname = 'Giribabu' 
-                     AND Alias = 'testuser' AND
-                       ProfileId =: s];
+                     AND ProfileId =: s];
 System.debug(extuser);
 if(extuser != null && extuser.size() <= 0) {
     User sampleUser = new User();
