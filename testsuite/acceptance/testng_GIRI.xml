@@ -5,8 +5,9 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="Acceptance Tests" preserve-order="true">
+    <test verbose="3" name="GIRIBABU TEST CASES" preserve-order="true">
         <classes>
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
             <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
         </classes>
     </test>
