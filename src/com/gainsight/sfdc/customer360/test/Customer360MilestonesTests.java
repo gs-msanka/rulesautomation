@@ -27,7 +27,7 @@ public class Customer360MilestonesTests extends BaseTest {
 				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
-		cp.gotoCustomer360("Via Systems");
+		cp.searchCustomer("Via Systems", true);
 		cm = (Customer360Milestones) cp.goToSection("Usage");
 		cm.gotoMilestonesSubtab();
 	}

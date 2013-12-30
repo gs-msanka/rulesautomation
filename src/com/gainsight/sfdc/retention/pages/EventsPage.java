@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
@@ -105,6 +101,11 @@ public class EventsPage extends RetentionBasePage {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
+    public EventsPage(String val) {
+        super(val);
+        Report.logInfo("Page accessed from :" +val);
+    }
+
     public void waitTillEventCardsLoad() {
         amtDateUtil.stalePause();
         wait.waitTillElementNotDisplayed("//img[@class='waitingImage']", MIN_TIME, MAX_TIME);
@@ -149,22 +150,16 @@ public class EventsPage extends RetentionBasePage {
 
     /**
      * Add's a Event & Task on the event.
-     * @param eventdata - Event to be created.
+     * @param eventData - Event to be created.
      * @param taskData - Task to be created.
      */
-    public void addEventandTask(HashMap<String, String> eventdata, HashMap<String, String> taskData) {
+    public void addEventandTask(HashMap<String, String> eventData, HashMap<String, String> taskData) {
         Report.logInfo("Started adding the event & task on the event");
         int taskNo = 0;
         clickOnAddEvent();
-        fillEventForm(eventdata);
-        if(eventdata.get("recurring") != null && eventdata.get("recurring").equalsIgnoreCase("TRUE")) {
-            recEventForm(eventdata.get("frequency"), eventdata.get("startdate"), eventdata.get("enddate"));
-        }
-        if(eventdata.get("tasks") != null && eventdata.get("tasks").equalsIgnoreCase("true") ) {
+        fillEventForm(eventData, true);
+        if(eventData.get("tasks") != null && eventData.get("tasks").equalsIgnoreCase("true") ) {
             addTask(taskData);
-        }
-        if(eventdata.get("playbook") != null && !eventdata.get("playbook").equalsIgnoreCase("NA")) {
-            selectPlaybook(eventdata.get("playbook"));
         }
         clickOnCreateEvent();
         Report.logInfo("Finished adding the event & task on the event");
@@ -173,11 +168,12 @@ public class EventsPage extends RetentionBasePage {
     /**
      * Fills the event form based on the test data supplied.
      * @param testdata - Event data provided has HashMap
+     * @param fillAccName - is Account Name need to filled up.
      */
-    public void fillEventForm(HashMap<String, String> testdata) {
+    public void fillEventForm(HashMap<String, String> testdata, boolean fillAccName) {
         Report.logInfo("Filling in the events field values.");
-        wait.waitTillElementDisplayed(CUST_NAME_INPUT, MIN_TIME, MAX_TIME);
-        if(testdata.get("customer") != null) {
+        wait.waitTillElementDisplayed(EVENT_TYPE_SELECT, MIN_TIME, MAX_TIME);
+        if(testdata.get("customer") != null && fillAccName) {
             field.setTextField(CUST_NAME_INPUT, testdata.get("customer"));
             item.click(CUST_SEARCH_IMG);
             wait.waitTillElementDisplayed(CUST_SEARCH_RESULT, MIN_TIME, MAX_TIME);
@@ -192,7 +188,7 @@ public class EventsPage extends RetentionBasePage {
         }
         if(testdata.get("subject") != null) {
             wait.waitTillElementDisplayed(EVENT_SUBJECT_INPUT, MIN_TIME, MAX_TIME);
-            field.setTextField(EVENT_SUBJECT_INPUT, testdata.get("subject"));
+            field.clearAndSetText(EVENT_SUBJECT_INPUT, testdata.get("subject"));
         }
         if(testdata.get("schedule") != null) {
             field.clearAndSetText(EVENT_SCHEDULEDATE_INPUT, testdata.get("schedule"));
@@ -218,6 +214,14 @@ public class EventsPage extends RetentionBasePage {
         if(testdata.get("description") != null ) {
             field.setTextField(EVENT_DESRP_INPUT, testdata.get("description"));
         }
+        if(testdata.get("recurring") != null && testdata.get("recurring").equalsIgnoreCase("TRUE")) {
+            recEventForm(testdata.get("frequency"), testdata.get("startdate"), testdata.get("enddate"));
+        }
+
+        if(testdata.get("playbook") != null && !testdata.get("playbook").equalsIgnoreCase("NA")) {
+            selectPlaybook(testdata.get("playbook"));
+        }
+
         Report.logInfo("Filled values of event form");
     }
 
@@ -361,6 +365,9 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Clicked on saving the event");
     }
 
+    public void clickOnUpdateEvent() {
+        button.click(EVENT_UPDATE_BUTTON);
+    }
     public void clickOnUpdateEvent(HashMap<String, String> eventdata) {
         Report.logInfo("Clicking on updating event.");
         button.click(EVENT_UPDATE_BUTTON);
@@ -608,29 +615,25 @@ public class EventsPage extends RetentionBasePage {
     }
 
     public void waitforEventCardDisplay(HashMap<String, String> testdata) {
+        wait.waitTillElementDisplayed(buildeventXpath(testdata), MIN_TIME, MAX_TIME);
+
+    }
+
+    private String buildeventXpath(HashMap<String, String> testData) {
         String elePath = "//div[@class='data-value scheduledDateValCls' "
-                + "and contains(text(), '"+testdata.get("schedule")+"')]/parent::div"
-                + "/preceding-sibling::div/div[contains(@title,'"+testdata.get("owner")+"')]"
-                + "/parent::div/preceding-sibling::div[@title='"+testdata.get("subject")+"']"
-                + "/preceding-sibling::div[text()='"+testdata.get("type")+"']"
-                + "/preceding-sibling::div[@title='"+testdata.get("customer")+"']"
+                + "and contains(text(), '"+testData.get("schedule")+"')]/parent::div"
+                + "/preceding-sibling::div/div[contains(@title,'"+testData.get("owner")+"')]"
+                + "/parent::div/preceding-sibling::div[@title='"+testData.get("subject")+"']"
+                + "/preceding-sibling::div[text()='"+testData.get("type")+"']"
+                + "/preceding-sibling::div[@title='"+testData.get("customer")+"']"
                 + "/parent::div[@class='event-card-body view-card']"
                 + "/parent::div[@class='event-card view-card event-card-maindiv']";
-        wait.waitTillElementDisplayed(elePath, MIN_TIME, MAX_TIME);
-
+        return elePath;
     }
     public WebElement getEventInCardLayout(HashMap<String, String> testdata) {
         WebElement eventCard = null;
         for(int i =0; i<2;i++) {
-            String elePath = "//div[@class='data-value scheduledDateValCls' "
-                    + "and contains(text(), '"+testdata.get("schedule")+"')]/parent::div"
-                    + "/preceding-sibling::div/div[contains(@title,'"+testdata.get("owner")+"')]"
-                    + "/parent::div/preceding-sibling::div[@title='"+testdata.get("subject")+"']"
-                    + "/preceding-sibling::div[text()='"+testdata.get("type")+"']"
-                    + "/preceding-sibling::div[@title='"+testdata.get("customer")+"']"
-                    + "/parent::div[@class='event-card-body view-card']"
-                    + "/parent::div[@class='event-card view-card event-card-maindiv']";
-            List<WebElement> eventCardsList = element.getAllElement(elePath);
+            List<WebElement> eventCardsList = element.getAllElement(buildeventXpath(testdata));
             if(eventCardsList  != null && eventCardsList.size() >0) {
                 eventCard = eventCardsList.get(0);
                 Report.logInfo("Found the event Card");
@@ -649,36 +652,41 @@ public class EventsPage extends RetentionBasePage {
     public void waitforEventCardtoLoad() {
         boolean tasksDisplayed = false;
         boolean eventDataLoaded = false;
-        for(int i=0; i< 2 ; i++) {
-            try {
-                if(!eventDataLoaded) {
-                    String eventType = element.getElement("eventType").getText();
-                    if(eventType == null || eventType.length() <=1) {
-                        amtDateUtil.sleep(1);
-                        Report.logInfo("Event details are not loaded still.");
-                        continue;
-                    } else {
-                        eventDataLoaded = true;
-                    }
-                }
-                if(!tasksDisplayed) {
-                    List<WebElement> eleList = element.getAllElement("//div[@class='taskDetailsCls taskDetailsBorderCls']");
-                    if(eleList.size() ==0) {
-                        amtDateUtil.sleep(1);
-                        Report.logInfo("Tasks on Event card are not loaded still");
-                    } else {
-                        tasksDisplayed = true;
-                    }
-                }
-                if(tasksDisplayed && eventDataLoaded) {
-                    Report.logInfo("Event Card loaded successfully");
-                    break;
-                }
-            } catch(RuntimeException e) {
-                Report.logInfo("Run time Exception");
-                Report.logInfo("Wait for event card load failed:" +e.getLocalizedMessage());
+        amtDateUtil.sleep(5);
+        for(int i=0; i< 15 ; i++) {
+            if(isEventDataLoaded() && isTasksLoaded()) {
+                Report.logInfo("Event Card loaded successfully");
+                break;
+            } else {
+                amtDateUtil.sleep(1);
             }
         }
+    }
+
+    private boolean isEventDataLoaded() {
+        boolean isEventDataLoaded = false;
+        String s = null;
+        try {
+            s = field.getText(EVENT_DATE_VALUE);
+        } catch (Exception e) {
+            s = field.getTextFieldValue(EVENT_SCHEDULEDATE_INPUT);
+        }
+        if(s == null || s.length() <=1) {
+            Report.logInfo("Event details are not loaded still.");
+        } else {
+            isEventDataLoaded = true;
+        }
+        return isEventDataLoaded;
+    }
+    private boolean isTasksLoaded() {
+        boolean isTasksDisplayed = false;
+        List<WebElement> eleList = element.getAllElement("//div[@class='taskDetailsCls taskDetailsBorderCls']");
+        if(eleList.size() ==0) {
+            Report.logInfo("Tasks on Event card are not loaded still");
+        } else {
+           isTasksDisplayed = true;
+        }
+        return isTasksDisplayed;
     }
 
     public void openEventCard(HashMap<String, String> testdata) {
@@ -688,7 +696,6 @@ public class EventsPage extends RetentionBasePage {
             if(eventCard != null) {
                 eventCard.click();
                 waitforEventCardtoLoad();
-                amtDateUtil.stalePause();
                 Report.logInfo("Event card found & opened the card successfully");
             } else {
                 Report.logInfo("Event Card is not found, failed to open the event card");
@@ -699,7 +706,6 @@ public class EventsPage extends RetentionBasePage {
             if(eventCard != null) {
                 eventCard.click();
                 waitforEventCardtoLoad();
-                amtDateUtil.stalePause();
                 Report.logInfo("Event card found & opened the card successfully");
             } else {
                 Report.logInfo("Event Card is not found, failed to open the event card");
@@ -716,6 +722,11 @@ public class EventsPage extends RetentionBasePage {
 
     public void changeStatus(HashMap<String, String> testdata, String status) {
         WebElement eventCard = getEventInCardLayout(testdata);
+        changeEventStatus(eventCard, status);
+
+    }
+
+    public void changeEventStatus(WebElement eventCard, String status) {
         WebElement statusChageIcon = eventCard.findElement(By.cssSelector("a.ge-arrow.eventStatusCls"));
         statusChageIcon.click();
         amtDateUtil.stalePause();
@@ -826,6 +837,7 @@ public class EventsPage extends RetentionBasePage {
             Report.logInfo("Switched all the filters");
         }
         hideFilters();
+        amtDateUtil.sleep(3);
     }
 
     public boolean isFiltersDisplayed() {
@@ -1091,7 +1103,9 @@ public class EventsPage extends RetentionBasePage {
         if(recText.contains("Occurs")) {
             result = true;
         }
+        clickOnCloseEventCard();
         return result;
+
     }
 
 
