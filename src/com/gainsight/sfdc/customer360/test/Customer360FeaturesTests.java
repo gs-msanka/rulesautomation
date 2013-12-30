@@ -83,13 +83,13 @@ public class Customer360FeaturesTests extends BaseTest {
 			// and then just check if all the data is present as per the test input form the xpath and then check once per row
 			for (int f = 0; f < ProdFeatureList.size(); f++) {
 				cf.checkFeatureForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("eature"));
+						ProdFeatureList.get(f).get("eature"),f+1);
 				cf.checkLicensedForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Licensed"));
+						ProdFeatureList.get(f).get("Licensed"),f+1);
 				cf.checkEnabledForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Enabled"));
+						ProdFeatureList.get(f).get("Enabled"),f+1);
 				cf.checkCommentsForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Comments"));
+						ProdFeatureList.get(f).get("Comments"),f+1);
 			}
             }
 		}
@@ -109,10 +109,10 @@ public class Customer360FeaturesTests extends BaseTest {
 		cf.selectEnabled(ProdName,ProdList.get("Feature"));
 		cf.addComments(ProdName,ProdList.get("Feature"),ProdList.get("Comments"));
 		cf.clickOnSave();
-		Assert.assertTrue(cf.checkLicensedForProduct(ProdName, ProdList.get("Licensed")),
+		Assert.assertTrue(cf.checkLicensedForProduct(ProdName, ProdList.get("Licensed"),1),
 				"Verify that licensed is checked for this feature");
-		Assert.assertTrue(cf.checkEnabledForProduct(ProdName, ProdList.get("Enabled")), "Verified that enabled is checked for this feature");
-		Assert.assertTrue(cf.checkCommentsForProduct(ProdName,ProdList.get("Comments")), "Verified that comment is edited correctly");
+		Assert.assertTrue(cf.checkEnabledForProduct(ProdName, ProdList.get("Enabled"),1), "Verified that enabled is checked for this feature");
+		Assert.assertTrue(cf.checkCommentsForProduct(ProdName,ProdList.get("Comments"),1), "Verified that comment is edited correctly");
 	}
 
 	/*@Test
