@@ -23,7 +23,7 @@ public class Customer360MilestonesTests extends BaseTest {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Milestones module Test Cases...");
-		apex.runApexCodeFromFile( System.getProperty("user.dir")+"apex_scripts/Milestones/Milestones.apex",
+		apex.runApexCodeFromFile( System.getProperty("user.dir")+"/apex_scripts/Milestones/Milestones.apex",
 				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
