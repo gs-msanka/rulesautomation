@@ -108,33 +108,22 @@ public class AdminMilestoneTabTest extends BaseTest {
 		
 	@AfterClass
 	public void tearDown() {
+		
+		       try {
+		           String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Delete_Script.txt";
+		           Report.logInfo("File :" +file);
+		           Report.logInfo("Pack :" +isPackageInstance());
+		           apex.runApexCodeFromFile(file, isPackageInstance());
+		          // isEventCreateScriptExecuted = true;
+		       } catch (Exception e) {
+		           Report.logInfo(e.getLocalizedMessage());
+		       }
+		   
 		basepage.logout();
+		
+		
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }

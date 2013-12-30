@@ -1,0 +1,3 @@
+List<JBCXM__PickList__c> milestonelist=[select id from JBCXM__PickList__c where JBCXM__Category__c = 'Milestones'];
+delete milestonelist;
+
