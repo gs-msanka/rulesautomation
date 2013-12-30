@@ -17,7 +17,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	Customer360Page cp;
 	Customer360Milestones cm;
 	final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
-	final String CURRENT_DIR = System.getProperty("user.dir");
+	final String CURRENT_DIR = env.basedir;
 
 	@BeforeClass
 	public void setUp() {
