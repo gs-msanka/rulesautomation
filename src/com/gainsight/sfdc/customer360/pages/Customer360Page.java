@@ -81,7 +81,8 @@ public class Customer360Page extends BasePage {
                 driver.findElement(By.xpath(READY_INDICATOR)).sendKeys(Keys.ENTER);
                 try {
                     wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
-                    item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
+					driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
+                    //item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
                     break;
                 } catch(NotFoundException e ) {
                     item.click(SEARCH_ICON);
