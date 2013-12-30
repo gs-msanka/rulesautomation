@@ -11,7 +11,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminMilestoneTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
@@ -32,7 +31,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 		                     //Add Milestone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
-	public void testAdmincreateAdoptionMeasure(HashMap<String, String> testData) throws BiffException, IOException {
+	public void testAdminCreateMilestone(HashMap<String, String> testData) throws BiffException, IOException {
 		
 		createMilestoneFromScript();
 		createMilestoneType(testData.get("CreateNewMilestone"));
@@ -56,7 +55,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	            //Edit MileStone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
-	public void testAdminEditMeasureTest(HashMap<String, String> testData) throws BiffException, IOException {
+	public void testAdminEditMilestone(HashMap<String, String> testData) throws BiffException, IOException {
 		editMilestoneType(testData.get("EditMilestone"));
 	}
 	private AdminMilestoneTab editMilestoneType(String testData) {
@@ -77,7 +76,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 		                // Delete Milestone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
-	public void testAdminDeleteMeasureTest(HashMap<String, String> testData) throws BiffException, IOException {
+	public void testAdminDeleteMilestone(HashMap<String, String> testData) throws BiffException, IOException {
 		deleteMilestoneType(testData.get("DeleteMilestone"));
 	}
 	private AdminMilestoneTab deleteMilestoneType(String testData) {
