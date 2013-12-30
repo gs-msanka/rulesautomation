@@ -25,6 +25,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
+		deleteMilestoneFromScript();
 		basepage.login();
 	}
 
@@ -32,6 +33,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
 	public void testAdmincreateAdoptionMeasure(HashMap<String, String> testData) throws BiffException, IOException {
+		
 		createMilestoneFromScript();
 		createMilestoneType(testData.get("CreateNewMilestone"));
 	}
@@ -106,24 +108,50 @@ public class AdminMilestoneTabTest extends BaseTest {
 	       }
 	   }
 		
+	 
+	 public void deleteMilestoneFromScript() {
+     try {
+         String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Delete_Script.txt";
+         Report.logInfo("File :" +file);
+         Report.logInfo("Pack :" +isPackageInstance());
+         apex.runApexCodeFromFile(file, isPackageInstance());
+        // isEventCreateScriptExecuted = true;
+     } catch (Exception e) {
+         Report.logInfo(e.getLocalizedMessage());
+     }
+	 }
+	 
 	@AfterClass
 	public void tearDown() {
-		
-		       try {
-		           String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Delete_Script.txt";
-		           Report.logInfo("File :" +file);
-		           Report.logInfo("Pack :" +isPackageInstance());
-		           apex.runApexCodeFromFile(file, isPackageInstance());
-		          // isEventCreateScriptExecuted = true;
-		       } catch (Exception e) {
-		           Report.logInfo(e.getLocalizedMessage());
-		       }
-		   
 		basepage.logout();
 		
 		
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
