@@ -25,7 +25,7 @@ public class Customer360FeaturesTests extends BaseTest {
 		Report.logInfo("Starting Customer 360 Features module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Features module Test Cases...");
-		apex.runApexCodeFromFile(
+		apex.runApexCodeFromFile( System.getProperty("user.dir")+
 				"apex_scripts/Features/features.apex",
 				isPackageInstance());
 		basepage.login();
