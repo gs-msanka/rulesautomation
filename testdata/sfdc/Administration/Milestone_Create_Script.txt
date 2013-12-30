@@ -1,0 +1,15 @@
+List<JBCXM__PickList__c> milestonelist = new List<JBCXM__PickList__c>();
+
+JBCXM__PickList__c dummy = null;
+
+for(integer i=0 ; i<2 ; i++ )
+{
+    dummy = new JBCXM__PickList__c (  Name = 'milestone'+i ,
+									  JBCXM__DisplayOrder__c = +i ,
+									  JBCXM__SystemName__c = 'sys'+i ,
+									  JBCXM__Attribute1__c = '#FF0000' ,
+									  JBCXM__Active__c = true ,
+									  JBCXM__Category__c = 'Milestones' ) ;
+milestonelist.add(dummy);
+}
+insert milestonelist ;
