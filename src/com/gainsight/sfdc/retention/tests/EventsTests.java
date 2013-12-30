@@ -33,7 +33,6 @@ public class EventsTests extends BaseTest {
     public void setUp() {
         basepage.login();
         userLocale           = soql.getUserLocale();
-
         try{
             if(!isPackageInstance()) {
                 deleteScript = removeNameSpace(deleteScript);
