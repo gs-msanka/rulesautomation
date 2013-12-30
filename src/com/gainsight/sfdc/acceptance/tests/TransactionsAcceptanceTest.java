@@ -31,8 +31,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	public void setUp() throws Exception {
 		try {
 			Report.logInfo("Starting Acceptance Test Case...");
-			apex.runApexCodeFromFile(
-					"apex_scripts/acceptance_tests/transactions.apex",
+			apex.runApexCodeFromFile(env.basedir+
+					"/apex_scripts/acceptance_tests/transactions.apex",
 					isPackageInstance());
 			basepage.login();
 			loggedIn = true;
