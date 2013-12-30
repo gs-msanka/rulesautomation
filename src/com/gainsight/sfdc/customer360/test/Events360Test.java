@@ -30,7 +30,7 @@ public class Events360Test extends BaseTest {
     String RECORDS_DELETE = "SELECT id FROM JBCXM__CSEvent__c " +
             "WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
     String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
-    String playbookScriptfile = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String playbookScriptfile = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
 
     @BeforeClass
     public void setUp() {
