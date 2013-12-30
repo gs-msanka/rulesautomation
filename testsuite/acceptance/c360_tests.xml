@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Automation Project" preserve-order="true">
+
+	<listeners>
+		<listener class-name="com.gainsight.utils.AutTestListener" />
+	</listeners>
+	
+	<test verbose="3" name="C360 Tests" preserve-order="true">
+		<classes>
+			<!--Srividya's Tests -->
+			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
+			<class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
+          
+		</classes>
+	</test>
+</suite>
