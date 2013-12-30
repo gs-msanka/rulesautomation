@@ -97,7 +97,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	
 	 public void createMilestoneFromScript() {
 	       try {
-	           String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Create_Script.txt";
+	           String file = env.basedir+"/testdata/sfdc/Administration/Milestone_Create_Script.txt";
 	           Report.logInfo("File :" +file);
 	           Report.logInfo("Pack :" +isPackageInstance());
 	           apex.runApexCodeFromFile(file, isPackageInstance());
@@ -110,11 +110,11 @@ public class AdminMilestoneTabTest extends BaseTest {
 	 
 	 public void deleteMilestoneFromScript() {
      try {
-         String file = System.getProperty("user.dir")+"/testdata/sfdc/Administration/Milestone_Delete_Script.txt";
-         Report.logInfo("File :" +file);
-         Report.logInfo("Pack :" +isPackageInstance());
-         apex.runApexCodeFromFile(file, isPackageInstance());
-        // isEventCreateScriptExecuted = true;
+        String DELETERECORDS = "select id from JBCXM__PickList__c where JBCXM__Category__c = 'Milestones'";
+        if(!isPackageInstance()) {
+            DELETERECORDS = removeNameSpace(DELETERECORDS);
+        }
+        soql.deleteQuery(DELETERECORDS);
      } catch (Exception e) {
          Report.logInfo(e.getLocalizedMessage());
      }
