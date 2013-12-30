@@ -21,12 +21,16 @@ public class PlaybooksTests extends BaseTest {
     String[] dirs = { "playbooktests" };
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
+    String DELETE_RECORDS = "SELECT ID FROM JBCXM__Playbook__c";
+
     @BeforeClass
     public void setUp() {
         Report.logInfo("Starting Playbook Test Case...");
         basepage.login();
-        Date date = new Date();
-        System.out.println("Playbook Test Start Time :"+date );
+        if(!isPackageInstance()) {
+            DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
+        }
+        soql.deleteQuery(DELETE_RECORDS);
     }
 
     @Test
@@ -184,8 +188,6 @@ public class PlaybooksTests extends BaseTest {
 
     @AfterClass
     public void tearDown(){
-        Date date = new Date();
-        System.out.println("Playbook Test Finished Time :"+date );
         basepage.logout();
 
     }

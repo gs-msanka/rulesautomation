@@ -24,7 +24,7 @@ public class EventsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isEventCreateScriptExecuted = false;
     String userLocale = "en_IN";
-    String deleteScript = "List<JBCXM__CSEvent__c> csList = [SELECT Id FROM JBCXM__CSEvent__c]; Delete csList;";
+    String deleteScript = "SELECT Id FROM JBCXM__CSEvent__c";
     @BeforeClass
     public void setUp() {
         basepage.login();
@@ -34,9 +34,9 @@ public class EventsTests extends BaseTest {
             if(!isPackageInstance()) {
                 deleteScript = removeNameSpace(deleteScript);
             }
-            apex.runApex(deleteScript);
-            file = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-            String userupdate = System.getProperty("user.dir")+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+            soql.deleteQuery(deleteScript);
+            file = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+            String userupdate = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
             apex.runApexCodeFromFile(file, isPackageInstance());
             apex.runApexCodeFromFile(userupdate);
 

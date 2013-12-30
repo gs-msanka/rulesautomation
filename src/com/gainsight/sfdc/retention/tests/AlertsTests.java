@@ -25,15 +25,15 @@ public class AlertsTests extends BaseTest {
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
     String userLocale = "en_IN";
-
+    String DELETE_RECORDS = "SELECT ID FROM JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
         basepage.login();
-        String script = "List<JBCXM__Alert__c> alertsList = [SELECT ID FROM JBCXM__Alert__c]; DELETE alertsList;";
+
         if(!isPackageInstance()) {
-            script = removeNameSpace(script);
+            DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
         }
-        apex.runApex(script);
+        soql.deleteQuery(DELETE_RECORDS);
         userLocale = soql.getUserLocale();
     }
 
