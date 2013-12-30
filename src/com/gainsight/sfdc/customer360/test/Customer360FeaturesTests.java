@@ -19,13 +19,14 @@ public class Customer360FeaturesTests extends BaseTest {
 	Customer360Page cp;
 	Customer360Features cf;
 	final String TEST_DATA_FILE = "testdata/sfdc/Features/FeaturesTests.xls";
+	final String CURRENT_DIR=System.getProperty("user.dir");
 
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Features module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Features module Test Cases...");
-		apex.runApexCodeFromFile( System.getProperty("user.dir")+
+		apex.runApexCodeFromFile(CURRENT_DIR +
 				"/apex_scripts/Features/features.apex",
 				isPackageInstance());
 		basepage.login();
