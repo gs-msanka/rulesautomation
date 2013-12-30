@@ -17,13 +17,15 @@ public class Customer360MilestonesTests extends BaseTest {
 	Customer360Page cp;
 	Customer360Milestones cm;
 	final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
+	final String CURRENT_DIR = System.getProperty("user.dir");
 
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Milestones module Test Cases...");
-		apex.runApexCodeFromFile( System.getProperty("user.dir")+"/apex_scripts/Milestones/Milestones.apex",
+		apex.runApexCodeFromFile(CURRENT_DIR
+				+ "/apex_scripts/Milestones/Milestones.apex",
 				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
@@ -32,10 +34,10 @@ public class Customer360MilestonesTests extends BaseTest {
 		cm.gotoMilestonesSubtab();
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel" , priority =1)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-		
+
 		HashMap<String, String> MsHeaders = getMapFromData(testData
 				.get("Headers"));
 
@@ -46,7 +48,8 @@ public class Customer360MilestonesTests extends BaseTest {
 			for (int h = 1; h <= MsHeaders.size(); h++) {
 				System.out.println("Checking for---"
 						+ MsHeaders.get("Column" + h));
-				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column" + h)));
+				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"
+						+ h)));
 			}
 		}
 
@@ -65,17 +68,21 @@ public class Customer360MilestonesTests extends BaseTest {
 
 				// check if all the data is present as per the test input
 				Assert.assertTrue(cm.checkMilestoneDate(MsData.get("Date"), i));
-				Assert.assertTrue(cm.checkMilestoneColor(MsData.get("MilestoneColor"), i));
-				Assert.assertTrue(cm.checkMilestoneName(MsData.get("Milestone"), i));
-				Assert.assertTrue(cm.checkMilestoneOpportunity(MsData.get("Opportunity"), i));
-				Assert.assertTrue(cm.checkMilestoneComments(MsData.get("Comments"), i));
-				
+				Assert.assertTrue(cm.checkMilestoneColor(
+						MsData.get("MilestoneColor"), i));
+				Assert.assertTrue(cm.checkMilestoneName(
+						MsData.get("Milestone"), i));
+				Assert.assertTrue(cm.checkMilestoneOpportunity(
+						MsData.get("Opportunity"), i));
+				Assert.assertTrue(cm.checkMilestoneComments(
+						MsData.get("Comments"), i));
+
 			}
 		}
 
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel" , priority=2)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyAddMilestones(HashMap<String, String> testData) {
 
@@ -93,14 +100,17 @@ public class Customer360MilestonesTests extends BaseTest {
 		cm.isMsTableDataPresent();
 
 		Assert.assertTrue(cm.checkMilestoneDate(MsList.get("Date"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"),
+				MsNum));
 		Assert.assertTrue(cm.checkMilestoneName(MsList.get("Milestone"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneOpportunity(MsList.get("Opportunity"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneOpportunity(
+				MsList.get("Opportunity"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"),
+				MsNum));
 
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel" ,priority=3)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 3)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyEditMilestones(HashMap<String, String> testData) {
 		String MsName = "M6";
@@ -117,10 +127,13 @@ public class Customer360MilestonesTests extends BaseTest {
 		cm.isMsTableDataPresent();
 
 		Assert.assertTrue(cm.checkMilestoneDate(MsList.get("Date"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"),
+				MsNum));
 		Assert.assertTrue(cm.checkMilestoneName(MsList.get("Milestone"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneOpportunity(MsList.get("Opportunity"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneOpportunity(
+				MsList.get("Opportunity"), MsNum));
+		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"),
+				MsNum));
 
 	}
 
@@ -133,19 +146,17 @@ public class Customer360MilestonesTests extends BaseTest {
 		cm.isMsTableDataPresent();
 		Assert.assertTrue(cm.isRowPresentAfterDelete(MsNum));
 	}
-	
-	
+
 	@Test(priority = 5)
-	public void verifyNoMilestonesMessage(){
-		//Assuming there are 4 milestones left in the page
-		int MsNum=4;
-		for(int i =1;i<= MsNum;i++)
-		{
+	public void verifyNoMilestonesMessage() {
+		// Assuming there are 4 milestones left in the page
+		int MsNum = 4;
+		for (int i = 1; i <= MsNum; i++) {
 			cm.clickOnDeleteMilestone(1);
 		}
 		Assert.assertTrue(cm.isNoMilestoneMessagePresent());
 	}
-	
+
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();
