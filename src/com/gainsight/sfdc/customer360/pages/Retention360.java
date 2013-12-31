@@ -125,8 +125,7 @@ public class Retention360 extends Customer360Page {
     public boolean isEventCardDisplayed(HashMap<String, String> testData) {
         boolean result = false;
         for(int i =0; i < 2; ++i) {
-            List<WebElement> eventList = element.getAllElement(buildeventXpath(testData));
-            if(eventList!= null & eventList.size() > 0 ) {
+            if(item.isElementPresent(buildeventXpath(testData))) {
                 result = true;
                 break;
             } else {
@@ -248,28 +247,61 @@ public class Retention360 extends Customer360Page {
         element.switchToMainWindow();
     }
 
-
-    public boolean isAlertDisplayed(HashMap<String, String> alertData, AlertCardLabel alertCardLabel) {
-        String a = aPage.buildAlertXpath(alertCardLabel, alertData);
-        Report.logInfo("Alert Xpath :" +a);
-
-        return false;
+    public void updateAlert(HashMap<String, String> alertData, HashMap<String, String> updatedAlertData, AlertCardLabel alabel) {
+        String alertXpath = buildAlertXpath(alertData, alabel);
+        String alertEditIcon = alertXpath+"/div[@class='edit_icon card_data_click' and @title='Edit']";
+        item.click(alertEditIcon);
+        movetoActiveIframe();
+        aPage.fillAlertForm(updatedAlertData, false);
+        aPage.clickOnEditAlertClose();
+        element.switchToMainWindow();
     }
 
-    private String buildAlertXpath(HashMap<String, String> alertData) {
-        String xPath  = "//div[@class='data_label' and contains(text(),'Alert ASV')]/following-sibling::div[@class='data_value' and contains(text(),'200')]" +
-                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
-                "/div[@class='data_label' and contains(text(),'Reason')]/following-sibling::div[@class='data_value' and contains(text(),'Product Issue')]" +
-                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
-                "/div[@class='data_label' and contains(text(),'Type')]/following-sibling::div[@class='data_value' and contains(text(),'Downsell')]" +
-                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
-                "/div[contains(@class, 'data_label') and contains(text(),'Severity')]/following-sibling::div[@class='data_value' and contains(text(),'High')]" +
-                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
-                "/div[@class='data_label' and contains(text(),'Status')]/following-sibling::div[@class='data_value' and contains(text(),'Active')]" +
 
-                "/parent::div[@class='card_data card_data_click']/preceding-sibling::div[@class='alert_title card_data_click' and contains(text(), 'This is the first')]" +
-                "/parent::div[@class='alert_card']";
-        return null;
+    public boolean isAlertDisplayed(HashMap<String, String> alertData, AlertCardLabel alertCardLabel) {
+        boolean result = false;
+        String alert = buildAlertXpath(alertData, alertCardLabel);
+        if(item.isElementPresent(alert)) {
+            result = true;
+            Report.logInfo("Alert Found");
+        } else {
+            Report.logInfo("Alert Not Found");
+        }
+        return result;
+    }
+
+    private String buildAlertXpath(HashMap<String, String> alertData, AlertCardLabel alabel) {
+        String  xPath = "//";
+        if(alabel.getLabel5() != null && alabel.getLabel5() != "") {
+            xPath += "div[@class='data_label' and contains(text(),'"+alabel.getLabel5()+"')]/following-sibling::div[@class='data_value' and contains(text(),'"+alertData.get(alabel.getLabel5())+"')]" +
+                    "/parent::div/preceding-sibling::div[@class='card_data card_data_click']";
+        }
+        if(alabel.getLabel4() != null && alabel.getLabel5() != "") {
+            xPath += "/div[@class='data_label' and contains(text(),'"+alabel.getLabel4()+"')]/following-sibling::div[@class='data_value' and contains(text(),'"+alertData.get(alabel.getLabel4())+"')]" +
+                    "/parent::div/preceding-sibling::div[@class='card_data card_data_click']";
+        }
+        if(alabel.getLabel3() != null && alabel.getLabel3() != "") {
+            xPath += "/div[@class='data_label' and contains(text(),'"+alabel.getLabel3()+"')]/following-sibling::div[@class='data_value' and contains(text(),'"+alertData.get(alabel.getLabel3())+"')]" +
+                    "/parent::div/preceding-sibling::div[@class='card_data card_data_click']";
+        }
+        if(alabel.getLabel2() != null && alabel.getLabel2() != "") {
+            xPath +="/div[contains(@class, 'data_label') and contains(text(),'"+alabel.getLabel2()+"')]/following-sibling::div[@class='data_value' and contains(text(),'"+alertData.get(alabel.getLabel2())+"')]" +
+                    "/parent::div/preceding-sibling::div[@class='card_data card_data_click']";
+        }
+        if(alabel.getLabel1() != null && alabel.getLabel1() != "") {
+            xPath += "/div[@class='data_label' and contains(text(),'"+alabel.getLabel1()+"')]/following-sibling::div[@class='data_value' and contains(text(),'"+alertData.get(alabel.getLabel1())+"')]";
+        }
+        xPath += "/parent::div[@class='card_data card_data_click']/preceding-sibling::div[@class='alert_title card_data_click' and contains(text(), '"+alertData.get("subject")+"')]";
+        xPath += "/parent::div[@class='alert_card']";
+        Report.logInfo("Alert Xpath :" +xPath);
+        return xPath;
+    }
+
+    public void deleteAlert(HashMap<String, String> alertData, AlertCardLabel alabel) {
+        String alertXpath = buildAlertXpath(alertData, alabel);
+        String deleteIcon = alertXpath+"/div[@class='delete_icon_btn' and @title='Delete']";
+        item.click(deleteIcon);
+        modal.accept();
     }
 
 
