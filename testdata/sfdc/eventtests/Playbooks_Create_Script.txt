@@ -5,10 +5,10 @@ JBCXM__Playbook__c playbook;
 JBCXM__PlaybookTasks__c playbooktask;
 for(String pbName : pbNames) {
     playbook = new JBCXM__Playbook__c(	Name = pbName,
-    									Active__c = true,
-                                      Description__c = 'This playbook need to be applied on customer on boarding.',
-                                      Tasks_Count__c = 5,
-                                      Type__c = 'All');
+    									JBCXM__Active__c = true,
+                                      JBCXM__Description__c = 'This playbook need to be applied on customer on boarding.',
+                                      JBCXM__Tasks_Count__c = 5,
+                                      JBCXM__Type__c = 'All');
     playbookList.add(playbook);                                      
 }
 insert playbookList;
@@ -20,9 +20,9 @@ List<String> taskList = new List<String>{'[{"fieldName":"Assigned__c","objectNam
 
 integer i =1;
 for(String taskStr : taskList) {
-	playbooktask = new JBCXM__PlaybookTasks__c(DisplayOrder__c = i,
-												PlaybookId__c = playbookList.get(0).Id,
-												TaskJSON__c = taskStr);
+	playbooktask = new JBCXM__PlaybookTasks__c(JBCXM__DisplayOrder__c = i,
+												JBCXM__PlaybookId__c = playbookList.get(0).Id,
+												JBCXM__TaskJSON__c = taskStr);
 	playbookTaskList.add(playbooktask);
 }
 insert playbookTaskList;	
