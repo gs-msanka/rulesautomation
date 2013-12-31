@@ -19,11 +19,13 @@ public class Customer360Page extends BasePage {
 	private final String SUMMARY_NUM_FIELDS = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
 	private final String SUMMARY_STR_FIELDS = "//div[@class='gs_summary_details']//li[contains(.,'%s')]/span";
 	private final String ADD_TRAN = "//a[text()='Add Transaction']";
-	private final String TRANSACTION_FRAME = "//iframe";
+	private final String TRANSACTION_FRAME = "//iframe[contains(@src,'TransactionForm')]";
     private final String CUST_SERCHBY_SELECT    = "//select[@class='gs_filterOptions']";
     private final String SEARCH_ICON            = "//div[@class='search_input_btn']";
     private final String CUST_SELECT_LIST       = "//li[@class='ui-menu-item' and @role = 'presentation']";
     private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
+    private final String DEBOOK_TRN_CONFIRM     = "//div[@class='gs_tsn_confirmation']";
+    private final String DEBOOK_OK_BTN	="//div[@class='modal-footer']/a[text()='Ok']";
 
 	public Customer360Page() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -135,8 +137,8 @@ public class Customer360Page extends BasePage {
 	public Customer360Page addDebookTransaction(HashMap<String, String> dbData) {
 		transInit();
 		transactionUtil.addDebookTransaction(dbData);
-		if(modal.exists()){
-			modal.accept();
+		if(item.isElementPresent(DEBOOK_TRN_CONFIRM)){
+			item.click(DEBOOK_OK_BTN);
 		}
 		transFini();
 		return this;
