@@ -33,6 +33,7 @@ public class AlertsPage extends RetentionBasePage {
     String COMMENT_INPUT            = "jbaraAlertCmtInput";
     String ALERT_SAVE_ADD_TASK_BUTTON = "saveAlertAndAddTaskIdBtn";
     String ALERT_SAVE_CLOSE         = "saveAlertAndCloseIdBtn";
+    String ALERT_EDIT_SAVE_CLOSE    = "editAndCloseAlertBtn";
     String ALERT_FORM_CLOSE         = "//span[@title='Close']";
     String ALERT_FORM_EDIT_ALERT_DETAILS = "//span[@class='dummyEditAlertInfoIconCls']";
     String ADD_PLAYBOOK_BUTTON      = "//input[@class='dummyAddPBText dummyETAddText btn']";
@@ -80,6 +81,9 @@ public class AlertsPage extends RetentionBasePage {
     public void clickOnSaveAlert() {
         item.click(ALERT_SAVE_CLOSE);
     }
+    public void clickOnEditAlertClose() {
+        item.click(ALERT_EDIT_SAVE_CLOSE);
+    }
 
     //customer , asv, date, subject, severity, type, reason, status, comment
     public void fillAlertForm(HashMap<String, String> alertData, boolean isCustomerReq) {
@@ -96,6 +100,7 @@ public class AlertsPage extends RetentionBasePage {
             field.clearAndSetText(DATE_INPUT, alertData.get("date"));
         }
         if(alertData.get("asv") != null) {
+            amtDateUtil.stalePause();
             field.clearAndSetText(ASV_INPUT, alertData.get("asv"));
         }
         if(alertData.get("type") != null) {
