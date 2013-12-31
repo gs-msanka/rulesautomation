@@ -18,7 +18,7 @@ appSettings.JBCXM__NPSAssociatedObjectDisplayName__c  = 'Opportunity';
 appSettings.JBCXM__NPSAssociated__c = true;
 appSettings.JBCXM__MilestoneAssociated__c = true;
 appSettings.JBCXM__AlertAssociated__c = true;
-update pList;
+update appSettings;
 
 List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
 
@@ -30,6 +30,7 @@ Opportunity opp = new Opportunity(name ='Via Systems - new business',
 									CloseDate = date.today(),
 									AccountId = accList.get(0).Id);
 insert opp;
+
 List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Via Systems - new business' LIMIT 1];
 
 List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where Name like 'Onboarding'];
