@@ -17,6 +17,7 @@ delete ids.get(0);
 List<Account> accounts=[select id from Account where name like '%Acceptance Test%'];
 if (! accounts.isEmpty()){
     delete accounts;
+    }
     List<Account> accList = new List<Account>();
 for(integer i=1; i<25 ; i++) {
    Account acc = new Account(Name ='Acceptance Test Account ' +i);
