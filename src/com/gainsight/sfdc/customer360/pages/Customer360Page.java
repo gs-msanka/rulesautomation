@@ -1,6 +1,8 @@
 package com.gainsight.sfdc.customer360.pages;
 
 import java.util.HashMap;
+
+import com.gainsight.pageobject.core.Report;
 import org.openqa.selenium.By;
 import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
@@ -27,10 +29,20 @@ public class Customer360Page extends BasePage {
     private final String DEBOOK_TRN_CONFIRM     = "//div[@class='gs_tsn_confirmation']";
     private final String DEBOOK_OK_BTN	="//div[@class='modal-footer']/a[text()='Ok']";
 
+    private static final String RETENTION_SECTION_TAB   = "//div[@class='gs_section_title']/h1[text()='Retention']";
+    private static final String ALERT_SECTION_TAB= "//ul[@class='alert_tab_nav']/li/a[text()='Alert']";
+    private static final String EVENT_SECTION_TAB   = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
+    private static final String LOADING_EVENTS_IMG  = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
+    private static final String LOADING_ALERTS_IMG  = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
+
 	public Customer360Page() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 		// wait.waitTillElementNotPresent(LOADING_IMAGES, MIN_TIME, MAX_TIME);
 	}
+
+    public Customer360Page(String val) {
+        Report.logInfo("Sample");
+    }
 
 	public CustomerSummary getSummaryDetails() {
 		CustomerSummary summary = new CustomerSummary();
@@ -84,13 +96,12 @@ public class Customer360Page extends BasePage {
                 try {
                     wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
 					driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
-                    //item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
                     break;
                 } catch(NotFoundException e ) {
                     item.click(SEARCH_ICON);
                     wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
                 }
-                item.click("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]");
+                driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
                 break;
             } catch (Exception globalException) {
                 refreshPage();
@@ -109,6 +120,18 @@ public class Customer360Page extends BasePage {
 		String xpath = getXpathForTimeLineItem(lineItem);
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
+
+    public Retention360 clickOnRetEventsSec() {
+        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
+        item.click(EVENT_SECTION_TAB);
+        return new Retention360("Events Page");
+    }
+
+    public Retention360 clickOnRetAlertsSec() {
+        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
+        item.click(ALERT_SECTION_TAB);
+        return new Retention360("Alerts Page");
+    }
 
 	public Customer360Page addNewBusinessTransaction(
 			HashMap<String, String> nbData) {

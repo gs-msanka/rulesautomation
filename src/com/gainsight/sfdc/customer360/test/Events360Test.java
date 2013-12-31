@@ -22,39 +22,23 @@ public class Events360Test extends BaseTest {
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
     private final String TEST_DATA_FILE = "testdata/sfdc/eventtests/Events_360_Tests.xls";
-    String customerName = "Galbreath Co";
-    Customer360Page c360Page;
-    Retention360 ret;
 
-
-    String RECORDS_DELETE = "SELECT id FROM JBCXM__CSEvent__c " +
-            "WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
-    String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
     String playbookScriptfile = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
 
     @BeforeClass
     public void setUp() {
         basepage.login();
-        c360Page    = basepage.clickOnC360Tab().searchCustomer(customerName, true);
-        ret         = new Retention360("Events Page");
-        if(!isPackageInstance()) {
-            RECORDS_DELETE = removeNameSpace(RECORDS_DELETE);
-            deletPlaybookScript = removeNameSpace(deletPlaybookScript);
-        }
-        soql.deleteQuery(RECORDS_DELETE);
-        soql.deleteQuery(deletPlaybookScript);
         apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_1")
     public void addEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("customer", customerName);
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         taskData.put("date", getDatewithFormat(0));
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -63,12 +47,12 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_2")
     public void changeEventStatus(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         ret.changeEventStatus(eventData, "In Progress");
@@ -78,12 +62,12 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_3")
     public void deleteEvent( HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date",getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         ret.changeEventStatus(eventData, "Open");
@@ -95,12 +79,12 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_4")
     public void addTasksToEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         ret.openEventCard(eventData);
@@ -127,13 +111,13 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_5")
     public void addTasksToEventFromPlaybook(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         String pName = testData.get("playbook");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         ret.openEventCard(eventData);
@@ -160,26 +144,26 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_6")
     public void addRecurringEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+testData.get("customer")+"'";
         if(!isPackageInstance()) {
             script = removeNameSpace(script);
         }
         soql.deleteQuery(script);
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(5));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         eventData.put("date", getDatewithFormat(2));
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         eventData.put("date", getDatewithFormat(4));
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+customerName+
+        String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+testData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount = getQueryRecordCount(query);
@@ -189,19 +173,19 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_7")
     public void infoMessageVerification(HashMap<String, String> testData) throws IOException, BiffException {
-        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+testData.get("customer")+"'";
         if(!isPackageInstance()) {
             script = removeNameSpace(script);
         }
         soql.deleteQuery(script);
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(70));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         Assert.assertTrue(ret.isInfoMessageDisplayed(), "Checking the information message displayed");
         ret.addEvent(eventData, taskData);
         ret.deleteAllEvents();
@@ -211,14 +195,14 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_8")
     public void editEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        ret.refreshPage();
-        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         HashMap<String, String> updateEventData   = getMapFromData(testData.get("updateeventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         updateEventData.put("schedule", getDatewithFormat(3));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         ret.openEventCard(eventData);

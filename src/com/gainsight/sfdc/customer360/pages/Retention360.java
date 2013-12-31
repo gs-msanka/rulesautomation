@@ -12,47 +12,28 @@ import java.util.List;
 
 public class Retention360 extends Customer360Page {
 
-    private static final String ADD_EVENT_BUTTON = "//div[@class='gs_edit_icon']/a[text()='Add Event']";
-    private static final String ADD_ALERT_BUTTON = "//div[@class='gs_edit_icon']/a[text()='Add Alert']";
-    private static final String READY_INDICATOR = "//div[@class='gs_section_title']/h1[text()='Retention']";
-    String EVENT_STATUS_OPEN_RADIO = "//input[@class='ga_eventstatusFldCls' and @value='Open']";
-    String EVENT_STATUS_INPROGRESS_RADIO = "//input[@class='ga_eventstatusFldCls' and @value='In Progress']";
-    String EVENT_STATUS_COMPLETE_RADIO = "//input[@class='ga_eventstatusFldCls' and @value='Complete']";
-    String ALERT_SECTION_TAB = "//ul[@class='alert_tab_nav']/li/a[text()='Alert']";
-    String EVENT_SECTION_TAB = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
-    String LOADING_EVENTS_IMG = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
-    String LOADING_ALERTS_IMG = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
+    private static final String ADD_EVENT_BUTTON                = "//div[@class='gs_edit_icon']/a[text()='Add Event']";
+    private static final String ADD_ALERT_BUTTON                = "//div[@class='gs_edit_icon']/a[text()='Add Alert']";
+    private static final String EVENT_STATUS_OPEN_RADIO         = "//input[@class='ga_eventstatusFldCls' and @value='Open']";
+    private static final String EVENT_STATUS_INPROGRESS_RADIO   = "//input[@class='ga_eventstatusFldCls' and @value='In Progress']";
+    private static final String EVENT_STATUS_COMPLETE_RADIO     = "//input[@class='ga_eventstatusFldCls' and @value='Complete']";
+    private static final String ALERT_SECTION_TAB               = "//ul[@class='alert_tab_nav']/li/a[text()='Alert']";
+    private static final String EVENT_SECTION_TAB               = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
+    private static final String LOADING_EVENTS_IMG              = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
+    private static final String LOADING_ALERTS_IMG              = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
     EventsPage ePage;
     AlertsPage aPage;
 
     public Retention360(String val) {
-        wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
         if(val != null && val.contains("Events Page")) {
             ePage = new EventsPage("360 Page");
+            wait.waitTillElementDisplayed(ADD_EVENT_BUTTON, MAX_TIME, MIN_TIME);
+            wait.waitTillElementNotPresent(LOADING_EVENTS_IMG, MIN_TIME, MAX_TIME);
         } else if(val != null && val.contains("Alerts Page")) {
             aPage = new AlertsPage("360 Page");
+            wait.waitTillElementDisplayed(ADD_ALERT_BUTTON, MAX_TIME, MIN_TIME);
+            wait.waitTillElementNotPresent(LOADING_ALERTS_IMG, MIN_TIME, MAX_TIME);
         }
-    }
-
-    public void clickOnAlertSubTab() {
-        wait.waitTillElementDisplayed(ALERT_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(ALERT_SECTION_TAB);
-        wait.waitTillElementNotPresent(LOADING_ALERTS_IMG, MIN_TIME, MAX_TIME);
-    }
-
-    public void clickOnEventSubTab() {
-        wait.waitTillElementDisplayed(EVENT_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(EVENT_SECTION_TAB);
-        wait.waitTillElementNotPresent(LOADING_EVENTS_IMG, MIN_TIME, MAX_TIME);
-    }
-
-    public int getlistofIframes() {
-        List<WebElement> wEleList = driver.findElements(By.tagName("iframe"));
-        int a =0;
-        if(wEleList  !=null) {
-            a = wEleList.size();
-        }
-        return a;
     }
 
     private void movetoActiveIframe() {
@@ -66,7 +47,6 @@ public class Retention360 extends Customer360Page {
     }
 
     public void addEvent(HashMap<String, String> eventData, HashMap<String, String> taskData) {
-        clickOnEventSubTab();
         item.click(ADD_EVENT_BUTTON);
         movetoActiveIframe();
         fillEventForm(eventData);
@@ -252,11 +232,11 @@ public class Retention360 extends Customer360Page {
         String alertEditIcon = alertXpath+"/div[@class='edit_icon card_data_click' and @title='Edit']";
         item.click(alertEditIcon);
         movetoActiveIframe();
+        aPage.waitTillAlertCardLoaded();
         aPage.fillAlertForm(updatedAlertData, false);
         aPage.clickOnEditAlertClose();
         element.switchToMainWindow();
     }
-
 
     public boolean isAlertDisplayed(HashMap<String, String> alertData, AlertCardLabel alertCardLabel) {
         boolean result = false;

@@ -1,3 +1,7 @@
+List<JBCXM__CSEvent__c> evL = [SELECT ID FROM JBCXM__CSEvent__c];
+Delete evL;
+List<JBCXM__Playbook__c> pnSL = [SELECT ID FROM JBCXM__Playbook__c];
+Delete pnSL;
 List<JBCXM__Playbook__c> playbookList = new List<JBCXM__Playbook__c>();
 List<JBCXM__PlaybookTasks__c> playbookTaskList = new List<JBCXM__PlaybookTasks__c>();
 List<String> pbNames = new List<String>{'New Customer On-boarding'};

@@ -25,15 +25,22 @@ import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
  * 
  */
 public class BasePage extends WebPage implements Constants {
-	private final String READY_INDICATOR = "//div[@id='userNavButton']";
-	private final String OPPORTUNITIES_TAB = "//img[@title='Opportunities']";
-	private final String ALL_TABS = "//img[@title='All Tabs']";
-	private final String ACCOUNTS_TAB = "//a[@title='Accounts Tab']";
-	private final String DEFAULT_APP_RADIO = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
-	private final String TAB_SELECT = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
-	private final String C360_TAB = "//a[contains(@title,'Customer Success 360 Tab')]";
-	public Transactions transactionUtil = new Transactions();
-	public AmountsAndDatesUtil amtDateUtil = new AmountsAndDatesUtil();
+	private final String READY_INDICATOR    = "//div[@id='userNavButton']";
+	private final String OPPORTUNITIES_TAB  = "//img[@title='Opportunities']";
+	private final String ALL_TABS           = "//img[@title='All Tabs']";
+	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
+	private final String DEFAULT_APP_RADIO  = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
+	private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
+	private final String C360_TAB           = "//a[contains(@title,'Customer Success 360')]";
+    private final String CUSTOMER_TAB       = "//a[contains(@title,'Customers Tab')]";
+    private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
+    private final String RETENTION_TAB      = "//a[contains(@title, 'Retention Tab')]";
+    private final String CHURN_TAB          = "//a[contains(@title,'Churn Tab')]";
+    private final String ADOPTION_TAB       = "//a[contains(@title,'Adoption Tab')]";
+    private final String SUREVEY_TAB        = "//a[contains(text(),'Survey')]";
+    private final String ADMINISTRATION_TAB = "//a[contains(@title,'Administration')]";
+    public Transactions transactionUtil     = new Transactions();
+	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
@@ -70,32 +77,32 @@ public class BasePage extends WebPage implements Constants {
 
 	// Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab() {
-		item.click("//a[contains(@title,'Customers Tab')]");
+		item.click(CUSTOMER_TAB);
 		return new CustomerBasePage();
 	}
 
 	public TransactionsBasePage clickOnTransactionTab() {
-		item.click("//a[contains(@title,'Transactions Tab')]");
+		item.click(TRANSACTIONS_TAB);
 		return new TransactionsBasePage();
 	}
 
 	public AdoptionBasePage clickOnAdoptionTab() {
-		item.click("//a[contains(@title,'Adoption Tab')]");
+		item.click(ADOPTION_TAB);
 		return new AdoptionBasePage();
 	}
 
     public RetentionBasePage clickOnRetentionTab() {
-        item.click("//a[contains(@title, 'Retention Tab')]");
+        item.click(RETENTION_TAB);
         return new RetentionBasePage();
     }
 
 	public SurveyBasePage clickOnSurveyTab() {
-		item.click("//a[contains(text(),'Survey')]");
+		item.click(SUREVEY_TAB);
 		return new SurveyBasePage();
 	}
 
 	public ChurnPage clickOnChurnTab() {
-		item.click("//a[contains(@title,'Churn Tab')]");
+		item.click(CHURN_TAB);
 		return new ChurnPage();
 	}
 	public Customer360Page clickOnC360Tab() {
@@ -116,7 +123,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public AdministrationBasepage clickOnAdminTab() {
-		item.click("//a[contains(@title,'Administration')]");
+		item.click(ADMINISTRATION_TAB);
 		return new AdministrationBasepage();
 	}
 

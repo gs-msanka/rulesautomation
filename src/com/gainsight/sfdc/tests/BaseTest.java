@@ -26,7 +26,7 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
-    String userLocale  = "en_IN";
+    public String userLocale;
 
 	@BeforeSuite
 	public void init() throws Exception {
@@ -38,6 +38,7 @@ public class BaseTest {
 			env.launchBrower();
 			basepage = new BasePage();
             userLocale = soql.getUserLocale();
+            Report.logInfo("User Locale : " +userLocale);
 			Report.logInfo("Initializing Base Page : " + basepage);
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();

@@ -12,51 +12,51 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AlertsPage extends RetentionBasePage {
-	private final String READY_INDICATOR = "//select[@class='jbaraDummyAlertUIViewsSelectControl']";
-    String ADD_ALERT_BUTTON         = "//a[contains(text(), 'Add Alert')]";
-    String SHOW_FILTER_IMG          = "//img[@title='Show filters']";
-    String HIDE_FILTER_IMG          = "//img[@title='Hide filters']";
-    String FILTER_SECTION_BUTTON    = "filter-section";
-    String EXPORT_BUTTON            = "//div[@class='export-btn btn']";
-    String LIST_VIEW_IMG            = "//img[@title='List view']";
-    String CARD_VIEW_IMG            = "//img[@title='Card view']";
-    String ANALYTICS_VIEW_IMG       = "//img[@title='Analytics view']";
-    String CUST_NAME_INPUT          = "//input[contains(@class,'custComponentIdjbaraDummyCustomerName customer-name-text')]";
-    String CUST_LOOKUP_SERCH_IMG    = "//img[@title='Customer Name Lookup']";
-    String SUBJECT_INPUT            = "jbaraAlertSubjectInput";
-    String SEVERITY_SELECT          = "//select[@class='entry-severity-select jbaraAlertSelectInput jbaraAlertSeverityInput']";
-    String DATE_INPUT               = "jbaraAlertDateInput";
-    String ASV_INPUT                = "jbaraAlertASVInput";
-    String TYPE_SELECT              = "//select[@class='entry-type-select jbaraAlertSelectInput jbaraAlertTypeInput']";
-    String REASON_SELECT            = "//select[@class='entry-reason-select jbaraAlertSelectInput jbaraAlertReasonInput']";
-    String STATUS_SELECT            = "//select[@class='entry-status-select jbaraAlertSelectInput jbaraAlertStatusInput']";
-    String COMMENT_INPUT            = "jbaraAlertCmtInput";
-    String ALERT_SAVE_ADD_TASK_BUTTON = "saveAlertAndAddTaskIdBtn";
-    String ALERT_SAVE_CLOSE         = "saveAlertAndCloseIdBtn";
-    String ALERT_EDIT_SAVE_CLOSE    = "editAndCloseAlertBtn";
-    String ALERT_FORM_CLOSE         = "//span[@title='Close']";
-    String ALERT_FORM_EDIT_ALERT_DETAILS = "//span[@class='dummyEditAlertInfoIconCls']";
-    String ADD_PLAYBOOK_BUTTON      = "//input[@class='dummyAddPBText dummyETAddText btn']";
-    String ADD_TASK_BUTTON          = "//input[@class='dummyAddTaskIconCls btn']";
-    String GS_TASK_ASSIGN_INPUT     = "//input[@class='Assigned__cInputCls userlookupCls taskParamControlDataInput ui-autocomplete-input']";
-    String GS_TASK_SUBJECT_INPUT    = "//input[@class='Subject__cInputCls taskParamControlDataInput']";
-    String GS_TASK_DATE_INPUT       = "Date__cInputId";
-    String GS_TASK_PRI0RITY_INPUT   = "//select[@class='Priority__cInputCls taskParamControlDataInput']";
-    String GS_TASK_STATUS_INPUT     = "//select[@class='Status__cInputCls taskParamControlDataInput']";
-    String TASK_SAVE_BUTTON         = "//button[@class='btn taskSaveBtn']";
-    String TASK_CANCEL_BUTTON       = "//button[@class='btn taskCancelBtn']";
-    String PLAYBOOK_SELECT          = "//select[@class='loadPlaybookCls']";
-    String TASK_CARD                = "//div[@class='taskItemCls']";
-    String CUST_SEARCH_RESULT_DIV   = "//div[contains(@id, 'CustomerSearchPanel')]";
+	private static final String READY_INDICATOR          = "//select[@class='jbaraDummyAlertUIViewsSelectControl']";
+    private static final String ADD_ALERT_BUTTON         = "//a[contains(text(), 'Add Alert')]";
+    private static final String SHOW_FILTER_IMG          = "//img[@title='Show filters']";
+    private static final String HIDE_FILTER_IMG          = "//img[@title='Hide filters']";
+    private static final String FILTER_SECTION_BUTTON    = "filter-section";
+    private static final String EXPORT_BUTTON            = "//div[@class='export-btn btn']";
+    private static final String LIST_VIEW_IMG            = "//img[@title='List view']";
+    private static final String CARD_VIEW_IMG            = "//img[@title='Card view']";
+    private static final String ANALYTICS_VIEW_IMG       = "//img[@title='Analytics view']";
+    private static final String CUST_NAME_INPUT          = "//input[contains(@class,'custComponentIdjbaraDummyCustomerName customer-name-text')]";
+    private static final String CUST_LOOKUP_SERCH_IMG    = "//img[@title='Customer Name Lookup']";
+    private static final String SUBJECT_INPUT            = "jbaraAlertSubjectInput";
+    private static final String SEVERITY_SELECT          = "//select[@class='entry-severity-select jbaraAlertSelectInput jbaraAlertSeverityInput']";
+    private static final String DATE_INPUT               = "jbaraAlertDateInput";
+    private static final String ASV_INPUT                = "jbaraAlertASVInput";
+    private static final String TYPE_SELECT              = "//select[@class='entry-type-select jbaraAlertSelectInput jbaraAlertTypeInput']";
+    private static final String REASON_SELECT            = "//select[@class='entry-reason-select jbaraAlertSelectInput jbaraAlertReasonInput']";
+    private static final String STATUS_SELECT            = "//select[@class='entry-status-select jbaraAlertSelectInput jbaraAlertStatusInput']";
+    private static final String COMMENT_INPUT            = "jbaraAlertCmtInput";
+    private static final String ALERT_SAVE_ADD_TASK_BUTTON = "saveAlertAndAddTaskIdBtn";
+    private static final String ALERT_SAVE_CLOSE         = "saveAlertAndCloseIdBtn";
+    private static final String ALERT_EDIT_SAVE_CLOSE    = "editAndCloseAlertBtn";
+    private static final String ALERT_FORM_CLOSE         = "//span[@title='Close']";
+    private static final String ALERT_FORM_EDIT_ALERT_DETAILS = "//span[@class='dummyEditAlertInfoIconCls']";
+    private static final String ADD_PLAYBOOK_BUTTON      = "//input[@class='dummyAddPBText dummyETAddText btn']";
+    private static final String ADD_TASK_BUTTON          = "//input[@class='dummyAddTaskIconCls btn']";
+    private static final String GS_TASK_ASSIGN_INPUT     = "//input[@class='Assigned__cInputCls userlookupCls taskParamControlDataInput ui-autocomplete-input']";
+    private static final String GS_TASK_SUBJECT_INPUT    = "//input[@class='Subject__cInputCls taskParamControlDataInput']";
+    private static final String GS_TASK_DATE_INPUT       = "Date__cInputId";
+    private static final String GS_TASK_PRI0RITY_INPUT   = "//select[@class='Priority__cInputCls taskParamControlDataInput']";
+    private static final String GS_TASK_STATUS_INPUT     = "//select[@class='Status__cInputCls taskParamControlDataInput']";
+    private static final String TASK_SAVE_BUTTON         = "//button[@class='btn taskSaveBtn']";
+    private static final String TASK_CANCEL_BUTTON       = "//button[@class='btn taskCancelBtn']";
+    private static final String PLAYBOOK_SELECT          = "//select[@class='loadPlaybookCls']";
+    private static final String TASK_CARD                = "//div[@class='taskItemCls']";
+    private static final String CUST_SEARCH_RESULT_DIV   = "//div[contains(@id, 'CustomerSearchPanel')]";
 
-    String SUBJECT_DISPLAY = "subject-view";
-    String SEVERITY_DISPLAY = "severity-view";
-    String REASON_DISPLAY = "reason-view";
-    String STATUS_DISPLAY = "status-view";
-    String TYPE_DISPLAY = "type-view";
-    String DATE_DISPLAY = "date-view";
-    String ASV_DISPLAY = "asv-view";
-    String COMMENTS_DISPLAY = "comments-view";
+    private static final String SUBJECT_DISPLAY     = "subject-view";
+    private static final String SEVERITY_DISPLAY    = "severity-view";
+    private static final String REASON_DISPLAY      = "reason-view";
+    private static final String STATUS_DISPLAY      = "status-view";
+    private static final String TYPE_DISPLAY        = "type-view";
+    private static final String DATE_DISPLAY        = "date-view";
+    private static final String ASV_DISPLAY         = "asv-view";
+    private static final String COMMENTS_DISPLAY    = "comments-view";
 
 
 
@@ -224,19 +224,15 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     private String taskXPath(HashMap<String, String> taskData) {
-        String newXpath = "//span[@class='taskTitleCls' and contains(text(), '"+taskData.get("subject")+"')]" +
+        String xpath = "//span[@class='taskTitleCls' and contains(text(), '"+taskData.get("subject")+"')]" +
                 "/following-sibling::div/div/span[@class='taskDataCls' and contains(text(), '"+taskData.get("owner")+"')]" +
                 "/following-sibling::span[@class='taskDataCls' and contains(text(), '"+taskData.get("date")+"')]" +
                 "/parent::div/following-sibling::div[@class='showMoreDetailsCls']" +
                 "/div/descendant::span[@class='taskDataCls']/b[contains(text(),'"+taskData.get("priority")+"')]" +
                 "/parent::span/following-sibling::span/span[contains(text(), '"+taskData.get("status")+"')]" +
                 "/ancestor::div[@class='taskItemCls']";
-        String xPath = "//span[@class='taskTitleCls' and contains(text(), '"+taskData.get("subject")+"')]" +
-                "/following-sibling::div/div[contains(text(), '"+taskData.get("owner")+"') and contains(text(), '"+taskData.get("date")+"')]" +
-                "/following-sibling::div[contains(text(),'"+taskData.get("priority")+"') and contains(text(),'"+taskData.get("status")+"')]" +
-                "/ancestor::div[@class='taskItemCls']";
-        Report.logInfo("xpath of Task : " +newXpath);
-        return newXpath;
+        Report.logInfo("xpath of Task : " +xpath);
+        return xpath;
     }
 
     private WebElement getTaskCard(HashMap<String, String> taskData) {
@@ -428,4 +424,6 @@ public class AlertsPage extends RetentionBasePage {
             }
         }
     }
+
+
 }
