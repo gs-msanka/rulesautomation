@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.pages;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.AlertsPage;
 import com.gainsight.sfdc.retention.pages.EventsPage;
+import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -20,6 +21,7 @@ public class Retention360 extends Customer360Page {
     String ALERT_SECTION_TAB = "//ul[@class='alert_tab_nav']/li/a[text()='Alert']";
     String EVENT_SECTION_TAB = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
     String LOADING_EVENTS_IMG = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
+    String LOADING_ALERTS_IMG = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
     EventsPage ePage;
     AlertsPage aPage;
 
@@ -28,13 +30,14 @@ public class Retention360 extends Customer360Page {
         if(val != null && val.contains("Events Page")) {
             ePage = new EventsPage("360 Page");
         } else if(val != null && val.contains("Alerts Page")) {
-            ePage = new EventsPage("360 Page");
+            aPage = new AlertsPage("360 Page");
         }
     }
 
     public void clickOnAlertSubTab() {
         wait.waitTillElementDisplayed(ALERT_SECTION_TAB, MIN_TIME, MAX_TIME);
         item.click(ALERT_SECTION_TAB);
+        wait.waitTillElementNotPresent(LOADING_ALERTS_IMG, MIN_TIME, MAX_TIME);
     }
 
     public void clickOnEventSubTab() {
@@ -53,6 +56,7 @@ public class Retention360 extends Customer360Page {
     }
 
     private void movetoActiveIframe() {
+        amtDateUtil.sleep(5);
         List<WebElement> elementList = element.getAllElement("//iframe");
         for(WebElement wEle : elementList) {
            if(wEle.isDisplayed()) {
@@ -108,8 +112,9 @@ public class Retention360 extends Customer360Page {
         String elePath = "//div[@class='data_value' and contains(text(), '"+testData.get("schedule")+"')]" +
                 "/parent::div/preceding-sibling::div/div[contains(@title, '"+testData.get("owner")+"')]" +
                 "/parent::div/preceding-sibling::div[contains(text(), '"+testData.get("subject")+"')]" +
-                "/preceding-sibling::div[text()='"+testData.get("type")+"']" +
+                "/preceding-sibling::div[contains(text(),'"+testData.get("type")+"')]" +
                 "/parent::div[@class='events_card']";
+        Report.logInfo("Event Xpath :" +elePath);
         return elePath;
     }
 
@@ -218,7 +223,6 @@ public class Retention360 extends Customer360Page {
         WebElement eCard = getEventCard(eventData);
         eCard.findElement(By.cssSelector("div.edit_icon.card_data_click")).click();
         Report.logInfo("Clicked on Event Card");
-        amtDateUtil.sleep(10);
         movetoActiveIframe();
         ePage.waitforEventCardtoLoad();
     }
@@ -236,21 +240,37 @@ public class Retention360 extends Customer360Page {
     /************Alerts Module Page Objects********/
 
 
-     public void addAlert(HashMap<String, String> alertData) {
-            item.click(ADD_ALERT_BUTTON);
-            movetoActiveIframe();
-            aPage.addAlert(alertData);
-        }
+    public void addAlert(HashMap<String, String> alertData) {
+        item.click(ADD_ALERT_BUTTON);
+        movetoActiveIframe();
+        aPage.fillAlertForm(alertData, false);
+        aPage.clickOnSaveAlert();
+        element.switchToMainWindow();
+    }
 
 
-        public boolean isAlertDisplayed(HashMap<String, String> alertData) {
-                  return false;
+    public boolean isAlertDisplayed(HashMap<String, String> alertData, AlertCardLabel alertCardLabel) {
+        String a = aPage.buildAlertXpath(alertCardLabel, alertData);
+        Report.logInfo("Alert Xpath :" +a);
 
-        }
+        return false;
+    }
 
-        private String buildAlertXpath(HashMap<String, String> alertData) {
-            return null;
-        }
+    private String buildAlertXpath(HashMap<String, String> alertData) {
+        String xPath  = "//div[@class='data_label' and contains(text(),'Alert ASV')]/following-sibling::div[@class='data_value' and contains(text(),'200')]" +
+                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
+                "/div[@class='data_label' and contains(text(),'Reason')]/following-sibling::div[@class='data_value' and contains(text(),'Product Issue')]" +
+                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
+                "/div[@class='data_label' and contains(text(),'Type')]/following-sibling::div[@class='data_value' and contains(text(),'Downsell')]" +
+                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
+                "/div[contains(@class, 'data_label') and contains(text(),'Severity')]/following-sibling::div[@class='data_value' and contains(text(),'High')]" +
+                "/parent::div/preceding-sibling::div[@class='card_data card_data_click']" +
+                "/div[@class='data_label' and contains(text(),'Status')]/following-sibling::div[@class='data_value' and contains(text(),'Active')]" +
+
+                "/parent::div[@class='card_data card_data_click']/preceding-sibling::div[@class='alert_title card_data_click' and contains(text(), 'This is the first')]" +
+                "/parent::div[@class='alert_card']";
+        return null;
+    }
 
 
 
