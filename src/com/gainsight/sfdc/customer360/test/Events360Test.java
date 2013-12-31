@@ -42,13 +42,15 @@ public class Events360Test extends BaseTest {
             deletPlaybookScript = removeNameSpace(deletPlaybookScript);
         }
         soql.deleteQuery(RECORDS_DELETE);
-        soql.deleteQuery(RECORDS_DELETE);
+        soql.deleteQuery(deletPlaybookScript);
         apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_1")
     public void addEvent(HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("customer", customerName);
         eventData.put("schedule", getDatewithFormat(0));
@@ -61,6 +63,8 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_2")
     public void changeEventStatus(HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
@@ -74,6 +78,8 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_3")
     public void deleteEvent( HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
@@ -89,6 +95,8 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_4")
     public void addTasksToEvent(HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
@@ -119,6 +127,8 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_5")
     public void addTasksToEventFromPlaybook(HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         String pName = testData.get("playbook");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -155,6 +165,8 @@ public class Events360Test extends BaseTest {
             script = removeNameSpace(script);
         }
         soql.deleteQuery(script);
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
@@ -181,7 +193,7 @@ public class Events360Test extends BaseTest {
         if(!isPackageInstance()) {
             script = removeNameSpace(script);
         }
-        soql.deleteQuery(script);;
+        soql.deleteQuery(script);
         ret.refreshPage();
         ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
@@ -199,6 +211,8 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_8")
     public void editEvent(HashMap<String, String> testData) throws IOException, BiffException {
+        ret.refreshPage();
+        ret.clickOnEventSubTab();
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         HashMap<String, String> updateEventData   = getMapFromData(testData.get("updateeventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
