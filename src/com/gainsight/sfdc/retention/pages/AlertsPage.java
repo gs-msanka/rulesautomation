@@ -73,13 +73,17 @@ public class AlertsPage extends RetentionBasePage {
     public void addAlert(HashMap<String, String> alertData) {
         item.click(ADD_ALERT_BUTTON);
         wait.waitTillElementDisplayed(CUST_NAME_INPUT, MIN_TIME, MAX_TIME);
-        fillAlertForm(alertData);
+        fillAlertForm(alertData, true);
+        clickOnSaveAlert();
+    }
+
+    public void clickOnSaveAlert() {
         item.click(ALERT_SAVE_CLOSE);
     }
 
     //customer , asv, date, subject, severity, type, reason, status, comment
-    public void fillAlertForm(HashMap<String, String> alertData) {
-        if(alertData.get("customer") != null) {
+    public void fillAlertForm(HashMap<String, String> alertData, boolean isCustomerReq) {
+        if(alertData.get("customer") != null && isCustomerReq) {
             selectCustomer(alertData.get("customer"));
         }
         if(alertData.get("subject") != null) {
@@ -206,7 +210,7 @@ public class AlertsPage extends RetentionBasePage {
 
     public boolean isAlertDisplayed( AlertCardLabel alertCardLabel, HashMap<String, String> testData) {
         boolean result = false;
-        String xpath = buildXpath(alertCardLabel, testData);
+        String xpath = buildAlertXpath(alertCardLabel, testData);
         List<WebElement> eleList = element.getAllElement(xpath);
         if(eleList.size() >0) {
             result = true;
@@ -237,13 +241,13 @@ public class AlertsPage extends RetentionBasePage {
 
     public WebElement getAlertCard(AlertCardLabel alertCardLabel, HashMap<String, String> alertData) {
         WebElement wEle = null;
-        wEle = element.getElement(buildXpath(alertCardLabel, alertData));
+        wEle = element.getElement(buildAlertXpath(alertCardLabel, alertData));
         return wEle;
     }
 
     public boolean isAlertDisplayedBasedOnStatus(AlertCardLabel alertLabel, HashMap<String, String> alertData) {
         boolean result = false;
-        String xPath = buildXpath(alertLabel, alertData);
+        String xPath = buildAlertXpath(alertLabel, alertData);
         xPath += "/ancestor::div[@class='card-group']/div/div[@class='group-title' and contains(text(), '"+alertData.get("status")+"')]";
         Report.logInfo(xPath);
         List<WebElement> eleList = element.getAllElement(xPath);
@@ -271,7 +275,7 @@ public class AlertsPage extends RetentionBasePage {
     public void closeAlertForm()  {
         item.click(ALERT_FORM_CLOSE);
     }
-    private String buildXpath(AlertCardLabel alertLabel, HashMap<String, String> alertData) {
+    public String buildAlertXpath(AlertCardLabel alertLabel, HashMap<String, String> alertData) {
         String xPath = "//";
         if(alertLabel.getLabel5()!=null && alertLabel.getLabel5() != "") {
             xPath = "div[@class='data-label' and contains(text(),'"+alertLabel.getLabel5()+"')]" +
@@ -362,7 +366,7 @@ public class AlertsPage extends RetentionBasePage {
     public void addAlertandTasks(HashMap<String, String> alertData, List<HashMap<String, String>> taskDataList) {
         item.click(ADD_ALERT_BUTTON);
         wait.waitTillElementDisplayed(SUBJECT_INPUT, MIN_TIME, MAX_TIME);
-        fillAlertForm(alertData);
+        fillAlertForm(alertData, true);
         item.click(ALERT_SAVE_ADD_TASK_BUTTON);
         for(HashMap<String, String> taskData : taskDataList) {
             addTask(taskData);

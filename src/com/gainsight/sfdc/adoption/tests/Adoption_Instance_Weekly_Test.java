@@ -22,8 +22,8 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
-        String measureFile          = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Usage_Measure_Create.txt";
-        String advUsageConfigFile   = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Instance_Level_Weekly.txt";
+        String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Usage_Measure_Create.txt";
+        String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Instance_Level_Weekly.txt";
         try{
           //  apex.runApexCodeFromFile(measureFile);
            // apex.runApexCodeFromFile(advUsageConfigFile);
@@ -59,7 +59,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                             .replaceAll("THEYEARCHANGE", String.valueOf(year))
                             .replace("THEDAYCHANGE", String.valueOf(day));
                     if(!isPackageInstance()) {
-                        code    = code.replace("JBCXM__", "").replace("JBCXM.", "");
+                        code    = removeNameSpace(code).replace("JBCXM.", "");
                     }
                     apex.runApex(code);
                 }

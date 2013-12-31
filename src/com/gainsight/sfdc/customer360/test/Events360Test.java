@@ -25,7 +25,7 @@ public class Events360Test extends BaseTest {
     String customerName = "Galbreath Co";
     Customer360Page c360Page;
     Retention360 ret;
-    String userLocale  = "en_IN";
+
 
     String RECORDS_DELETE = "SELECT id FROM JBCXM__CSEvent__c " +
             "WHERE JBCXM__Account__r.Name LIKE '"+customerName+"'";
@@ -43,7 +43,6 @@ public class Events360Test extends BaseTest {
         }
         soql.deleteQuery(RECORDS_DELETE);
         soql.deleteQuery(RECORDS_DELETE);
-        userLocale = soql.getUserLocale();
         apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
@@ -219,19 +218,5 @@ public class Events360Test extends BaseTest {
         basepage.logout();
     }
 
-    public String getDatewithFormat(int i) {
-        String date                 = null;
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, i);
-        if(userLocale.contains("en_US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("M/d/yyyy");
-            date = dateFormat.format(c.getTime());
 
-        } else if(userLocale.contains("en_IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
-            date = dateFormat.format(c.getTime());
-        }
-        Report.logInfo(String.valueOf(date));
-        return date;
-    }
 }

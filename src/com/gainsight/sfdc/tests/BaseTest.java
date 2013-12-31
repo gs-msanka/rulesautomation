@@ -26,6 +26,7 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
+    String userLocale  = "en_IN";
 
 	@BeforeSuite
 	public void init() throws Exception {
@@ -36,6 +37,7 @@ public class BaseTest {
 			String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
 			env.launchBrower();
 			basepage = new BasePage();
+            userLocale = soql.getUserLocale();
 			Report.logInfo("Initializing Base Page : " + basepage);
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();
@@ -204,4 +206,20 @@ public class BaseTest {
 		}
 		return result;
 	}
+
+    public String getDatewithFormat(int i) {
+        String date                 = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, i);
+        if(userLocale.contains("en_US")) {
+            DateFormat dateFormat   = new SimpleDateFormat("M/d/yyyy");
+            date = dateFormat.format(c.getTime());
+
+        } else if(userLocale.contains("en_IN")) {
+            DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
+            date = dateFormat.format(c.getTime());
+        }
+        Report.logInfo(String.valueOf(date));
+        return date;
+    }
 }
