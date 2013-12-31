@@ -21,7 +21,6 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 import com.gainsight.utils.DataProviderArguments;
 
-@Listeners({ com.gainsight.utils.GSTestListener.class })
 public class TransactionsAcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
 	final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
