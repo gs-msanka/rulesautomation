@@ -38,4 +38,4 @@ for(Account acc : [SELECT id FROM Account where name like 'Acceptance Test Accou
 insert custList;
 delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c ='Acceptance Test Account 1'];
 delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c ='Acceptance Test Account 5'];
-}
+
