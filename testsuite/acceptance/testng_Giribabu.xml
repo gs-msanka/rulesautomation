@@ -5,24 +5,9 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="Events" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.retention.tests.EventsTests"/>
-        </classes>
-    </test>
-    <test verbose="3" name="Playbooks Test Cases" preserve-order="true">
-    <classes>
-        <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests"/>
-    </classes>
-    </test>
-    <test verbose="3" name="Events 360 Test Cases" preserve-order="true">
+<test>
         <classes>
             <class name="com.gainsight.sfdc.customer360.test.Events360Test"/>
-        </classes>
-    </test>
-    <test verbose="3" name="Alerts 360 Test Cases" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
         </classes>
     </test>
 
