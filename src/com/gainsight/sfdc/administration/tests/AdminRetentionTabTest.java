@@ -24,10 +24,11 @@ public class AdminRetentionTabTest extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
+		deleteRetentionTypeFromScript();
 	}
-	
+/*	 //create
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Create")
 	public void testAdminCreateAlertTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertType(testData.get("CreateAlertType"));
 	}
@@ -47,8 +48,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Edit")
 	public void testAdminEditAlertType1Test(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertType(testData.get("CreateAlertType"));
 		editAlertType(testData.get("EditAlertType"));
 	}
 		private AdminRetentionTab editAlertType(String testData) {
@@ -68,8 +70,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 		//Delete Alert Type
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertType")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Delete")
 		public void testAdminDeleteAlertType2Test(HashMap<String, String> testData) throws BiffException, IOException {
+			createAlertType(testData.get("CreateAlertType"));
 			deleteAlertType(testData.get("DeleteAlertType"));
 		}
 		
@@ -88,9 +91,9 @@ public class AdminRetentionTabTest extends BaseTest {
 		return adRetPage;
 	}
 	
-	                                     	// Create Alert Severity
+	                                  	// Create Alert Severity
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ASeverity_Create")
 	public void testAdminCreateAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertSeverity(testData.get("CreateAlertSeverity"));
 	}
@@ -111,8 +114,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 		      // Edit Alert Severity
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ASeverity_Edit")
 		public void testAdminEditAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertSeverity(testData.get("CreateAlertSeverity"));		
 		editAlertSeverity(testData.get("EditAlertSeverity"));
 	}
 	private AdminRetentionTab editAlertSeverity(String testData) {
@@ -131,8 +135,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 		
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertSeverity")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ASeverity_Delete")
 	public void testAdminDeleteAlertSeverityTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertSeverity(testData.get("CreateAlertSeverity"));
 		deleteAlertSeverity(testData.get("DeleteAlertSeverity"));
     }
 	
@@ -152,7 +157,7 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	                       // Create Alert Reason	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AReason_Create")
 	public void testAdminCreateAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertReason(testData.get("CreateAlertReason"));
     }
@@ -173,8 +178,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	
 	                  // Edit Alert Reason
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AReason_Edit")
 	public void testAdminEditAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertReason(testData.get("CreateAlertReason"));
 		editAlertReason(testData.get("EditAlertReason"));
     }
 	
@@ -194,8 +200,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	                 //Delete Alert Reason
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=9)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertReason")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AReason_Delete")
 	public void testAdminDeleteAlertReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertReason(testData.get("CreateAlertReason"));
 		deleteAlertReason(testData.get("DeleteAlertReason"));
     }
 	
@@ -216,7 +223,7 @@ public class AdminRetentionTabTest extends BaseTest {
 	
 	                                              // Create Alert Status
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=10)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AStatus_Create")
 	public void testAdminCreateAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createAlertStatus(testData.get("CreateAlertStatus"));
     }
@@ -236,8 +243,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	      	          // Edit Alert Status
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=11)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AStatus_Edit")
 	public void testAdminEditAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertStatus(testData.get("CreateAlertStatus"));
 		editAlertStatus(testData.get("editAlertStatus"));
     }
 	
@@ -256,8 +264,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	                 // Delete Alert Status
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=12)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AlertStatus")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AStatus_Delete")
 	public void testAdminDeleteAlertStatusTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createAlertStatus(testData.get("CreateAlertStatus"));
 		deleteAlertStatus(testData.get("deleteAlertStatus"));
     }
 	
@@ -275,9 +284,9 @@ public class AdminRetentionTabTest extends BaseTest {
 					"Verifying Alert Status added in the grid");
 			return adRetPage;
 	}
-	                            // Create Event Type
+*/	                            // Create Event Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=13)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EType_Create")
 	public void testAdminCreateEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createEventType(testData.get("CreateEventType"));
     }
@@ -297,9 +306,10 @@ public class AdminRetentionTabTest extends BaseTest {
 		return adRetPage;
 	}
 	         	// Edit Event Type
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=14)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+/*	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=14)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EType_Edit")
 	public void testAdminEditEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createEventType(testData.get("CreateEventType"));
 		editEventType(testData.get("editEventType"));
     }
 	private AdminRetentionTab editEventType(String testData) {
@@ -317,8 +327,9 @@ public class AdminRetentionTabTest extends BaseTest {
 	}
 	                  // Delete Event Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=15)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EventType")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EType_Delete")
 	public void testAdminDeleteEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
+		createEventType(testData.get("CreateEventType"));
 		deleteEventType(testData.get("deleteEventType"));
     }
 	private AdminRetentionTab deleteEventType(String testData) {
@@ -344,6 +355,19 @@ public class AdminRetentionTabTest extends BaseTest {
 		adRetPage.taskConfiguration();
 	} */
 
+
+		 public void deleteRetentionTypeFromScript() {
+			  try {
+			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Alert%' OR JBCXM__Category__c like 'SalesRep Name' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
+			     if(!isPackageInstance()) {
+			         DELETERECORDS = removeNameSpace(DELETERECORDS);
+			     }
+			     soql.deleteQuery(DELETERECORDS);
+			  } catch (Exception e) {
+			      Report.logInfo(e.getLocalizedMessage());
+			  }
+				 }
+				
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();
