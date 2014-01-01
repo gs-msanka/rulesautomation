@@ -67,6 +67,11 @@ public class Events360Test extends BaseTest {
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date",getDatewithFormat(0));
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
+        if(!isPackageInstance()) {
+            script = removeNameSpace(script);
+        }
+        soql.deleteQuery(script);
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -145,17 +150,17 @@ public class Events360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_6")
     public void addRecurringEvent(HashMap<String, String> testData) throws IOException, BiffException {
-        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+testData.get("customer")+"'";
-        if(!isPackageInstance()) {
-            script = removeNameSpace(script);
-        }
-        soql.deleteQuery(script);
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(5));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
+        String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
+        if(!isPackageInstance()) {
+            script = removeNameSpace(script);
+        }
+        soql.deleteQuery(script);
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
