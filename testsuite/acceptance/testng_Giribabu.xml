@@ -5,10 +5,13 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-<test>
+    <test verbose="3" name="Automation Test Suite" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Events360Test"/>
+
+
+
+            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
+
         </classes>
     </test>
-
 </suite>
