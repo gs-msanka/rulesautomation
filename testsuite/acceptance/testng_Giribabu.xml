@@ -20,5 +20,10 @@
             <class name="com.gainsight.sfdc.customer360.test.Events360Test"/>
         </classes>
     </test>
+    <test verbose="3" name="Alerts 360 Test Cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
+        </classes>
+    </test>
 
 </suite>

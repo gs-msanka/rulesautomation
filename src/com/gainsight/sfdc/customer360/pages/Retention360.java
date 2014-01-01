@@ -21,6 +21,8 @@ public class Retention360 extends Customer360Page {
     private static final String EVENT_SECTION_TAB               = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
     private static final String LOADING_EVENTS_IMG              = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
     private static final String LOADING_ALERTS_IMG              = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
+    private static final String ALERT_TASK_CARD                 = "//div[@class='taskItemCls']" ;
+    private static final String ALERT_INFO_MSG                  = "//div[@class='noDataFound' and contains(text(), 'No Alerts Found')]";
     EventsPage ePage;
     AlertsPage aPage;
 
@@ -276,6 +278,15 @@ public class Retention360 extends Customer360Page {
 
     public boolean isAlertTaskDisplayed(HashMap<String, String> taskData) {
         return aPage.isTaskDisplayed(taskData);
+    }
+
+    public boolean isAlertInfoMsgDisplayed() {
+        return element.getElement(ALERT_INFO_MSG).isDisplayed();
+    }
+
+    public void selectAlertPlaybook(String playbookName) {
+        aPage.selectPlaybook(playbookName);
+        wait.waitTillElementDisplayed(ALERT_TASK_CARD, MIN_TIME, MAX_TIME);
     }
 
     private String buildAlertXpath(HashMap<String, String> alertData, AlertCardLabel alabel) {
