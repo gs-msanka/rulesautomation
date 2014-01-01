@@ -25,15 +25,14 @@ public class AdminFeatureTabTest extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
+		deleteFeaturesFromScript();
 	}
-	
-	
-	              
 	
 	            //create Feature Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminFeaturesTab")
 	public void testAdmincreateFeatureType(HashMap<String, String> testData) throws BiffException, IOException {
+		createFeaturesFromScript();
 		createFeatureType(testData.get("CreateFeatureType"));
 	}
 	
@@ -90,6 +89,33 @@ public class AdminFeatureTabTest extends BaseTest {
 				"Verifying Feature Type is deleted in the grid");
 		return adFeturTpe;
 	}
+	
+	public void createFeaturesFromScript() {
+	       try {
+	           String file = env.basedir+"/testdata/sfdc/Administration/Features_Create_Script.txt";
+	           Report.logInfo("File :" +file);
+	           Report.logInfo("Pack :" +isPackageInstance());
+	           apex.runApexCodeFromFile(file, isPackageInstance());
+	          // isEventCreateScriptExecuted = true;
+	       } catch (Exception e) {
+	           Report.logInfo(e.getLocalizedMessage());
+	       }
+	   }
+		
+	 
+	 public void deleteFeaturesFromScript() {
+  try {
+     String DELETERECORDS = "select id from JBCXM__Features__c";
+     if(!isPackageInstance()) {
+         DELETERECORDS = removeNameSpace(DELETERECORDS);
+     }
+     soql.deleteQuery(DELETERECORDS);
+  } catch (Exception e) {
+      Report.logInfo(e.getLocalizedMessage());
+  }
+	 }
+	
+	
 	
 	@AfterClass
 	public void tearDown() {
