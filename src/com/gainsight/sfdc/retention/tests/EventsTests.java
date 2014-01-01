@@ -23,7 +23,6 @@ public class EventsTests extends BaseTest {
             + generatePath(dirs);
     Calendar c = Calendar.getInstance();
     Boolean isEventCreateScriptExecuted = false;
-    String userLocale = "en_IN";
     String deleteScript = "SELECT Id FROM JBCXM__CSEvent__c";
     String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
     String file = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
@@ -38,6 +37,7 @@ public class EventsTests extends BaseTest {
                 deleteScript = removeNameSpace(deleteScript);
                 deletPlaybookScript = removeNameSpace(deletPlaybookScript);
             }
+            userLocale = soql.getUserLocale();
             soql.deleteQuery(deleteScript);
             soql.deleteQuery(deletPlaybookScript);
             apex.runApexCodeFromFile(file, isPackageInstance());
@@ -404,26 +404,6 @@ public class EventsTests extends BaseTest {
         taskData.put("date", getDatewithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
-    }
-
-    /**
-     * @param i -   No of days to add to the current date (Based on User locale).
-     * @return String - today day with the locale format for USER.
-     */
-    public String getDatewithFormat(int i) {
-        String date                 = null;
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, i);
-        if(userLocale.contains("en_US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("M/d/yyyy");
-            date = dateFormat.format(c.getTime());
-
-        } else if(userLocale.contains("en_IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
-            date = dateFormat.format(c.getTime());
-        }
-        Report.logInfo(String.valueOf(date));
-        return date;
     }
 
     public String getCalendarCurrentMonthandYear() {

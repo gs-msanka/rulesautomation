@@ -28,6 +28,7 @@ public class Events360Test extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
+        userLocale = soql.getUserLocale();
         apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
