@@ -236,10 +236,10 @@ public class AdminTransactionsTabTest extends BaseTest {
 			return adTrPage;
 		}
 
-	                        //script to delete
+	                        //script to delete transaction line items and booking types
 		 public void deleteAdminTransactionsThorughScript() {
 			  try {
-			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where  JBCXM__DisplayOrder__c >12 and JBCXM__Category__c IN ('Order Type' , 'Churn Reason')";
+			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where  JBCXM__DisplayOrder__c >12 and JBCXM__Category__c IN ('Order Type' , 'Churn Reason')| SELECT Id, Name FROM JBCXM__TransactionType__c WHERE Name NOT IN ('Activation', 'Services', 'Users', 'Subscription')";
 			     if(!isPackageInstance()) {
 			         DELETERECORDS = removeNameSpace(DELETERECORDS);
 			     }
