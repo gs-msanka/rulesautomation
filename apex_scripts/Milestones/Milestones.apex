@@ -22,6 +22,8 @@ update appSettings;
 
 List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
 
+delete [SELECT id FROM Opportunity where name like 'Via Systems - new business'];
+
 List<Account> accList=[SELECT id FROM Account where name like 'Via Systems'];
 Opportunity opp = new Opportunity(name ='Via Systems - new business',
 									StageName = 'Closed Won',
@@ -33,16 +35,11 @@ insert opp;
 
 List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Via Systems - new business' LIMIT 1];
 
-List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where Name like 'Onboarding'];
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/02/2013'),JBCXM__Milestone__c=msList.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Complete Onboarding for this customer'));
+List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where Name in ('Onboarding','Client Meeting','Conduct Survey','Analyze Survey Responses') order by Name];
 
-List<JBCXM__PickList__c> msList1=[SELECT id FROM JBCXM__PickList__c where name like 'Client Meeting'];
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/10/2013'),JBCXM__Milestone__c=msList1.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Set up client meeting'));
-
-List<JBCXM__PickList__c> msList2=[SELECT id FROM JBCXM__PickList__c where name like 'Conduct Survey'];
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/18/2013'),JBCXM__Milestone__c=msList2.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Conduct survey for this customer'));
-
-List<JBCXM__PickList__c> msList3=[SELECT id FROM JBCXM__PickList__c where name like 'Analyze Survey Responses'];
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/23/2013'),JBCXM__Milestone__c=msList3.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Analyze survey responses and take actions'));
+mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/23/2013'),JBCXM__Milestone__c=msList.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Analyze survey responses and take actions'));
+mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/10/2013'),JBCXM__Milestone__c=msList.get(1).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Set up client meeting'));
+mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/18/2013'),JBCXM__Milestone__c=msList.get(2).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Conduct survey for this customer'));
+mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/02/2013'),JBCXM__Milestone__c=msList.get(3).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Complete Onboarding for this customer'));
 
 insert mList;
