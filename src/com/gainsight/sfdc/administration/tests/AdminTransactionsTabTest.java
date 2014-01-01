@@ -26,13 +26,14 @@ public class AdminTransactionsTabTest extends BaseTest {
 		public void setUp() {
 			Report.logInfo("Starting  Test Case...");
 			basepage.login();
+			deleteAdminTransactionsThorughScript();
 		}
 
 		                     //  Add Transaction Booking Types
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Create_BookingTypes")
 		public void testAdminAddBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
-			addBookingTypes(testData.get("BookingTypes"));
+			addBookingTypes(testData.get("createBookingTypes"));
 		}
 		private AdminTransactionsTab addBookingTypes(String testData) {
 			HashMap<String, String> data = getMapFromData(testData);
@@ -50,9 +51,10 @@ public class AdminTransactionsTabTest extends BaseTest {
 		}
 		           // Edit Transaction Booking Types
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_BookingTypes")
 		public void testAdminEditBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
-			editbookingType(testData.get("EditBookingTypes1"));
+			addBookingTypes(testData.get("createBookingTypes"));
+			editbookingType(testData.get("EditBookingTypes"));
 		}
 
 		private AdminTransactionsTab editbookingType(String testData) {
@@ -74,8 +76,9 @@ public class AdminTransactionsTabTest extends BaseTest {
 		
 		// MapBooking types
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Map_BookingTypes")
 		public void testMapBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
+			addBookingTypes(testData.get("createBookingTypes"));
 			mapBookingTypes(testData.get("MapBookingTypes"));
 		}
 			private AdminTransactionsTab mapBookingTypes(String testData) {
@@ -91,10 +94,10 @@ public class AdminTransactionsTabTest extends BaseTest {
 		}
 		
 		
-		
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "BookingTypes")
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Delete_BookingTypes")
 		public void testAdminDeleteBookingTypesTest(HashMap<String, String> testData) throws BiffException, IOException {
+			addBookingTypes(testData.get("createBookingTypes"));
 			deleteBookingTypes(testData.get("DeleteBookingTypes"));
 		}
 		private AdminTransactionsTab deleteBookingTypes(String testData) {
@@ -114,8 +117,8 @@ public class AdminTransactionsTabTest extends BaseTest {
 		  
 	           // Add Transaction Line Item
 	  @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
-		public void testAddTransactionLinesItemsTest(HashMap<String, String> testData) throws BiffException, IOException {
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Add_LineItem")
+	public void testAddTransactionLinesItemsTest(HashMap<String, String> testData) throws BiffException, IOException {
 		  addTransactionLinesItems(testData.get("CreateTransactionLineITem"));
 		}
 		private AdminTransactionsTab addTransactionLinesItems(String testData) {
@@ -131,8 +134,9 @@ public class AdminTransactionsTabTest extends BaseTest {
 		}
 			//Edit Transactions.
 	 @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
-		public void testEditTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_LineItem")
+	public void testEditTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
+		 addTransactionLinesItems(testData.get("CreateTransactionLineITem"));
 		 EditTransactionLineItem(testData.get("EditTransactionLineItem"));
 		}
 	 private AdminTransactionsTab EditTransactionLineItem(String testData) {
@@ -151,9 +155,10 @@ public class AdminTransactionsTabTest extends BaseTest {
 				
 			       // deleteTransactionLineItem
   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LineItems")
-	  public void testDeleteTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
-	deleteTransactionLineItem(testData.get("DeleteTransactionLineItem"));
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Delete_LineItem")
+	 public void testDeleteTransactionLineItemTest(HashMap<String, String> testData) throws BiffException, IOException {
+	  addTransactionLinesItems(testData.get("CreateTransactionLineITem"));
+	  deleteTransactionLineItem(testData.get("DeleteTransactionLineItem"));
 			}
     private AdminTransactionsTab deleteTransactionLineItem(String testData) {	
 			HashMap<String, String> data = getMapFromData(testData);
@@ -170,7 +175,7 @@ public class AdminTransactionsTabTest extends BaseTest {
 		
 		      	// Add Churn Reason
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Add_ChurnReason")
 	  public void testAdminAddChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
 		addChurnReason(testData.get("AddChurnReason"));
 	}		
@@ -190,8 +195,9 @@ public class AdminTransactionsTabTest extends BaseTest {
 		
 		             // Edit churn Reason
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=8)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
-		  public void testAdminEditChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_ChurnReason")
+	 public void testAdminEditChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+			addChurnReason(testData.get("AddChurnReason"));
 			editChurnReason(testData.get("EditChurnReason"));
 		}
 			private AdminTransactionsTab editChurnReason(String testData) {
@@ -210,8 +216,9 @@ public class AdminTransactionsTabTest extends BaseTest {
 		
 			 // Delete Churn Reason
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=9)
-	  @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ChurnReason")
-	  public void testAdminDeleteChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+	  @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Delete_ChurnReason")
+	 public void testAdminDeleteChurnReasonTest(HashMap<String, String> testData) throws BiffException, IOException {
+		addChurnReason(testData.get("AddChurnReason"));
 		deleteChurnReason(testData.get("DeleteChurnReason"));
 			}		
 	private AdminTransactionsTab deleteChurnReason(String testData) {	
@@ -228,7 +235,22 @@ public class AdminTransactionsTabTest extends BaseTest {
 					"Verifying Churn Reason deleted in the grid");
 			return adTrPage;
 		}
-		
+
+	                        //script to delete
+		 public void deleteAdminTransactionsThorughScript() {
+			  try {
+			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where  JBCXM__DisplayOrder__c >12 and JBCXM__Category__c IN ('Order Type' , 'Churn Reason')";
+			     if(!isPackageInstance()) {
+			         DELETERECORDS = removeNameSpace(DELETERECORDS);
+			     }
+			     soql.deleteQuery(DELETERECORDS);
+			  } catch (Exception e) {
+			      Report.logInfo(e.getLocalizedMessage());
+			  }
+				 }
+	
+		 
+		 
 		@AfterClass
 		public void tearDown() {
 			basepage.logout();
