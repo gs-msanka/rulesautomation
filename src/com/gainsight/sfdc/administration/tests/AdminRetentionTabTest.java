@@ -26,7 +26,7 @@ public class AdminRetentionTabTest extends BaseTest {
 		basepage.login();
 		deleteRetentionTypeFromScript();
 	}
-	            //create
+	            //create Alert Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Create")
 	public void testAdminCreateAlertTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
@@ -355,7 +355,7 @@ public class AdminRetentionTabTest extends BaseTest {
 		adRetPage.taskConfiguration();
 	} */
 
-
+                 //Script to delete, even if the catagory is null
 		 public void deleteRetentionTypeFromScript() {
 			  try {
 			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Alert%' OR JBCXM__Category__c like 'SalesRep Name' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
