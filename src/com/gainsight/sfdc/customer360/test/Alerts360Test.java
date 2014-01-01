@@ -1,34 +1,35 @@
 package com.gainsight.sfdc.customer360.test;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Retention360;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Alerts360Test extends BaseTest {
     String[] dirs = {"eventtests"};
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_360_Tests.xls";
-    String customerName = "Galbreath Co";
-    Customer360Page c360Page;
-    Retention360 ret;
-
-
+    String query = "SELECT Id FROM JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
         basepage.login();
-        c360Page    = basepage.clickOnC360Tab().searchCustomer(customerName, true);
-        ret         = new Retention360("Alerts Page");
+        if(!isPackageInstance()) {
+            query = removeNameSpace(query);
+        }
+        soql.deleteQuery(query);
     }
-
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_Alert_1")
@@ -41,13 +42,15 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        ret.addAlert(alertData);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetAlertsSec();
+        ret = ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
         alertData.put(alabel.getLabel2(), alertData.get("severity"));
         alertData.put(alabel.getLabel3(), alertData.get("type"));
         alertData.put(alabel.getLabel4(), alertData.get("reason"));
         alertData.put(alabel.getLabel5(), alertData.get("asv"));
-        ret.isAlertDisplayed(alertData, alabel);
+        Assert.assertTrue(ret.isAlertDisplayed(alertData, alabel), "Checking alert creation is successful");
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -61,6 +64,8 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
         alertData.put(alabel.getLabel2(), alertData.get("severity"));
@@ -84,6 +89,8 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
         alertData.put(alabel.getLabel2(), alertData.get("severity"));
@@ -92,15 +99,52 @@ public class Alerts360Test extends BaseTest {
         alertData.put(alabel.getLabel5(), alertData.get("asv"));
         Assert.assertEquals(true, ret.isAlertDisplayed(alertData,alabel), "Checking weather alert created successfully");
         ret.updateAlert(alertData, updatedAlertData, alabel);
-        updatedAlertData.put(alabel.getLabel1(), alertData.get("status"));
-        updatedAlertData.put(alabel.getLabel2(), alertData.get("severity"));
-        updatedAlertData.put(alabel.getLabel3(), alertData.get("type"));
-        updatedAlertData.put(alabel.getLabel4(), alertData.get("reason"));
-        updatedAlertData.put(alabel.getLabel5(), alertData.get("asv"));
+        updatedAlertData.put(alabel.getLabel1(), updatedAlertData.get("status"));
+        updatedAlertData.put(alabel.getLabel2(), updatedAlertData.get("severity"));
+        updatedAlertData.put(alabel.getLabel3(), updatedAlertData.get("type"));
+        updatedAlertData.put(alabel.getLabel4(), updatedAlertData.get("reason"));
+        updatedAlertData.put(alabel.getLabel5(), updatedAlertData.get("asv"));
         Assert.assertEquals(true, ret.isAlertDisplayed(updatedAlertData,alabel), "Checking weather alert is updated successfully");
     }
 
-
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_Alert_4")
+    public void addTasksOnAlert(HashMap<String , String> testData) {
+        HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
+        List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
+        AlertCardLabel alabel = new AlertCardLabel();
+        alertData.put("date", getDatewithFormat(0));
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Retention360 ret         = c360Page.clickOnRetAlertsSec();
+        ret.addAlert(alertData);
+        alabel.setLabel5("Alert ASV");
+        alabel.setLabel4("Reason");
+        alabel.setLabel3("Type");
+        alabel.setLabel2("Severity");
+        alabel.setLabel1("Status");
+        alertData.put("date", getDatewithFormat(0));
+        alertData.put(alabel.getLabel1(), alertData.get("status"));
+        alertData.put(alabel.getLabel2(), alertData.get("severity"));
+        alertData.put(alabel.getLabel3(), alertData.get("type"));
+        alertData.put(alabel.getLabel4(), alertData.get("reason"));
+        alertData.put(alabel.getLabel5(), alertData.get("asv"));
+        Assert.assertEquals(true, ret.isAlertDisplayed(alertData,alabel), "Checking weather alert created successfully");
+        ret.openAlertCardEditMode(alertData, alabel);
+        try {
+            for(int a=1;a <= 20 ; a++ ) {
+                HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
+                taskData.put("date", getDatewithFormat(a));
+                taskDataList.add(taskData);
+            }
+        } catch (Exception e) {
+            Report.logInfo("All Tasks Read");
+        }
+        ret.addTaksOnAlert(taskDataList);
+        ret.openAlertCardEditMode(alertData, alabel);
+        for(HashMap<String, String> taskData : taskDataList)  {
+            Assert.assertTrue(ret.isAlertTaskDisplayed(taskData));
+        }
+    }
 
     @AfterClass
     public void tearDown(){

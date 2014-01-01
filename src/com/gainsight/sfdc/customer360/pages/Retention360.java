@@ -28,11 +28,9 @@ public class Retention360 extends Customer360Page {
         if(val != null && val.contains("Events Page")) {
             ePage = new EventsPage("360 Page");
             wait.waitTillElementDisplayed(ADD_EVENT_BUTTON, MAX_TIME, MIN_TIME);
-            wait.waitTillElementNotPresent(LOADING_EVENTS_IMG, MIN_TIME, MAX_TIME);
         } else if(val != null && val.contains("Alerts Page")) {
             aPage = new AlertsPage("360 Page");
             wait.waitTillElementDisplayed(ADD_ALERT_BUTTON, MAX_TIME, MIN_TIME);
-            wait.waitTillElementNotPresent(LOADING_ALERTS_IMG, MIN_TIME, MAX_TIME);
         }
     }
 
@@ -62,7 +60,7 @@ public class Retention360 extends Customer360Page {
         ePage.fillEventForm(eventData, false);
     }
 
-    public void addTask(HashMap<String, String> taskData) {
+    public void addEventTask(HashMap<String, String> taskData) {
         ePage.clickOnAddTask();
         ePage.fillTaskForm(taskData);
         ePage.clickOnSaveTask();
@@ -219,20 +217,17 @@ public class Retention360 extends Customer360Page {
     /************Alerts Module Page Objects********/
 
 
-    public void addAlert(HashMap<String, String> alertData) {
+    public Retention360 addAlert(HashMap<String, String> alertData) {
         item.click(ADD_ALERT_BUTTON);
         movetoActiveIframe();
         aPage.fillAlertForm(alertData, false);
         aPage.clickOnSaveAlert();
         element.switchToMainWindow();
+        return this;
     }
 
     public void updateAlert(HashMap<String, String> alertData, HashMap<String, String> updatedAlertData, AlertCardLabel alabel) {
-        String alertXpath = buildAlertXpath(alertData, alabel);
-        String alertEditIcon = alertXpath+"/div[@class='edit_icon card_data_click' and @title='Edit']";
-        item.click(alertEditIcon);
-        movetoActiveIframe();
-        aPage.waitTillAlertCardLoaded();
+        openAlertCardEditMode(alertData, alabel);
         aPage.fillAlertForm(updatedAlertData, false);
         aPage.clickOnEditAlertClose();
         element.switchToMainWindow();
@@ -240,6 +235,7 @@ public class Retention360 extends Customer360Page {
 
     public boolean isAlertDisplayed(HashMap<String, String> alertData, AlertCardLabel alertCardLabel) {
         boolean result = false;
+        amtDateUtil.stalePause();
         String alert = buildAlertXpath(alertData, alertCardLabel);
         if(item.isElementPresent(alert)) {
             result = true;
@@ -248,6 +244,38 @@ public class Retention360 extends Customer360Page {
             Report.logInfo("Alert Not Found");
         }
         return result;
+    }
+
+    public void openAlertCardEditMode(HashMap<String, String> alertData, AlertCardLabel alabel) {
+        String alertXpath = buildAlertXpath(alertData, alabel);
+        String alertEditIcon = alertXpath+"/div[@class='edit_icon card_data_click' and @title='Edit']";
+        item.click(alertEditIcon);
+        movetoActiveIframe();
+        aPage.waitTillAlertCardLoaded();
+    }
+
+    public Retention360 addTaksOnAlert(List<HashMap<String, String>> taskDataList) {
+        for(HashMap<String, String> taskData : taskDataList) {
+            aPage.addTask(taskData);
+        }
+        closeAlertView();
+        return this;
+    }
+
+    public void closeAlertView() {
+        aPage.closeAlertForm();
+        element.switchToMainWindow();
+    }
+
+    public void deleteAlert(HashMap<String, String> alertData, AlertCardLabel alabel) {
+        String alertXpath = buildAlertXpath(alertData, alabel);
+        String deleteIcon = alertXpath+"/div[@class='delete_icon_btn' and @title='Delete']";
+        item.click(deleteIcon);
+        modal.accept();
+    }
+
+    public boolean isAlertTaskDisplayed(HashMap<String, String> taskData) {
+        return aPage.isTaskDisplayed(taskData);
     }
 
     private String buildAlertXpath(HashMap<String, String> alertData, AlertCardLabel alabel) {
@@ -277,12 +305,7 @@ public class Retention360 extends Customer360Page {
         return xPath;
     }
 
-    public void deleteAlert(HashMap<String, String> alertData, AlertCardLabel alabel) {
-        String alertXpath = buildAlertXpath(alertData, alabel);
-        String deleteIcon = alertXpath+"/div[@class='delete_icon_btn' and @title='Delete']";
-        item.click(deleteIcon);
-        modal.accept();
-    }
+
 
 
 
