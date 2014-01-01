@@ -32,7 +32,6 @@ public class AdminMilestoneTabTest extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
 	public void testAdminCreateMilestone(HashMap<String, String> testData) throws BiffException, IOException {
-		
 		createMilestoneFromScript();
 		createMilestoneType(testData.get("CreateNewMilestone"));
 	}

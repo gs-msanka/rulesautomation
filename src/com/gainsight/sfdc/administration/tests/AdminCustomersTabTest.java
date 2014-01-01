@@ -26,12 +26,12 @@ public class AdminCustomersTabTest extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
+		deleteCustomersStagesThorughScript();
 	}
-	
 	
 	             //Add Stage
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Customer_Stage_Create")
 	public void testAdminAddCustomerStage(HashMap<String, String> testData) throws BiffException, IOException {
 		addNewStage(testData.get("CreateNewStage"));
 	}
@@ -52,8 +52,9 @@ public class AdminCustomersTabTest extends BaseTest {
 	
 		               // Edit  Stage      
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Customer_Stage_Edit")
 	public void testAdminEditStageTest(HashMap<String, String> testData) throws BiffException, IOException {
+		addNewStage(testData.get("CreateNewStage"));
 		editStage(testData.get("EditStage"));
 	}
 	private AdminCustomersTab editStage(String testData) {
@@ -72,8 +73,9 @@ public class AdminCustomersTabTest extends BaseTest {
 	
 		                 //  Delete Stage
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminCustomersTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Customer_Stage_Delete")
 	public void testAdminDeleteStageTest(HashMap<String, String> testData) throws BiffException, IOException {
+		addNewStage(testData.get("CreateNewStage"));
 		deleteStage(testData.get("DeleteStage"));
 	}
 	private AdminCustomersTab deleteStage(String testData) {
@@ -90,6 +92,20 @@ public class AdminCustomersTabTest extends BaseTest {
 				"Verifying Stage is deleted to the grid");
 		return adCustPage;
 	}
+	
+	
+	 public void deleteCustomersStagesThorughScript() {
+		  try {
+		     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Customer Stage' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
+		     if(!isPackageInstance()) {
+		         DELETERECORDS = removeNameSpace(DELETERECORDS);
+		     }
+		     soql.deleteQuery(DELETERECORDS);
+		  } catch (Exception e) {
+		      Report.logInfo(e.getLocalizedMessage());
+		  }
+			 }
+	
 	
 	@AfterClass
 	public void tearDown() {
