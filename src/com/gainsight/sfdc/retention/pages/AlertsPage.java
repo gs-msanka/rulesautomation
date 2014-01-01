@@ -4,6 +4,7 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pojos.Alert;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.retention.pojos.Task;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -48,6 +49,7 @@ public class AlertsPage extends RetentionBasePage {
     private static final String PLAYBOOK_SELECT          = "//select[@class='loadPlaybookCls']";
     private static final String TASK_CARD                = "//div[@class='taskItemCls']";
     private static final String CUST_SEARCH_RESULT_DIV   = "//div[contains(@id, 'CustomerSearchPanel')]";
+    private static final String NO_TASK_PRESENT_MSG = "//div[@class='taskFirstTimeAddCls' and contains(text(), 'No tasks are added for this alert!')]";
 
     private static final String SUBJECT_DISPLAY     = "subject-view";
     private static final String SEVERITY_DISPLAY    = "severity-view";
@@ -127,7 +129,6 @@ public class AlertsPage extends RetentionBasePage {
     //owner, subject, date, priority, status.
     public void addTask(HashMap<String, String> taskData) {
         item.click(ADD_TASK_BUTTON);
-        amtDateUtil.sleep(3);
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);
@@ -393,9 +394,9 @@ public class AlertsPage extends RetentionBasePage {
                 if(!alertDataLoaded) {
                     String eventDate = "";
                     try {
-                        eventDate = field.getText(SUBJECT_DISPLAY);
-                    }  catch (Exception e) {
                         eventDate = field.getTextFieldValue(SUBJECT_INPUT);
+                    } catch (Exception e) {
+                        eventDate = field.getText(SUBJECT_DISPLAY);
                     }
                     if(eventDate == null || eventDate.length() <=1) {
                         amtDateUtil.sleep(1);
@@ -405,13 +406,23 @@ public class AlertsPage extends RetentionBasePage {
                         alertDataLoaded = true;
                     }
                 }
+
                 if(!tasksDisplayed) {
-                    List<WebElement> eleList = element.getAllElement(TASK_CARD);
-                    if(eleList.size() ==0) {
-                        amtDateUtil.sleep(1);
-                        Report.logInfo("Tasks on Alert card are not loaded still");
-                    } else {
-                        tasksDisplayed = true;
+                    try {
+                        if(isElementPresentAndDisplay(By.xpath(NO_TASK_PRESENT_MSG))) {
+                            tasksDisplayed = true;
+                        }
+                    }catch (Exception e) {
+                        Report.logInfo("Message not displayed");
+                    }
+                }
+                if(!tasksDisplayed) {
+                    try {
+                        if(isElementPresentAndDisplay(By.xpath(TASK_CARD))) {
+                            tasksDisplayed = true;
+                        }
+                    } catch (Exception e) {
+                        Report.logInfo("No Tasks");
                     }
                 }
                 if(tasksDisplayed && alertDataLoaded) {
