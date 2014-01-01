@@ -26,7 +26,7 @@ public class AdminRetentionTabTest extends BaseTest {
 		basepage.login();
 		deleteRetentionTypeFromScript();
 	}
-/*	 //create
+	            //create
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Create")
 	public void testAdminCreateAlertTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
@@ -284,7 +284,7 @@ public class AdminRetentionTabTest extends BaseTest {
 					"Verifying Alert Status added in the grid");
 			return adRetPage;
 	}
-*/	                            // Create Event Type
+                            // Create Event Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=13)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EType_Create")
 	public void testAdminCreateEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
@@ -306,7 +306,7 @@ public class AdminRetentionTabTest extends BaseTest {
 		return adRetPage;
 	}
 	         	// Edit Event Type
-/*	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=14)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=14)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EType_Edit")
 	public void testAdminEditEventTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
 		createEventType(testData.get("CreateEventType"));
