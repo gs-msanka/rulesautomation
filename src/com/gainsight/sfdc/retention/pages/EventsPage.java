@@ -259,16 +259,7 @@ public class EventsPage extends RetentionBasePage {
                 }
             }
         }
-        if(wEle != null) {
-            Actions builder = new Actions(driver);
-            builder.moveToElement(wEle);
-            builder.click(wEle);
-            Action selectedAction = builder.build();
-            selectedAction.perform();
-            Report.logInfo("Finished selecting the owner for event");
-        } else {
-            Report.logInfo("FAIL: Failed to select the owner for the event");
-        }
+        wEle.click();
     }
 
     /**
