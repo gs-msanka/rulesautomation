@@ -239,27 +239,24 @@ public class EventsPage extends RetentionBasePage {
                     isOwnerDisplayed = true;
                     break;
                 } else {
-                    amtDateUtil.sleep(1);
+                    amtDateUtil.stalePause();
                 }
             }
             if(isOwnerDisplayed) {
+                Report.logInfo("Auto Owner Suggestion list displayed");
                 break;
             }
         }
-        WebElement wEle = null;
-        List<WebElement> eleList = element.getAllElement("//a[contains(@class, 'ui-corner-all')]");
+        WebElement owner = null;
+        List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
         for(WebElement ele : eleList) {
-            if(ele.isDisplayed()){
-                String s = ele.getText();
-                System.out.println("AccText :" +s);
-                System.out.println("Exp Text:" +ownerName);
-                if(s.contains(ownerName)){
-                    wEle = ele;
-                    break;
-                }
+            if(ele.isDisplayed()) {
+                owner = ele;
+                break;
             }
         }
-        wEle.click();
+        owner.click();
+
     }
 
     /**
