@@ -230,14 +230,13 @@ public class EventsPage extends RetentionBasePage {
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner of event");
         for(int i =0; i<15; i++) {
+            amtDateUtil.stalePause();
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             boolean isOwnerDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
                     isOwnerDisplayed = true;
                     break;
-                } else {
-                    amtDateUtil.stalePause();
                 }
             }
             if(isOwnerDisplayed) {
