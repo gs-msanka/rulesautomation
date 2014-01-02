@@ -23,30 +23,17 @@ public class EventsTests extends BaseTest {
             + generatePath(dirs);
     Calendar c = Calendar.getInstance();
     Boolean isEventCreateScriptExecuted = false;
-    String deleteScript = "SELECT Id FROM JBCXM__CSEvent__c";
-    String deletPlaybookScript = "SELECT ID FROM JBCXM__Playbook__c";
-    String file = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-    String userupdate = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
-    String playbookScriptfile = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+
+    String EVENT_PICKLIST_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+    String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+    String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale           = soql.getUserLocale();
-        try{
-            if(!isPackageInstance()) {
-                deleteScript = removeNameSpace(deleteScript);
-                deletPlaybookScript = removeNameSpace(deletPlaybookScript);
-            }
-            userLocale = soql.getUserLocale();
-            soql.deleteQuery(deleteScript);
-            soql.deleteQuery(deletPlaybookScript);
-            apex.runApexCodeFromFile(file, isPackageInstance());
-            apex.runApexCodeFromFile(userupdate);
-            apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
-        }
+        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(USER_SETUP_FILE);
+        apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
     }
 
     @Test
