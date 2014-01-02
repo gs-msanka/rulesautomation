@@ -107,9 +107,7 @@ public class EventsPage extends RetentionBasePage {
     }
 
     public void waitTillEventCardsLoad() {
-        amtDateUtil.stalePause();
         wait.waitTillElementNotDisplayed("//img[@class='waitingImage']", MIN_TIME, MAX_TIME);
-        wait.waitTillElementNotDisplayed("//span[@class='waitingDescription']", MIN_TIME, MAX_TIME);
     }
 
     public void weekView() {
@@ -356,6 +354,7 @@ public class EventsPage extends RetentionBasePage {
     public void clickOnUpdateEvent() {
         button.click(EVENT_UPDATE_BUTTON);
     }
+
     public void clickOnUpdateEvent(HashMap<String, String> eventdata) {
         Report.logInfo("Clicking on updating event.");
         button.click(EVENT_UPDATE_BUTTON);
@@ -371,6 +370,7 @@ public class EventsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(xpath, MIN_TIME, MAX_TIME);
         Report.logInfo("Clicked on Updating the event");
     }
+
 
     private boolean isErrMsgDisplayed(String s) {
         boolean result = false;

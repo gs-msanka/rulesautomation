@@ -41,7 +41,9 @@ public class EventsTests extends BaseTest {
         if(!isEventCreateScriptExecuted) {
             createEventsFromScript();
         }
-        EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         eventsPage.applyFilter("Sprint Planning");
         Assert.assertTrue(eventsPage.isFiltersOn("Sprint Planning"));
         List<Event> eventList = eventsPage.getAllEvents();
@@ -53,6 +55,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_30() throws IOException, BiffException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -60,8 +65,7 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(365));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
+
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearly' " +
@@ -76,6 +80,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_31() throws IOException, BiffException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -83,8 +90,7 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(300));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
+
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearlyNth' " +
@@ -99,13 +105,14 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_033() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         eventsPage.changeStatus(eventData, "In Progress");
@@ -116,7 +123,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_032() throws BiffException, IOException {
-        Report.logInfo("Test Case Start: Event_032");
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_032");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -124,18 +133,18 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(2));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
         eventsPage.deleteEvent(eventData);
         Assert.assertFalse(eventsPage.isEventDisplayed(eventData), "Verifying weather Event Deleted successfully.");
-        Report.logInfo("Test Case Start: Event_032");
     }
 
     @Test
     public void Event_029() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -143,8 +152,6 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(60));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthlyNth' " +
@@ -159,6 +166,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_028() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -166,8 +176,6 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(40));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthly' " +
@@ -181,6 +189,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_027() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -188,8 +199,6 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(3));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -205,6 +214,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_026() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -212,8 +224,6 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(4));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -229,6 +239,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_025() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
@@ -236,8 +249,6 @@ public class EventsTests extends BaseTest {
         eventData.put("enddate", getDatewithFormat(1));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -253,6 +264,9 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_024() throws BiffException, IOException {
+        basepage.refreshPage();
+        EventsPage eventsPage                       = basepage.clickOnRetentionTab().clickOnEventsTab();
+        eventsPage.waitTillEventCardsLoad();
         List<HashMap<String, String>> taskDataList  =  new ArrayList<HashMap<String, String>>();
         HashMap<String, String> testData            = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_024");
         HashMap<String, String> eventData           = getMapFromData(testData.get("eventdetails"));
@@ -261,24 +275,23 @@ public class EventsTests extends BaseTest {
         taskData.put("date", getDatewithFormat(0));
         HashMap<String, String> task1               = getMapFromData(testData.get("task1"));
         task1.put("date", getDatewithFormat(0));
-        EventsPage eventsPage                       = basepage.clickOnRetentionTab().clickOnEventsTab();
-        eventsPage.waitTillEventCardsLoad();
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         taskDataList.add(task1);
         eventsPage.addTask(eventData, taskDataList);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         eventsPage.openEventCard(eventData);
-        Assert.assertTrue(eventsPage.isTaskDisplayed(task1));
+        Assert.assertTrue(eventsPage.isTaskDisplayed(task1), "Checking weather task is created successfully");
         eventsPage.deleteTask(task1);
         eventsPage.clickOnUpdateEvent(eventData);
         eventsPage.openEventCard(eventData);
-        Assert.assertFalse(eventsPage.isTaskDisplayed(task1));
+        Assert.assertFalse(eventsPage.isTaskDisplayed(task1), "Checking weather task deletion successful");
         eventsPage.clickOnCloseEventCard();
     }
 
     @Test
     public void Event_018() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_018");
@@ -313,6 +326,7 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_017() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_017");
@@ -335,6 +349,7 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_016() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_016");
@@ -350,6 +365,7 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_004() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_004");
@@ -366,6 +382,7 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_003() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_003");
@@ -381,6 +398,7 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_001() throws BiffException, IOException {
+        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_001");
