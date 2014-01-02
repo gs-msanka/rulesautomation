@@ -32,7 +32,7 @@ public class EventsTests extends BaseTest {
         basepage.login();
         userLocale           = soql.getUserLocale();
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(USER_SETUP_FILE);
+        //apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
     }
 
@@ -40,7 +40,6 @@ public class EventsTests extends BaseTest {
     public void Event_07() {
         if(!isEventCreateScriptExecuted) {
             createEventsFromScript();
-            isEventCreateScriptExecuted = true;
         }
         EventsPage eventsPage = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.applyFilter("Sprint Planning");
@@ -433,14 +432,10 @@ public class EventsTests extends BaseTest {
     }
 
     public void createEventsFromScript() {
-        try {
-            String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-            Report.logInfo("File :" +file);
-            apex.runApexCodeFromFile(file, isPackageInstance());
-            isEventCreateScriptExecuted = true;
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-        }
+        String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
+        Report.logInfo("File :" +file);
+        apex.runApexCodeFromFile(file, isPackageInstance());
+        isEventCreateScriptExecuted = true;
     }
 
     @AfterClass
