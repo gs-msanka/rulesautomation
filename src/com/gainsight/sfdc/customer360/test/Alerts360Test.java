@@ -27,6 +27,7 @@ public class Alerts360Test extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
+        userLocale = soql.getUserLocale();
         apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
         if(!isPackageInstance()) {
             deleteScript = removeNameSpace(deleteScript);
