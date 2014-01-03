@@ -9,11 +9,13 @@
         <classes>
 
             <!-- Giri's Test-->
-
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
             <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
             <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
             <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
             <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+
+
 
         </classes>
     </test>
