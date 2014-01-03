@@ -26,7 +26,7 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
-    String userLocale  = "en_IN";
+    public String userLocale;
 
 	@BeforeSuite
 	public void init() throws Exception {
