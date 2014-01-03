@@ -357,6 +357,7 @@ public class EventsPage extends RetentionBasePage {
     public void clickOnUpdateEvent(HashMap<String, String> eventdata) {
         Report.logInfo("Clicking on updating event.");
         button.click(EVENT_UPDATE_BUTTON);
+        amtDateUtil.stalePause();
         String xpath = "//div[@class='data-value scheduledDateValCls' "
                 + "and contains(text(), '"+eventdata.get("schedule")+"')]/parent::div"
                 + "/preceding-sibling::div/div[contains(@title,'"+eventdata.get("owner")+"')]"

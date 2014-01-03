@@ -104,7 +104,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_033() throws BiffException, IOException {
+    public void Event_33() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -122,7 +122,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_032() throws BiffException, IOException {
+    public void Event_32() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -141,7 +141,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_029() throws BiffException, IOException {
+    public void Event_29() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -165,7 +165,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_028() throws BiffException, IOException {
+    public void Event_28() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -188,7 +188,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_027() throws BiffException, IOException {
+    public void Event_27() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -213,7 +213,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_026() throws BiffException, IOException {
+    public void Event_26() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -238,7 +238,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_025() throws BiffException, IOException {
+    public void Event_25() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -263,7 +263,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_024() throws BiffException, IOException {
+    public void Event_24() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage                       = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -290,7 +290,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_018() throws BiffException, IOException {
+    public void Event_18() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -325,7 +325,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_017() throws BiffException, IOException {
+    public void Event_17() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -348,7 +348,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_016() throws BiffException, IOException {
+    public void Event_16() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -364,7 +364,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_004() throws BiffException, IOException {
+    public void Event_04() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -381,7 +381,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_003() throws BiffException, IOException {
+    public void Event_03() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
@@ -397,7 +397,7 @@ public class EventsTests extends BaseTest {
     }
 
     @Test
-    public void Event_001() throws BiffException, IOException {
+    public void Event_01() throws BiffException, IOException {
         basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
