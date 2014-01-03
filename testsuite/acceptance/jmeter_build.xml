@@ -1,0 +1,82 @@
+<project name="Acceptance Test" default="" basedir="../../.">
+	<property name="build.dir" location="${basedir}/bin" />
+	<property name="result.dir" location="${basedir}/result" />
+	<property name="failed.dir" location="${result.dir}/failed" />
+	<property name="screenshots.dir" value="${result.dir}/screenshots" />
+	<property name="failures.dir" value="${screenshots.dir}/failures" />
+	<property environment="env"/>
+	
+	<!-- TestNG file name for pre and post tests -->
+	<property name="testngFileName" value="jmeter_testng.xml"/>
+
+	<target name="runTest" depends="init, editPropertyFile, compile, bat"/>
+
+	<!-- Classpath files required for compiling -->
+	<path id="cpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Classpath files required at run-time -->
+	<path id="runpath">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement location="${build.dir}"/>
+	</path>
+
+	<!-- TestNG Ant Task Def -->
+	<taskdef resource="testngtasks" classpathref="cpath"/>
+
+	<!-- Run Tests by specifying testNG file name -->
+	<target name="bat" depends="">
+		<echo message="Starting Acceptance Tests" />	
+		<testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true">
+			<sysproperty key="run" value="BAT" />
+			<sysproperty key="basedir" value="${basedir}" />
+
+			<xmlfileset dir="testsuite/acceptance" includes="${testngFileName}"/>
+		</testng>
+	</target>
+
+	<target name="compile" depends="">
+		<echo message="compiling tests" />
+		<javac srcdir="src" destdir="${build.dir}" classpathref="cpath" nowarn="on" debug="on" debuglevel="lines,vars,source">
+		</javac>
+	</target>
+
+	<!-- Edit Property file by replacing default values with run-time values -->
+	<target name="editPropertyFile">
+		<propertyfile file="${basedir}/conf/application.properties">
+			<entry  key="sfdc.username" value="${username}"/>
+			<entry  key="sfdc.password" value="${password}"/>
+			<entry  key="sfdc.stoken" value="${stoken}"/>
+			<entry  key="sfdc.appurl" value="${appurl}"/>
+			<entry  key="sfdc.deleteRecords" value="${deleteRecords}"/>
+			<entry  key="sfdc.managedPackage" value="${managedPackage}"/>
+			<entry  key="sfdc.setAsDefaultApp" value="${setAsDefaultApp}"/>
+			<entry  key="sfdc.loadDefaultData" value="${loadDefaultData}"/>
+			
+			<entry  key="browser" value="${browser}"/>
+		</propertyfile>
+	</target>
+
+	<target name="init" depends="clean">
+		<echo>Initializing Acceptance Test...</echo>
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${result.dir}" />
+		<mkdir dir="${failed.dir}" />
+		<mkdir dir="${screenshots.dir}" />
+		<mkdir dir="${failures.dir}" />
+	</target>
+
+	<target name="clean">
+		<echo>Clean up....</echo>
+		<delete dir="${build.dir}" failonerror="false" />
+		<delete dir="${result.dir}" failonerror="false" />
+		<delete dir="${failed.dir}" failonerror="false" />
+		<delete dir="${screenshots.dir}" failonerror="false" />
+		<delete dir="${failures.dir}" failonerror="false" />
+	</target>
+</project>
