@@ -1,0 +1,16 @@
+List<JBCXM__PickList__c> pkList = new List<JBCXM__PickList__c>();
+
+List<String> utList = new List<String>{'Emails Sent Count', 'Files Upload Count', 'Data Base Size Used', 'Network Traffic Created'};
+Delete [SELECT ID FROM JBCXM__PickList__c WHERE Name IN: utList];
+integer i=150;
+for(String s : utList) {
+	JBCXM__PickList__c pk = new JBCXM__PickList__c(Name = s,
+													JBCXM__SystemName__c = s,
+													JBCXM__Category__c = 'Adoption Measure Types',
+													JBCXM__Attribute1__c = '#DC143C',
+													JBCXM__Active__c = true,
+													JBCXM__UsageTrackingMeasure__c = true,
+													JBCXM__DisplayOrder__c	= ++i);
+	pkList.add(pk);
+}
+insert pkList;

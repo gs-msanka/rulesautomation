@@ -34,6 +34,9 @@ public class Customer360Page extends BasePage {
     private static final String EVENT_SECTION_TAB   = "//ul[@class='alert_tab_nav']/li/a[text()='Events']";
     private static final String LOADING_EVENTS_IMG  = "//div[contains(@class, 'gs-loader' and text()='Loading Events')]";
     private static final String LOADING_ALERTS_IMG  = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
+    private static final String USAGE_SECTION_TAB = "//div[@class='gs_section_title']/h1[contains(text(), 'Usage')]";
+    private static final String USAGE_SUB_SECTION_TAB = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
+
 
 	public Customer360Page() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -134,6 +137,12 @@ public class Customer360Page extends BasePage {
         wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
         item.click(ALERT_SECTION_TAB);
         return new Retention360("Alerts Page");
+    }
+
+    public UsageTracker360 clickOnUsageTracker() {
+        wait.waitTillElementDisplayed(USAGE_SECTION_TAB, MIN_TIME,MAX_TIME);
+        item.click(USAGE_SUB_SECTION_TAB);
+        return new UsageTracker360();
     }
 
 	public Customer360Page addNewBusinessTransaction(
