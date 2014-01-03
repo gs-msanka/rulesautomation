@@ -26,7 +26,7 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
-    public String userLocale;
+    String userLocale  = "en_IN";
 
 	@BeforeSuite
 	public void init() throws Exception {
@@ -38,7 +38,6 @@ public class BaseTest {
 			env.launchBrower();
 			basepage = new BasePage();
             userLocale = soql.getUserLocale();
-            Report.logInfo("User Locale : " +userLocale);
 			Report.logInfo("Initializing Base Page : " + basepage);
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();
@@ -223,4 +222,10 @@ public class BaseTest {
         Report.logInfo(String.valueOf(date));
         return date;
     }
+    
+    public void deletePickList() {
+    	String DELETE_SCRIPT_FILE = env.basedir+"/testdata/sfdc/Administration/Picklist_Delte_Script.txt";
+    	apex.runApexCodeFromFile(DELETE_SCRIPT_FILE, isPackageInstance());
+    }
+    
 }
