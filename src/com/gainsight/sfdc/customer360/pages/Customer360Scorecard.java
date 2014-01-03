@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -31,8 +32,8 @@ public class Customer360Scorecard extends Customer360Page {
 	private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
 	private final String MEASURE_SCORE_SAVE = "//div[contains(text(), '%s')]/parent::div/div[@class='sliderH' and contains(@id, 'gs')]/descendant::a[@data-action='SAVE']";
 	private final String MEASURE_COMMENTS = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container']/div/div[@class='text-edit-area']";
-	private final String MEASURE_COMMENTS_EDIT = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container']/div/span[@class='edit_icon']"; // %s is measure
-	private final String MEASURE_COMMENTS_SAVE = "//div[contains(text(), '%s')]/parent::div/following-sibling::div/following-sibling::div[@class='editable comment-container']/div[@class='save-options clearfix']/a[@data-action='SAVE']";
+	private final String MEASURE_COMMENTS_EDIT = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container edit_on']/div/div[@class='text-edit-area']"; // %s is measure
+	private final String MEASURE_COMMENTS_SAVE = "//div[contains(.,'%s') and @class='card-holder']//div[@class='editable comment-container edit_on']//a[@data-action='SAVE']";
 	private final String MEASURE_FOOTER_MSG = "//div[@title='%s']/parent::div/parent::div/div[@class='status']";
 
 	public Customer360Scorecard() {
@@ -43,19 +44,19 @@ public class Customer360Scorecard extends Customer360Page {
 		return (Integer.parseInt(item.getText(OVERALL_SCORE)));
 	}
 
-	public void verifyOverallTrend(String Trend) {
+	public boolean verifyOverallTrend(String Trend) {
 
 		switch (Trend) {
 		case "Up":
-			item.isElementPresent(String.format(OVERALL_TREND, "up"));
-			break;
+			return item.isElementPresent(String.format(OVERALL_TREND, "up"));
+			
 		case "Down":
-			item.isElementPresent(String.format(OVERALL_TREND, "down"));
-			break;
+			return item.isElementPresent(String.format(OVERALL_TREND, "down"));
+
 		case "Same":
-			item.isElementPresent(String.format(OVERALL_TREND, "flat"));
-			break;
+			return item.isElementPresent(String.format(OVERALL_TREND, "flat"));
 		}
+		return false;
 	}
 
 	public void addOrEditOverallSummary(String summary, boolean add) {
@@ -108,9 +109,12 @@ public class Customer360Scorecard extends Customer360Page {
 				.xpath(MEASURE_SCORE_SLIDER_CIRCLE));
 		for (WebElement svg : svgObject) {
 			if (svg.isDisplayed())
+			{
+				builder.moveToElement(svg);
 				builder.dragAndDropBy(svg,
-						getOffsetForScore(score, scheme, true), 0).build()
+						getOffsetForScore(score, scheme, add), 0).build()
 						.perform();
+			}
 		}
 		amtDateUtil.stalePause();
 		item.click(String.format(MEASURE_SCORE_SAVE, measure));
@@ -134,37 +138,53 @@ public class Customer360Scorecard extends Customer360Page {
 	private int getOffsetForScore(String score, String scheme, boolean add) {
 		int sliderStart = 10;
 		int sliderEnd = 243;
-		int sliderCurrentPos = 0; // need to get current x pos of the slider
+		List<WebElement> ele=driver.findElements(By.xpath(MEASURE_SCORE_SLIDER_CIRCLE));
+		
+
 		int numOfGrades = 6; // To decide if this is to be taken from some
 								// configuration/excel
 		int returnVal = 0;
+		
 		switch (scheme) {
-		case "Numeric":
-			if (add) {
-				returnVal = Math.round((((sliderEnd - sliderStart) * (Float
-						.parseFloat(score) / 100)) + sliderStart));
+		case "Numeric":{
+				if (add) {
+				returnVal =(int)Math.floor((((sliderEnd - sliderStart) * (Float
+						.parseFloat(score) / 100))));
 			} else {
-				returnVal = Math
-						.round(((((sliderEnd - sliderStart) * (Float
-								.parseFloat(score) / 100)) + sliderStart) - sliderCurrentPos));
+				int sliderCurrentPos=0;
+				for(WebElement e : ele){
+					if(e.isDisplayed())
+						sliderCurrentPos = (int)Float.parseFloat(e.getAttribute("cx")); // need to get current x pos of the slider
+				}
+				returnVal = (int) Math
+						.floor(((((sliderEnd - sliderStart) * (Float
+								.parseFloat(score) / 100))) +sliderStart - sliderCurrentPos));
+				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 			break;
+		}
 		case "Grade":
 			if (add) {
 				returnVal = Math
 						.round(((((sliderEnd - sliderStart) / numOfGrades) * Grades
 								.valueOf(score).getValue()) + sliderStart));
 			} else {
+				int sliderCurrentPos=0;
+				for(WebElement e : ele){
+					if(e.isDisplayed())
+						sliderCurrentPos = (int)Float.parseFloat(e.getAttribute("cx")); // need to get current x pos of the slider
+				}
 				returnVal = Math
 						.round((((((sliderEnd - sliderStart) / numOfGrades) * Grades
 								.valueOf(score).getValue()) + sliderStart) - sliderCurrentPos));
+				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 			break;
 		case "Color":
 			if (add) {
-				returnVal = sliderCurrentPos;
+				returnVal = 0;
 			} else {
-				returnVal = sliderCurrentPos;
+				returnVal = 0;
 			}
 			break;
 		}
@@ -172,12 +192,8 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 
 	public void addOrEditCommentsForMeasure(String comments, String measure) {
-		Actions builder = new Actions(driver);
-		builder.moveToElement(element.getElement(By.xpath(String.format(
-				MEASURE_COMMENTS, measure))));
-		amtDateUtil.stalePause();
-		item.click(String.format(MEASURE_COMMENTS_EDIT, measure));
-		item.clearAndSetText(String.format(MEASURE_COMMENTS, measure), comments);
+		driver.findElement(By.xpath(String.format(MEASURE_COMMENTS, measure))).click();
+		driver.findElement(By.xpath(String.format(MEASURE_COMMENTS_EDIT,measure))).sendKeys(comments);
 		item.click(String.format(MEASURE_COMMENTS_SAVE, measure));
 		amtDateUtil.stalePause();
 	}

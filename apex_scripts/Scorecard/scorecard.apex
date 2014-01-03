@@ -1,0 +1,1 @@
+delete [select Name from JBCXM__ScorecardFact__c];
