@@ -1,7 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
 import com.gainsight.pageobject.core.Report;
-import com.sun.tools.javac.util.List;
 
 import java.util.HashMap;
 
