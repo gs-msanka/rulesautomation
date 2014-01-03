@@ -24,15 +24,14 @@ public class AdminMilestoneTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
-		deleteMilestoneFromScript();
+		deletePickList();
 		basepage.login();
 	}
 
 		                     //Add Milestone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Create_Milestone")
 	public void testAdminCreateMilestone(HashMap<String, String> testData) throws BiffException, IOException {
-		createMilestoneFromScript();
 		createMilestoneType(testData.get("CreateNewMilestone"));
 	}
 	
@@ -53,8 +52,9 @@ public class AdminMilestoneTabTest extends BaseTest {
 	
 	            //Edit MileStone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_Milestone")
 	public void testAdminEditMilestone(HashMap<String, String> testData) throws BiffException, IOException {
+		createMilestoneType(testData.get("CreateNewMilestone"));
 		editMilestoneType(testData.get("EditMilestone"));
 	}
 	private AdminMilestoneTab editMilestoneType(String testData) {
@@ -74,8 +74,9 @@ public class AdminMilestoneTabTest extends BaseTest {
 	
 		                // Delete Milestone
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AdminMilestoneTab")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Delete_Milestone")
 	public void testAdminDeleteMilestone(HashMap<String, String> testData) throws BiffException, IOException {
+		createMilestoneType(testData.get("CreateNewMilestone"));
 		deleteMilestoneType(testData.get("DeleteMilestone"));
 	}
 	private AdminMilestoneTab deleteMilestoneType(String testData) {
@@ -94,7 +95,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	}
 	
 	
-	 public void createMilestoneFromScript() {
+	 /*public void createMilestoneFromScript() {
 	       try {
 	           String file = env.basedir+"/testdata/sfdc/Administration/Milestone_Create_Script.txt";
 	           Report.logInfo("File :" +file);
@@ -105,19 +106,9 @@ public class AdminMilestoneTabTest extends BaseTest {
 	           Report.logInfo(e.getLocalizedMessage());
 	       }
 	   }
-		
+		*/
 	 
-	 public void deleteMilestoneFromScript() {
-     try {
-        String DELETERECORDS = "select id from JBCXM__PickList__c where JBCXM__Category__c = 'Milestones'";
-        if(!isPackageInstance()) {
-            DELETERECORDS = removeNameSpace(DELETERECORDS);
-        }
-        soql.deleteQuery(DELETERECORDS);
-     } catch (Exception e) {
-         Report.logInfo(e.getLocalizedMessage());
-     }
-	 }
+
 	 
 	@AfterClass
 	public void tearDown() {

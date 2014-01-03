@@ -23,10 +23,11 @@ public class AdminRetentionTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
+		deletePickList();
 		basepage.login();
-		deleteRetentionTypeFromScript();
+		
 	}
-	            //create
+	            //create Alert Type
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AType_Create")
 	public void testAdminCreateAlertTypeTest(HashMap<String, String> testData) throws BiffException, IOException {
@@ -355,19 +356,7 @@ public class AdminRetentionTabTest extends BaseTest {
 		adRetPage.taskConfiguration();
 	} */
 
-
-		 public void deleteRetentionTypeFromScript() {
-			  try {
-			     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Alert%' OR JBCXM__Category__c like 'SalesRep Name' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
-			     if(!isPackageInstance()) {
-			         DELETERECORDS = removeNameSpace(DELETERECORDS);
-			     }
-			     soql.deleteQuery(DELETERECORDS);
-			  } catch (Exception e) {
-			      Report.logInfo(e.getLocalizedMessage());
-			  }
-				 }
-				
+			
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();

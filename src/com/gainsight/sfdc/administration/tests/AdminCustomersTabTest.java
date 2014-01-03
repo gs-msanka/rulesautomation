@@ -25,8 +25,8 @@ public class AdminCustomersTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
+		deletePickList();
 		basepage.login();
-		deleteCustomersStagesThorughScript();
 	}
 	
 	             //Add Stage
@@ -93,7 +93,7 @@ public class AdminCustomersTabTest extends BaseTest {
 		return adCustPage;
 	}
 	
-	
+	/*//script to delete
 	 public void deleteCustomersStagesThorughScript() {
 		  try {
 		     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Customer Stage' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
@@ -104,7 +104,7 @@ public class AdminCustomersTabTest extends BaseTest {
 		  } catch (Exception e) {
 		      Report.logInfo(e.getLocalizedMessage());
 		  }
-			 }
+			 }*/
 	
 	
 	@AfterClass
