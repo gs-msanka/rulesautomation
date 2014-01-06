@@ -34,7 +34,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		 
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", true);
+		cp.searchCustomer("Scorecard Account", true);
 		cs = (Customer360Scorecard) cp.goToSection("Scorecard");
 	}
 
@@ -222,7 +222,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Edit")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
 	public void addOverallSummary(HashMap<String, String> testData) {
 		String actualSummary = getMapFromData(testData.get("Summary")).get(
 				"Comment");
@@ -230,17 +230,17 @@ public class Customer360ScorecardsTests extends BaseTest {
 		Assert.assertEquals(actualSummary, cs.getOverallSummary());
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnMethods="addOverallSummary")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
 	public void editOverallSummary(HashMap<String, String> testData) {
 		String actualSummary = getMapFromData(testData.get("Summary")).get(
 				"Comment");
 		cs.addOrEditOverallSummary(actualSummary, false);
-		Assert.assertEquals(actualSummary, cs.getOverallSummary());
+		Assert.assertEquals(getMapFromData(testData.get("Summary")).get("EditedComment"), cs.getOverallSummary());
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
 	public void addCustomerGoals(HashMap<String, String> testData) {
 		String actualGoals = getMapFromData(testData.get("Goals")).get(
 				"Comment");
@@ -248,13 +248,13 @@ public class Customer360ScorecardsTests extends BaseTest {
 		Assert.assertEquals(actualGoals, cs.getCustomerGoals());
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",dependsOnMethods="addCustomerGoals" )
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
 	public void editCustomerGoals(HashMap<String, String> testData) {
 		String actualGoals = getMapFromData(testData.get("Goals")).get(
 				"Comment");
 		cs.addOrEditCustomerGoals(actualGoals, false);
-		Assert.assertEquals(actualGoals, cs.getCustomerGoals());
+		Assert.assertEquals(getMapFromData(testData.get("Goals")).get("EditedComment"), cs.getCustomerGoals());
 	}
 
 	@AfterClass

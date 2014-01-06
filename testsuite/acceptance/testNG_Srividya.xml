@@ -8,11 +8,10 @@
 	<test verbose="3" name="C360 Tests" preserve-order="true">
 		<classes>
 			<!--Srividya's Tests -->
-			<!-- 
+			
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
 			<class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
-			-->
-          	<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
+			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
           	<methods>
 					<include name="verifyScoreWithNumeric" />
 					<include name="editNumericScores" />

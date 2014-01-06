@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -15,13 +16,14 @@ public class Customer360Scorecard extends Customer360Page {
 	private final String OVERALL_TREND = "//div[@class='score-area']/ul/li[@class='score-trend trend-%s']";// %s can	be up,down or flat
 
 	private final String OVERALL_SUMMARY = "//div[@class='discription']";
-	private final String EDIT_OVERALL_SUMMARY = "//div[@class='discription']/following-sibling::span";
-	private final String SAVE_OVERALL_SUMMARY = "//div[@class='discription-cont clearfix']/div[@class='save-options clearfix']/a[@data-action='SAVE']";
+	private final String EDIT_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']";
+	private final String SAVE_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']/parent::div/div[@class='save-options clearfix']/a[@data-action='SAVE']";
 
-	private final String CUSTOMER_GOALS = "//div[@class='goals']";
-	private final String EDIT_CUSTOMER_GOALS = "//div[@class='goalslist_editble']/span";
-	private final String SAVE_CUSTOMER_GOALS = "//div[@class='goalslist_editble']/div[@class='save-options clearfix']/a[@data-action='SAVE']";
-	private final String HIDE_OR_SHOW_CUSTOMER_GOALS = "//div[@class='gs-head-tgl-btn goals-arrow-up']";// or//div[@class='gs-head-tgl-btn goals-arrow-down']
+	private final String CUSTOMER_GOALS_HEADER="//div[@class='goalsheader clearfix']";
+	private final String CUSTOMER_GOALS = "//div[@class='goalslist_content']";
+	private final String EDIT_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']";
+	private final String SAVE_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']/parent::div//a[@data-action='SAVE']";
+	private final String HIDE_OR_SHOW_CUSTOMER_GOALS = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-down']";// or//div[@class='gs-head-tgl-btn goals-arrow-down']
 
 	private final String GROUP_LABEL = "//div[@class='matrix-heading']/h2[contains(.,'%s')]";
 
@@ -61,26 +63,31 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 
 	public void addOrEditOverallSummary(String summary, boolean add) {
-		item.click(EDIT_OVERALL_SUMMARY);
-		if (add)
-			item.clearAndSetText(OVERALL_SUMMARY, summary);
-		else
-			item.setText(OVERALL_SUMMARY, summary);
+		driver.findElement(By.xpath(OVERALL_SUMMARY)).click();
+		driver.findElement(By.xpath(EDIT_OVERALL_SUMMARY)).sendKeys(summary);
 		item.click(SAVE_OVERALL_SUMMARY);
+		amtDateUtil.stalePause();
 	}
 
 	public String getOverallSummary() {
+		amtDateUtil.stalePause();
 		return item.getText(OVERALL_SUMMARY);
 	}
 
 	public void addOrEditCustomerGoals(String goals, boolean add) {
-		item.click(String.format(HIDE_OR_SHOW_CUSTOMER_GOALS, "up"));
-		item.click(EDIT_CUSTOMER_GOALS);
-		if (add)
-			item.clearAndSetText(CUSTOMER_GOALS, goals);
-		else
-			item.setText(CUSTOMER_GOALS, goals);
+		//WebElement element = driver.findElement(By.xpath(CUSTOMER_GOALS_HEADER));
+		//JavascriptExecutor executor = (JavascriptExecutor)driver;
+		System.out.println("about to click goals header");
+		//executor.executeScript("j$(\".goals-section .goalsheader\").click();");
+		driver.findElement(By.className(".goals-section")).findElement(By.className(".goalsheader")).click();
+
+		System.out.println("Finished clicking goals header");
+		/*driver.findElement(By.xpath(CUSTOMER_GOALS_HEADER)).click();
+		amtDateUtil.stalePause();
+		driver.findElement(By.xpath(CUSTOMER_GOALS)).click();
+		driver.findElement(By.xpath(EDIT_CUSTOMER_GOALS)).sendKeys(goals);*/
 		item.click(SAVE_CUSTOMER_GOALS);
+		amtDateUtil.stalePause();
 	}
 
 	public String getCustomerGoals() {
