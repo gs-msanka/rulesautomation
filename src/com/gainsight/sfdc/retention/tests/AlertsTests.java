@@ -7,6 +7,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -89,21 +90,7 @@ public class AlertsTests extends BaseTest {
         alertsPage.closeAlertForm();
     }
 
-    public String getDatewithFormat(int i) {
-        String date                 = null;
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, i);
-        if(userLocale.contains("en_US")) {
-            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
-            date = dateFormat.format(c.getTime());
 
-        } else if(userLocale.contains("en_IN")) {
-            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
-            date = dateFormat.format(c.getTime());
-        }
-        Report.logInfo(String.valueOf(date));
-        return date;
-    }
 
 
 

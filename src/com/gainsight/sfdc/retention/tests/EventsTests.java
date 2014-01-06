@@ -32,7 +32,7 @@ public class EventsTests extends BaseTest {
         basepage.login();
         userLocale           = soql.getUserLocale();
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
-        //apex.runApexCodeFromFile(USER_SETUP_FILE);
+        apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
     }
 

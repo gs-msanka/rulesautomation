@@ -129,6 +129,7 @@ public class AlertsPage extends RetentionBasePage {
     //owner, subject, date, priority, status.
     public void addTask(HashMap<String, String> taskData) {
         item.click(ADD_TASK_BUTTON);
+        amtDateUtil.stalePause();
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);
