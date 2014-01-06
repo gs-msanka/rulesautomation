@@ -9,6 +9,7 @@ import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -222,6 +223,10 @@ public class Events360Test extends BaseTest {
         Assert.assertEquals(true, ret.isEventCardDisplayed(updateEventData), "Checking Event is Present");
     }
 
+    @BeforeMethod
+    public void refresh() {
+        basepage.refreshPage();
+    }
     @AfterClass
     public void tearDown(){
         basepage.logout();
