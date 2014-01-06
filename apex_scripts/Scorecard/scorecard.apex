@@ -24,3 +24,14 @@ smList_Meas.add(new JBCXM__ScorecardMetric__c(Name='M'+i,JBCXM__GroupId__c=group
 
 insert(smList_Meas);
 //smList.add(new JBCXM__ScorecardMetric__c(Name='Group1',JBCXM__AllowOverride__c=true,JBCXM__DisplayOrder__c=1,JBCXM__HelpText__c='abcd',JBCXM__InputType__c='Manual',JBCXM__IsActive__c=true,JBCXM__IsGroup__c=true,JBCXM__ScoringSchemeId__c=,JBCXM__ValidityPeriod__c=,JBCXM__Weight__c=));
+
+//ENABLING NUMERIC SCHEME
+JBCXM__ScoringScheme__c cur_scheme_type=[select JBCXM__CustomerScheme__c from JBCXM__ScoringScheme__c where JBCXM__CustomerScheme__c=true];
+if (cur_scheme_type==null){}
+    else{
+cur_scheme_type.JBCXM__CustomerScheme__c=false;
+update(cur_scheme_type);
+    }
+JBCXM__ScoringScheme__c scheme_type=[select JBCXM__CustomerScheme__c from JBCXM__ScoringScheme__c where Name like 'Num%'];
+scheme_type.JBCXM__CustomerScheme__c=true;
+update(scheme_type);
