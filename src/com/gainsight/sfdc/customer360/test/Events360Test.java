@@ -9,6 +9,7 @@ import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -23,13 +24,18 @@ public class Events360Test extends BaseTest {
             + generatePath(dirs);
     private final String TEST_DATA_FILE = "testdata/sfdc/eventtests/Events_360_Tests.xls";
 
-    String playbookScriptfile = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String PLAYBOOK_CREATE_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String EVENT_PICKLIST_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+    String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+
 
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
-        apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
+        apex.runApexCodeFromFile(PLAYBOOK_CREATE_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(USER_SETUP_FILE);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -82,7 +88,7 @@ public class Events360Test extends BaseTest {
         Assert.assertEquals(false, ret.isEventCardDisplayed(eventData), "Checking Event is Deleted");
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    /*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_4")
     public void addTasksToEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
@@ -112,7 +118,7 @@ public class Events360Test extends BaseTest {
             Assert.assertTrue(ret.isTaskDisplayed(task));
         }
         ret.clickOnUpdateEvent();
-    }
+    }*/
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_5")
@@ -198,7 +204,7 @@ public class Events360Test extends BaseTest {
         //Assert.assertTrue(ret.isInfoMessageDisplayed(), "Checking the information message displayed"); //since no message is displayed we are doing assert false, bug failed in JIRA.
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    /*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_8")
     public void editEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
@@ -215,8 +221,12 @@ public class Events360Test extends BaseTest {
         ret.fillEventForm(updateEventData);
         ret.clickOnUpdateEvent();
         Assert.assertEquals(true, ret.isEventCardDisplayed(updateEventData), "Checking Event is Present");
-    }
+    }*/
 
+    @BeforeMethod
+    public void refresh() {
+        basepage.refreshPage();
+    }
     @AfterClass
     public void tearDown(){
         basepage.logout();
