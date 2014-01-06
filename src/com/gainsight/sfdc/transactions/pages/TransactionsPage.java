@@ -13,7 +13,7 @@ public class TransactionsPage extends BasePage {
 	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
 	private final String TRANS_EDIT_LINK = "//table[@id='transactionList_IdOfJBaraStandardView']//tr[%d]//a[text()='Edit']";
 	private final String NEW_BUTTON = "//input[@value='New']";
-	private final String TRANS_TABLE = "transactionList_IdOfJBaraStandardView";
+	private final String TRANS_TABLE = "//table[contains(@id,'transactionList_Id') and @class='ui-jqgrid-btable']";
 	private final String CUSTOMER_FILTER = "Customer_link";
 
 	public TransactionsPage() {
