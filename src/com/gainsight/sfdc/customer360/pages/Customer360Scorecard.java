@@ -41,6 +41,7 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 
 	public int getOverallScore() {
+		amtDateUtil.stalePause();
 		return (Integer.parseInt(item.getText(OVERALL_SCORE)));
 	}
 
@@ -199,6 +200,7 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 
 	public String verifyCommentForMeasure(String measure) {
+		amtDateUtil.stalePause();;
 		return item.getText(String.format(MEASURE_COMMENTS, measure));
 	}
 
