@@ -29,7 +29,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		System.out
 				.println("Starting Customer 360 Scorecard module Test Cases...");
 		
-		  apex.runApexCodeFromFile("apex_scripts/Scorecard/scorecard.apex",
+		  apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/scorecard.apex",
 		  isPackageInstance());
 		 
 		basepage.login();
