@@ -50,14 +50,12 @@ public class UsageTracker360Tests  extends BaseTest {
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();
         List<HashMap<String, String>> udList = new ArrayList<HashMap<String, String>>();
-        try {
-            for(int i =1; i < 10 ; i++) {
+        for(int i=0; i <= 10 ; i ++) {
+            if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
                 usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
-        } catch (Exception e) {
-            Report.logInfo("All Usage Data Records Loaded");
         }
         for(HashMap<String, String> uD : udList) {
             Assert.assertTrue(uTPage.isUsageDataDisplayed(uD), "Checking for usage data display");
@@ -72,14 +70,12 @@ public class UsageTracker360Tests  extends BaseTest {
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();
         List<HashMap<String, String>> udList = new ArrayList<HashMap<String, String>>();
-        try {
-            for(int i =1; i < 10 ; i++) {
+        for(int i=0; i <= 10 ; i ++) {
+            if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
                 usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
-        } catch (Exception e) {
-            Report.logInfo("All Usage Data Records Loaded");
         }
         for(HashMap<String, String> uD : udList) {
             Assert.assertTrue(uTPage.isUsageDataDisplayed(uD), "Checking for usage data display");
@@ -94,14 +90,12 @@ public class UsageTracker360Tests  extends BaseTest {
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();
         List<HashMap<String, String>> udList = new ArrayList<HashMap<String, String>>();
-        try {
-            for(int i =1; i < 10 ; i++) {
+        for(int i=0; i <= 10 ; i ++) {
+            if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
                 usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
-        } catch (Exception e) {
-            Report.logInfo("All Usage Data Records Loaded");
         }
         for(HashMap<String, String> uD : udList) {
             Assert.assertTrue(uTPage.isUsageDataDisplayed(uD), "Checking for usage data displayed");

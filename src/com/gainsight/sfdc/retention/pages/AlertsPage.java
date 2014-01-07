@@ -156,45 +156,41 @@ public class AlertsPage extends RetentionBasePage {
 
     public void ownerSelect(String ownerName) {
         field.clearAndSetText(GS_TASK_ASSIGN_INPUT, ownerName);
-        Report.logInfo("Started selecting the owner of event");
+        Report.logInfo("Started selecting the owner");
+        amtDateUtil.sleep(7);
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
-            boolean isOwnerDisplayed = false;
+            Report.logInfo("No of Owners :" +eleList.size());
+            boolean autoSuggestionDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
-                    isOwnerDisplayed = true;
+                    String s = e.getText();
+                    System.out.println("AccText :" +s);
+                    System.out.println("Exp Text:" +ownerName);
+                    autoSuggestionDisplayed = true;
                     break;
-                } else {
-                    amtDateUtil.sleep(1);
                 }
             }
-            if(isOwnerDisplayed) {
+            if(autoSuggestionDisplayed) {
+                Report.logInfo("Auto Owner Suggestion list displayed");
+                break;
+            } else {
+                Report.logInfo("Auto Suggestion List is not displayed");
+                amtDateUtil.stalePause();
+            }
+
+        }
+        WebElement wEle  = null;
+        List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
+        Report.logInfo("Owner List Count : " +eleList.size());
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()) {
+                wEle = ele;
+                Report.logInfo("Owner Found");
                 break;
             }
         }
-        WebElement wEle = null;
-        List<WebElement> eleList = element.getAllElement("//a[contains(@class, 'ui-corner-all')]");
-        for(WebElement ele : eleList) {
-            if(ele.isDisplayed()){
-                String s = ele.getText();
-                System.out.println("AccText :" +s);
-                System.out.println("Exp Text:" +ownerName);
-                if(s.contains(ownerName)){
-                    wEle = ele;
-                    break;
-                }
-            }
-        }
-        if(wEle != null) {
-            Actions builder = new Actions(driver);
-            builder.moveToElement(wEle);
-            builder.click(wEle);
-            Action selectedAction = builder.build();
-            selectedAction.perform();
-            Report.logInfo("Finished selecting the owner for event");
-        } else {
-            Report.logInfo("FAIL: Failed to select the owner for the event");
-        }
+        wEle.click();
     }
 
     public int countOfTasks() {
