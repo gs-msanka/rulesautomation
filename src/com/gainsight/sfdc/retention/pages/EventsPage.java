@@ -174,6 +174,7 @@ public class EventsPage extends RetentionBasePage {
         if(testdata.get("customer") != null && fillAccName) {
             field.setTextField(CUST_NAME_INPUT, testdata.get("customer"));
             item.click(CUST_SEARCH_IMG);
+            amtDateUtil.stalePause();
             wait.waitTillElementDisplayed(CUST_SEARCH_RESULT, MIN_TIME, MAX_TIME);
             item.click("//a[contains(text(), '"+testdata.get("customer").trim()+"')]");
         }
@@ -191,7 +192,6 @@ public class EventsPage extends RetentionBasePage {
         }
         if(testdata.get("schedule") != null) {
             field.clearAndSetText(EVENT_SCHEDULEDATE_INPUT, testdata.get("schedule"));
-            driver.findElement(By.xpath(EVENT_SCHEDULEDATE_INPUT)).sendKeys(Keys.TAB);
         }
 
         if(testdata.get("status").equalsIgnoreCase("Open")) {
@@ -231,16 +231,15 @@ public class EventsPage extends RetentionBasePage {
      */
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner of event");
+        amtDateUtil.sleep(7);
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
-            Report.logInfo("No of Owners Displayed" +eleList.size());
+            Report.logInfo("No of Owners :" +eleList.size());
             boolean autoSuggestionDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
                     autoSuggestionDisplayed = true;
                     break;
-                } else {
-                    amtDateUtil.stalePause();
                 }
             }
             if(autoSuggestionDisplayed) {
@@ -248,20 +247,21 @@ public class EventsPage extends RetentionBasePage {
                 break;
             } else {
                 Report.logInfo("Auto Suggestion List is not displayed");
+                amtDateUtil.stalePause();
             }
 
         }
-        WebElement owner = null;
+        WebElement wEle  = null;
         List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
         Report.logInfo("Owner List Count : " +eleList.size());
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
-                owner = ele;
+                wEle = ele;
                 Report.logInfo("Owner Found");
                 break;
             }
         }
-        owner.click();
+        wEle.click();
     }
 
     /**
@@ -282,7 +282,6 @@ public class EventsPage extends RetentionBasePage {
         if(taskData.get("date") != null) {
             field.clearText(TASK_DUEDATE_INPUT);
             field.setText(TASK_DUEDATE_INPUT, taskData.get("date"));
-            driver.findElement(By.xpath(EVENT_SCHEDULEDATE_INPUT)).sendKeys(Keys.TAB);
         }
         if(taskData.get("priority") != null) {
             field.setSelectField(TASK_PRIORITY_SELECT, taskData.get("priority"));
@@ -629,16 +628,12 @@ public class EventsPage extends RetentionBasePage {
     }
     public WebElement getEventInCardLayout(HashMap<String, String> testdata) {
         WebElement eventCard = null;
-        for(int i =0; i<2;i++) {
-            List<WebElement> eventCardsList = element.getAllElement(buildeventXpath(testdata));
-            if(eventCardsList  != null && eventCardsList.size() >0) {
-                eventCard = eventCardsList.get(0);
-                Report.logInfo("Found the event Card");
-                break;
-            } else {
-                amtDateUtil.stalePause();
-                Report.logInfo("Event card is not found");
-            }
+        List<WebElement> eventCardsList = element.getAllElement(buildeventXpath(testdata));
+        if(eventCardsList  != null && eventCardsList.size() >0) {
+            eventCard = eventCardsList.get(0);
+            Report.logInfo("Found the event Card");
+        } else {
+           Report.logInfo("Event card is not found");
         }
         return eventCard;
     }
@@ -655,7 +650,7 @@ public class EventsPage extends RetentionBasePage {
                 Report.logInfo("Event Card loaded successfully");
                 break;
             } else {
-                amtDateUtil.sleep(1);
+                amtDateUtil.stalePause();
             }
         }
     }
@@ -820,7 +815,7 @@ public class EventsPage extends RetentionBasePage {
     }
 
     public void clearAllFilters() {
-        Report.logInfo("Swithcing off all the filters");
+        Report.logInfo("Switch off all the filters");
         showFilters();
         List<WebElement> filterButtonList = element.getAllElement("//div[@class='filter-check-options filter-check-on']");
         Report.logInfo("Total Filters to clear:" +filterButtonList.size());

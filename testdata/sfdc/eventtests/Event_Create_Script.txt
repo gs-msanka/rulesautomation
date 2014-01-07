@@ -1,11 +1,13 @@
+DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 500];
+DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 500];
 List<JBCXM__CSEvent__c> eventList = new List<JBCXM__CSEvent__c>();
-List<String> userNames = new List<String>{'Giribabu', 'Somasekhar Bobba'};
+List<String> userNames = new List<String>{'Giribabu'};
 List<String> statusList = new List<String>{'Open', 'In Progress'};
 List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'SalesRep Name'
                                        AND JBCXM__Active__c = TRUE LIMIT 10];
 List<User> userlist = [SELECT Id, Name FROM User WHERE IsActive = TRUE AND Name IN : userNames];
 JBCXM__CSEvent__c csEvent;
-List<Account> accList = [SELECT Id FROM Account WHERE JBCXM__CustomerInfo__c != null LIMIT 10];
+List<Account> accList = [SELECT Id FROM Account WHERE (JBCXM__CustomerInfo__c != null OR Name = 'Account For Related List') LIMIT 11];
 Integer i = 0;
 Integer j = 0;
 Integer k = 0;
