@@ -182,6 +182,7 @@ public class EventsPage extends RetentionBasePage {
         }
         if(testdata.get("owner") != null) {
             field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner"));
+            driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
             ownerSelect(testdata.get("owner"));
         }
         if(testdata.get("subject") != null) {
@@ -190,6 +191,7 @@ public class EventsPage extends RetentionBasePage {
         }
         if(testdata.get("schedule") != null) {
             field.clearAndSetText(EVENT_SCHEDULEDATE_INPUT, testdata.get("schedule"));
+            driver.findElement(By.xpath(EVENT_SCHEDULEDATE_INPUT)).sendKeys(Keys.TAB);
         }
 
         if(testdata.get("status").equalsIgnoreCase("Open")) {
@@ -230,30 +232,36 @@ public class EventsPage extends RetentionBasePage {
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner of event");
         for(int i =0; i<15; i++) {
-            amtDateUtil.stalePause();
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
-            boolean isOwnerDisplayed = false;
+            Report.logInfo("No of Owners Displayed" +eleList.size());
+            boolean autoSuggestionDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
-                    isOwnerDisplayed = true;
+                    autoSuggestionDisplayed = true;
                     break;
+                } else {
+                    amtDateUtil.stalePause();
                 }
             }
-            if(isOwnerDisplayed) {
+            if(autoSuggestionDisplayed) {
                 Report.logInfo("Auto Owner Suggestion list displayed");
                 break;
+            } else {
+                Report.logInfo("Auto Suggestion List is not displayed");
             }
+
         }
         WebElement owner = null;
         List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
+        Report.logInfo("Owner List Count : " +eleList.size());
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
                 owner = ele;
+                Report.logInfo("Owner Found");
                 break;
             }
         }
         owner.click();
-
     }
 
     /**
@@ -265,6 +273,7 @@ public class EventsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(TASK_ASSIGNE_INPUT, MIN_TIME, MAX_TIME);
         if(taskData.get("assignee") != null) {
             field.setTextField(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
+            driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
             ownerSelect(taskData.get("assignee"));
         }
         if(taskData.get("subject") != null) {
@@ -273,6 +282,7 @@ public class EventsPage extends RetentionBasePage {
         if(taskData.get("date") != null) {
             field.clearText(TASK_DUEDATE_INPUT);
             field.setText(TASK_DUEDATE_INPUT, taskData.get("date"));
+            driver.findElement(By.xpath(EVENT_SCHEDULEDATE_INPUT)).sendKeys(Keys.TAB);
         }
         if(taskData.get("priority") != null) {
             field.setSelectField(TASK_PRIORITY_SELECT, taskData.get("priority"));
