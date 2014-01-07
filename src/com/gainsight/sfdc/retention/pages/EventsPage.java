@@ -231,6 +231,7 @@ public class EventsPage extends RetentionBasePage {
      */
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner of event");
+        amtDateUtil.sleep(7);
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
@@ -250,16 +251,17 @@ public class EventsPage extends RetentionBasePage {
             }
 
         }
-
+        WebElement wEle  = null;
         List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
         Report.logInfo("Owner List Count : " +eleList.size());
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
-                ele.click();
+                wEle = ele;
                 Report.logInfo("Owner Found");
                 break;
             }
         }
+        wEle.click();
     }
 
     /**
