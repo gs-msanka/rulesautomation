@@ -63,14 +63,12 @@ public class AlertsTests extends BaseTest {
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
         alertData.put("date", getDatewithFormat(0));
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
-        try {
-            for(int i=1; i < 20; i++) {
-                HashMap<String, String> taskData = getMapFromData(testData.get("Task"+i));
-                taskData.put("date", getDatewithFormat(i));
+        for(int a=1;a <= 20 ; a++ ) {
+            if(testData.get("Task"+a) != null) {
+                HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
+                taskData.put("date", getDatewithFormat(a));
                 tasksList.add(taskData);
             }
-        } catch (Exception e) {
-            Report.logInfo("Tasks added to list");
         }
         AlertsPage alertsPage = basepage.clickOnRetentionTab().clickOnAlertsTab();
         alertsPage.addAlertandTasks(alertData, tasksList);

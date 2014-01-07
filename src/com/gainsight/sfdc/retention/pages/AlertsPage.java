@@ -49,7 +49,8 @@ public class AlertsPage extends RetentionBasePage {
     private static final String PLAYBOOK_SELECT          = "//select[@class='loadPlaybookCls']";
     private static final String TASK_CARD                = "//div[@class='taskItemCls']";
     private static final String CUST_SEARCH_RESULT_DIV   = "//div[contains(@id, 'CustomerSearchPanel')]";
-    private static final String NO_TASK_PRESENT_MSG = "//div[@class='taskFirstTimeAddCls' and contains(text(), 'No tasks are added for this alert!')]";
+    private static final String NO_TASK_PRESENT_MSG      = "//div[@class='taskFirstTimeAddCls' and contains(text(), 'No tasks are added for this alert!')]";
+    private static final String COLLABORATE_SPAN         = "//span[@class='headerCls' and contains(text(),'Collaborate')]";
 
     private static final String SUBJECT_DISPLAY     = "subject-view";
     private static final String SEVERITY_DISPLAY    = "severity-view";
@@ -138,6 +139,7 @@ public class AlertsPage extends RetentionBasePage {
 
     private void fillTaskForm(HashMap<String, String> taskData) {
         if(taskData.get("owner") != null) {
+            field.clearAndSetText(GS_TASK_ASSIGN_INPUT,taskData.get("owner"));
             ownerSelect(taskData.get("owner"));
         }
         if(taskData.get("subject") != null) {
@@ -155,46 +157,44 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     public void ownerSelect(String ownerName) {
-        field.clearAndSetText(GS_TASK_ASSIGN_INPUT, ownerName);
-        Report.logInfo("Started selecting the owner of event");
+        Report.logInfo("Started selecting the owner:");
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
-            boolean isOwnerDisplayed = false;
+            Report.logInfo("No of Owners :" +eleList.size());
+            boolean autoSuggestionDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
-                    isOwnerDisplayed = true;
+                    autoSuggestionDisplayed = true;
                     break;
-                } else {
-                    amtDateUtil.sleep(1);
                 }
             }
-            if(isOwnerDisplayed) {
+            if(autoSuggestionDisplayed) {
+                Report.logInfo("Auto Owner Suggestion list displayed");
                 break;
+            } else {
+                Report.logInfo("Auto Suggestion List is not displayed");
+                amtDateUtil.stalePause();
             }
+
         }
-        WebElement wEle = null;
-        List<WebElement> eleList = element.getAllElement("//a[contains(@class, 'ui-corner-all')]");
+        WebElement wEle  = null;
+        List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item']/a[contains(@class, 'ui-corner-all')]");
+        Report.logInfo("Owner List Count : " +eleList.size());
+        int count =0;
         for(WebElement ele : eleList) {
-            if(ele.isDisplayed()){
-                String s = ele.getText();
-                System.out.println("AccText :" +s);
-                System.out.println("Exp Text:" +ownerName);
-                if(s.contains(ownerName)){
+            if(ele.isDisplayed()) {
+                count++;
+                Report.logInfo("Actual text :" +ele.getText());
+                Report.logInfo("Exp text :" +ele.getText());
+                if(ele.getText().contains(ownerName.trim())) {
                     wEle = ele;
+                    Report.logInfo("Owner Found");
                     break;
                 }
             }
         }
-        if(wEle != null) {
-            Actions builder = new Actions(driver);
-            builder.moveToElement(wEle);
-            builder.click(wEle);
-            Action selectedAction = builder.build();
-            selectedAction.perform();
-            Report.logInfo("Finished selecting the owner for event");
-        } else {
-            Report.logInfo("FAIL: Failed to select the owner for the event");
-        }
+        Report.logInfo("Owner List Displayed Count : " +count);
+        wEle.click();
     }
 
     public int countOfTasks() {
@@ -372,6 +372,7 @@ public class AlertsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(SUBJECT_INPUT, MIN_TIME, MAX_TIME);
         fillAlertForm(alertData, true);
         item.click(ALERT_SAVE_ADD_TASK_BUTTON);
+        wait.waitTillElementDisplayed(COLLABORATE_SPAN, MIN_TIME, MAX_TIME);
         for(HashMap<String, String> taskData : taskDataList) {
             addTask(taskData);
         }

@@ -39,6 +39,7 @@ public class Customer360Page extends BasePage {
 
 
 	public Customer360Page() {
+        Report.logInfo("360 Page Loading");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 		// wait.waitTillElementNotPresent(LOADING_IMAGES, MIN_TIME, MAX_TIME);
 	}
@@ -85,7 +86,7 @@ public class Customer360Page extends BasePage {
 			return new Customer360Milestones();
 		}
 		if(name.equals("Scorecard")){
-			return new Customer360Scorecard();
+			//return new Customer360Scorecard();
 		}
 		return this;
 	}
@@ -137,6 +138,13 @@ public class Customer360Page extends BasePage {
         wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
         item.click(ALERT_SECTION_TAB);
         return new Retention360("Alerts Page");
+    }
+
+    public RelatedList360 clickOnRealtedListSec(String secName) {
+        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']";
+        wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
+        item.click(xPath);
+        return new RelatedList360(secName);
     }
 
     public UsageTracker360 clickOnUsageTracker() {

@@ -2,7 +2,11 @@ package com.gainsight.sfdc.pages;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
@@ -130,6 +134,14 @@ public class BasePage extends WebPage implements Constants {
 	public void setFilter(String filterFiledName, String value) {
 		field.setTextByKeys("//input[@name='" + filterFiledName + "']", value);
 	}
+
+    public void switchToMainWindow() {
+        Set<String> windows = driver.getWindowHandles();
+        List<String> aa = new ArrayList<String>();
+        aa.addAll(windows);
+        Report.logInfo("Moving to Main window : " + windows.size());
+        driver.switchTo().window(aa.get(0));
+    }
 
 	public void setDefaultApplication(String appName) {
 		item.click("userNavButton");

@@ -132,14 +132,12 @@ public class Alerts360Test extends BaseTest {
         alertData.put(alabel.getLabel5(), alertData.get("asv"));
         Assert.assertEquals(true, ret.isAlertDisplayed(alertData, alabel), "Checking weather alert created successfully");
         ret.openAlertCardEditMode(alertData, alabel);
-        try {
-            for(int a=1;a <= 20 ; a++ ) {
+        for(int a=1;a <= 20 ; a++ ) {
+            if(testData.get("Task"+a) != null) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
                 taskData.put("date", getDatewithFormat(a));
                 taskDataList.add(taskData);
             }
-        } catch (Exception e) {
-            Report.logInfo("All Tasks Read");
         }
         ret.addTaksOnAlert(taskDataList);
         ret.openAlertCardEditMode(alertData, alabel);
@@ -201,14 +199,12 @@ public class Alerts360Test extends BaseTest {
         alertData.put(alabel.getLabel5(), alertData.get("asv"));
         Assert.assertEquals(true, ret.isAlertDisplayed(alertData,alabel), "Checking weather alert created successfully");
         ret.openAlertCardEditMode(alertData, alabel);
-        try {
-            for(int a=1;a <= 20 ; a++ ) {
+        for(int a=1;a <= 20 ; a++ ) {
+            if(testData.get("Task"+a) != null) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
                 taskData.put("date", getDatewithFormat(a));
                 taskDataList.add(taskData);
             }
-        } catch (Exception e) {
-            Report.logInfo("All Tasks Read");
         }
         ret.selectAlertPlaybook(testData.get("Playbook"));
         for(HashMap<String, String> taskData : taskDataList)  {

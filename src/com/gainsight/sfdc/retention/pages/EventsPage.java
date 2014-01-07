@@ -184,7 +184,14 @@ public class EventsPage extends RetentionBasePage {
         if(testdata.get("owner") != null) {
             field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner"));
             driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
-            ownerSelect(testdata.get("owner"));
+            try {
+                ownerSelect(testdata.get("owner"));
+            } catch (NullPointerException e) {
+                Report.logInfo("Selecting Owner Failed, trying again");
+                field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner"));
+                driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
+                ownerSelect(testdata.get("owner"));
+            }
         }
         if(testdata.get("subject") != null) {
             wait.waitTillElementDisplayed(EVENT_SUBJECT_INPUT, MIN_TIME, MAX_TIME);
@@ -230,8 +237,7 @@ public class EventsPage extends RetentionBasePage {
      * @param ownerName - Name of the user to be selected.
      */
     public void ownerSelect(String ownerName) {
-        Report.logInfo("Started selecting the owner of event");
-        amtDateUtil.sleep(7);
+        Report.logInfo("Started selecting the owner:");
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
@@ -252,15 +258,22 @@ public class EventsPage extends RetentionBasePage {
 
         }
         WebElement wEle  = null;
-        List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
+        List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item']/a[contains(@class, 'ui-corner-all')]");
         Report.logInfo("Owner List Count : " +eleList.size());
+        int count =0;
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
-                wEle = ele;
-                Report.logInfo("Owner Found");
-                break;
+                count++;
+                Report.logInfo("Actual text :" +ele.getText());
+                Report.logInfo("Exp text :" +ele.getText());
+                if(ele.getText().contains(ownerName.trim())) {
+                    wEle = ele;
+                    Report.logInfo("Owner Found");
+                    break;
+                }
             }
         }
+        Report.logInfo("Owner List Displayed Count : " +count);
         wEle.click();
     }
 
