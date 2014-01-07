@@ -30,12 +30,11 @@ public class AlertsTests extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
-
+        userLocale           = soql.getUserLocale();
         if(!isPackageInstance()) {
             DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
         }
         soql.deleteQuery(DELETE_RECORDS);
-        userLocale = soql.getUserLocale();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

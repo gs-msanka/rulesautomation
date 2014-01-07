@@ -198,6 +198,17 @@ public class Relatedlisttests extends BaseTest {
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
     }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_6")
+    public void standObjNoDataInfoVerif(HashMap<String, String> testData) {
+        String relatedListName = testData.get("Section");
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
+        Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
+    }
+
     @AfterMethod
     public void beInMainWindow() {
         basepage.switchToMainWindow();

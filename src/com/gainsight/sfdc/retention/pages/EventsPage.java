@@ -287,7 +287,14 @@ public class EventsPage extends RetentionBasePage {
         if(taskData.get("assignee") != null) {
             field.setTextField(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
             driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
-            ownerSelect(taskData.get("assignee"));
+            try {
+                ownerSelect(taskData.get("owner"));
+            } catch (NullPointerException e) {
+                Report.logInfo("Selecting Owner Failed, trying again");
+                field.setTextField(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
+                driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
+                ownerSelect(taskData.get("owner"));
+            }
         }
         if(taskData.get("subject") != null) {
             field.setText(TASK_SUBJECT_INPUT, taskData.get("subject"));
