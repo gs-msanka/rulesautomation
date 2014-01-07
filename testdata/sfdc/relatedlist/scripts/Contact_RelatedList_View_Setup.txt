@@ -1,0 +1,54 @@
+DELETE [SELECT Id FROM Contact WHERE Account.Name Like '%Account For Related List%'];
+DELETE [SELECT Id From Account WHERE Name Like '%Account For Related List%'];
+Account acc = new Account(Name = 'Account For Related List');
+insert acc;
+List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage'
+                                      AND JBCXM__Category__c = 'Customer Status'];
+String stId;
+String saId;
+for(JBCXM__PickList__c pk : pkList) {
+    if(pk.JBCXM__Category__c.equals('Customer Status')) {stId = pk.Id;}
+    if(pk.JBCXM__Category__c.equals('Customer Stage')) {saId = pk.Id;}
+}
+JBCXM__CustomerInfo__c cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c = acc.Id,
+                                                        JBCXM__Stage__c = saId,
+                                                        JBCXM__Status__c = stId,
+                                                        JBCXM__Comments__c = 'Account to Test Related List');
+insert cust;                                                        
+List<Contact> conList = new List<Contact>();
+List<String> emailList  = new List<String>{'ggolla@gainsight.com', 'sbobba@gainsight.com', 'srallapalli@gainsight.com', 'ryaddanapalli@gainsight.com',
+								'spulagam@gainsight.com', 'spadmanabhan@gainsight.com', 'snasika@gainsight.com', 'spulluri@gainsight.com',
+								'hsharma@gainsight.com', 'fmirza@gainsight.com', 'ugesh@gainsight.com', 'murali@gainsight.com',
+								'jsiripurapu@gainsight.com', 'akhan@gainsight.com', 'hvadlamudi@gainsight.com', 'tsebastian@gainsight.com',
+								'nsinha@gainsight.com', 'pbiswas@gainsight.com'};
+List<String> nameList = new List<String>{'Giribabu', 'Somasekar', 'Sri Vidya', 'Rajesh', 'Srinivas', 'Sunand', 'Siva Prasad',
+							'Sai Ram', 'hitesh', 'Farhat', 'Ugesh', 'Murali', 'Jagadeesh', 'Azhar', 'Hari', 'Teresa', 'Nishant', 'Pradhip'};
+                                List<String> leadSource = new List<String>{'Advertisement',
+                                    'Employee Referral', 'External Referral', 'Partner',
+                                    'Public Relations', 'Seminar - Internal',
+                                    'Seminar - Partner', 'Trade Show',
+                                    'Web', 'Word of mouth','Other'};
+boolean emailOptOut = false;
+integer i =0, j=0, k=0;
+Contact con = null;
+for(integer l =0; l <18; l++) {
+    con = new Contact(AccountId = acc.Id,
+                    LastName = nameList.get(j),
+                    Email = emailList.get(i),
+                    LeadSource  = leadSource.get(k));
+
+    j++;
+    i++;
+    k++;
+    if(i == emailList.size()) {
+        i =0;
+    }
+     if(j == nameList.size()) {
+        j=0;
+     }
+    if(k == leadSource.size()) {
+        k =0;
+    }
+    conList.add(con);
+}
+insert conList;
