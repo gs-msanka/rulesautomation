@@ -49,7 +49,8 @@ public class AlertsPage extends RetentionBasePage {
     private static final String PLAYBOOK_SELECT          = "//select[@class='loadPlaybookCls']";
     private static final String TASK_CARD                = "//div[@class='taskItemCls']";
     private static final String CUST_SEARCH_RESULT_DIV   = "//div[contains(@id, 'CustomerSearchPanel')]";
-    private static final String NO_TASK_PRESENT_MSG = "//div[@class='taskFirstTimeAddCls' and contains(text(), 'No tasks are added for this alert!')]";
+    private static final String NO_TASK_PRESENT_MSG      = "//div[@class='taskFirstTimeAddCls' and contains(text(), 'No tasks are added for this alert!')]";
+    private static final String COLLABORATE_SPAN         = "//span[@class='headerCls' and contains(text(),'Collaborate')]";
 
     private static final String SUBJECT_DISPLAY     = "subject-view";
     private static final String SEVERITY_DISPLAY    = "severity-view";
@@ -133,7 +134,7 @@ public class AlertsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);
-        //wait.waitTillElementDisplayed(taskXPath(taskData), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(taskXPath(taskData), MIN_TIME, MAX_TIME);
     }
 
     private void fillTaskForm(HashMap<String, String> taskData) {
@@ -371,6 +372,7 @@ public class AlertsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(SUBJECT_INPUT, MIN_TIME, MAX_TIME);
         fillAlertForm(alertData, true);
         item.click(ALERT_SAVE_ADD_TASK_BUTTON);
+        wait.waitTillElementDisplayed(COLLABORATE_SPAN, MIN_TIME, MAX_TIME);
         for(HashMap<String, String> taskData : taskDataList) {
             addTask(taskData);
         }

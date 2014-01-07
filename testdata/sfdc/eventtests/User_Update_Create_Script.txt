@@ -7,11 +7,11 @@ List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias,
 System.debug(extuser);
 if(extuser != null && extuser.size() <= 0) {
     User sampleUser = new User();
-    sampleUser.Username= 'ggolla@testuser3.com';
+    sampleUser.Username= 'ggolla@testuserXX.com';
     sampleUser.Email = 'ggolla@gainsight.com';
     sampleUser.Lastname = 'Giribabu';
-    sampleUser.Alias = 'test2';
-    sampleUser.CommunityNickname = 'testuser2';
+    sampleUser.Alias = 'testXX';
+    sampleUser.CommunityNickname = 'testuserXX';
     sampleUser.ProfileId = profileList.get(0).Id;
     sampleUser.TimeZoneSidKey = 'GMT';
     sampleUser.LocaleSidKey = 'en_US';
