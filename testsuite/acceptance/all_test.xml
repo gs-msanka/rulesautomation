@@ -14,9 +14,9 @@
 
 
 			<!-- Giri's Test-->
+            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
             <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
             <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
-            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
             <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
 
 			<!--Srividya's Tests -->
@@ -28,6 +28,7 @@
             <class name="com.gainsight.sfdc.administration.tests.AdminFeatureTabTest" />
             <class name="com.gainsight.sfdc.administration.tests.AdminRetentionTabTest" />
             <class name="com.gainsight.sfdc.administration.tests.AdminCustomersTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminTransactionsTabTest" />
 
 
         </classes>
