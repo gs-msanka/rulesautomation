@@ -133,7 +133,7 @@ public class AlertsPage extends RetentionBasePage {
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);
-        wait.waitTillElementDisplayed(taskXPath(taskData), MIN_TIME, MAX_TIME);
+        //wait.waitTillElementDisplayed(taskXPath(taskData), MIN_TIME, MAX_TIME);
     }
 
     private void fillTaskForm(HashMap<String, String> taskData) {
@@ -155,18 +155,13 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     public void ownerSelect(String ownerName) {
-        field.clearAndSetText(GS_TASK_ASSIGN_INPUT, ownerName);
-        Report.logInfo("Started selecting the owner");
-        amtDateUtil.sleep(7);
+        Report.logInfo("Started selecting the owner:");
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
             boolean autoSuggestionDisplayed = false;
             for(WebElement e : eleList) {
                 if(e.isDisplayed()) {
-                    String s = e.getText();
-                    System.out.println("AccText :" +s);
-                    System.out.println("Exp Text:" +ownerName);
                     autoSuggestionDisplayed = true;
                     break;
                 }
@@ -181,15 +176,22 @@ public class AlertsPage extends RetentionBasePage {
 
         }
         WebElement wEle  = null;
-        List<WebElement> eleList = element.getAllElement("//a[@class='ui-corner-all' and contains(text(), '"+ownerName+"')]");
+        List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item']/a[contains(@class, 'ui-corner-all')]");
         Report.logInfo("Owner List Count : " +eleList.size());
+        int count =0;
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
-                wEle = ele;
-                Report.logInfo("Owner Found");
-                break;
+                count++;
+                Report.logInfo("Actual text :" +ele.getText());
+                Report.logInfo("Exp text :" +ele.getText());
+                if(ele.getText().contains(ownerName.trim())) {
+                    wEle = ele;
+                    Report.logInfo("Owner Found");
+                    break;
+                }
             }
         }
+        Report.logInfo("Owner List Displayed Count : " +count);
         wEle.click();
     }
 
