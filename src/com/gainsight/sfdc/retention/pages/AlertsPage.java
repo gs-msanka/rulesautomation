@@ -208,6 +208,7 @@ public class AlertsPage extends RetentionBasePage {
 
     public boolean isTaskDisplayed(HashMap<String, String> taskData) {
         boolean result = false;
+        amtDateUtil.sleep(5);
         List<WebElement> taskslist = element.getAllElement(taskXPath(taskData));
         if(taskslist.size() >0) {
             result = true;
