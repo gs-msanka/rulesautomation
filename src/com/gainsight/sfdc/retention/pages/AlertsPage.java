@@ -138,6 +138,7 @@ public class AlertsPage extends RetentionBasePage {
 
     private void fillTaskForm(HashMap<String, String> taskData) {
         if(taskData.get("owner") != null) {
+            field.clearAndSetText(GS_TASK_ASSIGN_INPUT,taskData.get("owner"));
             ownerSelect(taskData.get("owner"));
         }
         if(taskData.get("subject") != null) {
