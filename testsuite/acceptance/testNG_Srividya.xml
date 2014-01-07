@@ -17,6 +17,8 @@
 					<include name="editNumericScores" />
 					<include name="testAddCommentsToMeasure" />
 					<include name="testEditCommentsToMeasure" />
+					<include name="addOverallSummary" />
+					<include name="editOverallSummary" />
 				</methods>
           	</class>
 		</classes>
