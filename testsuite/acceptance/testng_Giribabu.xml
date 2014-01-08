@@ -16,6 +16,7 @@
             <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
             <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
 
 
 
