@@ -1,0 +1,35 @@
+DELETE [SELECT Id FROM Account WHERE Name = 'Account For Attributes Test'];
+Account acc = new Account(Name = 'Account For Attributes Test',
+                            AccountSource = 'Employee Referral',
+                            AnnualRevenue = 2039403,
+                            Description = 'This is the sample account created for testing the account attributes in Gainsight 360 page',
+                            Industry = 'Technology',
+                            NumberOfEmployees = 1215,
+                            Phone = '+91-9966635490',
+                            Type = 'Customer',
+                            Website = 'www.gainsight.com',
+                            SicDesc = 'Sample Account',
+                            Fax = '879-5643',
+                         	BillingCity = 'Hyderabad',
+                         	BillingCountry = 'India',
+                         	BillingPostalCode = '5600081',
+                         	BillingState = 'Andra Pradesh',
+                         	BillingStreet = 'Hi-Tech City',
+                         	 ShippingCity = 'California',
+                         	 ShippingCountry = 'USA',
+                         	ShippingState = 'MA',
+                         	 ShippingStreet = 'Wall Street');
+insert acc;
+List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage'
+                                      AND JBCXM__Category__c = 'Customer Status'];
+String stId;
+String saId;
+for(JBCXM__PickList__c pk : pkList) {
+    if(pk.JBCXM__Category__c.equals('Customer Status')) {stId = pk.Id;}
+    if(pk.JBCXM__Category__c.equals('Customer Stage')) {saId = pk.Id;}
+}
+JBCXM__CustomerInfo__c cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c = acc.Id,
+                                                        JBCXM__Stage__c = saId,
+                                                        JBCXM__Status__c = stId,
+                                                        JBCXM__Comments__c = 'Account to Test Account Attributes');
+insert cust;   
