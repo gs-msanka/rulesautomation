@@ -102,11 +102,14 @@ public class Events360Test extends BaseTest {
         ret.openEventCard(eventData);
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
         for(int a =1 ; a< 20; a++) {
-            if(testData.get("task"+a)!=null) {
+            try {
                 taskData = getMapFromData(testData.get("task"+a));
                 taskData.put("date", getDatewithFormat(a));
                 tasksList.add(taskData);
                 ret.addEventTask(taskData);
+            } catch (NullPointerException e) {
+                Report.logInfo("Finished Adding Tasks");
+                break;
             }
         }
         ret.clickOnUpdateEvent();
@@ -134,10 +137,13 @@ public class Events360Test extends BaseTest {
         ret.clickOnUpdateEvent();
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
         for(int a =1 ; a< 20; a++) {
-            if(testData.get("task"+a)!=null) {
+            try {
                 taskData = getMapFromData(testData.get("task"+a));
                 taskData.put("date", getDatewithFormat(a));
                 tasksList.add(taskData);
+            } catch (NullPointerException e) {
+                Report.logInfo("Finished Adding Tasks");
+                break;
             }
         }
         ret.openEventCard(eventData);

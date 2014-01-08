@@ -64,7 +64,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
         for(String data : dataList) {
-            Assert.assertTrue(rLPage.isDataDisplayed(relatedListName, data), "Verification of data in table");
+            Assert.assertTrue(rLPage.isDataDisplayed(relatedListName, data), "Verification of Data is table");
         }
     }
 
@@ -105,7 +105,7 @@ public class Relatedlisttests extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_1")
-    public void custObjTasksAddVerif(HashMap<String, String> testData) {
+    public void custTasksAddFunc(HashMap<String, String> testData) {
         if(!taskScriptCreated) {
             createEventsFromScript();
         }
@@ -127,86 +127,6 @@ public class Relatedlisttests extends BaseTest {
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_2")
-    public void custObjTasksDataVerif(HashMap<String, String> testData) {
-        if(!taskScriptCreated) {
-            createEventsFromScript();
-        }
-        String relatedListName = testData.get("Section");
-        HashMap<String, String> colHeaders = getMapFromData(testData.get("TableHeader"));
-        List<String> dataList =new ArrayList<String>();
-        for(int i =1; i <= 10; i++) {
-            if(testData.get("TableRow" + i) !=null) {
-                String data = testData.get("TableRow" + i);
-                dataList.add(data);
-                Report.logInfo(data);
-            }
-        }
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
-        for(String data : dataList) {
-            Assert.assertTrue(rLPage.isDataDisplayed(relatedListName, data), "Verification of Data in table");
-        }
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_3")
-    public void custObjEditVerif(HashMap<String, String> testData) {
-        String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("TableRow1"));
-        String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        SObject[] a = soql.getRecords(query);
-        String objectId = "";
-        if(a != null && a.length >0) {
-            objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
-        } else {
-            Report.logInfo("Failed to query data record");
-            Assert.assertTrue(false, "Error With Data Configuration.");
-        }
-        Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_4")
-    public void custObjViewVerif(HashMap<String, String> testData) {
-        String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("TableRow1"));
-        String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        SObject[] a = soql.getRecords(query);
-        String objectId = "";
-        if(a != null && a.length >0) {
-            objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
-        } else {
-            Report.logInfo("Failed to query data record");
-            Assert.assertTrue(false, "Error With Data Configuration.");
-        }
-        Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_6")
-    public void standObjNoDataInfoVerif(HashMap<String, String> testData) {
-        String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
-        Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
 
     @AfterMethod

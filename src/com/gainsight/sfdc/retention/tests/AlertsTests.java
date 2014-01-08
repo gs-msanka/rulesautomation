@@ -25,15 +25,17 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
+    String userLocale = "en_IN";
     String DELETE_RECORDS = "SELECT ID FROM JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
         basepage.login();
-        userLocale           = soql.getUserLocale();
+
         if(!isPackageInstance()) {
             DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
         }
         soql.deleteQuery(DELETE_RECORDS);
+        userLocale = soql.getUserLocale();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

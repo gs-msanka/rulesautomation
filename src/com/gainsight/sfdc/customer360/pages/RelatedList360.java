@@ -116,12 +116,6 @@ public class RelatedList360 extends Customer360Page {
         return new SalesforceRecordForm();
     }
 
-    public boolean isNoDataMsgDisplayed(String secName) {
-        String a = "//h1[contains(text(), '"+secName+"')]/ancestor::div[@class='gs_section']/descendant::div[@class='noDataFound' and contains(text(), 'No Data Found.')]";
-        Report.logInfo("Xpath of No Info Msg :" +a);
-        return element.getElement(a).isDisplayed();
-    }
-
     public RelatedList360 selectUIView(String secName, String viewName) {
         String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[@class='gs_edit_icon']/select[@class='case_uiviews']";
         item.selectFromDropDown(xPath, viewName);

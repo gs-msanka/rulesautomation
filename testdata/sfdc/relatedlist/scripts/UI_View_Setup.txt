@@ -36,22 +36,14 @@ JBCXM__UIViews__c uView2 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name
 													Name = 'Employee Referral - Contacts',
 													JBCXM__Visibility__c = 'Public',
                                                 	JBCXM__UITabName__c = String.valueOf(c360Sec.Id).subString(0,15));
-JBCXM__UIViews__c uView3 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name":"Email","label":"Email","displayOrder":1,"visibilityMode":true,"objectName":"Contact","fieldType":"EMAIL","isGroupable":true},{"name":"FirstName","label":"First Name","displayOrder":2,"visibilityMode":true,"objectName":"Contact","fieldType":"STRING","isGroupable":true},{"name":"Name","label":"Full Name","displayOrder":3,"visibilityMode":true,"objectName":"Contact","fieldType":"STRING","isGroupable":true},{"name":"Title","label":"Title","displayOrder":4,"visibilityMode":true,"objectName":"Contact","fieldType":"STRING","isGroupable":true},{"name":"CreatedDate","label":"Created Date","displayOrder":5,"visibilityMode":true,"objectName":"Contact","fieldType":"DATETIME","isGroupable":false}]' ,
-													JBCXM__FilterConditions__c = '[{"name":"Email","value":"noemailId@gmail.com","objectName":"Contact","fieldType":"EMAIL","operator":"e"}]',
-													JBCXM__SectionId__c = c360Sec.Id,
-													JBCXM__ShowDefault__c = false,
-													Name = 'No Data View',
-													JBCXM__Visibility__c = 'Public',
-                                                	JBCXM__UITabName__c = String.valueOf(c360Sec.Id).subString(0,15));
 
 insert uView1;
 insert uView2;
-insert uView3;
-JBCXM__UIViews__c uView4 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name":"JBCXM__Account__r.Name","label":"Account","displayOrder":1,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Subject__c","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"Owner.Name","label":"Owner","displayOrder":3,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Assigned__r.Name","label":"Assigned","displayOrder":4,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Date__c","label":"Date","displayOrder":5,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"DATE","isGroupable":true},{"name":"JBCXM__Priority__c","label":"Priority","displayOrder":6,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true},{"name":"Name","label":"Related Object","displayOrder":7,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Description__c","label":"Description","displayOrder":8,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"TEXTAREA","isGroupable":false},{"name":"JBCXM__Status__c","label":"Status","displayOrder":9,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true}]' ,
+JBCXM__UIViews__c uView3 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name":"JBCXM__Account__r.Name","label":"Account","displayOrder":1,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Subject__c","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"Owner.Name","label":"Owner","displayOrder":3,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Assigned__r.Name","label":"Assigned","displayOrder":4,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Date__c","label":"Date","displayOrder":5,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"DATE","isGroupable":true},{"name":"JBCXM__Priority__c","label":"Priority","displayOrder":6,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true},{"name":"Name","label":"Related Object","displayOrder":7,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Description__c","label":"Description","displayOrder":8,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"TEXTAREA","isGroupable":false},{"name":"JBCXM__Status__c","label":"Status","displayOrder":9,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true}]' ,
 													JBCXM__FilterConditions__c = '[]',
 													JBCXM__SectionId__c = c360Sec1.Id,
 													JBCXM__ShowDefault__c = false,
 													Name = 'All Tasks',
 													JBCXM__Visibility__c = 'Public',
                                                 	JBCXM__UITabName__c = String.valueOf(c360Sec1.Id).subString(0,15));
-insert uView4;
+insert uView3;
