@@ -7,10 +7,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -223,7 +220,7 @@ public class Events360Test extends BaseTest {
         Assert.assertEquals(true, ret.isEventCardDisplayed(updateEventData), "Checking Event is Present");
     }
 
-    @BeforeMethod
+    @AfterMethod
     public void refresh() {
         basepage.refreshPage();
     }

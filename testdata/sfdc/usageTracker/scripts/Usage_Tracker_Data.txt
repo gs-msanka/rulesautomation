@@ -1,4 +1,4 @@
-List<Account> accList = [SELECT Id FROM Account WHERE Name Like 'Lexidata%'];
+List<Account> accList = [SELECT Id FROM Account WHERE Name = 'Lexidata Corporation' limit 10];
 System.debug(accList.size());
 DELETE [SELECT Id FROM JBCXM__UsageTracker__c];
 List<String> utList = new List<String>{'Emails Sent Count', 'Files Upload Count', 'Network Traffic Created'};
@@ -8,9 +8,11 @@ List<JBCXM__UsageTracker__c> usTList = new List<JBCXM__UsageTracker__c>();
 JBCXM__UsageTracker__c ut;
 List<String> modulesList = new List<String>{'Customers', 'Transactions', 'Adoption', 'Rules Engine', 'Retention'};
 List<String> userNames = new List<String>{'Giribabu', 'Somu', 'Srinivas', 'Sunand', 'Sri Vidya', 'Sai Ram', 'Hitesh'};
-integer a = 0 , b = 0, c = 0;
-for(integer i =0 ;i<20; i++) {
-	ut = new JBCXM__UsageTracker__c(JBCXM__Account__c= accList.get(0).Id,
+
+for(Account acc : accList) {
+    integer a = 0 , b = 0, c = 0;
+    for(integer i =0 ;i<20; i++) {
+	ut = new JBCXM__UsageTracker__c(JBCXM__Account__c= acc.Id,
 										JBCXM__AdoptionMeasure__c = pkList.get(a).Id,
 										JBCXM__ActionTime__c = datetime.now().addDays(-i),
 										JBCXM__Module__c = modulesList.get(b),
@@ -20,6 +22,8 @@ for(integer i =0 ;i<20; i++) {
     if(a==pkList.size()) {a=0;}
     if(b==modulesList.size()){b=0;}
     if(c==userNames.size()){c=0;}
+}
+
 }
 System.debug(usTList.size());
 insert usTList;

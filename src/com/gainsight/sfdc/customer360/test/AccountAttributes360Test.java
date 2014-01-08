@@ -5,10 +5,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.HashMap;
 
@@ -62,7 +59,7 @@ public class AccountAttributes360Test extends BaseTest {
 
 
 
-    @BeforeMethod
+    @AfterMethod
     public void refresh() {
         basepage.refreshPage();
     }

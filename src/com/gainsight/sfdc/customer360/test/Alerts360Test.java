@@ -271,7 +271,7 @@ public class Alerts360Test extends BaseTest {
         Assert.assertEquals(false, ret.isAlertDisplayed(alertData,alabel), "Checking weather alert deleted successfully");
     }
 
-    @BeforeMethod
+    @AfterMethod
     public void refresh() {
         basepage.refreshPage();
     }

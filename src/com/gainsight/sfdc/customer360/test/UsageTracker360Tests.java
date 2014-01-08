@@ -5,10 +5,10 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.UsageTracker360;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
-import org.junit.Test;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ public class UsageTracker360Tests  extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/usageTracker/data/UsageTracker_360_TestData.xls";
     private final String DATA_SCRIPT_FILE  = env.basedir+"/testdata/sfdc/usageTracker/scripts/Usage_Tracker_Data.txt";
     private final String SETUP_SCRIPT_FILE  = env.basedir+"/testdata/sfdc/usageTracker/scripts/Usage_Tracker_Measures_Create.txt";
+
     @BeforeClass
     public void setUp() {
         basepage.login();
@@ -33,7 +34,7 @@ public class UsageTracker360Tests  extends BaseTest {
         apex.runApexCodeFromFile(DATA_SCRIPT_FILE, isPackageInstance());
     }
 
-    @org.testng.annotations.Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_1")
     public void infoMsgVerification(HashMap<String, String> testData) {
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
@@ -42,7 +43,7 @@ public class UsageTracker360Tests  extends BaseTest {
         Assert.assertTrue(uTPage.isInfoMessageDisplayed(), "Checking weather the information message is displayed.");
     }
 
-    @org.testng.annotations.Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_2")
     public void dataVerification(HashMap<String, String> testData) {
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
@@ -62,7 +63,7 @@ public class UsageTracker360Tests  extends BaseTest {
         }
     }
 
-    @org.testng.annotations.Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_3")
     public void dataVerificationandFilter(HashMap<String, String> testData) {
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
@@ -82,7 +83,7 @@ public class UsageTracker360Tests  extends BaseTest {
         }
     }
 
-    @org.testng.annotations.Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_4")
     public void infoandDataVerification(HashMap<String, String> testData) {
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
@@ -105,6 +106,10 @@ public class UsageTracker360Tests  extends BaseTest {
         Assert.assertTrue(uTPage.isInfoMessageDisplayed(), "Checking weather the information message is displayed.");
     }
 
+    @AfterClass
+    public void refresh() {
+        basepage.refreshPage();
+    }
 
     @AfterClass
     public void tearDown(){
