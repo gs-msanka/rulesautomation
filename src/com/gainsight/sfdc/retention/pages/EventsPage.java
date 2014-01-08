@@ -190,6 +190,7 @@ public class EventsPage extends RetentionBasePage {
                 Report.logInfo("Selecting Owner Failed, trying again");
                 field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner"));
                 driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
+
                 ownerSelect(testdata.get("owner"));
             }
         }
@@ -237,7 +238,7 @@ public class EventsPage extends RetentionBasePage {
      * @param ownerName - Name of the user to be selected.
      */
     public void ownerSelect(String ownerName) {
-        Report.logInfo("Started selecting the owner:");
+        Report.logInfo("Started selecting the owner");
         for(int i =0; i<15; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
@@ -285,15 +286,15 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Started filling the task form on Task card.");
         wait.waitTillElementDisplayed(TASK_ASSIGNE_INPUT, MIN_TIME, MAX_TIME);
         if(taskData.get("assignee") != null) {
-            field.setTextField(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
+            field.clearAndSetText(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
             driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
             try {
-                ownerSelect(taskData.get("owner"));
+                ownerSelect(taskData.get("assignee"));
             } catch (NullPointerException e) {
                 Report.logInfo("Selecting Owner Failed, trying again");
-                field.setTextField(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
+                field.clearAndSetText(TASK_ASSIGNE_INPUT, taskData.get("assignee"));
                 driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
-                ownerSelect(taskData.get("owner"));
+                ownerSelect(taskData.get("assignee"));
             }
         }
         if(taskData.get("subject") != null) {
