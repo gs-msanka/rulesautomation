@@ -86,7 +86,7 @@ public class Customer360Page extends BasePage {
 			return new Customer360Milestones();
 		}
 		if(name.equals("Scorecard")){
-			//return new Customer360Scorecard();
+			return new Customer360Scorecard();
 		}
 		return this;
 	}
@@ -145,6 +145,13 @@ public class Customer360Page extends BasePage {
         wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
         item.click(xPath);
         return new RelatedList360(secName);
+    }
+
+    public Attributes clickOnAccAttributesSec(String secName) {
+        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']";
+        wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
+        item.click(xPath);
+        return new Attributes(secName);
     }
 
     public UsageTracker360 clickOnUsageTracker() {

@@ -5,6 +5,7 @@ import com.gainsight.sfdc.retention.pojos.Alert;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.retention.pojos.Task;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -139,7 +140,9 @@ public class AlertsPage extends RetentionBasePage {
 
     private void fillTaskForm(HashMap<String, String> taskData) {
         if(taskData.get("owner") != null) {
-            field.clearAndSetText(GS_TASK_ASSIGN_INPUT,taskData.get("owner"));
+            driver.findElement(By.xpath(GS_TASK_ASSIGN_INPUT)).clear();
+            driver.findElement(By.xpath(GS_TASK_ASSIGN_INPUT)).sendKeys(taskData.get("owner"));
+            driver.findElement(By.xpath(GS_TASK_ASSIGN_INPUT)).sendKeys(Keys.ENTER);
             ownerSelect(taskData.get("owner"));
         }
         if(taskData.get("subject") != null) {
@@ -157,8 +160,9 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     public void ownerSelect(String ownerName) {
-        Report.logInfo("Started selecting the owner:");
-        for(int i =0; i<15; i++) {
+        Report.logInfo("Started selecting the owner");
+        amtDateUtil.sleep(5);
+        for(int i =0; i<5; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
             boolean autoSuggestionDisplayed = false;

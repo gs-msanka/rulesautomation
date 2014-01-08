@@ -182,16 +182,16 @@ public class EventsPage extends RetentionBasePage {
             field.selectFromDropDown(EVENT_TYPE_SELECT, testdata.get("type").trim());
         }
         if(testdata.get("owner") != null) {
-            field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner").trim());
+            driver.findElement(By.xpath(EVENT_OWNER_INPUT)).clear();
+            driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(testdata.get("owner"));
             driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
-            amtDateUtil.sleep(5);
             try {
                 ownerSelect(testdata.get("owner").trim());
             } catch (NullPointerException e) {
                 Report.logInfo("Selecting Owner Failed, trying again");
-                field.clearAndSetText(EVENT_OWNER_INPUT, testdata.get("owner").trim());
+                driver.findElement(By.xpath(EVENT_OWNER_INPUT)).clear();
+                driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(testdata.get("owner"));
                 driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
-                amtDateUtil.sleep(5);
                 ownerSelect(testdata.get("owner").trim());
             }
         }
@@ -240,6 +240,7 @@ public class EventsPage extends RetentionBasePage {
      */
     public void ownerSelect(String ownerName) {
         Report.logInfo("Started selecting the owner");
+        amtDateUtil.sleep(5);
         for(int i =0; i<5; i++) {
             List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
             Report.logInfo("No of Owners :" +eleList.size());
@@ -287,16 +288,16 @@ public class EventsPage extends RetentionBasePage {
         Report.logInfo("Started filling the task form on Task card.");
         wait.waitTillElementDisplayed(TASK_ASSIGNE_INPUT, MIN_TIME, MAX_TIME);
         if(taskData.get("assignee") != null) {
-            field.clearAndSetText(TASK_ASSIGNE_INPUT, taskData.get("assignee").trim());
+            driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).clear();
+            driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(taskData.get("assignee").trim());
             driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
-            amtDateUtil.sleep(5);
             try {
                 ownerSelect(taskData.get("assignee").trim());
             } catch (NullPointerException e) {
                 Report.logInfo("Selecting Owner Failed, trying again");
-                field.clearAndSetText(TASK_ASSIGNE_INPUT, taskData.get("assignee").trim());
+                driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).clear();
+                driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(taskData.get("assignee").trim());
                 driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
-                amtDateUtil.sleep(5);
                 ownerSelect(taskData.get("assignee").trim());
             }
         }
