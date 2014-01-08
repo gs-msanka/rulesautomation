@@ -25,7 +25,6 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
-    String userLocale = "en_IN";
     String DELETE_RECORDS = "SELECT ID FROM JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
