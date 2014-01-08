@@ -187,7 +187,7 @@ public class EventsPage extends RetentionBasePage {
             driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(Keys.ENTER);
             try {
                 ownerSelect(testdata.get("owner").trim());
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 Report.logInfo("Selecting Owner Failed, trying again");
                 driver.findElement(By.xpath(EVENT_OWNER_INPUT)).clear();
                 driver.findElement(By.xpath(EVENT_OWNER_INPUT)).sendKeys(testdata.get("owner"));
@@ -235,49 +235,13 @@ public class EventsPage extends RetentionBasePage {
     }
 
     /**
-     * Selects the Owner/Assigne of event/task.
-     * @param ownerName - Name of the user to be selected.
+     * Selects the Owner/Assignee of event/task.
+     * @param owner - Name of the user to be selected.
      */
-    public void ownerSelect(String ownerName) {
-        Report.logInfo("Started selecting the owner");
-        amtDateUtil.sleep(5);
-        for(int i =0; i<5; i++) {
-            List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item' and @role='menuitem']");
-            Report.logInfo("No of Owners :" +eleList.size());
-            boolean autoSuggestionDisplayed = false;
-            for(WebElement e : eleList) {
-                if(e.isDisplayed()) {
-                    autoSuggestionDisplayed = true;
-                    break;
-                }
-            }
-            if(autoSuggestionDisplayed) {
-                Report.logInfo("Auto Owner Suggestion list displayed");
-                break;
-            } else {
-                Report.logInfo("Auto Suggestion List is not displayed");
-                amtDateUtil.stalePause();
-            }
-
-        }
-        WebElement wEle  = null;
-        List<WebElement> eleList = element.getAllElement("//li[@class='ui-menu-item']/a[contains(@class, 'ui-corner-all')]");
-        Report.logInfo("Owner List Count : " +eleList.size());
-        int count =0;
-        for(WebElement ele : eleList) {
-            if(ele.isDisplayed()) {
-                count++;
-                Report.logInfo("Actual text :" +ele.getText());
-                Report.logInfo("Exp text :" +ele.getText());
-                if(ele.getText().contains(ownerName.trim())) {
-                    wEle = ele;
-                    Report.logInfo("Owner Found");
-                    break;
-                }
-            }
-        }
-        Report.logInfo("Owner List Displayed Count : " +count);
-        wEle.click();
+    public void ownerSelect(String owner) {
+        String xpath = "//ul[@class='ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all' and contains(@style,'display: block;')]/li[@class='ui-menu-item']/a[contains(text(),'"+owner.trim()+"')]";
+        wait.waitTillElementDisplayed(xpath, MIN_TIME, MAX_TIME);
+        driver.findElement(By.xpath(xpath)).click();
     }
 
     /**
@@ -293,7 +257,7 @@ public class EventsPage extends RetentionBasePage {
             driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(Keys.ENTER);
             try {
                 ownerSelect(taskData.get("assignee").trim());
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 Report.logInfo("Selecting Owner Failed, trying again");
                 driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).clear();
                 driver.findElement(By.xpath(TASK_ASSIGNE_INPUT)).sendKeys(taskData.get("assignee").trim());
