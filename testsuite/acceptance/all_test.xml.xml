@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Automation Project" preserve-order="true">
+
+	<listeners>
+		<listener class-name="com.gainsight.utils.AutTestListener" />
+	</listeners>
+
+	<test verbose="3" name="Automation Test Suite" preserve-order="true">
+		<classes>
+
+
+
+			<!-- Srinivas Test -->
+			<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
+
+
+			<!-- Giri's Test-->
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
+            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
+            <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
+
+			<!--Srividya's Tests -->
+			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests" />
+			<class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests" />
+
+            <!-- Sai Ram's Tests  -->
+            <class name="com.gainsight.sfdc.administration.tests.AdminMilestoneTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminFeatureTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminRetentionTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminCustomersTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminTransactionsTabTest" />
+
+
+        </classes>
+	</test>
+</suite>
