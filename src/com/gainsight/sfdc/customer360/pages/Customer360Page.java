@@ -86,7 +86,7 @@ public class Customer360Page extends BasePage {
 			return new Customer360Milestones();
 		}
 		if(name.equals("Scorecard")){
-			//return new Customer360Scorecard();
+			return new Customer360Scorecard();
 		}
 		return this;
 	}
