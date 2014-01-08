@@ -9,7 +9,7 @@ List<User> userlist = [SELECT Id, Name FROM User WHERE IsActive = TRUE AND Name 
 JBCXM__CSEvent__c csEvent;
 List<Account> ac = [SELECT Id, Name FROM Account WHERE Name = 'Account For Related List'];
 List<Account> accList = [SELECT Id, Name FROM Account WHERE JBCXM__CustomerInfo__c != null LIMIT 10];
-accList.add(ac.get(0));
+if(ac != null && ac.size() > 0) {accList.add(ac.get(0));}
 System.debug(JSON.serialize(accList));
 Integer i = 0;
 Integer j = 0;
