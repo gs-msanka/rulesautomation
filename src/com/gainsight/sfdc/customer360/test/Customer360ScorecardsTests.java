@@ -63,7 +63,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 				"Overall Score Correct for NUMERIC scheme");
 	}
 	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2 , dependsOnMethods ="verifyScoreWithNumeric")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2 , dependsOnMethods ="addScoreWithNumeric")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
 	public void editNumericScores(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
@@ -206,7 +206,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 				"Overall Score Correct for COLOR scheme");
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6, dependsOnMethods="verifyScoreWithNumeric")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6, dependsOnMethods="addScoreWithNumeric")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
 	public void addCommentsToMeasure(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
@@ -226,7 +226,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		}
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 7, dependsOnMethods="testAddCommentsToMeasure")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 7, dependsOnMethods="addCommentsToMeasure")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit" )
 	public void editCommentsInMeasure(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
