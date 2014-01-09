@@ -202,14 +202,11 @@ public class Alerts360Test extends BaseTest {
         for(int a=1;a <= 20 ; a++ ) {
             if(testData.get("Task"+a) != null) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
-                taskData.put("date", getDatewithFormat(a));
+                taskData.put("date", getDatewithFormat(a-1));
                 taskDataList.add(taskData);
             }
         }
         ret.selectAlertPlaybook(testData.get("Playbook"));
-        for(HashMap<String, String> taskData : taskDataList)  {
-            Assert.assertTrue(ret.isAlertTaskDisplayed(taskData));
-        }
         ret.closeAlertView();
         ret.openAlertCardEditMode(alertData, alabel);
         for(HashMap<String, String> taskData : taskDataList)  {
