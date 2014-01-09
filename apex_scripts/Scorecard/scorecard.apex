@@ -39,7 +39,7 @@ if (cur_scheme_type==null){}
 cur_scheme_type.JBCXM__CustomerScheme__c=false;
 update(cur_scheme_type);
     }
-JBCXM__ScoringScheme__c scheme_type=[select JBCXM__CustomerScheme__c from JBCXM__ScoringScheme__c where Name like 'Grade%'];
+JBCXM__ScoringScheme__c scheme_type=[select JBCXM__CustomerScheme__c from JBCXM__ScoringScheme__c where Name like 'Numeric%'];
 scheme_type.JBCXM__CustomerScheme__c=true;
 update(scheme_type);
 
@@ -70,3 +70,6 @@ for(integer i=4;i<6;i++)
 smList_Meas.add(new JBCXM__ScorecardMetric__c(Name='M'+i,JBCXM__GroupId__c=group2.get(0).Id,JBCXM__Weight__c=20.00,JBCXM__AllowOverride__c=true,JBCXM__PeriodType__c='WEEKS',JBCXM__DisplayOrder__c=i,JBCXM__HelpText__c='abcd',JBCXM__InputType__c='Manual',JBCXM__IsActive__c=true,JBCXM__IsGroup__c=false,JBCXM__ScoringSchemeId__c=scheme.get(0).Id));
 }
 insert(smList_Meas);
+
+
+//----------------------------------------------------------------------------------------------------------//
