@@ -202,7 +202,7 @@ public class Alerts360Test extends BaseTest {
         for(int a=1;a <= 20 ; a++ ) {
             if(testData.get("Task"+a) != null) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
-                taskData.put("date", getDatewithFormat(a-1));
+                taskData.put("date", getDatewithFormat(a));
                 taskDataList.add(taskData);
             }
         }
