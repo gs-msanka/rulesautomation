@@ -13,16 +13,16 @@
 			<class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
 			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
           	<methods>
-					<include name="verifyScoreWithNumeric" />
+					<include name="addScoreWithNumeric" />
 					<include name="editNumericScores" />
-					<include name="testAddCommentsToMeasure" />
-					<include name="testEditCommentsToMeasure" />
-					<include name="addOverallSummary" />
-					<include name="editOverallSummary" />
 					<include name="addScoreWithGrade" />
 					<include name="editGradeScores" />
 					<include name="addScoreWithColor" />
 					<include name="editColorScores" />
+					<include name="addCommentsToMeasure" />
+					<include name="editCommentsInMeasure" />
+					<include name="addOverallSummary" />
+					<include name="editOverallSummary" />				
 				</methods>
           	</class>
 		</classes>
