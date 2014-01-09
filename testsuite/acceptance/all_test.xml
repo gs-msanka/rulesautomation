@@ -15,10 +15,14 @@
 
 
 			<!-- Giri's Test-->
-            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
-            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
             <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+            <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
+            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
             <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
 
 			<!--Srividya's Tests -->
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests" />
