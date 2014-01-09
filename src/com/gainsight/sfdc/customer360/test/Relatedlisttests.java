@@ -140,7 +140,7 @@ public class Relatedlisttests extends BaseTest {
         List<String> dataList =new ArrayList<String>();
         for(int i =1; i <= 10; i++) {
             if(testData.get("TableRow" + i) !=null) {
-                String data = testData.get("TableRow" + i);
+                String data = testData.get("Values" + i);
                 dataList.add(data);
                 Report.logInfo(data);
             }
@@ -159,7 +159,7 @@ public class Relatedlisttests extends BaseTest {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("TableRow1"));
+        SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
         if(!isPackageInstance()) {
             query = removeNameSpace(query);
@@ -182,7 +182,7 @@ public class Relatedlisttests extends BaseTest {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
-        SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("TableRow1"));
+        SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
         if(!isPackageInstance()) {
             query = removeNameSpace(query);
