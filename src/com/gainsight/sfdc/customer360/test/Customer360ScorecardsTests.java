@@ -120,7 +120,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		}
 		String actualOverallScore = getMapFromData(
 				testData.get("OverallScore")).get("Score");
-		Assert.assertEquals(actualOverallScore, cs.getOverallScore(),
+		Assert.assertTrue(cs.getOverallScore().contains(actualOverallScore),
 				"Overall Score Correct for GRADE scheme");
 	}
 
@@ -151,7 +151,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 						MeasureDetails.get("Score"), "Grade", false); 
 			}
 		}
-		Assert.assertEquals(actualOverallScore, cs.getOverallScore(),
+		Assert.assertTrue(cs.getOverallScore().contains(actualOverallScore),
 				"Overall Score Correct for GRADE scheme");
 		Assert.assertTrue(cs.verifyOverallTrend(Trend), "Verified trend...");
 		
@@ -179,7 +179,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 			}
 		}
 		String actualOverallScore = getMapFromData(testData.get("OverallScore")).get("Score");
-		Assert.assertEquals(cs.verifyOverallScoreForColor(actualOverallScore),
+		Assert.assertTrue(cs.verifyOverallScoreForColor(actualOverallScore),
 				"Overall Score Correct for COLOR scheme");
 	}
 
@@ -200,13 +200,13 @@ public class Customer360ScorecardsTests extends BaseTest {
 						MeasureDetails.get("Score"), "Color", false); // 3rd parameter sould be true we are adding score first time,false if modifying existing score
 			}
 		}
-		int actualOverallScore = Integer.parseInt(getMapFromData(
-				testData.get("OverallScore")).get("Score"));
-		Assert.assertEquals(actualOverallScore, cs.getOverallScore(),
+		String actualOverallScore = getMapFromData(
+				testData.get("OverallScore")).get("Score");
+		Assert.assertTrue(cs.verifyOverallScoreForColor(actualOverallScore),
 				"Overall Score Correct for COLOR scheme");
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6, dependsOnMethods="addScoreWithNumeric")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
 	public void addCommentsToMeasure(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));

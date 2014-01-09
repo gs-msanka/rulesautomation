@@ -54,6 +54,7 @@ public class Customer360Scorecard extends Customer360Page {
 
 	public String getOverallScore() {
 		amtDateUtil.stalePause();
+		amtDateUtil.stalePause();
 		return (item.getText(OVERALL_SCORE));
 	}
 	
@@ -62,17 +63,16 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 	public boolean verifyOverallTrend(String Trend) {
 
-		switch (Trend) {
-		case "Up":
+		if(Trend.equals("Up")) {
 			return item.isElementPresent(String.format(OVERALL_TREND, "up"));
+		}
 			
-		case "Down":
+		else if(Trend.equals("Down")){
 			return item.isElementPresent(String.format(OVERALL_TREND, "down"));
-
-		case "Same":
+		}
+		else{
 			return item.isElementPresent(String.format(OVERALL_TREND, "flat"));
 		}
-		return false;
 	}
 
 	public void addOrEditOverallSummary(String summary, boolean add) {
@@ -174,9 +174,8 @@ public class Customer360Scorecard extends Customer360Page {
 		int returnVal = 0;
 		String[] grades_array={"F","E","D","C","B","A"};
 		String[] colors_array={"#790400","#c46d6c","#d5bf50","#4daddd","#97d477","#4a841e"};
-		switch (scheme) {
-		case "Numeric":{
-				if (add) {
+		if(scheme.equals("Numeric")) {
+			if (add) {
 				returnVal =(int)Math.floor((((sliderEnd - sliderStart) * (Float
 						.parseFloat(score) / 100))));
 			} else {
@@ -190,9 +189,8 @@ public class Customer360Scorecard extends Customer360Page {
 								.parseFloat(score) / 100))) +sliderStart - sliderCurrentPos));
 				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
-			break;
 		}
-		case "Grade":
+		else if(scheme.equals("Grade")){
 			int pos=Arrays.asList(grades_array).indexOf(score);
 			if (add) {
 				
@@ -208,8 +206,8 @@ public class Customer360Scorecard extends Customer360Page {
 						.floor((((((sliderEnd - sliderStart) / (numOfGrades-1)) * pos) + sliderStart) - sliderCurrentPos));
 				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
-			break;
-		case "Color":
+		}
+		else {   //scheme is "Color":
 			int c_pos=Arrays.asList(colors_array).indexOf(score);
 			if (add) {
 				
@@ -226,7 +224,6 @@ public class Customer360Scorecard extends Customer360Page {
 						.floor((((((sliderEnd - sliderStart) / (numOfGrades-1)) * c_pos) + sliderStart) - sliderCurrentPos));
 				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
-			break;
 		}
 		return returnVal;
 	}
@@ -256,19 +253,16 @@ public class Customer360Scorecard extends Customer360Page {
 	
 	public void changeToScheme(String schemeName,AdminScorecardSection as) throws InterruptedException{
 	
-		switch(schemeName) {
-		case "Numeric":
+		if(schemeName.equals("Numeric")) {
 				as.applyNumericScheme();
-				break;
-		case "Grade" :
-				as.applyGradeScheme();
-				break;
-		case "Color" :
-				as.applyColorScheme();
-				break;
 		}
-	      
-    	Report.logInfo("Job added... proceeding with polling");
+		if(schemeName.equals("Grade")){
+				as.applyGradeScheme();
+		}
+		if(schemeName.equals("Color")){
+				as.applyColorScheme();
+		}
+	   	Report.logInfo("Job added... proceeding with polling");
     	BaseTest bt=new BaseTest();
     	int noOfRunningJobs =0;
 	for(int l= 0; l < 100; l++) {
