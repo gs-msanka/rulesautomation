@@ -7,7 +7,7 @@ public class AdministrationBasepage extends BasePage{
 
 	
 	
-	
+	final String SCORECARD_SECTION="//span[contains(text(),'Scorecard')]";
 	public AdministrationBasepage() {
 		//wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
@@ -86,7 +86,11 @@ public class AdministrationBasepage extends BasePage{
 	}
 
 
-	
+	public AdminScorecardSection clickOnScorecardSetion(){
+		
+		item.click(SCORECARD_SECTION);
+		return new AdminScorecardSection();
+	}
 	
 	
 	

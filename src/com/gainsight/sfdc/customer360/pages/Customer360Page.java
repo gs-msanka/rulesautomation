@@ -85,12 +85,16 @@ public class Customer360Page extends BasePage {
 		if(name.equals("Usage")){
 			return new Customer360Milestones();
 		}
-		if(name.equals("Scorecard")){
-			return new Customer360Scorecard();
-		}
+		
 		return this;
 	}
-
+	
+	public Customer360Scorecard goToScorecardSection()
+	{
+		item.click(String.format(NAVIGATE_SECTION,"Scorecard"));
+		wait.waitTillElementDisplayed("//div[@class='scorecardsbody']", MIN_TIME, MAX_TIME);
+		return new Customer360Scorecard();
+	}
     public Customer360Page searchCustomer(String cName, Boolean startsWith) {
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         for(int i =0; i< 3 ; i++) {
@@ -242,4 +246,6 @@ public class Customer360Page extends BasePage {
 		xpath.append("]");
 		return xpath.toString();
 	}
+	
+	
 }

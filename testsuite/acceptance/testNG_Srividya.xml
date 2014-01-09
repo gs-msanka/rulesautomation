@@ -19,6 +19,10 @@
 					<include name="testEditCommentsToMeasure" />
 					<include name="addOverallSummary" />
 					<include name="editOverallSummary" />
+					<include name="addScoreWithGrade" />
+					<include name="editGradeScores" />
+					<include name="addScoreWithColor" />
+					<include name="editColorScores" />
 				</methods>
           	</class>
 		</classes>

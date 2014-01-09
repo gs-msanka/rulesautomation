@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,19 +9,28 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-public class Customer360Scorecard extends Customer360Page {
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
+import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.SOQLUtil;
 
+public class Customer360Scorecard extends Customer360Page {
+	
+	
 	private final String READY_INDICATOR = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
 
 	private final String OVERALL_SCORE = "//div[@class='score-area']/ul/li[@class='score']";
+	private final String OVERALL_SCORE_BACKGROUND="//div[@style='background-color:%s;' and @class='score-area']";
 	private final String OVERALL_TREND = "//div[@class='score-area']/ul/li[@class='score-trend trend-%s']";// %s can	be up,down or flat
 
 	private final String OVERALL_SUMMARY = "//div[@class='discription']";
 	private final String EDIT_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']";
 	private final String SAVE_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']/parent::div/div[@class='save-options clearfix']/a[@data-action='SAVE']";
 
-	private final String CUSTOMER_GOALS_HEADER="//div[@class='goalsheader clearfix']";
-	private final String CUSTOMER_GOALS = "//div[@class='goalslist_content']";
+	private final String CUSTOMER_GOALS_HEADER="div.goalsheader.clearfix";
+	private final String CUSTOMER_GOALS = "//div[@class='goalslist_content' and @title='Click to edit']";
 	private final String EDIT_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']";
 	private final String SAVE_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']/parent::div//a[@data-action='SAVE']";
 	private final String HIDE_OR_SHOW_CUSTOMER_GOALS = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-down']";// or//div[@class='gs-head-tgl-btn goals-arrow-down']
@@ -42,11 +52,14 @@ public class Customer360Scorecard extends Customer360Page {
 		wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
-	public int getOverallScore() {
+	public String getOverallScore() {
 		amtDateUtil.stalePause();
-		return (Integer.parseInt(item.getText(OVERALL_SCORE)));
+		return (item.getText(OVERALL_SCORE));
 	}
-
+	
+	public boolean verifyOverallScoreForColor(String score_color){
+		return (item.isElementPresent(String.format(OVERALL_SCORE_BACKGROUND,score_color)));
+	}
 	public boolean verifyOverallTrend(String Trend) {
 
 		switch (Trend) {
@@ -75,19 +88,25 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 
 	public void addOrEditCustomerGoals(String goals, boolean add) {
-		//WebElement element = driver.findElement(By.xpath(CUSTOMER_GOALS_HEADER));
-		//JavascriptExecutor executor = (JavascriptExecutor)driver;
-		System.out.println("about to click goals header");
-		//executor.executeScript("j$(\".goals-section .goalsheader\").click();");
-		driver.findElement(By.className(".goals-section")).findElement(By.className(".goalsheader")).click();
-
-		System.out.println("Finished clicking goals header");
-		/*driver.findElement(By.xpath(CUSTOMER_GOALS_HEADER)).click();
+		for(int i=0;i<3;i++){
+			driver.findElement(By.cssSelector(CUSTOMER_GOALS_HEADER)).click();
+			WebElement goals_ele=driver.findElement(By.xpath(CUSTOMER_GOALS));
+			if(goals_ele.isDisplayed()){
+				break;
+			}
+			else{
+				driver.navigate().refresh();
+				goToSection("Scorecard");
+			}
+		}
+		
 		amtDateUtil.stalePause();
-		driver.findElement(By.xpath(CUSTOMER_GOALS)).click();
-		driver.findElement(By.xpath(EDIT_CUSTOMER_GOALS)).sendKeys(goals);*/
-		item.click(SAVE_CUSTOMER_GOALS);
+		Actions builder=new Actions(driver);
+		WebElement goals_edit=driver.findElement(By.xpath(CUSTOMER_GOALS));
+		builder.moveToElement(goals_edit).click().sendKeys(goals).click(driver.findElement(By.xpath(SAVE_CUSTOMER_GOALS))).perform();
 		amtDateUtil.stalePause();
+		/*item.click(SAVE_CUSTOMER_GOALS);
+		amtDateUtil.stalePause();*/
 	}
 
 	public String getCustomerGoals() {
@@ -142,7 +161,7 @@ public class Customer360Scorecard extends Customer360Page {
 			return value;
 		}
 	}
-
+	
 	private int getOffsetForScore(String score, String scheme, boolean add) {
 		int sliderStart = 10;
 		int sliderEnd = 243;
@@ -151,8 +170,10 @@ public class Customer360Scorecard extends Customer360Page {
 
 		int numOfGrades = 6; // To decide if this is to be taken from some
 								// configuration/excel
+		int numOfColors=6;
 		int returnVal = 0;
-		
+		String[] grades_array={"F","E","D","C","B","A"};
+		String[] colors_array={"#790400","#c46d6c","#d5bf50","#4daddd","#97d477","#4a841e"};
 		switch (scheme) {
 		case "Numeric":{
 				if (add) {
@@ -172,27 +193,38 @@ public class Customer360Scorecard extends Customer360Page {
 			break;
 		}
 		case "Grade":
+			int pos=Arrays.asList(grades_array).indexOf(score);
 			if (add) {
-				returnVal = Math
-						.round(((((sliderEnd - sliderStart) / numOfGrades) * Grades
-								.valueOf(score).getValue()) + sliderStart));
+				
+				returnVal = (int)Math
+						.floor(((((sliderEnd - sliderStart) / (numOfGrades-1)) * pos) ));
 			} else {
 				int sliderCurrentPos=0;
 				for(WebElement e : ele){
 					if(e.isDisplayed())
 						sliderCurrentPos = (int)Float.parseFloat(e.getAttribute("cx")); // need to get current x pos of the slider
 				}
-				returnVal = Math
-						.round((((((sliderEnd - sliderStart) / numOfGrades) * Grades
-								.valueOf(score).getValue()) + sliderStart) - sliderCurrentPos));
+				returnVal = (int)Math
+						.floor((((((sliderEnd - sliderStart) / (numOfGrades-1)) * pos) + sliderStart) - sliderCurrentPos));
 				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 			break;
 		case "Color":
+			int c_pos=Arrays.asList(colors_array).indexOf(score);
 			if (add) {
-				returnVal = 0;
+				
+				
+				returnVal = (int)Math
+						.floor(((((sliderEnd - sliderStart) / (numOfColors-1)) * c_pos) ));
 			} else {
-				returnVal = 0;
+				int sliderCurrentPos=0;
+				for(WebElement e : ele){
+					if(e.isDisplayed())
+						sliderCurrentPos = (int)Float.parseFloat(e.getAttribute("cx")); // need to get current x pos of the slider
+				}
+				returnVal = (int)Math
+						.floor((((((sliderEnd - sliderStart) / (numOfGrades-1)) * c_pos) + sliderStart) - sliderCurrentPos));
+				System.out.println("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 			break;
 		}
@@ -221,5 +253,40 @@ public class Customer360Scorecard extends Customer360Page {
 				String.format(MEASURE_FOOTER_MSG, measName), MIN_TIME, MAX_TIME);
 		return true;
 	}
-
+	
+	public void changeToScheme(String schemeName,AdminScorecardSection as) throws InterruptedException{
+	
+		switch(schemeName) {
+		case "Numeric":
+				as.applyNumericScheme();
+				break;
+		case "Grade" :
+				as.applyGradeScheme();
+				break;
+		case "Color" :
+				as.applyColorScheme();
+				break;
+		}
+	      
+    	Report.logInfo("Job added... proceeding with polling");
+    	BaseTest bt=new BaseTest();
+    	int noOfRunningJobs =0;
+	for(int l= 0; l < 100; l++) {
+		String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
+                "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
+                "and ApexClass.Name = 'BatchHandler'";
+		
+        noOfRunningJobs = bt.getQueryRecordCount(query);
+        if(noOfRunningJobs==0) {
+            Report.logInfo("Scorecard schem changed to Grading...proceeding with execution of tests.....");
+            break;
+        } else {
+            Report.logInfo("Waiting for Scorecard scheme to be changed to Grading");
+            Thread.sleep(3000L);
+        }
+    }
+		clickOnC360Tab();
+		searchCustomer("Scorecard Account", true);
+		goToScorecardSection();
+	}
 }
