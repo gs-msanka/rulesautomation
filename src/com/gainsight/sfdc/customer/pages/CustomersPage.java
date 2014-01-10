@@ -11,7 +11,7 @@ public class CustomersPage extends CustomerBasePage {
 	private final String SAVE_BUTTON = "//input[@value='Save']";
 	private final String CUSTOMER_EDIT_LINK = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Edit']";
 	private final String CUSTOMER_DEL_LINK = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Delete']";
-	private final String CUSTOMER_TABLE = "customerList_IdOfJBaraStandardView";
+	private final String CUSTOMER_TABLE = "//table[contains(@id,'customerList_IdOf') and @class='ui-jqgrid-btable']";
 	private final String STATUS_FIELD = "//td[text()='Status: ']/following-sibling::td//select";
 	private final String STAGE_FIELD = "//td[text()='Stage: ']/following-sibling::td//select";
 	private final String COMMENTS_FIELD = "//textarea[@class='jbaraDummyCustomerInputCtrl jbaraDummyCustomerCommentInputCtrl']";

@@ -16,7 +16,7 @@ public class ChurnPage extends BasePage {
 	private final String CHURN_GRID = "//div[@class='mainPanelDiv churnGridGaphsDisplayDiv']";
 	private final String SAVE_BUTTON = "//a[text()='Save']";
 	private final String CUSTOMER_FILTER = "Customer_link";
-	private final String CHURN_TABLE = "ChurnAnalyticsList_IdOfJBaraStandardView";
+	private final String CHURN_TABLE = "//table[contains(@id,'ChurnAnalyticsList_IdOf') and @class='ui-jqgrid-btable']";
 
 	public ChurnPage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
