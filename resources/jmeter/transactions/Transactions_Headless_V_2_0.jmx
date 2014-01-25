@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.5" jmeter="2.10 r1533061">
+<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9 r1437961">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -27,41 +27,11 @@
         <stringProp name="variableNames">id,cName,tType,oppName,bDate,sDate,eDate,mrr,asv,users,otr,reason,comments,parent</stringProp>
       </CSVDataSet>
       <hashTree/>
-      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="env" enabled="false">
-        <collectionProp name="Arguments.arguments">
-          <elementProp name="SERVERNAME" elementType="Argument">
-            <stringProp name="Argument.name">SERVERNAME</stringProp>
-            <stringProp name="Argument.value">c.ap1.visual.force.com</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="un" elementType="Argument">
-            <stringProp name="Argument.name">un</stringProp>
-            <stringProp name="Argument.value">spulagam@gs.com</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="pwd" elementType="Argument">
-            <stringProp name="Argument.name">pwd</stringProp>
-            <stringProp name="Argument.value">gainsight1234</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="st" elementType="Argument">
-            <stringProp name="Argument.name">st</stringProp>
-            <stringProp name="Argument.value">men3cJg80SfUIxXg2s9BPWKN</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="managed" elementType="Argument">
-            <stringProp name="Argument.name">managed</stringProp>
-            <stringProp name="Argument.value">false</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-        </collectionProp>
-      </Arguments>
-      <hashTree/>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Manage package" enabled="true">
         <collectionProp name="Arguments.arguments">
           <elementProp name="SERVERNAME" elementType="Argument">
             <stringProp name="Argument.name">SERVERNAME</stringProp>
-            <stringProp name="Argument.value">${__P(baseURL)}</stringProp>
+            <stringProp name="Argument.value">${__P(baseURL)</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="un" elementType="Argument">
@@ -82,36 +52,6 @@
           <elementProp name="managed" elementType="Argument">
             <stringProp name="Argument.name">managed</stringProp>
             <stringProp name="Argument.value">${__P(managed)}</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-        </collectionProp>
-      </Arguments>
-      <hashTree/>
-      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Sandbox" enabled="false">
-        <collectionProp name="Arguments.arguments">
-          <elementProp name="SERVERNAME" elementType="Argument">
-            <stringProp name="Argument.name">SERVERNAME</stringProp>
-            <stringProp name="Argument.value">jbcxm.cs9.visual.force.com</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="un" elementType="Argument">
-            <stringProp name="Argument.name">un</stringProp>
-            <stringProp name="Argument.value">giri@etesting.com.devsandbox</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="pwd" elementType="Argument">
-            <stringProp name="Argument.name">pwd</stringProp>
-            <stringProp name="Argument.value">1234567jb</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="st" elementType="Argument">
-            <stringProp name="Argument.name">st</stringProp>
-            <stringProp name="Argument.value">Hg778YYSUSA2FC88DTJmdOaNL</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="managed" elementType="Argument">
-            <stringProp name="Argument.name">managed</stringProp>
-            <stringProp name="Argument.value">true</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -696,6 +636,15 @@ vars.put(&quot;pCustomer&quot;,vars.get(&quot;cName&quot;));</stringProp>
                 <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
               </HtmlExtractor>
               <hashTree/>
+              <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CustomUpsell ID" enabled="true">
+                <stringProp name="HtmlExtractor.refname">customupsellid</stringProp>
+                <stringProp name="HtmlExtractor.expr">select[class=jbaraDummyBookingOrderSelectCtrl] option:contains(CustomUpsell)</stringProp>
+                <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                <stringProp name="HtmlExtractor.default"></stringProp>
+                <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+              </HtmlExtractor>
+              <hashTree/>
               <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="Downsell ID" enabled="true">
                 <stringProp name="HtmlExtractor.refname">downsellid</stringProp>
                 <stringProp name="HtmlExtractor.expr">select[class=jbaraDummyBookingOrderSelectCtrl] option:contains(Downsell)</stringProp>
@@ -705,9 +654,27 @@ vars.put(&quot;pCustomer&quot;,vars.get(&quot;cName&quot;));</stringProp>
                 <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
               </HtmlExtractor>
               <hashTree/>
+              <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CustomDownsell ID" enabled="true">
+                <stringProp name="HtmlExtractor.refname">customdownsellid</stringProp>
+                <stringProp name="HtmlExtractor.expr">select[class=jbaraDummyBookingOrderSelectCtrl] option:contains(CustomDownsell)</stringProp>
+                <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                <stringProp name="HtmlExtractor.default"></stringProp>
+                <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+              </HtmlExtractor>
+              <hashTree/>
               <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="Debook ID" enabled="true">
                 <stringProp name="HtmlExtractor.refname">debookid</stringProp>
                 <stringProp name="HtmlExtractor.expr">select[class=jbaraDummyBookingOrderSelectCtrl] option:contains(Debook)</stringProp>
+                <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                <stringProp name="HtmlExtractor.default"></stringProp>
+                <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+              </HtmlExtractor>
+              <hashTree/>
+              <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CustomDebook ID" enabled="true">
+                <stringProp name="HtmlExtractor.refname">customdebookid</stringProp>
+                <stringProp name="HtmlExtractor.expr">select[class=jbaraDummyBookingOrderSelectCtrl] option:contains(CustomDebook)</stringProp>
                 <stringProp name="HtmlExtractor.attribute">value</stringProp>
                 <stringProp name="HtmlExtractor.default"></stringProp>
                 <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1954,7 +1921,7 @@ vars.put(&quot;success&quot;,&quot;true&quot;);
                     </hashTree>
                   </hashTree>
                   <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Upsell" enabled="true">
-                    <stringProp name="IfController.condition">&quot;${tType}&quot;.indexOf(&quot;Upsell&quot;) != -1</stringProp>
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;Upsell&quot;</stringProp>
                     <boolProp name="IfController.evaluateAll">false</boolProp>
                   </IfController>
                   <hashTree>
@@ -2839,6 +2806,892 @@ vars.put(&quot;success&quot;,&quot;true&quot;);
                       </hashTree>
                     </hashTree>
                   </hashTree>
+                  <IfController guiclass="IfControllerPanel" testclass="IfController" testname="CustomUpsell" enabled="true">
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;CustomUpsell&quot;</stringProp>
+                    <boolProp name="IfController.evaluateAll">true</boolProp>
+                  </IfController>
+                  <hashTree>
+                    <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                      <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                        <collectionProp name="Arguments.arguments">
+                          <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                            <stringProp name="Argument.value">_viewRoot</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}</stringProp>
+                            <stringProp name="Argument.value">${formid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${hiddenType}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custComponentId}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                            <stringProp name="Argument.value">${cName}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cid}</stringProp>
+                            <stringProp name="Argument.value">${cid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_opp}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_opp}</stringProp>
+                            <stringProp name="Argument.value">0</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_btype}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_btype}</stringProp>
+                            <stringProp name="Argument.value">${customupsellid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                            <stringProp name="Argument.value">10/18/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                            <stringProp name="Argument.value">10/18/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_term}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_term}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                            <stringProp name="Argument.value">${state}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                            <stringProp name="Argument.value">${sv}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                            <stringProp name="Argument.value">${mac}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                            <stringProp name="Argument.value">${csrf}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="jbBTId" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">jbBTId</stringProp>
+                            <stringProp name="Argument.value">${upsellid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${bTypeChangeId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.value">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                        </collectionProp>
+                      </elementProp>
+                      <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                      <stringProp name="HTTPSampler.port">443</stringProp>
+                      <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.protocol">https</stringProp>
+                      <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                      <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                      <stringProp name="HTTPSampler.method">POST</stringProp>
+                      <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                      <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                      <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                      <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                      <boolProp name="HTTPSampler.monitor">false</boolProp>
+                      <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                    </HTTPSamplerProxy>
+                    <hashTree>
+                      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                        <collectionProp name="HeaderManager.headers">
+                          <elementProp name="Content-Type" elementType="Header">
+                            <stringProp name="Header.name">Content-Type</stringProp>
+                            <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Language" elementType="Header">
+                            <stringProp name="Header.name">Accept-Language</stringProp>
+                            <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept" elementType="Header">
+                            <stringProp name="Header.name">Accept</stringProp>
+                            <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                          </elementProp>
+                          <elementProp name="User-Agent" elementType="Header">
+                            <stringProp name="Header.name">User-Agent</stringProp>
+                            <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                          </elementProp>
+                          <elementProp name="Pragma" elementType="Header">
+                            <stringProp name="Header.name">Pragma</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Cache-Control" elementType="Header">
+                            <stringProp name="Header.name">Cache-Control</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Encoding" elementType="Header">
+                            <stringProp name="Header.name">Accept-Encoding</stringProp>
+                            <stringProp name="Header.value">gzip, deflate</stringProp>
+                          </elementProp>
+                          <elementProp name="Referer" elementType="Header">
+                            <stringProp name="Header.name">Referer</stringProp>
+                            <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                          </elementProp>
+                        </collectionProp>
+                      </HeaderManager>
+                      <hashTree/>
+                      <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                        <boolProp name="resetInterpreter">true</boolProp>
+                        <stringProp name="parameters"></stringProp>
+                        <stringProp name="filename"></stringProp>
+                        <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import com.gs.headless.util.CSVUtil;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+
+CSVUtil util=new CSVUtil(&quot;TransactionsData.csv&quot;);
+String id=vars.get(&quot;parent&quot;);
+String tText=util.getTransactionText(id);
+String query=&quot;span[class=parentTransactionListToAssociate]:contains(&quot;+tText+&quot;) input&quot;;
+vars.put(&quot;pid&quot;,document.select(query).get(0).attr(&quot;value&quot;));</stringProp>
+                      </BeanShellPostProcessor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CSRF" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">csrf</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateCSRF]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="MAC" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">mac</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateMAC]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="state" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">state</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewState]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="hidden_pid" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">hidden_pid</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=hiddenParentId]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_users</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                    </hashTree>
+                    <IfController guiclass="IfControllerPanel" testclass="IfController" testname="New Upsell" enabled="true">
+                      <stringProp name="IfController.condition">&quot;${parent}&quot;  == &quot;&quot;</stringProp>
+                      <boolProp name="IfController.evaluateAll">false</boolProp>
+                    </IfController>
+                    <hashTree>
+                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                          <collectionProp name="Arguments.arguments">
+                            <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                              <stringProp name="Argument.value">_viewRoot</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}</stringProp>
+                              <stringProp name="Argument.value">${formid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hiddenType}</stringProp>
+                              <stringProp name="Argument.value">CustomUpsell</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custComponentId}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                              <stringProp name="Argument.value">${cName}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cid}</stringProp>
+                              <stringProp name="Argument.value">${cid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_opp}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_opp}</stringProp>
+                              <stringProp name="Argument.value">0</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_btype}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_btype}</stringProp>
+                              <stringProp name="Argument.value">${customupsellid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="ParentAssociation" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">ParentAssociation</stringProp>
+                              <stringProp name="Argument.value">new</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hidden_pid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hidden_pid}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                              <stringProp name="Argument.value">${bDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                              <stringProp name="Argument.value">${sDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                              <stringProp name="Argument.value">${eDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_term}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_term}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_mrr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_mrr}</stringProp>
+                              <stringProp name="Argument.value">${mrr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_asv}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_asv}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_users}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_users}</stringProp>
+                              <stringProp name="Argument.value">${users}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_otr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_otr}</stringProp>
+                              <stringProp name="Argument.value">${otr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                              <stringProp name="Argument.value">${comments}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                              <stringProp name="Argument.value">${state}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                              <stringProp name="Argument.value">${sv}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                              <stringProp name="Argument.value">${mac}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                              <stringProp name="Argument.value">${csrf}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${saveClickedId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.value">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                          </collectionProp>
+                        </elementProp>
+                        <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                        <stringProp name="HTTPSampler.port">443</stringProp>
+                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.protocol">https</stringProp>
+                        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                        <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                        <stringProp name="HTTPSampler.method">POST</stringProp>
+                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                        <boolProp name="HTTPSampler.monitor">false</boolProp>
+                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                      </HTTPSamplerProxy>
+                      <hashTree>
+                        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                          <collectionProp name="HeaderManager.headers">
+                            <elementProp name="Content-Type" elementType="Header">
+                              <stringProp name="Header.name">Content-Type</stringProp>
+                              <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Language" elementType="Header">
+                              <stringProp name="Header.name">Accept-Language</stringProp>
+                              <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept" elementType="Header">
+                              <stringProp name="Header.name">Accept</stringProp>
+                              <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                            </elementProp>
+                            <elementProp name="User-Agent" elementType="Header">
+                              <stringProp name="Header.name">User-Agent</stringProp>
+                              <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                            </elementProp>
+                            <elementProp name="Pragma" elementType="Header">
+                              <stringProp name="Header.name">Pragma</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Cache-Control" elementType="Header">
+                              <stringProp name="Header.name">Cache-Control</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Encoding" elementType="Header">
+                              <stringProp name="Header.name">Accept-Encoding</stringProp>
+                              <stringProp name="Header.value">gzip, deflate</stringProp>
+                            </elementProp>
+                            <elementProp name="Referer" elementType="Header">
+                              <stringProp name="Header.name">Referer</stringProp>
+                              <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </HeaderManager>
+                        <hashTree/>
+                        <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                          <boolProp name="resetInterpreter">true</boolProp>
+                          <stringProp name="parameters"></stringProp>
+                          <stringProp name="filename"></stringProp>
+                          <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+
+String error=document.select(&quot;span[id*=jbaraTransactionErrorMessages]&quot;).get(0).text();
+if ( error.length() == 0){
+vars.put(&quot;success&quot;,&quot;true&quot;);
+}</stringProp>
+                        </BeanShellPostProcessor>
+                        <hashTree/>
+                      </hashTree>
+                    </hashTree>
+                    <IfController guiclass="IfControllerPanel" testclass="IfController" testname="existing" enabled="true">
+                      <stringProp name="IfController.condition">&quot;${parent}&quot;  != &quot;&quot;</stringProp>
+                      <boolProp name="IfController.evaluateAll">false</boolProp>
+                    </IfController>
+                    <hashTree>
+                      <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+                        <stringProp name="IfController.condition">&quot;${pid}&quot;  != &quot;null&quot;</stringProp>
+                        <boolProp name="IfController.evaluateAll">false</boolProp>
+                      </IfController>
+                      <hashTree>
+                        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                            <collectionProp name="Arguments.arguments">
+                              <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                                <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                                <stringProp name="Argument.value">_viewRoot</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${formid}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${formid}</stringProp>
+                                <stringProp name="Argument.value">${formid}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${hiddenType}</stringProp>
+                                <stringProp name="Argument.value">CustomUpsell</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${custComponentId}</stringProp>
+                                <stringProp name="Argument.value"></stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                                <stringProp name="Argument.value">false</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                                <stringProp name="Argument.value">false</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                                <stringProp name="Argument.value"></stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                                <stringProp name="Argument.value">${cName}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                                <stringProp name="Argument.value"></stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_cid}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_cid}</stringProp>
+                                <stringProp name="Argument.value">${cid}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${select_opp}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${select_opp}</stringProp>
+                                <stringProp name="Argument.value">0</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${select_btype}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${select_btype}</stringProp>
+                                <stringProp name="Argument.value">${customupsellid}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="ParentAssociation" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                                <stringProp name="Argument.name">ParentAssociation</stringProp>
+                                <stringProp name="Argument.value">existing</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="parentTransaction" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                                <stringProp name="Argument.name">parentTransaction</stringProp>
+                                <stringProp name="Argument.value">${pid}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${hidden_pid}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${hidden_pid}</stringProp>
+                                <stringProp name="Argument.value">${pid}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                                <stringProp name="Argument.value">${bDate}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                                <stringProp name="Argument.value">${sDate}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                                <stringProp name="Argument.value">${eDate}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_term}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_term}</stringProp>
+                                <stringProp name="Argument.value"></stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_mrr}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_mrr}</stringProp>
+                                <stringProp name="Argument.value">${mrr}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_asv}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_asv}</stringProp>
+                                <stringProp name="Argument.value"></stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_users}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_users}</stringProp>
+                                <stringProp name="Argument.value">${users}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${input_otr}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${input_otr}</stringProp>
+                                <stringProp name="Argument.value">${otr}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                                <stringProp name="Argument.value">${comments}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                                <stringProp name="Argument.value">${state}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                                <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                                <stringProp name="Argument.value">${sv}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                                <stringProp name="Argument.value">${mac}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                                <stringProp name="Argument.value">${csrf}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                              <elementProp name="${saveClickedId}" elementType="HTTPArgument">
+                                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                                <stringProp name="Argument.name">${saveClickedId}</stringProp>
+                                <stringProp name="Argument.value">${saveClickedId}</stringProp>
+                                <stringProp name="Argument.metadata">=</stringProp>
+                                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              </elementProp>
+                            </collectionProp>
+                          </elementProp>
+                          <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                          <stringProp name="HTTPSampler.port">443</stringProp>
+                          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                          <stringProp name="HTTPSampler.protocol">https</stringProp>
+                          <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                          <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                          <stringProp name="HTTPSampler.method">POST</stringProp>
+                          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                          <boolProp name="HTTPSampler.monitor">false</boolProp>
+                          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                        </HTTPSamplerProxy>
+                        <hashTree>
+                          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                            <collectionProp name="HeaderManager.headers">
+                              <elementProp name="Content-Type" elementType="Header">
+                                <stringProp name="Header.name">Content-Type</stringProp>
+                                <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                              </elementProp>
+                              <elementProp name="Accept-Language" elementType="Header">
+                                <stringProp name="Header.name">Accept-Language</stringProp>
+                                <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                              </elementProp>
+                              <elementProp name="Accept" elementType="Header">
+                                <stringProp name="Header.name">Accept</stringProp>
+                                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                              </elementProp>
+                              <elementProp name="User-Agent" elementType="Header">
+                                <stringProp name="Header.name">User-Agent</stringProp>
+                                <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                              </elementProp>
+                              <elementProp name="Pragma" elementType="Header">
+                                <stringProp name="Header.name">Pragma</stringProp>
+                                <stringProp name="Header.value">no-cache</stringProp>
+                              </elementProp>
+                              <elementProp name="Cache-Control" elementType="Header">
+                                <stringProp name="Header.name">Cache-Control</stringProp>
+                                <stringProp name="Header.value">no-cache</stringProp>
+                              </elementProp>
+                              <elementProp name="Accept-Encoding" elementType="Header">
+                                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                                <stringProp name="Header.value">gzip, deflate</stringProp>
+                              </elementProp>
+                              <elementProp name="Referer" elementType="Header">
+                                <stringProp name="Header.name">Referer</stringProp>
+                                <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                              </elementProp>
+                            </collectionProp>
+                          </HeaderManager>
+                          <hashTree/>
+                          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                            <boolProp name="resetInterpreter">true</boolProp>
+                            <stringProp name="parameters"></stringProp>
+                            <stringProp name="filename"></stringProp>
+                            <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+
+String error=document.select(&quot;span[id*=jbaraTransactionErrorMessages]&quot;).get(0).text();
+if ( error.length() == 0){
+vars.put(&quot;success&quot;,&quot;true&quot;);
+}</stringProp>
+                          </BeanShellPostProcessor>
+                          <hashTree/>
+                        </hashTree>
+                      </hashTree>
+                    </hashTree>
+                  </hashTree>
                   <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Renewal" enabled="true">
                     <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;Renewal&quot;</stringProp>
                     <boolProp name="IfController.evaluateAll">false</boolProp>
@@ -3454,7 +4307,7 @@ vars.put(&quot;success&quot;,&quot;true&quot;);
                     </hashTree>
                   </hashTree>
                   <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Downsell" enabled="true">
-                    <stringProp name="IfController.condition">&quot;${tType}&quot;.indexOf(&quot;Downsell&quot;) != -1</stringProp>
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;Downsell&quot;</stringProp>
                     <boolProp name="IfController.evaluateAll">false</boolProp>
                   </IfController>
                   <hashTree>
@@ -4064,8 +4917,619 @@ vars.put(&quot;success&quot;,&quot;true&quot;);
                       </hashTree>
                     </hashTree>
                   </hashTree>
+                  <IfController guiclass="IfControllerPanel" testclass="IfController" testname="CustomDownsell" enabled="true">
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;CustomDownsell&quot;</stringProp>
+                    <boolProp name="IfController.evaluateAll">false</boolProp>
+                  </IfController>
+                  <hashTree>
+                    <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                      <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                        <collectionProp name="Arguments.arguments">
+                          <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                            <stringProp name="Argument.value">_viewRoot</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}</stringProp>
+                            <stringProp name="Argument.value">${formid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${hiddenType}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custComponentId}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                            <stringProp name="Argument.value">${cName}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cid}</stringProp>
+                            <stringProp name="Argument.value">${cid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_opp}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_opp}</stringProp>
+                            <stringProp name="Argument.value">0</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_btype}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_btype}</stringProp>
+                            <stringProp name="Argument.value">${customdownsellid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                            <stringProp name="Argument.value">18/10/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                            <stringProp name="Argument.value">18/10/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_term}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_term}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                            <stringProp name="Argument.value">${state}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                            <stringProp name="Argument.value">${mac}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                            <stringProp name="Argument.value">${csrf}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="jbBTId" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">jbBTId</stringProp>
+                            <stringProp name="Argument.value">${customdownsellid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${bTypeChangeId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.value">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.value">${sv}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                          </elementProp>
+                        </collectionProp>
+                      </elementProp>
+                      <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                      <stringProp name="HTTPSampler.port">443</stringProp>
+                      <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.protocol">https</stringProp>
+                      <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                      <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                      <stringProp name="HTTPSampler.method">POST</stringProp>
+                      <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                      <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                      <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                      <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                      <boolProp name="HTTPSampler.monitor">false</boolProp>
+                      <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                    </HTTPSamplerProxy>
+                    <hashTree>
+                      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                        <collectionProp name="HeaderManager.headers">
+                          <elementProp name="Content-Type" elementType="Header">
+                            <stringProp name="Header.name">Content-Type</stringProp>
+                            <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Language" elementType="Header">
+                            <stringProp name="Header.name">Accept-Language</stringProp>
+                            <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept" elementType="Header">
+                            <stringProp name="Header.name">Accept</stringProp>
+                            <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                          </elementProp>
+                          <elementProp name="User-Agent" elementType="Header">
+                            <stringProp name="Header.name">User-Agent</stringProp>
+                            <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                          </elementProp>
+                          <elementProp name="Pragma" elementType="Header">
+                            <stringProp name="Header.name">Pragma</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Cache-Control" elementType="Header">
+                            <stringProp name="Header.name">Cache-Control</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Encoding" elementType="Header">
+                            <stringProp name="Header.name">Accept-Encoding</stringProp>
+                            <stringProp name="Header.value">gzip, deflate</stringProp>
+                          </elementProp>
+                          <elementProp name="Referer" elementType="Header">
+                            <stringProp name="Header.name">Referer</stringProp>
+                            <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                          </elementProp>
+                        </collectionProp>
+                      </HeaderManager>
+                      <hashTree/>
+                      <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                        <boolProp name="resetInterpreter">true</boolProp>
+                        <stringProp name="parameters"></stringProp>
+                        <stringProp name="filename"></stringProp>
+                        <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import com.gs.headless.util.CSVUtil;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+CSVUtil util=new CSVUtil(&quot;TransactionsData.csv&quot;);
+String id=vars.get(&quot;parent&quot;);
+String tText=util.getTransactionText(id);
+log.info(&quot;transaction text is &quot; + tText);
+String query=&quot;span[class=parentTransactionListToAssociate]:contains(&quot;+tText+&quot;) input&quot;;
+vars.put(&quot;pid&quot;,document.select(query).get(0).attr(&quot;value&quot;));
+
+</stringProp>
+                      </BeanShellPostProcessor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CSRF" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">csrf</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateCSRF]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="MAC" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">mac</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateMAC]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="state" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">state</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewState]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="hidden_pid" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">hidden_pid</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=hiddenParentId]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_users</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                    </hashTree>
+                    <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+                      <stringProp name="IfController.condition">&quot;${pid}&quot;  != &quot;null&quot;</stringProp>
+                      <boolProp name="IfController.evaluateAll">false</boolProp>
+                    </IfController>
+                    <hashTree>
+                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                          <collectionProp name="Arguments.arguments">
+                            <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                              <stringProp name="Argument.value">_viewRoot</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}</stringProp>
+                              <stringProp name="Argument.value">${formid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hiddenType}</stringProp>
+                              <stringProp name="Argument.value">CustomDownsell</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custComponentId}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                              <stringProp name="Argument.value">${cName}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cid}</stringProp>
+                              <stringProp name="Argument.value">${cid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_opp}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_opp}</stringProp>
+                              <stringProp name="Argument.value">0</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_btype}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_btype}</stringProp>
+                              <stringProp name="Argument.value">${customdownsellid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="parentTransaction" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">parentTransaction</stringProp>
+                              <stringProp name="Argument.value">${pid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hidden_pid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hidden_pid}</stringProp>
+                              <stringProp name="Argument.value">${pid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                              <stringProp name="Argument.value">${bDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                              <stringProp name="Argument.value">${sDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                              <stringProp name="Argument.value">${eDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_term}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_term}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_mrr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_mrr}</stringProp>
+                              <stringProp name="Argument.value">${mrr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_asv}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_asv}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_users}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_users}</stringProp>
+                              <stringProp name="Argument.value">${users}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_otr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_otr}</stringProp>
+                              <stringProp name="Argument.value">${otr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                              <stringProp name="Argument.value">${comments}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                              <stringProp name="Argument.value">${state}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                              <stringProp name="Argument.value">${mac}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                              <stringProp name="Argument.value">${csrf}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${saveClickedId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.value">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">${sv}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </elementProp>
+                        <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                        <stringProp name="HTTPSampler.port">443</stringProp>
+                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.protocol">https</stringProp>
+                        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                        <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                        <stringProp name="HTTPSampler.method">POST</stringProp>
+                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                        <boolProp name="HTTPSampler.monitor">false</boolProp>
+                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                      </HTTPSamplerProxy>
+                      <hashTree>
+                        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                          <collectionProp name="HeaderManager.headers">
+                            <elementProp name="Content-Type" elementType="Header">
+                              <stringProp name="Header.name">Content-Type</stringProp>
+                              <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Language" elementType="Header">
+                              <stringProp name="Header.name">Accept-Language</stringProp>
+                              <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept" elementType="Header">
+                              <stringProp name="Header.name">Accept</stringProp>
+                              <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                            </elementProp>
+                            <elementProp name="User-Agent" elementType="Header">
+                              <stringProp name="Header.name">User-Agent</stringProp>
+                              <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                            </elementProp>
+                            <elementProp name="Pragma" elementType="Header">
+                              <stringProp name="Header.name">Pragma</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Cache-Control" elementType="Header">
+                              <stringProp name="Header.name">Cache-Control</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Encoding" elementType="Header">
+                              <stringProp name="Header.name">Accept-Encoding</stringProp>
+                              <stringProp name="Header.value">gzip, deflate</stringProp>
+                            </elementProp>
+                            <elementProp name="Referer" elementType="Header">
+                              <stringProp name="Header.name">Referer</stringProp>
+                              <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </HeaderManager>
+                        <hashTree/>
+                        <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                          <boolProp name="resetInterpreter">true</boolProp>
+                          <stringProp name="parameters"></stringProp>
+                          <stringProp name="filename"></stringProp>
+                          <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+
+String error=document.select(&quot;span[id*=jbaraTransactionErrorMessages]&quot;).get(0).text();
+if ( error.length() == 0){
+vars.put(&quot;success&quot;,&quot;true&quot;);
+}</stringProp>
+                        </BeanShellPostProcessor>
+                        <hashTree/>
+                      </hashTree>
+                    </hashTree>
+                  </hashTree>
                   <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Debook" enabled="true">
-                    <stringProp name="IfController.condition">&quot;${tType}&quot;.indexOf(&quot;Debook&quot;) != -1</stringProp>
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;Debook&quot;</stringProp>
                     <boolProp name="IfController.evaluateAll">false</boolProp>
                   </IfController>
                   <hashTree>
@@ -4471,6 +5935,603 @@ vars.put(&quot;pid&quot;,document.select(query).get(0).attr(&quot;value&quot;));
                               <boolProp name="HTTPArgument.always_encode">true</boolProp>
                               <stringProp name="Argument.name">${select_btype}</stringProp>
                               <stringProp name="Argument.value">${debookid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="parentTransaction" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">parentTransaction</stringProp>
+                              <stringProp name="Argument.value">${pid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hidden_pid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hidden_pid}</stringProp>
+                              <stringProp name="Argument.value">${pid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                              <stringProp name="Argument.value">${bDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                              <stringProp name="Argument.value">${sDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                              <stringProp name="Argument.value">${eDate}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_term}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_term}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_mrr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_mrr}</stringProp>
+                              <stringProp name="Argument.value">${mrr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_asv}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_asv}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_users}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_users}</stringProp>
+                              <stringProp name="Argument.value">${users}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_otr}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_otr}</stringProp>
+                              <stringProp name="Argument.value">${otr}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                              <stringProp name="Argument.value">${state}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                              <stringProp name="Argument.value">${sv}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                              <stringProp name="Argument.value">${mac}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                              <stringProp name="Argument.value">${csrf}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${saveClickedId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.value">${saveClickedId}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                          </collectionProp>
+                        </elementProp>
+                        <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                        <stringProp name="HTTPSampler.port">443</stringProp>
+                        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                        <stringProp name="HTTPSampler.protocol">https</stringProp>
+                        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                        <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                        <stringProp name="HTTPSampler.method">POST</stringProp>
+                        <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                        <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                        <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                        <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                        <boolProp name="HTTPSampler.monitor">false</boolProp>
+                        <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                      </HTTPSamplerProxy>
+                      <hashTree>
+                        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                          <collectionProp name="HeaderManager.headers">
+                            <elementProp name="Content-Type" elementType="Header">
+                              <stringProp name="Header.name">Content-Type</stringProp>
+                              <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Language" elementType="Header">
+                              <stringProp name="Header.name">Accept-Language</stringProp>
+                              <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept" elementType="Header">
+                              <stringProp name="Header.name">Accept</stringProp>
+                              <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                            </elementProp>
+                            <elementProp name="User-Agent" elementType="Header">
+                              <stringProp name="Header.name">User-Agent</stringProp>
+                              <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                            </elementProp>
+                            <elementProp name="Pragma" elementType="Header">
+                              <stringProp name="Header.name">Pragma</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Cache-Control" elementType="Header">
+                              <stringProp name="Header.name">Cache-Control</stringProp>
+                              <stringProp name="Header.value">no-cache</stringProp>
+                            </elementProp>
+                            <elementProp name="Accept-Encoding" elementType="Header">
+                              <stringProp name="Header.name">Accept-Encoding</stringProp>
+                              <stringProp name="Header.value">gzip, deflate</stringProp>
+                            </elementProp>
+                            <elementProp name="Referer" elementType="Header">
+                              <stringProp name="Header.name">Referer</stringProp>
+                              <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                            </elementProp>
+                          </collectionProp>
+                        </HeaderManager>
+                        <hashTree/>
+                        <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                          <boolProp name="resetInterpreter">true</boolProp>
+                          <stringProp name="parameters"></stringProp>
+                          <stringProp name="filename"></stringProp>
+                          <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+
+String error=document.select(&quot;span[id*=jbaraTransactionErrorMessages]&quot;).get(0).text();
+if ( error.length() == 0){
+vars.put(&quot;success&quot;,&quot;true&quot;);
+}</stringProp>
+                        </BeanShellPostProcessor>
+                        <hashTree/>
+                      </hashTree>
+                    </hashTree>
+                  </hashTree>
+                  <IfController guiclass="IfControllerPanel" testclass="IfController" testname="CustomDebook" enabled="true">
+                    <stringProp name="IfController.condition">&quot;${tType}&quot; == &quot;CustomDebook&quot;</stringProp>
+                    <boolProp name="IfController.evaluateAll">false</boolProp>
+                  </IfController>
+                  <hashTree>
+                    <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                      <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                        <collectionProp name="Arguments.arguments">
+                          <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                            <stringProp name="Argument.value">_viewRoot</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}</stringProp>
+                            <stringProp name="Argument.value">${formid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${hiddenType}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custComponentId}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value">false</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                            <stringProp name="Argument.value">${cName}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_cid}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_cid}</stringProp>
+                            <stringProp name="Argument.value">${cid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_opp}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_opp}</stringProp>
+                            <stringProp name="Argument.value">0</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${select_btype}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${select_btype}</stringProp>
+                            <stringProp name="Argument.value">${customdebookid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:bookingDate" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:bookingDate</stringProp>
+                            <stringProp name="Argument.value">18/10/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionStart" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionStart</stringProp>
+                            <stringProp name="Argument.value">18/10/2013</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${formid}:subscriptionEnd" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${formid}:subscriptionEnd</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${input_term}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${input_term}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${text_area_comments}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${text_area_comments}</stringProp>
+                            <stringProp name="Argument.value"></stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewState" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewState</stringProp>
+                            <stringProp name="Argument.value">${state}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateVersion" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateVersion</stringProp>
+                            <stringProp name="Argument.value">${sv}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateMAC" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateMAC</stringProp>
+                            <stringProp name="Argument.value">${mac}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="com.salesforce.visualforce.ViewStateCSRF" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">com.salesforce.visualforce.ViewStateCSRF</stringProp>
+                            <stringProp name="Argument.value">${csrf}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="jbBTId" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                            <stringProp name="Argument.name">jbBTId</stringProp>
+                            <stringProp name="Argument.value">${customdebookid}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                          <elementProp name="${bTypeChangeId}" elementType="HTTPArgument">
+                            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                            <stringProp name="Argument.name">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.value">${bTypeChangeId}</stringProp>
+                            <stringProp name="Argument.metadata">=</stringProp>
+                            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                          </elementProp>
+                        </collectionProp>
+                      </elementProp>
+                      <stringProp name="HTTPSampler.domain">${SERVERNAME}</stringProp>
+                      <stringProp name="HTTPSampler.port">443</stringProp>
+                      <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                      <stringProp name="HTTPSampler.protocol">https</stringProp>
+                      <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+                      <stringProp name="HTTPSampler.path">/apex/TransactionForm</stringProp>
+                      <stringProp name="HTTPSampler.method">POST</stringProp>
+                      <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                      <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                      <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                      <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                      <boolProp name="HTTPSampler.monitor">false</boolProp>
+                      <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                    </HTTPSamplerProxy>
+                    <hashTree>
+                      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                        <collectionProp name="HeaderManager.headers">
+                          <elementProp name="Content-Type" elementType="Header">
+                            <stringProp name="Header.name">Content-Type</stringProp>
+                            <stringProp name="Header.value">application/x-www-form-urlencoded; charset=UTF-8</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Language" elementType="Header">
+                            <stringProp name="Header.name">Accept-Language</stringProp>
+                            <stringProp name="Header.value">en-US,en;q=0.5</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept" elementType="Header">
+                            <stringProp name="Header.name">Accept</stringProp>
+                            <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+                          </elementProp>
+                          <elementProp name="User-Agent" elementType="Header">
+                            <stringProp name="Header.name">User-Agent</stringProp>
+                            <stringProp name="Header.value">Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0</stringProp>
+                          </elementProp>
+                          <elementProp name="Pragma" elementType="Header">
+                            <stringProp name="Header.name">Pragma</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Cache-Control" elementType="Header">
+                            <stringProp name="Header.name">Cache-Control</stringProp>
+                            <stringProp name="Header.value">no-cache</stringProp>
+                          </elementProp>
+                          <elementProp name="Accept-Encoding" elementType="Header">
+                            <stringProp name="Header.name">Accept-Encoding</stringProp>
+                            <stringProp name="Header.value">gzip, deflate</stringProp>
+                          </elementProp>
+                          <elementProp name="Referer" elementType="Header">
+                            <stringProp name="Header.name">Referer</stringProp>
+                            <stringProp name="Header.value">https://jbcxm.ap1.visual.force.com/apex/apex/TransactionForm?inline=1&amp;transactionId=&amp;customerId=&amp;orderType=&amp;callBackAfterSave=jbaraCallBackAfterTransactionFormSave&amp;callBackAfterCancel=jbaraCallBackAfterTransactionFormCancel</stringProp>
+                          </elementProp>
+                        </collectionProp>
+                      </HeaderManager>
+                      <hashTree/>
+                      <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+                        <boolProp name="resetInterpreter">true</boolProp>
+                        <stringProp name="parameters"></stringProp>
+                        <stringProp name="filename"></stringProp>
+                        <stringProp name="script">import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import com.gs.headless.util.CSVUtil;
+
+Document document = Jsoup.parse(prev.getResponseDataAsString()); 
+CSVUtil util=new CSVUtil(&quot;TransactionsData.csv&quot;);
+String id=vars.get(&quot;parent&quot;);
+String tText=util.getTransactionText(id);
+log.info(&quot;transaction text is &quot; + tText);
+String query=&quot;span[class=parentTransactionListToAssociate]:contains(&quot;+tText+&quot;) input&quot;;
+vars.put(&quot;pid&quot;,document.select(query).get(0).attr(&quot;value&quot;));
+
+</stringProp>
+                      </BeanShellPostProcessor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="CSRF" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">csrf</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateCSRF]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="MAC" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">mac</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewStateMAC]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="state" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">state</stringProp>
+                        <stringProp name="HtmlExtractor.expr">[name=com.salesforce.visualforce.ViewState]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">value</stringProp>
+                        <stringProp name="HtmlExtractor.default">not found</stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl">JSOUP</stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="hidden_pid" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">hidden_pid</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=hiddenParentId]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_users</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                      <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
+                        <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.attribute">name</stringProp>
+                        <stringProp name="HtmlExtractor.default"></stringProp>
+                        <stringProp name="HtmlExtractor.match_number">1</stringProp>
+                        <stringProp name="HtmlExtractor.extractor_impl"></stringProp>
+                      </HtmlExtractor>
+                      <hashTree/>
+                    </hashTree>
+                    <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+                      <stringProp name="IfController.condition">&quot;${pid}&quot;  != &quot;null&quot;</stringProp>
+                      <boolProp name="IfController.evaluateAll">false</boolProp>
+                    </IfController>
+                    <hashTree>
+                      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/apex/TransactionForm" enabled="true">
+                        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+                          <collectionProp name="Arguments.arguments">
+                            <elementProp name="AJAXREQUEST" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.name">AJAXREQUEST</stringProp>
+                              <stringProp name="Argument.value">_viewRoot</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${formid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${formid}</stringProp>
+                              <stringProp name="Argument.value">${formid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${hiddenType}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${hiddenType}</stringProp>
+                              <stringProp name="Argument.value">CustomDebook</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custComponentId}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custComponentId}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDisabledCustControl}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDisabledCustControl}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupHasDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupHasDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value">false</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${custLookupDefaultCustomText}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${custLookupDefaultCustomText}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cname_search}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cname_search}</stringProp>
+                              <stringProp name="Argument.value">${cName}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_display_cname}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_display_cname}</stringProp>
+                              <stringProp name="Argument.value"></stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${input_cid}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${input_cid}</stringProp>
+                              <stringProp name="Argument.value">${cid}</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_opp}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_opp}</stringProp>
+                              <stringProp name="Argument.value">0</stringProp>
+                              <stringProp name="Argument.metadata">=</stringProp>
+                              <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                            </elementProp>
+                            <elementProp name="${select_btype}" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                              <stringProp name="Argument.name">${select_btype}</stringProp>
+                              <stringProp name="Argument.value">${customdebookid}</stringProp>
                               <stringProp name="Argument.metadata">=</stringProp>
                               <boolProp name="HTTPArgument.use_equals">true</boolProp>
                             </elementProp>
@@ -5522,8 +7583,8 @@ if(users != null)
 vars.put(&quot;S-users&quot;,users);
 
 if(vars.get(&quot;accountStatus&quot;) != &quot;not found&quot;)
-vars.put(&quot;S-Status&quot;,vars.get(&quot;accountStatus&quot;));
-</stringProp>
+var Status=vars.get(&quot;accountStatus&quot;);
+vars.put(&quot;S-Status&quot;,Status);</stringProp>
                           </BSFPostProcessor>
                           <hashTree/>
                         </hashTree>
@@ -5639,15 +7700,22 @@ vars.put(&quot;lEndDate&quot;,eDate);
 
 var mrr=trn.JBCXM__MRRTotal__c;
 if (mrr != null)
-vars.put(&quot;lMRR&quot;,mrr);
-
+{
+ mrr=mrr.toString().replace(&apos;-&apos;,&apos;&apos;);
+ vars.put(&quot;lMRR&quot;,mrr);
+}
 var asv=trn.JBCXM__ASVTotal__c;
 if (asv != null)
-vars.put(&quot;lASV&quot;,asv);
-
+{
+   asv=asv.toString().replace(&apos;-&apos;,&apos;&apos;);
+   vars.put(&quot;lASV&quot;,asv);
+}
 var users=trn.JBCXM__UsersTotal__c;
 if (users != null)
-vars.put(&quot;lUsers&quot;,users);
+{
+	users=users.toString().replace(&apos;-&apos;,&apos;&apos;);	
+     vars.put(&quot;lUsers&quot;,users);
+}
 
 var otr=trn.JBCXM__OneTimeRevenue__c;
 if (otr != null)
@@ -5666,7 +7734,17 @@ getTransDetails(vars.get(&quot;prevTid&quot;));</stringProp>
                             <stringProp name="script">import com.gs.headless.util.Output;
 Output out=new Output();
 &quot;S-ASV,S-MRR,S-OTR,S-users,S-ARPU,S-OriginalContractDate,S-RenewalDate,Status,BookingDate,Booking Type,MRR,ASV,StartDate,EndDate,OTR,Users&quot;;
-row=vars.get(&quot;S-ASV&quot;)+&quot;,&quot;+vars.get(&quot;S-MRR&quot;)+&quot;,&quot;+vars.get(&quot;S-OTR&quot;)+&quot;,&quot;+vars.get(&quot;S-users&quot;)+&quot;,&quot;+vars.get(&quot;S-ARPU&quot;)+&quot;,&quot;+vars.get(&quot;S-OriginalContractDate&quot;)+&quot;,&quot;+vars.get(&quot;S-RenewalDate&quot;)+&quot;,&quot;+vars.get(&quot;S-Status&quot;)+&quot;,&quot;+vars.get(&quot;lBookingDate&quot;)+&quot;,&quot;+vars.get(&quot;lBookingType&quot;)+&quot;,&quot;+vars.get(&quot;lMRR&quot;)+&quot;,&quot;+vars.get(&quot;lASV&quot;)+&quot;,&quot;+vars.get(&quot;lStartDate&quot;)+&quot;,&quot;+vars.get(&quot;lEndDate&quot;)+&quot;,&quot;+vars.get(&quot;lOTR&quot;)+&quot;,&quot;+vars.get(&quot;lUsers&quot;);
+
+if(vars.get(&quot;S-Status&quot;).equals(&quot;Active&quot;))
+{
+	row=vars.get(&quot;S-ASV&quot;)+&quot;,&quot;+vars.get(&quot;S-MRR&quot;)+&quot;,&quot;+vars.get(&quot;S-OTR&quot;)+&quot;,&quot;+vars.get(&quot;S-users&quot;)+&quot;,&quot;+vars.get(&quot;S-ARPU&quot;)+&quot;,&quot;+vars.get(&quot;S-OriginalContractDate&quot;)+&quot;,&quot;+vars.get(&quot;S-RenewalDate&quot;)+&quot;,&quot;+vars.get(&quot;S-Status&quot;)+&quot;,&quot;+vars.get(&quot;lBookingDate&quot;)+&quot;,&quot;+vars.get(&quot;lBookingType&quot;)+&quot;,&quot;+vars.get(&quot;lMRR&quot;)+&quot;,&quot;+vars.get(&quot;lASV&quot;)+&quot;,&quot;+vars.get(&quot;lStartDate&quot;)+&quot;,&quot;+vars.get(&quot;lEndDate&quot;)+&quot;,&quot;+vars.get(&quot;lOTR&quot;)+&quot;,&quot;+vars.get(&quot;lUsers&quot;);
+
+}
+else
+{
+	row=vars.get(&quot;S-ASV&quot;)+&quot;,&quot;+vars.get(&quot;S-MRR&quot;)+&quot;,&quot;+vars.get(&quot;S-OTR&quot;)+&quot;,&quot;+vars.get(&quot;S-users&quot;)+&quot;,&quot;+vars.get(&quot;S-ARPU&quot;)+&quot;,&quot;+vars.get(&quot;S-OriginalContractDate&quot;)+&quot;,&quot;+vars.get(&quot;S-RenewalDate&quot;)+&quot;,&quot;+vars.get(&quot;S-Status&quot;)+&quot;(&quot;+vars.get(&quot;lBookingDate&quot;)+&quot;),&quot;+vars.get(&quot;lBookingDate&quot;)+&quot;,&quot;+vars.get(&quot;lBookingType&quot;)+&quot;,&quot;+vars.get(&quot;lMRR&quot;)+&quot;,&quot;+vars.get(&quot;lASV&quot;)+&quot;,&quot;+vars.get(&quot;lStartDate&quot;)+&quot;,&quot;+vars.get(&quot;lEndDate&quot;)+&quot;,&quot;+vars.get(&quot;lOTR&quot;)+&quot;,&quot;+vars.get(&quot;lUsers&quot;);
+}
+
 
 out.writeActuals(vars.get(&quot;id&quot;),row);</stringProp>
                           </BeanShellPostProcessor>
@@ -6250,6 +8328,38 @@ log.info(el.getElementsByTag(&quot;input&quot;).get(index).attr(&quot;name&quot;
         </ResultCollector>
         <hashTree/>
       </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
