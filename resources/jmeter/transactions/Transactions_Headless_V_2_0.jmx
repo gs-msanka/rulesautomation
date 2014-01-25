@@ -31,7 +31,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="SERVERNAME" elementType="Argument">
             <stringProp name="Argument.name">SERVERNAME</stringProp>
-            <stringProp name="Argument.value">${__P(baseURL)</stringProp>
+            <stringProp name="Argument.value">${__P(baseURL)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="un" elementType="Argument">
