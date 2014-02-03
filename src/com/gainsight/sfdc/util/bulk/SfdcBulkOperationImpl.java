@@ -87,14 +87,14 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		return parseXMLResponse(resp.getContent(), "id");
 	}
 	
-/*	public String[] addBatchToJob(String uri, String[] queries) throws IOException {
+	public String[] addBatchToJob(String uri, String[] queries) throws IOException {
 		String[] ids = new String[queries.length];
 		int index = 0;
 		for(String query : queries){
 			ids[index] = addBatchToJob(uri, query);
 		}
 		return ids;
-	}*/
+	}
 	
 	@Override
 	public String addBatchToJob(String uri, File csvFile) throws IOException {
@@ -111,6 +111,15 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		}
 		Report.logInfo("Batch Response:\n" + resp.getContent());
 		return parseXMLResponse(resp.getContent(), "id");
+	}
+	
+	public String[] addBatchToJob(String uri, List<File> csvFiles) throws IOException {
+		String[] ids = new String[csvFiles.size()];
+		int index = 0;
+		for(File file : csvFiles){
+			ids[index] = addBatchToJob(uri, file);
+		}
+		return ids;
 	}
 
 	@Override
@@ -140,6 +149,10 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 			return "Failed";
 		else
 			return parseXMLResponse(resp.getContent(), "state");
+	}
+	
+	public void getBatchStatus(List<String> uris) {
+		
 	}
 
 	@Override

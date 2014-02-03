@@ -9,9 +9,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class JobInfo {
 
 	String jobName;
+	String jobType;
 	String namespacePrefix;
 	boolean useNameSpace;
 	
+	@JsonProperty("preprocess")
+	PreProcess preProcess;
 	@JsonProperty("extract")
 	SfdcExtract extract;
 	@JsonProperty("transform")
@@ -25,6 +28,14 @@ public class JobInfo {
 
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
+	}
+	
+	public String getJobType() {
+		return jobType;
+	}
+	
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
 	}
 
 	public String getNamespacePrefix() {
@@ -41,6 +52,14 @@ public class JobInfo {
 
 	public void setUseNameSpace(boolean useNameSpace) {
 		this.useNameSpace = useNameSpace;
+	}
+	
+	public PreProcess getPreProcessRule() {
+		return preProcess;
+	}
+	
+	public void setPreProcess(PreProcess preProcess) {
+		this.preProcess = preProcess;
 	}
 
 	public SfdcExtract getExtractionRule() {
@@ -67,6 +86,55 @@ public class JobInfo {
 		this.load = load;
 	}
 
+	/**
+	 * To Store any pre processing of data required before ETL process
+	 * Currently only file operations are supported and also only for Usage Data
+	 * @author Sunand
+	 *
+	 */
+	public class PreProcess {
+		String inputFile;
+		boolean monthly;
+		boolean weekly;
+		String fieldName;
+		String outputFile;
+		
+		public String getInputFile() {
+			return inputFile;
+		}
+		public void setInputFile(String inputFile) {
+			this.inputFile = inputFile;
+		}
+		
+		public boolean isMonthly() {
+			return monthly;
+		}
+		public void setMonthly(boolean monthly) {
+			this.monthly = monthly;
+		}
+		
+		public boolean isWeekly() {
+			return weekly;
+		}
+		public void setWeekly(boolean weekly) {
+			this.weekly = weekly;
+		}
+		
+		public String getFieldName() {
+			return fieldName;
+		}
+		public void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
+		}
+		
+		public String getOutputFile() {
+			return outputFile;
+		}
+		public void setOutputFile(String outputFile) {
+			this.outputFile = outputFile;
+		}
+	}
+	
 	/**
 	 * Storing the Extraction Rules for SFDC
 	 * @author Sunand

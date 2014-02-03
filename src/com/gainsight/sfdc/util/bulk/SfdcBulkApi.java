@@ -18,10 +18,12 @@ public class SfdcBulkApi {
 	public static String api_version = "28.0";
 	public static String async_url = "/services/async/";
 	public static String async_job_url = "";
+	public static final int BULK_INSERT_LIMIT = 10000;
 	
 	static SfdcBulkOperationImpl op;
 	static SFDCInfo info;
 	
+	//Whenever we want to make a separate login/auth module we can modularize this piece of code.
 	static {
 		info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());
@@ -34,17 +36,7 @@ public class SfdcBulkApi {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		//Examples
-		//String query1 = QueryBuilder.buildSOQLQuery("PickList__c", "SystemName__c", "Id");
-		//String query2 = QueryBuilder.buildSOQLQuery("Account", "Id", "Name");
-		//pullDataFromSfdc("PickList__c", query1, "./result/");
-		//pullDataFromSfdc("Account", query2);
-		//pushDataToSfdc("CustomerInfo__c", "insert", new File("./resources/datagen/process/job1_final_mod.csv"));
-		/*String appSettingQuery = QueryBuilder.buildSOQLQuery("JBCXM__ApplicationSettings__c", "JBCXM__AdoptionAggregationColumns__c", "JBCXM__AdoptionAggregationType__c", "JBCXM__AdoptionGranularity__c", "JBCXM__AdoptionMeasureColMap__c");
-		pullDataFromSfdc("JBCXM__ApplicationSettings__c", appSettingQuery, "./result/appSettings.csv");*/
-		String appSettingQuery = QueryBuilder.buildSOQLQuery("JBCXM__ApplicationSettings__c", "JBCXM__AdoptionAggregationColumns__c", "JBCXM__AdoptionAggregationType__c", "JBCXM__AdoptionGranularity__c", "JBCXM__AdoptionMeasureColMap__c");
-		pullDataFromSfdc("JBCXM__ApplicationSettings__c", appSettingQuery, "./result/appSettings.xml");
-		//pushDataToSfdc("Account", "insert", new File("./resources/datagen/data/noduplicates.csv"));
+		pushDataToSfdc("JBCXM__UsageData__c", "insert", new File("./resources/datagen/process/db_Month11UD_3.csv"));
 	}
 
 	/**
@@ -55,13 +47,40 @@ public class SfdcBulkApi {
 	 * @throws IOException
 	 */
 	public static void pushDataToSfdc(String sObject, String operation, File csvFile) throws IOException {
-		//Create Job with parameters and change the last parameter to csv or xml for the 4th parameter to change the response content type while registering a job
+		//Create Job with parameters and change the last parameter to csv or xml for the 5th parameter to change the response content type while registering a job
 		String job_id = op.createJob(async_job_url, operation, sObject, "Parallel", "CSV");
 		if(job_id == null) throw new RuntimeException("Failed to create bulk JOB. Check the logs for more info.");
 		
 		//Framing the url's for batch from resulting job url 
 		String async_job_status_url = async_job_url +"/" + job_id;
 		String async_batch_url = async_job_status_url + "/batch";
+		String batch_id = op.addBatchToJob(async_batch_url, csvFile);
+		if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+		
+		String async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
+		//Waiting until the batch job is complete
+		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 60);
+		if(waitResult) {
+			//Fetching result from batch
+			String output = op.fetchResult(async_batch_status_url);
+			Report.logInfo("OUTPUT:\n" + output);
+			op.setJobState(async_job_status_url, "Closed");
+		}
+		else
+			op.setJobState(async_job_status_url, "Aborted");
+	}
+	
+	public static void pushDataToSfdc(String sObject, SfdcOperationType operation, File csvFile, int recordCount) throws IOException {
+		//Create Job with parameters and change the last parameter to csv or xml for the 5th parameter to change the response content type while registering a job
+		String job_id = op.createJob(async_job_url, operation.toString(), sObject, "Parallel", "CSV");
+		if(job_id == null) throw new RuntimeException("Failed to create bulk JOB. Check the logs for more info.");
+		
+		//Framing the url's for batch from resulting job url 
+		String async_job_status_url = async_job_url +"/" + job_id;
+		String async_batch_url = async_job_status_url + "/batch";
+		
+		//Here I need to split the files and give it as multiple batch inputs
+		//Yet to COMPLETE - SUNAND
 		String batch_id = op.addBatchToJob(async_batch_url, csvFile);
 		if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
 		
@@ -86,7 +105,7 @@ public class SfdcBulkApi {
 	 * @throws IOException
 	 */
 	public static void pullDataFromSfdc(String sObject, String query, String filePath) throws IOException {
-		//Create Job with parameters and change the last parameter to csv or xml for the 4th parameter to change the response content type while registering a job
+		//Create Job with parameters and change the last parameter to csv or xml for the 5th parameter to change the response content type while registering a job
 		String job_id = op.createJob(async_job_url, "query", sObject, "Parallel", "CSV");
 		if(job_id == null) throw new RuntimeException("Failed to create bulk JOB. Check the logs for more info.");
 		
@@ -121,6 +140,29 @@ public class SfdcBulkApi {
 			op.setJobState(async_job_status_url, "Aborted");
 	}
 
+	public void cleanUp(String sObject) throws Exception {
+		//I need to write logic considering governor limits
+		int recordCount = SfdcRestApi.countOfRecordsForASObject(sObject);
+		System.out.println("Count of Records : " + recordCount);
+		int calculateBatch = recordCount/BULK_INSERT_LIMIT;
+		System.out.println("Pulling all Records of " + sObject);
+		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
+		System.out.println("Pull Query : " + query);
+		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
+		System.out.println("Output File Loc : " + path);
+		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
+		File f = new File(path);
+		if(f.exists())
+			System.out.println("Pull Completed");
+		else
+			System.out.println("Pull Failed");
+		
+		//Here i need to split files 
+		System.out.println("Now Lets Delete some data");
+		SfdcBulkApi.pushDataToSfdc(sObject, "delete", f);
+		System.out.println("push done");
+		
+	}
 	/**
 	 *Wait Logic To wait until the batch job status is returned as "Completed"
 	 * 

@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -23,6 +25,7 @@ import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
 import com.gainsight.sfdc.util.bulk.SfdcBulkOperationImpl;
+import com.gainsight.sfdc.util.datagen.JobInfo.PreProcess;
 import com.gainsight.sfdc.util.datagen.JobInfo.SfdcExtract;
 import com.gainsight.sfdc.util.datagen.JobInfo.SfdcLoad;
 import com.gainsight.sfdc.util.datagen.JobInfo.Transform;
@@ -47,6 +50,25 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
 	
+	static {
+		info = SFDCUtil.fetchSFDCinfo();
+		op = new SfdcBulkOperationImpl(info.getSessionId());
+		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
+		
+		try {
+			//Pulling Pick List Object
+			String picklistPath = resDir + "process/" + pickListObject + ".csv";
+			String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
+			SfdcBulkApi.pullDataFromSfdc(pickListObject, query1, picklistPath);
+		
+			//Converting Pick List to Hash Map
+			pMap = convertPickListToMap(picklistPath);
+			System.out.println(pMap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -64,7 +86,7 @@ public class DataETL implements IJobExecutor {
 			//Step 4
 			//Decide which job to execute
 			//Currently hard-coding to Job1
-			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job2.txt"), JobInfo.class);
+			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job3.txt"), JobInfo.class);
 			gen.init();
 			gen.execute(jobInfo);
 			
@@ -91,7 +113,7 @@ public class DataETL implements IJobExecutor {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		info = SFDCUtil.fetchSFDCinfo();
+		/*info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());
 		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
 		
@@ -106,7 +128,7 @@ public class DataETL implements IJobExecutor {
 			System.out.println(pMap);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 
@@ -125,6 +147,25 @@ public class DataETL implements IJobExecutor {
 		try{
 			//Creates a db for the particular job
 			db = new H2Db("jdbc:h2:~/" + jobInfo.getJobName(),"sa","");
+			
+			//Pre Process Especially for Usage Data
+			PreProcess preProcess = jobInfo.getPreProcessRule();
+			if(preProcess != null){
+				File inputFile = new File(preProcess.getInputFile());
+				File outputFile = new File(preProcess.getOutputFile());
+				if(preProcess.isMonthly()) {
+					outputFile = FileProcessor.generateMonthlyUsageData(inputFile, preProcess.getFieldName(), outputFile);
+				}
+				else if(preProcess.isWeekly()) {
+					outputFile = FileProcessor.generateWeeklyUsageData(inputFile, preProcess.getFieldName(), outputFile);
+				}
+				
+				if(FileUtils.sizeOf(outputFile) > 0) {
+					System.out.println("Data is Ready");
+				}
+				else
+					throw new RuntimeException("Sorry Boss Pre Processing Failed");
+			}
 			
 			//Extraction Code
 			SfdcExtract pull = jobInfo.getExtractionRule();
@@ -255,6 +296,7 @@ public class DataETL implements IJobExecutor {
 	 * @throws IOException
 	 */
 	public void cleanUp(String sObject, int limit) throws IOException {
+		//I need to write logic considering governor limits
 		System.out.println("Pulling " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
 		System.out.println("Pull Query : " + query);
