@@ -25,7 +25,7 @@ public void runBatchToAggregateAdoptionData(Integer selMonth, Integer selYear, d
 			JBCXM.AdoptionAggregation batchApex = new JBCXM.AdoptionAggregation(query, adpAggCols, adpAggType, selMonth, selYear);
 			batchApex.selWeekLabel = selWeekLabel;
 			batchApex.adpGranularity = adoptionGranularity;
-			ID batchprocessid = Database.executeBatch(batchApex, 1);
+			ID batchprocessid = Database.executeBatch(batchApex, 15);
 		}
 	}
     catch(Exception e) {

@@ -56,7 +56,38 @@ public class QueryBuilder {
 		System.out.println(finalQuery);
 		return finalQuery.toString();
 	}
-	
+
+    public static String buildRightJoinQuery(LinkedHashMap<String, List<Columns>> finalFields, List<String> joinColumn, String operation){
+        StringBuffer finalQuery = new StringBuffer();
+        finalQuery.append("SELECT").append(" ");
+        //Just framing the fields
+        Set<String> f = finalFields.keySet();
+        String[] tables = f.toArray(new String[0]);
+        if(tables.length != 2 || joinColumn.size() != 2)
+            throw new RuntimeException("Only 2 Column Joins are Supported. Please provide appropriate Info");
+        for(String table : tables) {
+            List<Columns> cols = finalFields.get(table);
+            for(Columns col : cols) {
+                finalQuery.append(table).append(".").append(col.getName()).append(" ")
+                        .append("AS").append(" ").append("\"").append(col.getAlias()).append("\"").append(",");
+            }
+        }
+        //Removing last comma and adding a space
+        finalQuery.deleteCharAt(finalQuery.length() -1).append(" ");
+
+        finalQuery.append("FROM").append(" ").append(tables[0]);
+
+        //Adding join to query
+        finalQuery.append(" ").append("RIGHT JOIN").append(" ").append(tables[1]).append(" ").append("ON").append(" ");
+        //defining the join operator
+        finalQuery.append(tables[0]).append(".").append(joinColumn.get(0))
+                .append(operation)
+                .append(tables[1]).append(".").append(joinColumn.get(1));
+
+        //Printing the final Query after join
+        System.out.println(finalQuery);
+        return finalQuery.toString();
+    }
 	/**
 	 * Generic way to build Query to fetch the data from SOQL DB. Example,
 	 * object = Account ; limit = 5, field 1, field 2 ... field n
