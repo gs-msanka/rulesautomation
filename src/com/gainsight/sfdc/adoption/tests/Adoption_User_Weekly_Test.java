@@ -2,8 +2,12 @@ package com.gainsight.sfdc.adoption.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,24 +26,38 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class Adoption_User_Weekly_Test extends BaseTest {
-    Calendar c                      = Calendar.getInstance();
-    Boolean isAggBatchsCompleted    = false;
+    Calendar c = Calendar.getInstance();
+    Boolean isAggBatchsCompleted = false;
+    String USAGE_NAME = "JBCXM__UsageData__c";
+    String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
+    static ObjectMapper mapper = new ObjectMapper();
+    static String resDir = "./resources/datagen/";
+    String OBJECT_NAME = "JBCXM__UsageData__c";
+    static JobInfo jobInfo1;
+    static JobInfo jobInfo2;
+    static JobInfo jobInfo3;
+    String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
 
-    /**
-     *
-     */
     @BeforeClass
     public void setUp() {
-        String measureFile          = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Usage_Measure_Create.txt";
-        String advUsageConfigFile   = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/User_Level_Weekly.txt";
         basepage.login();
+        String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
+        String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/User_Level_Weekly.txt";
         try{
-            //delete of data
+            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+            DataETL dataLoader = new DataETL();
+            dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
+            dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);
+            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+            dataLoader.execute(jobInfo1);
+            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+            dataLoader.execute(jobInfo2);
+            dataLoader.cleanUp(isPackageInstance() ? OBJECT_NAME : removeNameSpace(OBJECT_NAME), null);
+            jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Weekly.txt"), JobInfo.class);
             apex.runApexCodeFromFile(measureFile);
             apex.runApexCodeFromFile(advUsageConfigFile);
-            /**
-             * Data Should be loaded here.
-             */
+            dataLoader.execute(jobInfo3);
+
             BufferedReader reader;
             String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
             String line     = null;
@@ -55,11 +73,11 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             //Max of only 5 jobs can run in an organization at a given time
             //Care to be taken that there are no apex jobs are running in the organization.
             int i= -7;
-            for(int k = 0; k< 11;k++) {
+            for(int k = 0; k< 12;k++) {
                 for(int m=0; m < 5; m++, i=i-7) {
                     //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                     // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                    dateStr     = getWeekLabelDate("Sun", i);
+                    dateStr     = getWeekLabelDate("Wed", i, false);
                     System.out.println(dateStr);
                     year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
                     month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
@@ -68,10 +86,12 @@ public class Adoption_User_Weekly_Test extends BaseTest {
                     code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                             .replaceAll("THEYEARCHANGE", String.valueOf(year))
                             .replace("THEDAYCHANGE", String.valueOf(day));
+                    if(!isPackageInstance()) {
+                        code    = removeNameSpace(code).replace("JBCXM.", "");
+                    }
                     apex.runApex(code);
                 }
-
-                for(int l= 0; l < 30; l++) {
+                for(int l= 0; l < 200; l++) {
                     String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
                             "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
                             "and ApexClass.Name = 'AdoptionAggregation'";
@@ -93,13 +113,23 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         }
     }
 
+    @Test
+    public void usageDataVerification() {
+        Report.logInfo("This is a sample test case");
+    }
+
+    @AfterClass
+    public void tearDown(){
+        basepage.logout();
+    }
+
     /**
      * This parameter returns the String with comprises of yyyy|mm|dd format.
-     * @param weekStartDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+     * @param weekDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
      * @param daysToAdd - number of days to add for current day.
      * @return String of format "yyyy|mm|dd".
      */
-    public String getWeekLabelDate(String weekStartDay, int daysToAdd) {
+    public String getWeekLabelDate(String weekDay, int daysToAdd, boolean usesEndDate) {
         String date= null;
         try {
             Calendar c = Calendar.getInstance();
@@ -111,7 +141,11 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             days.put("Thu", 5);
             days.put("Fri", 6);
             days.put("Sat", 7);
-            c.set(Calendar.DAY_OF_WEEK, days.get(weekStartDay));
+            int weekDate = days.get(weekDay);
+            if(usesEndDate) {
+                weekDate = (weekDate ==1) ? 7 : weekDate-1;
+            }
+            c.set(Calendar.DAY_OF_WEEK, weekDate);
             System.out.println(c.get(Calendar.DATE));
             c.add(Calendar.DATE, daysToAdd);
             int day = c.get(Calendar.DATE);
@@ -123,10 +157,5 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             Report.logInfo(e.getLocalizedMessage());
         }
         return date;
-    }
-
-    @AfterClass
-    public void tearDown(){
-        basepage.logout();
     }
 }
