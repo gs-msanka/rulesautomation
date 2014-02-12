@@ -1,6 +1,6 @@
 package com.gainsight.sfdc.tests;
 
-import java.io.File;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -227,5 +227,31 @@ public class BaseTest {
     	String DELETE_SCRIPT_FILE = env.basedir+"/testdata/sfdc/Administration/Picklist_Delte_Script.txt";
     	apex.runApexCodeFromFile(DELETE_SCRIPT_FILE, isPackageInstance());
     }
-    
+
+    public String getFileContents(String fileName) {
+        String code = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line = null;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+                stringBuilder.append("\n");
+            }
+            code = stringBuilder.toString();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return code;
+    }
+
+    public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
+        if(!isPackageInstance()) {
+            return new FileReader(removeNameSpace(getFileContents(fileName)));
+        } else {
+            return new FileReader(fileName);
+        }
+    }
+
 }
