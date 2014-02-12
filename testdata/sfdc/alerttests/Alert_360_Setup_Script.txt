@@ -1,30 +1,48 @@
-List<JBCXM__Playbook__c> pnSL = [SELECT ID FROM JBCXM__Playbook__c];
-Delete pnSL;
-List<JBCXM__Playbook__c> playbookList = new List<JBCXM__Playbook__c>();
-List<JBCXM__PlaybookTasks__c> playbookTaskList = new List<JBCXM__PlaybookTasks__c>();
-List<String> pbNames = new List<String>{'New Customer On-boarding'};
-JBCXM__Playbook__c playbook;
-JBCXM__PlaybookTasks__c playbooktask;
-for(String pbName : pbNames) {
-    playbook = new JBCXM__Playbook__c(	Name = pbName,
-    									JBCXM__Active__c = true,
-                                      JBCXM__Description__c = 'This playbook need to be applied on customer on boarding.',
-                                      JBCXM__Tasks_Count__c = 5,
-                                      JBCXM__Type__c = 'All');
-    playbookList.add(playbook);
+List <JBCXM__Alert__c> alertList = new List <JBCXM__Alert__c> ();
+Map<String, Id> idBySysName = new Map<String, Id>();
+List<String> catList = new List<String>{'Alert reason', 'Alert Severity', 'Alert Type', 'Alert Status'};
+List<String> aSList = new List<String>();
+List<String> aRList = new List<String>();
+List<String> aTList = new List<String>();
+for(JBCXM__PickList__c plo : [SELECT Id, JBCXM__SystemName__c, JBCXM__Category__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c IN: catList]) {
+	idBySysName.put(plo.JBCXM__SystemName__c, plo.Id);
+	if(plo.JBCXM__Category__c == 'Alert Severity') {
+		aSList.add(plo.id);
+	}
+	else if(plo.JBCXM__Category__c == 'Alert reason') {
+		aRList.add(plo.id);
+	}
+	else if(plo.JBCXM__Category__c == 'Alert Type') {
+		aTList.add(plo.id);
+	}
 }
-insert playbookList;
-List<String> taskList = new List<String>{'[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"Kick-off call","value":"Kick-off call"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"1","value":"1"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"High","value":"High"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Not Started","value":"Not Started"}]}]',
-											'[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"Customer Training","value":"Customer Training"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"2","value":"2"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Normal","value":"Normal"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"In Progress","value":"In Progress"}]}]',
-											'[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"Go Live","value":"Go Live"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"3","value":"3"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Low","value":"Low"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Waiting on someone else","value":"Waiting on someone else"}]}]',
-											'[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"Health check call","value":"Health check call"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"4","value":"4"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Low","value":"Low"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Waiting on someone else","value":"Waiting on someone else"}]}]',
-											'[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"Account Review","value":"Account Review"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"5","value":"5"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Normal","value":"Normal"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Low","value":"Low"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Not Started","value":"Not Started"},{"key":"In Progress","value":"In Progress"},{"key":"Completed","value":"Completed"},{"key":"Waiting on someone else","value":"Waiting on someone else"},{"key":"Deferred","value":"Deferred"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Waiting on someone else","value":"Waiting on someone else"}]}]'};
+JBCXM__Alert__c alertObj;
+Integer i = 1;
+Integer j = 1;
+Integer k = 1;
+For(JBCXM__CustomerInfo__c cio : [SELECT Id, JBCXM__Account__c, JBCXM__Account__r.Name FROM JBCXM__CustomerInfo__c LIMIT 100]) {
+	for(Integer l = 0; l < 3; l++) {	alertObj = new JBCXM__Alert__c(
+										name = 'This is alert sample subject + ' + cio.JBCXM__Account__r.Name,
+										JBCXM__Account__c = cio.JBCXM__Account__c,
+										JBCXM__Severity__c = aSList.get(i),
+										JBCXM__Reason__c = aRList.get(j),
+										JBCXM__Status__c = idBySysName.get('Active'),
+										JBCXM__Type__c = aTList.get(k),
+										JBCXM__Comment__c = 'You can also use version settings to associate a class or ',
+										JBCXM__Date__c = Date.today(),
+										JBCXM__NextStepDate__c = (Date.today()).addDays(6),
+										JBCXM__NextStepOwner__c = 'Sample User',
+										JBCXM__NextStepComment__c = 'The AWS re: Invent conference is only 43 days away and we wanted to share a few exciting updates with you.',
+										JBCXM__ASV__c = 1200,
+										JBCXM__MRR__c = 100);
+	alertList.add(alertObj);
+	i++;
+	j++;
+	k++;
+	if(i == aSList.size()) i =0;
+	if(j == aRList.size()) j =0;
+	if(k == aTList.size()) k =0;
 
-integer i =1;
-for(String taskStr : taskList) {
-	playbooktask = new JBCXM__PlaybookTasks__c(JBCXM__DisplayOrder__c = i,
-												JBCXM__PlaybookId__c = playbookList.get(0).Id,
-												JBCXM__TaskJSON__c = taskStr);
-	playbookTaskList.add(playbooktask);
+	}
 }
-insert playbookTaskList;
+insert alertList;
