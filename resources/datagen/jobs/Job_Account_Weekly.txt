@@ -1,12 +1,12 @@
 {
-    "jobName": "job3",
+    "jobName": "job2",
     "jobType" : "UsageData",
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
     "preprocess" : {
-    	"inputFile" : "./testdata/sfdc/UsageData/Data/AccountMonthly.csv",
-    	"monthly" : true,
-    	"weekly" : false,
+    	"inputFile" : "./testdata/sfdc/UsageData/Data/Account_Weekly.csv",
+    	"monthly" : false,
+    	"weekly" : true,
     	"fieldName" : "Date",
     	"outputFile" : "./resources/datagen/process/UsageDataFinal.csv"
     },
@@ -69,13 +69,13 @@
         ],
         "join": true,
         "picklist": false,
-        "output": "./resources/datagen/process/job3.csv"
+        "output": "./resources/datagen/process/Final_Account_Weekly.csv"
     },
     "load": {
         "target": "sfdc",
         "sObject": "JBCXM__UsageData__c",
         "operation": "insert",
         "contentType": "CSV",
-        "file": "./resources/datagen/process/job3.csv"
+        "file": "./resources/datagen/process/Final_Account_Weekly.csv"
     }
 }
