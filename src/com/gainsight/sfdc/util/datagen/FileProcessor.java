@@ -21,7 +21,7 @@ public class FileProcessor {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		File inputFile = new File("./testdata/sfdc/UsageData/Data/InstanceMonthly.csv");
+		File inputFile = new File("./testdata/sfdc/UsageData/Data/XXX.csv");
 		File outputFile = new File(resDir + "process/InstanceMonthlyFinal.csv");
 		System.out.println("File exists : " + outputFile.exists());
 		File f = generateMonthlyUsageData(inputFile, "Monthly", outputFile);

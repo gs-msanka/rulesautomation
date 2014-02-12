@@ -1,9 +1,9 @@
 package com.gainsight.sfdc.util.bulk;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.util.db.QueryBuilder;
@@ -54,20 +54,77 @@ public class SfdcBulkApi {
 		//Framing the url's for batch from resulting job url 
 		String async_job_status_url = async_job_url +"/" + job_id;
 		String async_batch_url = async_job_status_url + "/batch";
-		String batch_id = op.addBatchToJob(async_batch_url, csvFile);
-		if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
-		
-		String async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
-		//Waiting until the batch job is complete
-		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 60);
-		if(waitResult) {
-			//Fetching result from batch
-			String output = op.fetchResult(async_batch_status_url);
-			Report.logInfo("OUTPUT:\n" + output);
-			op.setJobState(async_job_status_url, "Closed");
-		}
-		else
-			op.setJobState(async_job_status_url, "Aborted");
+
+        List<String> batchIds = new ArrayList<String>();
+        BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
+        File tmpFile =  new File(System.getProperty("user.dir")+"/resources/datagen/process/tempFile.csv");
+        // read the CSV header row
+        byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
+        int headerBytesLength = headerBytes.length;
+        try {
+            FileOutputStream tmpOut = new FileOutputStream(tmpFile);
+            int maxBytesPerBatch = 10000000; // 10 million bytes per batch
+            int maxRowsPerBatch = 10000; // 10 thousand rows per batch
+            int currentBytes = 0;
+            int currentLines = 0;
+            String nextLine;
+            while ((nextLine = rdr.readLine()) != null) {
+                byte[] bytes = (nextLine + "\n").getBytes("UTF-8");
+                // Create a new batch when our batch size limit is reached
+                if (currentBytes + bytes.length > maxBytesPerBatch
+                        || currentLines > maxRowsPerBatch) {
+                    String batch_id = op.addBatchToJob(async_batch_url, tmpFile);
+                    if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+                    batchIds.add(batch_id);
+                    currentBytes = 0;
+                    currentLines = 0;
+                }
+                if (currentBytes == 0) {
+                    tmpOut = new FileOutputStream(tmpFile);
+                    tmpOut.write(headerBytes);
+                    currentBytes = headerBytesLength;
+                    currentLines = 1;
+                }
+                tmpOut.write(bytes);
+                currentBytes += bytes.length;
+                currentLines++;
+            }
+            // Finished processing all rows
+            // Create a final batch for any remaining data
+             if (currentLines > 1) {
+                 String batch_id = op.addBatchToJob(async_batch_url, tmpFile);
+                 if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+                 batchIds.add(batch_id);
+
+             }
+         } finally {
+             tmpFile.delete();
+         }
+        op.setJobState(async_job_status_url, "Closed");
+        //String batch_id = op.addBatchToJob(async_batch_url, csvFile);
+		//if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+        String async_batch_status_url = null;
+        List<String> tempList = new ArrayList<String>(batchIds);
+        boolean waitResult = false;
+        //Waiting until the batch job is complete
+        while (!tempList.isEmpty()) {
+            try {
+                Thread.sleep(30000L);
+            } catch (InterruptedException e) {}
+            for(String batch_id : batchIds) {
+                async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
+                String result = op.getBatchStatus(async_batch_status_url);
+                Report.logInfo("OUTPUT:\n" + result);
+                if(result.contains("Completed")) {
+                    tempList.remove(batch_id);
+                } else if(result.equalsIgnoreCase("Records Failed")) {
+                    tempList.remove(batch_id);
+                } else if(result.equalsIgnoreCase("Failed")) {
+                    tempList.remove(batch_id);
+                }
+            }
+            System.out.println("Awaiting results..." + tempList.size());
+        }
 	}
 	
 	public static void pushDataToSfdc(String sObject, SfdcOperationType operation, File csvFile, int recordCount) throws IOException {
@@ -81,7 +138,9 @@ public class SfdcBulkApi {
 		
 		//Here I need to split the files and give it as multiple batch inputs
 		//Yet to COMPLETE - SUNAND
-		String batch_id = op.addBatchToJob(async_batch_url, csvFile);
+
+
+        String batch_id = op.addBatchToJob(async_batch_url, csvFile);
 		if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
 		
 		String async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
@@ -192,4 +251,93 @@ public class SfdcBulkApi {
 			}
 		}
 	}
+
+    /**
+     *
+     * @param sObject
+     * @param operation
+     * @param csvFile
+     * @param externalIDField - for upsert operation, a field should be specified.
+     * @throws IOException
+     */
+    public static void pushDataToSfdc(String sObject, String operation, File csvFile, String externalIDField) throws IOException {
+        //Create Job with parameters and change the last parameter to csv or xml for the 5th parameter to change the response content type while registering a job
+        String job_id = op.createJob(async_job_url, operation, sObject, "Parallel", "CSV", externalIDField);
+        if(job_id == null) throw new RuntimeException("Failed to create bulk JOB. Check the logs for more info.");
+
+        //Framing the url's for batch from resulting job url
+        String async_job_status_url = async_job_url +"/" + job_id;
+        String async_batch_url = async_job_status_url + "/batch";
+
+        List<String> batchIds = new ArrayList<String>();
+        BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
+        File tmpFile =  new File(System.getProperty("user.dir")+"/resources/datagen/process/tempFile.csv");
+        // read the CSV header row
+        byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
+        int headerBytesLength = headerBytes.length;
+        try {
+            FileOutputStream tmpOut = new FileOutputStream(tmpFile);
+            int maxBytesPerBatch = 10000000; // 10 million bytes per batch
+            int maxRowsPerBatch = 10000; // 10 thousand rows per batch
+            int currentBytes = 0;
+            int currentLines = 0;
+            String nextLine;
+            while ((nextLine = rdr.readLine()) != null) {
+                byte[] bytes = (nextLine + "\n").getBytes("UTF-8");
+                // Create a new batch when our batch size limit is reached
+                if (currentBytes + bytes.length > maxBytesPerBatch
+                        || currentLines > maxRowsPerBatch) {
+                    String batch_id = op.addBatchToJob(async_batch_url, tmpFile);
+                    if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+                    batchIds.add(batch_id);
+                    currentBytes = 0;
+                    currentLines = 0;
+                }
+                if (currentBytes == 0) {
+                    tmpOut = new FileOutputStream(tmpFile);
+                    tmpOut.write(headerBytes);
+                    currentBytes = headerBytesLength;
+                    currentLines = 1;
+                }
+                tmpOut.write(bytes);
+                currentBytes += bytes.length;
+                currentLines++;
+            }
+            // Finished processing all rows
+            // Create a final batch for any remaining data
+            if (currentLines > 1) {
+                String batch_id = op.addBatchToJob(async_batch_url, tmpFile);
+                if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+                batchIds.add(batch_id);
+
+            }
+        } finally {
+            tmpFile.delete();
+        }
+        op.setJobState(async_job_status_url, "Closed");
+        //String batch_id = op.addBatchToJob(async_batch_url, csvFile);
+        //if(batch_id == null) throw new RuntimeException("Failed to add BATCH to JOB. Check the logs for more info.");
+        String async_batch_status_url = null;
+        List<String> tempList = new ArrayList<String>(batchIds);
+        boolean waitResult = false;
+        //Waiting until the batch job is complete
+        while (!tempList.isEmpty()) {
+            try {
+                Thread.sleep(30000L);
+            } catch (InterruptedException e) {}
+            for(String batch_id : batchIds) {
+                async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
+                String result = op.getBatchStatus(async_batch_status_url);
+                Report.logInfo("OUTPUT:\n" + result);
+                if(result.contains("Completed")) {
+                    tempList.remove(batch_id);
+                } else if(result.equalsIgnoreCase("Records Failed")) {
+                    tempList.remove(batch_id);
+                }  else if(result.equalsIgnoreCase("Failed")) {
+                    tempList.remove(batch_id);
+                }
+            }
+            System.out.println("Awaiting results..." + tempList.size());
+        }
+    }
 }

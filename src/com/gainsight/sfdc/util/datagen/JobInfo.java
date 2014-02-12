@@ -353,6 +353,8 @@ public class JobInfo {
 		String operation;
 		String contentType;
 		String file;
+
+        String externalIDField;
 		boolean cleanUp;
 		
 		public SfdcLoad() {
@@ -395,6 +397,12 @@ public class JobInfo {
 		public void setCleanUp(boolean cleanUp) {
 			this.cleanUp = cleanUp;
 		}
+        public String getExternalIDField() {
+            return externalIDField;
+        }
+        public void setExternalIDField(String externalIDField) {
+            this.externalIDField = externalIDField;
+        }
 
 		@Override
 		public String toString() {

@@ -86,7 +86,7 @@ public class DataETL implements IJobExecutor {
 			//Step 4
 			//Decide which job to execute
 			//Currently hard-coding to Job1
-			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job3.txt"), JobInfo.class);
+			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
 			gen.init();
 			gen.execute(jobInfo);
 			
@@ -179,8 +179,10 @@ public class DataETL implements IJobExecutor {
 			//Mapping and Transformation Code.
 			Transform transform = jobInfo.getTransformationRule();
 			File transFile = null;
+            File pushFile  = null;
 			LinkedHashMap<String, List<Columns>> finalFields= new LinkedHashMap<String, List<Columns>>();
 			ArrayList<String> joinColumn = new ArrayList<String>();
+            SfdcLoad load = jobInfo.getLoadRule();
 			if(transform != null && !transform.toString().contains("null")) {
 				if(transform.isJoin()) {
 					transFile = new File(transform.getOutputFileLoc());
@@ -196,7 +198,12 @@ public class DataETL implements IJobExecutor {
 					//Building Join Query
 					String finalQuery;
 					if(!transform.isJoinUsingQuery()) {
-						finalQuery = QueryBuilder.buildJoinQuery(finalFields, joinColumn, "=");
+                        if(load != null && load.getOperation().equals("upsert")) {
+                            finalQuery = QueryBuilder.buildRightJoinQuery(finalFields, joinColumn, "=");
+                        } else {
+                            finalQuery = QueryBuilder.buildJoinQuery(finalFields, joinColumn, "=");
+                        }
+
 						System.out.println("Final Query by forming join query at run time : " + finalQuery);
 					}//Or use Query provided by the user
 					else {
@@ -210,11 +217,11 @@ public class DataETL implements IJobExecutor {
 					else
 						System.out.println("Something went wrong");
 				}
-				
 				//Applying picklist transformation
+
 				if(transform.isPicklist()) {
-					File pushFile = doPickListTransformation(transFile, pMap);
-					if(pushFile.exists()) 
+					 pushFile = doPickListTransformation(transFile, pMap);
+					if(pushFile.exists())
 						System.out.println("Another Scucess");
 					else
 						System.out.println("Sorry Boss");
@@ -222,8 +229,11 @@ public class DataETL implements IJobExecutor {
 			}
 			
 			//Load the Data back to SFDC
-			SfdcLoad load = jobInfo.getLoadRule();
-			SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), new File(load.getFile()));
+            if(load.getOperation().equals("upsert")) {
+                SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()), load.getExternalIDField());
+            } else {
+                SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()));
+            }
 		}
 		catch (IOException e) {
 			// TODO: handle exception
@@ -268,13 +278,18 @@ public class DataETL implements IJobExecutor {
 	
 	/**
 	 * Simple Clean Up Operation, It queries the ID by pull mechanism and uses the same to delete the id with push mechanism
-	 * @param sObject
+	 * @param sObject - Name of the object where data should be deleted.
+     * @param condition - Where condition need to be supplied - {Ex: JBCXM__Stage__r.Name = 'New Business' (or) JBCXM__ASV__c > 2000}
 	 * @throws IOException
 	 */
-	public void cleanUp(String sObject) throws IOException {
+	public void cleanUp(String sObject, String condition) throws IOException {
 		System.out.println("Pulling " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
 		System.out.println("Pull Query : " + query);
+        if(condition !=null) {
+            query = query+" "+condition;
+            System.out.println("Where Attached Pull Query : " + query);
+        }
 		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);

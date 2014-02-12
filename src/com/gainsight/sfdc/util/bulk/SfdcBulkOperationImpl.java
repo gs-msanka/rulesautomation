@@ -1,9 +1,9 @@
 package com.gainsight.sfdc.util.bulk;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.http.entity.ContentType;
@@ -32,6 +32,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	public String basedir = System.getProperty("basedir", ".");
 	public String templatePath = basedir + "/resources/template";
 	public String createJobTemplate = templatePath + "/CreateJobTemplate.xml";
+    public String createUpsertJobTemplate = templatePath + "/CreateUpsertJobTemplate.xml";
 	public String jobStateTemplate = templatePath + "/JobStateTemplate.xml";
 	
 	WebAction wa;
@@ -69,6 +70,46 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		Report.logInfo("Job Response:\n" + resp.getContent());
 		return parseXMLResponse(resp.getContent(), "id");
 	}
+
+    /**
+     *
+     * @param uri
+     * @param operation
+     * @param sObject
+     * @param concurrencyMode
+     * @param contentType
+     * @param externalIDField
+     * @return
+     * @throws IOException
+     */
+    public String createJob(String uri, String operation, String sObject,
+                            String concurrencyMode, String contentType, String externalIDField) throws IOException {
+        File templateFile = new File(createUpsertJobTemplate);
+        File outputFile = new File(basedir + "/result/CreateJob.xml");
+        Template t = new Template(templateFile);
+        t.setValue("operation", operation);
+        t.setValue("object", sObject);
+        t.setValue("externalIdFieldName", externalIDField);
+       // t.setValue("concurrencyMode", concurrencyMode);
+        t.setValue("contentType", contentType);
+        t.export(new FileOutputStream(outputFile));
+
+        FileEntity entity = new FileEntity(outputFile, ContentType.create("text/xml", "UTF-8"));
+        HttpResponseObj resp = null;
+
+        try {
+            Report.logInfo("Create Job URL: " + uri);
+            Header h = new Header();
+            h.addHeader("X-SFDC-Session", session_id);
+            h.addHeader("Accept", "application/xml");
+            h.addHeader("Content-Type", "application/xml");
+            resp = wa.doPost(uri, h.getAllHeaders(), entity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Report.logInfo("Job Response:\n" + resp.getContent());
+        return parseXMLResponse(resp.getContent(), "id");
+    }
 
 	@Override
 	public String addBatchToJob(String uri, String query) throws IOException {
@@ -124,6 +165,8 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 
 	@Override
 	public String getBatchStatus(String uri) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
 		HttpResponseObj resp = null;
 		try {
 			Report.logInfo("Getting Batch Status URL: " + uri);
@@ -139,7 +182,16 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		if(status.equalsIgnoreCase("Completed") && numberRecordsFailed == 0 ) 
 			return "Completed";
 		else if(status.equalsIgnoreCase("Completed") && numberRecordsFailed > 0 ) {
-			Report.logInfo("Batch completed with failures.");
+            //https://instance_name—api.salesforce.com/services/async/APIversion/job/jobid/batch/batchId/request
+            Header h = new Header();
+            h.addHeader("X-SFDC-Session", session_id);
+            try {
+                resp = wa.doGet(uri+"/result", h.getAllHeaders());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Report.logInfo("Batch Status Response:\n" + resp.getContent());
+            Report.logInfo("Batch completed with failures.");
 			Report.logInfo("Operation : " + parseXMLResponse(resp.getContent(), "operation"));
 			Report.logInfo("Number of Records Processed : " + parseXMLResponse(resp.getContent(), "numberRecordsProcessed"));
 			Report.logInfo("Number of Records Failed : " + numberRecordsFailed);
