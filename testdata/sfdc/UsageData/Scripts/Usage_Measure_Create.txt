@@ -1,6 +1,5 @@
-List<JBCXM__PickList__c> todeletepkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'Adoption Measure Types'
-												and JBCXM__DISPLAYORDER__C >=10];
-delete todeletepkList;
+List<JBCXM__PickList__c> deleteList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'Adoption Measure Types'];
+delete deleteList;
 List<JBCXM__PickList__c> pkList = new List<JBCXM__PickList__c>();
 List<String> measureNameList = new List<String>{'Page Views', 'Page Visits', 'No of Report Run', 'Files Downloaded'};
 List<String> colorList = new List<String>{'#8b8989', '#ffdead', '#000000', '#0000cd', '#006400', '#adff2f', '#ffff00',

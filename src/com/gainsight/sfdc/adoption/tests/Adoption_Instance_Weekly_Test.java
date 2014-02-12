@@ -1,17 +1,14 @@
 package com.gainsight.sfdc.adoption.tests;
 
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
+import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
-import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
-import com.gainsight.sfdc.tests.BaseTest;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,6 +37,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
         try{
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+            createFieldsOnUsageData();
             DataETL dataLoader = new DataETL();
             dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
             dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);

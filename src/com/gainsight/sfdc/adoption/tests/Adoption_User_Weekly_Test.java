@@ -11,10 +11,7 @@ import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +42,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/User_Level_Weekly.txt";
         try{
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+            createFieldsOnUsageData();
             DataETL dataLoader = new DataETL();
             dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
             dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);

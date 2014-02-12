@@ -2,22 +2,15 @@ package com.gainsight.sfdc.adoption.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
-import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.utils.ApexUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Adoption_Account_Monthly_Test extends BaseTest {
 
@@ -42,6 +35,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
 
         try {
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+            createFieldsOnUsageData();
             DataETL dataLoader = new DataETL();
             dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
             dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);

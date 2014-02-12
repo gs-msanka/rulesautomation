@@ -1,21 +1,23 @@
 package com.gainsight.sfdc.tests;
 
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.pageobject.core.TestEnvironment;
+import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
+import com.gainsight.utils.ApexUtil;
+import com.gainsight.utils.SOQLUtil;
+import com.gainsight.utils.TestDataHolder;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.utils.ApexUtil;
-import com.gainsight.utils.SOQLUtil;
-import com.gainsight.utils.TestDataHolder;
 
 public class BaseTest {
 	protected TestDataHolder testDataLoader = new TestDataHolder();
@@ -252,6 +254,20 @@ public class BaseTest {
         } else {
             return new FileReader(fileName);
         }
+    }
+
+    public void createFieldsOnUsageData() {
+        String object = "JBCXM__Usagedata__c";
+        String[] numberFields = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
+        CreateObjectAndFields cObjFields = new CreateObjectAndFields();
+        try {
+            cObjFields.createNumberField(isPackageInstance() ? object : removeNameSpace(object), numberFields, false);
+        } catch (Exception e) {
+            Report.logInfo("Failed to create Fields on the object :" +object);
+            e.printStackTrace();
+        }
+
+
     }
 
 }
