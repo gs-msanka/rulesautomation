@@ -35,4 +35,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="lib/apex.jar"/>
+    <classpathentry kind="lib" path="lib/enterprize.jar"/>
+    <classpathentry kind="lib" path="lib/metadata.jar"/>
 </classpath>
