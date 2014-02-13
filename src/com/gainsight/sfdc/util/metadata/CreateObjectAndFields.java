@@ -268,7 +268,7 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createTextFields(String objName, String[] fields, boolean isTextField, boolean isTextArea, boolean isTextRich) throws Exception {
+    public void createTextFields(String objName, String[] fields, boolean isExternalID, boolean isUnique, boolean isTextField, boolean isTextArea, boolean isTextRich) throws Exception {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {
@@ -283,7 +283,13 @@ public class CreateObjectAndFields {
                 custField.setLength(32768);
                 custField.setVisibleLines(10);
             }
-
+            if(isExternalID) {
+                custField.setExternalId(true);
+            }
+            if(isUnique) {
+                custField.setUnique(true);
+                custField.setCaseSensitive(false);
+            }
             custField.setLabel(field);
             custField.setFullName(objName+"."+field.replaceAll(" ", "_")+"__c");
             metadata[i] = custField;
