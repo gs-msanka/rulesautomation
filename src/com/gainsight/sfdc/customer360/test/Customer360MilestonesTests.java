@@ -1,6 +1,12 @@
 package com.gainsight.sfdc.customer360.test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -18,7 +24,9 @@ public class Customer360MilestonesTests extends BaseTest {
 	Customer360Milestones cm;
 	final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
 	final String CURRENT_DIR = env.basedir;
-
+	Calendar cal;
+	DateFormat df=null;
+	
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
@@ -29,54 +37,49 @@ public class Customer360MilestonesTests extends BaseTest {
 				isPackageInstance());
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", true);
+		cp.searchCustomer("Milestones Account", true);
 		cm = (Customer360Milestones) cp.goToSection("Usage");
 		cm.gotoMilestonesSubtab();
+		TimeZone tz=TimeZone.getTimeZone(soql.getUserTimeZone());
+		cal=Calendar.getInstance(tz);			
+		String Lc=soql.getUserLocale();
+		if(Lc.equals("en_US"))	df=new SimpleDateFormat("M/d/yyyy");
+		else if(Lc.equals("en_IN"))	df=new SimpleDateFormat("d/M/yyyy");
+		else df=new SimpleDateFormat("M/d/yyyy");
+		df.setTimeZone(tz);
+		Report.logInfo("Your Org's TimeZone:"+soql.getUserTimeZone()+" && Locale:"+Lc);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
 
-		HashMap<String, String> MsHeaders = getMapFromData(testData
-				.get("Headers"));
-
+		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
 		// Verifying table header
-
 		if (cm.isHeaderPresent()) {
 			System.out.println("no of columns=" + MsHeaders.size());
 			for (int h = 1; h <= MsHeaders.size(); h++) {
-				System.out.println("Checking for---"
-						+ MsHeaders.get("Column" + h));
-				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"
-						+ h)));
+				System.out.println("Checking for---"+ MsHeaders.get("Column" + h));
+				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"+ h)));
 			}
 		}
 
 		// Verifying table data
 		if (cm.isMsTableDataPresent()) {
 
-			// Hardcoding (in the excel itself) the num of Milestones to
-			// 4...need to see how to get the no of rows from excel
-			int NumOfMilestones = Integer.parseInt(getMapFromData(
-					testData.get("numberOfRows")).get("Number"));
+			// Number of milestone data rows = testData-(1 row for header)
+			int NumOfMilestones = testData.size()-1;
 			HashMap<String, String> MsData;
+			System.out.println("number of miles to go:"+NumOfMilestones);
 			for (int i = 1; i <= NumOfMilestones; i++) {
 
 				// get data for a Milestone from the excel
-				MsData = getMapFromData(testData.get("M" + i));
-
-				// check if all the data is present as per the test input
-				Assert.assertTrue(cm.checkMilestoneDate(MsData.get("Date"), i));
-				Assert.assertTrue(cm.checkMilestoneColor(
-						MsData.get("MilestoneColor"), i));
-				Assert.assertTrue(cm.checkMilestoneName(
-						MsData.get("Milestone"), i));
-				Assert.assertTrue(cm.checkMilestoneOpportunity(
-						MsData.get("Opportunity"), i));
-				Assert.assertTrue(cm.checkMilestoneComments(
-						MsData.get("Comments"), i));
-
+				MsData = getMapFromData(testData.get("M" + i));		
+				int monthsToAdd=Integer.parseInt(MsData.get("Date"));
+				cal.add(Calendar.MONTH,monthsToAdd);
+				Date msDate=cal.getTime();
+				Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsData.get("MilestoneColor"), MsData.get("Milestone"), MsData.get("Opportunity"),MsData.get("Comments")));
+				cal.add(Calendar.MONTH, -(monthsToAdd));
 			}
 		}
 
@@ -86,11 +89,14 @@ public class Customer360MilestonesTests extends BaseTest {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyAddMilestones(HashMap<String, String> testData) {
 
-		String MsName = "M5";
-		int MsNum = 5;
+		int MsNum = cm.getCurrentNoOfRows()+1;
+		String MsName="M"+MsNum;
 		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
+		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
+		cal.add(Calendar.MONTH,monthsToAdd);
+		Date msDate=cal.getTime();
 		cm.clickOnAddMilestones();
-		cm.setDateInField(MsList.get("Date"));
+		cm.setDateInField(df.format(msDate));
 		cm.selectMileStone(MsList.get("Milestone"));
 		cm.selectOpportunityForMilestone(MsList.get("Opportunity"));
 		cm.addComments(MsList.get("Comments"));
@@ -98,26 +104,23 @@ public class Customer360MilestonesTests extends BaseTest {
 
 		// Verify if the data is added correctly
 		cm.isMsTableDataPresent();
-
-		Assert.assertTrue(cm.checkMilestoneDate(MsList.get("Date"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"),
-				MsNum));
-		Assert.assertTrue(cm.checkMilestoneName(MsList.get("Milestone"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneOpportunity(
-				MsList.get("Opportunity"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"),
-				MsNum));
+		Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsList.get("MilestoneColor"), MsList.get("Milestone"), MsList.get("Opportunity"),MsList.get("Comments")));
+		cal.add(Calendar.MONTH,-(monthsToAdd));
 
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 3)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyEditMilestones(HashMap<String, String> testData) {
-		String MsName = "M6";
-		int MsNum = 5;
+		int MsNum = cm.getCurrentNoOfRows();
+		String MsName="M"+MsNum;
 		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
+		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
+		cal.add(Calendar.MONTH,monthsToAdd);
+		Date msDate=cal.getTime();
+		cm.clickOnAddMilestones();
 		cm.clickOnEditMilestone(MsNum);
-		cm.setDateInField(MsList.get("Date"));
+		cm.setDateInField(df.format(msDate));
 		cm.selectMileStone(MsList.get("Milestone"));
 		cm.selectOpportunityForMilestone(MsList.get("Opportunity"));
 		cm.addComments(MsList.get("Comments"));
@@ -125,21 +128,15 @@ public class Customer360MilestonesTests extends BaseTest {
 
 		// Verify if the data is edited correctly
 		cm.isMsTableDataPresent();
-
-		Assert.assertTrue(cm.checkMilestoneDate(MsList.get("Date"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneColor(MsList.get("MilestoneColor"),
-				MsNum));
-		Assert.assertTrue(cm.checkMilestoneName(MsList.get("Milestone"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneOpportunity(
-				MsList.get("Opportunity"), MsNum));
-		Assert.assertTrue(cm.checkMilestoneComments(MsList.get("Comments"),
-				MsNum));
+		
+		Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsList.get("MilestoneColor"), MsList.get("Milestone"), MsList.get("Opportunity"),MsList.get("Comments")));
+		cal.add(Calendar.MONTH,-(monthsToAdd));
 
 	}
 
 	@Test(priority = 4)
 	public void verifyDeleteMilestones() {
-		int MsNum = 5;
+		int MsNum = cm.getCurrentNoOfRows();
 		cm.clickOnDeleteMilestone(MsNum);
 
 		// Verify if the data is deleted correctly
@@ -150,7 +147,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@Test(priority = 5)
 	public void verifyNoMilestonesMessage() {
 		// Assuming there are 4 milestones left in the page
-		int MsNum = 4;
+		int MsNum = cm.getCurrentNoOfRows();
 		for (int i = 1; i <= MsNum; i++) {
 			cm.clickOnDeleteMilestone(1);
 		}

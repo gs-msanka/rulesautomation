@@ -1,14 +1,20 @@
 delete [select Name from JBCXM__Milestone__c];
 delete [select Name from JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
+delete [SELECT id FROM Opportunity where name like 'Milestones Account - new business'];
+delete [select id from Account where name like 'Milestones Account'];
 
+//Adding into picklist for category Milestones
 List<JBCXM__PickList__c> pList=new List<JBCXM__PickList__c>();
+List<String>  milestones=new List<String>{'Implementation end date','Referral','HealthCheck','First Transaction','Go Live!','Renewal!','Software Upgrade','Quarterly Business Review'};
+List<String> colors=new List<String>{'#FF0000','#ff9900','#ffff00','#008b00','#3333ff','#0000cc','#00cd00','#99ffcc'};
+for(Integer i=0;i<milestones.size();i++)
+{
 
-pList.add(new JBCXM__PickList__c(Name='Onboarding',JBCXM__Category__c='Milestones',JBCXM__SystemName__c='OnBoarding',JBCXM__ShortName__c='Ob',JBCXM__Attribute1__c='#00ee00',JBCXM__Active__c=true,JBCXM__DisplayOrder__c=1));
-pList.add(new JBCXM__PickList__c(Name='Client Meeting',JBCXM__Category__c='Milestones',JBCXM__SystemName__c='Client Meeting',JBCXM__ShortName__c='CM',JBCXM__Attribute1__c='#ff6600',JBCXM__Active__c=true,JBCXM__DisplayOrder__c=2));
-pList.add(new JBCXM__PickList__c(Name='Conduct Survey',JBCXM__Category__c='Milestones',JBCXM__SystemName__c='Conduct Survey',JBCXM__ShortName__c='CS',JBCXM__Attribute1__c='#ffff00',JBCXM__Active__c=true,JBCXM__DisplayOrder__c=3));
-pList.add(new JBCXM__PickList__c(Name='Analyze Survey Responses',JBCXM__Category__c='Milestones',JBCXM__SystemName__c='Analyze Survey Responses',JBCXM__ShortName__c='ASR',JBCXM__Attribute1__c='#0000cc',JBCXM__Active__c=true,JBCXM__DisplayOrder__c=4));
-
+		pList.add(new JBCXM__PickList__c(Name=milestones.get(i),JBCXM__Category__c='Milestones',JBCXM__SystemName__c=milestones.get(i),JBCXM__ShortName__c=milestones.get(i).substring(0,3),JBCXM__Attribute1__c=colors.get(i),JBCXM__Active__c=true,JBCXM__DisplayOrder__c=i+1));
+}
 insert pList;
+
+//Enabling Opportunities for Milestones from App settings
 List<JBCXM__ApplicationSettings__c> appSettingsList = [SELECT Id, JBCXM__NPSAssociatedObject__c, JBCXM__NPSAssociatedObjectKey__c, JBCXM__NPSAssociatedObjectDisplay__c, JBCXM__NPSAssociatedObjectDisplayName__c, JBCXM__NPSAssociated__c, JBCXM__MilestoneAssociated__c, JBCXM__AlertAssociated__c FROM JBCXM__ApplicationSettings__c];
 JBCXM__ApplicationSettings__c appSettings = appSettingsList.get(0);
 appSettings.JBCXM__NPSAssociatedObject__c = 'Opportunity';
@@ -20,12 +26,13 @@ appSettings.JBCXM__MilestoneAssociated__c = true;
 appSettings.JBCXM__AlertAssociated__c = true;
 update appSettings;
 
-List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
+//Creating an account for adding milestones
+Account acc=new Account(Name='Milestones Account');
+insert acc;
 
-delete [SELECT id FROM Opportunity where name like 'Via Systems - new business'];
-
-List<Account> accList=[SELECT id FROM Account where name like 'Via Systems'];
-Opportunity opp = new Opportunity(name ='Via Systems - new business',
+//Creating a Opportunity for one of the existing customers (from sample data) 
+List<Account> accList=[SELECT Id FROM Account where name like 'Milestones Account'];
+Opportunity opp = new Opportunity(name ='Milestones Account - new business',
 									StageName = 'Closed Won',
 									Type = 'New Business',
 									Amount = 2000,
@@ -33,13 +40,32 @@ Opportunity opp = new Opportunity(name ='Via Systems - new business',
 									AccountId = accList.get(0).Id);
 insert opp;
 
-List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Via Systems - new business' LIMIT 1];
+//Adding the account to customers
+JBCXM__PickList__c stage = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__Category__c ='Customer Stage'  limit 1];
+JBCXM__PickList__c status = [SELECT ID FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' limit 1];
 
-List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where Name in ('Onboarding','Client Meeting','Conduct Survey','Analyze Survey Responses') order by Name];
+JBCXM__CustomerInfo__c cust  = new JBCXM__CustomerInfo__c(JBCXM__Account__c = accList.get(0).Id,
+										JBCXM__Status__c = status.Id,
+										JBCXM__Stage__c = stage.Id,
+										JBCXM__Comments__c = 'Valued Customer.',
+										JBCXM__OriginalContractDate__c = date.today());
+insert cust;
 
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/23/2013'),JBCXM__Milestone__c=msList.get(0).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Analyze survey responses and take actions'));
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/10/2013'),JBCXM__Milestone__c=msList.get(1).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Set up client meeting'));
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/18/2013'),JBCXM__Milestone__c=msList.get(2).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Conduct survey for this customer'));
-mList.add(new JBCXM__Milestone__c(JBCXM__Account__c=accList.get(0).Id,JBCXM__Date__c=date.parse('12/02/2013'),JBCXM__Milestone__c=msList.get(3).Id,JBCXM__Opportunity__c=opList.get(0).Id,JBCXM__Comment__c='Complete Onboarding for this customer'));
+//Adding Milestones for the selected Customer
+List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
+List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Milestones Account - new business' LIMIT 1];
+List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
+List<String> comments=new List<String>{'Customer signed off on Implementation','Referred to 2 more customers','Check on Customer Scorecard','First Transactions successfully added','Customer Go Live and using system','Renewal due for this customer','Software release 4.0.2','1st Quarterly Business Review'};
 
+Integer d=0;
+for(Integer p=0;p<msList.size();p++)
+{
+		mList.add(new JBCXM__Milestone__c (JBCXM__Account__c=accList.get(0).Id,
+																		JBCXM__Date__c=system.Date.today().addMonths(d),
+																		JBCXM__Milestone__c=msList.get(p).Id,
+																		JBCXM__Opportunity__c=opList.get(0).Id,
+																		JBCXM__Comment__c=comments.get(p)));
+		d++;
+		if(d==3) d=0;
+}
 insert mList;

@@ -1,16 +1,11 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import org.openqa.selenium.By;
-
 public class Customer360Milestones extends Customer360Page {
 	
 	private final String NO_MILESTONES_MSG = "//div[@class='noMilestone noDataFound' and contains(.,'No Milestones Found')]";
 	private final String MILESTONES_SUB_TAB="//li[@data-tabname='Milestones']/a[contains(.,'Milestones')]";
 	private final String ADD_MILESTONES="//a[@class='addNewMilestone']";
 	private final String DATE_FIELD="//input[@id='DateId']";
-	private final String DATE_MONTH="";
-	private final String DATE_YEAR="";
-	private final String DATE_DAY="";
 	private final String MILESTONE_DROP_BOX="//select[@id='MilestoneOptions']";
 	private final String OPPORTUNITY_DROP_BOX="//select[@id='OppOptions']";
 	private final String COMMENT_FIELD="//textarea[@id='CommentsId']";
@@ -19,15 +14,17 @@ public class Customer360Milestones extends Customer360Page {
 	private final String CLOSE_X="//button[@title='close']/span[@title='Close']";
 	private final String MILESTONES_TABLE="//table[@class='gs_features_grid gs_milestones_grid']";
 	private final String MILESTONES_TABLE_DATA_GRID=MILESTONES_TABLE+"/tbody";
-	private final String MILESTONE_DATE=MILESTONES_TABLE+"/tbody/tr[%d]/td[1]";
-	private final String MILESTONE_COLOR=MILESTONES_TABLE+"/tbody/tr[%d]/td[2]/span[@style='background-color:%s;']";
-	private final String MILESTONE_NAME=MILESTONES_TABLE+"/tbody/tr[%d]/td[2]/span[contains(.,'%s')]";
-	private final String MILESTONE_OPPOR=MILESTONES_TABLE+"/tbody/tr[%d]/td[3]";
-	private final String MILESTONE_COMMENTS=MILESTONES_TABLE+"/tbody/tr[%d]/td[4]";
 	private final String EDIT_LINK_ICON=MILESTONES_TABLE+"/tbody/tr[%d]/td[@class='edit-icon']";
 	private final String DELETE_LINK_ICON=MILESTONES_TABLE+"/tbody/tr[%d]/td[@class='delete-icon']";
 	private final String MILESSTONES_ADD_FRAME="//div[@class='ui-widget-overlay ui-front']";
 	private final String MILESTONE_ROW_CHECK=MILESTONES_TABLE+"/tbody/tr[%d]";
+	private final String MILESTONE_ROW="//table[@class='gs_features_grid gs_milestones_grid']"+
+									   "/tbody/tr/td[1][contains(.,'%s')]"+
+									   "/following-sibling::td[1]/span[@style='background-color:%s;']"+
+									   "/following-sibling::span[contains(.,'%s')]/parent::td"+
+									   "/following-sibling::td[1][contains(.,'%s')]"+
+									   "/following-sibling::td[1][contains(.,'%s')]";
+	private final String NO_OF_ROWS="//table[@class='gs_features_grid gs_milestones_grid']/tbody/tr";
 
 	
 	public void gotoMilestonesSubtab(){
@@ -85,37 +82,11 @@ public class Customer360Milestones extends Customer360Page {
 		item.clearAndSetText(COMMENT_FIELD, Comments);
 	}
 	
-	public boolean checkMilestoneDate(String date,int col){
-		amtDateUtil.stalePause();
-		System.out.println("got date-->"+date+", got date from UI-->"+item.getText(String.format(MILESTONE_DATE,col)));
-		return((item.getText(String.format(MILESTONE_DATE,col))).compareTo(date)==0 ? true : false);
+	public boolean checkMilestoneRow(String date,String Color,String Milestone,String Opportunity,String Comments){
+		return item.isElementPresent(String.format(MILESTONE_ROW, date,Color,Milestone,Opportunity,Comments));
 	}
 	
-	public boolean checkMilestoneColor(String color,int col){	
-		amtDateUtil.stalePause();
-		System.out.println("got color-->"+color+", got color from UI-->"+String.format(MILESTONE_COLOR,col,color));
-		wait.waitTillElementDisplayed(String.format(MILESTONE_COLOR,col,color), MIN_TIME, MAX_TIME);
-		return true;
-	}
-	
-	public boolean checkMilestoneName(String Name,int col){
-		amtDateUtil.stalePause();
-		System.out.println("got name-->"+Name+", got name from UI-->"+String.format(MILESTONE_NAME,col,Name));
-		wait.waitTillElementDisplayed(String.format(MILESTONE_NAME,col,Name), MIN_TIME, MAX_TIME);
-		return true;
-	}
-	
-	public boolean checkMilestoneOpportunity(String oppor,int col){
-		amtDateUtil.stalePause();
-		System.out.println("got opor-->"+oppor+", got op from UI-->"+item.getText(String.format(MILESTONE_OPPOR,col)));
-		return((item.getText(String.format(MILESTONE_OPPOR,col))).compareTo(oppor)==0 ? true : false);
-	}
-	
-	public boolean checkMilestoneComments(String comments,int col){
-		amtDateUtil.stalePause();
-		return ((item.getText(String.format(MILESTONE_COMMENTS,col))).compareTo(comments)==0 ? true : false);
-	}
-	
+
 	public void clickOnSave(){
 		item.click(SAVE_BUTTON);
 		wait.waitTillElementDisplayed(MILESTONES_TABLE, MIN_TIME, MAX_TIME);
@@ -154,5 +125,9 @@ public class Customer360Milestones extends Customer360Page {
 		amtDateUtil.stalePause();
 		wait.waitTillElementDisplayed(NO_MILESTONES_MSG, MIN_TIME, MAX_TIME);
 		return true;
+	}
+
+	public int getCurrentNoOfRows() {
+		return element.getElementCount(NO_OF_ROWS);
 	}
 }
