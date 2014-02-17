@@ -37,7 +37,7 @@ Surveys.add(new JBCXM__Survey__c ( JBCXM__Code__c = codes.get(i) ,
  
  //Add Questions to Survey 
  //JBCXM__SurveyQuestion__c
- JBCXM__Survey__c sur=[select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR'];
+ JBCXM__Survey__c sur=[select Id,SurMaster_ExternalID__c from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR'];
  List<JBCXM__SurveyQuestion__c>  sur1Questions=new List<JBCXM__SurveyQuestion__c>();
  List<String> Questions = new List<String> {'How often do you typically use the product?','How did our PRODUCT perform?','Please share with us a few things [Product/Service] could do better.','Based on your experience with [PRODUCT], how likely are you to buy [PRODUCT] again?','What day/time of the day would you prefer our representatives to contact you?','Have you ever contacted customer service?','Did our representative... (Select all that apply)','What did we do really well?','What can we do to be even better?','What Services offered by us , impressed you the most?','Please Rank the Services provided by us :','Please Select the features you use or would like to use in our product','How likely are you to recommend our Product to others?'};
 
@@ -47,11 +47,11 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment','S
  {
 			if(!QTypes.get(qNo).equals('NPS'))			
 					{
-						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
+						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 					}
 			else
 			{
-					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Text',SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
+					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Text',SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 		    }
 			
 }
@@ -67,14 +67,14 @@ List<String> mMultiple= new List<String>{'Engage','Promote'};
 Integer qNo=0;
 for(String ms : mSingle)
 {
-   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id,SurQues_ExternalID__c=MatrixSingleSelect.JBCXM__Type__c+MatrixSingleSelect.JBCXM__DisplayOrder__c+'_Radio'+(qNo+1)));
+   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id,SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+MatrixSingleSelect.JBCXM__Type__c+MatrixSingleSelect.JBCXM__DisplayOrder__c+'_Radio'+(qNo+1)));
    qNo++;
  }
 
  qNo=0;
  for(String mm : mMultiple)
  {
-		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id,SurQues_ExternalID__c=MatrixMultiSelect.JBCXM__Type__c+MatrixMultiSelect.JBCXM__DisplayOrder__c+'_Checkbox'+(qNo+1)));
+		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id,SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+MatrixMultiSelect.JBCXM__Type__c+MatrixMultiSelect.JBCXM__DisplayOrder__c+'_Checkbox'+(qNo+1)));
 		qNo++;
  }
 insert surSubQuestions;

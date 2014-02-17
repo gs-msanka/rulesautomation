@@ -42,11 +42,11 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment','S
  {
 			if(!QTypes.get(qNo).equals('NPS'))			
 					{
-						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
+						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 					}
 			else
 			{
-					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Icon',SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
+					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Icon',SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 		    }
 			
 }
@@ -62,14 +62,14 @@ List<String> mMultiple= new List<String>{'Engage','Promote'};
 Integer qNo=0;
 for(String ms : mSingle)
 {
-   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id,SurQues_ExternalID__c=MatrixSingleSelect.JBCXM__Type__c+MatrixSingleSelect.JBCXM__DisplayOrder__c+'_Radio'+(qNo+1)));
+   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id,SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+MatrixSingleSelect.JBCXM__Type__c+MatrixSingleSelect.JBCXM__DisplayOrder__c+'_Radio'+(qNo+1)));
    qNo++;
  }
 
  qNo=0;
  for(String mm : mMultiple)
  {
-		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id,SurQues_ExternalID__c=MatrixMultiSelect.JBCXM__Type__c+MatrixMultiSelect.JBCXM__DisplayOrder__c+'_Checkbox'+(qNo+1)));
+		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id,SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+MatrixMultiSelect.JBCXM__Type__c+MatrixMultiSelect.JBCXM__DisplayOrder__c+'_Checkbox'+(qNo+1)));
 		qNo++;
  }
 insert surSubQuestions;
