@@ -1,11 +1,12 @@
 //Cleanup
+delete [select id from JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c in (select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete')];
 delete[select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete'];
 delete [select id from Contact where AccountId in (select Id from Account where Name like 'Anonymous Survey%')]; 
 delete [select id from Account where Name like 'Anonymous Survey%' ];
 delete [select id from Account where Name like 'Gainsight Survey Account'];
 
 //Design Survey
-//Add Surveys - Anonymous with Account Tracking
+//Add Surveys - Anonymous without Account Tracking
 //JBCXM__Survey__c
 
 Account anonymousAcc=new Account(Name='Gainsight Survey Account');
@@ -27,7 +28,8 @@ Surveys.add(new JBCXM__Survey__c ( JBCXM__Code__c = codes.get(i) ,
 									JBCXM__ThankyouMessage__c='Thank you for your feedback. We sincerely appreciate your honest opinion and will take your input into consideration while providing products and services in the future.',
 									JBCXM__ThankyouType__c='message',
 									JBCXM__FooterMessge__c='If you have any comments or concerns about this survey please Contact: - [MANAGER_NAME],[phone]',
-									JBCXM__Status__c = 'Design'
+									JBCXM__Status__c = 'Design',
+									SurMaster_ExternalID__c=codes.get(i)
 								));
  insert Surveys;		
  
@@ -45,11 +47,11 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment','S
  {
 			if(!QTypes.get(qNo).equals('NPS'))			
 					{
-						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo)));
+						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
 					}
 			else
 			{
-					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Text'));
+					sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),JBCXM__AllowComment__c=true,JBCXM__AllowHeaderGrouping__c=true,JBCXM__CommentLabel__c='Please tell us why?',JBCXM__GroupHeaderType__c='Text',SurQues_ExternalID__c=QTypes.get(qNo)+(qNo+1)));
 		    }
 			
 }
@@ -58,21 +60,21 @@ insert sur1Questions;
 //Sub Questions for questions of Matrix type
 
 List<JBCXM__SurveyQuestion__c>  surSubQuestions=new List<JBCXM__SurveyQuestion__c>();
-JBCXM__SurveyQuestion__c MatrixSingleSelect =[select Name from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixSingleAnswer' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
-JBCXM__SurveyQuestion__c MatrixMultiSelect =[select Name from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixMultipleAnswers' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
+JBCXM__SurveyQuestion__c MatrixSingleSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixSingleAnswer' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
+JBCXM__SurveyQuestion__c MatrixMultiSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixMultipleAnswers' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
 List<String> mSingle = new List<String>{'Overall quality','Value','Purchase experience','Installation or first use experience','Usage experience','After purchase service (warranty,repair,customer service etc)'};
 List<String> mMultiple= new List<String>{'Engage','Promote'};
 Integer qNo=0;
 for(String ms : mSingle)
 {
-   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id));
+   surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=ms,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Radio',JBCXM__ParentQuestion__c=MatrixSingleSelect.Id,SurQues_ExternalID__c=MatrixSingleSelect.JBCXM__Type__c+MatrixSingleSelect.JBCXM__DisplayOrder__c+'_Radio'+(qNo+1)));
    qNo++;
  }
 
  qNo=0;
  for(String mm : mMultiple)
  {
-		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id));
+		surSubQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=mm,JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c='Checkbox',JBCXM__ParentQuestion__c=MatrixMultiSelect.Id,SurQues_ExternalID__c=MatrixMultiSelect.JBCXM__Type__c+MatrixMultiSelect.JBCXM__DisplayOrder__c+'_Checkbox'+(qNo+1)));
 		qNo++;
  }
 insert surSubQuestions;
@@ -84,7 +86,7 @@ insert surSubQuestions;
 
 List<JBCXM__SurveyAllowedAnswers__c>  answersList= new List<JBCXM__SurveyAllowedAnswers__c>();
 Integer ansOrder=0;
-List<JBCXM__SurveyQuestion__c> que=[select Name,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  order by JBCXM__DisplayOrder__c];
+List<JBCXM__SurveyQuestion__c> que=[select Id,Name,JBCXM__Type__c,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  order by JBCXM__DisplayOrder__c];
 Map<JBCXM__SurveyQuestion__c,List<String>> qAndaMap = new Map<JBCXM__SurveyQuestion__c,List<String>>();
 List<List<String>> answers=new List<List<String>> {new List<String>{'Daily','Weekly Once','Monthly Once','Once in 2-3 Months','Never'},
 new List<String>{'Miserably','Somewhat Satisfactory','Very Satisfactory','Delightfully'},
@@ -112,21 +114,21 @@ for(Integer m=0;m<qAndaMap.size();m++)
    {
        if(!que.get(m).JBCXM__Type__c.equals('NPS'))
 	   {
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
 		}
 		else
 		{
 			 if(an<4)
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Not likely at all'));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Not likely at all',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
 			}
 			else if(an>3 && an<8)
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Neutral'));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Neutral',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
 			}
 			else
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Extremely likely'));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupLabel__c='Extremely likely',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
 			}
 		}
    }
@@ -140,13 +142,13 @@ insert answersList;
 //Adding Logic Rules
 //JBCXM__SurveyLogicRules__c
 
-JBCXM__SurveyQuestion__c ques=[select Name from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
+JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
 
-JBCXM__SurveyQuestion__c NextQues=[select Name from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
+JBCXM__SurveyQuestion__c NextQues=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
 
 JBCXM__SurveyAllowedAnswers__c ans=[select Name from JBCXM__SurveyAllowedAnswers__c where JBCXM__Title__c='Definitely will' and JBCXM__DisplayOrder__c=1 and JBCXM__SurveyQuestion__c in (select Id from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 ) and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')];
 
-JBCXM__SurveyLogicRules__c  lr = new JBCXM__SurveyLogicRules__c(JBCXM__Answer__c=ans.Id,JBCXM__DependentQuestion__c=NextQues.Id,JBCXM__LogicType__c='Ask',JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=ques.Id);
+JBCXM__SurveyLogicRules__c  lr = new JBCXM__SurveyLogicRules__c(JBCXM__Answer__c=ans.Id,JBCXM__DependentQuestion__c=NextQues.Id,JBCXM__LogicType__c='Ask',JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=ques.Id,surLogicRules_ExternalID__c=ques.SurQues_ExternalID__c+'_Ask_'+NextQues.SurQues_ExternalID__c);
 
 insert lr;
 
