@@ -38,7 +38,7 @@ public class Customer360MilestonesTests extends BaseTest {
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Milestones Account", true);
-		cm = (Customer360Milestones) cp.goToSection("Usage");
+		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
 		TimeZone tz=TimeZone.getTimeZone(soql.getUserTimeZone());
 		cal=Calendar.getInstance(tz);			

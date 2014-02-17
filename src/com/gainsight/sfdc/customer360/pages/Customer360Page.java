@@ -87,7 +87,7 @@ public class Customer360Page extends BasePage {
         return new Customer360Features();
 	}
 	
-	public Customer360Milestones goToMilestonesSection(){
+	public Customer360Milestones goToUsageSection(){
 		item.click(String.format(NAVIGATE_SECTION,"Usage"));
 		wait.waitTillElementDisplayed("//div[@class='gs_usage']", MIN_TIME, MAX_TIME);
         return new Customer360Milestones();
