@@ -1,4 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
+import org.openqa.selenium.By;
+
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 
 public class Customer360Features extends Customer360Page{
@@ -8,6 +10,20 @@ public class Customer360Features extends Customer360Page{
 	public final String FEATURES_TABLE_HEADER="//table[@class='gs_features_grid gs_features_grid_header gs_features_display_header']";
 	public final String FEATURES_TABLE_DATA="//table[@class='gs_features_grid gs_features_display']";
 	public final String EDIT_FEATURES_TABLE="//table[@class='gs_features_grid gs_features_grid_dialog gs_features_edit']";
+	protected final String FEATURE_ROW_WITH_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
+													"/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
+													"/following-sibling::td[1][contains(.,'%s')]"+
+													"/following-sibling::td[1]/img[@src='%s']/parent::td"+
+													"/following-sibling::td[1]/img[@src='%s']/parent::td"+
+													"/following-sibling::td[1][contains(.,'%s')]";
+	protected final String FEATURE_ROW_WITHOUT_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
+													   "/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
+													   "/parent::tr/following-sibling::tr/"+
+			                                           "td[1][contains(.,'%s')]"+
+			                                           "/following-sibling::td[1]/img[@src='%s']/parent::td"+
+			                                           "/following-sibling::td[1]/img[@src='%s']/parent::td"+
+			                                           "/following-sibling::td[1][contains(.,'%s')]";
+	
 	public void clickOnEditFeatures()
 	{
 		item.click(EDIT_FEATURES_ICON);
@@ -17,22 +33,24 @@ public class Customer360Features extends Customer360Page{
 	public void selectLicensed(String product,String feature){
 		amtDateUtil.stalePause();
 		//table[@class='gs_features_grid gs_features_grid_dialog gs_features_edit']/tbody/tr[contains(.,'P1')]/td[contains(.,'Feature1')]/following-sibling::td[1]
-		item.selectCheckBox("//tbody/tr[contains(.,'"+product+"')]/td[contains(.,'"+feature+"')]/following-sibling::td[1]/input[@class='licensed']");
+		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[1]/input[@class='licensed']")).click();
 	}
 	
 	public void selectEnabled(String product,String feature){
 		amtDateUtil.stalePause();
-		item.selectCheckBox(EDIT_FEATURES_TABLE+"/tbody/tr[contains(.,'"+product+"')]/td[contains(.,'"+feature+"')]/following-sibling::td[2]/input[@class='enabled']");
+		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[2]/input[@class='enabled']")).click();
+	}
+
+	public void addComments(String product,String feature,String comment){
+		amtDateUtil.stalePause();
+		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[3]/input[@class='comments']")).sendKeys(comment);
+		//field.clearAndSetText(,comment);
 	}
 	
 	public void clickOnSave(){
 		amtDateUtil.stalePause();
-		item.click(SAVE_BUTTON);
-	}
-	
-	public void addComments(String product,String feature,String comment){
 		amtDateUtil.stalePause();
-		field.clearAndSetText(EDIT_FEATURES_TABLE+"/tbody/tr[contains(.,'"+product+"')]/td[contains(.,'"+feature+"')]/following-sibling::td[3]/input[@class='comments']",comment);
+		item.click(SAVE_BUTTON);
 	}
 	
 	public boolean isHeaderPresent()
@@ -47,94 +65,20 @@ public class Customer360Features extends Customer360Page{
 		return true;
 	}
 
-	public boolean checkFeatureForProduct(String product,String feature,int row) {
-		System.out.println("Prod:"+product+",feature:"+feature);
-		//For the given product check if the given feature exists in the table row
+	public boolean checkFeatureRow(String Product, String Feature,
+			String Licensed, String Enabled, String Comments,int rowspan,boolean order) {
+		String eimg="";
+		if(Enabled.equals("Yes")) 	eimg="/img/checkbox_checked.gif";
+		else if(Enabled.equals("No")) eimg="/img/checkbox_unchecked.gif";
 		
-		//form an xpath for the feature basing on the product and verify if the element is present
-		if(row==1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr/td[2][contains(.,'"+feature+"')]", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		else if(row > 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr/td[1][contains(.,'"+feature+"')]", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		return false;
-	}
+		String limg="";
+		if(Licensed.equals("Yes"))  limg="/img/checkbox_checked.gif";
+		else if(Licensed.equals("No")) limg="/img/checkbox_unchecked.gif";
+		
+		if(order)
+		return item.isElementPresent(String.format(FEATURE_ROW_WITH_ROWSPAN,Product,rowspan,Feature,limg,eimg,Comments));
+		else
+		return item.isElementPresent(String.format(FEATURE_ROW_WITHOUT_ROWSPAN,Product,rowspan,Feature,limg,eimg,Comments));
 
-	public boolean checkLicensedForProduct(String product, String license,int row) {
-		System.out.println("Prod:"+product+",license:"+license);
-		String img="";
-		if(license.equals("Yes"))
-		{
-			img="/img/checkbox_checked.gif";
-		}
-		else if(license.equals("No"))
-		{
-			img="/img/checkbox_unchecked.gif";
-		}
-		//table[@class='gs_features_grid gs_features_display']/tbody/tr[contains(.,'P1')]/td/img[@src='/img/checkbox_checked.gif']
-		if(row == 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[3]/img[@src='"+img+"']", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		else if(row > 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[2]/img[@src='"+img+"']", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		return false;
 	}
-
-	public boolean checkEnabledForProduct(String product, String enabled,int row) {
-		System.out.println("Prod:"+product+",enabled:"+enabled);
-		String img="";
-		if(enabled.equals("Yes"))
-		{
-			img="/img/checkbox_checked.gif";
-		}
-		else if(enabled.equals("No"))
-		{
-			img="/img/checkbox_unchecked.gif";
-		}
-		if(row == 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[4]/img[@src='"+img+"']", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		else if (row > 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[3]/img[@src='"+img+"']", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkCommentsForProduct(String product, String comments,int row) {
-		System.out.println("Prod:"+product+",comments:"+comments);
-		//table[@class='gs_features_grid gs_features_display']/tbody/tr[contains(.,'P1')]/td[contains(.,'A good feature of Product1')]
-		if(row == 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[5][contains(.,'"+comments+"')]", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		else if (row > 1)
-		{
-			wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr[contains(.,'"+product+"')]/td[4][contains(.,'"+comments+"')]", MIN_TIME, MAX_TIME);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean checkProductWithRowspan(String product, int rowspan) {
-		System.out.println("Prod:"+product+", rowspan:"+rowspan);
-		//table[@class='gs_features_grid gs_features_display']/tbody/tr/td[contains(.,'P2') and @rowspan=2] 
-		wait.waitTillElementDisplayed(FEATURES_TABLE_DATA+"/tbody/tr/td[contains(.,'"+product+"') and @rowspan="+rowspan+"]", MIN_TIME, MAX_TIME);
-		return true;
-	}
-	
 }
