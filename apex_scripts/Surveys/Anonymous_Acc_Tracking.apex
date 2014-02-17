@@ -137,7 +137,7 @@ insert answersList;
 //Adding Logic Rules
 //JBCXM__SurveyLogicRules__c
 
-JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction and Retention' and JBCXM__Title__c='General')  ];
+JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c,JBCXM__HasRules__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction and Retention' and JBCXM__Title__c='General')  ];
 
 JBCXM__SurveyQuestion__c NextQues=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction and Retention' and JBCXM__Title__c='General')  ];
 
@@ -147,6 +147,8 @@ JBCXM__SurveyLogicRules__c  lr = new JBCXM__SurveyLogicRules__c(JBCXM__Answer__c
 
 insert lr;
 
+ques.JBCXM__HasRules__c=true;
+update ques;
 //=======================================================================================================================================================//
 
 //Publish Survey
