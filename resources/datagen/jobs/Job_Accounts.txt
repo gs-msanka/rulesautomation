@@ -65,6 +65,10 @@
                         "name": "DESCRIPTION",
                         "alias": "DESCRIPTION"
                     }
+                    {
+                        "name": "Data_ExternalId__c",
+                        "alias": "Data_ExternalId__c"
+                    }
                 ]
             }
         ],
