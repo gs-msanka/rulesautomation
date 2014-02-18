@@ -1,0 +1,21 @@
+List<JBCXM__TransactionType__c> transCount = [SELECT ID, Name FROM JBCXM__TransactionType__c WHERE Name = 'Training'];
+SYstem.debug(transCount.size());
+if(transCount.size() == 0) {
+    JBCXM__TransactionType__c transType = new JBCXM__TransactionType__c();
+    transType.Name = 'Training';
+    transType.JBCXM__Type__c = 'Recurring';
+    insert transType;
+}
+List<JBCXM__TransactionType__c> transactionTypes = [SELECT ID, Name, JBCXM__Type__c, TransTypes_ExternalID__c FROM JBCXM__TransactionType__c];
+Map<String, String> dMap = new Map<String, String>();
+dMap.put('Activation', 'a0Ri0000000I3XSEA0');
+dMap.put('Subscription', 'a0Ri0000000I3XVEA0');
+dMap.put('Users', 'a0Ri0000000I3XTEA0');
+dMap.put('Services', 'a0Ri0000000I3XUEA0');
+dMap.put('Training', 'a0Ri0000000I3XWEA0');
+
+for(JBCXM__TransactionType__c transType : transactionTypes) {
+    transType.TransTypes_ExternalID__c =  dMap.get(String.valueOf(transType.Name));
+}
+System.debug(JSON.serialize(transactionTypes));
+update transactionTypes;
