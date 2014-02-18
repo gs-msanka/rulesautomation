@@ -32,118 +32,94 @@ public class Customer360FeaturesTests extends BaseTest {
 		basepage.login();
 		cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Via Systems", true);
-		cf = (Customer360Features) cp.goToSection("Features");
+		cf = (Customer360Features) cp.goToFeaturesSection();
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-		// Test if all the features in the excel are displayed on clicking edit
-		// feature
-		HashMap<String, String> ProdList = getMapFromData(testData
-				.get("Products"));
+		// Test if all the features in the excel are displayed (pre added features)
+		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
 		System.out.println("Prodlistsize=" + ProdList.size());
 		List<HashMap<String, String>> ProdFeatureList = new ArrayList();
 
-		HashMap<String, String> tableHeaders = getMapFromData(testData
-				.get("Headers"));
+		HashMap<String, String> tableHeaders = getMapFromData(testData.get("Headers"));
 
 		// Verifying table header
 
 		if (cf.isHeaderPresent()) {
 			System.out.println("no of columns=" + tableHeaders.size());
 			for (int h = 1; h <= tableHeaders.size(); h++) {
-				System.out.println("Checking for---"
-						+ tableHeaders.get("Column" + h));
-				System.out.println(cf.FEATURES_TABLE_HEADER
-						+ "/thead/tr/th[text()='"
-						+ tableHeaders.get("Column" + h) + "']");
-				cf.isElementPresent(By.xpath(cf.FEATURES_TABLE_HEADER
-						+ "/thead/tr/th[text()='"
-						+ tableHeaders.get("Column" + h) + "']"));
+				System.out.println("Checking for---"+ tableHeaders.get("Column" + h));
+				System.out.println(cf.FEATURES_TABLE_HEADER+ "/thead/tr/th[text()='"+ tableHeaders.get("Column" + h) + "']");
+				cf.isElementPresent(By.xpath(cf.FEATURES_TABLE_HEADER+ "/thead/tr/th[text()='"+ tableHeaders.get("Column" + h) + "']"));
 			}
 		}
-
 		// Verifying table data
 		if (cf.isDataGridPresent()) {
 		for (int i = 1; i <= ProdList.size(); i++) {
 
-			// get data for a product from the excel
-			ProdFeatureList = getMapFromDataList(testData.get(ProdList
-					.get("Product" + i)));
-			int rowspan = 1;
-			// if the no.of features is >1 then check if rowspan = no.of
-			// features for cell containing the product name
-
-			if (ProdFeatureList.size() > 1) {
-				rowspan = ProdFeatureList.size();
+			ProdFeatureList = getMapFromDataList(testData.get(ProdList.get("Product" + i)));
+			int No_of_Features=ProdFeatureList.size();
+			int rowspan = 0;
+			for(int j=0;j<No_of_Features;j++)
+			{
+				if(ProdFeatureList.get(j).get("Edit").equals("No")) rowspan++;
 			}
 			
-            if(cf.checkProductWithRowspan(ProdList.get("Product"+i),rowspan)){
-			// and then just check if all the data is present as per the test input form the xpath and then check once per row
-			for (int f = 0; f < ProdFeatureList.size(); f++) {
-				cf.checkFeatureForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("eature"),f+1);
-				cf.checkLicensedForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Licensed"),f+1);
-				cf.checkEnabledForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Enabled"),f+1);
-				cf.checkCommentsForProduct(ProdList.get("Product" + i),
-						ProdFeatureList.get(f).get("Comments"),f+1);
+			for (int f = 0; f < rowspan; f++) {
+				if(ProdFeatureList.get(f).get("Edit").equals("No"))
+				{
+            	 if(f==0)
+			      Assert.assertTrue(cf.checkFeatureRow(ProdList.get("Product"+i),ProdFeatureList.get(f).get("Feature"),ProdFeatureList.get(f).get("Licensed"),ProdFeatureList.get(f).get("Enabled"),ProdFeatureList.get(f).get("Comments"),rowspan,true));
+            	 else
+   			      Assert.assertTrue(cf.checkFeatureRow(ProdList.get("Product"+i),ProdFeatureList.get(f).get("Feature"),ProdFeatureList.get(f).get("Licensed"),ProdFeatureList.get(f).get("Enabled"),ProdFeatureList.get(f).get("Comments"),rowspan,false));
+            	}
 			}
-            }
 		}
-	}
+	 }
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F2")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyEditFeatures(HashMap<String, String> testData) {
 		//In the Edit features form check on Licensed for a Feature and verify if same is reflected in features module
-		String ProdName="P4";
-		HashMap<String, String> ProdList = getMapFromData(testData.get(ProdName));
-		cf.clickOnEditFeatures();
-		if(ProdList.get("Licensed").equals("Yes"))
-		cf.selectLicensed(ProdName,ProdList.get("Feature"));
-		if(ProdList.get("Enabled").equals("Yes"))
-		cf.selectEnabled(ProdName,ProdList.get("Feature"));
-		cf.addComments(ProdName,ProdList.get("Feature"),ProdList.get("Comments"));
-		cf.clickOnSave();
-		Assert.assertTrue(cf.checkLicensedForProduct(ProdName, ProdList.get("Licensed"),1),
-				"Verify that licensed is checked for this feature");
-		Assert.assertTrue(cf.checkEnabledForProduct(ProdName, ProdList.get("Enabled"),1), "Verified that enabled is checked for this feature");
-		Assert.assertTrue(cf.checkCommentsForProduct(ProdName,ProdList.get("Comments"),1), "Verified that comment is edited correctly");
-	}
+		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
+		
+		String ProdName="";
+		List<HashMap<String, String>> ProdFeatureList = new ArrayList();	
+		if (cf.isDataGridPresent()) {
+		for (int i = 1; i <= ProdList.size(); i++) {
+			ProdName=ProdList.get("Product"+i);
+			ProdFeatureList = getMapFromDataList(testData.get(ProdName));
+			int rowspan = ProdFeatureList.size();
+			cf.clickOnEditFeatures();
 
-	/*@Test
-	public void verifyEnablingEnabled() {
-		cf.clickOnEditFeatures();
-		cf.selectEnabled();
-		cf.clickOnSave();
-		Assert.assertTrue(cf.isLicenseChecked(),
-				"Verify that licensed is checked for this feature");
-	}
-
-	@Test
-	public void verifyEnablingLicensedAndEnabled() {
-		cf.clickOnEditFeatures();
-		cf.selectEnabled();
-		cf.selectLicensed();
-		cf.clickOnSave();
-		Assert.assertTrue(cf.isLicenseChecked(),
-				"Verify that licensed is checked for this feature");
-	}
-
-	@Test
-	public void verifyComments() {
-
-		cf.clickOnEditFeatures();
-		cf.addComments("Sample Comments");
-		cf.clickOnSave();
-		Assert.assertTrue(cf.isCommentPresent("Sample Comments"),
-				"Verify that licensed is checked for this feature");
-	}
-*/
+			for (int f = 0; f < rowspan; f++) {
+				if(ProdFeatureList.get(f).get("Edit").equals("Yes"))
+				{
+					
+					if(ProdFeatureList.get(f).get("Licensed").equals("Yes"))
+         				cf.selectLicensed(ProdName,ProdFeatureList.get(f).get("Feature"));
+         			if(ProdFeatureList.get(f).get("Enabled").equals("Yes"))
+         				cf.selectEnabled(ProdName,ProdFeatureList.get(f).get("Feature"));
+         			cf.addComments(ProdName,ProdFeatureList.get(f).get("Feature"),ProdFeatureList.get(f).get("Comments"));
+				}
+			}
+ 			cf.clickOnSave();
+ 			boolean c1=false,c2=false;
+			for (int f = 0; f < rowspan; f++) {
+				
+         			if(!c1||cf.checkFeatureRow(ProdList.get("Product"+i),ProdFeatureList.get(f).get("Feature"),ProdFeatureList.get(f).get("Licensed"),ProdFeatureList.get(f).get("Enabled"),ProdFeatureList.get(f).get("Comments"),rowspan,true))
+         					c1=true;
+         			else if(cf.checkFeatureRow(ProdList.get("Product"+i),ProdFeatureList.get(f).get("Feature"),ProdFeatureList.get(f).get("Licensed"),ProdFeatureList.get(f).get("Enabled"),ProdFeatureList.get(f).get("Comments"),rowspan,false))
+         				c2=true;
+         			Assert.assertTrue(c1||c2,"verified that the newly added product exists in the features table");
+            	 }
+			}
+		}
+	 }
+	
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();

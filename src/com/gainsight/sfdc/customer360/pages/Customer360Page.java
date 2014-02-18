@@ -78,17 +78,20 @@ public class Customer360Page extends BasePage {
 
 	public Customer360Page goToSection(String name) {
 		item.click(String.format(NAVIGATE_SECTION, name));
-		wait.waitTillElementNotPresent(LOADING_IMAGES, MIN_TIME, MAX_TIME);
-		if (name.equals("Features")) {
-			return new Customer360Features();
-		}
-		if(name.equals("Usage")){
-			return new Customer360Milestones();
-		}
-		
+		wait.waitTillElementNotPresent(LOADING_IMAGES, MIN_TIME, MAX_TIME);	
 		return this;
 	}
+	public Customer360Features goToFeaturesSection(){
+		item.click(String.format(NAVIGATE_SECTION,"Features"));
+		wait.waitTillElementDisplayed("//div[@class='gs_features']", MIN_TIME, MAX_TIME);
+        return new Customer360Features();
+	}
 	
+	public Customer360Milestones goToUsageSection(){
+		item.click(String.format(NAVIGATE_SECTION,"Usage"));
+		wait.waitTillElementDisplayed("//div[@class='gs_usage']", MIN_TIME, MAX_TIME);
+        return new Customer360Milestones();
+	}
 	public Customer360Scorecard goToScorecardSection()
 	{
 		item.click(String.format(NAVIGATE_SECTION,"Scorecard"));

@@ -275,7 +275,7 @@ public class CreateObjectAndFields {
             CustomField custField = new CustomField();
             if(isTextField) {
                 custField.setType(FieldType.Text);
-                custField.setLength(40);
+                custField.setLength(250);
             } else if(isTextArea) {
                 custField.setType(FieldType.TextArea);
             } else if(isTextRich) {

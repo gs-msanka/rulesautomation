@@ -1,26 +1,19 @@
 //Cleanup
-delete [select id from JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c in (select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete')];
-delete[select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete'];
-delete [select id from Contact where AccountId in (select Id from Account where Name like 'Anonymous Survey%')]; 
-delete [select id from Account where Name like 'Anonymous Survey%' ];
-delete [select id from Account where Name like 'Gainsight Survey Account'];
+delete [select id from JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c in (select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=false)];
+delete[select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=false];
+delete [select id from Contact ];
 
 //Design Survey
-//Add Surveys - Anonymous without Account Tracking
+//Add Surveys - Non-Anonymous
 //JBCXM__Survey__c
 
-Account anonymousAcc=new Account(Name='Gainsight Survey Account');
-insert anonymousAcc;
-
 List<JBCXM__Survey__c> Surveys = new List<JBCXM__Survey__c>();
-List<String> codes= new List<String> {'Customer Satisfaction'};
+List<String> codes= new List<String> {'Customer Retention'};
 List<String> titles = new List<String> {'CSR'};
 integer i=0;	
 Surveys.add(new JBCXM__Survey__c ( JBCXM__Code__c = codes.get(i) ,
 								   JBCXM__Title__c = titles.get(i) ,
-			                       JBCXM__IsAnonymous__c=true,
-								   JBCXM__AnonymousType__c='Complete',
-								   JBCXM__AnonymousAccount__c=anonymousAcc.Id,
+			                       JBCXM__IsAnonymous__c=false,
 							       JBCXM__StartDate__c=system.Date.today(),
 								   JBCXM__EndDate__c=system.Date.today().addMonths(1),
 								   JBCXM__InternalSubmit__c=false,
@@ -37,7 +30,7 @@ Surveys.add(new JBCXM__Survey__c ( JBCXM__Code__c = codes.get(i) ,
  
  //Add Questions to Survey 
  //JBCXM__SurveyQuestion__c
- JBCXM__Survey__c sur=[select Id,SurMaster_ExternalID__c from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR'];
+ JBCXM__Survey__c sur=[select Id,SurMaster_ExternalID__c from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR'];
  List<JBCXM__SurveyQuestion__c>  sur1Questions=new List<JBCXM__SurveyQuestion__c>();
  List<String> Questions = new List<String> {'How often do you typically use the product?','How did our PRODUCT perform?','Please share with us a few things [Product/Service] could do better.','Based on your experience with [PRODUCT], how likely are you to buy [PRODUCT] again?','What day/time of the day would you prefer our representatives to contact you?','Have you ever contacted customer service?','Did our representative... (Select all that apply)','What did we do really well?','What can we do to be even better?','What Services offered by us , impressed you the most?','Please Rank the Services provided by us :','Please Select the features you use or would like to use in our product','How likely are you to recommend our Product to others?'};
 
@@ -60,8 +53,8 @@ insert sur1Questions;
 //Sub Questions for questions of Matrix type
 
 List<JBCXM__SurveyQuestion__c>  surSubQuestions=new List<JBCXM__SurveyQuestion__c>();
-JBCXM__SurveyQuestion__c MatrixSingleSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixSingleAnswer' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
-JBCXM__SurveyQuestion__c MatrixMultiSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixMultipleAnswers' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Satisfaction' and JBCXM__Title__c='CSR')];
+JBCXM__SurveyQuestion__c MatrixSingleSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixSingleAnswer' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Retention' and JBCXM__Title__c='CSR')];
+JBCXM__SurveyQuestion__c MatrixMultiSelect =[select Name,JBCXM__DisplayOrder__c,JBCXM__Type__c from JBCXM__SurveyQuestion__c where JBCXM__Type__c='MatrixMultipleAnswers' and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c like 'Customer Retention' and JBCXM__Title__c='CSR')];
 List<String> mSingle = new List<String>{'Overall quality','Value','Purchase experience','Installation or first use experience','Usage experience','After purchase service (warranty,repair,customer service etc)'};
 List<String> mMultiple= new List<String>{'Engage','Promote'};
 Integer qNo=0;
@@ -86,7 +79,7 @@ insert surSubQuestions;
 
 List<JBCXM__SurveyAllowedAnswers__c>  answersList= new List<JBCXM__SurveyAllowedAnswers__c>();
 Integer ansOrder=0;
-List<JBCXM__SurveyQuestion__c> que=[select Id,Name,JBCXM__Type__c,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  order by JBCXM__DisplayOrder__c];
+List<JBCXM__SurveyQuestion__c> que=[select Id,Name,JBCXM__Type__c,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and 	JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR')  order by JBCXM__DisplayOrder__c];
 Map<JBCXM__SurveyQuestion__c,List<String>> qAndaMap = new Map<JBCXM__SurveyQuestion__c,List<String>>();
 List<List<String>> answers=new List<List<String>> {new List<String>{'Daily','Weekly Once','Monthly Once','Once in 2-3 Months','Never'},
 new List<String>{'Miserably','Somewhat Satisfactory','Very Satisfactory','Delightfully'},
@@ -142,11 +135,11 @@ insert answersList;
 //Adding Logic Rules
 //JBCXM__SurveyLogicRules__c
 
-JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c,JBCXM__HasRules__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
+JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c,JBCXM__HasRules__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR')  ];
 
-JBCXM__SurveyQuestion__c NextQues=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
+JBCXM__SurveyQuestion__c NextQues=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR')  ];
 
-JBCXM__SurveyAllowedAnswers__c ans=[select Name from JBCXM__SurveyAllowedAnswers__c where JBCXM__Title__c='Definitely will' and JBCXM__DisplayOrder__c=1 and JBCXM__SurveyQuestion__c in (select Id from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 ) and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')];
+JBCXM__SurveyAllowedAnswers__c ans=[select Name from JBCXM__SurveyAllowedAnswers__c where JBCXM__Title__c='Definitely will' and JBCXM__DisplayOrder__c=1 and JBCXM__SurveyQuestion__c in (select Id from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 ) and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR')];
 
 JBCXM__SurveyLogicRules__c  lr = new JBCXM__SurveyLogicRules__c(JBCXM__Answer__c=ans.Id,JBCXM__DependentQuestion__c=NextQues.Id,JBCXM__LogicType__c='Ask',JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=ques.Id,surLogicRules_ExternalID__c=ques.SurQues_ExternalID__c+'_Ask_'+NextQues.SurQues_ExternalID__c);
 
@@ -154,13 +147,14 @@ insert lr;
 
 ques.JBCXM__HasRules__c=true;
 update ques;
+
 //=======================================================================================================================================================//
 
 //Publish Survey
 //updating publish URL and email template
 //Goto Setup->Develop->Sites and create Domain before giving that in this script...here http://gainsight-developer-edition.na15.force.com/ is the domain i registered
 
- JBCXM__Survey__c publishSurvey=[select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR'];
+ JBCXM__Survey__c publishSurvey=[select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR'];
 EmailTemplate email=[select Id, Name, FolderId, Folder.Name from EmailTemplate where Name ='JBara Anonymous Survey without Account Tracking'];
  publishSurvey.JBCXM__PublishedURL__c='http://gainsight-developer-edition.na15.force.com/JBCXM__SurveyResponse';
  publishSurvey.JBCXM__EmailTemplate__c=email.Id;
@@ -177,12 +171,12 @@ publishSurvey.JBCXM__Status__c = 'Publish';
   
  List<Account> accList = new List<Account>();
 for(integer a=1; a<3 ; a++) {
-   Account acc = new Account(Name ='Anonymous Survey Account  ' +a);
+   Account acc = new Account(Name ='Non-Anonymous Survey Account  ' +a);
    accList.add(acc);
 }
 insert accList;
  
-List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Anonymous Survey%'];
+List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Non-Anonymous Survey%'];
 List<Contact> contactList = new List<Contact>();
 List<String> emails  = new List<String>{'hitesh@release41.com', 'rajesh@release41.com','srividya@release41.com','giri@release41.com'};
 List<String> names = new List<String>{'Hitesh', 'Rajesh','Vidya','Giri'};
@@ -196,16 +190,3 @@ for(Account acc : SurveyAcc) {
 }
 
 insert contactList;
-
-//Adding Participants to Distribution list
-
-List<JBCXM__SurveyParticipant__c> participants = new List<JBCXM__SurveyParticipant__c>();
-
-List<Contact> contacts=[select Id,AccountId,Name,Email from Contact where AccountId in (select Id from Account where name like 'Anonymous Survey%')];
-
-for ( Contact cons : contacts)
-{
-    participants.add(new JBCXM__SurveyParticipant__c(JBCXM__Account__c=cons.AccountId,JBCXM__AnonymousTempUser__c=true,JBCXM__Contact__c=cons.Id,JBCXM__DisplayName__c=cons.Name,JBCXM__Role__c='User',JBCXM__SentEmail__c=cons.Email,JBCXM__SurveyMaster__c=sur.Id));
-}
-
-insert participants;

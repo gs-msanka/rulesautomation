@@ -134,7 +134,7 @@ public class BaseTest {
 		for (String record : dataArray) {
 			if (record != null) {
 				System.out.println(record);
-				hm.add(getMapFromData(record));
+				hm.add(getMapFromData("{"+record+"}"));
 				i++;
 			}
 		}
