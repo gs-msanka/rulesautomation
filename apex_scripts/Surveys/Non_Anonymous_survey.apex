@@ -155,12 +155,13 @@ update ques;
 //Goto Setup->Develop->Sites and create Domain before giving that in this script...here http://gainsight-developer-edition.na15.force.com/ is the domain i registered
 
  JBCXM__Survey__c publishSurvey=[select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Retention' and JBCXM__Title__c='CSR'];
-EmailTemplate email=[select Id, Name, FolderId, Folder.Name from EmailTemplate where Name ='JBara Anonymous Survey without Account Tracking'];
+EmailTemplate email=[select Id, Name, FolderId, Folder.Name from EmailTemplate where Name ='JBara Survey Template'];
  publishSurvey.JBCXM__PublishedURL__c='http://gainsight-developer-edition.na15.force.com/JBCXM__SurveyResponse';
  publishSurvey.JBCXM__EmailTemplate__c=email.Id;
  publishSurvey.JBCXM__EmailOpenURL__c='http://gainsight-developer-edition.na15.force.com/JBCXM__SurveyEmailOpen';
 publishSurvey.JBCXM__Status__c = 'Publish';
- 
+publishSurvey.JBCXM__PublishDate__c=system.Date.today();
+
  update publishSurvey;
  
  

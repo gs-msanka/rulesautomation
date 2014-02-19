@@ -166,6 +166,8 @@ EmailTemplate email=[select Id, Name, FolderId, Folder.Name from EmailTemplate w
  publishSurvey.JBCXM__EmailTemplate__c=email.Id;
  publishSurvey.JBCXM__EmailOpenURL__c='http://gainsight-developer-edition.na15.force.com/JBCXM__SurveyEmailOpen';
 publishSurvey.JBCXM__Status__c = 'Publish';
+ publishSurvey.JBCXM__PublishDate__c=system.Date.today();
+
  
  update publishSurvey;
  
