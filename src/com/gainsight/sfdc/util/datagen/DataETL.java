@@ -2,6 +2,7 @@ package com.gainsight.sfdc.util.datagen;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
@@ -44,7 +45,7 @@ public class DataETL implements IJobExecutor {
 		op = new SfdcBulkOperationImpl(info.getSessionId());
 		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
 		
-		/*try {
+		try {
 			//Pulling Pick List Object
 			String picklistPath = resDir + "process/" + pickListObject + ".csv";
 			String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
@@ -55,9 +56,9 @@ public class DataETL implements IJobExecutor {
 			System.out.println(pMap);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
-	
+
 	/**
 	 * @param args
 	 */
@@ -220,17 +221,20 @@ public class DataETL implements IJobExecutor {
 			}
 			
 			//Load the Data back to SFDC
-			if(transform!=null)
-            if(load.getOperation().equals("upsert")) {
-                SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()), load.getExternalIDField());
-            } else{
-                SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()));
-            }
-            else{ //in case there is no transform part...only loading
-            	if(load.getOperation().equals("upsert"))
-            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()),load.getExternalIDField());
-            	else
-            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()));            		
+			if(transform!=null) {
+                if(load.getOperation().equals("upsert")) {
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(load.getFile()), load.getExternalIDField());
+                } else{
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(load.getFile()));
+                }
+            } else{ //in case there is no transform part...only loading
+            	if(load.getOperation().equals("upsert")) {
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()),load.getExternalIDField());
+                }
+            	else {
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()));
+                }
+
             }
 		}
 		catch (IOException e) {
@@ -257,7 +261,7 @@ public class DataETL implements IJobExecutor {
 		// TODO Auto-generated method stub
 		CSVReader reader = new CSVReader(new FileReader(transFile));
 		String[] cols;
-		File outputFile = new File(resDir + "process/job1_final.csv");
+		File outputFile = new File(resDir+"job_final.csv");
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext();
 		while(cols != null) {
@@ -338,5 +342,37 @@ public class DataETL implements IJobExecutor {
 		}
 		return pickListMap;
 	}
+
+
+    public File resolveNameSpace(String  fileName) throws IOException {
+        TestEnvironment env =new TestEnvironment();
+        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        if(!isPackage) {
+            CSVReader csvReader = new CSVReader(new FileReader(fileName));
+
+            List<String[]> csvData = csvReader.readAll();
+            String[] headerRows = csvData.get(0);
+            for(int i=0; i< headerRows.length; i++) {
+                if(!isPackage) {
+                    headerRows[i] = headerRows[i].replaceAll("JBCXM__", "");
+                }
+            }
+            csvData.remove(0);
+            csvData.add(0, headerRows);
+            csvReader.close();
+
+            CSVWriter csvWriter = new CSVWriter(new FileWriter("./resources/process/Temp.csv"));
+            csvWriter.writeAll(csvData);
+            csvWriter.flush();
+            csvWriter.close();
+
+            File f = new File("./testdata/sfdc/Temp.csv");
+            return f;
+        } else {
+            return new File(fileName);
+        }
+
+
+    }
 
 }
