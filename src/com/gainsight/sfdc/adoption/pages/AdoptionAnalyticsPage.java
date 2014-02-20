@@ -1,16 +1,81 @@
 package com.gainsight.sfdc.adoption.pages;
 
-import java.util.List;
-
+import com.gainsight.pageobject.core.Report;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import com.gainsight.pageobject.core.Report;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdoptionAnalyticsPage extends AdoptionBasePage {
-	
-	/**
+
+
+    private final String MISSING_TEXT 			= "//span[@class='clsToShowMissingDataMsg']";
+    private final String ADOP_GRID			    = "adoptionDataGridView";
+    private final String ADOP_CHART				= "userAdoptionChartId";
+    private final String READY_INDICATOR 		= "selectionFilterControls";
+    private final String CUSTOMERNAME_INPUT 	= "//div[@class='requiredInput']/input";
+    private final String MEASURE_SELECT	 		= "//a[@class='measureSelectorLink measureSwitch newMeasureDD']";
+    private final String TIMEPERIOD_SELECT 		= "//select[@class='jbaraDummyPeriodSelectControl min-width']";
+    private final String MONTH_SELECT 			= "//select[@class='jbaraDummyMonSelectControl min-width']";
+    private final String YEAR_SELECT 			= "//select[@class='jbaraDummyYearSelectControl min-width']";
+    private final String VIEWRESULTS_BUTTON 	= "btnUsageGraphGoBtn";
+    private final String ADD_ALERT_BUTTON		= "//input[@class='btn dummyAllAlertNewBtn']";
+    private final String ENDDATE_INPUT			= "//input[@class='min-width jbaraDateInputAnalytics']";
+    private final String INSTANCE_SELECT		= "//select[@class='jbaraDummyInstanceSelectControl classToHandeInstance']";
+    private final String CUSTLOOKUP_IMG			= "//img[@alt='Customer Name Lookup' and @title='Customer Name Lookup']";
+    private final String MEASURESELECT_BLOCK	= "measureSelectorContainer";
+    private final String NOADOPTION_MSG         = "AdoptionDataNotAvailable";
+
+    private String customerName;
+    private String measureNames;
+    private String forTimeMonthPeriod = "6 Months";
+    private String month;
+    private String year;
+    private String instance;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getForTimeMonthPeriod() {
+        return forTimeMonthPeriod;
+    }
+
+    public void setForTimeMonthPeriod(String forTimeMonthPeriod) {
+        this.forTimeMonthPeriod = forTimeMonthPeriod;
+    }
+
+    public String getMeasureNames() {
+        return measureNames;
+    }
+
+    public void setMeasureNames(String measureNames) {
+        this.measureNames = measureNames;
+    }
+
+    /**
 	 * Constructor waits for the ready element to be displayed in the page.
 	 */
 	public AdoptionAnalyticsPage() {
@@ -49,30 +114,22 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 		
 	}
 	/**
-	 * Fills the details for viewing the customer usage usage data if org level configuration is monthly.
-	 * @param cName
-	 * @param instance
-	 * @param measures
-	 * @param tPeriod
-	 * @param month
-	 * @param year
+	 * Fills the details for viewing the customer usage usage data if org level configuration is monthly
 	 * @return
 	 */
-	public AdoptionAnalyticsPage displayCustMonthlyData(String cName, String instance, String measures, 
-														String tPeriod, String month, String year) {
+	public AdoptionAnalyticsPage displayCustMonthlyData() {
 		
-		selectCustomer(cName);
+		selectCustomer(customerName);
 		if(instance != null && !instance.isEmpty()) {
 			if(isInstDropDownLoaded(instance)) {
 				field.selectFromDropDown(INSTANCE_SELECT, instance);
 			}
 		}
-		selectMeasures(measures);
-		if(tPeriod != null && !tPeriod.isEmpty()) {
-			field.selectFromDropDown(TIMEPERIOD_SELECT, tPeriod);
-		}
+		selectMeasures(measureNames);
+	    field.selectFromDropDown(TIMEPERIOD_SELECT, forTimeMonthPeriod);
 		if(month != null && !month.isEmpty()) {
-			field.selectFromDropDown(MONTH_SELECT, month);
+            Select select = new Select(driver.findElement(By.xpath(MONTH_SELECT)));
+            select.selectByValue(month);
 		}
 		if(year != null && !year.isEmpty()) {
 			field.selectFromDropDown(YEAR_SELECT, year);
@@ -165,7 +222,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 	}
 	
 	public AdoptionAnalyticsPage clickOnAddAlert() {
-		button.click(ADDALERT_BUTTON);
+		button.click(ADD_ALERT_BUTTON);
 		return this;
 	}
 	
@@ -173,51 +230,107 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 	public boolean isChartDisplayed() {
 		boolean success = false;
 		Report.logInfo("Checking Adoption chart is displayed");
-		if(field.isElementPresent(ADOP_CHART)) {
-			success = true;
-		}
-		Report.logInfo("Checked Adoption chart display returning result: " +success);
+        try {
+            WebElement ele = element.getElement(ADOP_CHART);
+            if(ele != null) {
+                success = ele.isDisplayed();
+            }
+        } catch (RuntimeException e) {
+            Report.logInfo("No Such Ele : " +e.getLocalizedMessage());
+        }
+        Report.logInfo("Checked Adoption chart display returning result: " +success);
 		return success;
 	}
 	
 	//Verifies if the adoption grid below the usage data is displayed (Not grill-down grid).
 	public boolean isGridDispalyed() {
 		boolean success = false;
-		Report.logInfo("Checking aoption grid is displayed in adoption analytics page.");
-		wait.waitTillElementDisplayed(ADOP_CHART, MIN_TIME, MAX_TIME);
-		if(field.isElementPresent(ADOP_GRID)){
-			success = true;
-		}
-		Report.logInfo("Checked adoption grid appearence in adoption analytics & returning result: "+success);
-		return success;
+		Report.logInfo("Checking adoption grid is displayed in adoption analytics page.");
+		try {
+            WebElement ele = element.getElement(ADOP_GRID);
+            if(ele != null) {
+                success = ele.isDisplayed();
+            }
+        } catch (RuntimeException e) {
+            Report.logInfo("No Such Ele : " +e.getLocalizedMessage());
+        }
+        Report.logInfo("Checked Adoption chart display returning result: " +success);
+        return success;
 	}
 	
 	public boolean isMissingDataInfoDisplayed() {
 		boolean success = false;
 		Report.logInfo("Checking Missing Data message info is displayed above the graph.");
-		if(field.isElementPresent(MISSING_TEXT)) {
-			success = true;
-		}
-		Report.logInfo("Checked adoption missing data message on screen & returning result: " +success);
-		return success;
+		try {
+            WebElement ele = element.getElement(MISSING_TEXT);
+            if(ele != null) {
+                if(ele.getText().contains("Missing data for some months.")) {
+                    success =true;
+                }
+            }
+        } catch (RuntimeException e) {
+            Report.logInfo("No Such Ele : " +e.getLocalizedMessage());
+        }
+        Report.logInfo("Checked  Missing Data message info is displayed, returning result: " +success);
+        return success;
 	}
+
+
+    public boolean isNoAdoptionDataMsgDisplayed() {
+        boolean result = false;
+        try {
+            WebElement ele = element.getElement(NOADOPTION_MSG);
+            if(ele != null) {
+                if(ele.isDisplayed()) {
+                    if(ele.getText().contains("No Adoption data found for "+customerName+"")) {
+                        result = true;
+                    }
+
+                }
+            }
+        } catch (RuntimeException e) {
+            Report.logInfo("No Such Ele : " +e.getLocalizedMessage());
+        }
+        return result;
+    }
+
+    public boolean isDataPresentInGrid(String s) {
+        Report.logInfo("Checking Weather data is displayed in the grid");
+        List<String> values = new ArrayList<String>();
+        for(String v : s.split("\\|")) {
+            values.add(v.trim());
+        }
+        boolean result = false;
+        WebElement table = element.getElement("//table[contains(@id,'dynamicAdoptionTableList')]");
+        List<WebElement> rows = table.findElements(By.tagName("tr"));
+        int index = 0;
+        String rowtext = null;
+        for(WebElement row : rows) {
+            if(row.getAttribute("role").equalsIgnoreCase("row")) {
+                rowtext = row.getText();
+                Report.logInfo("Row Text : " +row.getText());
+            }
+            for(String val : values ) {
+                System.out.println("Checking String :" +val);
+                if(rowtext.contains(val)) {
+                    result = true;
+                    Report.logInfo("Matched : " +result);
+                } else {
+                    result = false;
+                    Report.logInfo("Matched : " +result);
+                    break;
+                }
+            }
+            if(result) {
+                break;
+            }
+            index++;
+        }
+        System.out.println("The Number of actual Rows : " +rows.size());
+        Report.logInfo("Checked the data in the grid & returning result :" +result);
+        return result;
+    }
 	
-	private final String MISSING_TEXT 			= "//span[@class='clsToShowMissingDataMsg']";
-	private final String ADOP_GRID			    = "adoptionDataGridView";
-	private final String ADOP_CHART				= "userAdoptionChartId";
-	private final String READY_INDICATOR 		= "selectionFilterControls";
-	private final String CUSTOMERNAME_INPUT 	= "//div[@class='requiredInput']/input";
-	private final String MEASURE_SELECT	 		= "//a[@class='measureSelectorLink measureSwitch newMeasureDD']";
-	private final String TIMEPERIOD_SELECT 		= "//select[@class='jbaraDummyPeriodSelectControl min-width']";
-	private final String MONTH_SELECT 			= "//select[@class='jbaraDummyMonSelectControl min-width']";
-	private final String YEAR_SELECT 			= "//select[@class='jbaraDummyYearSelectControl min-width']";
-	private final String VIEWRESULTS_BUTTON 	= "btnUsageGraphGoBtn";
-	private final String ADDALERT_BUTTON		= "//input[@class='btn dummyAllAlertNewBtn']";
-	private final String ENDDATE_INPUT			= "//input[@class='min-width jbaraDateInputAnalytics']";
-	private final String INSTANCE_SELECT		= "//select[@class='jbaraDummyInstanceSelectControl classToHandeInstance']";
-	private final String CUSTLOOKUP_IMG			= "//img[@alt='Customer Name Lookup' and @title='Customer Name Lookup']";
-	private final String MEASURESELECT_BLOCK	= "measureSelectorContainer";
-	private final String NOADOPTION_MSG         = "AdoptionDataNotAvailable";
-	
+
 
 }
