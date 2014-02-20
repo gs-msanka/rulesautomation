@@ -1,10 +1,11 @@
 package com.gainsight.sfdc.survey.pages;
 
-import static org.testng.AssertJUnit.assertTrue;
-
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyData;
-import com.gainsight.sfdc.util.Utilities;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SurveyBasePage extends BasePage {
 
@@ -22,7 +23,7 @@ public class SurveyBasePage extends BasePage {
 	private boolean ACCEPT_NEXT_ALERT = true;
 
 	public SurveyBasePage() {
-		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(NEW_SURVEY, MIN_TIME, MAX_TIME);
 		
 	}
 
@@ -31,241 +32,88 @@ public class SurveyBasePage extends BasePage {
 		return new NewSurveyPage();
 	}
 
-	public NewSurveyPage clickOnEdit(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkEditSurvey']");
+	public NewSurveyPage clickOnEdit(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Edit']";
+		item.click(xPath);
 		return new NewSurveyPage();
 	}
 
-	public SurveyDesignPage clickOnDesign(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkDesignSurvey']");
-		return new SurveyDesignPage();
+	public SurveyDesignPage clickOnDesign(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Design']";
+        item.click(xPath);
+        return new SurveyDesignPage();
 	}
 
-	public PublishSurveyPage clickOnPublish(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkPublishSurvey']");
-		return new PublishSurveyPage();
+	public PublishSurveyPage clickOnPublish(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Publish']";
+        item.click(xPath);
+        return new PublishSurveyPage();
 	}
 
-	public DistributeSurveyPage clickOnDistribute(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkDistributeSurvey']");
-		return new DistributeSurveyPage();
+	public DistributeSurveyPage clickOnDistribute(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Distribute']";
+        item.click(xPath);
+        return new DistributeSurveyPage();
 	}
 
-	public CloseSurveyPage clickOnClose(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkClosedSurvey']");
-		return new CloseSurveyPage();
+	public CloseSurveyPage clickOnClose(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Close']";
+        item.click(xPath);
+        return new CloseSurveyPage();
 	}
 
-	public PreviewSurveyPage clickOnPreview(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkPreviewSurvey']");
-		return new PreviewSurveyPage();
+	public PreviewSurveyPage clickOnPreview(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Preview']";
+        item.click(xPath);
+        return new PreviewSurveyPage();
 	}
 
-	public AnalyzeSurveyPage clickOnAnalyze(String surveystatus) {
-
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkAnalyzeSurvey']");
-		return new AnalyzeSurveyPage();
+	public AnalyzeSurveyPage clickOnAnalyze(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Analyze']";
+        item.click(xPath);
+        return new AnalyzeSurveyPage();
 	}
 
-	public void DeleteSurvey(String surveystatus) {
+	public SurveyBasePage DeleteSurvey(SurveyData surveyData) {
+        String xPath = buildSurveyXpath(surveyData);
+        xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_Actions']/a[@title='Delete']";
+        item.click(xPath);
+		modal.accept();
+        return this;
+    }
 
-		String surveyname=getSurveyWithStatus(surveystatus);
-		int i=getSurveyRowNum(surveyname);
-		item.click("//tr[@id=\""+i+"\"]/td[8]/a/span[@class='gridLinkDeleteSurvey']");
-		try {
-			modal.exists();
-			String alerttext = modal.getText();
-			if (ACCEPT_NEXT_ALERT) {
-				modal.accept();
-			} else {
-				modal.dismiss();
-			}
+    public boolean isSurveyPresent(SurveyData surveyData) {
+        boolean result = false;
+        String xPath = buildSurveyXpath(surveyData);
+        List<WebElement> surveyList = element.getAllElement(xPath);
+        if(surveyList.size() >0) {
+            result = true;
+        }
+        return result;
+    }
 
-			assertTrue(alerttext.matches("^Are you sure [\\s\\S]$"));
+    public String buildSurveyXpath(SurveyData surveyData) {
+        //td/span[contains(text(), 'Design')]/parent::td/following-sibling::td[text()='Sample:Sample']/following-sibling::td[text()='02/13/2014']
+        String xPath = "//td[@aria-describedby='SurveyList_Status__c']/span[contains(text(),"+"'"+surveyData.getStatus()+"')]"
+                +"/parent::td[@aria-describedby='SurveyList_Status__c']/following-sibling::td[@aria-describedby='SurveyList_Code__c'and text()='"
+                +surveyData.getCode()+":"+surveyData.getTitle()+"']";
+        if(surveyData.getStartDate() != null) {
+            xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_StartDate__c' and text()='"+surveyData.getStartDate()+"']";
+        }
+        if(surveyData.getEndDate() != null) {
+            xPath = xPath+"/following-sibling::td[@aria-describedby='SurveyList_EndDate__c'and text()='"+surveyData.getEndDate()+"']";
+        }
+        Report.logInfo("Survey xpath in list :" +xPath);
+        return xPath;
+    }
 
-		} finally {
-			ACCEPT_NEXT_ALERT = true;
-		}
-
-	}
-
-	public SurveyBasePage clickOnBack() {
-
-		item.click(BACK);
-		return this;
-	}
-
-	public String getSurveyWithStatus(String status) {
-
-		try {
-			int i = getNumberOfSurveyCount();
-			for(int j=0;j<i;j++){
-				
-				if(j%30==0){
-					navigateToNextPage();
-					item.wait();
-				}
-				if (item.getText("//tr[@id=" + j + "]/td[2]").equalsIgnoreCase(
-						status)) {
-					return item.getText("//tr[@id=" + j + "]/td[3]");
-				}
-			}
-			
-			NewSurveyPage surveypage = clickOnNew();
-			SurveyData sdata = new SurveyData();
-			String surveyname=Utilities.getRandomString();
-			sdata.setCode(surveyname);
-			sdata.setTitle("test");
-			sdata.setStartDate(Utilities.generateDate(0));
-			sdata.setEndDate(Utilities.generateDate(2));
-			sdata.setAnanymous(false);
-			sdata.setImageName("TestImage.png");
-			sdata.setTUOption("Message");
-			
-			SurveyDesignPage surveydesign = surveypage.createNewSurvey(sdata);
-			AddQuestionsPage addquestions = surveydesign.clickOnNewQuestion();
-			SurveyBasePage base = addquestions.clickOnBack();
-			if(status.equalsIgnoreCase("Design"))
-				return surveyname;
-			PublishSurveyPage publishsurvey = base.clickOnPublish("Design");
-			publishsurvey.savePublishPage();
-			publishsurvey.clickPublish();
-			publishsurvey.clickOnBack();
-			if(status.equalsIgnoreCase("Publish"))
-				return surveyname;
-			
-			DistributeSurveyPage distributepage = base.clickOnDistribute("Publish");
-			distributepage.addParticipants();
-			
-			if(status.equalsIgnoreCase("Distribute"))
-				return surveyname;				
-			CloseSurveyPage surveyclose = distributepage.clickOnClose("Distribute");
-			surveyclose.clickOnYes();
-			surveyclose.clickOnBack();
-			if(status.equalsIgnoreCase("Closed"))
-				return surveyname;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "No Survey found with status: " + status;
-	}
-	
-	public int getSurveyRowNum(String surveyname) {
-
-		try {
-			int i = item.getElementCount("//tr");
-
-			while (i > 0) {
-
-				if (item.getText("//tr[@id=" + i + "]/td[3]").equalsIgnoreCase(
-						surveyname)) {
-					return i;
-				}
-				i--;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	public String[] getAllSurveyNames() {
-		String[] surveys = null;
-
-		try {
-
-			int i = item.getElementCount("//tr");
-
-			while (i > 0) {
-
-				surveys[i] = item.getText("//tr[@id=" + i + "]/td[3]");
-				i--;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return surveys;
-
-	}
-
-	public String getStartDate(String survey) {
-
-		try {
-			int i = item.getElementCount("//tr");
-
-			while (i > 0) {
-				if (item.getText("//tr[@id=" + i + "]/td[3]").equalsIgnoreCase(
-						survey)) {
-					return item.getText("//tr[@id=" + i + "]/td[4]");
-				}
-				i--;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return "No Survey found with name: " + survey;
-	}
-	
-	public String getEndDate(String survey) {
-
-		try {
-			int i = item.getElementCount("//tr");
-
-			while (i > 0) {
-				if (item.getText("//tr[@id=" + i + "]/td[3]").equalsIgnoreCase(
-						survey)) {
-					return item.getText("//tr[@id=" + i + "]/td5]");
-				}
-				i--;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return "No Survey found with name: " + survey;
-	}
-
-	public String getRespondedCount(String survey) {
-
-		try {
-			int i = item.getElementCount("//tr");
-
-			while (i > 0) {
-				if (item.getText("//tr[@id=" + i + "]/td[3]").equalsIgnoreCase(
-						survey)) {
-					return item.getText("//tr[@id=" + i + "]/td[6]");
-				}
-				i--;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return "No Survey found with name: " + survey;
-	}
-	
 	public void navigateToNextPage(){
 		
 		try{
@@ -338,7 +186,6 @@ public class SurveyBasePage extends BasePage {
 	}
 	
 	public int getNumberOfSurveyCount(){
-		
 		String pageinfo = item.getText(PAGE_INFO);
 		String[] num = pageinfo.split(" ");
 		return Integer.parseInt(num[5]);

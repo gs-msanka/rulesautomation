@@ -183,14 +183,7 @@ public class BaseTest {
 	 */
 	public int getQueryRecordCount(String query) {
 		int result = 0;
-		if (isPackageInstance()) {
-			Report.logInfo("Query : " + query);
-			result = soql.getRecordCount(query);
-		} else {
-			query = removeNameSpace(query);
-			Report.logInfo("Query : " + query);
-			result = soql.getRecordCount(query);
-		}
+        result = soql.getRecordCount(resolveStrNameSpace(query));
 		return result;
 	}
 
@@ -201,12 +194,16 @@ public class BaseTest {
 	 *            -The string where name space should be removed.
 	 * @return String - with name space removed.
 	 */
-	public String removeNameSpace(String str) {
+	public String resolveStrNameSpace(String str) {
 		String result = "";
-		if (str != null) {
+        boolean isPackage = Boolean.valueOf(TestEnvironment.get().getProperty("sfdc.managedPackage"));
+		if (str != null && !isPackage) {
 			result = str.replaceAll("JBCXM__", "");
-		}
-		return result;
+            return result;
+		} else {
+            return str;
+        }
+
 	}
 
     public String getDatewithFormat(int i) {
@@ -219,6 +216,22 @@ public class BaseTest {
 
         } else if(userLocale.contains("en_IN")) {
             DateFormat dateFormat   = new SimpleDateFormat("d/M/yyyy");
+            date = dateFormat.format(c.getTime());
+        }
+        Report.logInfo(String.valueOf(date));
+        return date;
+    }
+
+    public String getDateFormat(int i) {
+        String date                 = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, i);
+        if(userLocale.contains("en_US")) {
+            DateFormat dateFormat   = new SimpleDateFormat("MM/dd/yyyy");
+            date = dateFormat.format(c.getTime());
+
+        } else if(userLocale.contains("en_IN")) {
+            DateFormat dateFormat   = new SimpleDateFormat("dd/MM/yyyy");
             date = dateFormat.format(c.getTime());
         }
         Report.logInfo(String.valueOf(date));
@@ -250,10 +263,33 @@ public class BaseTest {
 
     public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
         if(!isPackageInstance()) {
-            return new FileReader(removeNameSpace(getFileContents(fileName)));
+            File tempFile = new File("./resources/datagen/process/tempJob.txt");
+            FileOutputStream fOut = new FileOutputStream(tempFile);
+            try {
+                fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
+                fOut.close();
+                fOut.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new FileReader("./resources/datagen/process/tempJob.txt");
         } else {
             return new FileReader(fileName);
+
+
         }
+    }
+
+
+    public void createExtIdFieldOnAccount() {
+        CreateObjectAndFields fieldsCreator = new CreateObjectAndFields();
+        try {
+            fieldsCreator.createTextFields("Account", new String[]{"Data ExternalId"}, true, true,true,false,false);
+        } catch (Exception e) {
+            Report.logInfo("Failed to create ext id field on account object :" +e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+
     }
 
     public void createFieldsOnUsageData() {
@@ -261,7 +297,7 @@ public class BaseTest {
         String[] numberFields = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
         CreateObjectAndFields cObjFields = new CreateObjectAndFields();
         try {
-            cObjFields.createNumberField(isPackageInstance() ? object : removeNameSpace(object), numberFields, false);
+            cObjFields.createNumberField(resolveStrNameSpace(object), numberFields, false);
         } catch (Exception e) {
             Report.logInfo("Failed to create Fields on the object :" +object);
             e.printStackTrace();
