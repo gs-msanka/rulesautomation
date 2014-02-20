@@ -106,21 +106,21 @@ for(Integer m=0;m<qAndaMap.size();m++)
    {
        if(!que.get(m).JBCXM__Type__c.equals('NPS'))
 	   {
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+qAndaMap.get(que.get(m)).get(an)+'_ans'+(an+1)));
 		}
 		else
 		{
 			 if(an<4)
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Sad',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Sad',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+qAndaMap.get(que.get(m)).get(an)+'_ans'+(an+1)));
 			}
 			else if(an>3 && an<8)
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Plain',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Plain',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+qAndaMap.get(que.get(m)).get(an)+'_ans'+(an+1)));
 			}
 			else
 			{
-				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Smile',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+'_ans'+(an+1)));
+				answersList.add(new JBCXM__SurveyAllowedAnswers__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__SurveyQuestion__c=que.get(m).Id,JBCXM__Title__c=qAndaMap.get(que.get(m)).get(an),JBCXM__DisplayOrder__c=an+1,JBCXM__IsActive__c=true,JBCXM__UserResponseCount__c=0,JBCXM__GroupIcon__c='Smile',SurAllowAns_ExternalID__c=que.get(m).SurQues_ExternalID__c+qAndaMap.get(que.get(m)).get(an)+'_ans'+(an+1)));
 			}
 		}
    }
