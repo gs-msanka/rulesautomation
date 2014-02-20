@@ -4,6 +4,7 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -38,7 +39,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
 
         try {
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            /*createExtIdFieldOnAccount();
+            createExtIdFieldOnAccount();
             createFieldsOnUsageData();
             apex.runApexCodeFromFile(measureFile, isPackageInstance());
             apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
@@ -53,7 +54,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
             jobInfo3 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Account_Monthly.txt"), JobInfo.class);
             apex.runApexCodeFromFile(measureFile);
             apex.runApexCodeFromFile(advUsageConfigFile);
-            dataLoader.execute(jobInfo3);*/
+            dataLoader.execute(jobInfo3);
         } catch (Exception e) {
             Report.logInfo("Setup Failure :" +e.getLocalizedMessage());
             e.printStackTrace();

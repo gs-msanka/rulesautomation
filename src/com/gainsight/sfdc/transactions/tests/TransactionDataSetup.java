@@ -7,7 +7,9 @@ import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.dataLoad.loadDataFromFile;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
@@ -16,6 +18,9 @@ public class TransactionDataSetup {
 
     TestEnvironment env;
     static boolean isPackageInstance = false;
+    static String resDir = "./resources/datagen/";
+    static JobInfo jobInfo1;
+    ObjectMapper mapper = new ObjectMapper();
     public TransactionDataSetup() {
         TestEnvironment env = new TestEnvironment();
         isPackageInstance = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
@@ -69,7 +74,9 @@ public class TransactionDataSetup {
         dataLoader.cleanUp(resolveNameSpace("JBCXM__CustomerInfo__c"), resolveNameSpace(" JBCXM__OriginalContractNumber__c = 'AUTO_SAMPLE_DATA'"));
 
         Report.logInfo("Loading Account Data");
-       dataLoad.loadData("Account", "./testdata/sfdc/transactions/TrailData/Account.csv", "Data_ExternalID__c");
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Trans_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        //dataLoad.loadData("Account", "./testdata/sfdc/transactions/TrailData/Account.csv", "Data_ExternalID__c");
 
         Report.logInfo("Loading Order Transaction Map");
         dataLoader.cleanUp("JBCXM__OrderTransactionMap__c", null);

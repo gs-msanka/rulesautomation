@@ -1,0 +1,87 @@
+{
+    "jobName": "Job_Account",
+    "jobType" : "AccountUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "Account",
+        "fields": [
+            "Id",
+            "Name"
+        ],
+        "output": "./resources/datagen/process/account1.csv"
+    },
+    "transform": {
+    	"query" : "",
+    	"useQuery" : false,
+        "tableInfo": [
+            {
+                "file": "./resources/datagen/process/account1.csv",
+                "table": "account",
+                "joinColumnName": "Name",
+                "columns": [
+                    {
+                        "name": "Id",
+                        "alias": "Id"
+                    }
+                ]
+            },
+            {
+                "file": "./testdata/sfdc/transactions/TrailData/Account.csv",
+                "table": "usagedata",
+                "joinColumnName": "Name",
+                "columns": [
+                	{
+                        "name": "Name",
+                        "alias": "Name"
+                    },
+                    {
+                        "name": "Jigsaw",
+                        "alias": "Jigsaw"
+                    },
+                    {
+                        "name": "TYPE",
+                        "alias": "TYPE"
+                    },
+                    {
+                        "name": "WEBSITE",
+                        "alias": "WEBSITE"
+                    },
+                    {
+                        "name": "INDUSTRY",
+                        "alias": "INDUSTRY"
+                    },
+                    {
+                        "name": "NUMBEROFEMPLOYEES",
+                        "alias": "NUMBEROFEMPLOYEES"
+                    },
+                    {
+                        "name": "DESCRIPTION",
+                        "alias": "DESCRIPTION"
+                    },
+                    {
+                       "name": "ANNUALREVENUE"
+                        "alias": "ANNUALREVENUE"
+                    },
+                    {
+                        "name": "Data_ExternalId__c",
+                        "alias": "Data_ExternalId__c"
+                    }
+                ]
+            }
+        ],
+        "join": true,
+        "picklist": false,
+        "output": "./resources/datagen/process/Final_Trans_Accounts.csv"
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "Account",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "externalIDField": "Id",
+        "file": "./resources/datagen/process/Final_Trans_Accounts.csv"
+    }
+}
