@@ -70,13 +70,13 @@ public class AdministrationBasepage extends BasePage{
 		return new AdminNotificationsSubTab();
 	}
 	
-	/*public AdminUIViewssSubTab clickOnUIViewssettingsSubTab()
+	public AdminUIViewssSubTab clickOnUIViewssettingsSubTab()
 	{
 		
 		item.click("//a[contains(@href,'Administration-UIViews')]");
 		
 		return new AdminUIViewssSubTab();
-	}*/
+	}
 	
 	public AdminRulesEngineTab clickOnRulesEngineSubTab() {
 	

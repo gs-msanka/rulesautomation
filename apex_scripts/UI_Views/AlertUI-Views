@@ -1,0 +1,59 @@
+//Create Alert List Views
+JBCXM__Uiviews__c add = new JBCXM__Uiviews__c();
+add.Name = 'View ASV>=5000';
+add.JBCXM__ColumnList__c = '[{"name":"ASV__c","label":"Alert ASV","displayOrder":1,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Status__r.Name","label":"Status","displayOrder":2,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},{"name":"Severity__r.Name","label":"Severity","displayOrder":3,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true}]';
+add.JBCXM__FilterConditions__c = '[{"name":"ASV__c","value":"5000","objectName":"Alert__c","fieldType":"CURRENCY","operator":"h"}]';
+add.JBCXM__ReportParams__c='[{"fieldName":"ASV__c","objectName":"Alert__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Alert ASV","fieldType":"CURRENCY","value":"10000","selectedOperator":"h","logicalOperator":""}]';
+add.JBCXM__IsStandard__c = false;
+add.JBCXM__UITabName__c= 'Alerts';
+add.JBCXM__Visibility__c= 'Public';
+add.JBCXM__IsShown__c = true;
+add.JBCXM__VisualType__c = 'List';
+insert add;
+
+//Create Alert List Views
+JBCXM__Uiviews__c Create1 = new JBCXM__Uiviews__c();
+Create1.Name = 'MRR>=500View';
+Create1.JBCXM__ColumnList__c = '[{"name":"ASV__c","label":"Alert ASV","displayOrder":1,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"MRR__c","label":"Alert MRR","displayOrder":2,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Status__r.Name","label":"Status","displayOrder":3,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},{"name":"Name","label":"Subject","displayOrder":4,"visibilityMode":true,"objectName":"Alert__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false}]';
+Create1.JBCXM__FilterConditions__c = '[{"name":"MRR__c","value":"500","objectName":"Alert__c","fieldType":"CURRENCY","operator":"h"}]';
+Create1.JBCXM__ReportParams__c='[{"fieldName":"MRR__c","objectName":"Alert__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Alert MRR","fieldType":"CURRENCY","value":"5000","selectedOperator":"m","logicalOperator":""}]';
+Create1.JBCXM__IsStandard__c = false;
+Create1.JBCXM__UITabName__c= 'Alerts';
+Create1.JBCXM__Visibility__c= 'Public';
+Create1.JBCXM__IsShown__c = true;
+Create1.JBCXM__VisualType__c = 'List';
+insert Create1;
+
+
+//Created by List view
+JBCXM__Uiviews__c Create2 = new JBCXM__Uiviews__c();
+Create2.Name = 'Alerts CretedbyView';
+Create2.JBCXM__ColumnList__c = '[{"name":"CreatedBy.Name","label":"Created By","displayOrder":1,"visibilityMode":true,"objectName":"Alert__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"LastModifiedBy.Name","label":"Modified By","displayOrder":2,"visibilityMode":true,"objectName":"Alert__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"CreatedDate","label":"Created Date","displayOrder":3,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false}]';
+Create2.JBCXM__FilterConditions__c = '[{"name":"CreatedBy.Name","value":"@@CURRENTUSER","objectName":"Alert__c","fieldType":"USERLOOKUP","operator":"e"}]';
+Create2.JBCXM__ReportParams__c='[{"fieldName":"CreatedDate","objectName":"Alert__c","ctrlType":"timeframe","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Created Date","fieldType":"TIMEFRAMENORMALDATETIME","value":"JBcurfy","selectedOperator":"e","logicalOperator":""}]';
+Create2.JBCXM__IsStandard__c = false;
+Create2.JBCXM__UITabName__c= 'Alerts';
+Create2.JBCXM__Visibility__c= 'Public';
+Create2.JBCXM__IsShown__c = true;
+Create2.JBCXM__VisualType__c = 'List';
+insert Create2;
+
+//Only Filter criteria
+JBCXM__Uiviews__c Create3 = new JBCXM__Uiviews__c();
+Create3.Name = 'Includes FiltersANDreportparams';
+Create3.JBCXM__ColumnList__c = '[{"name":"ASV__c","label":"Alert ASV","displayOrder":1,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Status__r.Name","label":"Status","displayOrder":2,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},{"name":"Severity__r.Name","label":"Severity","displayOrder":3,"visibilityMode":true,"objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true}]';
+List<JBCXM__Picklist__c > altsvty=[select JBCXM__DisplayOrder__c ,name,id from JBCXM__Picklist__c where JBCXM__Category__c = 'Alert Severity'];
+for(JBCXM__Picklist__c pic : altsvty)
+{
+    system.debug(pic);
+}
+Create3.JBCXM__FilterConditions__c = '[{"name":"Severity__c","value":"(\''+altsvty[0].id +'\')","objectName":"Alert__c","fieldType":"CUSTOMLOOKUP","operator":"u"}]';
+Create3.JBCXM__IsStandard__c = false;
+Create3.JBCXM__UITabName__c= 'AlertsCard';
+Create3.JBCXM__Visibility__c= 'Public';
+Create3.JBCXM__IsShown__c = true;
+Create3.JBCXM__VisualType__c = 'List';
+insert Create3;
+
+
+
