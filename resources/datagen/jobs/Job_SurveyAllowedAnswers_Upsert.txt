@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__SurveyAllowedAnswers__c",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "externalIDField": "SurAllowAns_ExternalID__c",
+        "file": "./testdata/sfdc/Survey/SurveyAnswers_responseCount.csv"
+    }
+}

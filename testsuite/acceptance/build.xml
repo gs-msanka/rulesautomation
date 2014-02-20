@@ -32,7 +32,7 @@
 	<!-- Run Tests by specifying testNG file name -->
 	<target name="bat" depends="">
 		<echo message="Starting Acceptance Tests" />	
-		<testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true">
+		<testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
 
