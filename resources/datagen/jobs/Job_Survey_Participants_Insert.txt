@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__SurveyParticipant__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "SurPart_ExternalID__c",
+        "file": "./testdata/sfdc/Survey/Survey_Participants.csv"
+    }
+}

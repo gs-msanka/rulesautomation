@@ -98,6 +98,7 @@ public class JobInfo {
 		boolean weekly;
 		String fieldName;
 		String outputFile;
+		boolean daysToAdd;
 		
 		public String getInputFile() {
 			return inputFile;
@@ -111,6 +112,14 @@ public class JobInfo {
 		}
 		public void setMonthly(boolean monthly) {
 			this.monthly = monthly;
+		}
+		
+		public boolean isDaysToAdd(){
+			return daysToAdd;
+		}
+		
+		public void setDaysToAdd(boolean daysToAdd){
+			this.daysToAdd = daysToAdd;
 		}
 		
 		public boolean isWeekly() {
