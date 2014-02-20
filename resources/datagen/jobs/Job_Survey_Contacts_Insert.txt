@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "Contact",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "Id",
+        "file": "./testdata/sfdc/Survey/Contacts_forSurveyParticipants.csv"
+    }
+}

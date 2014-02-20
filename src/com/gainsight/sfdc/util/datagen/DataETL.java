@@ -44,7 +44,7 @@ public class DataETL implements IJobExecutor {
 		op = new SfdcBulkOperationImpl(info.getSessionId());
 		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
 		
-		try {
+		/*try {
 			//Pulling Pick List Object
 			String picklistPath = resDir + "process/" + pickListObject + ".csv";
 			String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
@@ -55,7 +55,7 @@ public class DataETL implements IJobExecutor {
 			System.out.println(pMap);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class DataETL implements IJobExecutor {
 			//Step 4
 			//Decide which job to execute
 			//Currently hard-coding to Job1
-			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Insert_SurveyUserAnswers"), JobInfo.class);
 			gen.init();
 			gen.execute(jobInfo);
 			
@@ -148,7 +148,9 @@ public class DataETL implements IJobExecutor {
 				else if(preProcess.isWeekly()) {
 					outputFile = FileProcessor.generateWeeklyUsageData(inputFile, preProcess.getFieldName(), outputFile);
 				}
-				
+				else if(preProcess.isDaysToAdd()){
+					outputFile=FileProcessor.generateResponseSubmissionDate(inputFile, preProcess.getFieldName(), outputFile);
+				}
 				if(FileUtils.sizeOf(outputFile) > 0) {
 					System.out.println("Data is Ready");
 				}
@@ -218,10 +220,17 @@ public class DataETL implements IJobExecutor {
 			}
 			
 			//Load the Data back to SFDC
+			if(transform!=null)
             if(load.getOperation().equals("upsert")) {
                 SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()), load.getExternalIDField());
-            } else {
+            } else{
                 SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()));
+            }
+            else{ //in case there is no transform part...only loading
+            	if(load.getOperation().equals("upsert"))
+            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()),load.getExternalIDField());
+            	else
+            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()));            		
             }
 		}
 		catch (IOException e) {
