@@ -1,26 +1,7 @@
 package com.gainsight.sfdc.util.datagen;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.bouncycastle.crypto.RuntimeCryptoException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
@@ -33,6 +14,14 @@ import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo;
 import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo.Columns;
 import com.gainsight.sfdc.util.db.H2Db;
 import com.gainsight.sfdc.util.db.QueryBuilder;
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.*;
+import java.sql.SQLException;
+import java.util.*;
 
 public class DataETL implements IJobExecutor {
 
@@ -55,7 +44,7 @@ public class DataETL implements IJobExecutor {
 		op = new SfdcBulkOperationImpl(info.getSessionId());
 		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
 		
-		try {
+		/*try {
 			//Pulling Pick List Object
 			String picklistPath = resDir + "process/" + pickListObject + ".csv";
 			String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
@@ -66,7 +55,7 @@ public class DataETL implements IJobExecutor {
 			System.out.println(pMap);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	/**
@@ -86,7 +75,7 @@ public class DataETL implements IJobExecutor {
 			//Step 4
 			//Decide which job to execute
 			//Currently hard-coding to Job1
-			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Insert_SurveyUserAnswers"), JobInfo.class);
 			gen.init();
 			gen.execute(jobInfo);
 			
@@ -159,7 +148,9 @@ public class DataETL implements IJobExecutor {
 				else if(preProcess.isWeekly()) {
 					outputFile = FileProcessor.generateWeeklyUsageData(inputFile, preProcess.getFieldName(), outputFile);
 				}
-				
+				else if(preProcess.isDaysToAdd()){
+					outputFile=FileProcessor.generateResponseSubmissionDate(inputFile, preProcess.getFieldName(), outputFile);
+				}
 				if(FileUtils.sizeOf(outputFile) > 0) {
 					System.out.println("Data is Ready");
 				}
@@ -229,10 +220,17 @@ public class DataETL implements IJobExecutor {
 			}
 			
 			//Load the Data back to SFDC
+			if(transform!=null)
             if(load.getOperation().equals("upsert")) {
                 SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()), load.getExternalIDField());
-            } else {
+            } else{
                 SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() && pushFile != null) ? pushFile : new File(load.getFile()));
+            }
+            else{ //in case there is no transform part...only loading
+            	if(load.getOperation().equals("upsert"))
+            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()),load.getExternalIDField());
+            	else
+            		SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()));            		
             }
 		}
 		catch (IOException e) {
@@ -287,7 +285,7 @@ public class DataETL implements IJobExecutor {
 		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
 		System.out.println("Pull Query : " + query);
         if(condition !=null) {
-            query = query+" "+condition;
+            query = query+" Where "+condition;
             System.out.println("Where Attached Pull Query : " + query);
         }
 		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";

@@ -29,7 +29,6 @@ public class Adoption_User_Weekly_Test extends BaseTest {
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
     static String resDir = "./resources/datagen/";
-    String OBJECT_NAME = "JBCXM__UsageData__c";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
@@ -43,14 +42,15 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         try{
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
             createFieldsOnUsageData();
+            apex.runApexCodeFromFile(measureFile, isPackageInstance());
+            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
             DataETL dataLoader = new DataETL();
-            dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);
+            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
             jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
             dataLoader.execute(jobInfo1);
             jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
             dataLoader.execute(jobInfo2);
-            dataLoader.cleanUp(isPackageInstance() ? OBJECT_NAME : removeNameSpace(OBJECT_NAME), null);
             jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Weekly.txt"), JobInfo.class);
             apex.runApexCodeFromFile(measureFile);
             apex.runApexCodeFromFile(advUsageConfigFile);
@@ -84,10 +84,8 @@ public class Adoption_User_Weekly_Test extends BaseTest {
                     code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                             .replaceAll("THEYEARCHANGE", String.valueOf(year))
                             .replace("THEDAYCHANGE", String.valueOf(day));
-                    if(!isPackageInstance()) {
-                        code    = removeNameSpace(code).replace("JBCXM.", "");
-                    }
-                    apex.runApex(code);
+
+                    apex.runApex(resolveStrNameSpace(code));
                 }
                 for(int l= 0; l < 200; l++) {
                     String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +

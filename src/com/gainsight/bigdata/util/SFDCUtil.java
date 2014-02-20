@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.util;
 
 import com.gainsight.bigdata.pojo.SFDCInfo;
+import com.sforce.soap.apex.SoapConnection;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.GetUserInfoResult;
 import com.sforce.soap.partner.PartnerConnection;
@@ -11,6 +12,7 @@ public class SFDCUtil {
 
 	private final String endPointURL = "https://login.salesforce.com/services/Soap/u/28.0";
 	static PartnerConnection connection;
+    static SoapConnection soapConnection;
 	
 	public static SFDCInfo fetchSFDCinfo() {
 		// TODO Auto-generated method stub
@@ -37,4 +39,6 @@ public class SFDCUtil {
 			return null;
 		}
 	}
+
+
 }

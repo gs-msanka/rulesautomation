@@ -1,8 +1,6 @@
 //Cleanup
 delete [select id from JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c in (select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete')];
 delete[select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=true and JBCXM__AnonymousType__c='Complete'];
-delete [select id from Contact where AccountId in (select Id from Account where Name like 'Anonymous Survey%')]; 
-delete [select id from Account where Name like 'Anonymous Survey%' ];
 delete [select id from Account where Name like 'Gainsight Survey Account'];
 
 //Design Survey
@@ -47,7 +45,7 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment','S
  {
 			if(!QTypes.get(qNo).equals('NPS'))			
 					{
-						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
+						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=false,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 					}
 			else
 			{
@@ -142,7 +140,7 @@ insert answersList;
 //Adding Logic Rules
 //JBCXM__SurveyLogicRules__c
 
-JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
+JBCXM__SurveyQuestion__c ques=[select Name,SurQues_ExternalID__c,JBCXM__HasRules__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=4 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
 
 JBCXM__SurveyQuestion__c NextQues=[select Name,SurQues_ExternalID__c from JBCXM__SurveyQuestion__c where JBCXM__ParentQuestion__c=null and JBCXM__DisplayOrder__c=5 and JBCXM__SurveyMaster__c in (select Id from JBCXM__Survey__c where JBCXM__Code__c='Customer Satisfaction' and JBCXM__Title__c='CSR')  ];
 
@@ -152,6 +150,8 @@ JBCXM__SurveyLogicRules__c  lr = new JBCXM__SurveyLogicRules__c(JBCXM__Answer__c
 
 insert lr;
 
+ques.JBCXM__HasRules__c=true;
+update ques;
 //=======================================================================================================================================================//
 
 //Publish Survey
@@ -164,6 +164,8 @@ EmailTemplate email=[select Id, Name, FolderId, Folder.Name from EmailTemplate w
  publishSurvey.JBCXM__EmailTemplate__c=email.Id;
  publishSurvey.JBCXM__EmailOpenURL__c='http://gainsight-developer-edition.na15.force.com/JBCXM__SurveyEmailOpen';
 publishSurvey.JBCXM__Status__c = 'Publish';
+ publishSurvey.JBCXM__PublishDate__c=system.Date.today();
+
  
  update publishSurvey;
  
@@ -173,37 +175,24 @@ publishSurvey.JBCXM__Status__c = 'Publish';
  //Distribute Survey
  //Loading contacts into contacts object for Survey Participants
   
- List<Account> accList = new List<Account>();
-for(integer a=1; a<3 ; a++) {
-   Account acc = new Account(Name ='Anonymous Survey Account  ' +a);
-   accList.add(acc);
-}
-insert accList;
- 
-List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Anonymous Survey%'];
-List<Contact> contactList = new List<Contact>();
-List<String> emails  = new List<String>{'hitesh@release41.com', 'rajesh@release41.com','srividya@release41.com','giri@release41.com'};
-List<String> names = new List<String>{'Hitesh', 'Rajesh','Vidya','Giri'};
-Contact con = null;
-for(Account acc : SurveyAcc) {
-    for(Integer j=0;j<emails.size();j++)
-    {
-		con = new Contact(AccountId = acc.Id,LastName = names.get(j),Email = emails.get(j));
-        contactList.add(con);
-	}
-}
-
-insert contactList;
-
-//Adding Participants to Distribution list
-
-List<JBCXM__SurveyParticipant__c> participants = new List<JBCXM__SurveyParticipant__c>();
-
-List<Contact> contacts=[select Id,AccountId,Name,Email from Contact where AccountId in (select Id from Account where name like 'Anonymous Survey%')];
-
-for ( Contact cons : contacts)
-{
-    participants.add(new JBCXM__SurveyParticipant__c(JBCXM__Account__c=cons.AccountId,JBCXM__AnonymousTempUser__c=true,JBCXM__Contact__c=cons.Id,JBCXM__DisplayName__c=cons.Name,JBCXM__Role__c='User',JBCXM__SentEmail__c=cons.Email,JBCXM__SurveyMaster__c=sur.Id));
-}
-
-insert participants;
+// List<Account> accList = new List<Account>();
+//for(integer a=1; a<3 ; a++) {
+//   Account acc = new Account(Name ='Anonymous Survey Account  ' +a);
+//   accList.add(acc);
+//}
+//insert accList;
+// 
+//List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Anonymous Survey%'];
+//List<Contact> contactList = new List<Contact>();
+//List<String> emails  = new List<String>{'hitesh@release41.com', 'rajesh@release41.com','srividya@release41.com','giri@release41.com'};
+//List<String> names = new List<String>{'Hitesh', 'Rajesh','Vidya','Giri'};
+//Contact con = null;
+//for(Account acc : SurveyAcc) {
+//    for(Integer j=0;j<emails.size();j++)
+//    {
+//		con = new Contact(AccountId = acc.Id,LastName = names.get(j),Email = emails.get(j));
+//        contactList.add(con);
+//	}
+//}
+//
+//insert contactList;

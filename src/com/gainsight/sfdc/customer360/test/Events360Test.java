@@ -7,12 +7,14 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Events360Test extends BaseTest {
@@ -71,10 +73,7 @@ public class Events360Test extends BaseTest {
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date",getDatewithFormat(0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
-        if(!isPackageInstance()) {
-            script = removeNameSpace(script);
-        }
-        soql.deleteQuery(script);
+        soql.deleteQuery(resolveStrNameSpace(script));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -139,10 +138,12 @@ public class Events360Test extends BaseTest {
                 taskData.put("date", getDatewithFormat(a));
                 tasksList.add(taskData);
             } catch (NullPointerException e) {
-                Report.logInfo("Finished Adding Tasks");
+                Report.logInfo("Finished Loading Tasks");
                 break;
             }
         }
+        basepage.refreshPage();
+        ret = c360Page.clickOnRetEventsSec();
         ret.openEventCard(eventData);
         for(HashMap<String, String> task : tasksList) {
             Assert.assertTrue(ret.isTaskDisplayed(task), "Checking task is displayed on event");
@@ -160,10 +161,7 @@ public class Events360Test extends BaseTest {
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
-        if(!isPackageInstance()) {
-            script = removeNameSpace(script);
-        }
-        soql.deleteQuery(script);
+        soql.deleteQuery(resolveStrNameSpace(script));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -184,10 +182,7 @@ public class Events360Test extends BaseTest {
     public void infoMessageVerification(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
-        if(!isPackageInstance()) {
-            script = removeNameSpace(script);
-        }
-        soql.deleteQuery(script);
+        soql.deleteQuery(resolveStrNameSpace(script));
         eventData.put("schedule", getDatewithFormat(0));
         eventData.put("startdate", getDatewithFormat(0));
         eventData.put("enddate", getDatewithFormat(70));

@@ -1,0 +1,32 @@
+DELETE [SELECT ID FROM JBCXM__UIViews__c Where JBCXM__SectionId__r.Name IN ('Gainsight-Tasks')];
+List<JBCXM__CSTask__c> ctList  = [SELECT ID FROM JBCXM__CSTask__c LIMIT 1];
+String objectId = String.valueOf(ctList.get(0).Id).substring(0,3);
+JBCXM__C360Sections__c c360Sec1 = new JBCXM__C360Sections__c(JBCXM__AccountReference__c = 'JBCXM__Account__c',
+															JBCXM__DisplayOrder__c = 12,
+															Name = 'Gainsight-Tasks',
+															 JBCXM__DisplayLabel__c = 'Gainsight-Tasks',
+															 JBCXM__IsActive__c = true,
+															 JBCXM__isStandardObject__c = false,
+															 JBCXM__ObjectId__c = objectId,
+															 JBCXM__ObjectName__c = 'JBCXM__CSTask__c',
+															 JBCXM__Type__c = 'RelatedList');
+insert c360Sec1;
+JBCXM__UIViews__c uView4 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name":"JBCXM__Account__r.Name","label":"Account","displayOrder":1,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Subject__c","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Assigned__r.Name","label":"Assigned","displayOrder":3,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Date__c","label":"Date","displayOrder":4,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"DATE","isGroupable":true},{"name":"JBCXM__Priority__c","label":"Priority","displayOrder":5,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true},{"name":"Name","label":"Related Object","displayOrder":6,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Status__c","label":"Status","displayOrder":7,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true}]' ,
+													JBCXM__FilterConditions__c = '[]',
+													JBCXM__Visibility__c = 'Public',
+													JBCXM__SectionId__c = c360Sec1.Id,
+													Name = 'All Tasks',
+                                                 	JBCXM__IsShown__c=true,
+                                                    JBCXM__VisualType__c='List',
+                                                   	JBCXM__UITabName__c = String.valueOf(c360Sec1.Id).subString(0,15));
+
+JBCXM__UIViews__c uView5 = new JBCXM__UIViews__c(JBCXM__ColumnList__c='[{"name":"JBCXM__Account__r.Name","label":"Account","displayOrder":1,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Subject__c","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"STRING","isGroupable":true},{"name":"JBCXM__Assigned__r.Name","label":"Assigned","displayOrder":3,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"USERLOOKUP","isGroupable":true},{"name":"JBCXM__Date__c","label":"Date","displayOrder":4,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"DATE","isGroupable":true},{"name":"JBCXM__Priority__c","label":"Priority","displayOrder":5,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true},{"name":"JBCXM__Status__c","label":"Status","displayOrder":6,"visibilityMode":true,"objectName":"CSTask__c","fieldType":"PICKLIST","isGroupable":true}]',
+                                                    JBCXM__FilterConditions__c = '[{"name":"JBCXM__Priority__c","value":"(\'High\',\'Normal\')","objectName":"CSTask__c","fieldType":"PICKLIST","operator":"u"}]',
+                                                    JBCXM__Visibility__c='Public',
+                                                    JBCXM__SectionId__c = c360Sec1.Id,
+                                                    Name='High  & Normal Priority Tasks',
+                                                    JBCXM__IsShown__c=true,
+                                                    JBCXM__VisualType__c='List',
+                                                    JBCXM__UITabName__c = String.valueOf(c360Sec1.Id).subString(0,15));
+insert uView4;
+insert uView5;
