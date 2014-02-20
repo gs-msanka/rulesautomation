@@ -1,0 +1,56 @@
+JBCXM__USERRESPONSECOUNT__C,SURALLOWANS_EXTERNALID__C
+1,Customer Retention_NPS138_ans9
+4,Customer Retention_NPS139_ans10
+6,Customer Retention_NPS134_ans5
+5,Customer Retention_NPS135_ans6
+3,Customer Retention_NPS136_ans7
+5,Customer Retention_NPS137_ans8
+37,Customer Retention_MatrixSingleAnswer2Delightfully_ans4
+50,Customer Retention_Comment3_ans1
+18,Customer Retention_SingleSelect4Definitely will_ans1
+9,Customer Retention_SingleSelect4Probably will_ans2
+10,Customer Retention_SingleSelect4Might or might not_ans3
+9,Customer Retention_SingleSelect4Probably will not_ans4
+4,Customer Retention_SingleSelect4Definitely will not_ans5
+6,Customer Retention_Checkbox5Weekdays_ans1
+4,Customer Retention_Checkbox5Weekends_ans2
+0,Customer Retention_Checkbox5Morning (6-10 AM)_ans3
+2,Customer Retention_Checkbox5Mid-day( 11- 4 PM)_ans4
+10,Customer Retention_Radio1Daily_ans1
+8,Customer Retention_Radio1Weekly Once_ans2
+7,Customer Retention_Radio1Monthly Once_ans3
+15,Customer Retention_Radio1Once in 2-3 Months_ans4
+10,Customer Retention_Radio1Never_ans5
+38,Customer Retention_MatrixSingleAnswer2Miserably_ans1
+42,Customer Retention_MatrixSingleAnswer2Somewhat Satisfactory_ans2
+39,Customer Retention_MatrixSingleAnswer2Very Satisfactory_ans3
+3,Customer Retention_Checkbox5Evenings (4-9 PM)_ans5
+1,Customer Retention_Checkbox5Any time of the day on Weekdays_ans6
+2,Customer Retention_Checkbox5Any time of the day on Weekends_ans7
+29,Customer Retention_Radio6Yes_ans1
+21,Customer Retention_Radio6No_ans2
+10,Customer Retention_MultiSelect7Quickly identify the problem_ans1
+13,Customer Retention_MultiSelect7Appear knowledgeable and competent_ans2
+13,Customer Retention_MultiSelect7Help you understand the cause and the solution to the problem_ans3
+14,Customer Retention_MultiSelect7Handle issues with courtesy and professionalism_ans4
+50,Customer Retention_Text8_ans1
+50,Customer Retention_Text9_ans1
+13,Customer Retention_Checkbox10Sales_ans1
+11,Customer Retention_Checkbox10Installation_ans2
+6,Customer Retention_Checkbox10Services_ans3
+9,Customer Retention_Checkbox10Customer Service Desk_ans4
+8,Customer Retention_Checkbox10All Services are very good_ans5
+3,Customer Retention_Checkbox10Liked none of our Services_ans6
+50,Customer Retention_Ranking11Sales_ans1
+50,Customer Retention_Ranking11Pre-Sales_ans2
+50,Customer Retention_Ranking11Services_ans3
+50,Customer Retention_Ranking11Customer Service Desk_ans4
+21,Customer Retention_MatrixMultipleAnswers12CoreMotives_ans1
+11,Customer Retention_MatrixMultipleAnswers12Email_ans2
+13,Customer Retention_MatrixMultipleAnswers12Marketing Automation_ans3
+18,Customer Retention_MatrixMultipleAnswers12Mobile Marketing_ans4
+23,Customer Retention_MatrixMultipleAnswers12PlacePunch_ans5
+4,Customer Retention_NPS130_ans1
+6,Customer Retention_NPS131_ans2
+8,Customer Retention_NPS132_ans3
+8,Customer Retention_NPS133_ans4

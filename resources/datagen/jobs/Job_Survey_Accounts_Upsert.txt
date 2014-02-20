@@ -6,7 +6,7 @@
     "extract": {
         "source": "sfdc",
         "connection": "conf/application.conf",
-        "table": "contact",
+        "table": "account",
         "fields": [
             "Id",
             "Name"
@@ -20,7 +20,7 @@
         "tableInfo": [
             {
                 "file": "./resources/datagen/process/account_survey.csv",
-                "table": "contact",
+                "table": "account",
                 "joinColumnName": "Name",
                 "columns": [
                     {
