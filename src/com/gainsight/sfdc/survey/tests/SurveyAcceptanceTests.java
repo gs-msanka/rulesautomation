@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class SurveyAcceptanceTests extends BaseTest{
 
-    private final String TEST_DATA_FILE = "./testdata/sfdc/survey/SurveyData.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/survey/SurveyData.xls";
 
 	@BeforeClass
 	public void setUp() {
