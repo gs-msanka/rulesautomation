@@ -1,7 +1,6 @@
 //Cleanup
 delete [select id from JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c in (select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=false)];
 delete[select id from JBCXM__Survey__c where JBCXM__IsAnonymous__c=false];
-delete [select id from Contact ];
 
 //Design Survey
 //Add Surveys - Non-Anonymous
@@ -40,7 +39,7 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment','S
  {
 			if(!QTypes.get(qNo).equals('NPS'))			
 					{
-						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=true,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
+						sur1Questions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c=sur.Id,JBCXM__IsActive__c=true,JBCXM__IsRequired__c=false,JBCXM__Title__c=Questions.get(qNo),JBCXM__DisplayOrder__c=qNo+1,JBCXM__Type__c=QTypes.get(qNo),SurQues_ExternalID__c=sur.SurMaster_ExternalID__c+'_'+QTypes.get(qNo)+(qNo+1)));
 					}
 			else
 			{
@@ -170,24 +169,25 @@ publishSurvey.JBCXM__PublishDate__c=system.Date.today();
  //Distribute Survey
  //Loading contacts into contacts object for Survey Participants
   
- List<Account> accList = new List<Account>();
-for(integer a=1; a<3 ; a++) {
-   Account acc = new Account(Name ='Non-Anonymous Survey Account  ' +a);
-   accList.add(acc);
-}
-insert accList;
- 
-List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Non-Anonymous Survey%'];
-List<Contact> contactList = new List<Contact>();
-List<String> emails  = new List<String>{'hitesh@release41.com', 'rajesh@release41.com','srividya@release41.com','giri@release41.com'};
-List<String> names = new List<String>{'Hitesh', 'Rajesh','Vidya','Giri'};
-Contact con = null;
-for(Account acc : SurveyAcc) {
-    for(Integer j=0;j<emails.size();j++)
-    {
-		con = new Contact(AccountId = acc.Id,LastName = names.get(j),Email = emails.get(j));
-        contactList.add(con);
-	}
-}
-
-insert contactList;
+ //List<Account> accList = new List<Account>();
+//for(integer a=1; a<3 ; a++) {
+//   Account acc = new Account(Name ='Non-Anonymous Survey Account  ' +a);
+//   accList.add(acc);
+//}
+//insert accList;
+// 
+//List<Account> SurveyAcc = [SELECT ID FROM Account where name like 'Non-Anonymous Survey%'];
+//List<Contact> contactList = new List<Contact>();
+//List<String> emails  = new List<String>{'hitesh@release41.com', 'rajesh@release41.com','srividya@release41.com','giri@release41.com'};
+//List<String> names = new List<String>{'Hitesh', 'Rajesh','Vidya','Giri'};
+//Contact con = null;
+//for(Account acc : SurveyAcc) {
+//    for(Integer j=0;j<emails.size();j++)
+//    {
+//		con = new Contact(AccountId = acc.Id,LastName = names.get(j),Email = emails.get(j));
+//        contactList.add(con);
+//	}
+//}
+//
+//insert contactList;
+//
