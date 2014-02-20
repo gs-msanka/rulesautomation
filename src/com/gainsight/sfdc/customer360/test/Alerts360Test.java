@@ -1,15 +1,18 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Retention360;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.utils.DataProviderArguments;
-
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +23,19 @@ public class Alerts360Test extends BaseTest {
             + generatePath(dirs);
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_360_Tests.xls";
     String playbookScriptfile = env.basedir+"/testdata/sfdc/alerttests/Alert_360_Setup_Script.txt";
-    String deleteScript = "SELECT ID FROM JBCXM__Alert__c";
+    String ALERT_OBJECT = "JBCXM__Alert__c";
 
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
-        apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
-        if(!isPackageInstance()) {
-            deleteScript = removeNameSpace(deleteScript);
+        DataETL dataETL = new DataETL();
+        try {
+            dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        soql.deleteQuery(deleteScript);
+        apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -219,10 +224,7 @@ public class Alerts360Test extends BaseTest {
     public void informationMessageCheck(HashMap<String , String> testData) {
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
         String script = "SELECT id FROM JBCXM__Alert__c WHERE JBCXM__Account__r.Name LIKE '"+alertData.get("customer")+"'";
-        if(!isPackageInstance()) {
-            script = removeNameSpace(script);
-        }
-        soql.deleteQuery(script);
+        soql.deleteQuery(resolveStrNameSpace(script));
         AlertCardLabel alabel = new AlertCardLabel();
         alabel.setLabel5("Alert ASV");
         alabel.setLabel4("Reason");

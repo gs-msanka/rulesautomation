@@ -1,18 +1,16 @@
 package com.gainsight.sfdc.retention.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.AlertsPage;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -25,16 +23,17 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
-    String DELETE_RECORDS = "SELECT ID FROM JBCXM__Alert__c";
+    String ALERT_OBJECT = "JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
-        if(!isPackageInstance()) {
-            DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
+        DataETL dataETL = new DataETL();
+        try {
+            dataETL.cleanUp(ALERT_OBJECT, null);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        soql.deleteQuery(DELETE_RECORDS);
-
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

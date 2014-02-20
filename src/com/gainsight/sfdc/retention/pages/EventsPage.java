@@ -1,17 +1,14 @@
 package com.gainsight.sfdc.retention.pages;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pojos.Event;
 import com.gainsight.sfdc.retention.pojos.Task;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class EventsPage extends RetentionBasePage {
     private final String READY_INDICATOR        = "calhomeBtn";
@@ -633,7 +630,7 @@ public class EventsPage extends RetentionBasePage {
     public void waitforEventCardtoLoad() {
         boolean tasksDisplayed = false;
         boolean eventDataLoaded = false;
-        amtDateUtil.sleep(5);
+        amtDateUtil.stalePause();
         for(int i=0; i< 15 ; i++) {
             if(isEventDataLoaded() && isTasksLoaded()) {
                 Report.logInfo("Event Card loaded successfully");

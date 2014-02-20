@@ -1,36 +1,36 @@
 package com.gainsight.sfdc.retention.tests;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.retention.pages.PlayBooksPage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import jxl.read.biff.BiffException;
-
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.retention.pages.PlayBooksPage;
-import com.gainsight.sfdc.tests.BaseTest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class PlaybooksTests extends BaseTest {
     String[] dirs = { "playbooktests" };
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
-    String DELETE_RECORDS = "SELECT ID FROM JBCXM__Playbook__c";
+    String PLAYBOOK_OBJECT = "JBCXM__Playbook__c";
 
     @BeforeClass
     public void setUp() {
         Report.logInfo("Starting Playbook Test Case...");
         basepage.login();
-        if(!isPackageInstance()) {
-            DELETE_RECORDS = removeNameSpace(DELETE_RECORDS);
+        DataETL dataETL = new DataETL();
+        try {
+            dataETL.cleanUp(PLAYBOOK_OBJECT, null);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        soql.deleteQuery(DELETE_RECORDS);
     }
 
     @Test

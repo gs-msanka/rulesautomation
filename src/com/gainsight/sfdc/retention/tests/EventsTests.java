@@ -1,21 +1,20 @@
 package com.gainsight.sfdc.retention.tests;
 
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.retention.pages.EventsPage;
+import com.gainsight.sfdc.retention.pojos.Event;
+import com.gainsight.sfdc.tests.BaseTest;
+import jxl.read.biff.BiffException;
+import org.testng.Assert;
+import org.testng.annotations.*;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.gainsight.sfdc.retention.pojos.Event;
-import jxl.read.biff.BiffException;
-
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.retention.pages.EventsPage;
-import com.gainsight.sfdc.tests.BaseTest;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 public class EventsTests extends BaseTest {
     String[] dirs = {"eventtests"};
@@ -27,6 +26,7 @@ public class EventsTests extends BaseTest {
     String EVENT_PICKLIST_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
     String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+
     @BeforeClass
     public void setUp() {
         basepage.login();
@@ -36,12 +36,16 @@ public class EventsTests extends BaseTest {
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
     }
 
+    @AfterMethod
+    private void refresh() {
+        basepage.refreshPage();
+    }
+
     @Test
     public void Event_07() {
         if(!isEventCreateScriptExecuted) {
             createEventsFromScript();
         }
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         eventsPage.applyFilter("Sprint Planning");
@@ -55,7 +59,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_30() throws IOException, BiffException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
@@ -71,16 +74,12 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        recordCount = getQueryRecordCount(query);
+        recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_31() throws IOException, BiffException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
@@ -96,16 +95,12 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursYearlyNth' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        recordCount = getQueryRecordCount(query);
+        recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_33() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
@@ -123,7 +118,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_32() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_032");
@@ -142,7 +136,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_29() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
@@ -157,16 +150,12 @@ public class EventsTests extends BaseTest {
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthlyNth' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
         int recordCount;
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        recordCount = getQueryRecordCount(query);
+        recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_28() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
@@ -180,16 +169,12 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        int recordCount = getQueryRecordCount(query);
+        int recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_27() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
@@ -205,16 +190,12 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursWeekly' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        int recordCount = getQueryRecordCount(query);
+        int recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_26() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
@@ -230,16 +211,12 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        int recordCount = getQueryRecordCount(query);
+        int recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_25() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
@@ -255,16 +232,12 @@ public class EventsTests extends BaseTest {
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursEveryWeekDay' " +
                 "and JBCXM__Status__c = '"+eventData.get("status")+"' and JBCXM__Type__r.Name = '"+eventData.get("type")+"' and isdeleted = false";
-        if(!isPackageInstance()) {
-            query = removeNameSpace(query);
-        }
-        int recordCount = getQueryRecordCount(query);
+        int recordCount = getQueryRecordCount(resolveStrNameSpace(query));
         Assert.assertEquals(1, recordCount);
     }
 
     @Test
     public void Event_24() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage                       = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         List<HashMap<String, String>> taskDataList  =  new ArrayList<HashMap<String, String>>();
@@ -291,7 +264,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_18() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_018");
@@ -326,7 +298,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_17() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_017");
@@ -349,7 +320,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_16() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_016");
@@ -365,7 +335,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_04() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_004");
@@ -382,7 +351,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_03() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_003");
@@ -398,7 +366,6 @@ public class EventsTests extends BaseTest {
 
     @Test
     public void Event_01() throws BiffException, IOException {
-        basepage.refreshPage();
         EventsPage eventsPage               = basepage.clickOnRetentionTab().clickOnEventsTab();
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_001");
