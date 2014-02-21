@@ -30,7 +30,7 @@ public class AlertsTests extends BaseTest {
         userLocale = soql.getUserLocale();
         DataETL dataETL = new DataETL();
         try {
-            dataETL.cleanUp(ALERT_OBJECT, null);
+            dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
         } catch (IOException e) {
             e.printStackTrace();
         }

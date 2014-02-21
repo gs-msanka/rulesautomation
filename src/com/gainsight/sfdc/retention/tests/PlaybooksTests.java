@@ -27,7 +27,7 @@ public class PlaybooksTests extends BaseTest {
         basepage.login();
         DataETL dataETL = new DataETL();
         try {
-            dataETL.cleanUp(PLAYBOOK_OBJECT, null);
+            dataETL.cleanUp(resolveStrNameSpace(PLAYBOOK_OBJECT), null);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,6 +4,7 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.EventsPage;
 import com.gainsight.sfdc.retention.pojos.Event;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -26,11 +27,20 @@ public class EventsTests extends BaseTest {
     String EVENT_PICKLIST_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
     String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String EVENT_OBJECT = "JBCXM__CSEvent__c";
+    String TASKS_OBJECT = "JBCXM__CSTask__c";
 
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale           = soql.getUserLocale();
+        DataETL dataETL = new DataETL();
+        try {
+            dataETL.cleanUp(resolveStrNameSpace(EVENT_OBJECT), null);
+            dataETL.cleanUp(resolveStrNameSpace(TASKS_OBJECT), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
