@@ -35,8 +35,8 @@ public class EventsTests extends BaseTest {
     @BeforeClass
     public void setUp() {
         userLocale           = soql.getUserLocale();
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 8000]"));
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 8000]"));
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 8000];"));
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 8000];"));
         basepage.login();
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
         apex.runApexCodeFromFile(USER_SETUP_FILE);

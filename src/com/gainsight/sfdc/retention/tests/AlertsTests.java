@@ -24,7 +24,7 @@ public class AlertsTests extends BaseTest {
     @BeforeClass
     public void setUp() {
         userLocale = soql.getUserLocale();
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Alert__c LIMIT 8000]"));
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Alert__c LIMIT 8000];"));
         basepage.login();
 
 
