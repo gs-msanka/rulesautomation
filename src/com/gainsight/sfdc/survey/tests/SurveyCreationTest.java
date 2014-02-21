@@ -63,54 +63,6 @@ public class SurveyCreationTest extends BaseTest {
 
 	}
 
-	/*@Test
-	public void createNewSurveyWithThankYouRedirectURL() {
-		SurveyBasePage base = basepage.clickOnSurveyTab();
-		NewSurveyPage newsurvey = base.clickOnNew();
-		sdata.setCode(Utilities.getRandomString());
-		sdata.setTUOption("Redirect URL");
-        sdata.setThankYou("www.gainsight.com");
-		newsurvey.createNewSurvey(sdata);
-	}
-
-	@Test
-	public void createNewSurveyWithThankYouCustomPage() {
-		SurveyBasePage base = basepage.clickOnSurveyTab();
-		NewSurveyPage newsurvey = base.clickOnNew();
-		sdata.setCode(Utilities.getRandomString());
-		sdata.setTUOption("Custom Page");
-		sdata.setThankYou("gainsight");
-		newsurvey.createNewSurvey(sdata);
-
-	}
-
-	@Test
-	public void createNewSurveyWithNewSurveyLogo() {
-		SurveyBasePage base = basepage.clickOnSurveyTab();
-		NewSurveyPage newsurvey = base.clickOnNew();
-		sdata.setCode(Utilities.getRandomString());
-		sdata.setFilePath(TestEnvironment.basedir + "/testdata/sfdc/images/TestImage.png");
-		newsurvey.createNewSurvey(sdata);
-
-	}
-
-	@Test(dependsOnMethods={"createNewSurvey"})
-	public void createClonedSurvey() throws InterruptedException {
-		SurveyBasePage base = basepage.clickOnSurveyTab();
-		NewSurveyPage newsurvey = base.clickOnNew();
-		sdata.setCode(surveyname);
-		newsurvey.cloneSurvey(sdata);
-
-	}*/
-
-	@Test
-	public void cancelSurvey() {
-		SurveyBasePage base = basepage.clickOnSurveyTab();
-		NewSurveyPage newsurvey = base.clickOnNew();
-		sdata.setCode(Utilities.getRandomString());
-		newsurvey.cancelSurvey();
-	}
-	
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();

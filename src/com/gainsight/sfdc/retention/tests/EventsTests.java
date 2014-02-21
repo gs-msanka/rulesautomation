@@ -4,10 +4,12 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.EventsPage;
 import com.gainsight.sfdc.retention.pojos.Event;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,15 +34,10 @@ public class EventsTests extends BaseTest {
 
     @BeforeClass
     public void setUp() {
-        basepage.login();
         userLocale           = soql.getUserLocale();
-        DataETL dataETL = new DataETL();
-        try {
-            dataETL.cleanUp(resolveStrNameSpace(EVENT_OBJECT), null);
-            dataETL.cleanUp(resolveStrNameSpace(TASKS_OBJECT), null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 8000]"));
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 8000]"));
+        basepage.login();
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());

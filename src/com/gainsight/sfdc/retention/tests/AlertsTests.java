@@ -3,14 +3,12 @@ package com.gainsight.sfdc.retention.tests;
 import com.gainsight.sfdc.retention.pages.AlertsPage;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -23,17 +21,13 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
-    String ALERT_OBJECT = "JBCXM__Alert__c";
     @BeforeClass
     public void setUp() {
-        basepage.login();
         userLocale = soql.getUserLocale();
-        DataETL dataETL = new DataETL();
-        try {
-            dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Alert__c LIMIT 8000]"));
+        basepage.login();
+
+
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
