@@ -10,8 +10,8 @@
 
             <!-- Giri's Test-->
 
-            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
-            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+            <!--<class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />-->
 
             <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
             <!--
