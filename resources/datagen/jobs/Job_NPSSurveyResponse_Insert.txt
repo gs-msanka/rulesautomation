@@ -1,0 +1,22 @@
+{
+    "jobName": "job_insert_NPSSurveyResponse",
+    "jobType" : "Survey",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : true,
+    "preprocess" : {
+    	"inputFile" : "./testdata/sfdc/Survey/NPS_SurveyResponses.csv",
+    	"monthly" : false,
+    	"weekly" : false,
+    	"daysToAdd" : true,
+    	"fieldName" : "JBCXM__RESPONSEDATE__C",
+    	"outputFile" : "./resources/datagen/process/NPS_SurveyResponses_Processed.csv"
+    },
+    
+   "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__SurveyResponse__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "./resources/datagen/process/NPS_SurveyResponses_Processed.csv"
+    }
+}

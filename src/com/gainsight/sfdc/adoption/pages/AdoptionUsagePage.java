@@ -1,13 +1,13 @@
 package com.gainsight.sfdc.adoption.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AdoptionUsagePage extends AdoptionBasePage {
@@ -21,16 +21,17 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String PIN_ICON 				= "//img[@id='pinIcon']";
     private final String MONTH_SELECT 			= "//div[@class='JbaraMonthlyFilter hideForOldAdoption']/select";
     private final String YEAR_SELECT 			= "//div[@class='JbaraMonthlyFilter changeMyFloat']/select";
-    private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']"; //"//div[@class='newFilters']/div[2]/select";
+    private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']";
     private final String GO_BUTTON 				= "//div[@class='newFilters']/div[2]/input[@value='View Results']";
     private final String DATAVIEW_SELECT 		= "//select[@class='jbaraDummyAdoptionDataViewSelectControl min-width']";
     private final String WEEK_PERIOD_SELECT		= "//select[@class='dummyJbaraWeeksPeriodsSelectionCntrl min-width']";
-    private final String WEEKDATE_UPTO_INPUT	=	"//input[@class='jbaraAdoptionGridInputField min-width']";
-    private final String ADVANCEDSEARCH_BUTTON	=	"//span[@class='dummygrdAdvancedSearch' and @title='Search']";
+    private final String WEEKDATE_UPTO_INPUT	= "//input[@class='jbaraAdoptionGridInputField min-width']";
+    private final String ADVANCEDSEARCH_BUTTON	= "//span[@class='dummygrdAdvancedSearch' and @title='Search']";
     private final String ASEARCH_SEARCH_BUTTON 	= "//input[@class='Search' and @type='button']";
     private final String ASEARCH_RESET_BUTTON 	= "//input[@class='Reset' and @type='button']";
     private final String ASEARCH_CLOSE_BUTTON 	= "//input[@class='Close' and @type='button']";
     private final String ASEARCH_CLOSE 			= "//a[@class='ui-dialog-titlebar-close ui-corner-all']/span[text()='close']";
+    private final String UIVIEW_SELECT          = "//select[@class='jbaraDummyAdoptionUIViewsSelectControl']";
 
     String month 		= "";
     String year 		= "";
@@ -101,7 +102,9 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     public AdoptionUsagePage displayMonthlyUsageData() {
         Report.logInfo("Displaying Monthly usage Data");
         button.click(PIN_ICON);
-        field.selectFromDropDown(MONTH_SELECT, month);
+        Select select = new Select(driver.findElement(By.xpath(MONTH_SELECT)));
+        select.selectByValue(month);
+        //field.selectFromDropDown(MONTH_SELECT, month);
         field.selectFromDropDown(YEAR_SELECT, year);
         field.setSelectField(MEASURE_SELECT, measure);
         if(byDataGran.isEmpty() == false && byDataGran.length() > 1 ) {
@@ -236,32 +239,32 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     public boolean isDataPresentInGrid(String s) {
         Report.logInfo("Checking Weather data is displayed in the grid");
-        //String s = "Test acc 1 | Test acc 1 -SandBox Instance | 19/02/2013 | 0 | 0 | 0% | 5 ";
         List<String> values = new ArrayList<String>();
         for(String v : s.split("\\|")) {
             values.add(v.trim());
         }
-        //setFilter("gs_cl", values.get(0).toString());
         field.clearAndSetText("gs_cl", values.get(0).toString());
         amtDateUtil.stalePause();
         boolean result = false;
-        WebElement table = driver.findElement(By.id("adoptionTableList_IdOfJBaraStandardView"));
+        WebElement table = element.getElement("//table[contains(@id,'adoptionTableList_IdOf')]");
         List<WebElement> rows = table.findElements(By.tagName("tr"));
         int index = 0;
         String rowtext = null;
+        int a =0;
         for(WebElement row : rows) {
+            ++a;
             if(row.getAttribute("role").equalsIgnoreCase("row")) {
                 rowtext = row.getText();
-                System.out.println("Row Text : " +row.getText());
+                Report.logInfo("Row Text : " + row.getText());
             }
             for(String val : values ) {
                 System.out.println("Checking String :" +val);
                 if(rowtext.contains(val)) {
                     result = true;
-                    System.out.println("Matched : " +result);
+                    Report.logInfo("Matched : " + result);
                 } else {
                     result = false;
-                    System.out.println("Matched : " +result);
+                    Report.logInfo("Matched : " +result);
                     break;
                 }
             }
@@ -272,12 +275,62 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
         System.out.println("The Number of actual Rows : " +rows.size());
         Report.logInfo("Checked the data in the grid & returning result :" +result);
+        Report.logInfo("Matched in row : " +a);
         return result;
     }
 
-    public AdoptionAnalyticsPage navToUsageByCustIns(String cName, String Instance) {
+
+    public AdoptionAnalyticsPage clickOnViewUsage(String s) {
+        Report.logInfo("Checking Weather data is displayed in the grid");
+        List<String> values = new ArrayList<String>();
+        for(String v : s.split("\\|")) {
+            values.add(v.trim());
+        }
+        field.clearAndSetText("gs_cl", values.get(0).toString());
+        amtDateUtil.stalePause();
+        boolean result = false;
+        WebElement table = element.getElement("//table[contains(@id,'adoptionTableList_IdOf')]");
+        List<WebElement> rows = table.findElements(By.tagName("tr"));
+        int index = 0;
+        String rowtext = null;
+        int a =0;
+        for(WebElement row : rows) {
+            ++a;
+            if(row.getAttribute("role").equalsIgnoreCase("row")) {
+                rowtext = row.getText();
+                Report.logInfo("Row Text : " +row.getText());
+            }
+            for(String val : values ) {
+                System.out.println("Checking String :" +val);
+                if(rowtext.contains(val)) {
+                    result = true;
+                    Report.logInfo("Matched : " +result);
+                } else {
+                    result = false;
+                    Report.logInfo("Matched : " +result);
+                    break;
+                }
+            }
+            if(result) {
+                break;
+            }
+            index++;
+        }
+        System.out.println("The Number of actual Rows : " +rows.size());
+        Report.logInfo("Checked the data in the grid & returning result :" +result);
+        Report.logInfo("Matched in row : " +a);
+        item.click("//table[contains(@id, 'adoptionTableList_IdOf')]/descendant::tr[@id='"+a+"']/td/atext()='View'");
+        return new AdoptionAnalyticsPage();
+    }
+
+    public AdoptionAnalyticsPage navToUsageByCust(String cName, String instance) {
         Report.logInfo("Click on view button to view single customers usage data");
-        item.click("//td[text()='"+Instance+"']/preceding-sibling::td[@title='"+cName+"']/preceding-sibling::td/a[text()='View']");
+        if(instance != null) {
+            item.click("//td[text()='"+instance+"']/preceding-sibling::td[@title='"+cName+"']/preceding-sibling::td/a[text()='View']");
+        } else {
+            item.click("//td[@title='"+cName+"']/preceding-sibling::td[@title='View']/a[text()='View']");
+        }
+
         Report.logInfo("CLicked on view to view single customers usage data");
         return new AdoptionAnalyticsPage();
     }
@@ -290,16 +343,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
 
 
-    public void applyGridCustStatusFilter(String filter) {
-        Report.logInfo("Applying Customer status level filter on adotpion grid.");
-        field.click(GRID_CUST_STATUS_IMG);
-        wait.waitTillElementDisplayed(GRID_CUST_STATUS_BLOCK, MIN_TIME, MAX_TIME);
-        if(filter==null) {
-            filter = "All";
-        }
-        item.click("//div[@class='dummyDDFilterList' and contains(text(), '"+filter+"')]");
-        Report.logInfo("Applied Customer status level filter on adotpion grid.");
-    }
+
 
     public boolean exportGrid() {
         boolean result = false;
@@ -351,6 +395,23 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         wait.waitTillElementDisplayed(ASEARCH_SEARCH_BUTTON, MIN_TIME, MAX_TIME);
         return this;
     }
+
+
+    public AdoptionUsagePage selectUIView(String viewName) {
+        field.selectFromDropDown(UIVIEW_SELECT, viewName);
+        return this;
+    }
+
+    public AdoptionUsagePage selectCustomersView(String value) {
+        String s = "//div[@class='dummyDDStatusFilterHead ui-corner-all']";
+        item.click(s);
+        String s1 = "//div[@class='dummyDDFilterList']";
+        wait.waitTillElementDisplayed(s1, MIN_TIME, MAX_TIME);
+        String s2 = "//div[@class='dummyDDFilterList' and contains(text(), '"+value+"')]";
+        item.click(s2);
+        return this;
+    }
+
 
 
 }

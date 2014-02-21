@@ -1,11 +1,13 @@
 package com.gainsight.sfdc.adoption.tests;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -23,7 +25,6 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
     static String resDir = "./resources/datagen/";
-    String OBJECT_NAME = "JBCXM__UsageData__c";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
@@ -39,13 +40,14 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
             //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
             createFieldsOnUsageData();
             DataETL dataLoader = new DataETL();
-            dataLoader.cleanUp(isPackageInstance() ? USAGE_NAME : removeNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(isPackageInstance() ? CUSTOMER_INFO : removeNameSpace(CUSTOMER_INFO), null);
+            apex.runApexCodeFromFile(measureFile, isPackageInstance());
+            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
             jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
             dataLoader.execute(jobInfo1);
             jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
             dataLoader.execute(jobInfo2);
-            dataLoader.cleanUp(isPackageInstance() ? OBJECT_NAME : removeNameSpace(OBJECT_NAME), null);
             jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Weekly.txt"), JobInfo.class);
             apex.runApexCodeFromFile(measureFile);
             apex.runApexCodeFromFile(advUsageConfigFile);
@@ -66,7 +68,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
             //Max of only 5 jobs can run in an organization at a given time
             //Care to be taken that there are no apex jobs are running in the organization.
             int i= -7;
-            for(int k = 0; k< 12;k++) {
+            for(int k = 0; k< 3;k++) {
                 for(int m=0; m < 5; m++, i=i-7) {
                     //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                     // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
@@ -79,10 +81,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                     code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                             .replaceAll("THEYEARCHANGE", String.valueOf(year))
                             .replace("THEDAYCHANGE", String.valueOf(day));
-                    if(!isPackageInstance()) {
-                        code    = removeNameSpace(code).replace("JBCXM.", "");
-                    }
-                    apex.runApex(code);
+                    apex.runApex(resolveStrNameSpace(code));
                 }
                 for(int l= 0; l < 200; l++) {
                     String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
@@ -111,8 +110,6 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     public void viewWeeklyInsData() {
 
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-    }
-        /*
         usage.setMeasure("Page Visits");
         usage.setNoOfWeeks("9 Weeks");
         usage.setByDataGran("By Instance");
@@ -186,7 +183,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
 
     /**
      * This parameter returns the String with comprises of yyyy|mm|dd format.
-     * @param weekStartDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+     * @param weekDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
      * @param daysToAdd - number of days to add for current day.
      * @return String of format "yyyy|mm|dd".
      */

@@ -5,7 +5,6 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
-import com.gainsight.sfdc.util.datagen.DataETL;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,7 +22,6 @@ public class loadDataFromFile {
 
     public void loadData(String object, String fileName, String extId) throws IOException {
         File tempFile = resolveNameSpace(fileName);
-        DataETL gen = new DataETL();
         if(extId != null) {
             SfdcBulkApi.pushDataToSfdc(object, "upsert", tempFile, extId);
         } else {
@@ -34,26 +32,31 @@ public class loadDataFromFile {
    public File resolveNameSpace(String  fileName) throws IOException {
        TestEnvironment env =new TestEnvironment();
        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-       CSVReader csvReader = new CSVReader(new FileReader(fileName));
+       if(!isPackage) {
+           CSVReader csvReader = new CSVReader(new FileReader(fileName));
 
-       List<String[]> csvData = csvReader.readAll();
-       String[] headerRows = csvData.get(0);
-       for(int i=0; i< headerRows.length; i++) {
-           if(!isPackage) {
-               headerRows[i] = headerRows[i].replaceAll("JBCXM__", "");
+           List<String[]> csvData = csvReader.readAll();
+           String[] headerRows = csvData.get(0);
+           for(int i=0; i< headerRows.length; i++) {
+               if(!isPackage) {
+                   headerRows[i] = headerRows[i].replaceAll("JBCXM__", "");
+               }
            }
+           csvData.remove(0);
+           csvData.add(0, headerRows);
+           csvReader.close();
+
+           CSVWriter csvWriter = new CSVWriter(new FileWriter("./resources/process/Temp.csv"));
+           csvWriter.writeAll(csvData);
+           csvWriter.flush();
+           csvWriter.close();
+
+           File f = new File("./testdata/sfdc/Temp.csv");
+           return f;
+       } else {
+           return new File(fileName);
        }
-       csvData.remove(0);
-       csvData.add(0, headerRows);
-       csvReader.close();
 
-       CSVWriter csvWriter = new CSVWriter(new FileWriter("./testdata/sfdc/Temp.csv"));
-       csvWriter.writeAll(csvData);
-       csvWriter.flush();
-       csvWriter.close();
-
-       File f = new File("./testdata/sfdc/Temp.csv");
-       return f;
 
     }
 }

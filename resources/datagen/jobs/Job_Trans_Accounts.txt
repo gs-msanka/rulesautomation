@@ -29,7 +29,7 @@
                 ]
             },
             {
-                "file": "./testdata/sfdc/UsageData/Data/1700_Accounts.csv",
+                "file": "./testdata/sfdc/transactions/TrailData/Account.csv",
                 "table": "usagedata",
                 "joinColumnName": "Name",
                 "columns": [
@@ -44,10 +44,6 @@
                     {
                         "name": "TYPE",
                         "alias": "TYPE"
-                    },
-                    {
-                        "name": "SHIPPINGSTREET",
-                        "alias": "SHIPPINGSTREET"
                     },
                     {
                         "name": "WEBSITE",
@@ -66,6 +62,10 @@
                         "alias": "DESCRIPTION"
                     },
                     {
+                       "name": "ANNUALREVENUE"
+                        "alias": "ANNUALREVENUE"
+                    },
+                    {
                         "name": "Data_ExternalId__c",
                         "alias": "Data_ExternalId__c"
                     }
@@ -74,7 +74,7 @@
         ],
         "join": true,
         "picklist": false,
-        "output": "./resources/datagen/process/1700_Final_Accounts.csv"
+        "output": "./resources/datagen/process/Final_Trans_Accounts.csv"
     },
     "load": {
         "target": "sfdc",
@@ -82,6 +82,6 @@
         "operation": "upsert",
         "contentType": "CSV",
         "externalIDField": "Id",
-        "file": "./resources/datagen/process/1700_Final_Accounts.csv"
+        "file": "./resources/datagen/process/Final_Trans_Accounts.csv"
     }
 }

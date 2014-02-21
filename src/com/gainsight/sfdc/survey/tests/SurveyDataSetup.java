@@ -10,6 +10,7 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.SOQLUtil;
 
 public class SurveyDataSetup  {
 
@@ -42,7 +43,7 @@ public class SurveyDataSetup  {
         sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Anonymous_No_Acc_Tracking.apex", isPackageInstance);
         sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Non_Anonymous_survey.apex", isPackageInstance);
         System.out.println("STEP 2 : DONE!");
-        
+       
         try{
         //STEP 3 :  Upsert the existing Account Fields with Account ext id
         System.out.println("STEP 3 :  Upsert the existing Account Fields with Account ext id");
@@ -62,7 +63,7 @@ public class SurveyDataSetup  {
         dataLoader.execute(job_SurPart);
         System.out.println("STEP 5 : DONE!");
         
-/*        //STEP 6: Create NPS SurveyMaster
+       //STEP 6: Create NPS SurveyMaster
         sfdc.runApexCodeFromFile("./apex_scripts/Surveys/NonAnonymous_NPSSurveyMaster.apex", isPackageInstance);
         
         //STEP 7 : Upload NPS Survey Response
@@ -70,12 +71,27 @@ public class SurveyDataSetup  {
         JobInfo job_NPSSurResp= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_NPSSurveyResponse_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_NPSSurResp);
         System.out.println("STEP 7 : DONE!");
-*/
+
         //STEP 8 : Upload Survey User Responses
         System.out.println("STEP 8 : Upload Survey User Responses");
         JobInfo job_SurUserAns= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyUserAnswers_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_SurUserAns);
         System.out.println("STEP 8: DONE");
+        
+        //STEP 9 : Update Survey with User Response count
+        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Update_UserResponseCount.apex", isPackageInstance);
+        
+        //STEP 10 : Upsert AllowedAnswers with User Response counts
+        System.out.println("STEP 10 : Upsert AllowedAnswers with User Response counts");
+        JobInfo job_SurAllowAns= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyAllowedAnswers_Upsert.txt"), JobInfo.class);
+        dataLoader.execute(job_SurAllowAns);
+        System.out.println("STEP 10: DONE");
+        
+        //STEP 11 : Upsert Survey Questions with User Response Counts
+        System.out.println("STEP 11 : Upsert Survey Questions with User Response Counts");
+        JobInfo job_SurQues= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyQuestions_Upsert.txt"), JobInfo.class);
+        dataLoader.execute(job_SurQues);
+        System.out.println("STEP 11: DONE");
         
         }catch(Exception ex){
         	Report.logInfo(ex.getLocalizedMessage());
