@@ -16,17 +16,17 @@
 
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
-            <class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
-            <class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
-            <!--
-            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
-            <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
-            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
+            <!--<class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
+           <class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
+
+           <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
+           <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
+           <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
 
 
 
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>-->
+           <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
+           <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>-->
         </classes>
     </test>
 </suite>
