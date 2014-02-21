@@ -1,0 +1,69 @@
+JBCXM__Uiviews__c add1 = new JBCXM__Uiviews__c();
+add1.Name = 'Customers users View script';
+add1.JBCXM__ColumnList__c = '[{"name":"Users__c","label":"Users","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true},{"name":"Stage__r.Name","label":"Stage","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},{"name":"Status__r.Name","label":"Status","displayOrder":3,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true}]';
+add1.JBCXM__FilterConditions__c = '[{"name":"Users__c","value":"10","objectName":"CustomerInfo__c","fieldType":"DOUBLE","operator":"h"}]';
+add1.JBCXM__ReportParams__c='[{"fieldName":"Users__c","objectName":"CustomerInfo__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Users","fieldType":"DOUBLE","value":"60","selectedOperator":"m","logicalOperator":""}]';
+add1.JBCXM__IsStandard__c = false;
+add1.JBCXM__UITabName__c= 'Customers';
+add1.JBCXM__Visibility__c= 'Public';
+add1.JBCXM__IsShown__c = true;
+add1.JBCXM__VisualType__c = 'List';
+insert add1;
+
+
+JBCXM__Uiviews__c add2 = new JBCXM__Uiviews__c();
+add2.Name = 'Customers Industry View script';
+add2.JBCXM__ColumnList__c = '[{"name":"Industry","label":"Industry","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Industry__c","label":"Industry","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"STRING","isGroupable":false,"hasJBCXMNS":true}]';
+add2.JBCXM__FilterConditions__c = '[{"name":"Industry__c","value":"M","objectName":"CustomerInfo__c","fieldType":"STRING","operator":"c"}]';
+add2.JBCXM__ReportParams__c='[{"fieldName":"Industry__c","objectName":"CustomerInfo__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"},{\\"key\\":\\"s\\",\\"value\\":\\"starts with\\"},{\\"key\\":\\"c\\",\\"value\\":\\"contains\\"},{\\"key\\":\\"k\\",\\"value\\":\\"does not contain\\"}]","label":"Industry","fieldType":"STRING","value":"Manu","selectedOperator":"c","logicalOperator":""}]';
+add2.JBCXM__IsStandard__c = false;
+add2.JBCXM__UITabName__c= 'Customers';
+add2.JBCXM__Visibility__c= 'Public';
+add2.JBCXM__IsShown__c = true;
+add2.JBCXM__VisualType__c = 'List';
+insert add2;
+
+
+JBCXM__Uiviews__c add3 = new JBCXM__Uiviews__c();
+add3.Name = 'Customers Created View script';
+add3.JBCXM__ColumnList__c = '[{"name":"CreatedBy.Name","label":"Created By","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"CreatedDate","label":"Created Date","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false}]';
+add3.JBCXM__FilterConditions__c = '[{"name":"CreatedBy.Name","value":"@@CURRENTUSER","objectName":"CustomerInfo__c","fieldType":"USERLOOKUP","operator":"e"}]';
+add3.JBCXM__ReportParams__c='[{"fieldName":"CreatedDate","objectName":"CustomerInfo__c","ctrlType":"timeframe","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Created Date","fieldType":"TIMEFRAMENORMALDATETIME","value":"JBcurfy","selectedOperator":"e","logicalOperator":""}]';
+add3.JBCXM__IsStandard__c = false;
+add3.JBCXM__UITabName__c= 'Customers';
+add3.JBCXM__Visibility__c= 'Public';
+add3.JBCXM__IsShown__c = true;
+add3.JBCXM__VisualType__c = 'List';
+insert add3;
+
+
+JBCXM__Uiviews__c Create = new JBCXM__Uiviews__c();
+Create.Name = 'Customers ASV View Script';
+Create.JBCXM__ColumnList__c = '[{"name":"ASV__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":false},{"name":"MRR__c","label":"MRR","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":false},{"name":"CreatedBy.Name","label":"Created By","displayOrder":3,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false}]';
+Create.JBCXM__FilterConditions__c = '[{"name":"ASV__c","value":"1000","objectName":"CustomerInfo__c","fieldType":"CURRENCY","operator":"h"}]';
+Create.JBCXM__ReportParams__c='[{"fieldName":"CreatedBy.Name","objectName":"CustomerInfo__c","ctrlType":"select","ctrlData":"[{\\"key\\":\\"cu\\",\\"value\\":\\"Current User\\"},{\\"key\\":\\"ou\\",\\"value\\":\\"Other User\\"}]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"c\\",\\"value\\":\\"contains\\"},{\\"key\\":\\"s\\",\\"value\\":\\"starts with\\"},{\\"key\\":\\"k\\",\\"value\\":\\"does not contain\\"}]","label":"Created By","fieldType":"USERLOOKUP","value":"@@CURRENTUSER","selectedOperator":"e","logicalOperator":""}]';
+Create.JBCXM__IsStandard__c = false;
+Create.JBCXM__UITabName__c= 'Customers';
+Create.JBCXM__Visibility__c= 'Public';
+Create.JBCXM__IsShown__c = true;
+Create.JBCXM__VisualType__c = 'List';
+insert Create;
+
+
+
+JBCXM__Uiviews__c Create1 = new JBCXM__Uiviews__c();
+Create1.Name = 'Customer MRR View script';
+Create1.JBCXM__ColumnList__c = '[{"name":"ASV__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"MRR__c","label":"MRR","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Users__c","label":"Users","displayOrder":3,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true}]';
+Create1.JBCXM__FilterConditions__c = '[{"name":"MRR__c","value":"500","objectName":"CustomerInfo__c","fieldType":"CURRENCY","operator":"h"}]';
+Create1.JBCXM__ReportParams__c='[{"fieldName":"MRR__c","objectName":"CustomerInfo__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"MRR","fieldType":"CURRENCY","value":"2000","selectedOperator":"m","logicalOperator":""}]';
+Create1.JBCXM__IsStandard__c = false;
+Create1.JBCXM__UITabName__c= 'Customers';
+Create1.JBCXM__Visibility__c= 'Public';
+Create1.JBCXM__IsShown__c = true;
+Create1.JBCXM__VisualType__c = 'List';
+insert Create1;
+
+
+
+
+
