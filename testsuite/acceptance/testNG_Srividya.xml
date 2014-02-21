@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true">
+<suite name="Automation Project" preserve-order="true" >
 
 	<listeners>
 		<listener class-name="com.gainsight.utils.AutTestListener" />
@@ -9,9 +9,9 @@
 		<classes>
 			<!--Srividya's Tests -->
 			
-			<!--<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
-			<class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>-->
-			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
+			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
+		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
+			<!-- <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
           	<methods>
 					<include name="addScoreWithNumeric" />
 					<include name="editNumericScores" />
@@ -24,7 +24,7 @@
 					<include name="addOverallSummary" />
 					<include name="editOverallSummary" />				
 				</methods>
-          	</class>
+          	</class>-->
 		</classes>
 	</test>
 </suite>

@@ -229,10 +229,10 @@ public class DataETL implements IJobExecutor {
                 }
             } else{ //in case there is no transform part...only loading
             	if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()),load.getExternalIDField());
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(load.getFile()),load.getExternalIDField());
                 }
             	else {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),new File(load.getFile()));
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(load.getFile()));
                 }
 
             }
