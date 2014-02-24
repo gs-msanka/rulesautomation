@@ -106,7 +106,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewMonthlyInsData() {
+    public void Adoption_Instance_Monthly_ViewMonthlyInsData() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         setMonthAndYear(0);
@@ -123,7 +123,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void viewMonthlyAccDataSUM() {
+    public void Adoption_Instance_Monthly_ViewMonthlyAccDataSUM() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Visits");
         usage.setDataGranularity("By Account");
@@ -144,7 +144,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewMonthlyAccDataAVG() {
+    public void Adoption_Instance_Monthly_ViewMonthlyAccDataAVG() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         usage.setDataGranularity("By Account");
@@ -164,7 +164,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewMonthlyAccDataCount() {
+    public void Adoption_Instance_Monthly_ViewMonthlyAccDataCount() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setDataGranularity("By Account");
@@ -183,14 +183,14 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void testMonthlyAdoptionSelectionFormDisplayed() {
+    public void Adoption_Instance_Monthly_TestMonthlyAdoptionSelectionFormDisplayed() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         Assert.assertTrue(usage.isMonthlyFormEleDisplayed(), "Checking if Monthly form is displayed");
         Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
     @Test
-    public void testAdoptionGridExport() {
+    public void Adoption_Instance_Monthly_TestAdoptionGridExport() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setDataGranularity("By Account");
@@ -203,7 +203,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageInGridAndGraph() {
+    public void Adoption_Instance_Monthly_ViewAccountLevelUsageInGridAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         setMonthAndYear(0);
@@ -228,7 +228,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewInstanceLevelUsageInGridAndGraph() {
+    public void Adoption_Instance_Monthly_ViewInstanceLevelUsageInGridAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Visits");
         setMonthAndYear(0);
@@ -255,7 +255,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewInstanceLevelUsageGraph() {
+    public void Adoption_Instance_Monthly_ViewInstanceLevelUsageGraph() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("COMERGALV SA DE CV");
         analyticsPage.setInstance("COMERGALV SA DE CV - Instance 2");
@@ -276,7 +276,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void viewAccountLevelUsageGraph() {
+    public void Adoption_Instance_Monthly_ViewAccountLevelUsageGraph() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Vicor");
         analyticsPage.setInstance("All");
@@ -296,7 +296,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageGraphWithMissingInfo() {
+    public void Adoption_Instance_Monthly_ViewAccountLevelUsageGraphWithMissingInfo() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
         analyticsPage.setInstance("All");
@@ -317,7 +317,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void noAdoptionDataFoundMsgVerification() {
+    public void Adoption_Instance_Monthly_NoAdoptionDataFoundMsgVerification() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("ABASTECEDORA DE METALES Y DERIVADOS SA DE CV");
         analyticsPage = analyticsPage.displayCustMonthlyData();

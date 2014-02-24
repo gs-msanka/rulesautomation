@@ -57,7 +57,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewWeeklyData() {
+    public void Adoption_Account_Weekly_ViewWeeklyData() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         usage.setNoOfWeeks("12 Weeks");
@@ -89,7 +89,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageInGridAndGraph() {
+    public void Adoption_Account_Weekly_ViewAccountLevelUsageInGridAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("6 Weeks");
@@ -110,7 +110,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageGraph() {
+    public void Adoption_Account_Weekly_ViewAccountLevelUsageGraph() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Vicor");
         analyticsPage.setForTimeWeekPeriod("52 Weeks");
@@ -125,7 +125,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageGraphWithMissingInfo() {
+    public void Adoption_Account_Weekly_ViewAccountLevelUsageGraphWithMissingInfo() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
         analyticsPage.setForTimeWeekPeriod("52 Weeks");
@@ -141,7 +141,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void noAdoptionDataFoundMsgVerification() {
+    public void Adoption_Account_Weekly_NoAdoptionDataFoundMsgVerification() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("ABASTECEDOR HOSPITALARIO DEL");
         analyticsPage = analyticsPage.displayCustWeeklyData();

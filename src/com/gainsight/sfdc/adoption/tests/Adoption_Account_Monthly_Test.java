@@ -60,7 +60,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void usageDataVerification1() {
+    public void adoption_Account_Monthly_UsageDataVerification1() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         setMonthAndYear(0);
@@ -77,7 +77,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void usageDataVerification2() {
+    public void adoption_Account_Monthly_UsageDataVerification2() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         setMonthAndYear(0);
@@ -95,7 +95,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void usageDataVerificationInGirdAndGraph() {
+    public void adoption_Account_Monthly_UsageDataVerificationInGirdAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         setMonthAndYear(0);
@@ -120,7 +120,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewUsageForCustomer() {
+    public void adoption_Account_Monthly_ViewUsageForCustomer() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("Anunay Fab Ltd");
         usage.setMeasureNames("All Measures");
@@ -139,7 +139,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void viewPartialUsageForCustomer() {
+    public void adoption_Account_Monthly_ViewPartialUsageForCustomer() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("DAKTEL COMUNICACIONES SA DE CV");
         usage.setMeasureNames("All Measures");
@@ -158,7 +158,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewUsageForCustomerNoData() {
+    public void adoption_Account_Monthly_ViewUsageForCustomerNoData() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("ARGO ALMACENADORA SA DE CV");
         usage.setMeasureNames("All Measures");

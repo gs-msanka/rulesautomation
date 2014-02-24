@@ -107,7 +107,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
 
 
     @Test
-    public void viewWeeklyInsData() {
+    public void Adoption_Instance_Weekly_ViewWeeklyInsData() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         usage.setNoOfWeeks("12 Weeks");
@@ -122,7 +122,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
 
 
     @Test
-    public void viewWeeklyAccDataSUM() {
+    public void Adoption_Instance_Weekly_ViewWeeklyAccDataSUM() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         usage.setNoOfWeeks("12 Weeks");
@@ -137,7 +137,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewWeeklyAccDataAVG() {
+    public void Adoption_Instance_Weekly_ViewWeeklyAccDataAVG() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("9 Weeks");
@@ -153,7 +153,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewWeeklyAccDataCount() {
+    public void Adoption_Instance_Weekly_ViewWeeklyAccDataCount() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("6 Weeks");
@@ -168,14 +168,14 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void testWeeklyAdoptionSelectionFormDisplayed() {
+    public void Adoption_Instance_Weekly_TestWeeklyAdoptionSelectionFormDisplayed() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         Assert.assertTrue(usage.isWeeklyFormEleDisplayed(), "Checking if weekly form is displayed");
         Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
     @Test
-    public void testAdoptionGridExport() {
+    public void Adoption_Instance_Weekly_TestAdoptionGridExport() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
@@ -186,7 +186,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageInGridAndGraph() {
+    public void Adoption_Instance_Weekly_ViewAccountLevelUsageInGridAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("12 Weeks");
@@ -209,7 +209,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewInstanceLevelUsageInGridAndGraph() {
+    public void Adoption_Instance_Weekly_ViewInstanceLevelUsageInGridAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Visits");
         usage.setNoOfWeeks("3 Weeks");
@@ -233,7 +233,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewInstanceLevelUsageGraph() {
+    public void Adoption_Instance_Weekly_ViewInstanceLevelUsageGraph() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("JUAN ANGEL FLORES AGUIRRE");
         analyticsPage.setInstance("JUAN ANGEL FLORES AGUIRRE - Instance 1");
@@ -252,7 +252,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
 
 
     @Test
-    public void viewAccountLevelUsageGraph() {
+    public void Adoption_Instance_Weekly_ViewAccountLevelUsageGraph() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Vicor");
         analyticsPage.setInstance("All");
@@ -270,7 +270,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void viewAccountLevelUsageGraphWithMissingInfo() {
+    public void Adoption_Instance_Weekly_ViewAccountLevelUsageGraphWithMissingInfo() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
         analyticsPage.setInstance("All");
@@ -289,7 +289,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     }
 
     @Test
-    public void noAdoptionDataFoundMsgVerification() {
+    public void Adoption_Instance_Weekly_NoAdoptionDataFoundMsgVerification() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("ABASTECEDORA DE VALVULAS INTRUMENT");
         analyticsPage = analyticsPage.displayCustWeeklyData();

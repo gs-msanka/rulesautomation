@@ -1,26 +1,26 @@
 package com.gainsight.sfdc.pages;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.helpers.Transactions;
 import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Base Class to hold all the Top Level Navigations

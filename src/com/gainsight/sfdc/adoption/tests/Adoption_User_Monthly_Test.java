@@ -106,7 +106,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void usageDataVerificationSum() {
+    public void Adoption_User_Monthly_UsageDataVerificationSum() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         setMonthAndYear(0);
@@ -122,7 +122,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void usageDataVerificationAvg() {
+    public void Adoption_User_Monthly_UsageDataVerificationAvg() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         setMonthAndYear(0);
@@ -139,7 +139,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void usageDataVerificationCount() {
+    public void Adoption_User_Monthly_UsageDataVerificationCount() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         setMonthAndYear(0);
@@ -157,7 +157,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void usageDataVerificationInGirdAndGraph() {
+    public void Adoption_User_Monthly_UsageDataVerificationInGirdAndGraph() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Files Downloaded");
         setMonthAndYear(2);
@@ -182,7 +182,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewUsageForCustomer() {
+    public void Adoption_User_Monthly_ViewUsageForCustomer() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("JUAN ANGEL FLORES AGUIRRE");
         usage.setMeasureNames("All Measures");
@@ -201,7 +201,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
 
 
     @Test
-    public void viewPartialUsageForCustomer() {
+    public void Adoption_User_Monthly_ViewPartialUsageForCustomer() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("CRIBAS Y ARRENDAMIENTOS SA DE CV");
         usage.setMeasureNames("All Measures");
@@ -220,7 +220,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void viewUsageForCustomerNoData() {
+    public void Adoption_User_Monthly_ViewUsageForCustomerNoData() {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         usage.setCustomerName("ARGO ALMACENADORA SA DE CV");
         usage.setMeasureNames("All Measures");
