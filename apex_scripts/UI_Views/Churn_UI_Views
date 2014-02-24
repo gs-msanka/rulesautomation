@@ -1,0 +1,23 @@
+JBCXM__Uiviews__c add1 = new JBCXM__Uiviews__c();
+add1.Name = 'CChurn Filter by Reason script1';
+add1.JBCXM__ColumnList__c = '[{"name":"CreatedBy.Name","label":"Created By","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"CreatedDate","label":"Created Date","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false}]';
+add1.JBCXM__FilterConditions__c = '[{"name":"CreatedBy.Name","value":"@@CURRENTUSER","objectName":"TransHeader__c","fieldType":"USERLOOKUP","operator":"e"}]';
+add1.JBCXM__ReportParams__c='[{"fieldName":"CreatedDate","objectName":"TransHeader__c","ctrlType":"timeframe","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Created Date","fieldType":"TIMEFRAMENORMALDATETIME","value":"JBcurfy","selectedOperator":"e","logicalOperator":""}]';
+add1.JBCXM__IsStandard__c = false;
+add1.JBCXM__UITabName__c= 'Churn';
+add1.JBCXM__Visibility__c= 'Public';
+add1.JBCXM__IsShown__c = true;
+add1.JBCXM__VisualType__c = 'List';
+insert add1;
+
+JBCXM__Uiviews__c Create = new JBCXM__Uiviews__c();
+Create.Name = 'Churn Filter by Current user script1';
+Create.JBCXM__ColumnList__c = '[{"name":"CreatedBy.Name","label":"Created By","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"CreatedDate","label":"Created Date","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false}]';
+Create.JBCXM__FilterConditions__c = '[{"name":"CreatedBy.Name","value":"@@CURRENTUSER","objectName":"TransHeader__c","fieldType":"USERLOOKUP","operator":"e"}]';
+Create.JBCXM__ReportParams__c='[{"fieldName":"CreatedDate","objectName":"TransHeader__c","ctrlType":"timeframe","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Created Date","fieldType":"TIMEFRAMENORMALDATETIME","value":"JBcurfy","selectedOperator":"e","logicalOperator":""}]';
+Create.JBCXM__IsStandard__c = false;
+Create.JBCXM__UITabName__c= 'Churn';
+Create.JBCXM__Visibility__c= 'Public';
+Create.JBCXM__IsShown__c = true;
+Create.JBCXM__VisualType__c = 'List';
+insert Create;

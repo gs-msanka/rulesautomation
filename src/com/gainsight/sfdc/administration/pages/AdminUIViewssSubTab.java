@@ -16,12 +16,15 @@ public class AdminUIViewssSubTab extends BasePage {
 	private final String UI_VIEW_CANCEL        = "//input[@class='btn btnCancelClick']";
 	private final String WAIT_PAGE_LOAD        = "//div[@class='bPageBlock brandSecondaryBrd bEditBlock secondaryPalette']";
 	private final String SELECT_DROPDOWN       = "//select[@class='ddTabsList']";
-	private final String AVAILABLE_FIELDS      = "ddColumnSelectorList";
+	private final String AVAILABLE_FIELDS      = "//select[@id='ddColumnSelectorList' and @multiple='multiple']"; //"ddColumnSelectorList";
 	private final String VIEW_NAME             = "//input[@ class='jbaraDummyUIViewInputCtrl viewNameInput']";
 	private final String FILTER_SELECT_FIELDS  = "//select[@class='ddFilterFields']";
 	private final String FILTER_SELECT_OPERATOR= "//select[@class='dummyOperatorFields ddOperatorClass']";
 	private final String FILTER_VALUE          = "//input[@class='Name filterFieldClass']";
-	private final String FILTER_VALUE_SELECT   = "//select[@class='AccountSource filterFieldClass']";
+	
+	private final String FILTER_VALUE_TEXT     = "//td[@class='tdFilterValue othertds']//input";
+	private final String MULTI_FILTER_VALUE    = "//select[@multiple='multiple']";
+	private final String FILTER_VALUE_SELECT   = "//td[@class='tdFilterValue othertds']//select";
 	
 	//private final String
 	//private final String
@@ -34,78 +37,63 @@ public class AdminUIViewssSubTab extends BasePage {
 	}
 	
 	
-	public AdminUIViewssSubTab selectTabName(String tabName, String ViewName, String fieldName, 
-			                                              String selectffield, String foperator , String fvalue) {
-		System.out.println("selectffield has these values---1:" +selectffield);
+	public AdminUIViewssSubTab selectTabName(String tabName, String ViewName,  
+			                                              String selectffield, String foperator , String fvalue,String sctFieldName) {
 		button.click(NEW);
 		System.out.println("Clicked on NEW" );
 		wait.waitTillElementPresent(WAIT_PAGE_LOAD, MIN_TIME, MAX_TIME);
-		verifyandSelectTabName(tabName, ViewName, fieldName);
-		specifyFilterCriteria(selectffield, foperator ,fvalue);
+		verifyandSelectTabName(tabName, ViewName, selectffield, foperator , fvalue, sctFieldName);
 		return this;
 		}		
 		
-	
-	
-	public AdminUIViewssSubTab verifyandSelectTabName(String tabName, String ViewName, String fieldName  ) {
-			                                  
-	 String[] SelectTabs = {"Customers 360", "NPS", "Survey Participants", "survey Details Report" };  
+	public AdminUIViewssSubTab verifyandSelectTabName(String tabName, String ViewName,String selectffield, String foperator , String fvalue ,String sctFieldName) {             
+	 String[] SelectTabs = {"Customer360", "NPS","Survey Detail Report", "Survey Participants"};  
 		for(String Nmechck:SelectTabs ) {
-			System.out.println("Namecheck items are:--"+Nmechck);
 			if(Nmechck.contains(tabName)) {
-				 System.out.println("In the if block tab name is :--"+tabName);
 				 field.selectFromDropDown(SELECT_DROPDOWN, tabName);
-				 
-				//selectAvailableFields(fieldName);
+				 selectAvailableFields(sctFieldName);
 			 return this;
 			}
 	 	}
 			 field.selectFromDropDown(SELECT_DROPDOWN, tabName);
 			 field.clearAndSetText(VIEW_NAME, ViewName);
-			// specifyFilterCriteria(selectfield, foperator ,fvalue, selectfvalue);
+			 System.out.println("After the View name:--");
+			 specifyFilterCriteria(selectffield, foperator ,fvalue);
+			 selectAvailableFields(sctFieldName);
 		return this;		
 	}
 	
-	
 	public AdminUIViewssSubTab specifyFilterCriteria(String selectffield, String foperator , String fvalue) {
-		
-		System.out.println("se;ectffield has these values:" +selectffield);
 		field.selectFromDropDown(FILTER_SELECT_FIELDS, selectffield);
-		
-		
-		
 		wait.waitTillElementDisplayed(FILTER_SELECT_OPERATOR, MIN_TIME, MAX_TIME);
+		System.out.println("foperator value is:--"+foperator);
 		field.selectFromDropDown(FILTER_SELECT_OPERATOR, foperator);//equals, contains,lessthan...
-		if(item.isElementPresent(FILTER_VALUE)) {
-		field.selectFromDropDown(FILTER_VALUE, fvalue);
+		
+	if(item.isElementPresent(MULTI_FILTER_VALUE)) {
+			System.out.println("Fvalue is:--"+fvalue);
+		       field.selectFromDropDown(MULTI_FILTER_VALUE, fvalue);
+		} else if(item.isElementPresent(FILTER_VALUE_TEXT)) {
+			System.out.println("Fvalue is:--"+fvalue);
+		     field.selectFromDropDown(FILTER_VALUE_TEXT, fvalue);
 		} else {
-			
-			//field.selectFromDropDown(FILTER_VALUE_SELECT, selectfvalue);
+			 field.selectFromDropDown(FILTER_VALUE_SELECT, fvalue);
 		} return this;	
 	}
 	
-	
-	
-	
-	
-	
-public AdminUIViewssSubTab selectAvailableFields(String fieldName ) {
 		
-		boolean result = false;
-		Select s = new Select(item.getElement(AVAILABLE_FIELDS));
-		List<WebElement> avblefilds = s.getOptions();
-		for(WebElement webEle : avblefilds) {
-   if(webEle.getText().equalsIgnoreCase(fieldName)) {
-		result = true;
-	  if(result == true) {
-			field.selectFromDropDown(AVAILABLE_FIELDS, fieldName);//selecting existing field Name
-		    } 
-		}
-		return this;
-	}
+public AdminUIViewssSubTab selectAvailableFields(String sctFieldName ) {
+	System.out.println("****In selectAvailableFields*****");
+	System.out.println("splits.size: " + sctFieldName);
+	 String[] allsctFieldNames= sctFieldName.split(",");
+	 System.out.println("splits.size: " + allsctFieldNames.length);
+	 for(int k=0;k<allsctFieldNames.length;k++){
+		 field.selectFromDropDown(AVAILABLE_FIELDS, allsctFieldNames[k]);//selecting existing field Name
+	     button.click("//img[@class='rightArrowIcon']");
+	 }
+	button.click("//input[@class='btnSaveClick btn']");
 		return this;
 }
 	
-	
+
 
 }
