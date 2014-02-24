@@ -302,8 +302,53 @@ public class BaseTest {
             Report.logInfo("Failed to create Fields on the object :" +object);
             e.printStackTrace();
         }
-
-
     }
+
+    /**
+     * This parameter returns the String with comprises of yyyy|mm|dd format.
+     * @param weekDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+     * @param daysToAdd - number of days to add for current day.
+     * @return String of format "yyyy|mm|dd".
+     */
+    public String getWeekLabelDate(String weekDay, int daysToAdd, boolean usesEndDate, boolean userFormat) {
+        String date= null;
+        try {
+            Calendar c = Calendar.getInstance();
+            Map<String,Integer> days = new HashMap<String, Integer>();
+            days.put("Sun", 1);
+            days.put("Mon", 2);
+            days.put("Tue", 3);
+            days.put("Wed", 4);
+            days.put("Thu", 5);
+            days.put("Fri", 6);
+            days.put("Sat", 7);
+            int weekDate = days.get(weekDay);
+            if(usesEndDate) {
+                weekDate = (weekDate ==1) ? 7 : weekDate-1;
+            }
+            c.set(Calendar.DAY_OF_WEEK, weekDate);
+            System.out.println(c.get(Calendar.DATE));
+            c.add(Calendar.DATE, daysToAdd);
+            int day = c.get(Calendar.DATE);
+            int month = c.get(Calendar.MONTH);
+            month += 1;
+            int year = c.get(Calendar.YEAR);
+            if(userFormat) {
+                if(userLocale.contains("en_US")) {
+                    date = month + "/" +day + "/"+year;
+
+                } else if(userLocale.contains("en_IN")) {
+                    date = day + "/" +month + "/" +year;
+                }
+            } else {
+                date = year + "|" + month + "|"+day;
+            }
+
+        } catch (NullPointerException e) {
+            Report.logInfo(e.getLocalizedMessage());
+        }
+        return date;
+    }
+
 
 }
