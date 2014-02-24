@@ -29,6 +29,7 @@ public class BaseTest {
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
     public String userLocale;
+    public String userDir = System.getProperty("user.dir");
 
 	@BeforeSuite
 	public void init() throws Exception {

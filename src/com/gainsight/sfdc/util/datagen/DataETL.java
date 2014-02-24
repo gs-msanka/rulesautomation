@@ -33,7 +33,8 @@ public class DataETL implements IJobExecutor {
 	static Map<String, String> pMap;
 	
 	static String dropTableQuery = "DROP TABLE IF EXISTS ";
-	static String resDir = "./resources/datagen/";
+    static String userDir = System.getProperty("user.dir");
+	static String resDir = userDir+"/resources/datagen/";
 	static SfdcBulkOperationImpl op;
 	static SFDCInfo info;
 	static JobInfo jobInfo;
@@ -292,7 +293,7 @@ public class DataETL implements IJobExecutor {
             query = query+" Where "+condition;
             System.out.println("Where Attached Pull Query : " + query);
         }
-		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
+		String path = userDir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
 		File f = new File(path);
@@ -317,7 +318,7 @@ public class DataETL implements IJobExecutor {
 		System.out.println("Pulling " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
 		System.out.println("Pull Query : " + query);
-		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
+		String path = userDir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
 		File f = new File(path);
@@ -366,7 +367,7 @@ public class DataETL implements IJobExecutor {
             csvWriter.flush();
             csvWriter.close();
 
-            File f = new File("./testdata/sfdc/Temp.csv");
+            File f = new File(userDir+"/testdata/sfdc/Temp.csv");
             return f;
         } else {
             return new File(fileName);
