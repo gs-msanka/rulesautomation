@@ -183,7 +183,7 @@ public class SfdcBulkApi {
 			Report.logInfo("OUTPUT:\n" + output);
 			try {
 				//Save the file to the respective destination
-				FileOutputStream fos = new FileOutputStream(basedir+filePath);
+				FileOutputStream fos = new FileOutputStream(filePath);
 				fos.write(output.getBytes());
 				fos.close();
 				op.setJobState(async_job_status_url, "Closed");
