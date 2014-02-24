@@ -5,7 +5,7 @@ delete [select id from Account where name like 'Milestones Account'];
 
 //Adding into picklist for category Milestones
 List<JBCXM__PickList__c> pList=new List<JBCXM__PickList__c>();
-List<String>  milestones=new List<String>{'Implementation end date','Referral','HealthCheck','First Transaction','Go Live!','Renewal!','Software Upgrade','Quarterly Business Review'};
+List<String>  milestones=new List<String>{'Implementation end date','Referral','HealthCheck','First Transaction','Go Live!','Renewal!','Software Upgrade','Quarterly Business Review Meet'};
 List<String> colors=new List<String>{'#FF0000','#ff9900','#ffff00','#008b00','#3333ff','#0000cc','#00cd00','#99ffcc'};
 for(Integer i=0;i<milestones.size();i++)
 {
@@ -55,7 +55,7 @@ insert cust;
 List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
 List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Milestones Account - new business' LIMIT 1];
 List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
-List<String> comments=new List<String>{'Customer signed off on Implementation','Referred to 2 more customers','Check on Customer Scorecard','First Transactions successfully added','Customer Go Live and using system','Renewal due for this customer','Software release 4.0.2','1st Quarterly Business Review'};
+List<String> comments=new List<String>{'Customer signed off on Implementation','Referred to 2 more customers','Check on Customer Scorecard','First Transactions successfully added','Customer Go Live and using system','Renewal due for this customer','Software release 4.0.2','1st Quarterly Business Review Meet'};
 
 Integer d=0;
 for(Integer p=0;p<msList.size();p++)

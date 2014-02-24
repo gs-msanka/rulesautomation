@@ -1,14 +1,10 @@
 package com.gainsight.sfdc.retention.pages;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.retention.pojos.Alert;
 import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
-import com.gainsight.sfdc.retention.pojos.Task;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +127,6 @@ public class AlertsPage extends RetentionBasePage {
     //owner, subject, date, priority, status.
     public void addTask(HashMap<String, String> taskData) {
         item.click(ADD_TASK_BUTTON);
-        amtDateUtil.stalePause();
         wait.waitTillElementDisplayed(GS_TASK_ASSIGN_INPUT, MIN_TIME, MAX_TIME);
         fillTaskForm(taskData);
         item.click(TASK_SAVE_BUTTON);

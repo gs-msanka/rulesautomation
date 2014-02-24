@@ -1,5 +1,5 @@
 DELETE [SELECT ID FROM JBCXM__UIViews__c Where JBCXM__SectionId__r.Name IN ('Contacts')];
-DELETE [SELECT ID FROM JBCXM__C360Sections__c Where Name IN ('Contacts', 'Gainsight-Tasks')];
+DELETE [SELECT ID FROM JBCXM__C360Sections__c Where Name IN ('Gainsight-Tasks')];
 JBCXM__C360Sections__c c360Sec = new JBCXM__C360Sections__c(JBCXM__AccountReference__c = 'AccountId',
 															JBCXM__DisplayOrder__c = 11,
 															Name = 'Contacts',
@@ -41,3 +41,4 @@ JBCXM__UIViews__c uView3 = new JBCXM__UIViews__c(JBCXM__ColumnList__c = '[{"name
 insert uView1;
 insert uView2;
 insert uView3;
+

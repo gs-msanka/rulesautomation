@@ -6,7 +6,10 @@ import com.gainsight.sfdc.retention.pojos.Event;
 import com.gainsight.sfdc.tests.BaseTest;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -26,11 +29,15 @@ public class EventsTests extends BaseTest {
     String EVENT_PICKLIST_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
     String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String EVENT_OBJECT = "JBCXM__CSEvent__c";
+    String TASKS_OBJECT = "JBCXM__CSTask__c";
 
     @BeforeClass
     public void setUp() {
-        basepage.login();
         userLocale           = soql.getUserLocale();
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 8000];"));
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 8000];"));
+        basepage.login();
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());

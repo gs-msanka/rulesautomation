@@ -3,7 +3,6 @@ package com.gainsight.sfdc.retention.tests;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -24,13 +23,8 @@ public class PlaybooksTests extends BaseTest {
     @BeforeClass
     public void setUp() {
         Report.logInfo("Starting Playbook Test Case...");
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Playbook__c LIMIT 8000];"));
         basepage.login();
-        DataETL dataETL = new DataETL();
-        try {
-            dataETL.cleanUp(PLAYBOOK_OBJECT, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
