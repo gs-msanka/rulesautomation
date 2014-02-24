@@ -3,7 +3,7 @@ JBCXM__C360Sections__c c360Sec = c360SecList.get(0);
 c360Sec.JBCXM__IsActive__c = true;
 update c360Sec;
 DELETE [SELECT Id FROM JBCXM__UIViews__c WHERE JBCXM__UITabName__c = 'Customer360'];
-JBCXM__UIViews__c UIView  = new JBCXM__UIViews__c(Name = 'Customer 360',
+JBCXM__UIViews__c UIView  = new JBCXM__UIViews__c(Name = 'Customer 360' ,
                                                     JBCXM__VisualType__c = 'List',
                                                     JBCXM__UITabName__c = 'Customer360',
                                                     JBCXM__Visibility__c = 'Public',
