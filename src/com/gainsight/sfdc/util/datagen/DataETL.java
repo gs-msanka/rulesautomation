@@ -33,7 +33,7 @@ public class DataETL implements IJobExecutor {
 	static Map<String, String> pMap;
 	
 	static String dropTableQuery = "DROP TABLE IF EXISTS ";
-    static String userDir = System.getProperty("user.dir");
+    static String userDir = System.getProperty("basedir", ".");
 	static String resDir = userDir+"/resources/datagen/";
 	static SfdcBulkOperationImpl op;
 	static SFDCInfo info;
