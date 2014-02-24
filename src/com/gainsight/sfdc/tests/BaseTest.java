@@ -29,7 +29,7 @@ public class BaseTest {
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
     public String userLocale;
-    public String userDir = System.getProperty("basedir", ".");
+    public String userDir = env.basedir;
 
 	@BeforeSuite
 	public void init() throws Exception {
