@@ -16,7 +16,6 @@
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
-		    <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
 
 			<!--Srividya's Tests -->
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests" />
