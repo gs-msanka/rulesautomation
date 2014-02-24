@@ -21,10 +21,10 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
-    static String resDir = "./resources/datagen/";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
+    String resDir = userDir+"/resources/datagen/";
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
 

@@ -22,7 +22,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
-    static String resDir = "./resources/datagen/";
+    String resDir = userDir+"/resources/datagen/";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;

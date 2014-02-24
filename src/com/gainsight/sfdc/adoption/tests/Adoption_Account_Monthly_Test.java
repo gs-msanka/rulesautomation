@@ -20,7 +20,8 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     Boolean isAggBatchsCompleted = false;
 
     ObjectMapper mapper = new ObjectMapper();
-    static String resDir = "./resources/datagen/";
+
+    String resDir = userDir+"/resources/datagen/";
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static JobInfo jobInfo1;
