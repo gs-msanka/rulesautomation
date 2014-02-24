@@ -17,11 +17,13 @@ import java.util.HashMap;
 public class SurveyAcceptanceTests extends BaseTest{
 
     private final String TEST_DATA_FILE = "testdata/sfdc/Survey/SurveyData.xls";
+    String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c WHERE JBCXM__Code__c = 'Survey Automated UI']";
 
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
+        apex.runApex(resolveStrNameSpace(QUERY));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

@@ -15,11 +15,13 @@ import org.testng.annotations.Test;
 public class SurveyCreationTest extends BaseTest {
 	SurveyData sdata = new SurveyData();
 	private String surveyname = "";
+    String QUERY = "DELETE [SELECT Id FROM JBCXM__Survey__c WHERE JBCXM__Title__c  = 'test'];";
 	@BeforeClass
 	public void setUp() {
         userLocale = soql.getUserLocale();
 		Report.logInfo("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
+        apex.runApex(resolveStrNameSpace(QUERY));
 		sdata.setTitle("test");
 		sdata.setStartDate(getDateFormat(0));
 		sdata.setEndDate(getDateFormat(30));
