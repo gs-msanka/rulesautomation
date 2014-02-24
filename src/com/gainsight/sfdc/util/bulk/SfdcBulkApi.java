@@ -183,7 +183,7 @@ public class SfdcBulkApi {
 			Report.logInfo("OUTPUT:\n" + output);
 			try {
 				//Save the file to the respective destination
-				FileOutputStream fos = new FileOutputStream(filePath);
+				FileOutputStream fos = new FileOutputStream(basedir+filePath);
 				fos.write(output.getBytes());
 				fos.close();
 				op.setJobState(async_job_status_url, "Closed");
@@ -207,7 +207,7 @@ public class SfdcBulkApi {
 		System.out.println("Pulling all Records of " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
 		System.out.println("Pull Query : " + query);
-		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
+		String path = basedir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
 		File f = new File(path);

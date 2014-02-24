@@ -4,11 +4,11 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
     "preprocess" : {
-    	"inputFile" : "./testdata/sfdc/UsageData/Data/Instance_Weekly.csv",
+    	"inputFile" : "/testdata/sfdc/UsageData/Data/Instance_Weekly.csv",
     	"monthly" : false,
     	"weekly" : true,
     	"fieldName" : "Date",
-    	"outputFile" : "./resources/datagen/process/UsageDataFinal.csv"
+    	"outputFile" : "/resources/datagen/process/UsageDataFinal.csv"
     },
     "extract": {
         "source": "sfdc",
@@ -18,14 +18,14 @@
             "Id",
             "Name"
         ],
-        "output": "./resources/datagen/process/account.csv"
+        "output": "/resources/datagen/process/account.csv"
     },
     "transform": {
     	"query" : "",
     	"useQuery" : false,
         "tableInfo": [
             {
-                "file": "./resources/datagen/process/account.csv",
+                "file": "/resources/datagen/process/account.csv",
                 "table": "account",
                 "joinColumnName": "name",
                 "columns": [
@@ -36,7 +36,7 @@
                 ]
             },
             {
-                "file": "./resources/datagen/process/UsageDataFinal.csv",
+                "file": "/resources/datagen/process/UsageDataFinal.csv",
                 "table": "usagedata",
                 "joinColumnName": "Account",
                 "columns": [
@@ -77,13 +77,13 @@
         ],
         "join": true,
         "picklist": false,
-        "output": "./resources/datagen/process/Final_Instance_Weekly.csv"
+        "output": "/resources/datagen/process/Final_Instance_Weekly.csv"
     },
     "load": {
         "target": "sfdc",
         "sObject": "JBCXM__UsageData__c",
         "operation": "insert",
         "contentType": "CSV",
-        "file": "./resources/datagen/process/Final_Instance_Weekly.csv"
+        "file": "/resources/datagen/process/Final_Instance_Weekly.csv"
     }
 }

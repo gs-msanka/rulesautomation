@@ -12,14 +12,14 @@
             "Name"
            
         ],
-        "output": "./resources/datagen/process/account_survey.csv"
+        "output": "/resources/datagen/process/account_survey.csv"
     },
     "transform": {
     	"query" : "",
     	"useQuery" : false,
         "tableInfo": [
             {
-                "file": "./resources/datagen/process/account_survey.csv",
+                "file": "/resources/datagen/process/account_survey.csv",
                 "table": "account",
                 "joinColumnName": "Name",
                 "columns": [
@@ -30,7 +30,7 @@
                 ]
             },
             {
-                "file": "./testdata/sfdc/Survey/Accounts_fromSampleData.csv",
+                "file": "/testdata/sfdc/Survey/Accounts_fromSampleData.csv",
                 "table": "accounts",
                 "joinColumnName": "Name",
                 "columns": [
@@ -48,7 +48,7 @@
         ],
         "join": true,
         "picklist": false,
-        "output": "./resources/datagen/process/Accounts_fromSampleData.csv"
+        "output": "/resources/datagen/process/Accounts_fromSampleData.csv"
     },
     "load": {
         "target": "sfdc",
@@ -56,6 +56,6 @@
         "operation": "upsert",
         "contentType": "CSV",
         "externalIDField": "Id",
-        "file": "./resources/datagen/process/Accounts_fromSampleData.csv"
+        "file": "/resources/datagen/process/Accounts_fromSampleData.csv"
     }
 }

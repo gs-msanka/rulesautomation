@@ -142,8 +142,8 @@ public class DataETL implements IJobExecutor {
 			//Pre Process Especially for Usage Data
 			PreProcess preProcess = jobInfo.getPreProcessRule();
 			if(preProcess != null){
-				File inputFile = new File(preProcess.getInputFile());
-				File outputFile = new File(preProcess.getOutputFile());
+				File inputFile = new File(userDir+preProcess.getInputFile());
+				File outputFile = new File(userDir+preProcess.getOutputFile());
 				if(preProcess.isMonthly()) {
 					outputFile = FileProcessor.generateMonthlyUsageData(inputFile, preProcess.getFieldName(), outputFile);
 				}
@@ -164,7 +164,7 @@ public class DataETL implements IJobExecutor {
 			SfdcExtract pull = jobInfo.getExtractionRule();
 			if(pull != null && !pull.toString().contains("null")) {
 				String query = QueryBuilder.buildSOQLQuery(pull.getTable(), pull.getFields());
-				SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, pull.getOutputFileLoc());
+				SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, userDir+pull.getOutputFileLoc());
 			}
 			else
 				System.out.println("Nothing to extract. Check the Job Details");
@@ -178,11 +178,11 @@ public class DataETL implements IJobExecutor {
             SfdcLoad load = jobInfo.getLoadRule();
 			if(transform != null && !transform.toString().contains("null")) {
 				if(transform.isJoin()) {
-					transFile = new File(transform.getOutputFileLoc());
+					transFile = new File(userDir+transform.getOutputFileLoc());
 					ArrayList<TableInfo> tables = transform.getTableInfo();
 					for(TableInfo tableInfo : tables) {
 						db.executeStmt(dropTableQuery + tableInfo.getTable());
-						String createTableFromCSv = "CREATE TABLE " + tableInfo.getTable() + " AS SELECT * FROM CSVREAD('"+ tableInfo.getCsvFile() +"')";
+						String createTableFromCSv = "CREATE TABLE " + tableInfo.getTable() + " AS SELECT * FROM CSVREAD('"+ userDir+tableInfo.getCsvFile() +"')";
 						db.executeStmt(createTableFromCSv);
 						finalFields.put(tableInfo.getTable(), tableInfo.getColumns());
 						joinColumn.add(tableInfo.getJoinColumnName());
@@ -204,7 +204,7 @@ public class DataETL implements IJobExecutor {
 						System.out.println("Final Query provided by the user : " + finalQuery);
 					}
 						
-					db.executeStmt("call CSVWRITE ( '" + transform.getOutputFileLoc() + "', '" + finalQuery + "' ) ");
+					db.executeStmt("call CSVWRITE ( '" + userDir+transform.getOutputFileLoc() + "', '" + finalQuery + "' ) ");
 					if(transFile.exists())
 						System.out.println("Success");
 					else
@@ -224,16 +224,16 @@ public class DataETL implements IJobExecutor {
 			//Load the Data back to SFDC
 			if(transform!=null) {
                 if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(load.getFile()), load.getExternalIDField());
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()), load.getExternalIDField());
                 } else{
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(load.getFile()));
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()));
                 }
             } else{ //in case there is no transform part...only loading
             	if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(load.getFile()),load.getExternalIDField());
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
                 }
             	else {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(load.getFile()));
+                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
                 }
 
             }
@@ -262,7 +262,7 @@ public class DataETL implements IJobExecutor {
 		// TODO Auto-generated method stub
 		CSVReader reader = new CSVReader(new FileReader(transFile));
 		String[] cols;
-		File outputFile = new File(resDir+"job_final.csv");
+		File outputFile = new File(resDir+"process/job_final.csv");
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext();
 		while(cols != null) {
@@ -362,7 +362,7 @@ public class DataETL implements IJobExecutor {
             csvData.add(0, headerRows);
             csvReader.close();
 
-            CSVWriter csvWriter = new CSVWriter(new FileWriter("./resources/process/Temp.csv"));
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(userDir+"/resources/process/Temp.csv"));
             csvWriter.writeAll(csvData);
             csvWriter.flush();
             csvWriter.close();
