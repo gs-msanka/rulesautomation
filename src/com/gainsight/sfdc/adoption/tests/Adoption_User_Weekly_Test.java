@@ -68,7 +68,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         //Max of only 5 jobs can run in an organization at a given time
         //Care to be taken that there are no apex jobs are running in the organization.
         int i= -7;
-        for(int k = 0; k< 7;k++) {
+        for(int k = 0; k< 12;k++) {
             for(int m=0; m < 5; m++, i=i-7) {
                 //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                 // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
@@ -110,6 +110,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         usage = usage.displayWeeklyUsageData();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
+        usage.clearGirdFilter();
         //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
@@ -126,6 +127,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         usage.setDate(getWeekLabelDate("Wed", -7, false, true));
         usage = usage.displayWeeklyUsageData();
         usage = usage.selectUIView("Standard View");
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
@@ -142,6 +144,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         usage = usage.displayWeeklyUsageData();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
+        usage.clearGirdFilter();
         //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
@@ -162,6 +165,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
     }
@@ -173,6 +177,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("3 Weeks");
         usage.setDate(getWeekLabelDate("Wed", -7, false, true));
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.

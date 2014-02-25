@@ -109,6 +109,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Instance");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Instance | Renewal Date"));
@@ -124,6 +125,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -139,6 +141,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("9 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         usage = usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -155,6 +158,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("6 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -176,6 +180,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
+        usage.clearGirdFilter();
         usage = usage.displayWeeklyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
@@ -188,6 +193,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -211,6 +217,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("3 Weeks");
         usage.setDataGranularity("By Instance");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.

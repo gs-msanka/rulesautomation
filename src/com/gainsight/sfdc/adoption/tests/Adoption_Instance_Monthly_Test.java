@@ -110,6 +110,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Instance");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         Assert.assertTrue(usage.isAdoptionGridDisplayed(), "Verifying Adoption grid is displayed");
         Assert.assertTrue(usage.isGridHeaderMapped("Customer | Instance | Renewal Date"), "Verifying Grid Headers");
         Assert.assertTrue(usage.isDataPresentInGrid("AUREA SOFTWARE INC | AUREA SOFTWARE INC - Instance 1 | 2,544 | 5,274 | 1,199 | 5,799 | 4,013 | 1,712 | 8,866 | 1,224 | 3,315 | 818") , "Verifying Account Instance Level data");
@@ -127,6 +128,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -148,6 +150,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         usage = usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -168,6 +171,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
@@ -194,6 +198,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
     }
@@ -207,6 +212,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Account");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -232,6 +238,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Instance");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.

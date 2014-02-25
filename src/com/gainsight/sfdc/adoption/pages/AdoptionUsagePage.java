@@ -239,6 +239,12 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return result;
     }
 
+    public void clearGirdFilter() {
+        wait.waitTillElementDisplayed("gs_cl", MIN_TIME, MAX_TIME);
+        field.clearText("gs_cl");
+        amtDateUtil.stalePause();
+    }
+
     public boolean isDataPresentInGrid(String s) {
         Report.logInfo("Checking Weather data is displayed in the grid");
         List<String> values = new ArrayList<String>();

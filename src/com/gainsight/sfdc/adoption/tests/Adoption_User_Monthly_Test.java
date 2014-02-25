@@ -110,6 +110,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
@@ -126,6 +127,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -143,6 +145,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -161,6 +164,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
