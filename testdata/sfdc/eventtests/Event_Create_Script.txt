@@ -1,7 +1,7 @@
 DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 500];
 DELETE [SELECT ID FROM JBCXM__CSTask__c LIMIT 500];
 List<JBCXM__CSEvent__c> eventList = new List<JBCXM__CSEvent__c>();
-List<String> userNames = new List<String>{'Sri Vidya'};
+List<String> userNames = new List<String>{'Giribabu'};
 List<String> statusList = new List<String>{'Open', 'In Progress'};
 List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'SalesRep Name'
                                        AND JBCXM__Active__c = TRUE LIMIT 10];
