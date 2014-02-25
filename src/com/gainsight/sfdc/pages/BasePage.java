@@ -35,7 +35,7 @@ public class BasePage extends WebPage implements Constants {
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO  = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
 	private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
-	private final String C360_TAB           = "//a[contains(@title,'Customer Success 360')]";
+	private final String C360_TAB           = "//ul[@id='tabBar']/li/a[contains(@title,'Customer Success 360')]";
     private final String CUSTOMER_TAB       = "//a[contains(@title,'Customers Tab')]";
     private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
     private final String RETENTION_TAB      = "//a[contains(@title, 'Retention Tab')]";
@@ -110,7 +110,13 @@ public class BasePage extends WebPage implements Constants {
 		return new ChurnPage();
 	}
 	public Customer360Page clickOnC360Tab() {
-		item.click(C360_TAB);
+		if(item.isElementPresent(C360_TAB)){
+		   item.click(C360_TAB);
+		}
+		else{
+			item.click("//li[@id='MoreTabs_Tab']");
+			item.click("//ul[@id='MoreTabs_List']/li/a[@title='Customer Success 360 Tab']");
+		}
 		return new Customer360Page();
 	}
 	public OpportunitiesPage clickOnOpportunitiesTab() {

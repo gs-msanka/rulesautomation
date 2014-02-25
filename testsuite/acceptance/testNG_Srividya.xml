@@ -9,9 +9,9 @@
 		<classes>
 			<!--Srividya's Tests -->
 			
-			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
-		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
-			<!-- <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
+			<!-- <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
+		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>-->
+			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
           	<methods>
 					<include name="addScoreWithNumeric" />
 					 <include name="editNumericScores" />
@@ -22,7 +22,9 @@
 					<include name="addCommentsToMeasure" />
 					<include name="editCommentsInMeasure" />
 					<include name="addOverallSummary" />
-					<include name="editOverallSummary" />			
+					<include name="editOverallSummary" />	
+					<include name="addCustomerGoals"/>
+					<include name="editCustomerGoals"/>		
 				</methods>
           	</class>-->
 		</classes>
