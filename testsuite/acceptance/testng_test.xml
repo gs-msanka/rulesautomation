@@ -9,12 +9,12 @@
         <classes>
 
             <!-- Giri's Test-->
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/>
 
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
             <!--<class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>-->
 
         </classes>
