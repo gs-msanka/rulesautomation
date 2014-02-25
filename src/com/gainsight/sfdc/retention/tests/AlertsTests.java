@@ -21,10 +21,13 @@ public class AlertsTests extends BaseTest {
     Calendar c = Calendar.getInstance();
     Boolean isAlertCreateScriptExecuted = false;
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
+    String PLAYBOOKS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Playbook__c];";
+    String ALERTS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Alert__c];";
     @BeforeClass
     public void setUp() {
         userLocale = soql.getUserLocale();
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Alert__c LIMIT 8000];"));
+        apex.runApex(resolveStrNameSpace(ALERTS_DELETE_SCRIPT));
+        apex.runApex(resolveStrNameSpace(PLAYBOOKS_DELETE_SCRIPT));
         basepage.login();
 
 

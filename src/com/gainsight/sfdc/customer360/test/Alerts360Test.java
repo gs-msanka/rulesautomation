@@ -22,20 +22,21 @@ public class Alerts360Test extends BaseTest {
     private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
             + generatePath(dirs);
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_360_Tests.xls";
-    String playbookScriptfile = env.basedir+"/testdata/sfdc/alerttests/Alert_360_Setup_Script.txt";
+    String ALERT_SETUP_SCRIPT_FILE = env.basedir+"/testdata/sfdc/alerttests/Alert_360_Setup_Script.txt";
     String ALERT_OBJECT = "JBCXM__Alert__c";
+    String ALERTS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Alert__c];";
+    String PLAYBOOKS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Playbook__c];";
+    String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
         basepage.login();
         userLocale = soql.getUserLocale();
         DataETL dataETL = new DataETL();
-        try {
-            dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        apex.runApexCodeFromFile(playbookScriptfile, isPackageInstance());
+        dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
+        apex.runApex(resolveStrNameSpace(PLAYBOOKS_DELETE_SCRIPT));
+        apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(ALERT_SETUP_SCRIPT_FILE, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -247,7 +248,7 @@ public class Alerts360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_Alert_8")
     public void deleteAlerts(HashMap<String , String> testData) {
-
+        apex.runApex(resolveStrNameSpace(ALERTS_DELETE_SCRIPT));
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
         AlertCardLabel alabel = new AlertCardLabel();
         alabel.setLabel5("Alert ASV");
