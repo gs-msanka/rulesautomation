@@ -111,7 +111,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
+        //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Instance | Renewal Date"));
         //Checking the adoption data for a customer instance.
         Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN | TOMAS MARTINEZ PATLAN - Instance 2 | 1,662 | 7,159 | 7,296 | 5,663 | 4,085 | 9,931 | 8,497 | 4,595 | 5,743 | 5,076"));
