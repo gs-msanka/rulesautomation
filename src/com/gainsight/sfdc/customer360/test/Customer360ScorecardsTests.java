@@ -35,13 +35,19 @@ public class Customer360ScorecardsTests extends BaseTest {
 		 apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/scorecard.apex", isPackageInstance());
 		 
 		basepage.login();
-		cp = basepage.clickOnC360Tab();
+		
+		AdministrationBasepage adm=basepage.clickOnAdminTab();
+        AdminScorecardSection as=adm.clickOnScorecardSetion();
+        as.enableScorecard();
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
+        apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
+        cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Scorecard Account", true);
 		cs = (Customer360Scorecard) cp.goToScorecardSection();
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addScoreWithNumeric(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		int numOfGroups = Groups.size();
@@ -64,13 +70,13 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2 , dependsOnMethods ="addScoreWithNumeric")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void editNumericScores(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		int numOfGroups = Groups.size();
 		
 		int actualOverallScore = Integer.parseInt(getMapFromData(
-				testData.get("OverallScore")).get("Score"));
+				testData.get("OverallScore")).get("EditedScore"));
 		int currentScore=Integer.parseInt(cs.getOverallScore());
 		String Trend;
 		if(currentScore<actualOverallScore) Trend="Up";
@@ -83,9 +89,11 @@ public class Customer360ScorecardsTests extends BaseTest {
 			for (int m = 0; m < MeasuresForGroup.size(); m++) {
 				HashMap<String, String> MeasureDetails = getMapFromData(testData
 						.get(MeasuresForGroup.get("Measure" + (m + 1))));
+				if(MeasureDetails.containsKey("EditedScore")){
 				cs.addOrModifyMeasureScore(
 						MeasuresForGroup.get("Measure" + (m + 1)),
-						MeasureDetails.get("Score"), "Numeric", false); 
+						MeasureDetails.get("EditedScore"), "Numeric", false); 
+				}
 			}
 		}
 		Assert.assertTrue(cs.verifyOverallTrend(Trend),"Overall trend is correct for the numeric scheme");
@@ -94,7 +102,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority= 3)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Grade_Add")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Grade")
 	public void addScoreWithGrade(HashMap<String, String> testData) throws InterruptedException {
 		/*
         AdministrationBasepage adm=cs.clickOnAdminTab();
@@ -125,14 +133,14 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnMethods="addScoreWithGrade",priority=4)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Grade_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnMethods="addScoreWithGrade", priority=4)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Grade")
 	public void editGradeScores(HashMap<String, String> testData) {
 		
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		//String[] grades_arr={"F","E","D","C","B","A"};
 		String actualOverallScore = getMapFromData(
-				testData.get("OverallScore")).get("Score");
+				testData.get("OverallScore")).get("EditedScore");
 		String currentScore=cs.getOverallScore();
 		String Trend;
 		if(currentScore.compareTo(actualOverallScore)>0) Trend="Up";
@@ -146,9 +154,11 @@ public class Customer360ScorecardsTests extends BaseTest {
 			for (int m = 0; m < MeasuresForGroup.size(); m++) {
 				HashMap<String, String> MeasureDetails = getMapFromData(testData
 						.get(MeasuresForGroup.get("Measure" + (m + 1))));
+				if(MeasureDetails.containsKey("EditedScore")){
 				cs.addOrModifyMeasureScore(
 						MeasuresForGroup.get("Measure" + (m + 1)),
-						MeasureDetails.get("Score"), "Grade", false); 
+						MeasureDetails.get("EditedScore"), "Grade", false); 
+				}
 			}
 		}
 		Assert.assertTrue(cs.getOverallScore().contains(actualOverallScore),
@@ -158,7 +168,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 5)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Add")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color")
 	public void addScoreWithColor(HashMap<String, String> testData) throws InterruptedException {
 		 apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_color.apex", isPackageInstance());
 		 cs.refreshPage();
@@ -184,8 +194,8 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 
 	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6, dependsOnMethods="addScoreWithColor")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Color")
 	public void editColorScores(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		int numOfGroups = Groups.size();
@@ -195,19 +205,21 @@ public class Customer360ScorecardsTests extends BaseTest {
 			for (int m = 0; m < MeasuresForGroup.size(); m++) {
 				HashMap<String, String> MeasureDetails = getMapFromData(testData
 						.get(MeasuresForGroup.get("Measure" + (m + 1))));
+				if(MeasureDetails.containsKey("EditedScore")){
 				cs.addOrModifyMeasureScore(
 						MeasuresForGroup.get("Measure" + (m + 1)),
-						MeasureDetails.get("Score"), "Color", false); // 3rd parameter sould be true we are adding score first time,false if modifying existing score
+						MeasureDetails.get("EditedScore"), "Color", false); // 3rd parameter should be true we are adding score first time,false if modifying existing score
+				}
 			}
 		}
 		String actualOverallScore = getMapFromData(
-				testData.get("OverallScore")).get("Score");
+				testData.get("OverallScore")).get("EditedScore");
 		Assert.assertTrue(cs.verifyOverallScoreForColor(actualOverallScore),
 				"Overall Score Correct for COLOR scheme");
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 6)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 7)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addCommentsToMeasure(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		int numOfGroups = Groups.size();
@@ -226,8 +238,8 @@ public class Customer360ScorecardsTests extends BaseTest {
 		}
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 7, dependsOnMethods="addCommentsToMeasure")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit" )
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 8, dependsOnMethods="addCommentsToMeasure")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num" )
 	public void editCommentsInMeasure(HashMap<String, String> testData) {
 		HashMap<String, String> Groups = getMapFromData(testData.get("Groups"));
 		int numOfGroups = Groups.size();
@@ -237,17 +249,19 @@ public class Customer360ScorecardsTests extends BaseTest {
 			for (int m = 0; m < MeasuresForGroup.size(); m++) {
 				HashMap<String, String> MeasureDetails = getMapFromData(testData
 						.get(MeasuresForGroup.get("Measure" + (m + 1))));
-				cs.addOrEditCommentsForMeasure(MeasureDetails.get("Comments"),
+				if(MeasureDetails.containsKey("EditedComments")){
+				cs.addOrEditCommentsForMeasure(MeasureDetails.get("EditedComments"),
 						MeasuresForGroup.get("Measure" + (m + 1)));
-				Assert.assertEquals(MeasureDetails.get("EditedComment"), cs
+				Assert.assertEquals(MeasureDetails.get("EditedComments")+MeasureDetails.get("Comments"), cs
 						.verifyCommentForMeasure(MeasuresForGroup.get("Measure"
 								+ (m + 1))));
 			}
+			}
 		}
 	}
-
+	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 9)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addOverallSummary(HashMap<String, String> testData) {
 		String actualSummary = getMapFromData(testData.get("Summary")).get(
 				"Comment");
@@ -256,16 +270,16 @@ public class Customer360ScorecardsTests extends BaseTest {
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnMethods="addOverallSummary" ,priority=10)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void editOverallSummary(HashMap<String, String> testData) {
 		String actualSummary = getMapFromData(testData.get("Summary")).get(
-				"Comment");
+				"EditedComment");
 		cs.addOrEditOverallSummary(actualSummary, false);
-		Assert.assertEquals(getMapFromData(testData.get("Summary")).get("EditedComment"), cs.getOverallSummary());
+		Assert.assertEquals(getMapFromData(testData.get("Summary")).get("EditedComment")+getMapFromData(testData.get("Summary")).get("Comment"), cs.getOverallSummary());
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Add")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority =11)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addCustomerGoals(HashMap<String, String> testData) {
 		String actualGoals = getMapFromData(testData.get("Goals")).get(
 				"Comment");
@@ -273,13 +287,13 @@ public class Customer360ScorecardsTests extends BaseTest {
 		Assert.assertEquals(actualGoals, cs.getCustomerGoals());
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",dependsOnMethods="addCustomerGoals" )
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num_Edit")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",dependsOnMethods="addCustomerGoals",priority =12 )
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void editCustomerGoals(HashMap<String, String> testData) {
 		String actualGoals = getMapFromData(testData.get("Goals")).get(
-				"Comment");
+				"EditedComment");
 		cs.addOrEditCustomerGoals(actualGoals, false);
-		Assert.assertEquals(getMapFromData(testData.get("Goals")).get("EditedComment"), cs.getCustomerGoals());
+		Assert.assertEquals(getMapFromData(testData.get("Goals")).get("EditedComment")+getMapFromData(testData.get("Goals")).get("Comment"), cs.getCustomerGoals());
 	}
 
 	@AfterClass
