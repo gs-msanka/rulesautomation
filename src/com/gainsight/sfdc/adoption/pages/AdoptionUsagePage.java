@@ -36,7 +36,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     String month 		= "";
     String year 		= "";
     String measure 		= "";
-    String byDataGran 	= "";
+    String dataGranularity 	= "";
     String noOfWeeks	= "";
     String date			= "";
 
@@ -53,10 +53,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     /**
      * Data granularity is "By Account", "By Instance".
-     * @param byDataGran
+     * @param dataGranularity
      */
-    public void setByDataGran(String byDataGran) {
-        this.byDataGran = byDataGran;
+    public void setDataGranularity(String dataGranularity) {
+        this.dataGranularity = dataGranularity;
     }
 
 
@@ -107,8 +107,8 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         //field.selectFromDropDown(MONTH_SELECT, month);
         field.selectFromDropDown(YEAR_SELECT, year);
         field.setSelectField(MEASURE_SELECT, measure);
-        if(byDataGran.isEmpty() == false && byDataGran.length() > 1 ) {
-            field.selectFromDropDown(DATAVIEW_SELECT, byDataGran);
+        if(dataGranularity.isEmpty() == false && dataGranularity.length() > 1 ) {
+            field.selectFromDropDown(DATAVIEW_SELECT, dataGranularity);
         }
         button.click(GO_BUTTON);
         Report.logInfo("Clicking on to display monthly usage data.");
@@ -122,11 +122,13 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     public AdoptionUsagePage displayWeeklyUsageData() {
         Report.logInfo("Displaying Weekly usage Data");
         field.selectFromDropDown(MEASURE_SELECT, measure);
-        if(byDataGran != null && byDataGran.isEmpty() == false) {
-            field.selectFromDropDown(DATAVIEW_SELECT, byDataGran);
+        if(dataGranularity != null && dataGranularity.isEmpty() == false) {
+            field.selectFromDropDown(DATAVIEW_SELECT, dataGranularity);
         }
         field.selectFromDropDown(WEEK_PERIOD_SELECT, noOfWeeks);
-        item.clearAndSetText(WEEKDATE_UPTO_INPUT, date);
+        if(date != null && !date.equals("")) {
+            item.clearAndSetText(WEEKDATE_UPTO_INPUT, date);
+        }
         button.click(GO_BUTTON);
         Report.logInfo("Clicked to display weekly usage data.");
         return this;
@@ -342,43 +344,43 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return new Customer360Page();
     }
 
-
-
-
     public boolean exportGrid() {
         boolean result = false;
         Report.logInfo("Clicking to export the grid data");
-        item.click(GRID_EXPORT_LINK);
-        wait.waitTillElementDisplayed(EXPORT_SUCCESS_MSG, MIN_TIME, MAX_TIME);
-        result = element.getElement(EXPORT_SUCCESS_MSG).isDisplayed();
-        Report.logInfo("Clicked on export & returing the result : "+result);
+        try  {
+            item.click(GRID_EXPORT_LINK);
+            wait.waitTillElementDisplayed(EXPORT_SUCCESS_MSG, MIN_TIME, MAX_TIME);
+            result = element.getElement(EXPORT_SUCCESS_MSG).isDisplayed();
+        } catch (Exception e) {
+            Report.logInfo("*** Some Exception Got Created ***");
+        }
         return result;
     }
     //To verify weather all field in form are displayed (Weekly configuration).
     public boolean isWeeklyFormEleDisplayed() {
-        if(!item.getElement(MEASURE_SELECT).isDisplayed()) {
+        try  {
+            if(item.getElement(MEASURE_SELECT).isDisplayed() && item.getElement(WEEK_PERIOD_SELECT).isDisplayed() &&
+                    item.getElement(WEEKDATE_UPTO_INPUT).isDisplayed()) {
+                return true;
+            }
+        } catch (Exception e) {
+            Report.logInfo("***Some exception*** " +e.getLocalizedMessage());
             return false;
         }
-        if(!item.getElement(WEEK_PERIOD_SELECT).isDisplayed()) {
-            return false;
-        }
-        if(!item.getElement(WEEKDATE_UPTO_INPUT).isDisplayed()) {
-            return false;
-        }
-        return true;
+        return false;
     }
     //To verify weather all field in form are displayed (Monthly configuration).
     public boolean isMonthlyFormEleDisplayed() {
-        if(!item.getElement(MEASURE_SELECT).isDisplayed()) {
+        try  {
+            if(item.getElement(MEASURE_SELECT).isDisplayed() && item.getElement(MONTH_SELECT).isDisplayed() &&
+                    item.getElement(YEAR_SELECT).isDisplayed()) {
+                return true;
+            }
+        } catch (Exception e) {
+            Report.logInfo("***Some exception*** " +e.getLocalizedMessage());
             return false;
         }
-        if(!item.getElement(MONTH_SELECT).isDisplayed()) {
-            return false;
-        }
-        if(!item.getElement(YEAR_SELECT).isDisplayed()) {
-            return false;
-        }
-        return true;
+        return false;
     }
     //To verify data granularity selection drop-down is displayed.
     public boolean isDataGranularitySelectionDisplayed() {

@@ -4,12 +4,12 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : true,
     "preprocess" : {
-    	"inputFile" : "./testdata/sfdc/Survey/Survey_UserAnswers.csv",
+    	"inputFile" : "/testdata/sfdc/Survey/Survey_UserAnswers.csv",
     	"monthly" : false,
     	"weekly" : false,
     	"daysToAdd" : true,
     	"fieldName" : "JBCXM__SUBMISSIONTIME__C",
-    	"outputFile" : "./resources/datagen/process/Survey_UserAnswers_Processed.csv"
+    	"outputFile" : "/resources/datagen/process/Survey_UserAnswers_Processed.csv"
     },
     
    "load": {
@@ -17,6 +17,6 @@
         "sObject": "JBCXM__SurveyUserAnswer__c",
         "operation": "insert",
         "contentType": "CSV",
-        "file": "./resources/datagen/process/Survey_UserAnswers_Processed.csv"
+        "file": "/resources/datagen/process/Survey_UserAnswers_Processed.csv"
     }
 }

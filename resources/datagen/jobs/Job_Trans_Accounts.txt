@@ -11,14 +11,14 @@
             "Id",
             "Name"
         ],
-        "output": "./resources/datagen/process/account1.csv"
+        "output": "/resources/datagen/process/account1.csv"
     },
     "transform": {
     	"query" : "",
     	"useQuery" : false,
         "tableInfo": [
             {
-                "file": "./resources/datagen/process/account1.csv",
+                "file": "/resources/datagen/process/account1.csv",
                 "table": "account",
                 "joinColumnName": "Name",
                 "columns": [
@@ -29,7 +29,7 @@
                 ]
             },
             {
-                "file": "./testdata/sfdc/transactions/TrailData/Account.csv",
+                "file": "/testdata/sfdc/transactions/TrailData/Account.csv",
                 "table": "usagedata",
                 "joinColumnName": "Name",
                 "columns": [
@@ -74,7 +74,7 @@
         ],
         "join": true,
         "picklist": false,
-        "output": "./resources/datagen/process/Final_Trans_Accounts.csv"
+        "output": "/resources/datagen/process/Final_Trans_Accounts.csv"
     },
     "load": {
         "target": "sfdc",
@@ -82,6 +82,6 @@
         "operation": "upsert",
         "contentType": "CSV",
         "externalIDField": "Id",
-        "file": "./resources/datagen/process/Final_Trans_Accounts.csv"
+        "file": "/resources/datagen/process/Final_Trans_Accounts.csv"
     }
 }

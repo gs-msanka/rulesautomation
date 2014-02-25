@@ -1,12 +1,11 @@
 package com.gainsight.sfdc.util.bulk;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.util.db.QueryBuilder;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Standalone class for SFDC push/pull mechanism 
@@ -15,6 +14,7 @@ import com.gainsight.sfdc.util.db.QueryBuilder;
  */
 public class SfdcBulkApi {
 
+    public static String basedir = System.getProperty("basedir", ".");
 	public static String api_version = "28.0";
 	public static String async_url = "/services/async/";
 	public static String async_job_url = "";
@@ -36,7 +36,7 @@ public class SfdcBulkApi {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		pushDataToSfdc("JBCXM__UsageData__c", "insert", new File("./resources/datagen/process/db_Month11UD_3.csv"));
+		//pushDataToSfdc("JBCXM__UsageData__c", "insert", new File("./resources/datagen/process/db_Month11UD_3.csv"));
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class SfdcBulkApi {
 
         List<String> batchIds = new ArrayList<String>();
         BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
-        File tmpFile =  new File(System.getProperty("user.dir")+"/resources/datagen/process/tempFile.csv");
+        File tmpFile =  new File(basedir+"/resources/datagen/process/tempFile.csv");
         // read the CSV header row
         byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;
@@ -207,7 +207,7 @@ public class SfdcBulkApi {
 		System.out.println("Pulling all Records of " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
 		System.out.println("Pull Query : " + query);
-		String path = "./resources/datagen/process/" + sObject + "_cleanup.csv";
+		String path = basedir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
 		File f = new File(path);
@@ -271,7 +271,7 @@ public class SfdcBulkApi {
 
         List<String> batchIds = new ArrayList<String>();
         BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
-        File tmpFile =  new File(System.getProperty("user.dir")+"/resources/datagen/process/tempFile.csv");
+        File tmpFile =  new File(basedir+"/resources/datagen/process/tempFile.csv");
         // read the CSV header row
         byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;

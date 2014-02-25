@@ -5,6 +5,6 @@
         "operation": "insert",
         "contentType": "CSV",
         "externalIDField": "SurPart_ExternalID__c",
-        "file": "./testdata/sfdc/Survey/Survey_Participants.csv"
+        "file": "/testdata/sfdc/Survey/Survey_Participants.csv"
     }
 }

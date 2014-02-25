@@ -22,7 +22,7 @@ public class Customer360Scorecard extends Customer360Page {
 	private final String READY_INDICATOR = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
 
 	private final String OVERALL_SCORE = "//div[@class='score-area']/ul/li[@class='score']";
-	private final String OVERALL_SCORE_BACKGROUND="//div[@style='background-color:%s;' and @class='score-area']";
+	private final String OVERALL_SCORE_BACKGROUND="//div[@class='overallscore clearfix']/div[@style='background-color:%s;' and @class='score-area']";
 	private final String OVERALL_TREND = "//div[@class='score-area']/ul/li[@class='score-trend trend-%s']";// %s can	be up,down or flat
 
 	private final String OVERALL_SUMMARY = "//div[@class='discription']";
@@ -59,7 +59,7 @@ public class Customer360Scorecard extends Customer360Page {
 	}
 	
 	public boolean verifyOverallScoreForColor(String score_color){
-		return (item.isElementPresent(String.format(OVERALL_SCORE_BACKGROUND,score_color)));
+		return (driver.findElement(By.xpath(String.format(OVERALL_SCORE_BACKGROUND,score_color)))).isDisplayed();
 	}
 	public boolean verifyOverallTrend(String Trend) {
 
@@ -103,7 +103,11 @@ public class Customer360Scorecard extends Customer360Page {
 		amtDateUtil.stalePause();
 		Actions builder=new Actions(driver);
 		WebElement goals_edit=driver.findElement(By.xpath(CUSTOMER_GOALS));
-		builder.moveToElement(goals_edit).click().sendKeys(goals).click(driver.findElement(By.xpath(SAVE_CUSTOMER_GOALS))).perform();
+		item.mouseOver(CUSTOMER_GOALS);
+		//builder.moveToElement(goals_edit).click().sendKeys(goals).click(driver.findElement(By.xpath(SAVE_CUSTOMER_GOALS))).perform();
+		item.click(CUSTOMER_GOALS);
+		field.setText(CUSTOMER_GOALS, goals);
+		item.click(SAVE_CUSTOMER_GOALS);
 		amtDateUtil.stalePause();
 		/*item.click(SAVE_CUSTOMER_GOALS);
 		amtDateUtil.stalePause();*/

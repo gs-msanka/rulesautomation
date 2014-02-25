@@ -29,10 +29,30 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String NOADOPTION_MSG         = "AdoptionDataNotAvailable";
 
     private String customerName;
-    private String measureNames;
-    private String forTimeMonthPeriod = "6 Months";
+    private String measureNames         = "All Measures";
+    private String forTimeMonthPeriod   = "6 Months";
+    private String forTimeWeekPeriod    = "52 Weeks";
+    private String weekLabelDate        = "";
     private String month;
     private String year;
+
+    public void setWeekLabelDate(String weekLabelDate) {
+        this.weekLabelDate = weekLabelDate;
+    }
+
+    public void setForTimeWeekPeriod(String forTimeWeekPeriod) {
+
+        this.forTimeWeekPeriod = forTimeWeekPeriod;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
     private String instance;
 
     public String getCustomerName() {
@@ -84,30 +104,22 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 	
 	/**
 	 * Fills in deatils & clicks on view results for a customer usage data if org level configuration is weekly.
-	 * @param cName
-	 * @param instance
-	 * @param measures
-	 * @param tPeriod
-	 * @param date
 	 * @return
 	 */
-	public AdoptionAnalyticsPage displayCustWeeklyData(String cName, String instance, String measures, 
-															String tPeriod, String date) {
-		
-		selectCustomer(cName);
-
+	public AdoptionAnalyticsPage displayCustWeeklyData() {
+		selectCustomer(customerName);
 		if(instance != null && !instance.isEmpty()) {
 			if(isInstDropDownLoaded(instance)) {
 				field.selectFromDropDown(INSTANCE_SELECT, instance);
 			}
 		}
-		selectMeasures(measures);
+		selectMeasures(measureNames);
 		
-		if(tPeriod != null && !tPeriod.isEmpty()) {
-			field.selectFromDropDown(TIMEPERIOD_SELECT, tPeriod);
+		if(forTimeWeekPeriod != null && !forTimeWeekPeriod.isEmpty()) {
+			field.selectFromDropDown(TIMEPERIOD_SELECT, forTimeWeekPeriod);
 		}
-		if(date != null && !date.isEmpty()) {
-			field.clearAndSetText(ENDDATE_INPUT, date);
+		if(weekLabelDate != null && !weekLabelDate.isEmpty()) {
+			field.clearAndSetText(ENDDATE_INPUT, weekLabelDate);
 		}
 		button.click(VIEWRESULTS_BUTTON);
 		return this;
@@ -154,37 +166,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 		Report.logInfo("Selected the customer in adoption analytics page");
 	}
 	
-	public boolean isInstDropDownLoaded(String instName) {
-		boolean result = false;
-        wait.waitTillElementDisplayed(INSTANCE_SELECT, MIN_TIME, MAX_TIME);
-		String[] instList = instName.split("\\|");
-		Select s = new Select(item.getElement(INSTANCE_SELECT));
-		List<WebElement> opList = s.getOptions();
-        String dropDownValue = null;
-		for(WebElement wE : opList) {
-             dropDownValue += wE.getText().trim() +" | ";
-        }
-        for(String str : instList) {
-            if(dropDownValue.contains(str.trim())) {
-                result = true;
-            } else {
-                result = false;
-                break;
-            }
-        }
-		return result;
-	}
-	
-	public boolean isInstDropDownLoaded() {
-		boolean result = false;
-		wait.waitTillElementDisplayed(INSTANCE_SELECT, MIN_TIME, MAX_TIME);
-		Select s = new Select(item.getElement(INSTANCE_SELECT));
-		List<WebElement> opList = s.getOptions();
-		if(opList.size() > 1) {
-			result = true;
-		}
-		return result;
-	}
+
 	/**
 	 * Selects the list of measure provided measure values should be "|" separated.
 	 * @param measures
@@ -258,13 +240,13 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         return success;
 	}
 	
-	public boolean isMissingDataInfoDisplayed() {
+	public boolean isMissingDataInfoDisplayed(String value) {
 		boolean success = false;
 		Report.logInfo("Checking Missing Data message info is displayed above the graph.");
 		try {
             WebElement ele = element.getElement(MISSING_TEXT);
             if(ele != null) {
-                if(ele.getText().contains("Missing data for some months.")) {
+                if(ele.getText().contains(value)) {
                     success =true;
                 }
             }
@@ -285,7 +267,6 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
                     if(ele.getText().contains("No Adoption data found for "+customerName+"")) {
                         result = true;
                     }
-
                 }
             }
         } catch (RuntimeException e) {
@@ -330,7 +311,62 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         Report.logInfo("Checked the data in the grid & returning result :" +result);
         return result;
     }
-	
+
+    public boolean isSelectedCustomerName(String cName) {
+        try {
+            if(element.getElement(CUSTOMERNAME_INPUT).getAttribute("value").contains(cName)) {
+                return true;
+            }
+        } catch (Exception e) {
+            Report.logInfo("***Some Exception *** " +e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    public boolean verifySelectedInstanceValue(String value) {
+        try {
+            Select instanceSelect = new Select(element.getElement(INSTANCE_SELECT));
+            if(instanceSelect.getFirstSelectedOption().getText().equalsIgnoreCase(value)) {
+                return true;
+            }
+        } catch (Exception e) {
+            Report.logInfo("***Som Exception***" +e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isInstDropDownLoaded(String instName) {
+        boolean result = false;
+        wait.waitTillElementDisplayed(INSTANCE_SELECT, MIN_TIME, MAX_TIME);
+        String[] instList = instName.split("\\|");
+        Select s = new Select(item.getElement(INSTANCE_SELECT));
+        List<WebElement> opList = s.getOptions();
+        String dropDownValue = null;
+        for(WebElement wE : opList) {
+            dropDownValue += wE.getText().trim() +" | ";
+        }
+        for(String str : instList) {
+            if(dropDownValue.contains(str.trim())) {
+                result = true;
+            } else {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public boolean isInsDropDownDisplayed() {
+        try {
+            return element.getElement(INSTANCE_SELECT).isDisplayed();
+
+        } catch (Exception e) {
+            Report.logInfo("***Some Exception*** " +e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 }

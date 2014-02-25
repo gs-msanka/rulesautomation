@@ -5,6 +5,6 @@
         "operation": "upsert",
         "contentType": "CSV",
         "externalIDField": "SurQues_ExternalID__c",
-        "file": "./testdata/sfdc/Survey/SurveyQues_ResponseCount.csv"
+        "file": "/testdata/sfdc/Survey/SurveyQues_ResponseCount.csv"
     }
 }

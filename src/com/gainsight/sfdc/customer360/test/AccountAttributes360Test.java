@@ -55,10 +55,6 @@ public class AccountAttributes360Test extends BaseTest {
         Assert.assertTrue(att.isValuesForAccountAttDisplayed(fieldDataMap), "Checking the account attribute values");
     }
 
-
-
-
-
     @AfterMethod
     public void refresh() {
         basepage.refreshPage();
