@@ -1,0 +1,62 @@
+JBCXM__Uiviews__c add1 = new JBCXM__Uiviews__c();
+add1.Name = 'Transaction ASV with Users script1';
+add1.JBCXM__ColumnList__c = '[{"name":"ASVTotal__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"UsersTotal__c","label":"Users","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true}]';
+add1.JBCXM__FilterConditions__c = '[{"name":"ASVTotal__c","value":"20000.00","objectName":"TransHeader__c","fieldType":"CURRENCY","operator":"h"}]';
+add1.JBCXM__ReportParams__c='[{"fieldName":"UsersTotal__c","objectName":"TransHeader__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Users","fieldType":"DOUBLE","value":"20","selectedOperator":"h","logicalOperator":""}]';
+add1.JBCXM__IsStandard__c = false;
+add1.JBCXM__UITabName__c= 'Transactions';
+add1.JBCXM__Visibility__c= 'Public';
+add1.JBCXM__IsShown__c = true;
+add1.JBCXM__VisualType__c = 'List';
+insert add1;
+
+JBCXM__Uiviews__c Create = new JBCXM__Uiviews__c();
+Create.Name = 'Transaction MRR with Users script1';
+Create.JBCXM__ColumnList__c = '[{"name":"ASVTotal__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"UsersTotal__c","label":"Users","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true},{"name":"MRRTotal__c","label":"MRR","displayOrder":3,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true}]';
+Create.JBCXM__FilterConditions__c = '[{"name":"MRRTotal__c","value":"2000.00","objectName":"TransHeader__c","fieldType":"CURRENCY","operator":"h"}]';
+Create.JBCXM__ReportParams__c='[{"fieldName":"UsersTotal__c","objectName":"TransHeader__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Users","fieldType":"DOUBLE","value":"20","selectedOperator":"h","logicalOperator":""}]';
+Create.JBCXM__IsStandard__c = false;
+Create.JBCXM__UITabName__c= 'Transactions';
+Create.JBCXM__Visibility__c= 'Public';
+Create.JBCXM__IsShown__c = true;
+Create.JBCXM__VisualType__c = 'List';
+insert Create;
+
+JBCXM__Uiviews__c add2 = new JBCXM__Uiviews__c();
+add2.Name = 'Transactions booking date script1';
+add2.JBCXM__ColumnList__c = '[{"name":"ASVTotal__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"UsersTotal__c","label":"Users","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true},{"name":"MRRTotal__c","label":"MRR","displayOrder":3,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Date__c","label":"Booking Date","displayOrder":4,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DATE","isGroupable":true,"hasJBCXMNS":true}]';
+add2.JBCXM__FilterConditions__c = '[{"name":"Date__c","value":"JBcurfy","objectName":"TransHeader__c","fieldType":"TIMEFRAMENORMALDATE","operator":"e"}]';
+add2.JBCXM__ReportParams__c='[]';
+add2.JBCXM__IsStandard__c = false;
+add2.JBCXM__UITabName__c= 'Transactions';
+add2.JBCXM__Visibility__c= 'Public';
+add2.JBCXM__IsShown__c = true;
+add2.JBCXM__VisualType__c = 'List';
+insert add2;
+
+JBCXM__Uiviews__c add3 = new JBCXM__Uiviews__c();
+add3.Name = 'Transactions Term with users script1';
+add3.JBCXM__ColumnList__c = '[{"name":"ASVTotal__c","label":"ASV","displayOrder":1,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"UsersTotal__c","label":"Users","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true},{"name":"MRRTotal__c","label":"MRR","displayOrder":3,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true},{"name":"Term_Fractional__c","label":"Term","displayOrder":4,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true}]';
+add3.JBCXM__FilterConditions__c = '[{"name":"Term_Fractional__c","value":"12","objectName":"TransHeader__c","fieldType":"DOUBLE","operator":"h"}]';
+add3.JBCXM__ReportParams__c='[{"fieldName":"UsersTotal__c","objectName":"TransHeader__c","ctrlType":"text","ctrlData":"[]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"l\\",\\"value\\":\\"less than\\"},{\\"key\\":\\"g\\",\\"value\\":\\"greater than\\"},{\\"key\\":\\"m\\",\\"value\\":\\"less or equal\\"},{\\"key\\":\\"h\\",\\"value\\":\\"greater or equal\\"}]","label":"Users","fieldType":"DOUBLE","value":"20","selectedOperator":"h","logicalOperator":""}]';
+add3.JBCXM__IsStandard__c = false;
+add3.JBCXM__UITabName__c= 'Transactions';
+add3.JBCXM__Visibility__c= 'Public';
+add3.JBCXM__IsShown__c = true;
+add3.JBCXM__VisualType__c = 'List';
+insert add3;
+
+JBCXM__Uiviews__c add4 = new JBCXM__Uiviews__c();
+add4.Name = 'Transactions with One-time renv script1';
+add4.JBCXM__ColumnList__c = '[{"name":"Industry","label":"Industry","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"OneTimeRevenue__c","label":"One-time Rev","displayOrder":2,"visibilityMode":true,"objectName":"TransHeader__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true}]';
+add4.JBCXM__FilterConditions__c = '[{"name":"OneTimeRevenue__c","value":"2000.00","objectName":"TransHeader__c","fieldType":"CURRENCY","operator":"h"}]';
+add4.JBCXM__ReportParams__c='[{"fieldName":"Industry","objectName":"Account","ctrlType":"multiselect","ctrlData":"[{\\"key\\":\\"\\",\\"value\\":\\"--None--\\"},{\\"key\\":\\"Agriculture\\",\\"value\\":\\"Agriculture\\"},{\\"key\\":\\"Apparel\\",\\"value\\":\\"Apparel\\"},{\\"key\\":\\"Banking\\",\\"value\\":\\"Banking\\"},{\\"key\\":\\"Biotechnology\\",\\"value\\":\\"Biotechnology\\"},{\\"key\\":\\"Chemicals\\",\\"value\\":\\"Chemicals\\"},{\\"key\\":\\"Communications\\",\\"value\\":\\"Communications\\"},{\\"key\\":\\"Construction\\",\\"value\\":\\"Construction\\"},{\\"key\\":\\"Consulting\\",\\"value\\":\\"Consulting\\"},{\\"key\\":\\"Education\\",\\"value\\":\\"Education\\"},{\\"key\\":\\"Electronics\\",\\"value\\":\\"Electronics\\"},{\\"key\\":\\"Energy\\",\\"value\\":\\"Energy\\"},{\\"key\\":\\"Engineering\\",\\"value\\":\\"Engineering\\"},{\\"key\\":\\"Entertainment\\",\\"value\\":\\"Entertainment\\"},{\\"key\\":\\"Environmental\\",\\"value\\":\\"Environmental\\"},{\\"key\\":\\"Finance\\",\\"value\\":\\"Finance\\"},{\\"key\\":\\"Food & Beverage\\",\\"value\\":\\"Food & Beverage\\"},{\\"key\\":\\"Government\\",\\"value\\":\\"Government\\"},{\\"key\\":\\"Healthcare\\",\\"value\\":\\"Healthcare\\"},{\\"key\\":\\"Hospitality\\",\\"value\\":\\"Hospitality\\"},{\\"key\\":\\"Insurance\\",\\"value\\":\\"Insurance\\"},{\\"key\\":\\"Machinery\\",\\"value\\":\\"Machinery\\"},{\\"key\\":\\"Manufacturing\\",\\"value\\":\\"Manufacturing\\"},{\\"key\\":\\"Media\\",\\"value\\":\\"Media\\"},{\\"key\\":\\"Not For Profit\\",\\"value\\":\\"Not For Profit\\"},{\\"key\\":\\"Recreation\\",\\"value\\":\\"Recreation\\"},{\\"key\\":\\"Retail\\",\\"value\\":\\"Retail\\"},{\\"key\\":\\"Shipping\\",\\"value\\":\\"Shipping\\"},{\\"key\\":\\"Technology\\",\\"value\\":\\"Technology\\"},{\\"key\\":\\"Telecommunications\\",\\"value\\":\\"Telecommunications\\"},{\\"key\\":\\"Transportation\\",\\"value\\":\\"Transportation\\"},{\\"key\\":\\"Utilities\\",\\"value\\":\\"Utilities\\"},{\\"key\\":\\"Other\\",\\"value\\":\\"Other\\"}]","operatorsList":"[{\\"key\\":\\"\\",\\"value\\":\\"None\\"},{\\"key\\":\\"e\\",\\"value\\":\\"equals\\"},{\\"key\\":\\"n\\",\\"value\\":\\"not equal to\\"},{\\"key\\":\\"c\\",\\"value\\":\\"contains\\"},{\\"key\\":\\"s\\",\\"value\\":\\"starts with\\"},{\\"key\\":\\"k\\",\\"value\\":\\"does not contain\\"},{\\"key\\":\\"u\\",\\"value\\":\\"includes\\"},{\\"key\\":\\"x\\",\\"value\\":\\"excludes\\"}]","label":"Industry","fieldType":"PICKLIST","value":"Agriculture","selectedOperator":"c","logicalOperator":""}]';
+add4.JBCXM__IsStandard__c = false;
+add4.JBCXM__UITabName__c= 'Transactions';
+add4.JBCXM__Visibility__c= 'Public';
+add4.JBCXM__IsShown__c = true;
+add4.JBCXM__VisualType__c = 'List';
+insert add4;
+
+
+
