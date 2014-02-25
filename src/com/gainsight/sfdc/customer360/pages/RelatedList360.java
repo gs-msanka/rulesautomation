@@ -113,8 +113,9 @@ public class RelatedList360 extends Customer360Page {
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
         Report.logInfo("clickOnAdd Count : " +windows.size());
+        driver.switchTo().window(aa.get(1));
         driver.close();
-        driver.switchTo().defaultContent();
+        driver.switchTo().window(aa.get(0));
     }
 
     public SalesforceRecordForm clickOnViewRecord() {
