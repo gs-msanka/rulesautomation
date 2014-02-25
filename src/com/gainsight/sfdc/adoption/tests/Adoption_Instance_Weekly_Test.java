@@ -54,7 +54,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
             dataLoader.execute(jobInfo3);
 
             BufferedReader reader;
-            String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+            String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
             String line     = null;
             String code     = "";
             reader          = new BufferedReader(new FileReader(fileName));

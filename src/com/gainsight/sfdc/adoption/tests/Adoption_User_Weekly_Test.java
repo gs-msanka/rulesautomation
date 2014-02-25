@@ -53,7 +53,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
             dataLoader.execute(jobInfo3);
 
             BufferedReader reader;
-            String fileName = userDir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+            String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
             String line     = null;
             String code     = "";
             reader          = new BufferedReader(new FileReader(fileName));
@@ -182,7 +182,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("Anunay Fab Ltd |   | 0 | 2,208.7 | 2,216.1 | 2,005.5"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("Anunay Fab Ltd | 2,208.7 | 2,216.1 | 2,005.5"));
         AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("Anunay Fab Ltd", null);
         Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking if grid is displayed");
         Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking if adoption chart is displayed");

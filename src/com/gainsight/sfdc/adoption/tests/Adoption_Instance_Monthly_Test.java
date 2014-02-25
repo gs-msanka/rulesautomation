@@ -55,7 +55,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
             jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Monthly.txt"), JobInfo.class);
             dataLoader.execute(jobInfo3);
 
-            String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+            String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
             BufferedReader reader;
             reader = new BufferedReader(new FileReader(fileName));
             String line = null;
