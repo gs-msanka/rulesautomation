@@ -16,6 +16,7 @@ import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -184,6 +185,32 @@ public class BasePage extends WebPage implements Constants {
 		item.click("//input[@title='Save']");
 		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]", MIN_TIME, MAX_TIME);
 	}
+
+    public void addTabsToApplication(String appName, String tabs) {
+        item.click("userNavButton");
+        link.clickLink("Setup");
+        wait.waitTillElementDisplayed("DevTools_icon", MIN_TIME, MAX_TIME);
+        item.click("DevTools_icon");
+        wait.waitTillElementDisplayed("TabSet_font", MIN_TIME, MAX_TIME);
+        item.click("TabSet_font");
+        wait.waitTillElementDisplayed("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]", MIN_TIME, MAX_TIME);
+        item.click("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]");
+        wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
+        item.click("//input[@title='Edit' and @name ='edit']");
+        wait.waitTillElementDisplayed("//input[@type='submit' and @name='save']", MIN_TIME, MAX_TIME);
+        Select multiDropDown = new Select(element.getElement("duel_select_0"));
+        String[] tabsList = tabs.split(",");
+        for(String tabName : tabsList) {
+            try {
+                multiDropDown.selectByVisibleText(tabName.trim());
+                item.click("//img[@class='rightArrowIcon' and @title='Add']");
+            } catch (Exception e) {
+                Report.logInfo("The Following tab is not available : " +tabName);
+            }
+        }
+        item.click("//input[@type='submit' and @name='save']");
+        wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
+    }
 
 	public void loadDefaultData() throws URISyntaxException {
         clickOnSurveyTab();

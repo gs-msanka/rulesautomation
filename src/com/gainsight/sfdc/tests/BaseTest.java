@@ -42,16 +42,18 @@ public class BaseTest {
 			basepage = new BasePage();
             userLocale = soql.getUserLocale();
 			Report.logInfo("Initializing Base Page : " + basepage);
-			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
+			if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();
-				basepage.setDefaultApplication("Gainsight");
-				basepage.logout();
-			}
-			if (loadDefaultData != null && loadDefaultData.equals("true")) {
-				basepage.login();
-				basepage.loadDefaultData();
+                if((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
+                    basepage.setDefaultApplication("Gainsight");
+                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight");
+                }
+                if(loadDefaultData != null && loadDefaultData.equals("true")) {
+                    basepage.loadDefaultData();
+                }
                 basepage.logout();
 			}
+
 		} catch (Exception e) {
 			env.stop();
 			Report.logInfo(e.getLocalizedMessage());
