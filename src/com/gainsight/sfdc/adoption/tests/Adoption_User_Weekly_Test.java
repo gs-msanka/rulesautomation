@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class Adoption_User_Weekly_Test extends BaseTest {
@@ -31,77 +32,72 @@ public class Adoption_User_Weekly_Test extends BaseTest {
 
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
         basepage.login();
         String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/User_Level_Weekly.txt";
-        try{
-            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            apex.runApex(resolveStrNameSpace(QUERY));
-            createExtIdFieldOnAccount();
-            createFieldsOnUsageData();
-            apex.runApexCodeFromFile(measureFile, isPackageInstance());
-            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
-            DataETL dataLoader = new DataETL();
-            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo1);
-            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo2);
-            jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Weekly.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo3);
 
-            BufferedReader reader;
-            String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-            String line     = null;
-            String code     = "";
-            reader          = new BufferedReader(new FileReader(fileName));
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+        apex.runApex(resolveStrNameSpace(QUERY));
+        createExtIdFieldOnAccount();
+        createFieldsOnUsageData();
+        apex.runApexCodeFromFile(measureFile, isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        DataETL dataLoader = new DataETL();
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
+        jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Weekly.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
+
+        BufferedReader reader;
+        String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String line     = null;
+        String code     = "";
+        reader          = new BufferedReader(new FileReader(fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        reader.close();
+        int year, month, day;
+        String dateStr;
+        //Max of only 5 jobs can run in an organization at a given time
+        //Care to be taken that there are no apex jobs are running in the organization.
+        int i= -7;
+        for(int k = 0; k< 7;k++) {
+            for(int m=0; m < 5; m++, i=i-7) {
+                //if the start day of the week configuration is changed then method parameter should be changed appropriately..
+                // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+                dateStr     = getWeekLabelDate("Wed", i, false, false);
+                System.out.println(dateStr);
+                year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
+                month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
+                day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
+                code        = stringBuilder.toString();
+                code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
+                        .replaceAll("THEYEARCHANGE", String.valueOf(year))
+                        .replace("THEDAYCHANGE", String.valueOf(day));
+
+                apex.runApex(resolveStrNameSpace(code));
             }
-            reader.close();
-            int year, month, day;
-            String dateStr;
-            //Max of only 5 jobs can run in an organization at a given time
-            //Care to be taken that there are no apex jobs are running in the organization.
-            int i= -7;
-            for(int k = 0; k< 7;k++) {
-                for(int m=0; m < 5; m++, i=i-7) {
-                    //if the start day of the week configuration is changed then method parameter should be changed appropriately..
-                    // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                    dateStr     = getWeekLabelDate("Wed", i, false, false);
-                    System.out.println(dateStr);
-                    year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
-                    month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
-                    day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
-                    code        = stringBuilder.toString();
-                    code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
-                            .replaceAll("THEYEARCHANGE", String.valueOf(year))
-                            .replace("THEDAYCHANGE", String.valueOf(day));
-
-                    apex.runApex(resolveStrNameSpace(code));
-                }
-                for(int l= 0; l < 200; l++) {
-                    String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
-                            "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
-                            "and ApexClass.Name = 'AdoptionAggregation'";
-                    int noOfRunningJobs = getQueryRecordCount(query);
-                    if(noOfRunningJobs==0) {
-                        Report.logInfo("Aggregate Jobs are finished.");
-                        isAggBatchsCompleted = true;
-                        break;
-                    } else {
-                        Report.logInfo("Waiting for aggregation batch to complete");
-                        Thread.sleep(30000L);
-                    }
+            for(int l= 0; l < 200; l++) {
+                String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
+                        "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
+                        "and ApexClass.Name = 'AdoptionAggregation'";
+                int noOfRunningJobs = getQueryRecordCount(query);
+                if(noOfRunningJobs==0) {
+                    Report.logInfo("Aggregate Jobs are finished.");
+                    isAggBatchsCompleted = true;
+                    break;
+                } else {
+                    Report.logInfo("Waiting for aggregation batch to complete");
+                    Thread.sleep(30000L);
                 }
             }
-
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-            e.printStackTrace();
         }
     }
 

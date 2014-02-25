@@ -44,12 +44,13 @@ public class BaseTest {
 			Report.logInfo("Initializing Base Page : " + basepage);
 			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
 				basepage.login();
-				basepage.setDefaultApplication("JBara");
+				basepage.setDefaultApplication("Gainsight");
 				basepage.logout();
 			}
 			if (loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();
 				basepage.loadDefaultData();
+                basepage.logout();
 			}
 		} catch (Exception e) {
 			env.stop();
