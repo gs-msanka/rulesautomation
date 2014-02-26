@@ -19,10 +19,12 @@ import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class TransactionsAcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
 	final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
+	private String accQuery="Select id from Account where name='%s'";
 	private boolean loggedIn = false;
 
 	@BeforeClass
@@ -231,14 +233,16 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String accName = testData.get("AccName");
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
+		String accID=getAccID(accName);
 		CustomerSuccessPage csPage = basepage.clickOnAccountsTab()
-				.selectAccount(accName).getCustomerSuccessSection();
+				.selectAccount(accID).getCustomerSuccessSection();
 		csPage.verifyTextPresent(testData.get("AddCustomerMessage"));
 		csPage.clickOnAddCustomer();
 		CustomersPage cPage = csPage.clickOnCustomersTab()
 				.clickOnCustomersSubTab();
 		Assert.assertTrue(cPage.isCustomerPresent(accName));
-		csPage = cPage.clickOnAccountsTab().selectAccount(accName)
+		
+		csPage = cPage.clickOnAccountsTab().selectAccount(accID)
 				.getCustomerSuccessSection();
 		csPage.selectTransactionSection().clickTransactionNew()
 				.addNewBusiness(nbData);
@@ -333,21 +337,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.get("CustomTRN"));
 		HashMap<String, String> eSummary = getMapFromData(testData
 				.get("ExpectedSummary"));
-		String name = bTypeData.get("name");
-		String displayOrder = bTypeData.get("displayOrder");
-		String systemName = bTypeData.get("systemName");
-		String shortName = bTypeData.get("shortName");
 		String bType = bTypeData.get("bookingType");
-		String lineItemTypes = bTypeData.get("lineItemTypes");
-		String values = makeRowValues(name, displayOrder, systemName, "Custom-"
-				+ bType);
-		AdminTransactionsTab adminTransTab = basepage
-				.clickOnAdminTab()
-				.clickOnTransactionsTab()
-				.addBookingTypes(name, displayOrder, systemName, shortName,
-						bType);
-		Assert.assertTrue(adminTransTab.isBookingTypePresent(values));
-		adminTransTab.mapBookingTypes(name, lineItemTypes);
 		Customer360Page c360Page = addNewBusinessTransaction(testData);
 		TransactionsPage transactionsPage = c360Page.clickOnTransactionTab()
 				.clickOnTransactionsSubTab();
@@ -379,5 +369,10 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		}
 		Assert.assertTrue(c360Summary.getRD().contains(
 				eSummary.get("renewalDate")));
+	}
+	private String getAccID(String name){
+		SObject[] records=soql.getRecords(String.format(accQuery, name));
+		return records[0].getId();
+		
 	}
 }
