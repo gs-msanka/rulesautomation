@@ -81,10 +81,10 @@ public class PackageUtil {
 	}
 
 	public static MetadataConnection login() throws ConnectionException {
-		final String USERNAME = "spulagam@haskell.com";
+		final String USERNAME = TestEnvironment.get().getUserName();
 		// This is only a sample. Hard coding passwords in source files is a bad
 		// practice.
-		final String PASSWORD = "gainsite1230DZfbQbT7lmcSdvSXjfQ3pqw1";
+		final String PASSWORD = TestEnvironment.get().getUserPassword()+ TestEnvironment.get().getProperty("sfdc.stoken");
 		final String URL = "https://login.salesforce.com/services/Soap/c/29.0";
 		final LoginResult loginResult = loginToSalesforce(USERNAME, PASSWORD,
 				URL);
