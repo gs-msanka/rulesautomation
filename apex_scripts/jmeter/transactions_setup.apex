@@ -1,3 +1,6 @@
+delete [SELECT JBCXM__CustomerName__c FROM JBCXM__TransHeader__c where JBCXM__CustomerName__c like 'Headless%'];
+delete [SELECT  JBCXM__CustomerName__c, Name FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c like 'Headless%'];
+
 List<Account> accTBD =[Select id from Account where name like 'Headless Test%'];
 if(!accTBD.isEmpty()){
 	delete accTBD;
@@ -24,8 +27,8 @@ insert custList;
 
 //Creating custom booking types - CustomUpsell,CustomDownsell and CustomDebook if they do not exist
 
-List<JBCXM__PickList__c> cust=[select Id from JBCXM__PickList__c where JBCXM__SystemName__c in ('CustomUpsell','CustomDownsell','CustomDebook')];
-if(cust.size()!=3){
+List<JBCXM__PickList__c> custom=[select Id from JBCXM__PickList__c where JBCXM__SystemName__c in ('CustomUpsell','CustomDownsell','CustomDebook')];
+if(custom.size()!=3){
 						List<JBCXM__PickList__c> pList=new List<JBCXM__PickList__c>();
 						List<String>  transCustTypes=new List<String>{'CustomUpsell','CustomDownsell','CustomDebook'};
 						List<String> colors=new List<String>{'#ffff00','#ff9900','#3333ff'};
