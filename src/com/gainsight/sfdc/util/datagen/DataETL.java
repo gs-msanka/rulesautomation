@@ -2,6 +2,7 @@ package com.gainsight.sfdc.util.datagen;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
@@ -40,24 +41,13 @@ public class DataETL implements IJobExecutor {
 	static JobInfo jobInfo;
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
-	
+    TestEnvironment env =new TestEnvironment();
 	static {
 		info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());
 		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
 		
-		try {
-			//Pulling Pick List Object
-			String picklistPath = resDir + "process/" + pickListObject + ".csv";
-			String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
-			SfdcBulkApi.pullDataFromSfdc(pickListObject, query1, picklistPath);
-		
-			//Converting Pick List to Hash Map
-			pMap = convertPickListToMap(picklistPath);
-			System.out.println(pMap);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	/**
@@ -166,9 +156,9 @@ public class DataETL implements IJobExecutor {
 				String query = QueryBuilder.buildSOQLQuery(pull.getTable(), pull.getFields());
 				SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, userDir+pull.getOutputFileLoc());
 			}
-			else
+			else {
 				System.out.println("Nothing to extract. Check the Job Details");
-			
+            }
 			//Mapping and Transformation Code.
 			Transform transform = jobInfo.getTransformationRule();
 			File transFile = null;
@@ -213,27 +203,35 @@ public class DataETL implements IJobExecutor {
 				//Applying picklist transformation
 
 				if(transform.isPicklist()) {
-					 pushFile = doPickListTransformation(transFile, pMap);
-					if(pushFile.exists())
-						System.out.println("Another Scucess");
-					else
-						System.out.println("Sorry Boss");
+                    //Pulling Pick List Object
+                    String picklistPath = resDir + "process/" + pickListObject + ".csv";
+                    String query1 = QueryBuilder.buildSOQLQuery(pickListObject, "JBCXM__SystemName__c", "Id");
+                    SfdcBulkApi.pullDataFromSfdc(pickListObject, query1, picklistPath);
+
+                    //Converting Pick List to Hash Map
+                    pMap = convertPickListToMap(picklistPath);
+                    System.out.println(pMap);
+                    pushFile = doPickListTransformation(transFile, pMap);
+                    if(pushFile.exists())
+                        System.out.println("Another Scucess");
+                    else
+                        System.out.println("Sorry Boss");
 				}
 			}
 			
 			//Load the Data back to SFDC
 			if(transform!=null) {
                 if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()), load.getExternalIDField());
+                    SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()), load.getExternalIDField());
                 } else{
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()));
+                    SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()));
                 }
             } else{ //in case there is no transform part...only loading
             	if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
+                    SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
                 }
             	else {
-                    SfdcBulkApi.pushDataToSfdc(load.getsObject(), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
+                    SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
                 }
 
             }
@@ -281,11 +279,12 @@ public class DataETL implements IJobExecutor {
 	
 	/**
 	 * Simple Clean Up Operation, It queries the ID by pull mechanism and uses the same to delete the id with push mechanism
-	 * @param sObject - Name of the object where data should be deleted.
+	 * @param objectName - Name of the object where data should be deleted.
      * @param condition - Where condition need to be supplied - {Ex: JBCXM__Stage__r.Name = 'New Business' (or) JBCXM__ASV__c > 2000}
 	 * @throws IOException
 	 */
-	public void cleanUp(String sObject, String condition) throws IOException {
+	public void cleanUp(String objectName, String condition) throws IOException {
+        String sObject =  resolveStrNameSpace(objectName);
 		System.out.println("Pulling " + sObject);
 		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
 		System.out.println("Pull Query : " + query);
@@ -310,14 +309,15 @@ public class DataETL implements IJobExecutor {
 	
 	/**
 	 * Simple Clean Up Operation, It queries the ID by pull mechanism and uses the same to delete the id with push mechanism
-	 * @param sObject
+	 * @param objectName
 	 * @throws IOException
 	 */
-	public void cleanUp(String sObject, int limit) throws IOException {
+	public void cleanUp(String objectName, int limit) throws IOException {
 		//I need to write logic considering governor limits
-		System.out.println("Pulling " + sObject);
-		String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
-		System.out.println("Pull Query : " + query);
+        String sObject =  resolveStrNameSpace(objectName);
+        Report.logInfo("Object Name Opted for Clean Up :" +sObject);
+        String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
+		Report.logInfo("Pull Query : " + query);
 		String path = userDir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
@@ -346,7 +346,6 @@ public class DataETL implements IJobExecutor {
 
 
     public File resolveNameSpace(String  fileName) throws IOException {
-        TestEnvironment env =new TestEnvironment();
         boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
         if(!isPackage) {
             CSVReader csvReader = new CSVReader(new FileReader(fileName));
@@ -372,7 +371,24 @@ public class DataETL implements IJobExecutor {
         } else {
             return new File(fileName);
         }
+    }
 
+    /**
+     * Method to remove the name space from the string "JBCXM__".
+     *
+     * @param str
+     *            -The string where name space should be removed.
+     * @return String - with name space removed.
+     */
+    public String resolveStrNameSpace(String str) {
+        String result = "";
+        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        if (str != null && !isPackage) {
+            result = str.replaceAll("JBCXM__", "");
+            return result;
+        } else {
+            return str;
+        }
 
     }
 
