@@ -18,6 +18,7 @@ import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
+import com.gainsight.sfdc.util.PackageUtil;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -34,6 +35,9 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			apex.runApexCodeFromFile(env.basedir+
 					"/apex_scripts/acceptance_tests/transactions.apex",
 					isPackageInstance());
+			PackageUtil.updateAccountLayout(
+					"unpackaged/layouts/Account-Account Layout.layout",
+					"CustomerSuccess", "resources/package/account360widget.txt",isPackageInstance());
 			basepage.login();
 			loggedIn = true;
 		} catch (Exception e) {
