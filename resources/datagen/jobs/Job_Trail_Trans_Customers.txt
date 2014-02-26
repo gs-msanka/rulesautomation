@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CustomerInfo__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "",
+        "file": "/testdata/sfdc/transactions/TrailData/Customers.csv"
+    }
+}

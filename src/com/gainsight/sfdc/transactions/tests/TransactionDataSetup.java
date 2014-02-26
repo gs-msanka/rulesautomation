@@ -4,59 +4,55 @@ package com.gainsight.sfdc.transactions.tests;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
+import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.dataLoad.loadDataFromFile;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 
 public class TransactionDataSetup {
 
-
-    TestEnvironment env;
     static boolean isPackageInstance = false;
-    static String resDir = "./resources/datagen/";
-    static JobInfo jobInfo1;
+
+
     ObjectMapper mapper = new ObjectMapper();
+    static TestEnvironment env = new TestEnvironment();
+    static String resDir = env.basedir+"/resources/datagen/";
+    static BaseTest  baseTest = new BaseTest();
     public TransactionDataSetup() {
-        TestEnvironment env = new TestEnvironment();
         isPackageInstance = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TransactionDataSetup setup = new TransactionDataSetup();
         AccountDataSetup accSetup = new AccountDataSetup();
         accSetup.createExtIdFieldOnAccount();
         setup.createExtIdFieldsInTransactionModule();
-        SFDCUtil sfdcUtil = new SFDCUtil();
-        sfdcUtil.runApexCodeFromFile("./testdata/sfdc/transactions/scripts/TrailData_Populate_TransTypes.txt", isPackageInstance);
-        try {
-            setup.LoadTransData();
-        } catch (IOException e) {
-            Report.logInfo("Failed to Load Account's");
-            e.printStackTrace();
-        }
+        setup.LoadTransData();
     }
 
+    /**
+     * Creates external Id fields on all the transaction module objects.
+     */
     public void createExtIdFieldsInTransactionModule() {
-
         CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-
-        String transHeader_Obj      = "JBCXM__TransHeader__c";
-        String transLines_Obj       = "JBCXM__TransLines__c";
-        String transTypes_Obj       = "JBCXM__TransactionType__c";
+        String transHeader_Obj      = baseTest.resolveStrNameSpace("JBCXM__TransHeader__c");
+        String transLines_Obj       = baseTest.resolveStrNameSpace("JBCXM__TransLines__c");
+        String transTypes_Obj       = baseTest.resolveStrNameSpace("JBCXM__TransactionType__c");
 
         String[] transHeader_ExtId  = new String[]{"TransHeader ExternalID"};
         String[] transLines_ExtId   = new String[]{"TransLines ExternalID"};
         String[] transTypes_ExtId   = new String[]{"TransTypes ExternalID"};
 
         try {
-            cObjFields.createTextFields(resolveNameSpace(transHeader_Obj), transHeader_ExtId, true, true, true, false, false);
-            cObjFields.createTextFields(resolveNameSpace(transLines_Obj), transLines_ExtId, true, true, true, false, false);
-            cObjFields.createTextFields(resolveNameSpace(transTypes_Obj), transTypes_ExtId, true, true, true, false, false);
+            cObjFields.createTextFields(transHeader_Obj, transHeader_ExtId, true, true, true, false, false);
+            cObjFields.createTextFields(transLines_Obj, transLines_ExtId, true, true, true, false, false);
+            cObjFields.createTextFields(transTypes_Obj, transTypes_ExtId, true, true, true, false, false);
         } catch (Exception e) {
             Report.logInfo("*************Failed to create fields*****************");
             e.printStackTrace();
@@ -64,44 +60,52 @@ public class TransactionDataSetup {
 
     }
 
+    /**
+     * Cleans up customers, transaction setup data.
+     * Updates the transaction types via script.
+     * Updates & Inserts the accounts that are need for loading transactions data.
+     * Inserts Order transaction Map.
+     * Inserts transaction headers.
+     * Upserts transaction headers with look up relation ship filled.
+     * Inserts transaction line items.
+     * Inserts Customer Info records
+     * @throws IOException
+     */
     public void LoadTransData() throws IOException {
-        loadDataFromFile dataLoad = new loadDataFromFile();
         DataETL dataLoader = new DataETL();
 
-        Report.logInfo("Cleaning Transaction Header");
-        dataLoader.cleanUp(resolveNameSpace("JBCXM__TransHeader__c"), "TransHeader_ExternalID__c != null");
-        dataLoader.cleanUp(resolveNameSpace("JBCXM__TransLines__c"), null);
-        dataLoader.cleanUp(resolveNameSpace("JBCXM__CustomerInfo__c"), resolveNameSpace(" JBCXM__OriginalContractNumber__c = 'AUTO_SAMPLE_DATA'"));
-
-        Report.logInfo("Loading Account Data");
-        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Trans_Accounts.txt"), JobInfo.class);
-        dataLoader.execute(jobInfo1);
-        //dataLoad.loadData("Account", "./testdata/sfdc/transactions/TrailData/Account.csv", "Data_ExternalID__c");
-
-        Report.logInfo("Loading Order Transaction Map");
+        Report.logInfo("**Performing Clean up operation for Transaction Module Objects**");
+        dataLoader.cleanUp("JBCXM__TransHeader__c", null);
+        dataLoader.cleanUp("JBCXM__TransLines__c", null);
+        dataLoader.cleanUp("JBCXM__CustomerInfo__c", null);
         dataLoader.cleanUp("JBCXM__OrderTransactionMap__c", null);
-        dataLoad.loadData(resolveNameSpace("JBCXM__OrderTransactionMap__c"), "./testdata/sfdc/transactions/TrailData/OrderTransactionMap.csv", null);
+
+        SFDCUtil sfdcUtil = new SFDCUtil();
+        sfdcUtil.runApexCodeFromFile(env.basedir+"/testdata/sfdc/transactions/scripts/TrailData_Populate_TransTypes.txt", isPackageInstance);
+
+        Report.logInfo("**Started Loading Accounts**");
+        JobInfo jobInfo1 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+
+        Report.logInfo("**Started Loading Order Transaction Map**");
+        JobInfo jobInfo2 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_OrderTransMap.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
 
         Report.logInfo("Loading First Transaction header File");
-        dataLoad.loadData(resolveNameSpace("JBCXM__TransHeader__c"), "./testdata/sfdc/transactions/TrailData/TransHeader_Load1.csv", "TransHeader_ExternalID__c");
+        JobInfo jobInfo3 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransHeader_Load1.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
 
         Report.logInfo("Loading Second Transaction header File");
-        dataLoad.loadData(resolveNameSpace("JBCXM__TransHeader__c"), "./testdata/sfdc/transactions/TrailData/TransHeader_Load2.csv", "TransHeader_ExternalID__c");
+        JobInfo jobInfo4 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransHeader_Load2.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo4);
 
         Report.logInfo("Loading Transaction Lines");
-        dataLoad.loadData(resolveNameSpace("JBCXM__TransLines__c"), "./testdata/sfdc/transactions/TrailData/TransLines.csv", null);
+        JobInfo jobInfo5 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransLines.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo5);
 
         Report.logInfo("Loading Customers Data");
-        dataLoad.loadData(resolveNameSpace("JBCXM__CustomerInfo__c"), "./testdata/sfdc/transactions/TrailData/Customers.csv", null);
-
-    }
-
-
-    public String resolveNameSpace(String s) {
-        if(!isPackageInstance) {
-            return s.replaceAll("JBCXM__", "");
-        }
-        return s;
+        JobInfo jobInfo6 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo6);
     }
 }
 

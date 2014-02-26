@@ -5,7 +5,7 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="Giribabu Test Suite" preserve-order="true">
+    <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
         <classes>
 
             <!-- Giri's Test-->
@@ -20,7 +20,8 @@
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
             <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
-            
+            <class name="com.gainsight.sfdc.customer360.test.Events360Test"/>
+
             <class name="com.gainsight.sfdc.administration.tests.AdminFeatureTabTest" />
             <class name="com.gainsight.sfdc.administration.tests.AdminMilestoneTabTest" />
             <class name="com.gainsight.sfdc.administration.tests.AdminRetentionTabTest" />
@@ -39,10 +40,6 @@
 					<include name="addAndEditCustomerGoals"/>		
 				</methods>
 			</class>
-
-
-           <!-- <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
-                -->
         </classes>
     </test>
 </suite>

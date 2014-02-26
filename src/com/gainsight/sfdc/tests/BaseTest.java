@@ -23,7 +23,7 @@ public class BaseTest {
 	protected TestDataHolder testDataLoader = new TestDataHolder();
 	String[] dirs = { "testdata", "sfdc" };
 	protected TestEnvironment env = new TestEnvironment();
-	public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
+	public final String TEST_DATA_PATH_PREFIX = env.basedir + "/"
 			+ generatePath(dirs);
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
@@ -42,16 +42,18 @@ public class BaseTest {
 			basepage = new BasePage();
             userLocale = soql.getUserLocale();
 			Report.logInfo("Initializing Base Page : " + basepage);
-			if (setAsDefaultApp != null && setAsDefaultApp.equals("true")) {
+			if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();
-				basepage.setDefaultApplication("Gainsight");
-				basepage.logout();
-			}
-			if (loadDefaultData != null && loadDefaultData.equals("true")) {
-				basepage.login();
-				basepage.loadDefaultData();
+                if((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
+                    basepage.setDefaultApplication("Gainsight");
+                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight");
+                }
+                if(loadDefaultData != null && loadDefaultData.equals("true")) {
+                    basepage.loadDefaultData();
+                }
                 basepage.logout();
 			}
+
 		} catch (Exception e) {
 			env.stop();
 			Report.logInfo(e.getLocalizedMessage());
@@ -198,7 +200,7 @@ public class BaseTest {
 	 */
 	public String resolveStrNameSpace(String str) {
 		String result = "";
-        boolean isPackage = Boolean.valueOf(TestEnvironment.get().getProperty("sfdc.managedPackage"));
+        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
 		if (str != null && !isPackage) {
 			result = str.replaceAll("JBCXM__", "");
             return result;
@@ -265,7 +267,7 @@ public class BaseTest {
 
     public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
         if(!isPackageInstance()) {
-            File tempFile = new File("./resources/datagen/process/tempJob.txt");
+            File tempFile = new File(env.basedir+"/resources/datagen/process/tempJob.txt");
             FileOutputStream fOut = new FileOutputStream(tempFile);
             try {
                 fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
@@ -274,7 +276,7 @@ public class BaseTest {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new FileReader("./resources/datagen/process/tempJob.txt");
+            return new FileReader(env.basedir+"/resources/datagen/process/tempJob.txt");
         } else {
             return new FileReader(fileName);
 
