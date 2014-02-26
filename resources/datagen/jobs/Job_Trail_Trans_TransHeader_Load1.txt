@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__TransHeader__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "TransHeader_ExternalID__c",
+        "file": "/testdata/sfdc/transactions/TrailData/TransHeader_Load1.csv"
+    }
+}

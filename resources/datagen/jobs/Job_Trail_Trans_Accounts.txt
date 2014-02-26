@@ -62,7 +62,7 @@
                         "alias": "DESCRIPTION"
                     },
                     {
-                       "name": "ANNUALREVENUE"
+                       "name": "ANNUALREVENUE",
                         "alias": "ANNUALREVENUE"
                     },
                     {
