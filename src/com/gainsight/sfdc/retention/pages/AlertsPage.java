@@ -361,6 +361,7 @@ public class AlertsPage extends RetentionBasePage {
     }
 
     public void waitTillAlertCardLoaded() {
+        Report.logInfo("Waiting for alert card to load");
         boolean tasksDisplayed = false;
         boolean alertDataLoaded = false;
         for(int i=0; i< 5 ; i++) {

@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class Adoption_Instance_Weekly_Test extends BaseTest {
@@ -32,76 +33,71 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
 
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws InterruptedException, IOException {
         basepage.login();
         String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
-        try{
-            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            apex.runApex(resolveStrNameSpace(QUERY));
-            createExtIdFieldOnAccount();
-            createFieldsOnUsageData();
-            DataETL dataLoader = new DataETL();
-            apex.runApexCodeFromFile(measureFile, isPackageInstance());
-            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
-            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo1);
-            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo2);
-            jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Weekly.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo3);
 
-            BufferedReader reader;
-            String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-            String line     = null;
-            String code     = "";
-            reader          = new BufferedReader(new FileReader(fileName));
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-            reader.close();
-            int year, month, day;
-            String dateStr;
-            //Max of only 5 jobs can run in an organization at a given time
-            //Care to be taken that there are no apex jobs are running in the organization.
-            int i= -7;
-            for(int k = 0; k< 5;k++) {
-                for(int m=0; m < 5; m++, i=i-7) {
-                    //if the start day of the week configuration is changed then method parameter should be changed appropriately..
-                    // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                    dateStr     = getWeekLabelDate("Wed", i, true, false);
-                    System.out.println(dateStr);
-                    year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
-                    month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
-                    day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
-                    code        = stringBuilder.toString();
-                    code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
-                            .replaceAll("THEYEARCHANGE", String.valueOf(year))
-                            .replace("THEDAYCHANGE", String.valueOf(day));
-                    apex.runApex(resolveStrNameSpace(code));
-                }
-                for(int l= 0; l < 200; l++) {
-                    String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
-                            "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
-                            "and ApexClass.Name = 'AdoptionAggregation'";
-                    int noOfRunningJobs = getQueryRecordCount(query);
-                    if(noOfRunningJobs==0) {
-                        Report.logInfo("Aggregate Jobs are finished.");
-                        isAggBatchsCompleted = true;
-                        break;
-                    } else {
-                        Report.logInfo("Waiting for aggregation batch to complete");
-                        Thread.sleep(30000L);
-                    }
-                }
-            }
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+        apex.runApex(resolveStrNameSpace(QUERY));
+        createExtIdFieldOnAccount();
+        createFieldsOnUsageData();
+        DataETL dataLoader = new DataETL();
+        apex.runApexCodeFromFile(measureFile, isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
+        jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Weekly.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
 
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-            e.printStackTrace();
+        BufferedReader reader;
+        String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String line     = null;
+        String code     = "";
+        reader          = new BufferedReader(new FileReader(fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        reader.close();
+        int year, month, day;
+        String dateStr;
+        //Max of only 5 jobs can run in an organization at a given time
+        //Care to be taken that there are no apex jobs are running in the organization.
+        int i= -7;
+        for(int k = 0; k< 5;k++) {
+            for(int m=0; m < 5; m++, i=i-7) {
+                //if the start day of the week configuration is changed then method parameter should be changed appropriately..
+                // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+                dateStr     = getWeekLabelDate("Wed", i, true, false);
+                System.out.println(dateStr);
+                year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
+                month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
+                day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
+                code        = stringBuilder.toString();
+                code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
+                        .replaceAll("THEYEARCHANGE", String.valueOf(year))
+                        .replace("THEDAYCHANGE", String.valueOf(day));
+                apex.runApex(resolveStrNameSpace(code));
+            }
+            for(int l= 0; l < 200; l++) {
+                String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
+                        "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
+                        "and ApexClass.Name = 'AdoptionAggregation'";
+                int noOfRunningJobs = getQueryRecordCount(query);
+                if(noOfRunningJobs==0) {
+                    Report.logInfo("Aggregate Jobs are finished.");
+                    isAggBatchsCompleted = true;
+                    break;
+                } else {
+                    Report.logInfo("Waiting for aggregation batch to complete");
+                    Thread.sleep(30000L);
+                }
+            }
         }
     }
 
@@ -113,8 +109,9 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Instance");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
+        //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Instance | Renewal Date"));
         //Checking the adoption data for a customer instance.
         Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN | TOMAS MARTINEZ PATLAN - Instance 2 | 1,662 | 7,159 | 7,296 | 5,663 | 4,085 | 9,931 | 8,497 | 4,595 | 5,743 | 5,076"));
@@ -128,6 +125,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -143,6 +141,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("9 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         usage = usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -159,6 +158,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("6 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -180,6 +180,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
+        usage.clearGirdFilter();
         usage = usage.displayWeeklyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
@@ -192,6 +193,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -215,6 +217,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("3 Weeks");
         usage.setDataGranularity("By Instance");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.

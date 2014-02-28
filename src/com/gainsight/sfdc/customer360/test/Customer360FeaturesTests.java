@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.util.*;
 
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -30,15 +31,21 @@ public class Customer360FeaturesTests extends BaseTest {
 				"/apex_scripts/Features/features.apex",
 				isPackageInstance());
 		basepage.login();
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", true);
-		cf = (Customer360Features) cp.goToFeaturesSection();
 	}
-
+	
+	@AfterMethod
+	private void refresh() {
+	        basepage.refreshPage();
+	}
+	 
+	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
 		// Test if all the features in the excel are displayed (pre added features)
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Via Systems", true);
+		cf = (Customer360Features) cp.goToFeaturesSection();
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
 		System.out.println("Prodlistsize=" + ProdList.size());
 		List<HashMap<String, String>> ProdFeatureList = new ArrayList();
@@ -83,6 +90,9 @@ public class Customer360FeaturesTests extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyEditFeatures(HashMap<String, String> testData) {
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Via Systems", true);
+		cf = (Customer360Features) cp.goToFeaturesSection();
 		//In the Edit features form check on Licensed for a Feature and verify if same is reflected in features module
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
 		

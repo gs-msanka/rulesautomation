@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -12,6 +11,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class Adoption_Account_Monthly_Test extends BaseTest {
@@ -33,31 +33,27 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
         basepage.login();
         String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Account_Level_Monthly.txt";
 
-        try {
-            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            apex.runApex(resolveStrNameSpace(QUERY));
-            createExtIdFieldOnAccount();
-            createFieldsOnUsageData();
-            apex.runApexCodeFromFile(measureFile, isPackageInstance());
-            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
-            DataETL dataLoader = new DataETL();
-            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo1);
-            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo2);
-            jobInfo3 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Account_Monthly.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo3);
-        } catch (Exception e) {
-            Report.logInfo("Setup Failure :" +e.getLocalizedMessage());
-            e.printStackTrace();
-        }
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+        apex.runApex(resolveStrNameSpace(QUERY));
+        createExtIdFieldOnAccount();
+        createFieldsOnUsageData();
+        apex.runApexCodeFromFile(measureFile, isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        DataETL dataLoader = new DataETL();
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
+        jobInfo3 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Account_Monthly.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
+
     }
 
     @Test
@@ -68,6 +64,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
@@ -85,6 +82,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -103,6 +101,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());

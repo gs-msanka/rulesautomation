@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class Adoption_Instance_Monthly_Test extends BaseTest {
@@ -33,75 +34,70 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
 
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
         basepage.login();
         String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Instance_Level_Monthly.txt";
 
-        try{
-            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            apex.runApex(resolveStrNameSpace(QUERY));
-            createExtIdFieldOnAccount();
-            createFieldsOnUsageData();
-            DataETL dataLoader = new DataETL();
-            apex.runApexCodeFromFile(measureFile, isPackageInstance());
-            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
-            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo1);
-            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo2);
-            jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Monthly.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo3);
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+        apex.runApex(resolveStrNameSpace(QUERY));
+        createExtIdFieldOnAccount();
+        createFieldsOnUsageData();
+        DataETL dataLoader = new DataETL();
+        apex.runApexCodeFromFile(measureFile, isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
+        jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Monthly.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
 
-            String fileName = System.getProperty("user.dir")+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-            BufferedReader reader;
-            reader = new BufferedReader(new FileReader(fileName));
-            String line = null;
-            StringBuilder stringBuilder = new StringBuilder();
-            String code = "";
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-            int month = c.get(Calendar.MONTH);
-            int year = c.get(Calendar.YEAR);
-            int day = 15;
-            //Max of only 5 jobs can run in an organization at a given time
-            //Care to be taken that there are no apex jobs are running in the organization.
-            for(int k=0;k<5;k++) {
-                for(int i =0; i < 5; i++) {
-                    if(month == 0) {
-                        month = 12;
-                        year = year -1;
-                    }
-                    code = stringBuilder.toString();
-                    code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
-                            .replaceAll("THEYEARCHANGE", String.valueOf(year))
-                            .replace("THEDAYCHANGE", String.valueOf(day));
-                    apex.runApex(resolveStrNameSpace(code));
-                    month = month-1; //Need to move backward for executing the aggregation.
+        String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        BufferedReader reader;
+        reader = new BufferedReader(new FileReader(fileName));
+        String line = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        String code = "";
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        int month = c.get(Calendar.MONTH);
+        int year = c.get(Calendar.YEAR);
+        int day = 15;
+        //Max of only 5 jobs can run in an organization at a given time
+        //Care to be taken that there are no apex jobs are running in the organization.
+        for(int k=0;k<5;k++) {
+            for(int i =0; i < 5; i++) {
+                if(month == 0) {
+                    month = 12;
+                    year = year -1;
                 }
-                reader.close();
-                Thread.sleep(30000L);
-                for(int i= 0; i < 200; i++) {
-                    String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
-                            "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
-                            "and ApexClass.Name = 'AdoptionAggregation'";
-                    int noOfRunningJobs = getQueryRecordCount(query);
-                    if(noOfRunningJobs==0) {
-                        Report.logInfo("Aggregate Jobs are finished.");
-                        isAggBatchsCompleted = true;
-                        break;
-                    } else {
-                        Report.logInfo("Waiting");
-                        Thread.sleep(30000L);
-                    }
+                code = stringBuilder.toString();
+                code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
+                        .replaceAll("THEYEARCHANGE", String.valueOf(year))
+                        .replace("THEDAYCHANGE", String.valueOf(day));
+                apex.runApex(resolveStrNameSpace(code));
+                month = month-1; //Need to move backward for executing the aggregation.
+            }
+            reader.close();
+            Thread.sleep(30000L);
+            for(int i= 0; i < 200; i++) {
+                String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
+                        "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
+                        "and ApexClass.Name = 'AdoptionAggregation'";
+                int noOfRunningJobs = getQueryRecordCount(query);
+                if(noOfRunningJobs==0) {
+                    Report.logInfo("Aggregate Jobs are finished.");
+                    isAggBatchsCompleted = true;
+                    break;
+                } else {
+                    Report.logInfo("Waiting");
+                    Thread.sleep(30000L);
                 }
             }
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-            e.printStackTrace();
         }
     }
 
@@ -114,6 +110,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Instance");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         Assert.assertTrue(usage.isAdoptionGridDisplayed(), "Verifying Adoption grid is displayed");
         Assert.assertTrue(usage.isGridHeaderMapped("Customer | Instance | Renewal Date"), "Verifying Grid Headers");
         Assert.assertTrue(usage.isDataPresentInGrid("AUREA SOFTWARE INC | AUREA SOFTWARE INC - Instance 1 | 2,544 | 5,274 | 1,199 | 5,799 | 4,013 | 1,712 | 8,866 | 1,224 | 3,315 | 818") , "Verifying Account Instance Level data");
@@ -131,6 +128,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -152,6 +150,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         usage = usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -172,6 +171,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
@@ -198,6 +198,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setMonth(String.valueOf(month));
         usage.setYear(String.valueOf(year));
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
     }
@@ -211,6 +212,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Account");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows wether instance is displayed in the header.
@@ -236,6 +238,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(year));
         usage.setDataGranularity("By Instance");
         usage = usage.displayMonthlyUsageData();
+        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.

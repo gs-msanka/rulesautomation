@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -13,6 +12,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class Adoption_Account_Weekly_Test extends BaseTest {
@@ -26,34 +26,29 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     static JobInfo jobInfo3;
     String resDir = userDir+"/resources/datagen/";
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
-    String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
+    String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
         basepage.login();
         String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Account_Level_Weekly.txt";
 
-        try{
-            //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-            apex.runApex(resolveStrNameSpace(QUERY));
-            createExtIdFieldOnAccount();
-            createFieldsOnUsageData();
-            apex.runApexCodeFromFile(measureFile, isPackageInstance());
-            apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
-            DataETL dataLoader = new DataETL();
-            dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-            dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-            jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo1);
-            jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo2);
-            jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Account_Weekly.txt"), JobInfo.class);
-            dataLoader.execute(jobInfo3);
-        } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-            e.printStackTrace();
-        }
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
+        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        createExtIdFieldOnAccount();
+        createFieldsOnUsageData();
+        apex.runApexCodeFromFile(measureFile, isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        DataETL dataLoader = new DataETL();
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
+        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
+        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo1);
+        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo2);
+        jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Account_Weekly.txt"), JobInfo.class);
+        dataLoader.execute(jobInfo3);
     }
 
     @Test
@@ -63,6 +58,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         usage.setNoOfWeeks("12 Weeks");
         usage.setDate(getWeekLabelDate("Sat", 0, true, true));
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         usage = usage.selectCustomersView("All");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         //Checking the header rows weather instance is displayed in the header.
@@ -84,6 +80,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
         usage = usage.displayWeeklyUsageData();
+        usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
     }
@@ -96,6 +93,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         usage = usage.displayWeeklyUsageData();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
+        usage.clearGirdFilter();
         //Checking the header rows wether instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.

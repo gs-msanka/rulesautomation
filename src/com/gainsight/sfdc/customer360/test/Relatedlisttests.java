@@ -78,6 +78,7 @@ public class Relatedlisttests extends BaseTest {
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(testData.get("ObjectId")));
+        rLPage.closeWindow();
 
     }
 
@@ -90,7 +91,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values"));
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(testData.get("ObjectId")), "Verifying the Page Url is contact record view or not");
-
+        rLPage.closeWindow();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -102,7 +103,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values"));
         Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(testData.get("ObjectId")), "Verifying the Page Url is contact record view or not");
-
+        rLPage.closeWindow();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -123,6 +124,7 @@ public class Relatedlisttests extends BaseTest {
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
+        rLPage.closeWindow();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -143,6 +145,7 @@ public class Relatedlisttests extends BaseTest {
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
+        rLPage.closeWindow();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -176,6 +179,7 @@ public class Relatedlisttests extends BaseTest {
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
+        rLPage.closeWindow();
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

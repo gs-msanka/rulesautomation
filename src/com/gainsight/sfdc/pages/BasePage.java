@@ -15,6 +15,8 @@ import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,6 +45,8 @@ public class BasePage extends WebPage implements Constants {
     private final String ADOPTION_TAB       = "//a[contains(@title,'Adoption Tab')]";
     private final String SUREVEY_TAB        = "//a[contains(text(),'Survey')]";
     private final String ADMINISTRATION_TAB = "//a[contains(@title,'Administration')]";
+    private final String MORE_TABS          = "MoreTabs_Tab";
+    private final String MORE_TABS_LIST     = "MoreTabs_List";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
 
@@ -81,37 +85,37 @@ public class BasePage extends WebPage implements Constants {
 
 	// Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab() {
-		item.click(CUSTOMER_TAB);
+        clickOnTab(CUSTOMER_TAB);
 		return new CustomerBasePage();
 	}
 
 	public TransactionsBasePage clickOnTransactionTab() {
-		item.click(TRANSACTIONS_TAB);
+        clickOnTab(TRANSACTIONS_TAB);
 		return new TransactionsBasePage();
 	}
 
 	public AdoptionBasePage clickOnAdoptionTab() {
-		item.click(ADOPTION_TAB);
+        clickOnTab(ADOPTION_TAB);
 		return new AdoptionBasePage();
 	}
 
     public RetentionBasePage clickOnRetentionTab() {
-        item.click(RETENTION_TAB);
+        clickOnTab(RETENTION_TAB);
         return new RetentionBasePage();
     }
 
 	public SurveyBasePage clickOnSurveyTab() {
-		item.click(SUREVEY_TAB);
+        clickOnTab(SUREVEY_TAB);
 		return new SurveyBasePage();
 	}
 
 	public ChurnPage clickOnChurnTab() {
-		item.click(CHURN_TAB);
+        clickOnTab(CHURN_TAB);
 		return new ChurnPage();
 	}
 	public Customer360Page clickOnC360Tab() {
-		item.click(C360_TAB);
-		return new Customer360Page();
+		clickOnTab(C360_TAB);
+        return new Customer360Page();
 	}
 	public OpportunitiesPage clickOnOpportunitiesTab() {
 		if (!field.isElementPresent(OPPORTUNITIES_TAB)) {
@@ -122,12 +126,25 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	public AccountsPage clickOnAccountsTab() {
-		item.click(ACCOUNTS_TAB);
+		clickOnTab(ACCOUNTS_TAB);
 		return new AccountsPage();
 	}
 
+    private void clickOnTab(String xpath) {
+        try {
+            WebElement wEle = element.getElement(xpath);
+            if(wEle.isDisplayed()) {
+                wEle.click();
+            }
+        } catch (Exception e) {
+            item.click(MORE_TABS);
+            wait.waitTillElementDisplayed(MORE_TABS_LIST, MIN_TIME, MAX_TIME);
+            item.click(xpath);
+        }
+    }
+
 	public AdministrationBasepage clickOnAdminTab() {
-		item.click(ADMINISTRATION_TAB);
+		clickOnTab(ADMINISTRATION_TAB);
 		return new AdministrationBasepage();
 	}
 
@@ -146,18 +163,15 @@ public class BasePage extends WebPage implements Constants {
 	public void setDefaultApplication(String appName) {
 		item.click("userNavButton");
 		link.clickLink("Setup");
-		wait.waitTillElementPresent("//a[text()='Manage Users']", MIN_TIME,
-                MAX_TIME);
+		wait.waitTillElementPresent("//a[text()='Manage Users']", MIN_TIME, MAX_TIME);
 		link.clickLink("Manage Users");
 		link.clickLink("Profiles");
-		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]",
-                MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]",MIN_TIME, MAX_TIME);
 		item.click("//td[@id='bodyCell']//tr[contains(.,'System Administrator')]//a[contains(.,'Edit')]");
-		wait.waitTillElementPresent("//input[@title='Save']", MIN_TIME,
-                MAX_TIME);
-		item.click(String.format(DEFAULT_APP_RADIO, appName));
-		field.selectFromDropDown(String.format(TAB_SELECT, "Administration"),
-                "Default On");
+		wait.waitTillElementPresent("//input[@title='Save']", MIN_TIME, MAX_TIME);
+		item.click("//input[@title='"+appName+" Default']");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Accounts"),"Default On");
+		field.selectFromDropDown(String.format(TAB_SELECT, "Administration"),"Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Adoption"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Churn"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Customers"), "Default On");
@@ -165,13 +179,41 @@ public class BasePage extends WebPage implements Constants {
 		field.selectFromDropDown(String.format(TAB_SELECT, "Retention"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Survey"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Transactions"), "Default On");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Insights"), "Default On");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Gainsight"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Customer Success 360"), "Default On");
 		item.click("//input[@title='Save']");
-		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]",
-				MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]", MIN_TIME, MAX_TIME);
 	}
 
+    public void addTabsToApplication(String appName, String tabs) {
+        item.click("userNavButton");
+        link.clickLink("Setup");
+        wait.waitTillElementDisplayed("DevTools_icon", MIN_TIME, MAX_TIME);
+        item.click("DevTools_icon");
+        wait.waitTillElementDisplayed("TabSet_font", MIN_TIME, MAX_TIME);
+        item.click("TabSet_font");
+        wait.waitTillElementDisplayed("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]", MIN_TIME, MAX_TIME);
+        item.click("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]");
+        wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
+        item.click("//input[@title='Edit' and @name ='edit']");
+        wait.waitTillElementDisplayed("//input[@type='submit' and @name='save']", MIN_TIME, MAX_TIME);
+        Select multiDropDown = new Select(element.getElement("duel_select_0"));
+        String[] tabsList = tabs.split(",");
+        for(String tabName : tabsList) {
+            try {
+                multiDropDown.selectByVisibleText(tabName.trim());
+                item.click("//img[@class='rightArrowIcon' and @title='Add']");
+            } catch (Exception e) {
+                Report.logInfo("The Following tab is not available : " +tabName);
+            }
+        }
+        item.click("//input[@type='submit' and @name='save']");
+        wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
+    }
+
 	public void loadDefaultData() throws URISyntaxException {
+        clickOnSurveyTab();
 		URI uri=new URI(driver.getCurrentUrl());
 		String hostName="https://"+uri.getHost();
 		driver.get(hostName+"/apex/loadsetupdata");
@@ -186,7 +228,8 @@ public class BasePage extends WebPage implements Constants {
 			item.click(loadButton);
 			wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
 		}
-		
+        driver.get(hostName+"/apex/SurveyList");
+        wait.waitTillElementDisplayed("//input[@class='btn dummyNewSurveyBtn']", MIN_TIME, MAX_TIME);
 	}
 
 	public void goBack() {
