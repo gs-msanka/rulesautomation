@@ -31,6 +31,9 @@ public class AdminUIViewsTabTest extends BaseTest {
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views", isPackageInstance());
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views", isPackageInstance());
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views", isPackageInstance());
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackageInstance());
 		basepage.login();
 	}
 	
@@ -48,14 +51,20 @@ public class AdminUIViewsTabTest extends BaseTest {
 		System.out.println("selectffield has these values in test:" +selectffield);
 		String foperator =data.get("foperator");
 		String fvalue = data.get("fvalue");
+		String selectRfield = data.get("selectRfield");
+		//String rLabel = data.get("rLabel");
+		String rpOperator =data.get("rpOperator");
+		String rpvalue = data.get("rpvalue");
+		
 		AdminUIViewssSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewssettingsSubTab();
-		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName); 
+		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName,
+				                    selectRfield, rpOperator , rpvalue); 
 		return adUIview;
 		 
        
 		
 	}
-//	selectfvalue
+                 //	selectfvalue
 	public HashMap<String, String> getMapFromData1(String data) {
 		HashMap<String, String> hm = new HashMap<String, String>();
 		System.out.println(data);
