@@ -1,0 +1,23 @@
+{
+    "jobName": "job_insert_ScorecardFact",
+    "jobType" : "Scorecard",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : true,
+    "preprocess" : {
+    	"inputFile" : "/testdata/sfdc/Scorecard/ScorecardFact.csv",
+    	"monthly" : false,
+    	"weekly" : false,
+    	"daysToAdd" : true,
+    	"fieldName" : "JBCXM__LASTSCOREMODIFIEDDATE__C",
+    	"outputFile" : "/resources/datagen/process/ScorecardFact_Processed.csv"
+    },
+    
+   "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__ScorecardFact__c",
+        "operation": "upsert",
+        "contentType": "CSV",
+		"externalIDField":"SCFact_ExternalID__c",
+        "file": "/resources/datagen/process/ScorecardFact_Processed.csv"
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "jobName": "job_insert_ScorecardFact",
+    "jobType" : "Scorecard",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : true,
+   
+   "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CustomerInfo__c",
+        "operation": "upsert",
+        "contentType": "CSV",
+		"externalIDField":"CInfo_ExternalID__c",
+        "file": "/testdata/sfdc/Scorecard/Scorecard_CustomerInfo.csv"
+    }
+}

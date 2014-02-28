@@ -25,7 +25,8 @@ for(String mea : groupMeasuresList) {
 										JBCXM__DisplayOrder__c=i,
 										JBCXM__InputType__c='Manual',
 										JBCXM__IsActive__c=true,
-										JBCXM__IsGroup__c=true);
+										JBCXM__IsGroup__c=true,
+										SCMetric_ExternalID__c=mea);
 	i++;
 	scmMap.put(mea, scmObj);
 }
@@ -49,8 +50,10 @@ for(String mea : groupMeasuresList) {
 											JBCXM__PeriodType__c		= 'WEEKS',
 											JBCXM__ScoringSchemeId__c	= scoringScheme.get(0).Id,
 											JBCXM__ValidityPeriod__c 	= d5.get(j),
-											JBCXM__Weight__c			= d4.get(j));
+											JBCXM__Weight__c			= d4.get(j),
+											SCMetric_ExternalID__c=mea+measure);
 		measuresList.add(scmObj);
+		j++;
 	}
 }
 insert measuresList;
