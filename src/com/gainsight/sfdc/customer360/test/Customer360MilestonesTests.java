@@ -90,13 +90,10 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
-	public void verifyAddMilestones(HashMap<String, String> testData) {
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
+	/*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")*/
+	public void addMilestones(HashMap<String, String> testData) {
+
 		int MsNum = cm.getCurrentNoOfRows()+1;
 		String MsName="M"+MsNum;
 		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
@@ -119,18 +116,21 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 3)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
-	public void verifyEditMilestones(HashMap<String, String> testData) {
+	public void verifyAddandEditMilestones(HashMap<String, String> testData) {
 		cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Milestones Account", true);
 		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
+		
+		addMilestones(testData);
+		
 		int MsNum = cm.getCurrentNoOfRows();
 		String MsName="M"+MsNum;
 		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
 		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
 		cal.add(Calendar.MONTH,monthsToAdd);
 		Date msDate=cal.getTime();
-		cm.clickOnAddMilestones();
+		//cm.clickOnAddMilestones();
 		cm.clickOnEditMilestone(MsNum);
 		cm.setDateInField(df.format(msDate));
 		cm.selectMileStone(MsList.get("Milestone"));
