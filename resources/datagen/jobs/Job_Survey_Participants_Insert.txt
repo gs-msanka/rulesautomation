@@ -1,10 +1,22 @@
 {
+	 "jobName": "job_insert_surveyparticipants",
+	    "jobType" : "Survey",
+	    "namespacePrefix" : "JBCXM",
+	    "useNameSpace" : true,
+	    "preprocess" : {
+	    	"inputFile" : "/testdata/sfdc/Survey/Survey_Participants.csv",
+	    	"monthly" : false,
+	    	"weekly" : false,
+	    	"daysToAdd" : true,
+	    	"fieldName" : "JBCXM__ResponseDate__c",
+	    	"outputFile" : "/resources/datagen/process/Survey_Participants_Processed.csv"
+	},
     "load": {
         "target": "sfdc",
         "sObject": "JBCXM__SurveyParticipant__c",
         "operation": "insert",
         "contentType": "CSV",
         "externalIDField": "SurPart_ExternalID__c",
-        "file": "/testdata/sfdc/Survey/Survey_Participants.csv"
+        "file": "/resources/datagen/process/Survey_Participants_Processed.csv"
     }
 }
