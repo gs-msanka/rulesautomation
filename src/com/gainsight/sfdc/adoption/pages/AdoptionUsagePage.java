@@ -21,7 +21,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String PIN_ICON 				= "//img[@id='pinIcon']";
     private final String MONTH_SELECT 			= "//div[@class='JbaraMonthlyFilter hideForOldAdoption']/select";
     private final String YEAR_SELECT 			= "//div[@class='JbaraMonthlyFilter changeMyFloat']/select";
-    private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']";
+    //private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']";
     private final String GO_BUTTON 				= "//div[@class='newFilters']/div[2]/input[@value='View Results']";
     private final String DATAVIEW_SELECT 		= "//select[@class='jbaraDummyAdoptionDataViewSelectControl min-width']";
     private final String WEEK_PERIOD_SELECT		= "//select[@class='dummyJbaraWeeksPeriodsSelectionCntrl min-width']";
@@ -32,6 +32,9 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String ASEARCH_CLOSE_BUTTON 	= "//input[@class='Close' and @type='button']";
     private final String ASEARCH_CLOSE 			= "//a[@class='ui-dialog-titlebar-close ui-corner-all']/span[text()='close']";
     private final String UIVIEW_SELECT          = "//select[@class='jbaraDummyAdoptionUIViewsSelectControl']";
+    private final String MEASURE_SELECT = "//div[@class='newMeasureSelector']";
+    private final String MEASURE_DISPLAY_DIV = "//div[@class='gs_mult_drop hide']";
+    private final String MEASURE_SEARCH_INPUT = "//input[@class='singleSearchMeasureText']";
 
     String month 		= "";
     String year 		= "";
@@ -106,7 +109,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         select.selectByValue(month);
         //field.selectFromDropDown(MONTH_SELECT, month);
         field.selectFromDropDown(YEAR_SELECT, year);
-        field.setSelectField(MEASURE_SELECT, measure);
+        selectMeasure(measure);
         if(dataGranularity.isEmpty() == false && dataGranularity.length() > 1 ) {
             field.selectFromDropDown(DATAVIEW_SELECT, dataGranularity);
         }
@@ -121,7 +124,8 @@ public class AdoptionUsagePage extends AdoptionBasePage {
      */
     public AdoptionUsagePage displayWeeklyUsageData() {
         Report.logInfo("Displaying Weekly usage Data");
-        field.selectFromDropDown(MEASURE_SELECT, measure);
+        //field.selectFromDropDown(MEASURE_SELECT, measure);
+        selectMeasure(measure);
         if(dataGranularity != null && dataGranularity.isEmpty() == false) {
             field.selectFromDropDown(DATAVIEW_SELECT, dataGranularity);
         }
@@ -132,6 +136,15 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         button.click(GO_BUTTON);
         Report.logInfo("Clicked to display weekly usage data.");
         return this;
+    }
+
+
+    private void selectMeasure(String measure) {
+        item.click(MEASURE_SELECT);
+        wait.waitTillElementDisplayed(MEASURE_DISPLAY_DIV, MIN_TIME, MAX_TIME);
+        field.setTextField(MEASURE_SEARCH_INPUT, measure);
+        amtDateUtil.stalePause();
+        item.click("//ul[@class='gs_mult_results']/li[contains(text(), '"+measure+"')]");
     }
 
     public boolean isAdoptionGridDisplayed() {
@@ -263,13 +276,13 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             ++a;
             if(row.getAttribute("role").equalsIgnoreCase("row")) {
                 rowtext = row.getText();
-                Report.logInfo("Row Text : " + row.getText());
+                Report.logInfo("Actual Text : " + row.getText());
+                Report.logInfo("Expected Text :" +values.toString());
             }
             for(String val : values ) {
                 System.out.println("Checking String :" +val);
                 if(rowtext.contains(val)) {
                     result = true;
-                    Report.logInfo("Matched : " + result);
                 } else {
                     result = false;
                     Report.logInfo("Matched : " +result);

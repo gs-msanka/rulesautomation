@@ -1,4 +1,4 @@
-List<JBCXM__PickList__c> deleteList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'Adoption Measure Types'];
+List<JBCXM__PickList__c> deleteList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'Adoption Measure Types' AND JBCXM__DISPLAYORDER__C >= 10];
 delete deleteList;
 List<JBCXM__PickList__c> pkList = new List<JBCXM__PickList__c>();
 List<String> measureNameList = new List<String>{'Page Views', 'Page Visits', 'No of Report Run', 'Files Downloaded'};

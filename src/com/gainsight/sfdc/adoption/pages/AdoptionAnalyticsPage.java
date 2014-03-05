@@ -16,7 +16,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String ADOP_CHART				= "userAdoptionChartId";
     private final String READY_INDICATOR 		= "selectionFilterControls";
     private final String CUSTOMERNAME_INPUT 	= "//div[@class='requiredInput']/input";
-    private final String MEASURE_SELECT	 		= "//a[@class='measureSelectorLink measureSwitch newMeasureDD']";
+    //private final String MEASURE_SELECT	 		= "//a[@class='measureSelectorLink measureSwitch newMeasureDD']";
     private final String TIMEPERIOD_SELECT 		= "//select[@class='jbaraDummyPeriodSelectControl min-width']";
     private final String MONTH_SELECT 			= "//select[@class='jbaraDummyMonSelectControl min-width']";
     private final String YEAR_SELECT 			= "//select[@class='jbaraDummyYearSelectControl min-width']";
@@ -27,6 +27,10 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String CUSTLOOKUP_IMG			= "//img[@alt='Customer Name Lookup' and @title='Customer Name Lookup']";
     private final String MEASURESELECT_BLOCK	= "measureSelectorContainer";
     private final String NOADOPTION_MSG         = "AdoptionDataNotAvailable";
+    private final String MEASURE_SELECT = "//span[@class='measureSelectorLink measureSwitch newMeasureDD']";
+    private final String MEASURE_SEARCH_INPUT = "//input[@class='searchMeasureText']";
+    private final String ALL_MEASURES = "//span[contains(text(), 'All Measures')]/preceding-sibling::input[@class='measureSwitch allMeasureCheckBox']";
+    private final String UNGROUP_ALL_MEASURES = "//input[@class='ungroupMeaures' and @type='checkbox']";
 
     private String customerName;
     private String measureNames         = "All Measures";
@@ -172,35 +176,27 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 	 * @param measures
 	 */
 	public void selectMeasures(String measures) {
+        String MEASURE_DIV = "//div[@class='gs_mult_drop hide usage360MeasureSelectorStyles']";
 		Report.logInfo("Selecting Measure to view the adoption data.");
 		item.click(MEASURE_SELECT);
-		wait.waitTillElementDisplayed(MEASURESELECT_BLOCK, MIN_TIME, MAX_TIME);
-		String ch = driver.findElement(By.xpath("//li[text()='All Measures']/child::input")).getAttribute("checked");
-		if(ch == null) {
-			if(measures.equalsIgnoreCase("All Measures")) {
-				item.click("//li[text()='All Measures']/child::input");
-			} else {
-				item.click("//li[text()='All Measures']/child::input");
-				sleep(1); //Need a time frame for child checkbooks to get effected.
-				item.click("//li[text()='All Measures']/child::input");
-				for(String m : measures.split("\\|")) {
-					item.click("//li[text()='"+m.trim()+"']/child::input");
-					Report.logInfo("Seleted the Measure name: " +m.trim());
-				}
-			}
-			
-		} else {
-			if(!measures.equalsIgnoreCase("All Measures")) {
-				item.click("//li[text()='All Measures']/child::input");
-				sleep(1); //Need a time frame for child checkbooks to get effected.
-				for(String m : measures.split("\\|")) {
-					item.click("//li[text()='"+m.trim()+"']/child::input");
-					Report.logInfo("Seleted the Measure name: " +m.trim());
-				}
-			}
-			
-		}
-		Report.logInfo("Selected the above measures to view adoption data");
+		wait.waitTillElementDisplayed(MEASURE_DIV, MIN_TIME, MAX_TIME);
+        if(measures.equalsIgnoreCase("All Measures")) {
+            String text = element.getElement(ALL_MEASURES).getAttribute("checked");
+            if(text == null || text.equalsIgnoreCase("unchecked")) {
+                item.click(ALL_MEASURES);
+                amtDateUtil.stalePause();
+            }
+        } else {
+            item.click(UNGROUP_ALL_MEASURES);
+            amtDateUtil.stalePause();
+            for(String measure : measures.split(",")) {
+                String measure_xpath = "//li[text()='"+measure.trim()+"']/input[@type='checkbox']";
+                String text = element.getElement(measure_xpath).getAttribute("checked");
+                if(text == null || text.equalsIgnoreCase("unchecked")) {
+                    item.click(measure_xpath);
+                }
+            }
+        }
 	}
 	
 	public AdoptionAnalyticsPage clickOnAddAlert() {
@@ -289,13 +285,13 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         for(WebElement row : rows) {
             if(row.getAttribute("role").equalsIgnoreCase("row")) {
                 rowtext = row.getText();
-                Report.logInfo("Row Text : " +row.getText());
+                Report.logInfo("Actual Text : " +row.getText());
+                Report.logInfo("Expected Text: " +values.toString());
             }
             for(String val : values ) {
                 System.out.println("Checking String :" +val);
                 if(rowtext.contains(val)) {
                     result = true;
-                    Report.logInfo("Matched : " +result);
                 } else {
                     result = false;
                     Report.logInfo("Matched : " +result);
