@@ -213,6 +213,21 @@ public class BasePage extends WebPage implements Constants {
     }
 
 	public void loadDefaultData() throws URISyntaxException {
+        String APPLICATION_SELECTION = "tsidButton";
+        String APP_DROP_DOWN = "tsidMenu";
+        wait.waitTillElementDisplayed(APPLICATION_SELECTION, MIN_TIME, MAX_TIME);
+        item.click(APPLICATION_SELECTION);
+        wait.waitTillElementDisplayed(APP_DROP_DOWN, MIN_TIME, MAX_TIME);
+        String a = "//a[contains(@class, 'menuButtonMenuLink') and contains(text(), 'Gainsight')]";
+        try{
+            item.click(a);
+            wait.waitTillElementDisplayed(SUREVEY_TAB, MIN_TIME, MAX_TIME);
+        } catch (Exception e) {
+            String a1 = "//span[@id='tsidLabel' and contains(text(), 'Gainsight')]";
+            if(element.isElementPresent(a1)) {
+                Report.logInfo("Gainsight application is not available to select");
+            }
+        }
         clickOnSurveyTab();
 		URI uri=new URI(driver.getCurrentUrl());
 		String hostName="https://"+uri.getHost();
@@ -223,13 +238,25 @@ public class BasePage extends WebPage implements Constants {
 			wait.waitTillElementDisplayed("loadSetupDatatable", MIN_TIME, MAX_TIME);
 		}
 		driver.get(hostName+"/apex/loadsampledata");
-		String loadButton="//input[@value='Load']";
+        String loadButton="//input[@value='Load']";
+        try {
+            String DELETE_BUTTON = "//input[@class='btn' and contains(@value, 'Go')]";
+            wait.waitTillElementDisplayed(DELETE_BUTTON, MIN_TIME,MAX_TIME);
+            item.click(DELETE_BUTTON);
+            Report.logInfo("Deleting the sample data");
+            amtDateUtil.sleep(15);
+            wait.waitTillElementDisplayed(loadButton, MIN_TIME, 2*MAX_TIME);
+            Report.logInfo("Sample data delete completed.");
+        } catch(Exception e) {
+            Report.logInfo("Sample data is not loaded in to org.");
+        }
 		if(element.isElementPresent(loadButton)){
 			item.click(loadButton);
 			wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
 		}
         driver.get(hostName+"/apex/SurveyList");
         wait.waitTillElementDisplayed("//input[@class='btn dummyNewSurveyBtn']", MIN_TIME, MAX_TIME);
+
 	}
 
 	public void goBack() {
