@@ -202,7 +202,8 @@ public class BaseTest {
 		String result = "";
         boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
 		if (str != null && !isPackage) {
-			result = str.replaceAll("JBCXM__", "");
+            result =  str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
+            Report.logInfo(result);
             return result;
 		} else {
             return str;

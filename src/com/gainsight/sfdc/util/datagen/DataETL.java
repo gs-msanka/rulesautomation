@@ -359,12 +359,12 @@ public class DataETL implements IJobExecutor {
             csvData.add(0, headerRows);
             csvReader.close();
 
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(userDir+"/resources/process/Temp.csv"));
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(userDir+"/resources/datagen/process/Temp.csv"));
             csvWriter.writeAll(csvData);
             csvWriter.flush();
             csvWriter.close();
 
-            File f = new File(userDir+"/testdata/sfdc/Temp.csv");
+            File f = new File(userDir+"/resources/datagen/process/Temp.csv");
             return f;
         } else {
             return new File(fileName);
@@ -382,7 +382,7 @@ public class DataETL implements IJobExecutor {
         String result = "";
         boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
         if (str != null && !isPackage) {
-            result = str.replaceAll("JBCXM__", "");
+            result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
             return result;
         } else {
             return str;
