@@ -2,6 +2,7 @@ package com.gainsight.sfdc.administration.pages;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -16,96 +17,140 @@ public class AdminUIViewssSubTab extends BasePage {
 	private final String UI_VIEW_CANCEL        = "//input[@class='btn btnCancelClick']";
 	private final String WAIT_PAGE_LOAD        = "//div[@class='bPageBlock brandSecondaryBrd bEditBlock secondaryPalette']";
 	private final String SELECT_DROPDOWN       = "//select[@class='ddTabsList']";
-	private final String AVAILABLE_FIELDS      = "ddColumnSelectorList";
+	private final String AVAILABLE_FIELDS      = "//select[@id='ddColumnSelectorList' and @multiple='multiple']"; //"ddColumnSelectorList";
 	private final String VIEW_NAME             = "//input[@ class='jbaraDummyUIViewInputCtrl viewNameInput']";
 	private final String FILTER_SELECT_FIELDS  = "//select[@class='ddFilterFields']";
 	private final String FILTER_SELECT_OPERATOR= "//select[@class='dummyOperatorFields ddOperatorClass']";
 	private final String FILTER_VALUE          = "//input[@class='Name filterFieldClass']";
-	private final String FILTER_VALUE_SELECT   = "//select[@class='AccountSource filterFieldClass']";
 	
-	//private final String
-	//private final String
-	//private final String
+	private final String FILTER_VALUE_TEXT     = "//td[@class='tdFilterValue othertds']//input";
+	private final String MULTI_FILTER_VALUE    = "//select[@multiple='multiple']";//select[contains(@multiple,'multiple')]
+	private final String FILTER_VALUE_SELECT   = "//td[@class='tdFilterValue othertds']//select";
 	
+	private final String SPECFY_REPORT_PARM    = "//select[@class='ddReportParamFields']";
+	private final String RPARMS_LABEL          = "//input[@class='selectedReportParamLabel']"; 
+	private final String RPARMS_OPERATOR       = "//div[@ id='divReportParamSelector']//table//tbody//td[3]//select";
 	
-	
+	private final String RPARMS_VALUE_SELECT   = "//div[@ id='divReportParamSelector']//table//tbody//td[4]//select";
+	private final String RPRAMS_VALUE_TEXT     = "//div[@ id='divReportParamSelector']//table//tbody//td[4]//input";  
+//private final String RPARMS_VALUE_MLTISLCT = "";
+	//Add Rows
+	private final String FILTER_ADD_ROWS       = "//a[@id='fAddRowLink']";
+	private final String FILTER_REMOVE_ROWS    = "//span[@id='fRemoveRowLinkGreyed']";
+	//select[@class='ddFilterFields' and @dummyattrindex='4']
 	public AdminUIViewssSubTab() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 	
 	
-	public AdminUIViewssSubTab selectTabName(String tabName, String ViewName, String fieldName, 
-			                                              String selectffield, String foperator , String fvalue) {
-		System.out.println("selectffield has these values---1:" +selectffield);
+	public AdminUIViewssSubTab selectTabName(String tabName, String ViewName,  
+			                                       String selectffield, String foperator , String fvalue,
+			                                          String sctFieldName,String selectRfield, String rpOperator ,
+			                                           String rpvalue) {
 		button.click(NEW);
 		System.out.println("Clicked on NEW" );
-		wait.waitTillElementPresent(WAIT_PAGE_LOAD, MIN_TIME, MAX_TIME);
-		verifyandSelectTabName(tabName, ViewName, fieldName);
-		specifyFilterCriteria(selectffield, foperator ,fvalue);
+		wait.waitTillElementPresent(WAIT_PAGE_LOAD, MIN_TIME, MAX_TIME);     
+		verifyandSelectTabName(tabName, ViewName, selectffield, foperator , fvalue, sctFieldName,
+			                      	 selectRfield, rpOperator ,rpvalue);
 		return this;
 		}		
 		
-	
-	
-	public AdminUIViewssSubTab verifyandSelectTabName(String tabName, String ViewName, String fieldName  ) {
-			                                  
-	 String[] SelectTabs = {"Customers 360", "NPS", "Survey Participants", "survey Details Report" };  
+	public AdminUIViewssSubTab verifyandSelectTabName(String tabName, String ViewName,String selectffield, String foperator , 
+			                                                              String fvalue ,String sctFieldName,
+			                                               String selectRfield, String rpOperator , String rpvalue) {             
+	 String[] SelectTabs = {"Customer360", "NPS","Survey Detail Report", "Survey Participants"};  
 		for(String Nmechck:SelectTabs ) {
-			System.out.println("Namecheck items are:--"+Nmechck);
 			if(Nmechck.contains(tabName)) {
-				 System.out.println("In the if block tab name is :--"+tabName);
 				 field.selectFromDropDown(SELECT_DROPDOWN, tabName);
-				 
-				//selectAvailableFields(fieldName);
+				 selectAvailableFields(sctFieldName);
 			 return this;
-			}
-	 	}
+			}}
 			 field.selectFromDropDown(SELECT_DROPDOWN, tabName);
 			 field.clearAndSetText(VIEW_NAME, ViewName);
-			// specifyFilterCriteria(selectfield, foperator ,fvalue, selectfvalue);
+			 System.out.println("After the View name:--");
+			 specifyFilterCriteria(selectffield, foperator ,fvalue);
+			 specifyReportParams(selectRfield,rpOperator,rpvalue);
+			 selectAvailableFields(sctFieldName);
 		return this;		
 	}
-	
-	
-	public AdminUIViewssSubTab specifyFilterCriteria(String selectffield, String foperator , String fvalue) {
-		
-		System.out.println("se;ectffield has these values:" +selectffield);
+	                             //Filter Criteria code
+	public AdminUIViewssSubTab specifyFilterCriteria(String selectffield, String foperator ,String fvalue) {
 		field.selectFromDropDown(FILTER_SELECT_FIELDS, selectffield);
-		
-		
-		
 		wait.waitTillElementDisplayed(FILTER_SELECT_OPERATOR, MIN_TIME, MAX_TIME);
-		field.selectFromDropDown(FILTER_SELECT_OPERATOR, foperator);//equals, contains,lessthan...
-		if(item.isElementPresent(FILTER_VALUE)) {
-		field.selectFromDropDown(FILTER_VALUE, fvalue);
-		} else {
-			
-			//field.selectFromDropDown(FILTER_VALUE_SELECT, selectfvalue);
-		} return this;	
-	}
-	
-	
-	
-	
-	
-	
-public AdminUIViewssSubTab selectAvailableFields(String fieldName ) {
-		
-		boolean result = false;
-		Select s = new Select(item.getElement(AVAILABLE_FIELDS));
-		List<WebElement> avblefilds = s.getOptions();
-		for(WebElement webEle : avblefilds) {
-   if(webEle.getText().equalsIgnoreCase(fieldName)) {
-		result = true;
-	  if(result == true) {
-			field.selectFromDropDown(AVAILABLE_FIELDS, fieldName);//selecting existing field Name
-		    } 
-		}
+		System.out.println("foperator value is:--"+foperator);
+		field.selectFromDropDown(FILTER_SELECT_OPERATOR, foperator); //equals, contains,lessthan...
+		              // To Select a value	
+	if(isElementPresentAndDisplay(By.xpath(FILTER_VALUE_TEXT))) {
+		item.clearText(FILTER_VALUE_TEXT);
+		item.setTextByKeys(FILTER_VALUE_TEXT, fvalue); 
+		} else if(isElementPresentAndDisplay(By.xpath(FILTER_VALUE_SELECT))) {
+			System.out.println("splits.size: " + fvalue);
+			 String[] allfvalue= fvalue.split(",");
+			 System.out.println("splits.size: " + allfvalue.length);
+			 for(int r=0;r<allfvalue.length;r++){
+				 field.selectFromDropDown(FILTER_VALUE_SELECT, allfvalue[r]);
+	}} 
 		return this;
+	}	
+	                         // Report Params code.
+	public AdminUIViewssSubTab specifyReportParams(String selectRfield, String rpOperator , String rpvalue) {
+		field.selectFromDropDown(SPECFY_REPORT_PARM, selectRfield);
+		wait.waitTillElementDisplayed(RPARMS_OPERATOR, MIN_TIME, MAX_TIME);
+		System.out.println("rpOperator value is:--"+rpOperator);
+		field.selectFromDropDown(RPARMS_OPERATOR, rpOperator);//equals, contains,lessthan...
+		
+		if(isElementPresentAndDisplay(By.xpath(RPARMS_VALUE_SELECT))) {
+			System.out.println("splits.size: " + rpvalue);
+			 String[] allrpvalue= rpvalue.split(",");
+			 System.out.println("splits.size: " + allrpvalue.length);
+			 for(int r=0;r<allrpvalue.length;r++){
+				 field.selectFromDropDown(RPARMS_VALUE_SELECT, allrpvalue[r]);//selecting existing field Name
+	}} else {
+		item.clearText(RPRAMS_VALUE_TEXT);
+		item.clearAndSetText(RPRAMS_VALUE_TEXT, rpvalue);
 	}
+	return this;	
+	}
+	
+public AdminUIViewssSubTab selectAvailableFields(String sctFieldName ) {
+	System.out.println("splits.size: " + sctFieldName);
+	 String[] allsctFieldNames= sctFieldName.split(",");
+	 System.out.println("splits.size: " + allsctFieldNames.length);
+	 for(int k=0;k<allsctFieldNames.length;k++){
+		 field.selectFromDropDown(AVAILABLE_FIELDS, allsctFieldNames[k]);//selecting existing field Name
+	     button.click("//img[@class='rightArrowIcon']");
+	 }
+	button.click("//input[@class='btnSaveClick btn']");
 		return this;
 }
-	
 	
 
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

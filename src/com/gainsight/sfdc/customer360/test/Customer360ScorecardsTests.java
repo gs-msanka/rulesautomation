@@ -9,11 +9,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360ScorecardsTests extends BaseTest {
@@ -21,17 +23,29 @@ public class Customer360ScorecardsTests extends BaseTest {
 	Customer360Page cp;
 	Customer360Scorecard cs;
 	final String TEST_DATA_FILE = "testdata/sfdc/Scorecard/ScorecardTests.xls";
-
+	static boolean isPackageInstance = false;
+	
 	public enum Scheme {
 		NUMERIC, GRADE, COLOR
 	};
-
+	  
 	@BeforeClass
 	public void setUp() {
+		TestEnvironment env = new TestEnvironment();
+	    isPackageInstance = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
 		Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
 		System.out
 				.println("Starting Customer 360 Scorecard module Test Cases...");
-		
+		CreateObjectAndFields cObjFields = new CreateObjectAndFields();
+		 String Scorecard_Metrics="JBCXM__ScorecardMetric__c";
+	     String[] SCMetric_ExtId=new String[]{"SCMetric ExternalID"};
+	     try {
+	           cObjFields.createTextFields(removeNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+	     } catch (Exception e) {       	
+	           Report.logInfo("Failed to create fields");
+	           e.printStackTrace();
+	     }
+	        
 		 apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/scorecard.apex", isPackageInstance());
 		 
 		basepage.login();
@@ -45,7 +59,13 @@ public class Customer360ScorecardsTests extends BaseTest {
 		cp.searchCustomer("Scorecard Account", true);
 		cs = (Customer360Scorecard) cp.goToScorecardSection();
 	}
-
+	
+	  public String removeNameSpace(String s) {
+	        if(!isPackageInstance) {
+	            return s.replaceAll("JBCXM__", "");
+	        }
+	        return s;
+	    }
 	//@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
 	//@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addScoreWithNumeric(HashMap<String, String> testData) {

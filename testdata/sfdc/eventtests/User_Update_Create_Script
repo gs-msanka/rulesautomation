@@ -1,0 +1,30 @@
+List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'System Administrator'];
+System.debug(profileList);
+String s = profileList.get(0).Id; 
+System.debug(s);
+List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias, 
+                     ProfileId FROM User WHERE Lastname = 'Giribabu' 
+                     AND Alias = 'testuser' AND
+                       ProfileId =: s];
+System.debug(extuser);
+if(extuser != null && extuser.size() <= 0) {
+    User sampleUser = new User();
+    sampleUser.Username= 'ggolla@testuser.com';
+    sampleUser.Email = 'ggolla@gainsight.com';
+    sampleUser.Lastname = 'Giribabu';
+    sampleUser.Alias = 'testuser';
+    sampleUser.CommunityNickname = 'testuser';
+    sampleUser.ProfileId = profileList.get(0).Id;
+    sampleUser.TimeZoneSidKey = 'GMT';
+    sampleUser.LocaleSidKey = 'en_US';
+    sampleUser.EmailEncodingKey = 'ISO-8859-1';
+    sampleUser.LanguageLocaleKey = 'en_US';
+    sampleUser.UserPermissionsMobileUser = false;
+    System.debug ( JSON.serializePretty( sampleUser ) );
+    insert sampleUser;
+}
+ else {
+    user u1 = extuser.get(0);
+    u1.isActive = true;
+    update u1;
+ }

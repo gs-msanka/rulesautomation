@@ -1,0 +1,11 @@
+JBCXM__Uiviews__c Create = new JBCXM__Uiviews__c();
+Create.Name = 'Survey Participants script';
+Create.JBCXM__ColumnList__c = '[{"name":"Name","label":"Survey Participants Name","displayOrder":1,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":false,"hasJBCXMNS":false},{"name":"FirstName","label":"First Name","displayOrder":2,"visibilityMode":true,"objectName":"Contact","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Email","label":"Email","displayOrder":3,"visibilityMode":true,"objectName":"Contact","fieldType":"EMAIL","isGroupable":true,"hasJBCXMNS":false}]';
+Create.JBCXM__FilterConditions__c = '[]';
+Create.JBCXM__ReportParams__c='[]';
+Create.JBCXM__IsStandard__c = false;
+Create.JBCXM__UITabName__c= 'SurveyParticipants';
+Create.JBCXM__Visibility__c= 'Public';
+Create.JBCXM__IsShown__c = true;
+Create.JBCXM__VisualType__c = 'List';
+insert Create;

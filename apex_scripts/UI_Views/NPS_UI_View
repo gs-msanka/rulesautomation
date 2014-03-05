@@ -1,0 +1,11 @@
+JBCXM__Uiviews__c CrtNPS = new JBCXM__Uiviews__c();
+CrtNPS.Name = 'NPS View script';
+CrtNPS.JBCXM__ColumnList__c = '[{"name":"CreatedBy.Name","label":"Created By","displayOrder":1,"visibilityMode":true,"objectName":"SurveyResponse__c","fieldType":"USERLOOKUP","isGroupable":false,"hasJBCXMNS":false},{"name":"CreatedDate","label":"Created Date","displayOrder":2,"visibilityMode":true,"objectName":"SurveyResponse__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false},{"name":"Account__r.Industry","label":"Industry","displayOrder":3,"visibilityMode":true,"objectName":"SurveyResponse__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":true},{"name":"LastModifiedBy.Name","label":"Modified By","displayOrder":4,"visibilityMode":true,"objectName":"SurveyResponse__c","fieldType":"USERLOOKUP","isGroupable":true,"hasJBCXMNS":false},{"name":"LastModifiedDate","label":"Modified Date","displayOrder":5,"visibilityMode":true,"objectName":"SurveyResponse__c","fieldType":"DATETIME","isGroupable":false,"hasJBCXMNS":false}]';
+CrtNPS.JBCXM__FilterConditions__c = '[]';
+CrtNPS.JBCXM__ReportParams__c='[]';
+CrtNPS.JBCXM__IsStandard__c = false;
+CrtNPS.JBCXM__UITabName__c= 'NPS';
+CrtNPS.JBCXM__Visibility__c= 'Public';
+CrtNPS.JBCXM__IsShown__c = true;
+CrtNPS.JBCXM__VisualType__c = 'List';
+insert CrtNPS;

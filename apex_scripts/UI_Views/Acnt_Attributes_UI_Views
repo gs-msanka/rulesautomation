@@ -1,0 +1,11 @@
+JBCXM__Uiviews__c add = new JBCXM__Uiviews__c();
+add.Name = 'CS360 View script';
+add.JBCXM__ColumnList__c = '[{"name":"Id","label":"Account ID","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Account Name","displayOrder":2,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"AccountNumber","label":"Account Number","displayOrder":3,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Phone","label":"Account Phone","displayOrder":4,"visibilityMode":true,"objectName":"Account","fieldType":"PHONE","isGroupable":true,"hasJBCXMNS":false},{"name":"Rating","label":"Account Rating","displayOrder":5,"visibilityMode":true,"objectName":"Account","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Site","label":"Account Site","displayOrder":6,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"AccountSource","label":"Account Source","displayOrder":7,"visibilityMode":true,"objectName":"Account","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Account Type","displayOrder":8,"visibilityMode":true,"objectName":"Account","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]';
+add.JBCXM__FilterConditions__c = '[]';
+add.JBCXM__ReportParams__c='[]';
+add.JBCXM__IsStandard__c = false;
+add.JBCXM__UITabName__c= 'Customer360';
+add.JBCXM__Visibility__c= 'Public';
+add.JBCXM__IsShown__c = true;
+add.JBCXM__VisualType__c = 'List';
+insert add;

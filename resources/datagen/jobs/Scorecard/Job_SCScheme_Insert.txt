@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__ScoringScheme__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "SCScheme_ExternalID__c",
+        "file": "/testdata/sfdc/Scorecard/SCScheme.csv"
+    }
+}

@@ -1,0 +1,12 @@
+//Create SDR
+JBCXM__Uiviews__c CrtSDR = new JBCXM__Uiviews__c();
+CrtSDR.Name = 'Survey Detail Report script';
+CrtSDR.JBCXM__ColumnList__c = '[{"name":"Email__c","label":"Email","displayOrder":1,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":true},{"name":"Sent__c","label":"Email Sent","displayOrder":2,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"BOOLEAN","isGroupable":true,"hasJBCXMNS":true},{"name":"DisplayName__c","label":"Particpants","displayOrder":3,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":true},{"name":"Responsed__c","label":"Responded","displayOrder":4,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"Boolean","isGroupable":true,"hasJBCXMNS":true},{"name":"ResponseDate__c","label":"Response Date","displayOrder":5,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"DATETIME","isGroupable":true,"hasJBCXMNS":true},{"name":"Role__c","label":"Role","displayOrder":6,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":true},{"name":"SentEmail__c","label":"Sent Email","displayOrder":7,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":true},{"name":"SurveyOpened__c","label":"Survey Open","displayOrder":8,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"Boolean","isGroupable":true,"hasJBCXMNS":true},{"name":"Name","label":"Survey Participants Name","displayOrder":9,"visibilityMode":true,"objectName":"SurveyParticipant__c","fieldType":"STRING","isGroupable":false,"hasJBCXMNS":false}]';
+CrtSDR.JBCXM__FilterConditions__c = '[]';
+CrtSDR.JBCXM__ReportParams__c='[]';
+CrtSDR.JBCXM__IsStandard__c = false;
+CrtSDR.JBCXM__UITabName__c= 'SurveyDetailReport';
+CrtSDR.JBCXM__Visibility__c= 'Public';
+CrtSDR.JBCXM__IsShown__c = true;
+CrtSDR.JBCXM__VisualType__c = 'List';
+insert CrtSDR;

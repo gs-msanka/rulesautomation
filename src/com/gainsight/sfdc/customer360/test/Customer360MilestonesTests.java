@@ -10,6 +10,7 @@ import java.util.TimeZone;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -36,10 +37,6 @@ public class Customer360MilestonesTests extends BaseTest {
 				+ "/apex_scripts/Milestones/Milestones.apex",
 				isPackageInstance());
 		basepage.login();
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
 		TimeZone tz=TimeZone.getTimeZone(soql.getUserTimeZone());
 		cal=Calendar.getInstance(tz);			
 		String Lc=soql.getUserLocale();
@@ -49,11 +46,19 @@ public class Customer360MilestonesTests extends BaseTest {
 		df.setTimeZone(tz);
 		Report.logInfo("Your Org's TimeZone:"+soql.getUserTimeZone()+" && Locale:"+Lc);
 	}
-
+	 
+	@AfterMethod
+	private void refresh() {
+	        basepage.refreshPage();
+	    }
+	 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Milestones Account", true);
+		cm = cp.goToUsageSection();
+		cm.gotoMilestonesSubtab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
 		// Verifying table header
 		if (cm.isHeaderPresent()) {
@@ -85,9 +90,9 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
-	public void verifyAddMilestones(HashMap<String, String> testData) {
+	/*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")*/
+	public void addMilestones(HashMap<String, String> testData) {
 
 		int MsNum = cm.getCurrentNoOfRows()+1;
 		String MsName="M"+MsNum;
@@ -111,14 +116,21 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 3)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
-	public void verifyEditMilestones(HashMap<String, String> testData) {
+	public void verifyAddandEditMilestones(HashMap<String, String> testData) {
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Milestones Account", true);
+		cm = cp.goToUsageSection();
+		cm.gotoMilestonesSubtab();
+		
+		addMilestones(testData);
+		
 		int MsNum = cm.getCurrentNoOfRows();
 		String MsName="M"+MsNum;
 		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
 		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
 		cal.add(Calendar.MONTH,monthsToAdd);
 		Date msDate=cal.getTime();
-		cm.clickOnAddMilestones();
+		//cm.clickOnAddMilestones();
 		cm.clickOnEditMilestone(MsNum);
 		cm.setDateInField(df.format(msDate));
 		cm.selectMileStone(MsList.get("Milestone"));
@@ -136,6 +148,10 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	@Test(priority = 4)
 	public void verifyDeleteMilestones() {
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Milestones Account", true);
+		cm = cp.goToUsageSection();
+		cm.gotoMilestonesSubtab();
 		int MsNum = cm.getCurrentNoOfRows();
 		cm.clickOnDeleteMilestone(MsNum);
 
@@ -146,6 +162,10 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	@Test(priority = 5)
 	public void verifyNoMilestonesMessage() {
+		cp = basepage.clickOnC360Tab();
+		cp.searchCustomer("Milestones Account", true);
+		cm = cp.goToUsageSection();
+		cm.gotoMilestonesSubtab();
 		// Assuming there are 4 milestones left in the page
 		int MsNum = cm.getCurrentNoOfRows();
 		for (int i = 1; i <= MsNum; i++) {
