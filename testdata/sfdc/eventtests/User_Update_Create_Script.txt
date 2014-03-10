@@ -1,13 +1,16 @@
-List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name = 'Standard User'];
+ List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name = 'Standard User'];
 System.debug(profileList);
 String s = profileList.get(0).Id; 
 System.debug(s);
 List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias, 
                      ProfileId FROM User WHERE Lastname = 'Giribabu'];
 System.debug(extuser);
+ datetime myDate = datetime.now();
+String s2 = myDate.formatLong();
+String s1 = s2.replaceAll(' ', '');
 if(extuser != null && extuser.size() <= 0) {
     User sampleUser = new User();
-    sampleUser.Username= 'ggolla@testuserXX.com';
+    sampleUser.Username= 'ggolla@testuser'+s1.substring(0, 10)+'.com';
     sampleUser.Email = 'ggolla@gainsight.com';
     sampleUser.Lastname = 'Giribabu';
     sampleUser.Alias = 'testXX';
@@ -28,9 +31,6 @@ if(extuser != null && extuser.size() <= 0) {
     update u1;
     System.debug('User Updated Successfully');
  }
-
-
-
 
 
 

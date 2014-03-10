@@ -208,6 +208,7 @@ public class BasePage extends WebPage implements Constants {
                 Report.logInfo("The Following tab is not available : " +tabName);
             }
         }
+        item.click("overwrite_user_setting");
         item.click("//input[@type='submit' and @name='save']");
         wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
     }
