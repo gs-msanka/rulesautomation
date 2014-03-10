@@ -31,17 +31,17 @@
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
 		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
 			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
-            <methods>
-					<include name="addAndEditNumericScores" />
-					<include name="addAndEditGradeScores" />
-					<include name="addAndEditColorScores" />
-					<include name="addAndEditCommentsInMeasure" />
-					<include name="addAndEditOverallSummary" />	
-					<include name="addAndEditCustomerGoals"/>		
-			</methods>
+                <methods>
+                        <include name="addAndEditNumericScores" />
+                        <include name="addAndEditGradeScores" />
+                        <include name="addAndEditColorScores" />
+                        <include name="addAndEditCommentsInMeasure" />
+                        <include name="addAndEditOverallSummary" />
+                        <include name="addAndEditCustomerGoals"/>
+                </methods>
+            </class>
             <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
-            </class>
         </classes>
     </test>
 </suite>
