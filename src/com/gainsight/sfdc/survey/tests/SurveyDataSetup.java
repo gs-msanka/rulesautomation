@@ -14,12 +14,11 @@ import com.gainsight.utils.SOQLUtil;
 
 public class SurveyDataSetup  {
 
-    TestEnvironment env;
+	static TestEnvironment env=new TestEnvironment();
+
     static boolean isPackageInstance = false;
     public SurveyDataSetup() {
-        TestEnvironment env = new TestEnvironment();
         isPackageInstance = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-
     }
 
     public static void main(String[] args) {
@@ -28,7 +27,7 @@ public class SurveyDataSetup  {
         DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();
         BaseTest bt=new BaseTest();
-        
+       
         //STEP 1 : Create External Ids in Account and all the survey objects 
         System.out.println("STEP 1 : Create External Ids in Account and all the survey objects");
         accSetup.createExtIdFieldOnAccount();
@@ -39,57 +38,58 @@ public class SurveyDataSetup  {
         //STEP 2 : Run Survey Creation Scripts
         System.out.println("STEP 2 : Run Survey Creation Scripts");
         SFDCUtil sfdc=new SFDCUtil();
-        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Anonymous_Acc_Tracking.apex", isPackageInstance);  
-        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Anonymous_No_Acc_Tracking.apex", isPackageInstance);
-        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Non_Anonymous_survey.apex", isPackageInstance);
+        sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/Surveys/Anonymous_Acc_Tracking.apex", isPackageInstance);  
+        sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/Surveys/Anonymous_No_Acc_Tracking.apex", isPackageInstance);
+        sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/Surveys/Non_Anonymous_survey.apex", isPackageInstance);
         System.out.println("STEP 2 : DONE!");
        
         try{
-        //STEP 3 :  Upsert the existing Account Fields with Account ext id
+        	
+       //STEP 3 :  Upsert the existing Account Fields with Account ext id
         System.out.println("STEP 3 :  Upsert the existing Account Fields with Account ext id");
-        JobInfo job_Account= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_Survey_Accounts_Upsert.txt"), JobInfo.class);
+        JobInfo job_Account= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_Survey_Accounts_Upsert.txt"), JobInfo.class);
         dataLoader.execute(job_Account);
         System.out.println("STEP 3: DONE!");
         
         //STEP 4 : Insert Contacts with Ext Ids for few of the above accounts
         System.out.println("STEP 4 : Insert Contacts with Ext Ids for few of the above accounts");
-        JobInfo job_Contacts= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_Survey_Contacts_Insert.txt"), JobInfo.class);
+        JobInfo job_Contacts= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_Survey_Contacts_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_Contacts);
         System.out.println("STEP 4 : DONE!");
         
         //STEP 5 : Add contacts to survey by loading Survey Participants
         System.out.println("STEP 5 : Add contacts to survey by loading Survey Participants");
-        JobInfo job_SurPart= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_Survey_Participants_Insert.txt"), JobInfo.class);
+        JobInfo job_SurPart= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_Survey_Participants_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_SurPart);
         System.out.println("STEP 5 : DONE!");
         
        //STEP 6: Create NPS SurveyMaster
-        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/NonAnonymous_NPSSurveyMaster.apex", isPackageInstance);
+        sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/Surveys/NonAnonymous_NPSSurveyMaster.apex", isPackageInstance);
         
         //STEP 7 : Upload NPS Survey Response
         System.out.println("STEP 7 : Upload NPS Survey Response");
-        JobInfo job_NPSSurResp= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_NPSSurveyResponse_Insert.txt"), JobInfo.class);
+        JobInfo job_NPSSurResp= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_NPSSurveyResponse_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_NPSSurResp);
         System.out.println("STEP 7 : DONE!");
 
         //STEP 8 : Upload Survey User Responses
         System.out.println("STEP 8 : Upload Survey User Responses");
-        JobInfo job_SurUserAns= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyUserAnswers_Insert.txt"), JobInfo.class);
+        JobInfo job_SurUserAns= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_SurveyUserAnswers_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_SurUserAns);
         System.out.println("STEP 8: DONE");
         
         //STEP 9 : Update Survey with User Response count
-        sfdc.runApexCodeFromFile("./apex_scripts/Surveys/Update_UserResponseCount.apex", isPackageInstance);
+        sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/Surveys/Update_UserResponseCount.apex", isPackageInstance);
         
         //STEP 10 : Upsert AllowedAnswers with User Response counts
         System.out.println("STEP 10 : Upsert AllowedAnswers with User Response counts");
-        JobInfo job_SurAllowAns= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyAllowedAnswers_Upsert.txt"), JobInfo.class);
+        JobInfo job_SurAllowAns= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_SurveyAllowedAnswers_Upsert.txt"), JobInfo.class);
         dataLoader.execute(job_SurAllowAns);
         System.out.println("STEP 10: DONE");
         
         //STEP 11 : Upsert Survey Questions with User Response Counts
         System.out.println("STEP 11 : Upsert Survey Questions with User Response Counts");
-        JobInfo job_SurQues= mapper.readValue(bt.resolveNameSpace("./resources/datagen/jobs/Job_SurveyQuestions_Upsert.txt"), JobInfo.class);
+        JobInfo job_SurQues= mapper.readValue(bt.resolveNameSpace(env.basedir+"/resources/datagen/jobs/Job_SurveyQuestions_Upsert.txt"), JobInfo.class);
         dataLoader.execute(job_SurQues);
         System.out.println("STEP 11: DONE");
         
@@ -110,7 +110,7 @@ public class SurveyDataSetup  {
             e.printStackTrace();
         }
     }
-    
+  
     public void createExtIdFieldsInSurvey() {
 
         CreateObjectAndFields cObjFields = new CreateObjectAndFields();
