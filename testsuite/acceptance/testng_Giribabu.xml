@@ -17,7 +17,7 @@
             <class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
 
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
-            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
             <class name="com.gainsight.sfdc.customer360.test.Alerts360Test"/>
             <class name="com.gainsight.sfdc.customer360.test.Events360Test"/>
@@ -31,6 +31,7 @@
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
 		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
 			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
           	<methods>
 					<include name="addAndEditNumericScores" />
 					<include name="addAndEditGradeScores" />
