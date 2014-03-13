@@ -34,8 +34,15 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/GainsightAutomation/lib/commons-lang3-3.2.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
 	<classpathentry kind="lib" path="lib/apex.jar"/>
-    <classpathentry kind="lib" path="lib/enterprize.jar"/>
-    <classpathentry kind="lib" path="lib/metadata.jar"/>
+	<classpathentry kind="lib" path="lib/enterprize.jar"/>
+	<classpathentry kind="lib" path="lib/metadata.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.2.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.2.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/CompareCSV.jar"/>
+	<classpathentry kind="lib" path="lib/guice-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/reportng-1.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/resty-0.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/velocity-dep-1.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

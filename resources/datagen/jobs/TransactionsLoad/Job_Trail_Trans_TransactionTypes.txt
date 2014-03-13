@@ -1,0 +1,10 @@
+{
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__TransactionType__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "externalIDField": "",
+        "file": "/testdata/sfdc/transactions/SampleData/TransactionTypes.csv"
+    }
+}
