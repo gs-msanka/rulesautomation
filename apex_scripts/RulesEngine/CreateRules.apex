@@ -3,8 +3,11 @@ JBCXM__AutomatedAlertRules__c  rule = null;
 
 //Rule Array format: {filterLogic,filterCriteria,AlertCount,alertSeverity,alertReason,alertType,alertStatus,alertComment,alertSubject,PlayBookIds,SourceType,TaskDefaultOwner,TaskOwnerField,TriggerCriteria,TriggeredUsageOn}
 
-List<List<String>> RulesFields =new List<List<String>>{new List<String>{'','','0','High','Support Issues','Potential Churn','Active','','Usage Alert 2','Alert Playbook 1','Usage','Current','OwnerId','','ACCOUNTLEVEL'},new List<String>{'','','0','Medium','Services Issues','Downsell','Active','','Usage Alert 3','','Usage','Current','OwnerId','','ACCOUNTLEVEL'}};
+List<List<String>> RulesFields =new List<List<String>>{new List<String>{'','','0','High','Support Issues','Potential Churn','Active','','Usage Alert 2','Alert Playbook 1','Usage','Current','OwnerId','','INSTANCELEVEL'}};
 
+//TriggerCriteria Fields
+//{valueRef,type,trendParam,trendParams-traillingMonths,trendParams-isByMonth,trendParams-operation,trendParams-name,value,honorNull,name,logicalOperator,operator
+List<List<String>> TCFields=new List<List<String>>{new List<String>{'','Trend based','1','true','AVG','Page Views','20','true','Page Views','AND','m'}};
 for(Integer i=0;i<RulesFields.size();i++)
 {
     JBCXM__Picklist__c alertSeverity=[select id,Name from JBCXM__Picklist__c where JBCXM__Category__c='Alert Severity' and Name=:RulesFields[i][3]];
@@ -20,34 +23,8 @@ for(Integer i=0;i<RulesFields.size();i++)
 	JBCXM__Status__c=true,
 	JBCXM__TaskDefaultOwner__c=Userinfo.getUserId(),
 	JBCXM__TaskOwnerField__c=RulesFields[i][12],
-	JBCXM__TriggerCriteria__c='[{"valueRef":null,"type":"Trend based","trendParam":{"traillingMonths":1,"isByMonth":true,"operation":"AVG","name":"Page Views"},"value":20,"honorNull":true,"name":"Page Views","logicalOperator":"AND","operator":"m"}]',
+	JBCXM__TriggerCriteria__c='[{"valueRef":'+(TCFields[i][0].equals('')?'null':'"'+TCFields[i][0]+'"}')+',"type":"'+TCFields[i][1]+'","trendParam":{"traillingMonths":'+TCFields[i][2]+',"isByMonth":'+(TCFields[i][3].equals('true')?'true':'false')+',"operation":"'+TCFields[i][4]+'","name":"'+TCFields[i][5]+'"},"value":'+TCFields[i][6]+',"honorNull":'+TCFields[i][7]+',"name":"'+TCFields[i][8]+'","logicalOperator":"'+TCFields[i][9]+'","operator":"'+TCFields[i][10]+'"}]',
 	JBCXM__TriggeredUsageOn__c=RulesFields[i][14]);
     rules.add(rule);
 }
 insert rules;
-
-[{
-	"valueRef": null,
-	"type": "Trend based",
-	"trendParam": {
-		"traillingMonths": 1,
-		"isByMonth": true,
-		"operation": "AVG",
-		"name": "Page Views"
-	},
-	"value": 20,
-	"honorNull": true,
-	"name": "Page Views",
-	"logicalOperator": "AND",
-	"operator": "m"
-}]
-
-
-{
-	"alertSeverity": "a0RF000000HB7j5MAD",
-	"alertReason": "a0RF000000HB7jJMAT",
-	"alertType": "a0RF000000HB7jFMAT",
-	"alertStatus": "a0RF000000HB7jGMAT",
-	"alertComment": "Sample usage alert",
-	"alertSubject": "Usage Alert 1"
-}

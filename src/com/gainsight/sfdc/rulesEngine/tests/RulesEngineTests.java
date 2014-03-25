@@ -17,10 +17,11 @@ public class RulesEngineTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		//1. load usage data
-		basepage.login();
+		//basepage.login();
 		try{
-				rSetup.loadUsageDataForRulesEngine("AccountMonthly");
-				//rSetup.createRulesForRulesEngine();
+				rSetup.initialCleanUp();
+				rSetup.createRulesForRulesEngine();
+				rSetup.loadUsageDataForRulesEngine("InstanceMonthly");
 		}catch (Exception ex){
 			System.out.println(ex.getLocalizedMessage());
 		}
