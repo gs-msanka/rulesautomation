@@ -1,0 +1,63 @@
+{
+    "jobName": "job1",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "Account",
+        "fields": [
+            "Id",
+            "Name"
+        ],
+        "output": "/resources/datagen/process/account_RulesEngine.csv"
+    },
+    "transform": {
+    	"query" : "select a.id as \"JBCXM__Account__c\", c.stage as \"JBCXM__Stage__c\", d.status as \"JBCXM__Status__c\", b.comments as \"JBCXM__Comments__c\" from account a JOIN customers b on a.name=b.name JOIN JBCXM__PickList__c c on c.systemname__c = b.stage JOIN JBCXM__PickList__c d on d.systemname__c = b.status",
+    	"useQuery" : false,
+    	"limit" : 100,
+        "tableInfo": [
+            {
+                "file": "/resources/datagen/process/account_RulesEngine.csv",
+                "table": "account",
+                "joinColumnName": "name",
+                "columns": [
+                    {
+                        "name": "Id",
+                        "alias": "JBCXM__Account__c"
+                    }
+                ]
+            },
+            {
+                "file": "/testdata/sfdc/RulesEngine/Customers_FromSampleData.csv",
+                "table": "customers",
+                "joinColumnName": "Customer",
+                "columns": [
+                    {
+                        "name": "Stage",
+                        "alias": "JBCXM__Stage__r.JBCXM__SystemName__c"
+                    },
+                    {
+                        "name": "Status",
+                        "alias": "JBCXM__Status__r.JBCXM__SystemName__c"
+                    },
+                    {
+                        "name": "Comments",
+                        "alias": "JBCXM__Comments__c"
+                    }
+                ]
+            }
+        ],
+        "join": true,
+        "picklist": false,
+        "output": "/resources/datagen/process/RulesEngineCustomers_Final.csv"
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CustomerInfo__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "cleanUp" : true,
+        "file": "/resources/datagen/process/RulesEngineCustomers_Final.csv"
+    }
+}
