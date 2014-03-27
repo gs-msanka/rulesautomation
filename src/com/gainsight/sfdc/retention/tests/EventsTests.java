@@ -264,6 +264,7 @@ public class EventsTests extends BaseTest {
         Assert.assertTrue(eventsPage.isTaskDisplayed(task1), "Checking weather task is created successfully");
         eventsPage.deleteTask(task1);
         eventsPage.clickOnUpdateEvent(eventData);
+        basepage.refreshPage(); //stale
         eventsPage.openEventCard(eventData);
         Assert.assertFalse(eventsPage.isTaskDisplayed(task1), "Checking weather task deletion successful");
         eventsPage.clickOnCloseEventCard();

@@ -363,6 +363,7 @@ public class EventsPage extends RetentionBasePage {
                 + "/parent::div[@class='event-card view-card event-card-maindiv']";
         wait.waitTillElementDisplayed(xpath, MIN_TIME, MAX_TIME);
         Report.logInfo("Clicked on Updating the event");
+        amtDateUtil.stalePause();
     }
 
 

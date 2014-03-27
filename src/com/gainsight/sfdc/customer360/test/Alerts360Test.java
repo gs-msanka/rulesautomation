@@ -64,6 +64,7 @@ public class Alerts360Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_Alert_2")
     public void deleteAlert(HashMap<String , String> testData) {
+        apex.runApex(resolveStrNameSpace(ALERTS_DELETE_SCRIPT));
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
         AlertCardLabel alabel = new AlertCardLabel();
         alabel.setLabel5("Alert ASV");

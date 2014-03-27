@@ -7,6 +7,7 @@ import com.gainsight.sfdc.retention.pojos.AlertCardLabel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import javax.lang.model.element.Element;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,8 +105,9 @@ public class Retention360 extends Customer360Page {
 
     public boolean isEventCardDisplayed(HashMap<String, String> testData) {
         boolean result = false;
-        for(int i =0; i < 2; ++i) {
-            if(item.isElementPresent(buildeventXpath(testData))) {
+        List<WebElement> eleList = element.getAllElement(buildeventXpath(testData));
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()) {
                 result = true;
                 break;
             } else {
@@ -239,12 +241,16 @@ public class Retention360 extends Customer360Page {
         boolean result = false;
         amtDateUtil.stalePause();
         String alert = buildAlertXpath(alertData, alertCardLabel);
-        if(item.isElementPresent(alert)) {
-            result = true;
-            Report.logInfo("Alert Found");
-        } else {
-            Report.logInfo("Alert Not Found");
+        List<WebElement> eleList = element.getAllElement(alert);
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()) {
+                result = true;
+                Report.logInfo("Alert Found");
+            } else {
+                Report.logInfo("Alert Not Found");
+            }
         }
+
         return result;
     }
 
