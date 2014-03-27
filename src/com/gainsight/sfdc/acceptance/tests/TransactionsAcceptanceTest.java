@@ -35,9 +35,9 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			apex.runApexCodeFromFile(env.basedir+
 					"/apex_scripts/acceptance_tests/transactions.apex",
 					isPackageInstance());
-			PackageUtil.updateAccountLayout(
+			/*PackageUtil.updateAccountLayout(
 					"unpackaged/layouts/Account-Account Layout.layout",
-					"CustomerSuccess", "resources/package/account360widget.txt",isPackageInstance());
+					"CustomerSuccess", "resources/package/account360widget.txt",isPackageInstance());*/
 			basepage.login();
 			loggedIn = true;
 		} catch (Exception e) {
@@ -230,8 +230,8 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				"verify customer status is churn");
 	}
 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT5")
+	//@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	//@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT5")
 	public void testAddCustomerFromAccPage(HashMap<String, String> testData)
 			throws BiffException, IOException, ParseException {
 		String accName = testData.get("AccName");
