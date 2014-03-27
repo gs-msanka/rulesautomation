@@ -80,7 +80,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
                 code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                         .replaceAll("THEYEARCHANGE", String.valueOf(year))
                         .replace("THEDAYCHANGE", String.valueOf(day));
-                apex.runApex(code);
+                apex.runApex(resolveStrNameSpace(code));
                 month = month-1; //Need to move backward for executing the aggregation.
             }
             reader.close();
