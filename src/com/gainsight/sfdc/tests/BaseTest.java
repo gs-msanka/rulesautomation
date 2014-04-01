@@ -124,7 +124,7 @@ public class BaseTest {
 			if (record != null) {
 				System.out.println(record);
 				String[] pair = record.split("\\:");
-				hm.put(pair[0], pair[1]);
+				hm.put(pair[0], pair[1].trim());
 			}
 		}
 		return hm;

@@ -34,7 +34,7 @@ public class RuleEngineDataSetup extends BaseTest {
     public static void main(String[] args) throws InterruptedException, IOException {
     	
         RuleEngineDataSetup rds=new RuleEngineDataSetup();
-        rds.loadUsageDataForRulesEngine("AccountMonthly");
+        rds.loadUsageDataForRulesEngine("InstanceMonthly");
     }
 	//RuleEngineDataSetup setup = new RuleEngineDataSetup();
    
@@ -50,7 +50,7 @@ public class RuleEngineDataSetup extends BaseTest {
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/UsageData_Measures.apex", isPackageInstance);
-     /*   if(type.equalsIgnoreCase("AccountMonthly")){
+     /*  if(type.equalsIgnoreCase("AccountMonthly")){
             sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/Set_Account_Level_Monthly.apex",isPackageInstance);
         }
         else if(type.equalsIgnoreCase("InstanceWeekly")){
@@ -68,8 +68,8 @@ public class RuleEngineDataSetup extends BaseTest {
             dataLoader.execute(jobInfo);
         }
         else if (type.equalsIgnoreCase("AccountWeekly")){
-        	 sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/Set_Account_Level_Monthly.apex",isPackageInstance);
-         	jobInfo = mapper.readValue(resolveNameSpace(env.basedir + "/resources/datagen/jobs/RulesEngine/Job_Account_Monthly.txt"), JobInfo.class);
+        	 sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/Set_Account_Level_Weekly.apex",isPackageInstance);
+         	jobInfo = mapper.readValue(resolveNameSpace(env.basedir + "/resources/datagen/jobs/RulesEngine/Job_Account_Weekly.txt"), JobInfo.class);
              dataLoader.execute(jobInfo);
         }
         else if (type.contains("Instance")||type.contains("User")){
@@ -146,7 +146,7 @@ public class RuleEngineDataSetup extends BaseTest {
         		}
         	   dataLoader.execute(jobInfo);
                //sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/Aggregation_Script.apex", isPackageInstance);
-              /* String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+               String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
                BufferedReader reader;
                reader = new BufferedReader(new FileReader(fileName));
                String line = null;
@@ -189,13 +189,27 @@ public class RuleEngineDataSetup extends BaseTest {
                            Thread.sleep(30000L);
                        }
                    }
-               }*/
+               }
         	}
         }
     }
-    public void createRulesForRulesEngine() throws IOException{
+    public void createRulesForRulesEngine(String AdvanceCriteria,String AlertCount,String alertCriteriaJson,String SourceType,String TaskOwnerField,String triggerCriteriaJson,String TriggeredUsageOn) throws IOException{
     	 SFDCUtil sfdc=new SFDCUtil();
-    	 sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/CreateRules.apex", isPackageInstance);
+    	 sfdc.runApex(resolveStrNameSpace("List<JBCXM__AutomatedAlertRules__c>  rules =  new List<JBCXM__AutomatedAlertRules__c>();"
+    			 	  +"JBCXM__AutomatedAlertRules__c  rule = null;"
+    			 	  +"rule=new JBCXM__AutomatedAlertRules__c(JBCXM__AdvanceCriteria__c='"+AdvanceCriteria+"'"
+    			 	  										 +",JBCXM__AlertCount__c="+AlertCount+""
+    			 	  										 +",JBCXM__AlertCriteria__c='"+alertCriteriaJson+"'"
+    			 	  										 +",JBCXM__PlayBookIds__c=''"
+    			 	  										 +",JBCXM__SourceType__c='"+SourceType+"'"
+    			 	  										 +",JBCXM__Status__c=true"
+    			 	  										 +",JBCXM__TaskDefaultOwner__c=Userinfo.getUserId()"
+    			 	  										 +",JBCXM__TaskOwnerField__c='"+TaskOwnerField+"'"
+    			 	  										 +",JBCXM__TriggerCriteria__c='"+triggerCriteriaJson+"'"
+    			 	  										 +",JBCXM__TriggeredUsageOn__c='"+TriggeredUsageOn+"');"
+    			 	 +"rules.add(rule);"
+    			 	 +"insert rules;"
+    			 	));
     }
 	public void initialCleanUp() {
 		// TODO Auto-generated method stub
@@ -203,4 +217,10 @@ public class RuleEngineDataSetup extends BaseTest {
 		sfdc.runApexCodeFromFile(env.basedir+"/apex_scripts/RulesEngine/CleanUp.apex", isPackageInstance);
 		
 	}
+	public void loadInitialUsageDataForRulesEngine(String string) {
+		// TODO Auto-generated method stub
+		
+	}
 }
+
+
