@@ -37,7 +37,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
+        //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());

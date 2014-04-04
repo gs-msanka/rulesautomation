@@ -42,7 +42,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
+        //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();
