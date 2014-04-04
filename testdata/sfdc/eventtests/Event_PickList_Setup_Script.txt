@@ -1,4 +1,4 @@
-DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 500];
+DELETE [SELECT ID FROM JBCXM__CSEvent__c LIMIT 5000];
 List<JBCXM__PickList__c> todeleteList = [SELECT id from JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'SalesRep Name'];
 System.debug('Total event picklist that will be deleted : '+todeleteList.size());
 delete todeleteList;

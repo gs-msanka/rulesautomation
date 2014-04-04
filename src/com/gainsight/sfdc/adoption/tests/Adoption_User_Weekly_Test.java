@@ -142,6 +142,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("6 Weeks");
+        usage.setDate(getWeekLabelDate("Wed", -7, false, true));
         usage = usage.displayWeeklyUsageData();
         usage = usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -165,6 +166,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
+        usage.setDate(getWeekLabelDate("Wed", -7, false, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
@@ -224,6 +226,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
     @Test
     public void Adoption_User_Weekly_NoAdoptionDataFoundMsgVerification() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", -7, false, true));
         analyticsPage.setCustomerName("ABASTECEDORA DE VALVULAS INTRUMENT");
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isNoAdoptionDataMsgDisplayed());

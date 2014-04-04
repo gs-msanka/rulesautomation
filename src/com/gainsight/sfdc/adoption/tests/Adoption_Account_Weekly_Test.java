@@ -79,6 +79,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
+        usage.setDate(getWeekLabelDate("Sat", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
@@ -90,14 +91,15 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("6 Weeks");
+        usage.setDate(getWeekLabelDate("Sat", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
         usage.clearGirdFilter();
-        //Checking the header rows wether instance is displayed in the header.
+        //Checking the header rows weather instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("AUREA SOFTWARE INC | 12,370 | 3,394 | 7,298 | 8,089 | 6,242 | 6,005"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("AUREA SOFTWARE INC | 3,394 | 7,298 | 8,089 | 6,242 | 6,005"));
         AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("AUREA SOFTWARE INC", null);
         Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking if grid is displayed");
         Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking if adoption chart is displayed");
@@ -127,7 +129,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
         analyticsPage.setForTimeWeekPeriod("52 Weeks");
-        analyticsPage.setWeekLabelDate(getWeekLabelDate("Sat", +28, true, true));
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Sat", 28, true, true));
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isChartDisplayed());
         Assert.assertTrue(analyticsPage.isGridDispalyed());
@@ -142,6 +144,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     public void Adoption_Account_Weekly_NoAdoptionDataFoundMsgVerification() {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
         analyticsPage.setCustomerName("ABASTECEDOR HOSPITALARIO DEL");
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Sat", 0, true, true));
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isNoAdoptionDataMsgDisplayed());
     }
