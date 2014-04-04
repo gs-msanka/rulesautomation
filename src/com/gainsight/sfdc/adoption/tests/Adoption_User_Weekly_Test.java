@@ -29,6 +29,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
     static JobInfo jobInfo3;
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
+    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
 
 
     @BeforeClass
@@ -39,6 +40,7 @@ public class Adoption_User_Weekly_Test extends BaseTest {
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());

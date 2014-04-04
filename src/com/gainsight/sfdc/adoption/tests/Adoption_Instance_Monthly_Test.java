@@ -31,6 +31,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
     private int month;
     private int year;
     String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
+    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
 
 
     @BeforeClass
@@ -41,6 +42,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();

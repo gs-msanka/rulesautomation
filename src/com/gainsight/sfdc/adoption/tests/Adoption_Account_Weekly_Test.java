@@ -27,6 +27,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     String resDir = userDir+"/resources/datagen/";
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
+    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
 
     @BeforeClass
     public void setUp() throws IOException {
@@ -36,6 +37,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());
@@ -103,10 +105,10 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("AUREA SOFTWARE INC", null);
         Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking if grid is displayed");
         Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking if adoption chart is displayed");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 14,637 | 11,833 | 11,376 | 8,455 | 4,293 | 14,042 | 3,082 | 11,977 | 1,116 | 3,415 | 11,087 | 10,787 | 3,246 | 8,240 | 9,621 | 11,192 | 9,856 | 11,328 | 1,670 | 2,957 | 14,366 | 13,112 | 4,569 | 10,392 | 8,712 | 2,628 | 9,211 | 1,614 | 6,028 | 10,358 | 2,086 | 8,938 | 11,115 | 4,247 | 12,232 | 3,578 | 202 | 3,755 | 1,282 | 12,366 | 13,893 | 13,736 | 7,383 | 10,373 | 4,459 | 12,780 | 7,987 | 14,783 | 819 | 7,734 | 6,607 | 7,858"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 6,313 | 10,529 | 2,620 | 14,739 | 5,945 | 4,541 | 2,102 | 8,913 | 3,269 | 8,920 | 12,598 | 902 | 14,013 | 6,653 | 4,178 | 2,062 | 12,142 | 3,093 | 5,883 | 8,617 | 10,721 | 7,723 | 7,639 | 5,874 | 1,835 | 6,342 | 4,283 | 3,285 | 2,684 | 13,650 | 925 | 8,867 | 9,605 | 8,304 | 14,962 | 4,157 | 7,665 | 10,330 | 3,410 | 8,376 | 330 | 6,006 | 2,689 | 8,217 | 3,811 | 8,635 | 12,370 | 3,394 | 7,298 | 8,089 | 6,242 | 6,005"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 3,614 | 12,639 | 8,953 | 10,260 | 3,143 | 13,198 | 5,490 | 11,493 | 2,842 | 1,257 | 1,342 | 7,180 | 7,402 | 2,420 | 5,100 | 8,729 | 1,407 | 6,530 | 7,085 | 5,103 | 12,626 | 358 | 12,297 | 3,866 | 9,075 | 9,646 | 1,732 | 4,293 | 4,888 | 8,301 | 455 | 11,904 | 1,768 | 9,813 | 3,369 | 13,565 | 6,433 | 6,672 | 14,872 | 4,128 | 8,903 | 3,806 | 5,990 | 10,472 | 1,883 | 2,205 | 5,205 | 627 | 2,780 | 13,131 | 14,961 | 3,789"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits | 7,936 | 10,302 | 12,672 | 4,250 | 429 | 1,519 | 5,673 | 12,148 | 14,582 | 8,426 | 1,535 | 5,995 | 401 | 4,298 | 10,356 | 12,702 | 13,050 | 12,521 | 5,383 | 6,234 | 3,472 | 9,371 | 1,887 | 6,749 | 7,848 | 3,853 | 5,049 | 2,242 | 9,209 | 9,402 | 11,398 | 13,684 | 12,313 | 7,880 | 13,099 | 10,806 | 4,211 | 1,780 | 2,535 | 5,398 | 14,299 | 3,060 | 917 | 9,717 | 50 | 13,702 | 13,245 | 8,040 | 4,977 | 368 | 12,895 | 13,260"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 11,833 | 11,376 | 8,455 | 4,293 | 14,042 | 3,082 | 11,977 | 1,116 | 3,415 | 11,087 | 10,787 | 3,246 | 8,240 | 9,621 | 11,192 | 9,856 | 11,328 | 1,670 | 2,957 | 14,366 | 13,112 | 4,569 | 10,392 | 8,712 | 2,628 | 9,211 | 1,614 | 6,028 | 10,358 | 2,086 | 8,938 | 11,115 | 4,247 | 12,232 | 3,578 | 202 | 3,755 | 1,282 | 12,366 | 13,893 | 13,736 | 7,383 | 10,373 | 4,459 | 12,780 | 7,987 | 14,783 | 819 | 7,734 | 6,607 | 7,858"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 10,529 | 2,620 | 14,739 | 5,945 | 4,541 | 2,102 | 8,913 | 3,269 | 8,920 | 12,598 | 902 | 14,013 | 6,653 | 4,178 | 2,062 | 12,142 | 3,093 | 5,883 | 8,617 | 10,721 | 7,723 | 7,639 | 5,874 | 1,835 | 6,342 | 4,283 | 3,285 | 2,684 | 13,650 | 925 | 8,867 | 9,605 | 8,304 | 14,962 | 4,157 | 7,665 | 10,330 | 3,410 | 8,376 | 330 | 6,006 | 2,689 | 8,217 | 3,811 | 8,635 | 12,370 | 3,394 | 7,298 | 8,089 | 6,242 | 6,005"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 12,639 | 8,953 | 10,260 | 3,143 | 13,198 | 5,490 | 11,493 | 2,842 | 1,257 | 1,342 | 7,180 | 7,402 | 2,420 | 5,100 | 8,729 | 1,407 | 6,530 | 7,085 | 5,103 | 12,626 | 358 | 12,297 | 3,866 | 9,075 | 9,646 | 1,732 | 4,293 | 4,888 | 8,301 | 455 | 11,904 | 1,768 | 9,813 | 3,369 | 13,565 | 6,433 | 6,672 | 14,872 | 4,128 | 8,903 | 3,806 | 5,990 | 10,472 | 1,883 | 2,205 | 5,205 | 627 | 2,780 | 13,131 | 14,961 | 3,789"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits | 10,302 | 12,672 | 4,250 | 429 | 1,519 | 5,673 | 12,148 | 14,582 | 8,426 | 1,535 | 5,995 | 401 | 4,298 | 10,356 | 12,702 | 13,050 | 12,521 | 5,383 | 6,234 | 3,472 | 9,371 | 1,887 | 6,749 | 7,848 | 3,853 | 5,049 | 2,242 | 9,209 | 9,402 | 11,398 | 13,684 | 12,313 | 7,880 | 13,099 | 10,806 | 4,211 | 1,780 | 2,535 | 5,398 | 14,299 | 3,060 | 917 | 9,717 | 50 | 13,702 | 13,245 | 8,040 | 4,977 | 368 | 12,895 | 13,260"));
     }
 
     @Test
