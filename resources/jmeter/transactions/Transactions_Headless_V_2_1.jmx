@@ -7873,8 +7873,8 @@ vars.put(&quot;lUsers&quot;,&quot;&quot;);
                         <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="accountStatus" enabled="true">
                           <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                           <stringProp name="RegexExtractor.refname">accountStatus</stringProp>
-                          <stringProp name="RegexExtractor.regex"> GS.customerStatus   = &quot;(.*)&quot;;</stringProp>
-                          <stringProp name="RegexExtractor.template">$1$</stringProp>
+                          <stringProp name="RegexExtractor.regex"> GS.customerStatus(\s*)= &quot;(.*)&quot;;</stringProp>
+                          <stringProp name="RegexExtractor.template">$2$</stringProp>
                           <stringProp name="RegexExtractor.default">not found</stringProp>
                           <stringProp name="RegexExtractor.match_number">1</stringProp>
                         </RegexExtractor>
