@@ -1,10 +1,8 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -12,8 +10,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -39,8 +35,8 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        apex.runApex(resolveStrNameSpace(QUERY));
-       // apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
+        /*apex.runApex(resolveStrNameSpace(QUERY));
+        //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();
@@ -99,7 +95,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                     Thread.sleep(30000L);
                 }
             }
-        }
+        }*/
     }
 
 
@@ -109,6 +105,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Files Downloaded");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Instance");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
@@ -125,6 +122,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Files Downloaded");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         usage.selectUIView("Standard View");
@@ -132,7 +130,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         //Checking the header rows wether instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN | 11,054 | 3,741 | 14,374 | 10,092 | 15,809 | 7,886 | 14,658 | 13,646 | 12,781 | 9,352 | 6,454"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN  | 3,741 | 14,374 | 10,092 | 15,809 | 7,886 | 14,658 | 13,646 | 12,781 | 9,352 | 6,454"));
     }
 
     @Test
@@ -141,6 +139,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("9 Weeks");
         usage.setDataGranularity("By Account");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
@@ -149,7 +148,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         //Checking the header rows wether instance is displayed in the header.
         Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
         //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("A and T unlimit Limited | 1,508.5 | 2,655.5 | 5,412.5 | 6,646 | 5,087 | 9,318.5 | 6,276.5 | 7,576"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("A and T unlimit Limited | 2,655.5 | 5,412.5 | 6,646 | 5,087 | 9,318.5 | 6,276.5 | 7,576"));
     }
 
     @Test
@@ -158,6 +157,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("6 Weeks");
         usage.setDataGranularity("By Account");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         usage = usage.selectUIView("Standard View");
@@ -181,6 +181,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Views");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage.clearGirdFilter();
         usage = usage.displayWeeklyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
@@ -193,6 +194,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("No of Report Run");
         usage.setNoOfWeeks("12 Weeks");
         usage.setDataGranularity("By Account");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         usage.selectUIView("Standard View");
@@ -217,6 +219,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         usage.setMeasure("Page Visits");
         usage.setNoOfWeeks("3 Weeks");
         usage.setDataGranularity("By Instance");
+        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.clearGirdFilter();
         usage.selectUIView("Standard View");
