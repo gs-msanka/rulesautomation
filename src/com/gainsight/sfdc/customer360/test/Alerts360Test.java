@@ -27,16 +27,19 @@ public class Alerts360Test extends BaseTest {
     String ALERTS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Alert__c];";
     String PLAYBOOKS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Playbook__c];";
     String PLAYBOOK_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/Playbooks_Create_Script.txt";
+    String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
 
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
         userLocale = soql.getUserLocale();
         DataETL dataETL = new DataETL();
+        apex.runApexCodeFromFile(USER_SETUP_FILE);
         dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
         apex.runApex(resolveStrNameSpace(PLAYBOOKS_DELETE_SCRIPT));
         apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
         apex.runApexCodeFromFile(ALERT_SETUP_SCRIPT_FILE, isPackageInstance());
+
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

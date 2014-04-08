@@ -28,13 +28,15 @@ public class Events360Test extends BaseTest {
     String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
 
 
+
     @BeforeClass
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
+        apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_CREATE_FILE, isPackageInstance());
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(USER_SETUP_FILE);
+
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

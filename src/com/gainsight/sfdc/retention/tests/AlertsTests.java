@@ -23,14 +23,15 @@ public class AlertsTests extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/alerttests/Alert_Tests.xls";
     String PLAYBOOKS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Playbook__c];";
     String ALERTS_DELETE_SCRIPT = "DELETE [SELECT ID FROM JBCXM__Alert__c];";
+    String USER_SETUP_FILE = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     @BeforeClass
     public void setUp() {
         userLocale = soql.getUserLocale();
+        apex.runApexCodeFromFile(resolveStrNameSpace(USER_SETUP_FILE));
         apex.runApex(resolveStrNameSpace(ALERTS_DELETE_SCRIPT));
         apex.runApex(resolveStrNameSpace(PLAYBOOKS_DELETE_SCRIPT));
+
         basepage.login();
-
-
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
