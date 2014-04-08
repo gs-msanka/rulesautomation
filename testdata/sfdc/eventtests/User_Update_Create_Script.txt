@@ -10,7 +10,7 @@ String s2 = myDate.formatLong();
 String s1 = s2.replaceAll(' ', '');
 if(extuser != null && extuser.size() <= 0) {
     User sampleUser = new User();
-    sampleUser.Username= 'ggolla@testuser'+s1.substring(0, 10)+'.com';
+    sampleUser.Username= 'ggolla@testuser'+s1.substring(0, 5)+'.com';
     sampleUser.Email = 'ggolla@gainsight.com';
     sampleUser.Lastname = 'Giribabu';
     sampleUser.Alias = 'testXX';
