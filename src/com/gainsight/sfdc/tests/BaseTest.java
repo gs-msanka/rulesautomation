@@ -2,6 +2,7 @@ package com.gainsight.sfdc.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
+import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.ApexUtil;
@@ -11,7 +12,6 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -28,8 +28,10 @@ public class BaseTest {
 	public SOQLUtil soql = new SOQLUtil();
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
-    public String userLocale;
+    public static String userLocale;
     public String userDir = env.basedir;
+    public AmountsAndDatesUtil adUtil=new AmountsAndDatesUtil();
+	
 
 	@BeforeSuite
 	public void init() throws Exception {
@@ -92,29 +94,7 @@ public class BaseTest {
 		return moneyFormat.format(new Long(amt)).replace("$", "$ ");
 	}
 
-	public String getCurrentDate() {
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
-		return sdf.format(cal.getTime());
-	}
-
-	public String getFormattedDate(String dateStr) throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		Date date = formatter.parse(dateStr);
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
-		return sdf.format(date);
-	}
-
-	public String getFormattedDate(String dateStr, int days)
-			throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		Date date = formatter.parse(dateStr);
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.add(Calendar.DATE, 1);
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
-		return sdf.format(c.getTime());
-	}
+	
 
 	public HashMap<String, String> getMapFromData(String data) {
 		HashMap<String, String> hm = new HashMap<String, String>();

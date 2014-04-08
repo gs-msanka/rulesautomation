@@ -38,7 +38,7 @@ public class OpportunityConnectorPage extends BasePage {
 		item.click(CONNECTOR_SETTINGS_MAP);
 		wait.waitTillElementPresent(SAVE_BUTTON, MIN_ELEMENT_WAIT,
 				MAX_ELEMENT_WAIT);
-		amtDateUtil.enterDate(CONNECTOR_SETTINGS_DATE,date);
+		enterDate(CONNECTOR_SETTINGS_DATE,date);
 		String[] fields=fieldsCSV.split(",");
 		for(String cField: fields){
 			field.setSelectField(CONNECTOR_SETTINGS_FIELD_SELECT, cField);			

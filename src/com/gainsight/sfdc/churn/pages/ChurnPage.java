@@ -32,10 +32,10 @@ public class ChurnPage extends BasePage {
 		amtDateUtil.stalePause();
 		String bookingDate = data.get("bookingDate");
 		if (bookingDate != null)
-			amtDateUtil.enterDate(BOOKING_DATE_FIELD, bookingDate);
+			enterDate(BOOKING_DATE_FIELD, bookingDate);
 		String effectiveDate = data.get("effectiveDate");
 		if (effectiveDate != null)
-			amtDateUtil.enterDate(START_DATE_FIELD, effectiveDate);
+			enterDate(START_DATE_FIELD, effectiveDate);
 		field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
 		String comments = data.get("comments");
 		if (comments != null)

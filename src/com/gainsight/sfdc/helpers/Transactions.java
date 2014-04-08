@@ -1,10 +1,11 @@
 package com.gainsight.sfdc.helpers;
 
 import java.util.HashMap;
-
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
+import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.pages.Constants;
+import com.gainsight.sfdc.tests.BaseTest;
 
 public class Transactions extends WebPage implements Constants {
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
@@ -111,14 +112,14 @@ public class Transactions extends WebPage implements Constants {
 	private void addTransactionDates(String bookingDate, String startDate,
 			String endDate) {
 		if (bookingDate != null) {
-			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
+			enterDate(BOOKING_DATE_FIELD, bookingDate);
 		}
 		if (startDate != null) {
 			util.stalePause();
-			util.enterDate(START_DATE_FIELD, startDate);
+			enterDate(START_DATE_FIELD, startDate);
 		}
 		if (endDate != null)
-			util.enterDate(END_DATE_FIELD, endDate);
+			enterDate(END_DATE_FIELD, endDate);
 
 	}
 
@@ -148,9 +149,9 @@ public class Transactions extends WebPage implements Constants {
 	private void fillChurnFields(String bookingDate, String effectiveDate,
 			String reason) {
 		if (bookingDate != null)
-			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
+			enterDate(BOOKING_DATE_FIELD, bookingDate);
 		if (effectiveDate != null)
-			util.enterDate(START_DATE_FIELD, effectiveDate);
+			enterDate(START_DATE_FIELD, effectiveDate);
 		if (reason != null)
 			field.setSelectField(CHURN_REASON_SELECT, reason);
 	}
@@ -162,7 +163,7 @@ public class Transactions extends WebPage implements Constants {
 		String[] keywords = data.split(",");
 		for (String keyword : keywords) {
 			if (keyword.contains("/"))
-				keyword = util.getFormattedDate(keyword);
+				keyword = AmountsAndDatesUtil.parseFixedFmtDate(keyword,BaseTest.userLocale);
 			if (isFirstKwd) {
 				xpath.append("contains(.,'" + keyword + "')");
 				isFirstKwd = false;
@@ -183,9 +184,9 @@ public class Transactions extends WebPage implements Constants {
 		if (transaction != null)
 			item.click(getXpathForTran(transaction, "2"));
 		if (bookingDate != null)
-			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
+			enterDate(BOOKING_DATE_FIELD, bookingDate);
 		if (effectiveDate != null)
-			util.enterDate(START_DATE_FIELD, effectiveDate);
+			enterDate(START_DATE_FIELD, effectiveDate);
 	}
 
 	private void transactionFini(String comments) {
@@ -199,9 +200,9 @@ public class Transactions extends WebPage implements Constants {
 		if (transaction != null)
 			item.click(getXpathForTran(transaction, "2"));
 		if (bookingDate != null)
-			util.enterDate(BOOKING_DATE_FIELD, bookingDate);
+			enterDate(BOOKING_DATE_FIELD, bookingDate);
 		if (effectiveDate != null)
-			util.enterDate(START_DATE_FIELD, effectiveDate);
+			enterDate(START_DATE_FIELD, effectiveDate);
 	}
 	private String getXpathForTimeLineItem(TimeLineItem transaction){
 		StringBuffer xpath=new StringBuffer();		
@@ -222,6 +223,12 @@ public class Transactions extends WebPage implements Constants {
 			xpath.append(sContains+transaction.getTerm()+cContains);
 		xpath.append("]");
 		return xpath.toString();		
+	}
+	
+	public void enterDate(String identifier, String date) {
+		field.click(identifier);
+		field.click("//td[@class='weekday']");
+		field.clearAndSetText(identifier, date);
 	}
 
 }

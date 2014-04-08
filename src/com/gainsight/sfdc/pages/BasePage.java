@@ -17,7 +17,6 @@ import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -263,5 +262,10 @@ public class BasePage extends WebPage implements Constants {
 	public void goBack() {
 		driver.navigate().back();
 		
+	}
+	public void enterDate(String identifier, String date) {
+		field.click(identifier);
+		field.click("//td[@class='weekday']");
+		field.clearAndSetText(identifier, date);
 	}
 }
