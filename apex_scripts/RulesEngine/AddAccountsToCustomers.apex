@@ -5,7 +5,7 @@ List<String> stgList = new List<String>();
 List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
 List<JBCXM__PickList__c> pickList = [SELECT ID, JBCXM__Category__c,JBCXM__SystemName__c FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' OR JBCXM__Category__c ='Customer Stage' ];
 for(JBCXM__PickList__c pk :pickList) {
-	if(pk.JBCXM__Category__c == 'Customer Status' && pk.JBCXM__SystemName__c!='ChurnCustomer') {
+	if(pk.JBCXM__Category__c == 'Customer Status' && pk.JBCXM__SystemName__c! =='ActiveCustomer') {
 		stList.add(pk.Id);
 	}
 	if(pk.JBCXM__Category__c == 'Customer Stage') {
