@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.TimeZone;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
 
@@ -74,9 +75,10 @@ public class AmountsAndDatesUtil {
 		return newData;
 	}
 
-	public static String getCurrentDate(String userLocale) {
+	public static String getCurrentDate(String userLocale,String userTimezone) {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = userLocale.equals("en_IN") ? EN_IND : OTHER;
+		cal.setTimeZone(TimeZone.getTimeZone(userTimezone));
 		return sdf.format(cal.getTime());
 	}
 

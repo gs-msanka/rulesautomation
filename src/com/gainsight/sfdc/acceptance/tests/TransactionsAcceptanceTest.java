@@ -89,9 +89,9 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.gotoCustomer360(customerName);
 		CustomerSummary summary = customer360Page.getSummaryDetails();
 		int fnPosition = customer360Page.getPositionOfTransaction(
-				"New Business", AmountsAndDatesUtil.getCurrentDate(userLocale));
+				"New Business", AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		int rtPosition = customer360Page.getPositionOfTransaction("Renewal",
-				AmountsAndDatesUtil.getCurrentDate(userLocale));
+				AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		int asv = Integer.parseInt(rnlData.get("asv").trim());
 		int users = Integer.parseInt(rnlData.get("userCount").trim());
 		Assert.assertEquals(rnlData.get("asv").trim(), summary.getASV().trim());
@@ -103,7 +103,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 						.get("otr"))) + "", summary.getOTR().trim());
 		// Assert.assertEquals(calcARPU(asv, users),
 		// Integer.parseInt(summary.getARPU().trim()));
-		Assert.assertTrue(summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale)));
+		Assert.assertTrue(summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone)));
 		Assert.assertTrue(summary.getRD().contains(
 				AmountsAndDatesUtil.getFormattedDate(rnlData.get("endDate"), 1,userLocale)));
 		Assert.assertTrue(fnPosition > rtPosition,
@@ -153,7 +153,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		Assert.assertEquals(expData.get("arpu"), cSummary.getARPU().trim());
 		Assert.assertTrue(cSummary.getRD().contains(expData.get("renewalDate")));
 		TimeLineItem lineItem = new TimeLineItem();
-		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale));
+		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		lineItem.setType("Debook");
 		lineItem.setMRR(dbData.get("asv"));
 		lineItem.setUsers(dbData.get("users"));
@@ -219,7 +219,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.get("ChurnTRN"));
 		Customer360Page customer360Page = addNewBusinessTransaction(testData);
 		TimeLineItem lineItem = new TimeLineItem();
-		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale));
+		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		lineItem.setType("New Business");
 		lineItem.setMRR(nbData.get("asv"));
 		lineItem.setUsers(nbData.get("users"));
@@ -228,7 +228,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		customer360Page = customer360Page.addChurnTransaction(churnData);
 		TimeLineItem churnItem = new TimeLineItem();
 		churnItem.setType("Churn");
-		churnItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale));
+		churnItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		Assert.assertTrue(customer360Page.isTransactionPresent(churnItem));
 		CustomerSummary cSummary = customer360Page.getSummaryDetails();
 		Assert.assertEquals(cSummary.getASV().trim(), "0");
@@ -259,7 +259,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		csPage.selectTransactionSection().clickTransactionNew()
 				.addNewBusiness(nbData);
 		TimeLineItem lineItem = new TimeLineItem();
-		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale));
+		lineItem.setBookingDate(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
 		lineItem.setType("New Business");
 		lineItem.setMRR(nbData.get("mrr"));
 		lineItem.setUsers(nbData.get("users"));
@@ -332,8 +332,11 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		// Integer.parseInt(summary.getARPU()
 		// .trim()));
 		String bookingDate = data.get("bookingDate");
+		System.out.println(summary.getOCD());
+		System.out.println(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone));
+		
 		if (data.get("bookingDate") == null) {
-			Assert.assertTrue(summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale)));
+			Assert.assertTrue(summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone)));
 		} else {
 			Assert.assertTrue(summary.getOCD().contains(
 					AmountsAndDatesUtil.getFormattedDate(bookingDate,0,userLocale)));
@@ -377,7 +380,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.trim());
 		String ocDate = eSummary.get("ocDate");
 		if (ocDate == null) {
-			Assert.assertTrue(c360Summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale)));
+			Assert.assertTrue(c360Summary.getOCD().contains(AmountsAndDatesUtil.getCurrentDate(userLocale,userTimezone)));
 		} else {
 			Assert.assertTrue(c360Summary.getOCD().contains(
 					AmountsAndDatesUtil.getFormattedDate(ocDate,0,userLocale)));
