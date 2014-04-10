@@ -163,7 +163,7 @@ public class Transactions extends WebPage implements Constants {
 		String[] keywords = data.split(",");
 		for (String keyword : keywords) {
 			if (keyword.contains("/"))
-				keyword = AmountsAndDatesUtil.parseFixedFmtDate(keyword,BaseTest.userLocale);
+				keyword = AmountsAndDatesUtil.parseFixedFmtDate(keyword);
 			if (isFirstKwd) {
 				xpath.append("contains(.,'" + keyword + "')");
 				isFirstKwd = false;

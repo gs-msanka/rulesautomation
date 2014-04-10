@@ -29,7 +29,7 @@ public class BaseTest {
 	public ApexUtil apex = new ApexUtil();
 	protected static BasePage basepage;
     public static String userLocale;
-    public static String userTimezone;
+    public static TimeZone userTimezone;
     public String userDir = env.basedir;
     public AmountsAndDatesUtil adUtil=new AmountsAndDatesUtil();
 	
@@ -44,7 +44,7 @@ public class BaseTest {
 			env.launchBrower();
 			basepage = new BasePage();
             userLocale = soql.getUserLocale();
-            userTimezone=soql.getUserTimeZone();
+            userTimezone=TimeZone.getTimeZone(soql.getUserTimeZone());
 			Report.logInfo("Initializing Base Page : " + basepage);
 			if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
 				basepage.login();

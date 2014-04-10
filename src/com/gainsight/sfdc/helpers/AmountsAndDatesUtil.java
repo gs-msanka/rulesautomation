@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.tests.BaseTest;
 
 public class AmountsAndDatesUtil {
 	public final static SimpleDateFormat EN_IND_10 = new SimpleDateFormat(
@@ -52,8 +53,9 @@ public class AmountsAndDatesUtil {
 	}
 
 	public static HashMap<String, String> updateDatesLocale(
-			HashMap<String, String> nbData, String locale)
+			HashMap<String, String> nbData)
 			throws ParseException {
+		String locale=BaseTest.userLocale;
 		HashMap<String, String> newData = new HashMap<String, String>();
 		SimpleDateFormat dateFmt = null;
 		Iterator<String> itr = nbData.keySet().iterator();
@@ -75,34 +77,40 @@ public class AmountsAndDatesUtil {
 		return newData;
 	}
 
-	public static String getCurrentDate(String userLocale,String userTimezone) {
+	public static String getCurrentDate() {
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = userLocale.equals("en_IN") ? EN_IND : OTHER;
-		cal.setTimeZone(TimeZone.getTimeZone(userTimezone));
+		cal.setTimeZone(BaseTest.userTimezone);
+		SimpleDateFormat sdf = BaseTest.userLocale.equals("en_IN") ? EN_IND : OTHER;
+		sdf.setTimeZone(BaseTest.userTimezone);
 		return sdf.format(cal.getTime());
 	}
 
-	public static String getFormattedDate(String dateStr, int days,
-			String userLocale) {
+	public static String getFormattedDate(String dateStr, int days
+			) {
+		String userLocale=BaseTest.userLocale;
 		SimpleDateFormat dateFmt = dateStr.length() == 10 ? (userLocale
 				.equals("en_IN") ? EN_IND_10 : OTHER_10) : (userLocale
 				.equals("en_IN") ? EN_IND : OTHER);
+		dateFmt.setTimeZone(BaseTest.userTimezone);
 		Date formatedDate = null;
 		try {
 			formatedDate = dateFmt.parse(dateStr);
+			
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		Calendar c = Calendar.getInstance();
 		c.setTime(formatedDate);
-		if (days != 0){
+		if (days > 0){
 		c.add(Calendar.DATE, days);
 		}
 		dateFmt = userLocale.equals("en_IN") ? EN_IND : OTHER;
+		dateFmt.setTimeZone(BaseTest.userTimezone);
 		return dateFmt.format(c.getTime());
 	}
-	public static String parseFixedFmtDate(String dateStr,String userLocale) {
+	public static String parseFixedFmtDate(String dateStr) {
 		SimpleDateFormat dateFmt =  OTHER_10;
+		dateFmt.setTimeZone(BaseTest.userTimezone);
 		Date formatedDate = null;
 		try {
 			formatedDate = dateFmt.parse(dateStr);
@@ -111,7 +119,8 @@ public class AmountsAndDatesUtil {
 		}
 		Calendar c = Calendar.getInstance();
 		c.setTime(formatedDate);
-		dateFmt = userLocale.equals("en_IN") ? EN_IND : OTHER;
+		dateFmt = BaseTest.userLocale.equals("en_IN") ? EN_IND : OTHER;
+		dateFmt.setTimeZone(BaseTest.userTimezone);
 		return dateFmt.format(c.getTime());
 	}
 }
