@@ -128,7 +128,7 @@ public class BaseTest {
 	}
 
 	public int calcMRR(int ASV) {
-		return ASV / 12;
+		return (int) Math.round(ASV / 12.0);
 	}
 
 	public int calcARPU(int ASV, int users) {

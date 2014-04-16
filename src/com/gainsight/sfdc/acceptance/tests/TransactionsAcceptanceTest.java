@@ -27,6 +27,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	private String accQuery = "Select id from Account where name='%s'";
 	private boolean loggedIn = false;
 	private String currentDate;
+	private final String STANDARD_VIEW="Standard View";
 	
 	@BeforeClass
 	public void setUp() throws Exception {
@@ -80,7 +81,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		rnlData = AmountsAndDatesUtil.updateDatesLocale(rnlData);
 		String customerName = rnlData.get("customerName");
 		customer360Page = customer360Page.clickOnTransactionTab()
-				.clickOnTransactionsSubTab().addRenewalTransaction(rnlData)
+				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW).selectView(STANDARD_VIEW).addRenewalTransaction(rnlData)
 				.gotoCustomer360(customerName);
 		CustomerSummary summary = customer360Page.getSummaryDetails();
 		int fnPosition = customer360Page.getPositionOfTransaction(
@@ -120,7 +121,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				+ "|" + nbData.get("endDate") + "|"
 				+ currencyFormat(nbData.get("asv"));
 		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
-				.clickOnTransactionsSubTab().addNewBusiness(nbData);
+				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW).addNewBusiness(nbData);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
 				"Verify that newly added transaction present in the grid");
@@ -134,7 +135,6 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		Customer360Page c360Page = transactionsPage
 				.gotoCustomer360(customerName);
 		CustomerSummary cSummary = c360Page.getSummaryDetails();
-		System.out.println(AmountsAndDatesUtil.getFormattedDate(snbData.get("endDate"), 1));
 		Assert.assertTrue(cSummary.getRD().contains(
 				AmountsAndDatesUtil.getFormattedDate(snbData.get("endDate"), 1)));
 		c360Page = c360Page.addDebookTransaction(dbData);
@@ -168,7 +168,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String customerName = chData.get("customerName");
 		String values = customerName + "|" + chData.get("reason");
 		Customer360Page customer360Page = addNewBusinessTransaction(testData);
-		ChurnPage churnPage = customer360Page.clickOnChurnTab()
+		ChurnPage churnPage = customer360Page.clickOnChurnTab().selectView(STANDARD_VIEW).selectView(STANDARD_VIEW)
 				.addChurnTransaction(chData);
 		Assert.assertTrue(churnPage.isTransactionPresent(customerName, values));
 		customer360Page = churnPage.gotoCustomer360(customerName);
@@ -192,7 +192,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String customerName = chData.get("customerName");
 		String values = customerName + "|" + chData.get("reason");
 		Customer360Page customer360Page = addNewBusinessTransaction(testData);
-		ChurnPage churnPage = customer360Page.clickOnChurnTab()
+		ChurnPage churnPage = customer360Page.clickOnChurnTab().selectView(STANDARD_VIEW)
 				.addChurnTransaction(chData);
 		Assert.assertTrue(churnPage.isTransactionPresent(customerName, values));
 		CustomerSummary customerSummary = churnPage.gotoCustomer360(
@@ -302,7 +302,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				+ "|" + nbData.get("endDate") + "|"
 				+ currencyFormat(nbData.get("asv"));
 		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
-				.clickOnTransactionsSubTab().addNewBusiness(nbData);
+				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW).addNewBusiness(nbData);
 		Report.logInfo("Transaction Values : " + transactionValues);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
@@ -328,9 +328,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		// Integer.parseInt(summary.getARPU()
 		// .trim()));
 		String bookingDate = data.get("bookingDate");
-		System.out.println(summary.getOCD());
-		System.out.println(currentDate);
-		
+
 		if (data.get("bookingDate") == null) {
 			Assert.assertTrue(summary.getOCD().contains(currentDate));
 		} else {
@@ -353,7 +351,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		String bType = bTypeData.get("bookingType");
 		Customer360Page c360Page = addNewBusinessTransaction(testData);
 		TransactionsPage transactionsPage = c360Page.clickOnTransactionTab()
-				.clickOnTransactionsSubTab();
+				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW);
 		if (bType.equals("Debook")) {
 			transactionsPage.addDebookTransaction(tData);
 		} else if (bType.equals("Downsell")) {

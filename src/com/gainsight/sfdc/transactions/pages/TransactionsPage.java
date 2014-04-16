@@ -8,13 +8,15 @@ public class TransactionsPage extends BasePage {
 	private final String READY_INDICATOR = "//div[@id='Transactions-Usage']";
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
 	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate']";
-	private final String TRANS_GRID = "//div[@class='gridPanelDiv' and contains(@style,'inline')]";
-	private final String TRANS_DLT_LINK = "//table[@id='transactionList_IdOfJBaraStandardView']//tr[%d]//a[text()='Delete']";
+	private final String TRANS_GRID = "//div[contains(@id,'gbox_transactionList_IdOf')]";
+	private final String TRANS_DLT_LINK = "//table[contains(@id,'transactionList_IdOf')]//tr[%d]//a[text()='Delete']";
 	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
-	private final String TRANS_EDIT_LINK = "//table[@id='transactionList_IdOfJBaraStandardView']//tr[%d]//a[text()='Edit']";
-	private final String NEW_BUTTON = "//input[@value='New']";
+	private final String TRANS_EDIT_LINK = "//table[contains(@id,'transactionList_IdOf')]//tr[%d]//a[text()='Edit']";
+	private final String NEW_BUTTON = "//input[@value='Add Transaction']";
 	private final String TRANS_TABLE = "//table[contains(@id,'transactionList_Id') and @class='ui-jqgrid-btable']";
 	private final String CUSTOMER_FILTER = "Customer_link";
+	private final String VIEW="//label/span[text()='%s']";
+	private final String VIEW_BUTTON="//span[@class='TransUIViewsSelectionList']/button";
 
 	public TransactionsPage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -171,6 +173,14 @@ public class TransactionsPage extends BasePage {
 		amtDateUtil.stalePause();
 		item.click("//a[text()='" + customerName + "']");
 		return new Customer360Page();
+	}
+	
+	public TransactionsPage selectView(String viewName){
+		item.click(VIEW_BUTTON);
+		item.click(String.format(VIEW, viewName));
+		wait.waitTillElementDisplayed(TRANS_GRID, MIN_TIME, MAX_TIME);
+		return this;
+		
 	}
 
 }

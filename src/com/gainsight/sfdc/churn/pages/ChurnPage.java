@@ -6,7 +6,7 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class ChurnPage extends BasePage {
 	private final String READY_INDICATOR = "//div[@class='dummyChurnAnalyticsDetail']";
-	private final String NEW_BUTTON = "//input[@value='New']";
+	private final String NEW_BUTTON = "//input[@value='Add Transaction']";
 	private final String CUSTOMER_NAME_FIELD = "//input[contains(@class,'customer-name-text')]";
 	private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
@@ -17,6 +17,8 @@ public class ChurnPage extends BasePage {
 	private final String SAVE_BUTTON = "//a[text()='Save']";
 	private final String CUSTOMER_FILTER = "Customer_link";
 	private final String CHURN_TABLE = "//table[contains(@id,'ChurnAnalyticsList_IdOf') and @class='ui-jqgrid-btable']";
+	private final String VIEW="//label/span[text()='%s']";
+	private final String VIEW_BUTTON="//span[@class='ChurnUIViewsSelectionList']/button";
 
 	public ChurnPage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -25,7 +27,6 @@ public class ChurnPage extends BasePage {
 	public ChurnPage addChurnTransaction(HashMap<String, String> data) {
 		element.click(NEW_BUTTON);
 		element.switchToFrame("//iframe");
-		System.out.println(data.get("customerName"));
 		field.clearAndSetText(CUSTOMER_NAME_FIELD, data.get("customerName"));
 		button.click(NAME_LOOPUP_IMG);
 		element.click("//a[text()='" + data.get("customerName") + "']");
@@ -60,6 +61,13 @@ public class ChurnPage extends BasePage {
 		} else {
 			return true;
 		}
+	}
+	
+	public ChurnPage selectView(String viewName){
+		item.click(VIEW_BUTTON);
+		item.click(String.format(VIEW, viewName));
+		wait.waitTillElementDisplayed(CHURN_GRID, MIN_TIME, MAX_TIME);
+		return this;
 	}
 
 }
