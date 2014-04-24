@@ -6,8 +6,8 @@ import com.gainsight.sfdc.pages.BasePage;
 public class RetentionBasePage extends BasePage{
     private final String READY_INDICATOR    = "//a[@title='Retention Tab - Selected']";
     private final String ALERTS_TAB         = "//div[@class='ge-tabbar']/a[text()='Alerts']";
-    private final String EVENTS_TAB         = "//div[@class='ge-tabbar']/a[text()='Events']";
-    private final String PLAYBOOKS_TAB      = "//div[@class='ge-tabbar']/a[text()='Playbooks']";
+    private final String EVENTS_TAB         = "//a[text()='Events']";
+    private final String PLAYBOOKS_TAB      = "//a[text()='Playbooks']";
 
 
     public RetentionBasePage() {
