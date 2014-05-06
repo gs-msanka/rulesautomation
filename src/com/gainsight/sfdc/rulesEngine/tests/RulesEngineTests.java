@@ -56,9 +56,9 @@ public class RulesEngineTests extends BaseTest {
 		 System.out.println("rule criteria:"+triggerCriteriaJson);
 		 System.out.println("Advance criteria:"+AdvanceCriteria);
 		 rSetup.initialCleanUp();
-		 rSetup.loadInitialUsageDataForRulesEngine(getMapFromData(testData.get("UsageData")).get("type"));
+		 rSetup.loadUsageDataForRulesEngine(getMapFromData(testData.get("UsageData")).get("type"),true);
 		 rSetup.createRulesForRulesEngine(AdvanceCriteria,alertCriteria.get("AlertCount"),alertCriteriaJson,alertCriteria.get("SourceType"),alertCriteria.get("TaskOwnerField"),triggerCriteriaJson,alertCriteria.get("TriggeredUsageOn"));
-		 rSetup.loadUsageDataForRulesEngine(getMapFromData(testData.get("UsageData")).get("type"));
+		 rSetup.loadUsageDataForRulesEngine(getMapFromData(testData.get("UsageData")).get("type"),false);
 		
 		 rValidate.checkAlertsCreated(alertCriteria);	 
 	}
