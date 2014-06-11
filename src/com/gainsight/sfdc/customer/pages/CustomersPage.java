@@ -3,75 +3,132 @@ package com.gainsight.sfdc.customer.pages;
 import com.gainsight.pageobject.core.Report;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import java.util.*;
 
 
 public class CustomersPage extends CustomerBasePage {
-    private final String READY_INDICATOR    = "//div[@id='Customers']";
-    private final String NEW_BUTTON         = "//input[@value='New']";
-    private final String ACCT_NAME_TEXT     = "//input[@class='jbaraDummyAccountName']";
-    private final String ACCT_NAME_FIELD    = "//input[@class='jbaraDummyAccountName']";
-    private final String ACCT_LOOKUP_IMG    = "//img[@title='Account Name Lookup']";
-    private final String SAVE_BUTTON        = "//input[@value='Save']";
+    private final String READY_INDICATOR    = "//div[@class='gs-moreopt-btn']";
+
+
     private final String CUSTOMER_EDIT_LINK = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Edit']";
     private final String CUSTOMER_DEL_LINK  = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Delete']";
     private final String CUSTOMER_TABLE     = "//table[contains(@id,'customerList_IdOf') and @class='ui-jqgrid-btable']";
     private final String STATUS_FIELD       = "//td[text()='Status: ']/following-sibling::td//select";
     private final String STAGE_FIELD        = "//td[text()='Stage: ']/following-sibling::td//select";
-    private final String COMMENTS_FIELD     = "//textarea[@class='jbaraDummyCustomerInputCtrl jbaraDummyCustomerCommentInputCtrl']";
+    //private final String COMMENTS_FIELD     = "//textarea[@class='jbaraDummyCustomerInputCtrl jbaraDummyCustomerCommentInputCtrl']";
     private final String CUSTOMER_NAME_FIELD = "CustomerLink";
+
 
     String MORE_ICON = "//div[@class='gs-moreopt-btn']";
     String NEW_CUSTOMER_LINK = "//a[contains(text(), 'New Customer')]";
     String ACC_NAME_INPUT = "//input[@class='search_input search-field ui-autocomplete-input']";
-
     String AUTO_SELECT_LIST = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
     String CUSTOMER_FORM_CANCEL_BUTTON = "//input[@value='Cancel' and @class='cancel btn-cancel']";
+    String CUSTOMER_SAVE = "//input[@class='save-customer btn-save' and @value='Save']";
+    String COMMENTS_INPUT ="//textarea[@class='commentArea']";
+    String STAGE_SELECT_BUTTON = "//select[@class='stageSelection']/following-sibling::button";
+    String STATUS_SELECT_BUTTON = "//select[@class='statusSelection']/following-sibling::button";
 
     public CustomersPage() {
-        wait.waitTillElementPresent(MORE_ICON, MIN_TIME, MAX_TIME);
+        wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
     public CustomersPage addCustomer(String customerName, String status,
                                      String stage, String comments) {
 
-        try{
-            item.click(MORE_ICON);
-            wait.waitTillElementDisplayed(NEW_CUSTOMER_LINK, MIN_TIME, MAX_TIME);
-            item.click(NEW_CUSTOMER_LINK);
-            wait.waitTillElementDisplayed(ACC_NAME_INPUT, MIN_TIME, MAX_TIME);
-            driver.findElement(By.xpath(ACC_NAME_INPUT)).sendKeys(customerName);
-            wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
-            item.click("//a[@class='ui-corner-all' and contains(text(), '" + customerName + "')]");
-
-            item.click(CUSTOMER_FORM_CANCEL_BUTTON);
-
-        }catch (Exception e) {
-
-        }
-
-
-        /*
-        item.click(NEW_BUTTON);
-		wait.waitTillElementPresent(ACCT_NAME_TEXT, MIN_TIME, MAX_TIME);
-		amtDateUtil.stalePause();
-		field.setTextField(ACCT_NAME_FIELD, customerName);
-		button.click(ACCT_LOOKUP_IMG);
-		item.click("//a[text()='" + customerName + "']");
-		fillFields(status, stage, comments);
-		button.click(SAVE_BUTTON);
-		wait.waitTillElementNotDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
-		*/
+        item.click(MORE_ICON);
+        selectAccount(customerName);
+        fillFields(status, stage, comments);
+        item.click(CUSTOMER_SAVE);
         return this;
     }
 
+    private void selectAccount(String customerName) {
+        wait.waitTillElementDisplayed(NEW_CUSTOMER_LINK, MIN_TIME, MAX_TIME);
+        item.click(NEW_CUSTOMER_LINK);
+        wait.waitTillElementDisplayed(ACC_NAME_INPUT, MIN_TIME, MAX_TIME);
+        driver.findElement(By.xpath(ACC_NAME_INPUT)).sendKeys(customerName);
+        driver.findElement(By.xpath(ACC_NAME_INPUT)).sendKeys(Keys.ENTER);
+        driver.findElement(By.xpath(ACC_NAME_INPUT)).sendKeys(Keys.ARROW_DOWN);
+        wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
+
+        List<WebElement> eleList = element.getAllElement("//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']/li/a[contains(text(), '"+customerName+"')]");
+
+        boolean customerSelected = false;
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()) {
+                ele.click();
+                customerSelected = true;
+            }
+        }
+        if(!customerSelected) throw new RuntimeException("Unable to select customer (or) customer not found" );
+    }
+
+    private void selectValueInDropDown(String value) {
+        wait.waitTillElementDisplayed("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
+        item.click("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
+    }
+
+    private void fillFields(String status, String stage, String comments) {
+        if(stage !=null && stage !="") {
+            item.click(STAGE_SELECT_BUTTON);
+            selectValueInDropDown(stage);
+        }
+
+        if(status !=null && status !="") {
+            item.click(STATUS_SELECT_BUTTON);
+            selectValueInDropDown(status);
+        }
+
+        if(comments != null && comments !="") {
+            field.setTextField(COMMENTS_INPUT, comments);
+        }
+    }
+
+    private void setCustomerFilter(String custName) {
+        field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l1 r1']/input[@class='filter_input']", custName);
+        amtDateUtil.stalePause();
+    }
+
+    private int getNoOfCustomersRecords(String custName) {
+        amtDateUtil.stalePause();
+        setCustomerFilter(custName);
+        int recordCount = element.getElementCount("//div[@class='slick-cell l1 r1 slick-customer-format']/a[contains(text(), '"+custName+"')]");
+        return recordCount;
+    }
+
+    public boolean isCustomerPresent(String customerName) {
+        amtDateUtil.stalePause();
+        if(getNoOfCustomersRecords(customerName)>0) {
+            return true;
+        }
+        return false;
+    }
+
+    private WebElement getCustomerRow(String customerName, String values) {
+        setCustomerFilter(customerName);
+        WebElement ele = null;
+        try{
+            ele = element.getElement("//a[contains(text(), '"+customerName+"')]/parent::div/parent::div[contains(@class, 'ui-widget-content slick-row')]");
+        } catch (RuntimeException e) {
+            Report.logInfo(e.getMessage());
+        }
+        return ele;
+    }
+
+
+
     public CustomersPage editCustomer(String customerName, String status,
                                       String stage, String comments) {
-        int rowNo = getRowNumberOfCustm(customerName, customerName);
-        if (rowNo > 0) {
-            item.click(String.format(CUSTOMER_EDIT_LINK, rowNo));
-            fillFields(status, stage, comments);
-            button.click(SAVE_BUTTON);
-            wait.waitTillElementNotDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
+        WebElement ele = getCustomerRow(customerName, null);
+
+        if(ele!=null) {
+            ele.findElement(By.cssSelector("div>a[data-action='EDIT']")).click();
+            wait.waitTillElementDisplayed(ACC_NAME_INPUT, MIN_TIME, MAX_TIME);
+            fillFields(status,stage,comments);
+            item.click(CUSTOMER_SAVE);
+
         } else {
             throw new RuntimeException("Customer not found");
         }
@@ -80,9 +137,9 @@ public class CustomersPage extends CustomerBasePage {
 
     public boolean deleteCustomer(String customerName) {
         boolean status = false;
-        int rowNo = getRowNumberOfCustm(customerName, customerName);
-        if (rowNo > 0) {
-            item.click(String.format(CUSTOMER_DEL_LINK, rowNo));
+        WebElement ele = getCustomerRow(customerName, null);
+        if(ele!=null) {
+            ele.findElement(By.cssSelector("div>a[data-action='DELETE']")).click();
             amtDateUtil.stalePause();
             modal.accept();
             amtDateUtil.stalePause();
@@ -99,35 +156,8 @@ public class CustomersPage extends CustomerBasePage {
         return status;
     }
 
-    public boolean isCustomerPresent(String customerName) {
-        return isCustomerPresent(customerName, customerName);
-    }
 
-    public boolean isCustomerPresent(String customerName, String values) {
-        int attemptNo = 0;
-        boolean status = false;
-        while (attemptNo < 2) {
-            if (getRowNumberOfCustm(customerName, values) != -1) {
-                status = true;
-                break;
-            }
-            sleep(2);
-            attemptNo++;
-        }
-        return status;
-    }
 
-    private int getRowNumberOfCustm(String customerName, String values) {
-        setFilter(CUSTOMER_NAME_FIELD, customerName);
-        amtDateUtil.stalePause();
-        return table.getValueInListRow(CUSTOMER_TABLE, values);
-    }
 
-    private void fillFields(String status, String stage, String comments) {
-        field.setSelectField(STATUS_FIELD, status);
-        field.setSelectField(STAGE_FIELD, stage);
-        if (comments != null)
-            item.setText(COMMENTS_FIELD,
-                    comments);
-    }
+
 }
