@@ -6,25 +6,46 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CollectionInfo {
 
-	@JsonProperty("TenantName")
-	String tenantName;
-	@JsonProperty("TenantId")
-	String tenantId;
+	@JsonProperty("CollectionName")
+	String collectionName;
+	@JsonProperty("dbType")
+	String dbType;
+	@JsonProperty("dataStoreType")
+	String dataStoreType;
 	@JsonProperty("Columns")
 	List<Columns> columns;
 	
-	public String getTenantName() {
-		return tenantName;
-	}
-	public void setTenantName(String tenantName) {
-		this.tenantName = tenantName;
+	
+	
+	public CollectionInfo() {
+		dbType = "DATA";
+		dataStoreType = "MONGO";
 	}
 
-	public String getTenantId() {
-		return tenantId;
+	public String getCollectionName() {
+		return collectionName;
 	}
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+
+	public String getDataStoreType() {
+		return dataStoreType;
+	}
+
+	public void setDataStoreType(String dataStoreType) {
+		this.dataStoreType = dataStoreType;
+	}
+
+	
+	
+	public String getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
 	}
 
 	public List<Columns> getColumns() {
@@ -34,17 +55,27 @@ public class CollectionInfo {
 		this.columns = columns;
 	}
 
-	public class Columns {
-		String name;
+		public class Columns {
+		@JsonProperty("DisplayName")
+		String displayName;
+		
+		@JsonProperty("datatype")
 		String datatype;
-		int hide;
+		
+		@JsonProperty("hidden")
+		boolean hidden;
+		
+		@JsonProperty("indexable")
 		int indexable;
+		
+		@JsonProperty("colattribtype")
 		int colattribtype;
-		public String getName() {
-			return name;
+		
+		public String getDisplayName() {
+			return displayName;
 		}
-		public void setName(String name) {
-			this.name = name;
+		public void setDisplayName(String name) {
+			this.displayName = name;
 		}
 		public String getDatatype() {
 			return datatype;
@@ -52,11 +83,11 @@ public class CollectionInfo {
 		public void setDatatype(String datatype) {
 			this.datatype = datatype;
 		}
-		public int getHide() {
-			return hide;
+		public boolean getHidden() {
+			return hidden;
 		}
-		public void setHide(int hide) {
-			this.hide = hide;
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
 		}
 		public int getIndexable() {
 			return indexable;

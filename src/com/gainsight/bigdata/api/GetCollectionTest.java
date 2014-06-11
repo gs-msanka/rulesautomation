@@ -26,27 +26,28 @@ public class GetCollectionTest extends TestBase {
 	@BeforeClass
 	public void setUp() throws Exception {
 		init();
-		baseuri = PropertyReader.nsAppUrl + "/getcollection/"+ nsinfo.getTenantID() +"/ALL";
+		baseuri = PropertyReader.nsAppUrl + "/admin/collections/";
 	}
 	
 	@Test
 	public void getCollection() throws Exception {
+
 		ObjectMapper mapper = new ObjectMapper();
 		
 		//TestData to Compare
 		CollectionInfo cinfo = new CollectionInfo();
-		cinfo.setTenantName("DummyTenantName");
+		cinfo.setCollectionName("SampleCollection");
 		Columns col = cinfo.new Columns();
-		col.setName("spid");
-		col.setDatatype("");
-		col.setHide(0);
+		col.setDisplayName("Name");
+		col.setDatatype("string");
+		col.setHidden(false);
 		col.setIndexable(0);
 		col.setColattribtype(0);
 		
 		List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
 		colList.add(col);
 		cinfo.setColumns(colList);
-		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(colList));
+		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(cinfo));
 		
 		HttpResponseObj result = wa.doGet(baseuri, h.getAllHeaders());
 		Report.logInfo(result.toString());

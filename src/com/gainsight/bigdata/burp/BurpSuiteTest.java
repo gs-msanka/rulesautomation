@@ -31,8 +31,9 @@ public class BurpSuiteTest extends TestBase {
 	
 	@BeforeClass
 	public void setUp() throws Exception {
-		init();
+		// Need to fix this after functional test cases are up and running
 		
+		/*init();
 		cinfo = new CollectionInfo();
 		cinfo.setTenantName("DummyTenant");
 		Columns col = cinfo.new Columns();
@@ -44,7 +45,7 @@ public class BurpSuiteTest extends TestBase {
 		
 		colList = new ArrayList<CollectionInfo.Columns>();
 		colList.add(col);
-		cinfo.setColumns(colList);
+		cinfo.setColumns(colList);*/
 	}
 	
 	@Test

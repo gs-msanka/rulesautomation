@@ -29,14 +29,14 @@ public class CreateCollectionTest extends TestBase{
 	@BeforeClass
 	public void setUp() throws Exception {
 		init();
-		baseuri = PropertyReader.nsAppUrl + "/createcollection/"+ nsinfo.getTenantID();
+		baseuri = PropertyReader.nsAppUrl + "/admin/collections";
 		
 		cinfo = new CollectionInfo();
-		cinfo.setTenantName("DummyTenant");
+		//cinfo.setTenantName("DummyTenant");
 		Columns col = cinfo.new Columns();
-		col.setName("spid");
+		col.setDisplayName("spid");
 		col.setDatatype("");
-		col.setHide(0);
+		col.setHidden(false);
 		col.setIndexable(0);
 		col.setColattribtype(0);
 		
@@ -90,9 +90,9 @@ public class CreateCollectionTest extends TestBase{
 		String uri = baseuri + "/AutImproperInput";
 		
 		CollectionInfo cinfo = new CollectionInfo();
-		cinfo.setTenantName("DummyTenantName");
+		//cinfo.setTenantName("DummyTenantName");
 		Columns col = cinfo.new Columns();
-		col.setName("spid");
+		col.setDisplayName("spid");
 		col.setColattribtype(0);
 		
 		List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
