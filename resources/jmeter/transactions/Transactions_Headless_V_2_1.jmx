@@ -1641,7 +1641,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                   <hashTree/>
                   <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="false">
                     <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                    <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                    <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                     <stringProp name="HtmlExtractor.attribute">name</stringProp>
                     <stringProp name="HtmlExtractor.default"></stringProp>
                     <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1650,7 +1650,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                   <hashTree/>
                   <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="false">
                     <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                    <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                    <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                     <stringProp name="HtmlExtractor.attribute">name</stringProp>
                     <stringProp name="HtmlExtractor.default"></stringProp>
                     <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1659,7 +1659,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                   <hashTree/>
                   <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="false">
                     <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                    <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                    <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                     <stringProp name="HtmlExtractor.attribute">name</stringProp>
                     <stringProp name="HtmlExtractor.default"></stringProp>
                     <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1668,7 +1668,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                   <hashTree/>
                   <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="false">
                     <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                    <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                    <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                     <stringProp name="HtmlExtractor.attribute">name</stringProp>
                     <stringProp name="HtmlExtractor.default"></stringProp>
                     <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1934,7 +1934,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1943,7 +1943,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1952,7 +1952,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -1961,7 +1961,7 @@ log.info(&quot;customer id is &quot;+ data.substring(startIndex+1,lastIndex) + &
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -2533,7 +2533,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -2542,7 +2542,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -2551,7 +2551,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -2560,7 +2560,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -3437,7 +3437,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -3446,7 +3446,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -3455,7 +3455,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -3464,7 +3464,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4356,7 +4356,7 @@ vars.put(&quot;pname&quot;,names);
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4365,7 +4365,7 @@ vars.put(&quot;pname&quot;,names);
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4374,7 +4374,7 @@ vars.put(&quot;pname&quot;,names);
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4383,7 +4383,7 @@ vars.put(&quot;pname&quot;,names);
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4978,7 +4978,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4987,7 +4987,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -4996,7 +4996,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -5005,7 +5005,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -5625,7 +5625,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -5634,7 +5634,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -5643,7 +5643,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -5652,7 +5652,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6265,7 +6265,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6274,7 +6274,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6283,7 +6283,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6292,7 +6292,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6898,7 +6898,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_mrr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_mrr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringMRR lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6907,7 +6907,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_asv" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_asv</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=recurringASV lineItemVal input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6916,7 +6916,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_users" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_users</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemUsers input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
@@ -6925,7 +6925,7 @@ vars.put(&quot;pid&quot;,els.get(0).attr(&quot;value&quot;));
                       <hashTree/>
                       <HtmlExtractor guiclass="HtmlExtractorGui" testclass="HtmlExtractor" testname="input_otr" enabled="true">
                         <stringProp name="HtmlExtractor.refname">input_otr</stringProp>
-                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue]</stringProp>
+                        <stringProp name="HtmlExtractor.expr">input[class=lineItemVal lineItemOnetimeRevenue input-field]</stringProp>
                         <stringProp name="HtmlExtractor.attribute">name</stringProp>
                         <stringProp name="HtmlExtractor.default"></stringProp>
                         <stringProp name="HtmlExtractor.match_number">1</stringProp>
