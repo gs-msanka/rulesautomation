@@ -14,24 +14,6 @@ public class AdoptionBasePage extends BasePage {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
-    /**
-     * Click on Adoption Grid Page
-     * @return AdoptionUsagePage
-     */
-    public AdoptionUsagePage clickOnUsageGridSubTab() {
-        item.click("//a[text()='Usage']");
-        return new AdoptionUsagePage();
-    }
-
-    /**
-     * Clicks on adoption analytics page.
-     * @return adoption analytics page.
-     */
-    public AdoptionAnalyticsPage clickOnUsageAnalyticsTab() {
-        item.click("//a[text()='Analytics']");
-        return new AdoptionAnalyticsPage();
-    }
-
 
     public AdoptionUsagePage clickOnOverviewSubTab()  {
         item.click(OVER_SUB_TAB);
@@ -47,5 +29,12 @@ public class AdoptionBasePage extends BasePage {
         item.click(EXPLORER_SUB_TAB);
         return new AdoptionExplorerPage();
     }
+
+    public void selectValueInDropDown(String value) {
+        wait.waitTillElementDisplayed("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
+        item.click("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
+    }
+
+
 
 }

@@ -6,61 +6,31 @@ import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class AdoptionUsagePage extends AdoptionBasePage {
+    private final String READY_INDICATOR1         = "//div[@id='aGrid_view1']/center[text()='No views configured']";
+    private final String READY_INDICATOR2         = "//div[@class='results-btn' and text()='Go']";
 
-
-
-    private final String EXPORT_SUCCESS_MSG = "exportApexMsgId";
-    private final String GRID_EXPORT_LINK = "//div[@id='AdoptionUsageGridNavigationBar']/div/a[@title='export']";
-    private final String GRID_CUST_STATUS_BLOCK = "//div[@class='dummyDDStatusFilterList ui-corner-bottom']";
-    private final String GRID_CUST_STATUS_IMG = "//img[@class='jbarahideListButton dummyHideChurnAnalyticIcon' and @title='Select to filter']";
-    private final String WARNING_MESSAGE = "//div[@class='additionalCountSection']";
-    private final String ADOPTION_GRID = "containerAdoptionTableList";
-    //private final String READY_INDICATOR = "//div[@id='Adoption-Usage']";
-    private final String PIN_ICON = "//img[@id='pinIcon']";
-    private final String MONTH_SELECT = "//div[@class='JbaraMonthlyFilter hideForOldAdoption']/select";
-    private final String YEAR_SELECT = "//div[@class='JbaraMonthlyFilter changeMyFloat']/select";
-    //private final String MEASURE_SELECT 		= "//select[@class='jbaraDummyAdoptionMeasureSelectControl min-width']";
-    //private final String GO_BUTTON = "//div[@class='newFilters']/div[2]/input[@value='View Results']";
-    private final String DATAVIEW_SELECT = "//select[@class='jbaraDummyAdoptionDataViewSelectControl min-width']";
-    private final String WEEK_PERIOD_SELECT = "//select[@class='dummyJbaraWeeksPeriodsSelectionCntrl min-width']";
-    private final String WEEKDATE_UPTO_INPUT = "//input[@class='jbaraAdoptionGridInputField min-width']";
-    private final String ADVANCEDSEARCH_BUTTON = "//span[@class='dummygrdAdvancedSearch' and @title='Search']";
-    private final String ASEARCH_SEARCH_BUTTON = "//input[@class='Search' and @type='button']";
-    private final String ASEARCH_RESET_BUTTON = "//input[@class='Reset' and @type='button']";
-    private final String ASEARCH_CLOSE_BUTTON = "//input[@class='Close' and @type='button']";
-    private final String ASEARCH_CLOSE = "//a[@class='ui-dialog-titlebar-close ui-corner-all']/span[text()='close']";
-    private final String UIVIEW_SELECT = "//select[@class='jbaraDummyAdoptionUIViewsSelectControl']";
-    private final String MEASURE_SELECT = "//div[@class='newMeasureSelector']";
-    private final String MEASURE_DISPLAY_DIV = "//div[@class='gs_mult_drop hide']";
-    private final String MEASURE_SEARCH_INPUT = "//input[@class='singleSearchMeasureText']";
-
-
-    String READY_INDICATOR1         = "//div[@id='aGrid_view1']/center[text()='No views configured']";
-    String READY_INDICATOR2         = "//div[@class='results-btn' and text()='Go']";
-    String GO_BUTTON                = "//div[@class='results-btn' and text()='Go']";
-    String NO_VIEW_INFO_DIV         = "//div[@id='aGrid_view1']/center[contains(text(), 'No views configured')]";
-    String UI_VIEW_SELECT_BUTTON    = "//select[@class='components_list']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
-    String MEASURE_SELECT_BUTTON    = "//select[@class='measure']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
-    String MONTH_PERIOD_BUTTON      = "//select[@class='modern-select-box period']/following-sibling::button";
-    String MONTH_SELECT_BUTTON      = "//select[@class='modern-select-box month']/following-sibling::button";
-    String YEAR_SELECT_BUTTON       = "//select[@class='year modern-select-box']/following-sibling::button";
-    String AGG_SELECT_BUTTON        = "//select[@class='adoptionAggregationLevel modern-select-box']/following-sibling::button";
-    String SPARK_LINES_CHECKBOX     = "//div[contains(text(), 'Show Sparklines')]/input[@type='checkbox']";
-    String FILTER_BUTTON            = "//a[@data-action='FILTER']";
-    String MORE_BUTTON              = "//div[@class='gs-moreopt-btn']";
-    String NO_DATA_FOUND_DIV        = "//div[@class='jbaraInfoMessageClassMain']/div[@class='noDataFound' and text()='No Data Found']";
-
-    String DROP_DOWNS_DIV ="//div[@class='ui-multiselect-menu ui-widget ui-widget-content ui-corner-all ui-multiselect-single']";
-
-    String UNCHECK_ALL_MEASURES = "//a[@class='ui-multiselect-none']/span[contains(text(), 'Uncheck all')]";
-    String SEARCH_MEASURE_INPUT = "//div[@class='ui-multiselect-filter']/input[@type='search']";
-
-
+    private final String ADOPTION_GRID            = "//div[contains(@class, 'home-page-slick-grid ui-widget slickgrid')]";
+    private final String GO_BUTTON                = "//div[@class='results-btn' and text()='Go']";
+    private final String UI_VIEW_SELECT_BUTTON    = "//select[@class='components_list']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+    private final String MEASURE_SELECT_BUTTON    = "//select[@class='measure']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+    private final String PERIOD_SELECT_BUTTON      = "//select[@class='modern-select-box period']/following-sibling::button";
+    private final String MONTH_SELECT_BUTTON      = "//select[@class='modern-select-box month']/following-sibling::button";
+    private final String YEAR_SELECT_BUTTON       = "//select[@class='year modern-select-box']/following-sibling::button";
+    private final String AGG_SELECT_BUTTON        = "//select[@class='adoptionAggregationLevel modern-select-box']/following-sibling::button";
+    private final String MORE_BUTTON              = "//div[@class='gs-moreopt-btn']";
+    private final String UNCHECK_ALL_MEASURES     = "//a[@class='ui-multiselect-none']/span[contains(text(), 'Uncheck all')]";
+    private final String SEARCH_MEASURE_INPUT     = "//div[@class='ui-multiselect-filter']/input[@type='search']";
+    private final String WEEK_DATE_INPUT          = "calendar_view4";
+    private final String CUSTOMER_NAME_GIRD_FILTER_INPUT = "//div[@class='ui-state-default slick-headerrow-column l0 r0']/input[@type='text']";
+    private final String SPARK_LINES_CHECKBOX     = "//div[contains(text(), 'Show Sparklines')]/input[@type='checkbox']";
+    private final String FILTER_BUTTON            = "//a[@data-action='FILTER']";
+    private final String NO_VIEW_INFO_DIV         = "//div[@id='aGrid_view1']/center[contains(text(), 'No views configured')]";
+    private final String NO_DATA_FOUND_DIV        = "//div[@class='jbaraInfoMessageClassMain']/div[@class='noDataFound' and text()='No Data Found']";
 
     String uiView           = "";
     String measure          = "";
@@ -69,7 +39,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     String month            = "";
     String year             = "";
     String dataGranularity  = "";
-    String date             = "";
+    String weekDate             = "";
 
     public AdoptionUsagePage() {
         try {
@@ -88,7 +58,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
     /**
      * No of weeks i.e. 3 Weeks, 6 Weeks, 9 Weeks, 12 Weeks.
-     *
      * @param noOfWeeks
      */
 
@@ -98,7 +67,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     /**
      * Data granularity is "By Account", "By Instance".
-     *
      * @param dataGranularity
      */
     public void setDataGranularity(String dataGranularity) {
@@ -107,7 +75,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     /**
      * Month value Format is like Apr for April, Jan for January
-     *
      * @param month
      */
     public void setMonth(String month) {
@@ -116,7 +83,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     /**
      * Year value format 2013, 2012
-     *
      * @param year
      */
     public void setYear(String year) {
@@ -125,21 +91,17 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     /**
      * Measure name which are configurable.
-     *
      * @param measure
      */
     public void setMeasure(String measure) {
         this.measure = measure;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(String weekDate) {
+        this.weekDate = weekDate;
     }
 
-    private void selectValueInDropDown(String value) {
-        wait.waitTillElementDisplayed("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
-        item.click("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
-    }
+
 
     /**
      * Displays month level data.
@@ -154,7 +116,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
 
         if(noOfMonths != null && noOfMonths != "") {
-            item.click(MONTH_PERIOD_BUTTON);
+            item.click(PERIOD_SELECT_BUTTON);
             selectValueInDropDown(noOfMonths);
         }
         if(month != null && month != "") {
@@ -180,7 +142,27 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         Report.logInfo(wle.getAttribute("checked"));
         Report.logInfo(wle.getAttribute("style"));
         item.click(GO_BUTTON);
+        amtDateUtil.stalePause();
+        return this;
+    }
 
+
+    public AdoptionUsagePage displayWeeklyUsageData() {
+        if(measure !=null && measure != "") {
+            selectMeasures(measure);
+        }
+        if(noOfWeeks != null && noOfWeeks != "") {
+            item.click(PERIOD_SELECT_BUTTON);
+            selectValueInDropDown(noOfWeeks);
+        }
+        if(weekDate != null && weekDate != "") {
+            field.clearAndSetText(WEEK_DATE_INPUT, weekDate);
+        }
+        if(dataGranularity != null && dataGranularity != "") {
+            item.click(AGG_SELECT_BUTTON);
+            selectValueInDropDown(dataGranularity);
+        }
+        item.click(GO_BUTTON);
         return this;
     }
 
@@ -200,9 +182,15 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
 
     public AdoptionUsagePage selectUIView(String viewName) {
-        if(viewName != null && viewName!= "") {
-            item.click(UI_VIEW_SELECT_BUTTON);
-            selectValueInDropDown(viewName);
+        try {
+            if(viewName != null && viewName!= "") {
+                item.click(UI_VIEW_SELECT_BUTTON);
+                selectValueInDropDown(viewName);
+            } else {
+                throw new RuntimeException("Please Specify UI-View to select");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("UI-View is not found : "+viewName);
         }
         return new AdoptionUsagePage();
     }
@@ -223,284 +211,103 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 result = true;
             }
         } catch (Exception e) {
-            Report.logInfo("*** Export Failed ***");
+            Report.logInfo("*** Export Failed ***" +e.getMessage());
         }
         return result;
     }
 
-
-
-
-
-
-
-
-
-
-
-    /////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-    /////////////////////////////
-    /**
-     * Displays week level data.
-     *
-     * @return
-     */
-    public AdoptionUsagePage displayWeeklyUsageData() {
-        Report.logInfo("Displaying Weekly usage Data");
-        //field.selectFromDropDown(MEASURE_SELECT, measure);
-        selectMeasure(measure);
-        if (dataGranularity != null && dataGranularity.isEmpty() == false) {
-            field.selectFromDropDown(DATAVIEW_SELECT, dataGranularity);
-        }
-        field.selectFromDropDown(WEEK_PERIOD_SELECT, noOfWeeks);
-        if (date != null && !date.equals("")) {
-            item.clearAndSetText(WEEKDATE_UPTO_INPUT, date);
-        }
-        button.click(GO_BUTTON);
-        Report.logInfo("Clicked to display weekly usage data.");
-        return this;
-    }
-
-
-
-    public boolean isAdoptionGridDisplayed() {
-        Report.logInfo("Verifying is Adoption Data grid displayed");
-        boolean success = false;
-        wait.waitTillElementDisplayed(ADOPTION_GRID, MIN_TIME, MAX_TIME);
-        if (isElementPresentAndDisplay(By.id(ADOPTION_GRID))) {
-            success = true;
-        }
-        Report.logInfo("Verified adoption Data grid display & returing the result : " + success);
-        return success;
-    }
-
-    public boolean isWeeklyDataDisplayed() {
-        boolean success = false;
-        return success;
-    }
-
-    public boolean isMonthlyDataDisplayed() {
-        boolean success = false;
-        return success;
-    }
-
-    public boolean isAccountLevelDataDisplayed() {
-        boolean success = false;
-        return success;
-    }
-
-    public boolean isInstanceLevelDataDisplayed() {
-        boolean success = false;
-        return success;
-    }
-
-    public boolean isCustomerDataPresent(String cName, String values) {
-        Report.logInfo("Verifying is data present in grid.");
-        int attemptNo = 1;
-        boolean status = false;
-        setFilter("gs_cl", cName);
-        //stalePause();
-        while (attemptNo < 4) {
-            int customerRownNo = table.getValueInListRow(
-                    "adoptionTableList_IdOfJBaraStandardView", cName + " | " + values);
-            if (customerRownNo != -1) {
-                status = true;
-                break;
-            }
-            sleep(2);
-            attemptNo++;
-        }
-        Report.logInfo("Verified data present in grid & returning result : " + status);
-        return status;
-    }
-
-    public boolean isMissingDataInfoDisplayed() {
-        Report.logInfo("Checking Adoption data missing text is displayed on the screen");
+    public boolean isDataPresentInGrid(String values) {
+        amtDateUtil.sleep(5);
         boolean result = false;
-        if (field.isElementPresent(WARNING_MESSAGE)) {
-            result = true;
-        }
-        Report.logInfo("Checked Adoption data missing text is dispalyed & returning : " + result);
-        return result;
-    }
 
-    public boolean isGridHeaderMapped(String hRowsText) {
-        Report.logInfo("Checking the header of the grid for values in-puted.");
-        //String hRowsText = "Customer | Instancesasd | Renewal Date";
-        boolean result = false;
-        List<String> columnHeaders = new ArrayList<String>();
-        for (String s : hRowsText.split(" \\|")) {
-            columnHeaders.add(s.trim());
-        }
 
-        WebElement table = driver.findElement(By.xpath("//table[@class='ui-jqgrid-htable']"));
-        List<WebElement> dummyRows = table.findElements(By.tagName("tr"));
-        List<WebElement> hRows = new ArrayList<WebElement>();
-        for (WebElement row : dummyRows) {
-            if (row.getAttribute("role").equalsIgnoreCase("rowheader")) {
-                hRows.add(row);
-            }
-        }
-        if (hRows.size() > 0) {
-            System.out.println("No of Header Rows :" + hRows.size());
-            List<WebElement> cols = null;
-            String dyString = null;
-            WebElement row = hRows.get(0);
-            cols = row.findElements(By.tagName("th"));
-            if (cols.size() > 0) {
-                String s = null;
-                for (WebElement col : cols) {
-                    s = col.getText().trim();
-                    dyString += s;
-                }
-                for (String s1 : columnHeaders) {
-                    System.out.println("Header text compared :" + s1);
-                    if (dyString.contains(s1)) {
-                        result = true;
+        String[] cellValues = values.split("\\|");
+        setCustomerNameFilter(cellValues[0]);
+        WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
+
+        List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
+        System.out.println("Rows :" +rows.size());
+
+
+        for(WebElement row : rows) {
+            boolean inRowData = true;
+            List<WebElement> cells = row.findElements(By.cssSelector("div[class^='slick-cell']"));
+            int i=1;
+            outerloop:
+            for(String val : cellValues) {
+                //i=1;
+                boolean valTemp  =false;
+                for(WebElement cell : cells) {
+                    if(i==1) {
+                        ++i;
+                        Report.logInfo(cell.getText());
+                        Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
+                        if(cell.getText().contains(val.trim())) { valTemp=true; break;}
+                        if(cell.getText().contains(val.trim())) { break outerloop;}
                     } else {
-                        result = false;
-                        break;
+                        Report.logInfo(val);
+                        Report.logInfo(cell.getText());
+                        if(cell.getText().contains(val.trim())) {
+                            valTemp = true;
+                            Report.logInfo("Value is found in cell");
+                            break;
+                        }
                     }
                 }
-            }
-        }
-        Report.logInfo("Checked the header of grid for values inputed, completed & returing : " + result);
-        return result;
-    }
-
-    public void clearGirdFilter() {
-        wait.waitTillElementDisplayed("gs_cl", MIN_TIME, MAX_TIME);
-        field.clearText("gs_cl");
-        amtDateUtil.stalePause();
-    }
-
-    public boolean isDataPresentInGrid(String s) {
-        Report.logInfo("Checking Weather data is displayed in the grid");
-        List<String> values = new ArrayList<String>();
-        for (String v : s.split("\\|")) {
-            values.add(v.trim());
-        }
-        field.clearAndSetText("gs_cl", values.get(0).toString());
-        amtDateUtil.stalePause();
-        boolean result = false;
-        WebElement table = element.getElement("//table[contains(@id,'adoptionTableList_IdOf')]");
-        List<WebElement> rows = table.findElements(By.tagName("tr"));
-        int index = 0;
-        String rowtext = null;
-        int a = 0;
-        for (WebElement row : rows) {
-            ++a;
-            if (row.getAttribute("role").equalsIgnoreCase("row")) {
-                rowtext = row.getText();
-                Report.logInfo("Actual Text : " + row.getText());
-                Report.logInfo("Expected Text :" + values.toString());
-            }
-            for (String val : values) {
-                System.out.println("Checking String :" + val);
-                if (rowtext.contains(val)) {
-                    result = true;
-                } else {
-                    result = false;
-                    Report.logInfo("Matched : " + result);
+                if(!valTemp) {
+                    inRowData = false;
                     break;
                 }
             }
-            if (result) {
+            if(inRowData) {
+                result = true;
+            }
+            if(result) {
                 break;
             }
-            index++;
         }
-        System.out.println("The Number of actual Rows : " + rows.size());
-        Report.logInfo("Checked the data in the grid & returning result :" + result);
-        Report.logInfo("Matched in row : " + a);
         return result;
     }
 
-
-    public AdoptionAnalyticsPage clickOnViewUsage(String s) {
-        Report.logInfo("Checking Weather data is displayed in the grid");
-        List<String> values = new ArrayList<String>();
-        for (String v : s.split("\\|")) {
-            values.add(v.trim());
+    public boolean isAdoptionGridDisplayed() {
+        boolean success = false;
+        try {
+            wait.waitTillElementDisplayed(ADOPTION_GRID, MIN_TIME, MAX_TIME);
+            if (isElementPresentAndDisplay(By.xpath(ADOPTION_GRID))) {
+                success = true;
+            }
+        } catch (Exception e ) {
+            Report.logInfo(e.getMessage());
+            Report.logInfo("Adoption Grid is not displayed");
         }
-        field.clearAndSetText("gs_cl", values.get(0).toString());
-        amtDateUtil.stalePause();
-        boolean result = false;
-        WebElement table = element.getElement("//table[contains(@id,'adoptionTableList_IdOf')]");
-        List<WebElement> rows = table.findElements(By.tagName("tr"));
-        int index = 0;
-        String rowtext = null;
-        int a = 0;
-        for (WebElement row : rows) {
-            ++a;
-            if (row.getAttribute("role").equalsIgnoreCase("row")) {
-                rowtext = row.getText();
-                Report.logInfo("Row Text : " + row.getText());
-            }
-            for (String val : values) {
-                System.out.println("Checking String :" + val);
-                if (rowtext.contains(val)) {
-                    result = true;
-                    Report.logInfo("Matched : " + result);
-                } else {
-                    result = false;
-                    Report.logInfo("Matched : " + result);
-                    break;
-                }
-            }
-            if (result) {
-                break;
-            }
-            index++;
-        }
-        System.out.println("The Number of actual Rows : " + rows.size());
-        Report.logInfo("Checked the data in the grid & returning result :" + result);
-        Report.logInfo("Matched in row : " + a);
-        item.click("//table[contains(@id, 'adoptionTableList_IdOf')]/descendant::tr[@id='" + a + "']/td/atext()='View'");
-        return new AdoptionAnalyticsPage();
+        return success;
     }
 
-    public AdoptionAnalyticsPage navToUsageByCust(String cName, String instance) {
-        Report.logInfo("Click on view button to view single customers usage data");
-        if (instance != null) {
-            item.click("//td[text()='" + instance + "']/preceding-sibling::td[@title='" + cName + "']/preceding-sibling::td/a[text()='View']");
-        } else {
-            item.click("//td[@title='" + cName + "']/preceding-sibling::td[@title='View']/a[text()='View']");
-        }
-
-        Report.logInfo("CLicked on view to view single customers usage data");
-        return new AdoptionAnalyticsPage();
-    }
-
-    public Customer360Page navigateTo360(String cName) {
+    public Customer360Page navigateTo360(String custName) {
         Report.logInfo("Clicking on Customer link to navigate to 360 Page");
-        item.click("//td[@title='" + cName + "']/a[text()='" + cName + "']");
-        Report.logInfo("Clicked on customer Name & Navigating to 360 Page");
+        setCustomerNameFilter(custName);
+        item.click("//div[@class='slick-cell l0 r0 slick-customer-format']/a[contains(text(), '"+custName+"')]");
         return new Customer360Page();
     }
 
-
+    private void setCustomerNameFilter(String custName) {
+        field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
+        amtDateUtil.stalePause();
+        if(custName !=null) {
+            field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, custName);
+            amtDateUtil.stalePause();
+        }
+    }
 
     //To verify weather all field in form are displayed (Weekly configuration).
     public boolean isWeeklyFormEleDisplayed() {
         try {
-            if (item.getElement(MEASURE_SELECT).isDisplayed() && item.getElement(WEEK_PERIOD_SELECT).isDisplayed() &&
-                    item.getElement(WEEKDATE_UPTO_INPUT).isDisplayed()) {
+         WebElement ele = element.getElement(PERIOD_SELECT_BUTTON);
+            if(ele.getText().contains("Week") && element.getElement(WEEK_DATE_INPUT).isDisplayed()) {
                 return true;
             }
         } catch (Exception e) {
-            Report.logInfo("***Some exception*** " + e.getLocalizedMessage());
+            Report.logInfo("Weekly data selection view is not displayed");
             return false;
         }
         return false;
@@ -509,12 +316,13 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     //To verify weather all field in form are displayed (Monthly configuration).
     public boolean isMonthlyFormEleDisplayed() {
         try {
-            if (item.getElement(MEASURE_SELECT).isDisplayed() && item.getElement(MONTH_SELECT).isDisplayed() &&
-                    item.getElement(YEAR_SELECT).isDisplayed()) {
+            WebElement ele = element.getElement(PERIOD_SELECT_BUTTON);
+            if(ele.getText().contains("Month") && element.getElement(MONTH_SELECT_BUTTON).isDisplayed()
+                        && element.getElement(YEAR_SELECT_BUTTON).isDisplayed()) {
                 return true;
             }
         } catch (Exception e) {
-            Report.logInfo("***Some exception*** " + e.getLocalizedMessage());
+            Report.logInfo("Monthly data selection view is not displayed");
             return false;
         }
         return false;
@@ -522,40 +330,22 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     //To verify data granularity selection drop-down is displayed.
     public boolean isDataGranularitySelectionDisplayed() {
-        if (!item.getElement(DATAVIEW_SELECT).isDisplayed()) {
+        if (!item.getElement(AGG_SELECT_BUTTON).isDisplayed()) {
             return false;
         }
         return true;
     }
 
-
     //Need to be implemented keeping this more generic, that fits over entire application grid search.
-    public AdoptionUsagePage advancedSearch() {
-        button.click(ADVANCEDSEARCH_BUTTON);
-        wait.waitTillElementDisplayed(ASEARCH_SEARCH_BUTTON, MIN_TIME, MAX_TIME);
+    public AdoptionUsagePage advancedSearch(List<HashMap<String, String>> filtersList) {
         return this;
     }
 
-
-
-
-    public AdoptionUsagePage selectCustomersView(String value) {
-        String s = "//div[@class='dummyDDStatusFilterHead ui-corner-all']";
-        item.click(s);
-        String s1 = "//div[@class='dummyDDFilterList']";
-        wait.waitTillElementDisplayed(s1, MIN_TIME, MAX_TIME);
-        String s2 = "//div[@class='dummyDDFilterList' and contains(text(), '" + value + "')]";
-        item.click(s2);
-        return this;
-    }
-
-
-    private void selectMeasure(String measure) {
-        item.click(MEASURE_SELECT);
-        wait.waitTillElementDisplayed(MEASURE_DISPLAY_DIV, MIN_TIME, MAX_TIME);
-        field.setTextField(MEASURE_SEARCH_INPUT, measure);
-        amtDateUtil.stalePause();
-        item.click("//ul[@class='gs_mult_results']/li[contains(text(), '" + measure + "')]");
+    public boolean isGridHeaderMapped(String hRowsText) {
+        Report.logInfo("Checking the header of the grid for values in-puted.");
+        //String hRowsText = "Customer | InstanceID | Renewal Date";
+        boolean result = false;
+        return result;
     }
 
 
