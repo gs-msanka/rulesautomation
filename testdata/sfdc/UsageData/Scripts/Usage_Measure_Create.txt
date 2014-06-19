@@ -1,21 +1,28 @@
 List<JBCXM__PickList__c> deleteList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__CATEGORY__C = 'Adoption Measure Types' AND JBCXM__DISPLAYORDER__C >= 10];
 delete deleteList;
 List<JBCXM__PickList__c> pkList = new List<JBCXM__PickList__c>();
-List<String> measureNameList = new List<String>{'Page Views', 'Page Visits', 'No of Report Run', 'Files Downloaded'};
-List<String> colorList = new List<String>{'#8b8989', '#ffdead', '#000000', '#0000cd', '#006400', '#adff2f', '#ffff00',
-										'#cd5c5c', '#b22222', '#ff4500', '#ff1493', '#9932cc', '#dda0dd', '#2f4f4f',
-										'#696969', '#8470ff', '#eee8aa', '#a0522d', '#d2691e' , '#9370db' };
+List<String> measureNameList = new List<String>{'Page Views', 'Page Visits', 'No of Report Run', 'Files Downloaded', 'Emails Sent Count', 'Leads', 'No of Campaigns', 'DB Size', 'Active Users'};
+List<String> colorList = new List<String>{'#90f8dc', '#c3ed87', '#f57373', '#e39be3', '#9fe1f4',
+                                            '#ffdea9', '#978fb7', '#88e4cb', '#59d0b0', '#45b698',
+                                            '#97cb4c', '#75ad26', '#659323', '#537a1c', '#cf5c5c',
+                                            '#b34d4d', '#963e3e', '#793a3a', '#5a2c2c', '#c876c8',
+                                            '#a965a9', '#8d4f8d', '#783778', '#443a6b', '#31275b',
+                                            '#662266', '#7fe2ff', '#4abfe2', '#33a5c7', '#6d658e',
+                                            '#2e91ae', '#237e99', '#fed28b', '#fbc064', '#1e8d70',
+                                            '#eca637', '#cc8f2e', '#af7c28', '#827aa3', '#19785f',
+                                            '#b3e768', '#584f7c' };
+
 Integer i = 10;
 Integer j = 0;
 JBCXM__PickList__c pkMeasure = null;
 for(String measure : measureNameList) {
 	pkMeasure = new JBCXM__PickList__c(Name = measure,
-										JBCXM__ADOPTIONMEASURE__C = TRUE,
-										JBCXM__ATTRIBUTE1__C = colorList.get(j),
-										JBCXM__ATTRIBUTE4__C = TRUE,
-										JBCXM__CATEGORY__C = 'Adoption Measure Types',
-										JBCXM__DISPLAYORDER__C = i,
-										JBCXM__SYSTEMNAME__C = measure
+										JBCXM__ADOPTIONMEASURE__C   = TRUE,
+										JBCXM__ATTRIBUTE1__C        = colorList.get(j),
+										JBCXM__ATTRIBUTE4__C        = TRUE,
+										JBCXM__CATEGORY__C          = 'Adoption Measure Types',
+										JBCXM__DISPLAYORDER__C      = i,
+										JBCXM__SYSTEMNAME__C        = measure
 										);
 	i++;
 	j++;

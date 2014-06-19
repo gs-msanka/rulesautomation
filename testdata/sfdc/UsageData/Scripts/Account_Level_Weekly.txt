@@ -8,7 +8,12 @@ if(appSettingsList != null && appSettingsList.size() > 0) {
 	 appSettings.JBCXM__AdoptionGranularity__c = 'WEEKLY';
 	 appSettings.JBCXM__WeekStartsOn__c = 'Sat';
 	 appSettings.JBCXM__UsesEndDateAsWeekName__c = TRUE;
-	 appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Files Downloaded":"Files_Downloaded__c","No of Report Run":"No_of_Report_Run__c","Page Views":"Page_Views__c","Page Visits":"Page_Visits__c"}';
+	 appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Active Users":"Active_Users__c","DB Size":"DB_Size__c",'+
+          	                                                    '"Emails Sent Count":"Emails_Sent_Count__c",'+
+          	                                                    '"Files Downloaded":"Files_Downloaded__c",'+
+          	                                                    '"Leads":"Leads__c","No of Campaigns":"No_of_Campaigns__c",'+
+          	                                                    '"No of Report Run":"No_of_Report_Run__c",'+
+          	                                                    '"Page Views":"Page_Views__c","Page Visits":"Page_Visits__c"}';
 	 update appSettings;
 }
 

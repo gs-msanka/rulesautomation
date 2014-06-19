@@ -8,12 +8,21 @@ if(appSettingsList != null && appSettingsList.size() > 0) {
 	 appSettings.JBCXM__AdoptionGranularity__c = 'WEEKLY';
 	 appSettings.JBCXM__WeekStartsOn__c = 'Wed';
      appSettings.JBCXM__UsesEndDateAsWeekName__c = FALSE;
-
-	 appSettings.JBCXM__AdoptionAggregationColumns__c  = '[{"ColumnName":"Files_Downloaded__c","Type":"SUM","OnColumn":"Files_Downloaded__c"},'+
-	 														'{"ColumnName":"No_of_Report_Run__c","Type":"AVG","OnColumn":"No_of_Report_Run__c"},'+
-	 														'{"ColumnName":"Page_Views__c","Type":"Count","OnColumn":"Page_Views__c"},'+
-	 														'{"ColumnName":"Page_Visits__c","Type":"SUM","OnColumn":"Page_Visits__c"}]';
-	 appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Files Downloaded":"Files_Downloaded__c","No of Report Run":"No_of_Report_Run__c","Page Views":"Page_Views__c","Page Visits":"Page_Visits__c"}';
+     appSettings.JBCXM__AdoptionAggregationColumns__c  = '[{"ColumnName":"Active_Users__c","Type":"AVG","OnColumn":"Active_Users__c"},'+
+     	                                                        '{"ColumnName":"DB_Size__c","Type":"MEDIAN","OnColumn":"DB_Size__c"},'+
+     	                                                        '{"ColumnName":"Emails_Sent_Count__c","Type":"COUNT","OnColumn":"Emails_Sent_Count__c"},'+
+     	                                                        '{"ColumnName":"Files_Downloaded__c","Type":"SUM","OnColumn":"Files_Downloaded__c"},'+
+     	                                                        '{"ColumnName":"Leads__c","Type":"MIN","OnColumn":"Leads__c"},'+
+     	                                                        '{"ColumnName":"No_of_Campaigns__c","Type":"MAX","OnColumn":"No_of_Campaigns__c"},'+
+     	                                                        '{"ColumnName":"No_of_Report_Run__c","Type":"AVG","OnColumn":"No_of_Report_Run__c"},'+
+     	                                                        '{"ColumnName":"Page_Views__c","Type":"COUNT","OnColumn":"Page_Views__c"},'+
+     	                                                        '{"ColumnName":"Page_Visits__c","Type":"SUM","OnColumn":"Page_Visits__c"}]';
+     appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Active Users":"Active_Users__c","DB Size":"DB_Size__c",'+
+     	                                                    '"Emails Sent Count":"Emails_Sent_Count__c",'+
+     	                                                    '"Files Downloaded":"Files_Downloaded__c",'+
+     	                                                    '"Leads":"Leads__c","No of Campaigns":"No_of_Campaigns__c",'+
+     	                                                    '"No of Report Run":"No_of_Report_Run__c",'+
+     	                                                    '"Page Views":"Page_Views__c","Page Visits":"Page_Visits__c"}';
 	 update appSettings;
 }
 
