@@ -1,10 +1,8 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -12,8 +10,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -23,7 +19,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
-    String resDir = userDir+"/resources/datagen/";
+    String resDir = userDir + "/resources/datagen/";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
@@ -35,9 +31,9 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws InterruptedException, IOException {
         basepage.login();
-        String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
-        String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
-
+        String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
+        String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
+         /*
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
         //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
@@ -45,7 +41,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());
-        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackageInstance());
         dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
         dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
         jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
@@ -56,10 +52,10 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         dataLoader.execute(jobInfo3);
 
         BufferedReader reader;
-        String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-        String line     = null;
-        String code     = "";
-        reader          = new BufferedReader(new FileReader(fileName));
+        String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String line = null;
+        String code = "";
+        reader = new BufferedReader(new FileReader(fileName));
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = reader.readLine()) != null) {
             stringBuilder.append(line).append("\n");
@@ -69,28 +65,28 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         String dateStr;
         //Max of only 5 jobs can run in an organization at a given time
         //Care to be taken that there are no apex jobs are running in the organization.
-        int i= -7;
-        for(int k = 0; k< 5;k++) {
-            for(int m=0; m < 5; m++, i=i-7) {
+        int i = -7;
+        for (int k = 0; k < 1; k++) {
+            for (int m = 0; m < 5; m++, i = i - 7) {
                 //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                 // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                dateStr     = getWeekLabelDate("Wed", i, true, false);
+                dateStr = getWeekLabelDate("Wed", i, true, false);
                 System.out.println(dateStr);
-                year        = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
-                month       = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
-                day         = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
-                code        = stringBuilder.toString();
-                code        = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
+                year = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
+                month = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
+                day = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
+                code = stringBuilder.toString();
+                code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                         .replaceAll("THEYEARCHANGE", String.valueOf(year))
                         .replace("THEDAYCHANGE", String.valueOf(day));
                 apex.runApex(resolveStrNameSpace(code));
             }
-            for(int l= 0; l < 200; l++) {
+            for (int l = 0; l < 200; l++) {
                 String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
                         "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
                         "and ApexClass.Name = 'AdoptionAggregation'";
                 int noOfRunningJobs = getQueryRecordCount(query);
-                if(noOfRunningJobs==0) {
+                if (noOfRunningJobs == 0) {
                     Report.logInfo("Aggregate Jobs are finished.");
                     isAggBatchsCompleted = true;
                     break;
@@ -100,215 +96,159 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                 }
             }
         }
+        */
     }
 
 
     @Test
-    public void Adoption_Instance_Weekly_ViewWeeklyInsData() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Files Downloaded");
-        usage.setNoOfWeeks("12 Weeks");
-        usage.setDataGranularity("By Instance");
+    public void Ins_WeeklyInsData() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfWeeks("1 Week");
+        usage.setDataGranularity("Instance");
         usage.setDate(getWeekLabelDate("Wed", 0, true, true));
         usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Instance | Renewal Date"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN | TOMAS MARTINEZ PATLAN - Instance 2 | 1,662 | 7,159 | 7,296 | 5,663 | 4,085 | 9,931 | 8,497 | 4,595 | 5,743 | 5,076"));
-    }
-
-
-    @Test
-    public void Adoption_Instance_Weekly_ViewWeeklyAccDataSUM() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Files Downloaded");
-        usage.setNoOfWeeks("12 Weeks");
-        usage.setDataGranularity("By Account");
-        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
-        usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
         usage.selectUIView("Standard View");
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN  | 3,741 | 14,374 | 10,092 | 15,809 | 7,886 | 14,658 | 13,646 | 12,781 | 9,352 | 6,454"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("CARHLUC CARROCERIAS Y REMOLQUES SA DE CV|CARHLUC CARROCERIAS Y REMOLQUES SA DE CV - Instance 2|374|1,568|414|10,388|1,868|1,084|1,766|3,388|7,535"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("CARHLUC CARROCERIAS Y REMOLQUES SA DE CV|CARHLUC CARROCERIAS Y REMOLQUES SA DE CV - Instance 1|306|1,756|373|10,009|1,849|990|1,007|6,942|4,777"));
     }
 
+
     @Test
-    public void Adoption_Instance_Weekly_ViewWeeklyAccDataAVG() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("No of Report Run");
-        usage.setNoOfWeeks("9 Weeks");
-        usage.setDataGranularity("By Account");
-        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
+    public void Ins_WeeklyAccData() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfWeeks("1 Week");
+        usage.setDataGranularity("Instance");
+        usage.setDate(getWeekLabelDate("Wed", -7, true, true));
         usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
-        usage = usage.selectUIView("Standard View");
-        usage = usage.selectCustomersView("All");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("A and T unlimit Limited | 2,655.5 | 5,412.5 | 6,646 | 5,087 | 9,318.5 | 6,276.5 | 7,576"));
+        usage.selectUIView("Standard View");
+        Assert.assertEquals(true, usage.isDataPresentInGrid("DAKTEL COMUNICACIONES SA DE CV|226|1,093|2|20,968|2,118|916|5,077|2|11,786"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("Baja Inc|369|1,546|2|14,002|2,162|912|3,728|2|7,830"));
     }
 
     @Test
-    public void Adoption_Instance_Weekly_ViewWeeklyAccDataCount() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Page Views");
-        usage.setNoOfWeeks("6 Weeks");
-        usage.setDataGranularity("By Account");
-        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
-        usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
-        usage = usage.selectUIView("Standard View");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("AUREA SOFTWARE INC | 2 | 2 | 2 | 2 | 2 "));
-    }
-
-    @Test
-    public void Adoption_Instance_Weekly_TestWeeklyAdoptionSelectionFormDisplayed() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        Assert.assertTrue(usage.isWeeklyFormEleDisplayed(), "Checking if weekly form is displayed");
+    public void Ins_WeeklyFormDisplayed() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        Assert.assertTrue(usage.isWeeklyFormEleDisplayed(), "Checking if Monthly form is displayed");
         Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
     @Test
-    public void Adoption_Instance_Weekly_TestAdoptionGridExport() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Page Views");
-        usage.setNoOfWeeks("12 Weeks");
-        usage.setDataGranularity("By Account");
+    public void Ins_WeeklyInsExport() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfWeeks("6 Weeks");
         usage.setDate(getWeekLabelDate("Wed", 0, true, true));
-        usage.clearGirdFilter();
+        usage.setDataGranularity("Instance");
+        usage = usage.displayWeeklyUsageData();
+        usage.selectUIView("Standard View");
+        Assert.assertTrue(usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
+        Assert.assertTrue(usage.exportGrid(), "Checking grid export.");
+    }
+
+    @Test
+    public void Ins_WeeklyAccExport() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfWeeks("12 Weeks");
+        usage.setDate(getWeekLabelDate("Wed", -7, true, true));
+        usage.setDataGranularity("Account");
         usage = usage.displayWeeklyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
         Assert.assertEquals(true, usage.exportGrid(), "Checking grid export.");
     }
 
+    //This can be decoupled in to 2.
     @Test
-    public void Adoption_Instance_Weekly_ViewAccountLevelUsageInGridAndGraph() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("No of Report Run");
-        usage.setNoOfWeeks("12 Weeks");
-        usage.setDataGranularity("By Account");
-        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
-        usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
-        usage.selectUIView("Standard View");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows wether instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date | Licensed"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("AUREA SOFTWARE INC | 572 | 8,936 | 9,743.5 | 2,998 | 3,382.5 | 6,735 | 5,420.5 | 7,055 | 4,328"));
-        AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("AUREA SOFTWARE INC", null);
-        Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking if grid is displayed");
-        Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking if adoption chart is displayed");
-        Assert.assertTrue(analyticsPage.verifySelectedInstanceValue("All"), "Verifying that instance selected value is 'All'.");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 17,550 | 9,715 | 2,449 | 6,991 | 5,432 | 15,844 | 8,035 | 18,596 | 9,068 | 10,711 | 14,287 | 17,158 | 16,215 | 15,759"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 3,629.5 | 1,185 | 3,785 | 7,227.5 | 5,548.5 | 572 | 8,936 | 9,743.5 | 2,998 | 3,382.5 | 6,735 | 5,420.5 | 7,055 | 4,328"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits | 8,768 | 509 | 17,110 | 7,554 | 4,447 | 15,876 | 4,206 | 14,371 | 15,376 | 14,086 | 11,913 | 8,809 | 12,088 | 11,130"));
-    }
-
-    @Test
-    public void Adoption_Instance_Weekly_ViewInstanceLevelUsageInGridAndGraph() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Page Visits");
-        usage.setNoOfWeeks("3 Weeks");
-        usage.setDataGranularity("By Instance");
-        usage.setDate(getWeekLabelDate("Wed", 0, true, true));
-        usage = usage.displayWeeklyUsageData();
-        usage.clearGirdFilter();
-        usage.selectUIView("Standard View");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Instance | Renewal Date | Licensed"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("Terry Store age spa | Terry Store age spa - Instance 1 | 2,020 | 8,838 | 3,647"));
-        Assert.assertEquals(true, usage.isDataPresentInGrid("Terry Store age spa | Terry Store age spa - Instance 2 | 8,594 | 8,723 | 7,123"));
-        AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("Terry Store age spa", "Terry Store age spa - Instance 1");
-        Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking if grid is displayed");
-        Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking if adoption chart is displayed");
-        Assert.assertTrue(analyticsPage.verifySelectedInstanceValue("Terry Store age spa - Instance 1"), "Verifying that instance selected value is 'Terry Store age spa - Instance 1'.");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 7,357 | 322 | 5,344 | 2,337 | 2,354 | 10,199 | 3,414 | 8,956 | 3,131 | 6,459 | 11,648 | 8,422 | 10,867 | 451 | 7,279 | 3,657 | 3,979 | 7,929 | 9,856 | 4,465 | 10,471 | 2,524 | 4,681 | 8,400 | 432 | 1,233 | 4,931 | 7,051 | 1,812 | 7,984 | 4,292 | 9,781 | 9,662 | 7,789 | 63 | 6,689 | 4,610 | 8,239 | 2,090 | 5,401 | 7,895 | 9,524 | 11,520 | 10,986 | 3,341 | 4,359 | 5,691 | 4,550 | 3,567"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 1,698 | 4,807 | 4,504 | 6,023 | 3,635 | 6,054 | 9,787 | 1,227 | 1,626 | 8,109 | 11,653 | 1,260 | 2,455 | 11,890 | 2,719 | 1,526 | 4,174 | 2,388 | 7,780 | 8,376 | 7,105 | 6,020 | 8,554 | 11,084 | 7,555 | 3,967 | 1,783 | 9,129 | 8,974 | 11,465 | 11,030 | 9,513 | 5,639 | 8,443 | 1,506 | 11,571 | 4,358 | 5,481 | 7,979 | 5,610 | 1,835 | 1,493 | 6,399 | 10,364 | 6,285 | 3,185 | 2,475 | 111 | 280 | 10,73"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 2,579 | 2,203 | 1,531 | 8,744 | 2,637 | 2,941 | 6,780 | 3,662 | 1,844 | 7,821 | 5,205 | 1,204 | 7,128 | 58 | 6,363 | 2,182 | 4,495 | 6,149 | 9,053 | 2,312 | 8,348 | 6,411 | 3,090 | 3,427 | 6,015 | 1,340 | 8,355 | 10,115 | 3,559 | 4,229 | 6,361 | 4,960 | 6,332 | 5,247 | 3,608 | 9,403 | 3,872 | 11,623 | 3,245 | 11,897 | 3,899 | 11,063 | 6,823 | 1,537 | 9,510 | 2,274 | 6,944 | 5,389 | 878 | 10,773"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits | 349 | 11,245 | 7,835 | 6,823 | 2,476 | 3,793 | 9,816 | 143 | 3,240 | 8,882 | 9,770 | 7,284 | 9,204 | 1,082 | 4,394 | 2,380 | 1,463 | 6,813 | 6,730 | 6,733 | 803 | 2,231 | 4,289 | 1,614 | 4,063 | 1,198 | 10,483 | 8,332 | 9,860 | 11,120 | 4,941 | 6,295 | 9,076 | 2,985 | 2,620 | 11,946 | 6,647 | 11,249 | 2,227 | 324 | 281 | 7,774 | 9,190 | 11,865 | 547 | 822 | 7,826 | 2,020 | 8,838 | 3,647"));
-    }
-
-    @Test
-    public void Adoption_Instance_Weekly_ViewInstanceLevelUsageGraph() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
-        analyticsPage.setCustomerName("JUAN ANGEL FLORES AGUIRRE");
-        analyticsPage.setInstance("JUAN ANGEL FLORES AGUIRRE - Instance 1");
-        analyticsPage.setForTimeWeekPeriod("52 Weeks");
-        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", -7, true, true));
+    public void Ins_WeeklyAccAndInsUsageGraph() {
+        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
+        analyticsPage.setCustomerName("DeeTag USA");
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", 0, true, true));
+        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        analyticsPage.setForTimeWeekPeriod("26 Weeks");
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDispalyed());
-        Assert.assertTrue(analyticsPage.isInstDropDownLoaded("All | JUAN ANGEL FLORES AGUIRRE - Instance 1 | JUAN ANGEL FLORES AGUIRRE - Instance 2"));
-        Assert.assertTrue(analyticsPage.verifySelectedInstanceValue("JUAN ANGEL FLORES AGUIRRE - Instance 1"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 9,266 | 8,585 | 10,994 | 10,934 | 3,986 | 10,246 | 9,685 | 11,706 | 4,997 | 3,680 | 9,866 | 5,805 | 3,898 | 6,891 | 1,358 | 3,416 | 3,212 | 11,079 | 3,652 | 1,689 | 1,715 | 6,739 | 6,616 | 6,789 | 1,840 | 6,300 | 303 | 5,743 | 11,294 | 10,509 | 11,586 | 5,203 | 1,173 | 9,999 | 5,695 | 1,187 | 6,204 | 10,308 | 8,302 | 868 | 5,219 | 2,067 | 1,067 | 11,817 | 2,741 | 6,280 | 4,193 | 804 | 10,57"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 7,898 | 11,910 | 2,382 | 31 | 1,144 | 1,527 | 8,022 | 4,482 | 6,945 | 9,540 | 779 | 390 | 7,750 | 4,141 | 547 | 10,115 | 9,098 | 11,245 | 10,460 | 6,416 | 7,718 | 4,028 | 2,965 | 4,486 | 5,745 | 560 | 3,960 | 8,855 | 11,444 | 11,874 | 317 | 6,671 | 5,214 | 829 | 712 | 6,713 | 2,989 | 2,907 | 10,309 | 5,466 | 235 | 10,757 | 8,385 | 344 | 4,999 | 9,448 | 1,312 | 10,510 | 7,807"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 7,172 | 7,220 | 10,104 | 8,155 | 1,666 | 2,369 | 71 | 11,535 | 130 | 8,395 | 3,184 | 8,762 | 591 | 2,942 | 1,562 | 277 | 9,837 | 1,742 | 3,003 | 3,969 | 10,109 | 2,102 | 5,318 | 9,516 | 11,356 | 7,441 | 5,423 | 11,096 | 4,277 | 10,698 | 4,517 | 7,123 | 4,208 | 2,774 | 7,739 | 9,780 | 8,912 | 11,520 | 6,839 | 2,087 | 9,378 | 1,810 | 11,466 | 10,399 | 7,535 | 3,876 | 9,552 | 5,179 | 4,038"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits| 4,149 | 2,434 | 7,466 | 9,383 | 7,716 | 9,751 | 8,141 | 10,040 | 9,939 | 414 | 9,439 | 3,106 | 6,035 | 11,413 | 8,376 | 1,077 | 10,341 | 5,665 | 1,168 | 9,701 | 9 | 8,489 | 6,983 | 11,805 | 5,313 | 6,605 | 1,678 | 761 | 4,006 | 10,725 | 1,179 | 469 | 172 | 2,278 | 8,889 | 824 | 6,038 | 3,148 | 4,213 | 2,569 | 11,567 | 9,785 | 11,370 | 5,289 | 4,858 | 8,035 | 7,936 | 10,965 | 1,202"));
+        Assert.assertTrue(analyticsPage.isGridDisplayed());
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Active Users|196.5|304|244|95|378.5"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("DB Size|1,240.5|1,517.5|1,957.5|1,378.5|1,801.5"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Emails Sent Count|2|2|2|2|2"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded|5,626|9,207|16,873|13,843|7,383"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Leads|1,697|1,895|1,975|1,658|1,714|"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Campaigns|965|998|762|842|748"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run|4,983.5|10,092|1,381.5|8,090|8,156"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views|2|2|2|2|2"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits|21,116|20,164|14,306|14,430|12,506|"));
+        analyticsPage.setInstance("DeeTag USA - Instance 2");
+        analyticsPage.setForTimeMonthPeriod("52 Months");
+        analyticsPage = analyticsPage.displayCustWeeklyData();
+        Assert.assertTrue(analyticsPage.isChartDisplayed());
+        Assert.assertTrue(analyticsPage.isGridDisplayed());
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Active Users|349|442|39|326|267|445|14|211|485|313|2|17|16|148|261|39|221|18|357|112|364|468|33|92|392|267"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("DB Size|1,443|1,544|1,287|1,781|1,649|1,212|1,608|1,484|1,569|1,020|1,427|1,803|1,994|1,887|1,101|1,513|1,024|1,213|1,097|1,965|1,222|1,417|1,970|1,663|1,637|1,960"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Emails Sent Count|506|737|477|479|506|537|551|738|779|445|549|390|492|334|771|416|689|373|732|453|484|762|630|394|547|673"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded|5,694|8,196|3,234|9,279|1,248|1,872|7,755|596|573|2,724|11,292|715|3,077|4,315|7,463|4,145|8,513|7,052|6,099|9,859|4,851|1,064|9,779|7,557|5,790|9,931"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Leads|1,881|2,296|2,070|2,077|1,692|2,065|1,731|1,557|1,856|2,222|1,985|1,686|2,051|2,432|2,168|1,931|1,941|1,576|1,617|2,426|1,697|2,212|2,250|1,658|1,995|1,545"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Campaigns|653|1,046|883|673|979|1,085|860|611|785|600|856|943|954|805|760|743|1,003|925|1,056|756|965|998|671|713|748|616"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run|24|316|9,312|40|5,501|10,952|8,846|7,989|8,888|10,843|10,651|8,159|8,817|1,573|10,110|3,658|9,291|11,418|1,371|2,367|1,838|9,070|2,352|5,309|4,556|5,336"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views|11,393|5,166|4,584|10,707|11,054|1,981|9,159|5,424|1,123|8,257|4,063|247|8,858|10,506|4,802|1,323|7,404|11,655|2,718|2,642|4,742|10,310|2,020|2,279|11,805|1,455"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits|2,091|4,457|11,923|7,752|10,687|9,527|11,360|6,555|717|5,535|9,718|9,934|4,945|3,390|11,043|11,845|1,258|1,326|3,962|6,194|9,392|9,641|9,788|5,520|9,480|5,067"));
     }
 
 
     @Test
-    public void Adoption_Instance_Weekly_ViewAccountLevelUsageGraph() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
+    public void Ins_WeeklyAccUsageGraph() {
+        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("Vicor");
-        analyticsPage.setInstance("All");
-        analyticsPage.setForTimeWeekPeriod("52 Weeks");
-        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", -7, true, true));
+        analyticsPage.setForTimeWeekPeriod("26 Weeks");
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", 0, true, true));
+        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDispalyed());
-        Assert.assertTrue(analyticsPage.isInstDropDownLoaded("All | Vicor - Instance 1 | Vicor - Instance 2"));
-        Assert.assertTrue(analyticsPage.verifySelectedInstanceValue("All"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 13,846 | 14,237 | 12,110 | 10,062 | 13,539 | 12,774 | 11,048 | 19,105 | 12,051 | 17,293 | 4,054 | 11,903 | 9,190 | 9,221"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 5,150 | 543.5 | 3,382.5 | 5,851.5 | 778 | 9,314.5 | 8,743.5 | 10,176.5 | 5,982 | 6,618.5 | 2,059 | 3,783 | 5,835 | 5,305.5 | 6,125 "));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 "));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits| 11,375 | 18,603 | 7,116 | 5,157 | 18,977 | 17,040 | 12,334 | 10,651 | 11,953 | 17,084 | 9,056 | 8,310 | 12,744 | 9,519 | 7,807"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Active Users|325|45|162.5|75.5|372"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("DB Size|1,361|1,653.5|1,622|1,596|1,559|"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Emails Sent Count|2|2|2|2|2"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded|4,054|11,903|9,190|9,221|19,632"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Leads|1,834|2,134|1,570|1,676|1,654"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Campaigns|815|707|1,099|683|766"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run|2,059|3,783|5,835|5,305.5|6,125"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views|2|2|2|2|2"));
+        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits|9,056|8,310|12,744|9,519|7,807"));
     }
 
     @Test
-    public void Adoption_Instance_Weekly_ViewAccountLevelUsageGraphWithMissingInfo() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
+    public void Ins_WeeklyAccUsageGraphMissingInfo() {
+        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
-        analyticsPage.setInstance("All");
-        analyticsPage.setForTimeWeekPeriod("52 Weeks");
+        analyticsPage.setForTimeWeekPeriod("26 Weeks");
         analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", +28, true, true));
+        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         analyticsPage = analyticsPage.displayCustWeeklyData();
         Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDispalyed());
-        Assert.assertTrue(analyticsPage.isInstDropDownLoaded("All | Quince Hungary Kft - Instance 1 | Quince Hungary Kft - Instance 2"));
-        Assert.assertTrue(analyticsPage.verifySelectedInstanceValue("All"));
-        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some weeks."));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded | 18,673 | 12,789 | 12,712 | 13,162 | 20,670 | 21,988 | 1,773 | 9,954 | 10,722 | 8,367 | 9,230 | 19,761 | 12,136 | 6,314 | 4,378"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 2,956.5 | 9,118.5 | 4,026.5 | 9,051.5 | 1,652 | 4,792 | 7,432 | 8,041 | 7,301 | 5,564.5 | 3,621 | 5,203.5 | 7,133 | 8,930.5 | 9,125"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 "));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits| 15,232 | 1,649 | 13,613 | 14,541 | 13,034 | 15,445 | 5,170 | 7,828 | 16,565 | 12,434 | 9,609 | 14,075 | 14,127 | 17,680 | 13,427"));
+        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some weeks"));
     }
 
     @Test
-    public void Adoption_Instance_Weekly_NoAdoptionDataFoundMsgVerification() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
-        analyticsPage.setCustomerName("ABASTECEDORA DE VALVULAS INTRUMENT");
+    public void Ins_WeeklyInsUsageGraphMissingInfo() {
+        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
+        analyticsPage.setCustomerName("Cadbury Beverages Div Cadbury");
+        analyticsPage.setForTimeWeekPeriod("26 Weeks");
+        analyticsPage.setWeekLabelDate(getWeekLabelDate("Wed", +7, true, true));
+        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         analyticsPage = analyticsPage.displayCustWeeklyData();
-        Assert.assertTrue(analyticsPage.isNoAdoptionDataMsgDisplayed());
+        Assert.assertTrue(analyticsPage.isChartDisplayed());
+        Assert.assertTrue(analyticsPage.isGridDisplayed());
+        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some weeks"));
+        analyticsPage.setInstance("Cadbury Beverages Div Cadbury - Instance 1");
+        analyticsPage = analyticsPage.displayCustWeeklyData();
+        Assert.assertTrue(analyticsPage.isChartDisplayed());
+        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some weeks"));
+        Assert.assertTrue(analyticsPage.isGridDisplayed());
     }
 
     @AfterClass
-    public void tearDown(){
+    public void tearDown() {
         basepage.logout();
     }
 }

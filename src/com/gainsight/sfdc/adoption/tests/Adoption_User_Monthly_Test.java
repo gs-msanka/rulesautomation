@@ -23,7 +23,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
-    String resDir = userDir+"/resources/datagen/";
+    String resDir = userDir + "/resources/datagen/";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
@@ -37,8 +37,8 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
         basepage.login();
-        String measureFile          = env.basedir+"/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
-        String advUsageConfigFile   = env.basedir+"/testdata/sfdc/UsageData/Scripts/User_Level_Monthly.txt";
+        String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
+        String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/User_Level_Monthly.txt";
 
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
@@ -46,7 +46,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());
-        apex.runApexCodeFromFile(advUsageConfigFile,isPackageInstance());
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackageInstance());
         DataETL dataLoader = new DataETL();
         dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
         dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
@@ -57,7 +57,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Monthly.txt"), JobInfo.class);
         dataLoader.execute(jobInfo3);
 
-        String fileName = env.basedir+"/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
         BufferedReader reader;
         reader = new BufferedReader(new FileReader(fileName));
         String line = null;
@@ -71,27 +71,27 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         int day = 15;
         //Max of only 5 jobs can run in an organization at a given time
         //Care to be taken that there are no apex jobs are running in the organization.
-        for(int k=0;k<5;k++) {
-            for(int i =0; i < 5; i++) {
-                if(month == 0) {
+        for (int k = 0; k < 2; k++) {
+            for (int i = 0; i < 5; i++) {
+                if (month == 0) {
                     month = 12;
-                    year = year -1;
+                    year = year - 1;
                 }
                 code = stringBuilder.toString();
                 code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                         .replaceAll("THEYEARCHANGE", String.valueOf(year))
                         .replace("THEDAYCHANGE", String.valueOf(day));
                 apex.runApex(resolveStrNameSpace(code));
-                month = month-1; //Need to move backward for executing the aggregation.
+                month = month - 1; //Need to move backward for executing the aggregation.
             }
             reader.close();
             Thread.sleep(30000L);
-            for(int i= 0; i < 200; i++) {
+            for (int i = 0; i < 200; i++) {
                 String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
                         "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
                         "and ApexClass.Name = 'AdoptionAggregation'";
                 int noOfRunningJobs = getQueryRecordCount(query);
-                if(noOfRunningJobs==0) {
+                if (noOfRunningJobs == 0) {
                     Report.logInfo("Aggregate Jobs are finished.");
                     isAggBatchsCompleted = true;
                     break;
@@ -104,164 +104,116 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     }
 
     @Test
-    public void Adoption_User_Monthly_UsageDataVerificationSum() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Files Downloaded");
-        setMonthAndYear(0);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage = usage.displayMonthlyUsageData();
-        usage.clearGirdFilter();
+    public void Usr_MonthlyAllMeasure1() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfMonths("1 Month");
+        String[] monthAndYear = setMonthAndYear(0);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
         usage.selectUIView("Standard View");
+        usage = usage.displayMonthlyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("AGENCE PRESSE | 31,016 | 29,953 | 26,452 | 33,155 | 44,518 | 37,036 | 38,272 | 30,545 | 26,845 | 41,687 | 33,144"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("AGENCE PRESSE|220|1,418|10|33,144|1,545|1,089|2,916|10|34,285"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("COMERCIALIZADORA RIMATOM SA de CV|356|1,517|10|37,956|1,645|1,057|2,744|10|29,692"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("BOESDORFER & BOESDORFER INC|334|1,528|10|22,367|1,504|1,046|2,727|10|29,739"));
     }
 
     @Test
-    public void Adoption_User_Monthly_UsageDataVerificationAvg() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("No of Report Run");
-        setMonthAndYear(0);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage = usage.displayMonthlyUsageData();
-        usage.clearGirdFilter();
+    public void Usr_MonthlyAllMeasure2() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfMonths("1 Month ");
+        String[] monthAndYear = setMonthAndYear(-1);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
         usage.selectUIView("Standard View");
-        usage.selectCustomersView("All");
+        usage = usage.displayMonthlyUsageData();
         Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("TOMAS MARTINEZ PATLAN | 2,889 | 2,291.6 | 2,470 | 3,948.6 | 2,944 | 2,853.2 | 2,787.4 | 2,565.4 | 3,055.1 | 3,465.8 | 3,091.5"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("A and T unlimit Limited|302|1,639|10|33,569|1,761|1,069|3,162|10|19,619"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("Baja Inc|247|1,654|10|29,344|1,539|1,078|3,305|10|28,623"));
+        Assert.assertEquals(true, usage.isDataPresentInGrid("Cadbury Beverages Div Cadbury|340|1,626|10|33,402|1,515|1,086|3,625|10|31,983"));
     }
 
     @Test
-    public void Adoption_User_Monthly_UsageDataVerificationCount() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Page Views");
-        setMonthAndYear(0);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage = usage.displayMonthlyUsageData();
-        usage.clearGirdFilter();
-        usage.selectUIView("Standard View");
-        usage.selectCustomersView("All");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("PRODUCCIONES AGRICOLA DE TABASCO SA CV | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10"));
-    }
-
-
-    @Test
-    public void Adoption_User_Monthly_UsageDataVerificationInGirdAndGraph() {
-        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnUsageGridSubTab();
-        usage.setMeasure("Files Downloaded");
-        setMonthAndYear(2);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage = usage.displayMonthlyUsageData();
-        usage.clearGirdFilter();
-        usage.selectUIView("Standard View");
-        usage.selectCustomersView("All");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        //Checking the header rows weather instance is displayed in the header.
-        Assert.assertEquals(true, usage.isGridHeaderMapped("Customer | Renewal Date"));
-        //Checking the adoption data for a customer instance.
-        Assert.assertEquals(true, usage.isDataPresentInGrid("PROD Y DIS VER FRESCAS GUIJOSA SC RL CV | 28,855 | 28,510 | 34,614 | 29,865 | 33,386 | 24,705 | 20,189 | 31,537 | 29,690"));
-        AdoptionAnalyticsPage analyticsPage = usage.navToUsageByCust("PROD Y DIS VER FRESCAS GUIJOSA SC RL CV", null);
-        Assert.assertTrue(analyticsPage.isChartDisplayed(), "Checking adoption graph is displayed");
-        Assert.assertTrue(analyticsPage.isGridDispalyed(), "Checking grid is displayed");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded  | 33,098 | 30,167 | 28,855 | 28,510 | 34,614 | 29,865 | 33,386 | 24,705 | 20,189 | 31,537 | 29,690"), "Checking Files Downloaded measure");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run | 3,481.8 | 3,268.9 | 3,184.4 | 3,443.5 | 2,339.2 | 4,108.9 | 2,651.1 | 3,490.1 | 2,902.8 | 3,518.7 | 3,780.7"), "Checking No of Report Run measure");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views  | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10"), "Checking Page Views measure");
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits  | 31,398 | 26,094 | 32,895 | 33,841 | 36,179 | 24,606 | 21,731 | 27,974 | 21,303 | 17,996 | 24,286"), "Checking Page Visits measure");
-
-    }
-
-    @Test
-    public void Adoption_User_Monthly_ViewUsageForCustomer() {
-        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
-        usage.setCustomerName("JUAN ANGEL FLORES AGUIRRE");
-        usage.setMeasureNames("All Measures");
+    public void Usr_MonthlyForCustomer() {
+        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
+        usage.setCustomerName("DALE VALOR A MEXICO SC");
+        usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setForTimeMonthPeriod("6 Months");
-        setMonthAndYear(0);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage  = usage.displayCustMonthlyData();
+        String[] monthAndYear = setMonthAndYear(0);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
-        Assert.assertTrue(usage.isGridDispalyed(), "Checking the adoption grid is displayed.");
-        Assert.assertTrue(usage.isDataPresentInGrid("Files Downloaded  | 26,669 | 32,966 | 22,179 | 26,908 | 32,334"), "Checking the adoption grid displayed below the graph(Files Downloaded).");
-        Assert.assertTrue(usage.isDataPresentInGrid("No of Report Run  | 3,994.6 | 2,849.5 | 3,625 | 3,720.7 | 4,040.8"), "Checking the adoption grid displayed below the graph(No of Report Run).");
-        Assert.assertTrue(usage.isDataPresentInGrid("Page Views  | 10 | 10 | 10 | 10 | 10"), "Checking the adoption grid displayed below the graph(Page Views).");
-        Assert.assertTrue(usage.isDataPresentInGrid("Page Visits  | 24,561 | 27,229 | 26,234 | 33,826 | 23,799\n"), "Checking the adoption grid displayed below the graph(Page Visits).");
-    }
-
-
-    @Test
-    public void Adoption_User_Monthly_ViewPartialUsageForCustomer() {
-        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
-        usage.setCustomerName("CRIBAS Y ARRENDAMIENTOS SA DE CV");
-        usage.setMeasureNames("All Measures");
-        usage.setForTimeMonthPeriod("18 Months");
-        setMonthAndYear(1);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage  = usage.displayCustMonthlyData();
-        Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
-        Assert.assertTrue(usage.isGridDispalyed(), "Checking the adoption grid is displayed.");
-        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some months."), "Checking the missing data info message is displayed");
-        Assert.assertTrue(usage.isDataPresentInGrid("Files Downloaded  | 41,300 | 32,545 | 31,705 | 28,718 | 33,373 | 20,211 | 27,773 | 29,329 | 32,262 | 34,078 | 34,355 | 34,115 | 25,939 | 24,249 | 22,101 | 27,047 | "), "Checking the adoption grid displayed below the graph(Files Downloaded).");
-        Assert.assertTrue(usage.isDataPresentInGrid("No of Report Run  | 3,153.8 | 2,245.2 | 2,375.2 | 3,686.1 | 3,437.1 | 3,125.3 | 3,079.2 | 3,179.2 | 2,149.3 | 3,377.9 | 3,141 | 3,167.7 | 3,185.6 | 2,966.6 | 3,225.7 | 1,922.2"), "Checking the adoption grid displayed below the graph(No of Report Run).");
-        Assert.assertTrue(usage.isDataPresentInGrid("Page Views  | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10"), "Checking the adoption grid displayed below the graph(Page Views).");
-        Assert.assertTrue(usage.isDataPresentInGrid("Page Visits | 33,648 | 28,934 | 28,970 | 37,752 | 35,012 | 26,814 | 41,918 | 33,119 | 24,256 | 42,444 | 32,677 | 26,606 | 29,274 | 36,111 | 28,615 | 23,643"), "Checking the adoption grid displayed below the graph(Page Visits).");
+        Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Active Users|310.2|251.5|244.6|275.8|305|302.7"));
+        Assert.assertTrue(usage.isDataPresentInGrid("DB Size|1,508|1,246.5|1,541|1,450.5|1,475|1,475"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Emails Sent Count|10|10|10|10|10|10"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Files Downloaded|32,532|33,790|27,550|22,874|30,540|34,753"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Leads|1,549|1,533|1,610|1,567|1,554|1,564"));
+        Assert.assertTrue(usage.isDataPresentInGrid("No of Campaigns|1,090|1,091|1,100|1,084|1,016|1,047"));
+        Assert.assertTrue(usage.isDataPresentInGrid("No of Report Run|2,863.2|3,433.7|3,420.8|2,974.6|3,289.9|2,954.3"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Page Views|10|10|10|10|10|10"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Page Visits|28,622|33,812|28,806|35,895|27,000|25,145"));
     }
 
     @Test
-    public void Adoption_User_Monthly_ViewUsageForCustomerNoData() {
-        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnUsageAnalyticsTab();
+    public void Usr_MonthlyForCustomerPartialData() {
+        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
+        usage.setCustomerName("DAKTEL COMUNICACIONES SA DE CV");
+        usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setForTimeMonthPeriod("6 Months");
+        String[] monthAndYear = setMonthAndYear(2);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayCustMonthlyData();
+        Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
+        Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
+        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some weeks."));
+        Assert.assertTrue(usage.isDataPresentInGrid("Active Users|202.8|284.4|244.8|297.7"));
+        Assert.assertTrue(usage.isDataPresentInGrid("DB Size|1,521|1,562|1,639|1,324.5"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Emails Sent Count|10|10|10|10|"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Files Downloaded|34,114|34,977|31,752|22,780"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Leads|1,557|1,640|1,675|1,840"));
+        Assert.assertTrue(usage.isDataPresentInGrid("No of Campaigns|1,034|1,032|1,094|987|"));
+        Assert.assertTrue(usage.isDataPresentInGrid("No of Report Run|3,116.7|3,557.1|3,722.3|3,187.3"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Page Views|10|10|10|10"));
+        Assert.assertTrue(usage.isDataPresentInGrid("Page Visits|20,702|25,941|30,636|29,140|"));
+
+    }
+
+    @Test
+    public void Usr_MonthlyCustomerNoData() {
+        AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         usage.setCustomerName("ARGO ALMACENADORA SA DE CV");
-        usage.setMeasureNames("All Measures");
-        setMonthAndYear(0);
-        usage.setMonth(String.valueOf(month));
-        usage.setYear(String.valueOf(year));
-        usage  = usage.displayCustMonthlyData();
-        Assert.assertFalse(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
-        Assert.assertFalse(usage.isGridDispalyed(), "Checking the adoption grid is displayed.");
-        Assert.assertTrue(usage.isNoAdoptionDataMsgDisplayed());
+        usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setForTimeMonthPeriod("12 Months");
+        String[] monthAndYear = setMonthAndYear(0);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayCustMonthlyData();
+        Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
+        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some weeks."));
+        Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
     }
 
-    public void setMonthAndYear(int numOfMonthsToAdd) {
-        int currentMonth = Integer.valueOf(c.get(Calendar.MONTH))+1;
-        int currentYear = Integer.valueOf(c.get(Calendar.YEAR));
-        if(numOfMonthsToAdd == 0) {
-            month = currentMonth;
-            year = currentYear;
-        } else if(numOfMonthsToAdd > 0) {
-            if((currentMonth+numOfMonthsToAdd) > 12) {
-                month = currentMonth+numOfMonthsToAdd-12;
-                year = currentYear+1;
-            } else {
-                month = currentMonth+numOfMonthsToAdd;
-                year = currentYear;
-            }
-        } else if(numOfMonthsToAdd < 0) {
-            if(currentMonth+numOfMonthsToAdd <=0 ) {
-                month = 12 + currentMonth+numOfMonthsToAdd;
-                year = currentYear-1;
-            } else if(currentMonth+numOfMonthsToAdd >0) {
-                month = currentMonth+numOfMonthsToAdd;
-                year = currentYear;
-            }
-        }
+    @Test
+    public void Usr_MonthlyExport() {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
+        usage.setNoOfMonths("1 Month");
+        String[] monthAndYear = setMonthAndYear(0);
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayMonthlyUsageData();
+        usage.selectUIView("Standard View");
+        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
+        Assert.assertTrue(usage.exportGrid());
     }
 
     @AfterClass
-    public void tearDown(){
+    public void tearDown() {
         basepage.logout();
     }
 }
