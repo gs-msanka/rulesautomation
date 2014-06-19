@@ -2,7 +2,6 @@ package com.gainsight.sfdc.adoption.pages;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -17,20 +16,22 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String ADOPTION_GRID            = "//div[contains(@class, 'home-page-slick-grid ui-widget slickgrid')]";
     private final String GO_BUTTON                = "//div[@class='results-btn' and text()='Go']";
     private final String UI_VIEW_SELECT_BUTTON    = "//select[@class='components_list']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
-    private final String MEASURE_SELECT_BUTTON    = "//select[@class='measure']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+    private final String MEASURE_SELECT_BUTTON    = "//select[@class='measure']/following-sibling::button";
     private final String PERIOD_SELECT_BUTTON      = "//select[@class='modern-select-box period']/following-sibling::button";
     private final String MONTH_SELECT_BUTTON      = "//select[@class='modern-select-box month']/following-sibling::button";
     private final String YEAR_SELECT_BUTTON       = "//select[@class='year modern-select-box']/following-sibling::button";
     private final String AGG_SELECT_BUTTON        = "//select[@class='adoptionAggregationLevel modern-select-box']/following-sibling::button";
     private final String MORE_BUTTON              = "//div[@class='gs-moreopt-btn']";
-    private final String UNCHECK_ALL_MEASURES     = "//a[@class='ui-multiselect-none']/span[contains(text(), 'Uncheck all')]";
+    private final String UNCHECK_ALL_MEASURES     = "//a/span[contains(text(), 'Uncheck all')]";
+    private final String CHECK_ALL_MEASURES       = "//a[@class='ui-multiselect-all']";
     private final String SEARCH_MEASURE_INPUT     = "//div[@class='ui-multiselect-filter']/input[@type='search']";
-    private final String WEEK_DATE_INPUT          = "calendar_view4";
+    private final String WEEK_DATE_INPUT          = "//input[@class='calendar period']";
     private final String CUSTOMER_NAME_GIRD_FILTER_INPUT = "//div[@class='ui-state-default slick-headerrow-column l0 r0']/input[@type='text']";
     private final String SPARK_LINES_CHECKBOX     = "//div[contains(text(), 'Show Sparklines')]/input[@type='checkbox']";
     private final String FILTER_BUTTON            = "//a[@data-action='FILTER']";
     private final String NO_VIEW_INFO_DIV         = "//div[@id='aGrid_view1']/center[contains(text(), 'No views configured')]";
     private final String NO_DATA_FOUND_DIV        = "//div[@class='jbaraInfoMessageClassMain']/div[@class='noDataFound' and text()='No Data Found']";
+    private final String LOADING_IMG              = "//div[@class='no-float gs-loader-image-64']";
 
     String uiView           = "";
     String measure          = "";
@@ -43,8 +44,8 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     public AdoptionUsagePage() {
         try {
-            wait.waitTillElementPresent(READY_INDICATOR2, MIN_TIME, MAX_TIME);
-        } catch (ElementNotFoundException e) {
+            wait.waitTillElementPresent(UI_VIEW_SELECT_BUTTON, MIN_TIME, MAX_TIME);
+        } catch (Exception e) {
             wait.waitTillElementPresent(READY_INDICATOR1, MIN_TIME, MAX_TIME);
         }
     }
@@ -142,7 +143,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         Report.logInfo(wle.getAttribute("checked"));
         Report.logInfo(wle.getAttribute("style"));
         item.click(GO_BUTTON);
-        amtDateUtil.stalePause();
+        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         return this;
     }
 
@@ -156,43 +157,41 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(noOfWeeks);
         }
         if(weekDate != null && weekDate != "") {
-            field.clearAndSetText(WEEK_DATE_INPUT, weekDate);
+            Report.logInfo("Entering "+weekDate+" in "+WEEK_DATE_INPUT);
+            getFirstDisplayedElement(WEEK_DATE_INPUT).clear();
+            getFirstDisplayedElement(WEEK_DATE_INPUT).sendKeys(weekDate);
+
         }
         if(dataGranularity != null && dataGranularity != "") {
             item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
         }
         item.click(GO_BUTTON);
+        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         return this;
     }
 
     //Files Downloaded, Page Views.
     private void selectMeasures(String mesaures) {
         item.click(MEASURE_SELECT_BUTTON);
-        wait.waitTillElementDisplayed(UNCHECK_ALL_MEASURES, MIN_TIME,MAX_TIME);
-        item.click(UNCHECK_ALL_MEASURES);
-        String[] args = mesaures.split(",");
+        getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
+        String[] args = mesaures.split("\\|");
         for(String str : args) {
-            field.clearText(SEARCH_MEASURE_INPUT);
-            amtDateUtil.stalePause();
-            field.setTextField(SEARCH_MEASURE_INPUT, str);
-            amtDateUtil.stalePause();
-            item.click("//span[contains(text(), '"+str+"')]/preceding-sibling::input[@title='"+str+"']");
+            getFirstDisplayedElement(SEARCH_MEASURE_INPUT).clear();
+            getFirstDisplayedElement(SEARCH_MEASURE_INPUT).sendKeys(str.trim());
+            getFirstDisplayedElement("//span[contains(text(), '"+str.trim()+"')]/preceding-sibling::input").click();
         }
     }
 
     public AdoptionUsagePage selectUIView(String viewName) {
-        try {
-            if(viewName != null && viewName!= "") {
-                item.click(UI_VIEW_SELECT_BUTTON);
-                selectValueInDropDown(viewName);
-            } else {
-                throw new RuntimeException("Please Specify UI-View to select");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("UI-View is not found : "+viewName);
+        if(viewName != null && viewName!= "") {
+            item.click(UI_VIEW_SELECT_BUTTON);
+            selectValueInDropDown(viewName);
+            wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        } else {
+            throw new RuntimeException("Please Specify UI-View to select");
         }
-        return new AdoptionUsagePage();
+        return this;
     }
 
     public boolean exportGrid() {
@@ -217,21 +216,31 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
 
     public boolean isDataPresentInGrid(String values) {
-        amtDateUtil.sleep(5);
         boolean result = false;
-
-
         String[] cellValues = values.split("\\|");
-        setCustomerNameFilter(cellValues[0]);
+        setCustomerNameFilter(cellValues[0].trim());
         WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
-
         List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
         System.out.println("Rows :" +rows.size());
-
-
+        int a=1;  boolean hasScroll = false;
         for(WebElement row : rows) {
             boolean inRowData = true;
-            List<WebElement> cells = row.findElements(By.cssSelector("div[class^='slick-cell']"));
+            WebElement rightRow= null;
+            try {
+                element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
+                rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
+                hasScroll = true;
+            } catch (Exception e) {
+                Report.logInfo("Grid Doesn't have scroll bar");
+            }
+            List<WebElement> cells = null;
+            if(hasScroll) {
+                cells = rightRow.findElements(By.cssSelector("div[class*='slick-cell']"));
+            } else {
+                cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
+            }
+
+            Report.logInfo("No of Cells :" +cells.size());
             int i=1;
             outerloop:
             for(String val : cellValues) {
@@ -240,10 +249,15 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 for(WebElement cell : cells) {
                     if(i==1) {
                         ++i;
-                        Report.logInfo(cell.getText());
-                        Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
-                        if(cell.getText().contains(val.trim())) { valTemp=true; break;}
-                        if(cell.getText().contains(val.trim())) { break outerloop;}
+                        if(!hasScroll) {
+                            Report.logInfo(cell.getText());
+                            Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
+                            if(cell.getText().contains(val.trim())) { valTemp=true; break;}
+                            if(cell.getText().contains(val.trim())) { break outerloop;}
+                        } else {
+                            if(row.getText().contains(val.trim())) { valTemp=true; break;}
+                            if(row.getText().contains(val.trim())) { break outerloop;}
+                        }
                     } else {
                         Report.logInfo(val);
                         Report.logInfo(cell.getText());
@@ -265,6 +279,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             if(result) {
                 break;
             }
+            ++a;
         }
         return result;
     }
@@ -292,10 +307,9 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     private void setCustomerNameFilter(String custName) {
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
-        amtDateUtil.stalePause();
         if(custName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, custName);
-            amtDateUtil.stalePause();
+            amtDateUtil.sleep(5);
         }
     }
 
@@ -347,6 +361,8 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         boolean result = false;
         return result;
     }
+
+
 
 
 }

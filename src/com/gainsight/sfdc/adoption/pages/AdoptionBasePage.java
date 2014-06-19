@@ -1,7 +1,9 @@
 package com.gainsight.sfdc.adoption.pages;
 
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
+import org.openqa.selenium.WebElement;
 
 public class AdoptionBasePage extends BasePage {
 
@@ -31,8 +33,18 @@ public class AdoptionBasePage extends BasePage {
     }
 
     public void selectValueInDropDown(String value) {
-        wait.waitTillElementDisplayed("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
-        item.click("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
+        boolean selected = false;
+        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+            Report.logInfo("Checking : "+ele.isDisplayed());
+            if(ele.isDisplayed()) {
+                ele.click();
+                selected = true;
+                break;
+            }
+        }
+        if(selected != true) {
+            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
+        }
     }
 
 
