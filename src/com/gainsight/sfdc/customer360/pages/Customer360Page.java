@@ -3,11 +3,14 @@ package com.gainsight.sfdc.customer360.pages;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.core.Report;
+
 import org.openqa.selenium.By;
+
 import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NotFoundException;
 
@@ -15,15 +18,15 @@ import org.openqa.selenium.NotFoundException;
 public class Customer360Page extends BasePage {
 	//private final String READY_INDICATOR = "//div[@class='custmor_comp_name']";
 	// changing the ready indicator to search box on the right corner of page
-    private final String READY_INDICATOR        = "//input[@class='search_input ui-autocomplete-input' and @name='search_text']";
+    private final String READY_INDICATOR        = "//input[@class='search_input search-field ui-autocomplete-input' and @name='search_text']";
 	private final String LOADING_IMAGES = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String SUMMARY_NUM_FIELDS = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
 	private final String SUMMARY_STR_FIELDS = "//div[@class='gs_summary_details']//li[contains(.,'%s')]/span";
 	private final String ADD_TRAN = "//a[text()='Add Transaction']";
 	private final String TRANSACTION_FRAME = "//iframe[contains(@src,'TransactionForm')]";
-    private final String CUST_SERCHBY_SELECT    = "//select[@class='gs_filterOptions']";
-    private final String SEARCH_ICON            = "//div[@class='search_input_btn']";
+    private final String CUST_SERCHBY_SELECT    = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+    //private final String SEARCH_ICON            = "//div[@class='search_input_btn']";
     private final String CUST_SELECT_LIST       = "//li[@class='ui-menu-item' and @role = 'presentation']";
     private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
     private final String DEBOOK_TRN_CONFIRM     = "//div[@class='gs_tsn_confirmation']";
@@ -36,7 +39,8 @@ public class Customer360Page extends BasePage {
     private static final String LOADING_ALERTS_IMG  = "//div[contains(@class, 'gs-loader' and text()='Loading Alerts')]";
     private static final String USAGE_SECTION_TAB = "//div[@class='gs_section_title']/h1[contains(text(), 'Usage')]";
     private static final String USAGE_SUB_SECTION_TAB = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
-
+	private static final String CUST_NAME_CONTAINS = "//input[contains(@title,'Customer name contains')]";
+    
 
 	public Customer360Page() {
         Report.logInfo("360 Page Loading");
@@ -99,11 +103,14 @@ public class Customer360Page extends BasePage {
 		return new Customer360Scorecard();
 	}
     public Customer360Page searchCustomer(String cName, Boolean startsWith) {
+    	System.out.println("searching for customer...please wait...");
+    	
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
+        button.click(CUST_SERCHBY_SELECT);
         for(int i =0; i< 3 ; i++) {
             try {
                 if(!startsWith) {
-                    item.selectFromDropDown(CUST_SERCHBY_SELECT, "Customer name contains ");
+                    item.click(CUST_NAME_CONTAINS);
                 }
                 field.clearAndSetText(READY_INDICATOR, cName);
                 driver.findElement(By.xpath(READY_INDICATOR)).sendKeys(Keys.ENTER);
@@ -112,11 +119,12 @@ public class Customer360Page extends BasePage {
 					driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
                     break;
                 } catch(NotFoundException e ) {
-                    item.click(SEARCH_ICON);
-                    wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                  /*  item.click(SEARCH_ICON);
+                    wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);*/
+                	//NO SEARCH ICON FROM 4.5.9 SOOO..THIS CANT BE DONE
                 }
-                driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
-                break;
+               /* driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+cName+"')]")).click();
+                break;*/
             } catch (Exception globalException) {
                 refreshPage();
             }
