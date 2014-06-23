@@ -22,6 +22,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class RuleEngineDataSetup extends BaseTest {
 
@@ -299,11 +300,6 @@ public class RuleEngineDataSetup extends BaseTest {
 				+ "rules.add(rule);" + "insert rules;"));
 	}
 
-	public String getQuotedString(String input) {
-		input = input.replace("'", "\"");
-		return input;
-	}
-
 	public void initialCleanUp() {
 		// TODO Auto-generated method stub
 		SFDCUtil sfdc = new SFDCUtil();
@@ -312,8 +308,26 @@ public class RuleEngineDataSetup extends BaseTest {
 
 	}
 
-	public void loadInitialUsageDataForRulesEngine(String string) {
-		// TODO Auto-generated method stub
-
+	public String getAlertCriteriaJson(String severity, String reason,
+			String type, String status, String subject, String comments) {
+		SObject[] alertSeverity = soql
+				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Severity' and Name='"
+						+ severity + "'"));
+		SObject[] alertReason = soql
+				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Reason' and Name='"
+						+ reason + "'"));
+		SObject[] alertType = soql
+				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Type' and Name='"
+						+ type + "'"));
+		SObject[] alertStatus = soql
+				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Status' and Name='"
+						+ status + "'"));
+		return ("{\"alertSeverity\":\"" + alertSeverity[0].getId() +
+				"\",\"alertReason\":\"" + alertReason[0].getId() +
+				"\",\"alertType\":\"" + alertType[0].getId() +
+				"\",\"alertStatus\":\"" + alertStatus[0].getId() +
+				"\",\"alertComment\":\"" + comments +
+				"\",\"alertSubject\":\"" + subject + "\"}"
+		 );
 	}
 }
