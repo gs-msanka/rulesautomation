@@ -2,13 +2,31 @@ package com.gainsight.sfdc.rulesEngine.tests;
 
 import java.util.HashMap;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class RulesEngineDataValidation extends BaseTest {
 
-	public boolean checkAlertsCreated(HashMap<String, String> aC) {
+	public boolean checkAlertsCreated(HashMap<String, String> aC) throws InterruptedException {
 		int alertsMatched;
+		Boolean isRulesBatchCompleted=false;
+		
+		//only once the batch runs can we validate the alerts
+		for (int l = 0; l < 200; l++) {
+			String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob "
+					+ "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') "
+					+ "and ApexClass.Name = 'StatefulBatchHandler'";
+			int noOfRunningJobs = getQueryRecordCount(query);
+			if (noOfRunningJobs == 0) {
+				Report.logInfo("Rules Ran!!");
+				isRulesBatchCompleted = true;
+				break;
+			} else {
+				Report.logInfo("Waiting for Rules to Run");
+				Thread.sleep(30000L);
+			}
+		}
 		SObject[] alertSeverity = soql
 				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Severity' and Name='"
 						+ aC.get("alertSeverity") + "'"));

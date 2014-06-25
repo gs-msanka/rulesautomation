@@ -6,7 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import com.gainsight.sfdc.adoption.tests.*;
 
@@ -41,7 +45,7 @@ public class RuleEngineDataSetup extends BaseTest {
 			IOException {
 
 		RuleEngineDataSetup rds = new RuleEngineDataSetup();
-		rds.loadUsageDataForRulesEngine("InstanceMonthly", true,"");
+		rds.loadUsageDataForRulesEngine("InstanceMonthly", true, "");
 	}
 
 	// RuleEngineDataSetup setup = new RuleEngineDataSetup();
@@ -102,15 +106,13 @@ public class RuleEngineDataSetup extends BaseTest {
 							+ "/apex_scripts/RulesEngine/Set_Instance_Level_Weekly.apex",
 					isPackageInstance);
 		} else if (type.equalsIgnoreCase("UserMonthly")) {
-				sfdc.runApexCodeFromFile(
-						env.basedir
-								+ "/apex_scripts/RulesEngine/Set_User_Level_Monthly.apex",
-						isPackageInstance);
+			sfdc.runApexCodeFromFile(env.basedir
+					+ "/apex_scripts/RulesEngine/Set_User_Level_Monthly.apex",
+					isPackageInstance);
 		} else if (type.equalsIgnoreCase("UserWeekly")) {
-				sfdc.runApexCodeFromFile(
-						env.basedir
-								+ "/apex_scripts/RulesEngine/Set_User_Level_Weekly.apex",
-						isPackageInstance);
+			sfdc.runApexCodeFromFile(env.basedir
+					+ "/apex_scripts/RulesEngine/Set_User_Level_Weekly.apex",
+					isPackageInstance);
 		}
 
 		// Open job file..change weekly/monthly label , file name and write back
@@ -273,7 +275,30 @@ public class RuleEngineDataSetup extends BaseTest {
 			String TaskOwnerField, String triggerCriteriaJson,
 			String TriggeredUsageOn) throws IOException {
 		SFDCUtil sfdc = new SFDCUtil();
-
+System.out.println(resolveStrNameSpace("List<JBCXM__AutomatedAlertRules__c>  rules =  new List<JBCXM__AutomatedAlertRules__c>();"
+				+ "JBCXM__AutomatedAlertRules__c  rule = null;"
+				+ "rule=new JBCXM__AutomatedAlertRules__c(JBCXM__AdvanceCriteria__c='"
+				+ AdvanceCriteria
+				+ "'"
+				+ ",JBCXM__AlertCount__c=0 , JBCXM__AlertCriteria__c='"
+				+ alertCriteriaJson
+				+ "'"
+				+ ",JBCXM__PlayBookIds__c=''"
+				+ ",JBCXM__SourceType__c='"
+				+ SourceType
+				+ "'"
+				+ ",JBCXM__Status__c=true"
+				+ ",JBCXM__TaskDefaultOwner__c=Userinfo.getUserId()"
+				+ ",JBCXM__TaskOwnerField__c='"
+				+ TaskOwnerField
+				+ "'"
+				+ ",JBCXM__TriggerCriteria__c='"
+				+ triggerCriteriaJson
+				+ "'"
+				+ ",JBCXM__TriggeredUsageOn__c='"
+				+ TriggeredUsageOn
+				+ "');"
+				+ "rules.add(rule);" + "insert rules;"));
 		sfdc.runApex(resolveStrNameSpace("List<JBCXM__AutomatedAlertRules__c>  rules =  new List<JBCXM__AutomatedAlertRules__c>();"
 				+ "JBCXM__AutomatedAlertRules__c  rule = null;"
 				+ "rule=new JBCXM__AutomatedAlertRules__c(JBCXM__AdvanceCriteria__c='"
@@ -322,12 +347,43 @@ public class RuleEngineDataSetup extends BaseTest {
 		SObject[] alertStatus = soql
 				.getRecords(resolveStrNameSpace("select id from JBCXM__Picklist__c where JBCXM__Category__c='Alert Status' and Name='"
 						+ status + "'"));
-		return ("{\"alertSeverity\":\"" + alertSeverity[0].getId() +
-				"\",\"alertReason\":\"" + alertReason[0].getId() +
-				"\",\"alertType\":\"" + alertType[0].getId() +
-				"\",\"alertStatus\":\"" + alertStatus[0].getId() +
-				"\",\"alertComment\":\"" + comments +
-				"\",\"alertSubject\":\"" + subject + "\"}"
-		 );
+		return ("{\"alertSeverity\":\"" + alertSeverity[0].getId()
+				+ "\",\"alertReason\":\"" + alertReason[0].getId()
+				+ "\",\"alertType\":\"" + alertType[0].getId()
+				+ "\",\"alertStatus\":\"" + alertStatus[0].getId()
+				//+ "\",\"alertComment\":\"" + comments
+				+ "\",\"alertSubject\":\"" + subject + "\"}");
+	}
+
+	public void runRule(String date, String usageLevel) {
+		TimeZone tz=TimeZone.getTimeZone(soql.getUserTimeZone());
+		Calendar cal=Calendar.getInstance(tz);			
+		String Lc=soql.getUserLocale();
+		DateFormat df=null;
+		if(Lc.equals("en_US"))	df=new SimpleDateFormat("M/d/yyyy");
+		else if(Lc.equals("en_IN"))	df=new SimpleDateFormat("d/M/yyyy");
+		else df=new SimpleDateFormat("M/d/yyyy");
+		Date today=new Date();
+		today=cal.getTime();
+		df.setTimeZone(tz);
+		System.out.println("date="+df.format(today));
+		apex.runApex(
+				"Map<String,Object>  ruleParams=new Map<String,Object>();"
+						+ "JBCXM__AutomatedAlertRules__c RuleId=[select id from JBCXM__AutomatedAlertRules__c];"
+						+ "String rId=RuleId.Id;"
+						+ "ruleParams.put('ruleId',rId);"
+						+ "ruleParams.put('ruleRunDate','"+df.format(today)+"');"
+						+ "ruleParams.put('isAlertCreate',true);"
+						+ "ruleParams.put('usageLevel','"+usageLevel+"');"
+						//+ "ruleParams.put('criteriaList','{}');"
+						+ "ruleParams.put('areaName','usageData');"
+						+ "ruleParams.put('actionType','runRule');"
+						+ "JBCXM.CEHandler.handleCall(ruleParams);",
+				isPackageInstance);
+
+	}
+
+	public void clearAlertsFromPreviousTest() {
+		apex.runApex("delete [select id from JBCXM__AutomatedAlertRules__c]; delete [select id from JBCXM__Alert__c where JBCXM__Account__c in (select id from Account where name like 'Rules%')];",isPackageInstance);
 	}
 }

@@ -8,8 +8,8 @@ List<Account> accList = new List<Account>();
 Account acc = null;
 integer j =0;
 integer k =0;
-for(integer i =1 ; i < 4 ; i ++) {
-	acc = new Account(Name = 'Rules Engine Account' +i,industry = industryList.get(j),type = typeList.get(k),jigsaw='Rules Engine',Data_ExternalID__c='Rules Engine Account' +i);
+for(integer i =1 ; i < 11 ; i ++) {
+	acc = new Account(Name = 'Rules Engine Account' +i,industry = industryList.get(j),type = typeList.get(k),jigsaw='Rules Engine',Data_ExternalID__c='Rules Engine Account' +i,NumberOfEmployees=5000);
 	j++;
 	k++;
 	if (j==industryList.size()) {

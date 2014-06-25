@@ -22,6 +22,8 @@ for(Account acc : accList) {
 										JBCXM__Status__c = stList.get(j),
 										JBCXM__Stage__c = stgList.get(k),
 										JBCXM__Comments__c = 'Test comments : from script.',
+										JBCXM__ASV__c=60000.00,
+										JBCXM__Users__c=100,
 										JBCXM__OriginalContractDate__c = date.parse('01/01/2010'));
 
 	j++;
