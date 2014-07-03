@@ -26,19 +26,14 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 
 		@BeforeClass
 		public void setUp() {
-			// 1. load usage data
-			// basepage.login();
+		
 			try {
 				rSetup.initialCleanUp();
-				// rSetup.createRulesForRulesEngine();
 				rSetup.loadUsageDataForRulesEngine(USAGE_LEVEL, true,
 						USAGEDATA_FILE);
 			} catch (Exception ex) {
 				System.out.println(ex.getLocalizedMessage());
 			}
-
-			// 2. Create Rules From Backend
-
 		}
 		
 		
@@ -65,9 +60,6 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
 					alertCriteria.get("alertComments"));
-
-			System.out.println("alert criteria:" + alertCriteriaJson);
-			System.out.println("Clean up done! Loading fresh data....");
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
@@ -120,8 +112,6 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
 					alertCriteria.get("alertComments"));
-
-			System.out.println("alert criteria:" + alertCriteriaJson);
 			rSetup.clearAlertsFromPreviousTest();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
@@ -188,32 +178,4 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
-		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
-		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "R6")
-		public void Rule6(HashMap<String, String> testData) throws IOException,
-				InterruptedException {
-			HashMap<String, String> alertCriteria = getMapFromData(testData
-					.get("AlertCriteria"));
-			HashMap<String, String> tc = getMapFromData(testData
-					.get("RuleCriteria"));
-			String alertCriteriaJson = rSetup.getAlertCriteriaJson(
-					alertCriteria.get("alertSeverity"),
-					alertCriteria.get("alertReason"),
-					alertCriteria.get("alertType"),
-					alertCriteria.get("alertStatus"),
-					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
-
-			System.out.println("alert criteria:" + alertCriteriaJson);
-			rSetup.initialCleanUp();
-			System.out.println("Clean up done! Loading fresh data....");
-			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
-					alertCriteria.get("AlertCount"), alertCriteriaJson,
-					alertCriteria.get("SourceType"),
-					alertCriteria.get("TaskOwnerField"),
-					testData.get("RuleCriteria"),
-					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
-			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
-		}
-	}
+}

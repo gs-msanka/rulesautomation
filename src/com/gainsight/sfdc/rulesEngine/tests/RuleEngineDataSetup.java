@@ -45,7 +45,7 @@ public class RuleEngineDataSetup extends BaseTest {
 			IOException {
 
 		RuleEngineDataSetup rds = new RuleEngineDataSetup();
-		rds.loadUsageDataForRulesEngine("InstanceMonthly", true, "");
+		rds.loadUsageDataForRulesEngine("UserMonthly", true, "UsageData_User_Monthly");
 	}
 
 	// RuleEngineDataSetup setup = new RuleEngineDataSetup();
@@ -141,7 +141,7 @@ public class RuleEngineDataSetup extends BaseTest {
 				+ "/resources/datagen/jobs/RulesEngine/temp_job.txt"),
 				JobInfo.class);
 		dataLoader.execute(jobInfo);
-
+		System.out.println("TYPE= "+type);
 		if (type.contains("Instance") || type.contains("User")) {
 			if (type.contains("Weekly"))
 				performAggregation("Weekly");
@@ -194,6 +194,7 @@ public class RuleEngineDataSetup extends BaseTest {
 							.replaceAll("THEMONTHCHANGE", String.valueOf(month))
 							.replaceAll("THEYEARCHANGE", String.valueOf(year))
 							.replace("THEDAYCHANGE", String.valueOf(day));
+					System.out.println("RESOLVING NAME SPACE FOR MONTHLY");
 					apex.runApex(resolveStrNameSpace(code));
 				}
 				for (int l = 0; l < 200; l++) {
@@ -228,14 +229,14 @@ public class RuleEngineDataSetup extends BaseTest {
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line).append("\n");
 			}
-			int month = c.get(Calendar.MONTH);
+			int month = c.get(Calendar.MONTH)+1;
 			int year = c.get(Calendar.YEAR);
 			int day = 15;
 			// Max of only 5 jobs can run in an organization at a given time
 			// Care to be taken that there are no apex jobs are running in the
 			// organization.
 			for (int k = 0; k < 1; k++) {
-				for (int i = 0; i < 5; i++) {
+				for (int i = 1; i < 6; i++) {
 					if (month == 0) {
 						month = 12;
 						year = year - 1;
@@ -245,7 +246,7 @@ public class RuleEngineDataSetup extends BaseTest {
 							.replaceAll("THEMONTHCHANGE", String.valueOf(month))
 							.replaceAll("THEYEARCHANGE", String.valueOf(year))
 							.replace("THEDAYCHANGE", String.valueOf(day));
-					apex.runApex(code);
+					apex.runApex(resolveStrNameSpace(code));
 					month = month - 1; // Need to move backward for executing
 										// the aggregation.
 				}

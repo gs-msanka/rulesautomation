@@ -1,4 +1,4 @@
-Account__r.Data_ExternalID__c,Name,Date__c,Page_Visits__c,Page_Views__c,No_of_Report_Run__c,Files_Downloaded__c
+JBCXM__Account__r.Data_ExternalID__c,Name,JBCXM__Date__c,Page_Visits__c,Page_Views__c,No_of_Report_Run__c,Files_Downloaded__c
 Rules Engine Account1,ACCOUNTLEVEL,-3,5000,690,746,200
 Rules Engine Account1,ACCOUNTLEVEL,-2,2400,359,684,250
 Rules Engine Account1,ACCOUNTLEVEL,-1,1100,247,839,300
