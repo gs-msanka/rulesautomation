@@ -41,7 +41,7 @@ public class BasePage extends WebPage implements Constants {
     private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
     private final String RETENTION_TAB      = "//a[contains(@title, 'Retention Tab')]";
     private final String CHURN_TAB          = "//a[contains(@title,'Churn Tab')]";
-    private final String ADOPTION_TAB       = "//a[contains(@title,'Adoption Tab')]";
+    private final String ADOPTION_TAB       = "//a[contains(@title,'Engagement Tab')]";
     private final String SUREVEY_TAB        = "//a[contains(text(),'Survey')]";
     private final String ADMINISTRATION_TAB = "//a[contains(@title,'Administration')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
@@ -171,11 +171,11 @@ public class BasePage extends WebPage implements Constants {
 		item.click("//input[@title='"+appName+" Default']");
         field.selectFromDropDown(String.format(TAB_SELECT, "Accounts"),"Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Administration"),"Default On");
-		field.selectFromDropDown(String.format(TAB_SELECT, "Adoption"), "Default On");
+		field.selectFromDropDown(String.format(TAB_SELECT, "Engagement"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Churn"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Customers"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "NPS"), "Default On");
-		field.selectFromDropDown(String.format(TAB_SELECT, "Retention"), "Default On");
+		field.selectFromDropDown(String.format(TAB_SELECT, "Actions"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Survey"), "Default On");
 		field.selectFromDropDown(String.format(TAB_SELECT, "Transactions"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Insights"), "Default On");
