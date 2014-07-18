@@ -170,7 +170,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
-        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some weeks."));
+        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some months."));
         Assert.assertTrue(usage.isDataPresentInGrid("Active Users|202.8|284.4|244.8|297.7"));
         Assert.assertTrue(usage.isDataPresentInGrid("DB Size|1,521|1,562|1,639|1,324.5"));
         Assert.assertTrue(usage.isDataPresentInGrid("Emails Sent Count|10|10|10|10|"));
@@ -194,7 +194,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
-        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some weeks."));
+        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some months."));
         Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
     }
 
