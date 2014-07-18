@@ -67,6 +67,26 @@
                     {
                         "name": "Files_Downloaded__c",
                         "alias": "Files_Downloaded__c"
+                    },
+					 {
+                        "name": "Emails_Sent_Count__c",
+                        "alias": "Emails_Sent_Count__c"
+                    },
+					 {
+                        "name": "No_of_Campaigns__c",
+                        "alias": "No_of_Campaigns__c"
+                    },
+					{
+                        "name": "Active_Users__c",
+                        "alias": "Active_Users__c"
+                    },
+					{
+                        "name": "DB_Size__c",
+                        "alias": "DB_Size__c"
+                    },
+					{
+                        "name": "Leads__c",
+                        "alias": "Leads__c"
                     }
                 ]
             }
