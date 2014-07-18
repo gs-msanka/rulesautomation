@@ -33,7 +33,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         basepage.login();
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
-         /*
+         
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         apex.runApex(resolveStrNameSpace(QUERY));
         //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
@@ -96,7 +96,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
                 }
             }
         }
-        */
+        
     }
 
 
