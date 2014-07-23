@@ -236,7 +236,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 
 
     public boolean isDataPresentInGrid(String s) {
-        Report.logInfo("Checking Weather data is displayed in the grid");
+        Report.logInfo("Checking Weather data is displayed in the grid : " +s);
         List<String> values = new ArrayList<String>();
         for (String v : s.split("\\|")) {
             values.add(v.trim());
@@ -253,12 +253,10 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
                 Report.logInfo("Expected Text: " + values.toString());
             }
             for (String val : values) {
-                System.out.println("Checking String :" + val);
                 if (rowtext.contains(val)) {
                     result = true;
                 } else {
                     result = false;
-                    Report.logInfo("Matched : " + result);
                     break;
                 }
             }
