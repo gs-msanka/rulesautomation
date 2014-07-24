@@ -123,7 +123,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     public void Usr_MonthlyAllMeasure2() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("1 Month ");
+        usage.setNoOfMonths("1 Month");
         String[] monthAndYear = setMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
@@ -170,7 +170,6 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDrillDownMsgDisplayed("Click on a data point in the graph above to view detailed data"));
-        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some months."));
         Assert.assertTrue(usage.isDataPresentInGrid("Active Users|202.8|284.4|244.8|297.7"));
         Assert.assertTrue(usage.isDataPresentInGrid("DB Size|1,521|1,562|1,639|1,324.5"));
         Assert.assertTrue(usage.isDataPresentInGrid("Emails Sent Count|10|10|10|10|"));
@@ -180,6 +179,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid("No of Report Run|3,116.7|3,557.1|3,722.3|3,187.3"));
         Assert.assertTrue(usage.isDataPresentInGrid("Page Views|10|10|10|10"));
         Assert.assertTrue(usage.isDataPresentInGrid("Page Visits|20,702|25,941|30,636|29,140|"));
+        Assert.assertTrue(usage.isMissingDataInfoDisplayed("Missing data for some months."));
 
     }
 

@@ -124,7 +124,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfWeeks("1 Week");
-        usage.setDataGranularity("Instance");
+        usage.setDataGranularity("Account");
         usage.setDate(getWeekLabelDate("Wed", -7, true, true));
         usage = usage.displayWeeklyUsageData();
         usage.selectUIView("Standard View");

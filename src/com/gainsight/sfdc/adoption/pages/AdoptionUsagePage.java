@@ -216,20 +216,24 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
 
     public boolean isDataPresentInGrid(String values) {
+        Report.logInfo("Data to Verify : " +values);
         boolean result = false;
         String[] cellValues = values.split("\\|");
         setCustomerNameFilter(cellValues[0].trim());
         WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
         List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
-        System.out.println("Rows :" +rows.size());
+        Report.logInfo("Rows :" +rows.size());
         int a=1;  boolean hasScroll = false;
         for(WebElement row : rows) {
+            Report.logInfo("Checking Row : " +row.getText());
             boolean inRowData = true;
             WebElement rightRow= null;
             try {
                 element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
                 rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
                 hasScroll = true;
+                Report.logInfo("Checking Row : "+rightRow.getText());
+                Report.logInfo("Grid has scroll bar");
             } catch (Exception e) {
                 Report.logInfo("Grid Doesn't have scroll bar");
             }
