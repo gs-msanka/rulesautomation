@@ -30,9 +30,8 @@ public class Adoption_User_Monthly_Test extends BaseTest {
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     private int month;
     private int year;
-    String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
-    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
-
+    String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
+    String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
 
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
@@ -40,9 +39,10 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/User_Level_Monthly.txt";
 
+        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
+
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        apex.runApex(resolveStrNameSpace(QUERY));
-        //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());

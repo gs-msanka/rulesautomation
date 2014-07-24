@@ -27,10 +27,8 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
-    String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
-    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
-
-
+    String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
+    String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
 
     @BeforeClass
     public void setUp() throws IOException {
@@ -38,9 +36,10 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         String measureFile          = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir + "/testdata/sfdc/UsageData/Scripts/Account_Level_Monthly.txt";
 
-        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        apex.runApex(resolveStrNameSpace(QUERY));
+        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
 
+        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(measureFile, isPackageInstance());
@@ -75,7 +74,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     public void Acc_MonthlyAllMeas2() {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("1 Month ");
+        usage.setNoOfMonths("1 Month");
         String[] monthAndYear = setMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));

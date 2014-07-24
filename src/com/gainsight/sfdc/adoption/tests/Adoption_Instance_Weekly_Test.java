@@ -28,19 +28,19 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
     String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
-    String QUERY = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name = 'Adoption'];";
-    String CUST_SET_DELETE = "JBCXM__JbaraRestAPI.deleteActivityLogInfoRecord('DataLoadUsage');";
-
+    String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
+    String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
 
     @BeforeClass
     public void setUp() throws InterruptedException, IOException {
         basepage.login();
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Instance_Level_Weekly.txt";
-         
+
+        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
+
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        apex.runApex(resolveStrNameSpace(QUERY));
-        //apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();
