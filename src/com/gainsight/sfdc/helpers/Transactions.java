@@ -1,6 +1,12 @@
 package com.gainsight.sfdc.helpers;
 
 import java.util.HashMap;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
@@ -8,22 +14,23 @@ import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.tests.BaseTest;
 
 public class Transactions extends WebPage implements Constants {
-	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
-	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate']";
-	private final String MRR_FIELD = "//input[@class='recurringMRR lineItemVal']";
-	private final String ASV_FIELD = "//input[@class='recurringASV lineItemVal']";
-	private final String USERS_FIELD = "//input[@class='lineItemVal lineItemUsers']";
-	private final String OTR_FIELD = "//input[@class='lineItemVal lineItemOnetimeRevenue']";
-	private final String END_DATE_FIELD = "//input[@class='transactionDate transSubEndDate']";
+	private final String BOOKING_DATE_FIELD = "//input[@class= 'transactionDate transactionBookingdate gs-calendar']";
+	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
+	private final String MRR_FIELD = "//input[@class='recurringMRR lineItemVal input-field']";
+	private final String ASV_FIELD = "//input[@class='recurringASV lineItemVal input-field']";
+	private final String USERS_FIELD = "//input[@class='lineItemVal lineItemUsers input-field']";
+	private final String OTR_FIELD = "//input[@class='lineItemVal lineItemOnetimeRevenue input-field']";
+	private final String END_DATE_FIELD = "//input[@class='transactionDate transSubEndDate gs-calendar']";
 	private final String COMMENTS_FIELD = "//textarea[@class='jbaraDummyCommentInputCtrl transactionComments']";
-	private final String CUSTOMER_NAME_FIELD = "//input[contains(@class,'customer-name-text')]";
-	private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
-	private final String OPPRT_SELECT = "//input[@class='jbaraDummyOpportunitySelectCtrl']";
-	private final String BOOKING_TYPE_SELECT = "//select[@class='jbaraDummyBookingOrderSelectCtrl']";
+	private final String CUSTOMER_NAME_FIELD = "//div[@class='text-widget-view Customer']//input[contains (@class, 'customer-name-text gs-search-comp')]";
+	private final String AUTO_SELECT_LIST = "//td[@class='jbaraTrSearchCustomerListTd']";
+	private final String OPPRT_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Opportunity')]";
+	private final String BOOKING_TYPE_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Booking type')]";
+	private final String BOOKING_TYPE_SELECT_OPTION="//span[contains(text(),'%s')]";
 	private final String NEW_RADIO = "//input[@type='radio' and @value='new']";
 	private final String EXISTING_RADIO = "//input[@type='radio' and @value='existing']";
 	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
-	private final String SAVE_BUTTON = "//a[text()='Save']";
+	private final String SAVE_BUTTON = "//a[@class='buttonClass jBaraTransactionCompSaveBtn TransCrudActions btn-save']";
 	AmountsAndDatesUtil util = new AmountsAndDatesUtil();
 
 	public void addChurnTransaction(HashMap<String, String> data) {
@@ -127,13 +134,34 @@ public class Transactions extends WebPage implements Constants {
 			String bookingType) {
 		if (customerName != null) {
 			field.setTextField(CUSTOMER_NAME_FIELD, customerName);
-			button.click(NAME_LOOPUP_IMG);
-			element.click("//a[text()='" + customerName + "']");
-		}
+			driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ENTER);
+			wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
+			driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ARROW_DOWN);
+		    button.click(AUTO_SELECT_LIST);
+		    wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
+
+	        List<WebElement> eleList = element.getAllElement("//td[@class='jbaraTrSearchCustomerListTd']//a[@class='customSearchRefined']");
+
+	        boolean customerSelected = false;
+	        for(WebElement ele : eleList) {
+	            if(ele.isDisplayed()) {
+	                ele.click();
+	                customerSelected = true;
+	            }
+	        }
+	        if(!customerSelected) throw new RuntimeException("Unable to select customer (or) customer not found" );
+		//	element.click("//a[text()='" + customerName + "']");
+		}		
 		if (opportunity != null)
 			field.setSelectField(OPPRT_SELECT, opportunity);
 		if (bookingType != null)
-			field.setSelectField(BOOKING_TYPE_SELECT, bookingType);
+		{
+			button.click(BOOKING_TYPE_SELECT);
+			System.out.println("selecting option:"+String.format(BOOKING_TYPE_SELECT_OPTION, bookingType));
+			driver.findElement(By.xpath(String.format(BOOKING_TYPE_SELECT_OPTION,bookingType))).click();
+			
+		}
+			//field.setSelectField(BOOKING_TYPE_SELECT, bookingType);
 		util.stalePause();
 	}
 

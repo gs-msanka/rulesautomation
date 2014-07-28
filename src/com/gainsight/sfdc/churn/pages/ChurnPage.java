@@ -1,17 +1,26 @@
 package com.gainsight.sfdc.churn.pages;
 
 import java.util.HashMap;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class ChurnPage extends BasePage {
+	private final String AUTO_SELECT_LIST = "//td[@class='jbaraTrSearchCustomerListTd']";
+	private final String MORE_ICON = "//div[@title='More...' and @class='gs-moreopt-btn btnShowActions']";
 	private final String READY_INDICATOR = "//div[@class='dummyChurnAnalyticsDetail']";
-	private final String NEW_BUTTON = "//input[@value='Add Transaction']";
-	private final String CUSTOMER_NAME_FIELD = "//input[contains(@class,'customer-name-text')]";
+	private final String NEW_BUTTON = "//a[contains(text(), 'New Transaction')]";
+	private final String CUSTOMER_NAME_FIELD = "//div[@class='requiredInput']/input[contains(@class,'customer-name-text')]";
 	private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
-	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
-	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate']";
-	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
+	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate gs-calendar']";
+	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
+	private final String CHURN_REASON_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Reason')]";
+	private final String CHURN_REASON_SELECT_OPTION = "//span[contains(text(),'%s')]";
 	private final String COMMENTS_FIELD = "//textarea[@class='jbaraDummyCommentInputCtrl transactionComments']";
 	private final String CHURN_GRID = "//div[@class='mainPanelDiv churnGridGaphsDisplayDiv']";
 	private final String SAVE_BUTTON = "//a[text()='Save']";
@@ -25,11 +34,27 @@ public class ChurnPage extends BasePage {
 	}
 
 	public ChurnPage addChurnTransaction(HashMap<String, String> data) {
+		element.click(MORE_ICON);
 		element.click(NEW_BUTTON);
-		element.switchToFrame("//iframe");
-		field.clearAndSetText(CUSTOMER_NAME_FIELD, data.get("customerName"));
-		button.click(NAME_LOOPUP_IMG);
-		element.click("//a[text()='" + data.get("customerName") + "']");
+		element.switchToFrame("//iframe[contains(@src,'apex/TransactionForm')]");
+		field.setTextField(CUSTOMER_NAME_FIELD, data.get("customerName"));
+		/*button.click(NAME_LOOPUP_IMG);
+		element.click("//a[text()='" + data.get("customerName") + "']");*/
+		driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ENTER);
+		wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
+		driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ARROW_DOWN);
+	    button.click(AUTO_SELECT_LIST);
+	    wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
+	    List<WebElement> eleList = element.getAllElement("//td[@class='jbaraTrSearchCustomerListTd']//a[@class='customSearchRefined']");
+
+        boolean customerSelected = false;
+        for(WebElement ele : eleList) {
+            if(ele.isDisplayed()) {
+                ele.click();
+                customerSelected = true; break;
+            }
+        }
+        if(!customerSelected) throw new RuntimeException("Unable to select customer (or) customer not found" );
 		amtDateUtil.stalePause();
 		String bookingDate = data.get("bookingDate");
 		if (bookingDate != null)
@@ -37,7 +62,9 @@ public class ChurnPage extends BasePage {
 		String effectiveDate = data.get("effectiveDate");
 		if (effectiveDate != null)
 			enterDate(START_DATE_FIELD, effectiveDate);
-		field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
+		button.click(CHURN_REASON_SELECT);
+		driver.findElement(By.xpath(String.format(CHURN_REASON_SELECT_OPTION,data.get("reason")))).click();
+		//field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
 		String comments = data.get("comments");
 		if (comments != null)
 			field.setTextField(COMMENTS_FIELD, comments);

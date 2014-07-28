@@ -5,14 +5,14 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class TransactionsPage extends BasePage {
-	private final String READY_INDICATOR = "//div[@id='Transactions-Usage']";
-	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate']";
-	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate']";
+	private final String READY_INDICATOR = "//div[@class='gs-moreopt-btn']";
+	private final String BOOKING_DATE_FIELD = "//input[@class= 'transactionDate transactionBookingdate gs-calendar']";
+	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
 	private final String TRANS_GRID = "//div[contains(@id,'gbox_transactionList_IdOf')]";
-	private final String TRANS_DLT_LINK = "//table[contains(@id,'transactionList_IdOf')]//tr[%d]//a[text()='Delete']";
+	private final String TRANS_DLT_LINK = "//a[@class='deleteIconTiny commonSpecsIcons']";
 	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
 	private final String TRANS_EDIT_LINK = "//table[contains(@id,'transactionList_IdOf')]//tr[%d]//a[text()='Edit']";
-	private final String NEW_BUTTON = "//input[@value='Add Transaction']";
+	private final String NEW_BUTTON = "//a[contains(text(), 'New Transaction')]";
 	private final String TRANS_TABLE = "//table[contains(@id,'transactionList_Id') and @class='ui-jqgrid-btable']";
 	private final String CUSTOMER_FILTER = "Customer_link";
 	private final String VIEW="//label/span[text()='%s']";
@@ -65,13 +65,14 @@ public class TransactionsPage extends BasePage {
 	}
 
 	private void transactionFini() {
-		wait.waitTillElementPresent(TRANS_GRID, MIN_TIME, MAX_TIME);
 		element.switchToMainWindow();
+		wait.waitTillElementPresent(TRANS_GRID, MIN_TIME, MAX_TIME);	
 	}
 
 	private void addTransactionInit() {
+		element.click(READY_INDICATOR);
 		element.click(NEW_BUTTON);
-		element.switchToFrame("//iframe");
+		element.switchToFrame("//iframe[contains(@src,'apex/TransactionForm')]");
 	}
 
 	public TransactionsPage deleteTransaction(String customerName, String values) {
