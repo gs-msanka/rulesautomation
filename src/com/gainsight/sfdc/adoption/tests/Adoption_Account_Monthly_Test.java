@@ -3,6 +3,7 @@ package com.gainsight.sfdc.adoption.tests;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -34,7 +35,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         basepage.login();
         String measureFile          = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir + "/testdata/sfdc/UsageData/Scripts/Account_Level_Monthly.txt";
-          /*
+
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
         apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
 
@@ -52,7 +53,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         dataLoader.execute(jobInfo2);
         jobInfo3 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Account_Monthly.txt"), JobInfo.class);
         dataLoader.execute(jobInfo3);
-        */
+
     }
 
     @Test
