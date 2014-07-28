@@ -312,44 +312,43 @@ public class BaseTest {
      * @return String of format "yyyy|mm|dd".
      */
     public String getWeekLabelDate(String weekDay, int daysToAdd, boolean usesEndDate, boolean userFormat) {
-        String date = null;
-        try {
-            Calendar c = Calendar.getInstance();
-            Map<String, Integer> days = new HashMap<String, Integer>();
-            days.put("Sun", 1);
-            days.put("Mon", 2);
-            days.put("Tue", 3);
-            days.put("Wed", 4);
-            days.put("Thu", 5);
-            days.put("Fri", 6);
-            days.put("Sat", 7);
+        Calendar cal = Calendar.getInstance();
+        usesEndDate = false;
+        Map<String, Integer> days = new HashMap<String, Integer>();
+        days.put("Sun", 1);
+        days.put("Mon", 2);
+        days.put("Tue", 3);
+        days.put("Wed", 4);
+        days.put("Thu", 5);
+        days.put("Fri", 6);
+        days.put("Sat", 7);
+        System.out.println(cal.getTime());
+        if(usesEndDate) {
             int weekDate = days.get(weekDay);
-            if (usesEndDate) {
-                weekDate = (weekDate == 1) ? 7 : weekDate - 1;
-            }
-            c.set(Calendar.DAY_OF_WEEK, weekDate);
-            System.out.println(c.get(Calendar.DATE));
-            c.add(Calendar.DATE, daysToAdd);
-            int day = c.get(Calendar.DATE);
-            int month = c.get(Calendar.MONTH);
-            month += 1;
-            int year = c.get(Calendar.YEAR);
-            if (userFormat) {
-                if (userLocale.contains("en_US")) {
-                    date = month + "/" + day + "/" + year;
-
-                } else if (userLocale.contains("en_IN")) {
-                    date = day + "/" + month + "/" + year;
-                }
-            } else {
-                date = year + "|" + month + "|" + day;
-            }
-
-        } catch (NullPointerException e) {
-            Report.logInfo(e.getLocalizedMessage());
+            cal.add(Calendar.DATE, -7);
+            weekDate = (weekDate == 1) ? 7 : weekDate - 1;
+            cal.set(Calendar.DAY_OF_WEEK, weekDate);
         }
-        Report.logInfo("Week Label Date is : " +date);
-        return date;
+        else {
+            cal.set(Calendar.DAY_OF_WEEK, days.get(weekDay));
+            cal.add(Calendar.DATE, -7);
+        }
+        cal.add(Calendar.DATE, daysToAdd);
+        Date date = cal.getTime();
+        SimpleDateFormat simpleDateFormat =null;
+        if (userFormat) {
+            if (userLocale.contains("en_US")) {
+                simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+            } else if (userLocale.contains("en_IN")) {
+                simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            }
+        } else {
+            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        }
+        String sDate = simpleDateFormat.format(date);
+        Report.logInfo(sDate);
+        return sDate;
     }
 
     /*

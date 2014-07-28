@@ -19,11 +19,13 @@ public class AdoptionBasePage extends BasePage {
 
     public AdoptionUsagePage clickOnOverviewSubTab()  {
         item.click(OVER_SUB_TAB);
+        amtDateUtil.stalePause();
         return new AdoptionUsagePage();
     }
 
     public AdoptionAnalyticsPage clickOnTrendsSubTab() {
         item.click(TRENDS_SUB_TAB);
+        amtDateUtil.stalePause();
         return new AdoptionAnalyticsPage();
     }
 

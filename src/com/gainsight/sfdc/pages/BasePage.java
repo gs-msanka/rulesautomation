@@ -95,6 +95,7 @@ public class BasePage extends WebPage implements Constants {
 
 	public AdoptionBasePage clickOnAdoptionTab() {
         clickOnTab(ADOPTION_TAB);
+        amtDateUtil.stalePause();
 		return new AdoptionBasePage();
 	}
 
