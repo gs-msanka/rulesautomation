@@ -344,6 +344,7 @@ public class BaseTest {
                 simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             }
         } else {
+            //Default format used for bulk data load.
             simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         }
         String sDate = simpleDateFormat.format(date);

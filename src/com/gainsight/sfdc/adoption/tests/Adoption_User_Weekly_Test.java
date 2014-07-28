@@ -76,9 +76,9 @@ public class Adoption_User_Weekly_Test extends BaseTest {
                 // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
                 dateStr = getWeekLabelDate("Wed", i, false, false);
                 System.out.println(dateStr);
-                year = (dateStr != null && dateStr.split("\\|").length > 0) ? Integer.valueOf(dateStr.split("\\|")[0]) : c.get(Calendar.YEAR);
-                month = (dateStr != null && dateStr.split("\\|").length > 1) ? Integer.valueOf(dateStr.split("\\|")[1]) : c.get(Calendar.MONTH);
-                day = (dateStr != null && dateStr.split("\\|").length > 2) ? Integer.valueOf(dateStr.split("\\|")[2]) : c.get(Calendar.DATE);
+                year = (dateStr != null && dateStr.split("-").length > 0) ? Integer.valueOf(dateStr.split("-")[0]) : c.get(Calendar.YEAR);
+                month = (dateStr != null && dateStr.split("-").length > 1) ? Integer.valueOf(dateStr.split("-")[1]) : c.get(Calendar.MONTH);
+                day = (dateStr != null && dateStr.split("-").length > 2) ? Integer.valueOf(dateStr.split("-")[2]) : c.get(Calendar.DATE);
                 code = stringBuilder.toString();
                 code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
                         .replaceAll("THEYEARCHANGE", String.valueOf(year))
