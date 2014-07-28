@@ -40,18 +40,18 @@ public class BaseTest {
     public void init() throws Exception {
         Report.logInfo("Initializing Environment");
         env.start();
-        monthMap.put("1", "Jan");
-        monthMap.put("2", "Feb");
-        monthMap.put("3", "Mar");
-        monthMap.put("4", "Apr");
-        monthMap.put("5", "May");
-        monthMap.put("6", "Jun");
-        monthMap.put("7", "Jul");
-        monthMap.put("8", "Aug");
-        monthMap.put("9", "Sep");
-        monthMap.put("10", "Oct");
-        monthMap.put("11", "Nov");
-        monthMap.put("12", "Dec");
+        monthMap.put("0", "Jan");
+        monthMap.put("1", "Feb");
+        monthMap.put("2", "Mar");
+        monthMap.put("3", "Apr");
+        monthMap.put("4", "May");
+        monthMap.put("5", "Jun");
+        monthMap.put("6", "Jul");
+        monthMap.put("7", "Aug");
+        monthMap.put("8", "Sep");
+        monthMap.put("9", "Oct");
+        monthMap.put("10", "Nov");
+        monthMap.put("11", "Dec");
         try {
             String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
@@ -352,29 +352,17 @@ public class BaseTest {
         return date;
     }
 
-    public String[] setMonthAndYear(int numOfMonthsToAdd) {
-        int month, year;
-        int currentMonth = Integer.valueOf(c.get(Calendar.MONTH));
-        int currentYear = Integer.valueOf(c.get(Calendar.YEAR));
-        if (numOfMonthsToAdd == 0) {
-            if (currentMonth == 0) {
-                month = 12;
-                year = currentYear - 1;
-            } else {
-                month = currentMonth;
-                year = currentYear;
-            }
-        } else {
-            if ((currentMonth + numOfMonthsToAdd) - 11 > 0) {
-                month = currentMonth + numOfMonthsToAdd - 11;
-                year = currentYear + 1;
-            } else {
-                month = currentMonth + numOfMonthsToAdd;
-                year = currentYear;
-            }
-        }
-        Report.logInfo("Month : " +month + " - Year : " +year);
-        return new String[]{String.valueOf(month), String.valueOf(year)};
+    /*
+    Returns month & year adding/subtracting.
+    Jan = 0
+    Dec = 11
+     */
+    public String[] getMonthAndYear(int numOfMonthsToAdd) {
+        Calendar cal = Calendar.getInstance()  ;
+        Report.logInfo("The current date is : " + cal.getTime());
+        cal.add(Calendar.MONTH, numOfMonthsToAdd);
+        Report.logInfo("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
+        return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
     }
 
 

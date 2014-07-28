@@ -108,7 +108,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.setDataGranularity("Instance");
@@ -126,7 +126,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.setDataGranularity("Account");
@@ -151,7 +151,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("12 Months");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.setDataGranularity("Account");
@@ -166,7 +166,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("6 Months");
-        String[] monthAndYear = setMonthAndYear(-1);
+        String[] monthAndYear = getMonthAndYear(-2);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.setDataGranularity("Instance");
@@ -182,7 +182,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("DeeTag USA");
         analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
         analyticsPage.setYear(String.valueOf(monthAndYear[1]));
         analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
@@ -220,7 +220,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("Vicor");
         analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
         analyticsPage.setYear(String.valueOf(monthAndYear[1]));
         analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
@@ -234,7 +234,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("Quince Hungary Kft");
         analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = setMonthAndYear(+2);
+        String[] monthAndYear = getMonthAndYear(2);
         analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
         analyticsPage.setYear(String.valueOf(monthAndYear[1]));
         analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
@@ -248,7 +248,7 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         analyticsPage.setCustomerName("Cadbury Beverages Div Cadbury");
         analyticsPage.setForTimeMonthPeriod("24 Months");
-        String[] monthAndYear = setMonthAndYear(+2);
+        String[] monthAndYear = getMonthAndYear(2);
         analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
         analyticsPage.setYear(String.valueOf(monthAndYear[1]));
         analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");

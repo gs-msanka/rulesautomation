@@ -108,7 +108,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.selectUIView("Standard View");
@@ -124,7 +124,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = setMonthAndYear(-1);
+        String[] monthAndYear = getMonthAndYear(-2);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.selectUIView("Standard View");
@@ -141,7 +141,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setCustomerName("DALE VALOR A MEXICO SC");
         usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayCustMonthlyData();
@@ -164,7 +164,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setCustomerName("DAKTEL COMUNICACIONES SA DE CV");
         usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = setMonthAndYear(2);
+        String[] monthAndYear = getMonthAndYear(1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayCustMonthlyData();
@@ -189,7 +189,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         usage.setCustomerName("ARGO ALMACENADORA SA DE CV");
         usage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setForTimeMonthPeriod("12 Months");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayCustMonthlyData();
@@ -203,7 +203,7 @@ public class Adoption_User_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = setMonthAndYear(0);
+        String[] monthAndYear = getMonthAndYear(-1);
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayMonthlyUsageData();

@@ -119,18 +119,22 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         if(noOfMonths != null && noOfMonths != "") {
             item.click(PERIOD_SELECT_BUTTON);
             selectValueInDropDown(noOfMonths);
+            Report.logInfo("No of Months Selected : " +noOfMonths);
         }
         if(month != null && month != "") {
             item.click(MONTH_SELECT_BUTTON);
             selectValueInDropDown(month);
+            Report.logInfo("Month Selected : " +month);
         }
         if(year != null && year != "") {
             item.click(YEAR_SELECT_BUTTON);
             selectValueInDropDown(year);
+            Report.logInfo("Year Selected : "+year);
         }
         if(dataGranularity != null && dataGranularity != "") {
           item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
+            Report.logInfo("Data Granularity : " +dataGranularity);
         }
 
         WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
