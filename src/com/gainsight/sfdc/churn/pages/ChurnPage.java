@@ -20,7 +20,8 @@ public class ChurnPage extends BasePage {
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate gs-calendar']";
 	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
 	private final String CHURN_REASON_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Reason')]";
-	private final String CHURN_REASON_SELECT_OPTION = "//span[contains(text(),'%s')]";
+	private final String CHURN_REASON_SELECT_OPTION = "//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[contains(text(),'%s')]";
+	//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[contains(text(),'Other')]
 	private final String COMMENTS_FIELD = "//textarea[@class='jbaraDummyCommentInputCtrl transactionComments']";
 	private final String CHURN_GRID = "//div[@class='mainPanelDiv churnGridGaphsDisplayDiv']";
 	private final String SAVE_BUTTON = "//a[text()='Save']";
@@ -63,8 +64,16 @@ public class ChurnPage extends BasePage {
 		if (effectiveDate != null)
 			enterDate(START_DATE_FIELD, effectiveDate);
 		button.click(CHURN_REASON_SELECT);
-		driver.findElement(By.xpath(String.format(CHURN_REASON_SELECT_OPTION,data.get("reason")))).click();
-		//field.setSelectField(CHURN_REASON_SELECT, data.get("reason"));
+		 List<WebElement> churnReasonList = element.getAllElement(String.format(CHURN_REASON_SELECT_OPTION,data.get("reason")));
+
+	        boolean churnReasonSelected = false;
+	        for(WebElement crl : churnReasonList) {
+	            if(crl.isDisplayed()) {
+	            	crl.click();
+	                churnReasonSelected = true; break;
+	            }
+	        }
+	        if(!churnReasonSelected) throw new RuntimeException("Unable to select Churn Reason (or) Churn reason not found" );
 		String comments = data.get("comments");
 		if (comments != null)
 			field.setTextField(COMMENTS_FIELD, comments);
