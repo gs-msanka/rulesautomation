@@ -10,7 +10,7 @@
 			<!--Srividya's Tests -->
 			
 			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
-		    <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
+		    <!-- class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
 			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
           	<methods>
 					<include name="addAndEditNumericScores" />
@@ -20,7 +20,8 @@
 					<include name="addAndEditOverallSummary" />	
 					<include name="addAndEditCustomerGoals"/>		
 				</methods>
-          	</class>
+          	</class> -->
+          	<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
 		</classes>
 	</test>
 </suite>
