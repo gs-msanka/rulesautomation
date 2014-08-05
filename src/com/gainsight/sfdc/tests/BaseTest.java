@@ -366,6 +366,7 @@ public class BaseTest {
         Calendar cal = Calendar.getInstance()  ;
         Report.logInfo("The current date is : " + cal.getTime());
         cal.add(Calendar.MONTH, numOfMonthsToAdd);
+        Report.logInfo("Modified Date : " + cal.getTime());
         Report.logInfo("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
         return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
     }

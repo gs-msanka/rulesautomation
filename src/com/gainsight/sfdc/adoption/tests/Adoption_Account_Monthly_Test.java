@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.adoption.tests;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -76,7 +77,12 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
         usage.setNoOfMonths("1 Month");
+        Report.logInfo(String.valueOf(monthMap.size()));
+        for(String val : monthMap.values()) {
+            Report.logInfo(val);
+        }
         String[] monthAndYear = getMonthAndYear(-2);
+        Report.logInfo(monthMap.get(monthAndYear[0])+ " --- " + String.valueOf(monthAndYear[1]));
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage.selectUIView("Standard View");
