@@ -11,20 +11,27 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class PlayBooksPage extends BasePage {
 
-    private final String READY_INDICATOR            = "//div[@class='ga-addPlaybookIcon btn']";
+	//Aug 8th,2014 -  JP - Modified the xpath for playbooks in Actions tab
+	//private final String READY_INDICATOR            = "//div[@class='ga-addPlaybookIcon btn']";
+	private final String READY_INDICATOR            = "//div[@class='ga-addPlaybookIcon']";   
     private final String DELETE_PLAYBOOK            = "//a[@title='Delete playbook']";
-    private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='ga-addPlaybookIcon btn']";
+    private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='ga-addPlaybookIcon']";
     private final String ISALERT_PLAYBOOK_CHECK     = "ga-alert";
     private final String ISEVENT_PLAYBOOK_CHECK     = "ga-event";
     private final String PBNAME_INPUT               = "//input[@class='ga-playbookName pbInputVal']";
     private final String PBDES_INPTU                = "//textarea[@class='ga-playbookDes pbInputVal']";
     private final String TASK_SUB_INPUT             = "//input[@class='Subject__cInputCls taskParamControlDataInput']";
     private final String TASK_RELDATECOUNT_INPUT    = "//input[@class='Date__cInputCls taskParamControlDataInput']";
+    
     private final String TASK_PRIORITY_SELECT       = "//select[@class='Priority__cInputCls taskParamControlDataInput']";
+    //private final String TASK_PRIORITY_SELECT       = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all' and @type='button']";
+    
     private final String TASK_STATUS_SELECT         = "//select[@class='Status__cInputCls taskParamControlDataInput']";
-    private final String CREATE_BUTTON              = "//input[@class='ga-btnPrimary ga-savePlaybook' and @type='button' and @value='Create']";
-    private final String CANCEL_BUTTON              = "//input[@class='ga-btnSecondary ga-cancelPlaybook' and @type='button' and @value ='Cancel']";
-    private final String UPDATE_BUTTON              = "//input[@class='ga-btnPrimary ga-savePlaybook' and @value='Update']";
+    //private final String TASK_STATUS_SELECT         = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'In Progress')]";
+    
+    private final String CREATE_BUTTON              = "//input[@class='ga-btnPrimary ga-savePlaybook btn-save' and @type='button' and @value='Create']";
+    private final String CANCEL_BUTTON              = "//input[@class='ga-btnSecondary ga-cancelPlaybook btn-cancel' and @type='button' and @value ='Cancel']";
+    private final String UPDATE_BUTTON              = "//input[@class='ga-btnPrimary ga-savePlaybook btn-save' and @value='Update']";
     private final String ADD_TASK_BUTTON            = "ga-addTaskIconId";
     private final String TASK_SERCH_INPUT           = "//input[@class='ga-searchInput ga-searchTasks'";
     private final String TASK_SEARCH_CLEAR_BUTTON   = "//input[@class='ga-clearBtn ga-searchTaskClearBtn']";
@@ -173,7 +180,10 @@ public class PlayBooksPage extends BasePage {
             field.clearAndSetText(TASK_RELDATECOUNT_INPUT, testdata.get("date"));
         }
         if(testdata.get("priority") != null) {
-            element.selectFromDropDown(TASK_PRIORITY_SELECT, testdata.get("priority"));
+            //element.selectFromDropDown(TASK_PRIORITY_SELECT, testdata.get("priority"));
+        	element.click(TASK_PRIORITY_SELECT);
+        	//element.
+            
         }
         if(testdata.get("status") !=null) {
             element.selectFromDropDown(TASK_STATUS_SELECT, testdata.get("status"));
