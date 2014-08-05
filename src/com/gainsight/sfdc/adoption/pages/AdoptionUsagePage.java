@@ -121,11 +121,14 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(noOfMonths);
             Report.logInfo("No of Months Selected : " +noOfMonths);
         }
+        Report.logInfo(" Before if condition : "  +month);
         if(month != null && month != "") {
+            Report.logInfo("Block Start : " +month);
             item.click(MONTH_SELECT_BUTTON);
             selectValueInDropDown(month);
-            Report.logInfo("Month Selected : " +month);
+            Report.logInfo("Block End : " +month);
         }
+        Report.logInfo(" Before if condition : "  +month);
         if(year != null && year != "") {
             item.click(YEAR_SELECT_BUTTON);
             selectValueInDropDown(year);
