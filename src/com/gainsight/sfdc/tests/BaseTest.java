@@ -313,7 +313,6 @@ public class BaseTest {
      */
     public String getWeekLabelDate(String weekDay, int daysToAdd, boolean usesEndDate, boolean userFormat) {
         Calendar cal = Calendar.getInstance();
-        usesEndDate = false;
         Map<String, Integer> days = new HashMap<String, Integer>();
         days.put("Sun", 1);
         days.put("Mon", 2);
@@ -325,13 +324,19 @@ public class BaseTest {
         System.out.println(cal.getTime());
         if(usesEndDate) {
             int weekDate = days.get(weekDay);
-            cal.add(Calendar.DATE, -7);
+            int calLabel = cal.get(Calendar.DAY_OF_WEEK);
             weekDate = (weekDate == 1) ? 7 : weekDate - 1;
             cal.set(Calendar.DAY_OF_WEEK, weekDate);
+            if(weekDate < calLabel) {
+                cal.add(Calendar.DATE, 7);
+            }
         }
         else {
+            int a = cal.get(Calendar.DAY_OF_WEEK);
             cal.set(Calendar.DAY_OF_WEEK, days.get(weekDay));
-            cal.add(Calendar.DATE, -7);
+            if(a <  days.get(weekDay)) {
+                cal.add(Calendar.DATE, -7);
+            }
         }
         cal.add(Calendar.DATE, daysToAdd);
         Date date = cal.getTime();
