@@ -441,7 +441,7 @@ public class BaseTest {
             cal.add(Calendar.MONTH, -1);
             for (int k = 0; k < noOfTimesToLoop; k++) {
                 for (int i = 0; i < 5; i++) {
-                    month = String.valueOf(cal.get(Calendar.MONTH));
+                    month = String.valueOf(cal.get(Calendar.MONTH)+1);    //Added one as java return 0 for January month.
                     year = String.valueOf(cal.get(Calendar.YEAR));
                     code = stringBuilder.toString();
                     code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
