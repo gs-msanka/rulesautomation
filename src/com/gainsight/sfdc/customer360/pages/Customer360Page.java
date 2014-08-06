@@ -1,24 +1,19 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import java.util.HashMap;
-
 import com.gainsight.pageobject.core.Report;
-
-import org.openqa.selenium.By;
-
 import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
-
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NotFoundException;
-
+import java.util.HashMap;
 
 public class Customer360Page extends BasePage {
 	//private final String READY_INDICATOR = "//div[@class='custmor_comp_name']";
 	// changing the ready indicator to search box on the right corner of page
-    private final String READY_INDICATOR        = "//input[@class='search_input search-field ui-autocomplete-input' and @name='search_text']";
+    private final String READY_INDICATOR        = "//input[@class='search_input search-field gs-left-noradius ui-autocomplete-input' and @type='text'] ";
 	private final String LOADING_IMAGES = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String SUMMARY_NUM_FIELDS = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";

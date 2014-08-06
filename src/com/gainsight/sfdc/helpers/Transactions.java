@@ -1,17 +1,14 @@
 package com.gainsight.sfdc.helpers;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
+import com.gainsight.sfdc.pages.Constants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.pageobject.core.WebPage;
-import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
-import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.pages.Constants;
-import com.gainsight.sfdc.tests.BaseTest;
+import java.util.HashMap;
+import java.util.List;
 
 public class Transactions extends WebPage implements Constants {
 	private final String BOOKING_DATE_FIELD = "//input[@class= 'transactionDate transactionBookingdate gs-calendar']";
@@ -254,8 +251,8 @@ public class Transactions extends WebPage implements Constants {
 	}
 	
 	public void enterDate(String identifier, String date) {
-		field.click(identifier);
-		field.click("//td[@class='weekday']");
+		//field.click(identifier);
+		//field.click("//td[@class='weekday']");
 		field.clearAndSetText(identifier, date);
 	}
 
