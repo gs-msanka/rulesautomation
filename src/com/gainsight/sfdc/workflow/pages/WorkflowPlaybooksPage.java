@@ -31,10 +31,10 @@ public class WorkflowPlaybooksPage {
 	/**
      * Constructor of the page, Waits for the ready indicator to be present on the page.
      */
-    public PlayBooksPage() {
+    /*public PlayBooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
-    
+    */
     /**
      * Adds Playbook for the user on supplied paramters.  
      * <pre>
