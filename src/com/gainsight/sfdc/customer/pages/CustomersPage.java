@@ -16,19 +16,18 @@ public class CustomersPage extends CustomerBasePage {
     private final String CUSTOMER_TABLE     = "//table[contains(@id,'customerList_IdOf') and @class='ui-jqgrid-btable']";
     private final String STATUS_FIELD       = "//td[text()='Status: ']/following-sibling::td//select";
     private final String STAGE_FIELD        = "//td[text()='Stage: ']/following-sibling::td//select";
-    //private final String COMMENTS_FIELD     = "//textarea[@class='jbaraDummyCustomerInputCtrl jbaraDummyCustomerCommentInputCtrl']";
     private final String CUSTOMER_NAME_FIELD = "CustomerLink";
 
 
-    String MORE_ICON = "//div[@class='gs-moreopt-btn']";
-    String NEW_CUSTOMER_LINK = "//a[contains(text(), 'New Customer')]";
-    String ACC_NAME_INPUT = "//input[@class='search_input search-field ui-autocomplete-input']";
-    String AUTO_SELECT_LIST = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
-    String CUSTOMER_FORM_CANCEL_BUTTON = "//input[@value='Cancel' and @class='cancel btn-cancel']";
-    String CUSTOMER_SAVE = "//input[@class='save-customer btn-save' and @value='Save']";
-    String COMMENTS_INPUT ="//textarea[@class='commentArea']";
-    String STAGE_SELECT_BUTTON = "//select[@class='stageSelection']/following-sibling::button";
-    String STATUS_SELECT_BUTTON = "//select[@class='statusSelection']/following-sibling::button";
+    private final String MORE_ICON            = "//div[@class='gs-moreopt-btn']";
+    private final String NEW_CUSTOMER_LINK    = "//a[contains(text(), 'New Customer')]";
+    private final String ACC_NAME_INPUT       = "//input[@class='search_input search-field gs-left-noradius ui-autocomplete-input' and @type='text']";
+    private final String AUTO_SELECT_LIST     = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
+    private final String CUSTOMER_SAVE        = "//input[@class='save-customer btn-save' and @value='Save']";
+    private final String COMMENTS_INPUT       ="//textarea[@class='commentArea']";
+    private final String STAGE_SELECT_BUTTON  = "//select[@class='stageSelection']/following-sibling::button";
+    private final String STATUS_SELECT_BUTTON = "//select[@class='statusSelection']/following-sibling::button";
+    private final String CUSTOMER_FORM_CANCEL_BUTTON = "//input[@value='Cancel' and @class='cancel btn-cancel']";
 
     public CustomersPage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
