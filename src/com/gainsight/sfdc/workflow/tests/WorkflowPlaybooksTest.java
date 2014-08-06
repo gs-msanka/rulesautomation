@@ -37,7 +37,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void testAllPlaybook_wf() throws BiffException, IOException {
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+        /*HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
@@ -45,7 +45,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         pbPage.addplaybook_wf(pbData, taskData);
         Assert.assertEquals(true, pbPage.isplaybookpresent_wf(pbData.get("playbookname")));
         Assert.assertEquals(true, pbPage.isTaskPresent_wf(taskData));
-        Assert.assertEquals(true, pbPage.isAllPlaybook_wf(pbData.get("playbookname")));
+        Assert.assertEquals(true, pbPage.isAllPlaybook_wf(pbData.get("playbookname")));*/
     }
     
     
