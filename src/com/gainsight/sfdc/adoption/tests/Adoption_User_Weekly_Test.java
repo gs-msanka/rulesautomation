@@ -55,52 +55,8 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_User_Weekly.txt"), JobInfo.class);
         dataLoader.execute(jobInfo3);
 
-        BufferedReader reader;
-        String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-        String line = null;
-        String code = "";
-        reader = new BufferedReader(new FileReader(fileName));
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line).append("\n");
-        }
-        reader.close();
-        int year, month, day;
-        String dateStr;
-        //Max of only 5 jobs can run in an organization at a given time
-        //Care to be taken that there are no apex jobs are running in the organization.
-        int i = -7;
-        for (int k = 0; k < 2; k++) {
-            for (int m = 0; m < 5; m++, i = i - 7) {
-                //if the start day of the week configuration is changed then method parameter should be changed appropriately..
-                // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                dateStr = getWeekLabelDate("Wed", i, false, false);
-                System.out.println(dateStr);
-                year = (dateStr != null && dateStr.split("-").length > 0) ? Integer.valueOf(dateStr.split("-")[0]) : c.get(Calendar.YEAR);
-                month = (dateStr != null && dateStr.split("-").length > 1) ? Integer.valueOf(dateStr.split("-")[1]) : c.get(Calendar.MONTH);
-                day = (dateStr != null && dateStr.split("-").length > 2) ? Integer.valueOf(dateStr.split("-")[2]) : c.get(Calendar.DATE);
-                code = stringBuilder.toString();
-                code = code.replaceAll("THEMONTHCHANGE", String.valueOf(month))
-                        .replaceAll("THEYEARCHANGE", String.valueOf(year))
-                        .replace("THEDAYCHANGE", String.valueOf(day));
-
-                apex.runApex(resolveStrNameSpace(code));
-            }
-            for (int l = 0; l < 200; l++) {
-                String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
-                        "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
-                        "and ApexClass.Name = 'AdoptionAggregation'";
-                int noOfRunningJobs = getQueryRecordCount(query);
-                if (noOfRunningJobs == 0) {
-                    Report.logInfo("Aggregate Jobs are finished.");
-                    isAggBatchsCompleted = true;
-                    break;
-                } else {
-                    Report.logInfo("Waiting for aggregation batch to complete");
-                    Thread.sleep(30000L);
-                }
-            }
-        }
+        runAdoptionAggregation(10, true, false, "Wed");
+        isAggBatchsCompleted = true;
     }
 
     @Test

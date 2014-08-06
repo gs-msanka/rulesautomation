@@ -374,5 +374,91 @@ public class BaseTest {
         return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
     }
 
+    /**
+     *
+     * @param className
+     */
+    public void waitForBatchExecutionToComplete(String className) throws InterruptedException {
+        for (int l = 0; l < 200; l++) {
+            String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +
+                    "WHERE JobType ='BatchApex' and Status IN ('Queued', 'Processing', 'Preparing') " +
+                    "and ApexClass.Name = '"+className+"'";
+            int noOfRunningJobs = getQueryRecordCount(query);
+            if (noOfRunningJobs == 0) {
+                Report.logInfo("Aggregate Jobs are finished.");
+                break;
+            } else {
+                Report.logInfo("Waiting for aggregation batch to complete");
+                Thread.sleep(30000L);
+            }
+        }
+    }
 
+    /**
+     * To trigger adoption aggregation.
+     * @param isWeekly - true - Runs weekly aggregation, else - Runs Monthly aggregation.
+     * @param isStartDayOfWeek - Week label is based on start of week or end of week.
+     * @param weekStartsOn - Week starts on Sun, Mon, Tue
+     * @param noOfPeriods - No of weeks/months to run aggregation.  {Good to send multiples of 5}
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean isStartDayOfWeek, String weekStartsOn) throws IOException, InterruptedException {
+        Calendar cal = Calendar.getInstance();
+        BufferedReader reader;
+        String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String line = null;
+        String code = "";
+        reader = new BufferedReader(new FileReader(fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        reader.close();
+        String year = "", month = "", day = "15";
+        String dateStr;
+        int noOfTimesToLoop = (Integer.valueOf(noOfPeriods%5) ==0)  ? noOfPeriods/5 : noOfPeriods/5+1;
+
+        if(isWeekly) {
+            int i = -7;
+            for (int k = 0; k < noOfTimesToLoop; k++) {
+                for (int m = 0; m < 5; m++, i = i - 7) {
+                    //if the start day of the week configuration is changed then method parameter should be changed appropriately..
+                    // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+                    dateStr = getWeekLabelDate(weekStartsOn, i, isStartDayOfWeek, false);
+                    year = (dateStr != null && dateStr.split("-").length > 0) ? String.valueOf(dateStr.split("-")[0]) : String.valueOf(c.get(Calendar.YEAR));
+                    month = (dateStr != null && dateStr.split("-").length > 1) ? String.valueOf(dateStr.split("-")[1]) : String.valueOf(c.get(Calendar.MONTH));
+                    day = (dateStr != null && dateStr.split("-").length > 2) ? String.valueOf(dateStr.split("-")[2]) : String.valueOf(c.get(Calendar.DATE));
+                    code = stringBuilder.toString();
+                    code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
+                    Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
+                    apex.runApex(resolveStrNameSpace(code));
+                }
+                Thread.sleep(30000L);
+                waitForBatchExecutionToComplete("AdoptionAggregation");
+            }
+        } else {
+            cal.add(Calendar.MONTH, -1);
+            for (int k = 0; k < noOfTimesToLoop; k++) {
+                for (int i = 0; i < 5; i++) {
+                    month = String.valueOf(cal.get(Calendar.MONTH));
+                    year = String.valueOf(cal.get(Calendar.YEAR));
+                    code = stringBuilder.toString();
+                    code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
+                    Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
+                    apex.runApex(resolveStrNameSpace(code));
+                    cal.add(Calendar.MONTH, -1);
+                }
+                Thread.sleep(30000L);
+                waitForBatchExecutionToComplete("AdoptionAggregation");
+            }
+        }
+
+
+
+
+
+
+
+    }
 }
