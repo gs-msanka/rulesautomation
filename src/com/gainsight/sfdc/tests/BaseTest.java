@@ -32,14 +32,8 @@ public class BaseTest {
     public static TimeZone userTimezone;
     public String userDir = env.basedir;
     public AmountsAndDatesUtil adUtil = new AmountsAndDatesUtil();
-    public HashMap<String, String> monthMap = new HashMap<String, String>();
     Calendar c = Calendar.getInstance();
-
-
-    @BeforeSuite
-    public void init() throws Exception {
-        Report.logInfo("Initializing Environment");
-        env.start();
+    public HashMap<String, String > monthMap = new HashMap<String, String>(){{
         monthMap.put("0", "Jan");
         monthMap.put("1", "Feb");
         monthMap.put("2", "Mar");
@@ -52,6 +46,13 @@ public class BaseTest {
         monthMap.put("9", "Oct");
         monthMap.put("10", "Nov");
         monthMap.put("11", "Dec");
+    }};
+
+    @BeforeSuite
+    public void init() throws Exception {
+        Report.logInfo("Initializing Environment");
+        env.start();
+
         try {
             String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
