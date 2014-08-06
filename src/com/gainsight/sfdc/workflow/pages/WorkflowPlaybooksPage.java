@@ -1,8 +1,10 @@
 package com.gainsight.sfdc.workflow.pages;
 
-import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.pages.BasePage;
 
-public class WorkflowPlaybooksPage {
+import java.util.HashMap;
+
+public class WorkflowPlaybooksPage extends BasePage {
 
 	private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add']";  
 	private final String ADD_PLAYBOOK_BUTTON        = "//input[@class='gs-btn btn-add']";	//Add Playbook 
@@ -31,9 +33,9 @@ public class WorkflowPlaybooksPage {
 	/**
      * Constructor of the page, Waits for the ready indicator to be present on the page.
      */
-   /* public WorkflowPlaybooksPage() {
+    public WorkflowPlaybooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
-    }*/
+    }
     
     /**
      * Adds Playbook for the user on supplied paramters.  
