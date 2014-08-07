@@ -3,6 +3,7 @@ package com.gainsight.sfdc.workflow.pages;
 import java.util.HashMap;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.pageobject.core.Report;
@@ -13,7 +14,8 @@ import java.util.HashMap;
 public class WorkflowPlaybooksPage extends BasePage {
 
 	private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add']";  
-	private final String ADD_PLAYBOOK_BUTTON        = "//input[@class='gs-btn btn-add']";	//Add Playbook 
+	private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='add-playbtn-ctn']/input[@class='gs-btn btn-add']";	//Add Playbook on the left hand side
+	private final String ADD_PLAYBOOK_NOPB_BUTTON   = "//div[@class='no-playbooxs-ctn']/input[@class='gs-btn btn-add']";	//Add Playbook in the middle of playbook page
 	private final String SAVE_PLAYBOOK_BUTTON		= "//input[@class='gs-btn btn-save btn-save-playbook']";	//Save Playbook 
 	private final String CANCEL_PLAYBOOK_BUTTON		= "//input[@class='gs-btn btn-cancel btn-cancel-playbook']";	//Cancel Playbook
 	private final String PLAYBOOK_NAME_INPUT		= "//input[@class='form-control pb-subject']";	//Playbook Name
@@ -34,7 +36,13 @@ public class WorkflowPlaybooksPage extends BasePage {
 	private final String RELDATECOUNT_PBTASK_INPUT	= "//input[@class='form-control width40 Date__cInputCls taskParamControlDataInput']";	//Task Date
 	private final String COMMENTS_PBTASK_INPUT		= "//textarea[@class='form-control Description__cInputCls taskParamControlDataInput']";	//Task Comments/Description
 	private final String STATUS_PBTASK_BUTTON 		="//label[@class='Status__cClass taskFieldLbl ga-flabel col-sm-2 control-label']/parent::div/div/button/span";		//Task Status
+	private final String STATUS_PBTASK_BUTTON_OPTION="//span[contains(text(),'%s')]";
 	private final String PRIORITY_PBTASK_BUTTON		="//label[@class='Priority__cClass taskFieldLbl ga-flabel col-sm-2 control-label']/parent::div/div/button/span";	//Task Priority	
+	private final String PRIORITY_PBTASK_BUTTON_OPTION="//span[contains(text(),'%s')]";
+	private final String SAVE_PBTASK_BUTTON			="//input[@class='gs-btn btn-save btn-save-task']";		//Save Task
+	private final String CANCEL_PBTASK_BUTTON		="//input[@class='gs-btn btn-cancel btn-cancel-task']";		//Cancel Task
+	
+	
 	
 	/**
      * Constructor of the page, Waits for the ready indicator to be present on the page.
@@ -58,11 +66,12 @@ public class WorkflowPlaybooksPage extends BasePage {
      * </pre>
      */
     public void addplaybook(HashMap<String, String> playbookData, HashMap<String, String> taskData) {
-    	item.click(ADD_PLAYBOOK_BUTTON);
+    	wait.waitTillElementDisplayed(ADD_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
+        item.click(ADD_PLAYBOOK_BUTTON);
+        Report.logInfo("Clicked on Add Playbook button.");
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(playbookData);
         fillTaskDetails(taskData);
-        item.click(SAVE_PLAYBOOK_BUTTON);
         amtDateUtil.stalePause();
     }
     
@@ -150,8 +159,23 @@ public class WorkflowPlaybooksPage extends BasePage {
      */
     public void fillPlaybookDetails(HashMap<String, String> testdata) {
        Report.logInfo("Started filling the playbook details.");
-        
-        Report.logInfo("Finished filling the playbook details");
+       if(testdata.get("Risk") != null &&  testdata.get("Risk").equalsIgnoreCase("true")){
+    	   item.click(RISK_PBTYPE_RADIO);
+//           String isChecked = element.getElement(RISK_PBTYPE_RADIO).getAttribute("checked");
+           /*if(isChecked == null) {
+               item.click(RISK_PBTYPE_RADIO);
+           }*/
+        Report.logInfo("Finished filling the playbook details.");
+       }
+       if(testdata.get("playbookname")!=null) {
+           field.clearAndSetText(PLAYBOOK_NAME_INPUT, testdata.get("playbookname"));
+       }
+       if(testdata.get("description") != null) {
+           field.clearAndSetText(PLAYBOOK_COMMENTS_INPUT, testdata.get("description"));
+       }
+       
+       //Calling Save button
+       item.click(SAVE_PLAYBOOK_BUTTON);
     }
     
     /**
@@ -161,6 +185,7 @@ public class WorkflowPlaybooksPage extends BasePage {
      */
     public void fillTaskDetails(HashMap<String, String> testdata) {
         Report.logInfo("Stated filling the task form details.");
+        item.click(ADD_PBTASK_BUTTON);
         if(testdata.get("subject") != null) {
             field.clearAndSetText(SUBJECT_PBTASK_INPUT, testdata.get("subject"));
         }
@@ -170,12 +195,22 @@ public class WorkflowPlaybooksPage extends BasePage {
         if(testdata.get("priority") != null) {
             //element.selectFromDropDown(TASK_PRIORITY_SELECT, testdata.get("priority"));
         	element.click(PRIORITY_PBTASK_BUTTON);
+        	System.out.println("selecting option:"+String.format(PRIORITY_PBTASK_BUTTON_OPTION, testdata.get("priority")));
+			driver.findElement(By.xpath(String.format(PRIORITY_PBTASK_BUTTON_OPTION,testdata.get("priority")))).click();
+//        	element.selectFromDropDown(PRIORITY_PBTASK_BUTTON, testdata.get("priority"));
         	//element.
             
         }
         if(testdata.get("status") !=null) {
-            element.selectFromDropDown(STATUS_PBTASK_BUTTON, testdata.get("status"));
+//            element.selectFromDropDown(STATUS_PBTASK_BUTTON, testdata.get("status"));
+        	element.click(STATUS_PBTASK_BUTTON);
+        	System.out.println("selecting option:"+String.format(STATUS_PBTASK_BUTTON_OPTION, testdata.get("status")));
+			driver.findElement(By.xpath(String.format(STATUS_PBTASK_BUTTON_OPTION,testdata.get("status")))).click();
+//        	element.selectFromDropDown(STATUS_PBTASK_BUTTON, testdata.get("status"));
         }
+        
+      //Calling Save button
+        item.click(SAVE_PBTASK_BUTTON);
         Report.logInfo("Fininshed filling the task form details.");
     }
     

@@ -12,10 +12,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
+
 //import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPlaybooksPage;
+import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
 public class WorkflowPlaybooksTest extends BaseTest {
 	String[] dirs = { "wfplaybooktests" };
@@ -32,11 +34,22 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @AfterClass
     public void tearDown(){
+    	WorkflowBasePage wfb = new WorkflowBasePage();
+    	wfb.showSalesForceHeader();
         basepage.logout();
     }
     
     @Test
     public void testAllPlaybook_wf() throws BiffException, IOException {
+    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                 TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
+         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+         HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
+         HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
+         pbPage.addplaybook(pbData, taskData);
+         //Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname")));
+         //Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
+         //Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
        
     }
     

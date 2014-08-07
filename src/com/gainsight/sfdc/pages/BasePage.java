@@ -49,6 +49,7 @@ public class BasePage extends WebPage implements Constants {
     private final String MORE_TABS_LIST     = "MoreTabs_List";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
+	private final String WORKFLOW_TAB		= "//a[@title='Cockpit Tab']";
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
@@ -103,6 +104,11 @@ public class BasePage extends WebPage implements Constants {
     public RetentionBasePage clickOnRetentionTab() {
         clickOnTab(RETENTION_TAB);
         return new RetentionBasePage();
+    }
+    
+    public WorkflowBasePage clickonWorkflowTab(){
+    	clickOnTab(WORKFLOW_TAB);
+    	return new WorkflowBasePage();
     }
 
 	public SurveyBasePage clickOnSurveyTab() {
@@ -184,6 +190,7 @@ public class BasePage extends WebPage implements Constants {
         field.selectFromDropDown(String.format(TAB_SELECT, "Gainsight"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Cockpit"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Customer Success 360"), "Default On");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Cockpit"), "Default On");
 		item.click("//input[@title='Save']");
 		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]", MIN_TIME, MAX_TIME);
 	}
