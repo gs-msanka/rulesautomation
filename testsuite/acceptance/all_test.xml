@@ -17,6 +17,9 @@
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
 
+
+            <class name="com.gainsight.sfdc.api.c360.Customer360SectionsTest"/>
+
         </classes>
     </test>
 </suite>
