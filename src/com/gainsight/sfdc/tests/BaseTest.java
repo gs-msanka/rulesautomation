@@ -129,15 +129,13 @@ public class BaseTest {
     }
 
     public List<HashMap<String, String>> getMapFromDataList(String data) {
-        List<HashMap<String, String>> hm = new ArrayList();
+        List<HashMap<String, String>> hm = new ArrayList<HashMap<String, String>>();
         System.out.println(data);
         String[] dataArray = data.substring(1, data.length() - 1).split(",");
-        int i = 0;
         for (String record : dataArray) {
             if (record != null) {
                 System.out.println(record);
                 hm.add(getMapFromData("{" + record + "}"));
-                i++;
             }
         }
         return hm;

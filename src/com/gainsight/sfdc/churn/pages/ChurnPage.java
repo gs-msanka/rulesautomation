@@ -16,7 +16,7 @@ public class ChurnPage extends BasePage {
 	private final String READY_INDICATOR = "//div[@class='dummyChurnAnalyticsDetail']";
 	private final String NEW_BUTTON = "//a[contains(text(), 'New Transaction')]";
 	private final String CUSTOMER_NAME_FIELD = "//div[@class='requiredInput']/input[contains(@class,'customer-name-text')]";
-	private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
+	//private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate gs-calendar']";
 	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
 	private final String CHURN_REASON_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Reason')]";

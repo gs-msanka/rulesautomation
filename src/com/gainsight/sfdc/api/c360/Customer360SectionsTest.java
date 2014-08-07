@@ -25,7 +25,7 @@ import static us.monoid.web.Resty.*;
 public class Customer360SectionsTest {
 	private SFDCInfo sfinfo;
 	private String endPoint, sessionid;
-	Resty r;
+	Resty resty;
 	URI uri;
 	private final String c360Path = "/services/apexrest/JBCXM/Customer360";
 	private String accountQueryPath = "/services/data/v29.0/query/?q=SELECT+id+from+Account+where+name='%s'";
@@ -48,9 +48,9 @@ public class Customer360SectionsTest {
 		endPoint = sfinfo.getEndpoint();
 		sessionid = sfinfo.getSessionId();
 		uri = new URI(endPoint + c360Path);
-		r = new Resty();
-		r.withHeader("Content-Type", "application/json");
-		r.withHeader("Authorization", "Bearer " + sessionid);
+		resty = new Resty();
+		resty.withHeader("Content-Type", "application/json");
+		resty.withHeader("Authorization", "Bearer " + sessionid);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -69,7 +69,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "scorecard", accID, accName);
+		validateResponseJSON(scorecardJSON, "scorecard", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -78,7 +78,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "transactions", accID, accName);
+		validateResponseJSON(transactionsJSON, "transactions", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -87,7 +87,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "events", accID, accName);
+		validateResponseJSON(eventsJSON, "events", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -96,7 +96,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "usageData", accID, accName);
+		validateResponseJSON(usageDataJSON, "usageData", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -105,7 +105,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "accountAttr", accID, accName);
+		validateResponseJSON(accountAttrJSON, "accountAttr", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -114,7 +114,7 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "surveys", accID, accName);
+		validateResponseJSON(surveysJSON, "surveys", accID, accName);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -123,12 +123,12 @@ public class Customer360SectionsTest {
 			throws Exception {
 		String accName = testData.get("account");
 		String accID = getAccountID(testData.get("account"));
-		validateResponseJSON(summaryJSON, "features", accID, accName);
+		validateResponseJSON(featuresJSON, "features", accID, accName);
 	}
 
 	private void validateResponseJSON(String sectionJSON, String sectionName,
 			String accID, String accName) throws Exception {
-		BinaryResource result = r.bytes(uri,
+		BinaryResource result = resty.bytes(uri,
 				content(String.format(sectionJSON, accID)));
 		File tempFile = File.createTempFile(accID + "_" + sectionName, ".json");
 		File outFile = result.save(tempFile);
@@ -142,14 +142,14 @@ public class Customer360SectionsTest {
 	private String getAccountID(String name) throws Exception {
 		URI accURI = new URI(endPoint
 				+ String.format(accountQueryPath, name.replace(" ", "+")));
-		JSONResource result = r.json(accURI);
+		JSONResource result = resty.json(accURI);
 		System.out.println(result.toString());
 		return (String) result.get("records[0].Id");
 	}
 
 	private long getRenewalDays(String accID) throws Exception {
 		URI accURI = new URI(endPoint + String.format(renewalDate, accID));
-		JSONResource result = r.json(accURI);
+		JSONResource result = resty.json(accURI);
 		String rDate = (String) result
 				.get("records[0].JBCXM__NextRenewalDate__c");
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
