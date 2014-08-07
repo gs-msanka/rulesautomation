@@ -13,13 +13,13 @@ import java.util.HashMap;
  */
 public class UsageTracker360 extends Customer360Page {
 
-    String TAB_NAME             = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
-    String GO_BUTTON            = "//button[@class='go getUT' and text()='Go']";
-    String DATE_RANGE_SELECT    = "//select[@class='GainsightDummyDatePeriodSelectControl']";
-    String ACTION_SELECT        = "//select[@class='configSelect']";
-    String DATA_ROW             = "//div[@class='usagetracker-discription']";
-    String DATA_ROW_VALUE       = "Action performed: XXX in Module: XXX by user: XXXX on: XXXXXXX" ;
-    String NO_DATA_MSG          = "//div[@class='noUsage noDataFound' and contains(text(), 'No Records Found.')]";
+    private final String TAB_NAME             = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
+    private final String GO_BUTTON            = "//div[@class='usagetracker-data']/span/a[text()='Go']";
+    private final String DATE_RANGE_SELECT    = "//div[@class='usagetracker-data']/descendant::select[@class='GainsightDummyDatePeriodSelectControl']/following-sibling::button";
+    private final String ACTION_SELECT        = "//div[@class='usagetracker-data']/descendant::select[@class='configSelect']/following-sibling::button";
+    private final String DATA_ROW             = "//div[@class='usagetracker-discription']";
+    private final String DATA_ROW_VALUE       = "Action performed: XXX in Module: XXX by user: XXXX on: XXXXXXX" ;
+    private final String NO_DATA_MSG          = "//div[@class='noUsage noDataFound' and contains(text(), 'No Records Found.')]";
 
 
     public UsageTracker360() {
@@ -27,8 +27,10 @@ public class UsageTracker360 extends Customer360Page {
     }
 
     public UsageTracker360 viewUsageData(String measure, String timeInterval) {
-        item.selectFromDropDown(ACTION_SELECT, measure);
-        item.selectFromDropDown(DATE_RANGE_SELECT, timeInterval);
+        item.click(ACTION_SELECT);
+        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+measure+"')]");
+        item.click(DATE_RANGE_SELECT);
+        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+timeInterval+"')]");
         item.click(GO_BUTTON);
         return new UsageTracker360();
     }
