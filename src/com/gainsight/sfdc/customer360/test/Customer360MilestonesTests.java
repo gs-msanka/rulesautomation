@@ -1,24 +1,22 @@
 package com.gainsight.sfdc.customer360.test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
-
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 public class Customer360MilestonesTests extends BaseTest {
 	Customer360Page cp;
@@ -56,7 +54,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
+		cp.searchCustomer("Milestones Account", false, false);
 		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
@@ -118,7 +116,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyAddandEditMilestones(HashMap<String, String> testData) {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
+		cp.searchCustomer("Milestones Account", false, false);
 		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
 		
@@ -149,7 +147,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@Test(priority = 4)
 	public void verifyDeleteMilestones() {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
+		cp.searchCustomer("Milestones Account", false, false);
 		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
 		int MsNum = cm.getCurrentNoOfRows();
@@ -163,7 +161,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@Test(priority = 5)
 	public void verifyNoMilestonesMessage() {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", true);
+		cp.searchCustomer("Milestones Account", false, false);
 		cm = cp.goToUsageSection();
 		cm.gotoMilestonesSubtab();
 		// Assuming there are 4 milestones left in the page

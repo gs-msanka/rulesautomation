@@ -1,5 +1,6 @@
-List<JBCXM__C360Sections__c> c360SecList = [SELECT Id, Name FROM JBCXM__C360Sections__c WHERE Name = 'AccountAttributes'];
+List<JBCXM__C360Sections__c> c360SecList = [SELECT Id, Name, JBCXM__InCustomer360__c FROM JBCXM__C360Sections__c WHERE Name = 'AccountAttributes'];
 JBCXM__C360Sections__c c360Sec = c360SecList.get(0);
 c360Sec.JBCXM__IsActive__c = true;
+c360Sec.JBCXM__InCustomer360__c = true;
 update c360Sec;
 DELETE [SELECT Id FROM JBCXM__UIViews__c WHERE JBCXM__UITabName__c = 'Customer360'];

@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.UsageTracker360;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -37,7 +36,7 @@ public class UsageTracker360Tests  extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_1")
     public void infoMsgVerification(HashMap<String, String> testData) {
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), false, false);
         UsageTracker360 uTPage = c360Page.clickOnUsageTracker();
         uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         Assert.assertTrue(uTPage.isInfoMessageDisplayed(), "Checking weather the information message is displayed.");
@@ -46,7 +45,7 @@ public class UsageTracker360Tests  extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_2")
     public void dataVerification(HashMap<String, String> testData) {
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), false, false);
         UsageTracker360 uTPage = c360Page.clickOnUsageTracker();
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();
@@ -65,8 +64,8 @@ public class UsageTracker360Tests  extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_3")
-    public void dataVerificationandFilter(HashMap<String, String> testData) {
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
+    public void dataVerificationAndFilter(HashMap<String, String> testData) {
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), false, false);
         UsageTracker360 uTPage = c360Page.clickOnUsageTracker();
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();
@@ -85,8 +84,8 @@ public class UsageTracker360Tests  extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UT_360_4")
-    public void infoandDataVerification(HashMap<String, String> testData) {
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), true);
+    public void infoAndDataVerification(HashMap<String, String> testData) {
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("customer"), false, false);
         UsageTracker360 uTPage = c360Page.clickOnUsageTracker();
         uTPage = uTPage.viewUsageData(testData.get("measure"), testData.get("time"));
         uTPage.waitforUTDataDisplay();

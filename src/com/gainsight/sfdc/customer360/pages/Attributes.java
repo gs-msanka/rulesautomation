@@ -14,11 +14,12 @@ public class Attributes extends Customer360Page {
     private static final String READY_INDICATOR = "";
     private static final String NO_UIVIEW_CONF_INFO = "//div[@class='gs_accountAttribute']/div[@class='noDataFound']";
     private static final String ATTRIBUTES_TABLE = "//table[@class='gs_accountAttribute_grid']";
+    private static final String ACCOUNT_ATTRIBUTES_SECTION_TAB = "//ul[@class='nav']/li[@class='accountattributes']";
 
 
-    public Attributes(String secName) {
+    public Attributes() {
         Report.logInfo("Account Attributes Page Loading");
-        wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[contains(text(), '"+secName+"')]", MIN_TIME,MAX_TIME);
+        wait.waitTillElementDisplayed(ACCOUNT_ATTRIBUTES_SECTION_TAB, MIN_TIME,MAX_TIME);
     }
 
     public boolean isNoUIViewConfMsgDisplayed() {

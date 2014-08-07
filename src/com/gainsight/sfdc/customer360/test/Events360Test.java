@@ -45,7 +45,7 @@ public class Events360Test extends BaseTest {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         taskData.put("date", getDatewithFormat(0));
         ret.addEvent(eventData, taskData);
@@ -59,7 +59,7 @@ public class Events360Test extends BaseTest {
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -76,7 +76,7 @@ public class Events360Test extends BaseTest {
         taskData.put("date",getDatewithFormat(0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
         soql.deleteQuery(resolveStrNameSpace(script));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -93,7 +93,7 @@ public class Events360Test extends BaseTest {
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -126,7 +126,7 @@ public class Events360Test extends BaseTest {
         eventData.put("schedule", getDatewithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -164,7 +164,7 @@ public class Events360Test extends BaseTest {
         taskData.put("date", getDatewithFormat(0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
         soql.deleteQuery(resolveStrNameSpace(script));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
@@ -190,7 +190,7 @@ public class Events360Test extends BaseTest {
         eventData.put("enddate", getDatewithFormat(70));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         Assert.assertTrue(ret.isInfoMessageDisplayed(), "Checking the information message displayed");
         ret.addEvent(eventData, taskData);
@@ -207,7 +207,7 @@ public class Events360Test extends BaseTest {
         updateEventData.put("schedule", getDatewithFormat(3));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         taskData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");

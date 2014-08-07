@@ -284,7 +284,7 @@ public class Customer360Scorecard extends Customer360Page {
         }
     }
 		clickOnC360Tab();
-		searchCustomer("Scorecard Account", true);
+		searchCustomer("Scorecard Account", false, false);
 		goToScorecardSection();
 	}
 }

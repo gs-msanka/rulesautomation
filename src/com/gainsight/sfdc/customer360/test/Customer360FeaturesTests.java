@@ -1,19 +1,20 @@
 package com.gainsight.sfdc.customer360.test;
 
-import java.util.*;
-
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.customer360.pages.Customer360Features;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
+import org.openqa.selenium.By;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.Assert;
-import org.openqa.selenium.By;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.customer360.pages.Customer360Features;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Customer360FeaturesTests extends BaseTest {
 
@@ -44,7 +45,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
 		// Test if all the features in the excel are displayed (pre added features)
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", true);
+		cp.searchCustomer("Via Systems", false, false);
 		cf = (Customer360Features) cp.goToFeaturesSection();
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
 		System.out.println("Prodlistsize=" + ProdList.size());
@@ -91,7 +92,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyEditFeatures(HashMap<String, String> testData) {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", true);
+		cp.searchCustomer("Via Systems", false, false);
 		cf = (Customer360Features) cp.goToFeaturesSection();
 		//In the Edit features form check on Licensed for a Feature and verify if same is reflected in features module
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));

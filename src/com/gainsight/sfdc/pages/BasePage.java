@@ -15,7 +15,6 @@ import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -183,6 +182,7 @@ public class BasePage extends WebPage implements Constants {
 		field.selectFromDropDown(String.format(TAB_SELECT, "Transactions"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Insights"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Gainsight"), "Default On");
+        field.selectFromDropDown(String.format(TAB_SELECT, "Cockpit"), "Default On");
         field.selectFromDropDown(String.format(TAB_SELECT, "Customer Success 360"), "Default On");
 		item.click("//input[@title='Save']");
 		wait.waitTillElementPresent("//a[contains(.,'System Administrator')]", MIN_TIME, MAX_TIME);
@@ -267,8 +267,8 @@ public class BasePage extends WebPage implements Constants {
 		
 	}
 	public void enterDate(String identifier, String date) {
-		field.click(identifier);
-		field.click("//td[@class='weekday']");
+		//field.click(identifier);
+		//field.click("//td[@class='weekday']");
 		field.clearAndSetText(identifier, date);
 	}
 

@@ -61,7 +61,7 @@ public class Relatedlisttests extends BaseTest {
                 Report.logInfo(data);
             }
         }
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
@@ -74,7 +74,7 @@ public class Relatedlisttests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_3")
     public void stdContactAddFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(testData.get("ObjectId")));
@@ -86,7 +86,7 @@ public class Relatedlisttests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_4")
     public void stdContactViewFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values"));
@@ -98,7 +98,7 @@ public class Relatedlisttests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_5")
     public void stdContactEditViewFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values"));
@@ -108,9 +108,9 @@ public class Relatedlisttests extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_3")
-    public void custObjEditVerif(HashMap<String, String> testData) {
+    public void custObjEditVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
@@ -129,9 +129,9 @@ public class Relatedlisttests extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_4")
-    public void custObjViewVerif(HashMap<String, String> testData) {
+    public void custObjViewVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
@@ -152,7 +152,7 @@ public class Relatedlisttests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_6")
     public void standObjNoDataInfoVerif(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
@@ -165,7 +165,7 @@ public class Relatedlisttests extends BaseTest {
             createEventsFromScript();
         }
         String relatedListName = testData.get("Section");
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
@@ -198,7 +198,7 @@ public class Relatedlisttests extends BaseTest {
                 Report.logInfo(data);
             }
         }
-        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), true);
+        Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
         for(String data : dataList) {

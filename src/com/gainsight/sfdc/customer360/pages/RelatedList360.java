@@ -135,8 +135,12 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public RelatedList360 selectUIView(String secName, String viewName) {
-        String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[@class='gs_edit_icon']/select[@class='case_uiviews']";
-        item.selectFromDropDown(xPath, viewName);
+        String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[@class='case_uiviews']"+
+                            "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+        item.click(xPath);
+        wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']", MIN_TIME, MAX_TIME);
+        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[text()='"+viewName+"']");
+        amtDateUtil.stalePause();
         return new RelatedList360(secName);
     }
 

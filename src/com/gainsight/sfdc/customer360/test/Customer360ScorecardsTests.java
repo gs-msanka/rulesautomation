@@ -1,13 +1,5 @@
 package com.gainsight.sfdc.customer360.test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
@@ -17,6 +9,12 @@ import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.HashMap;
 
 public class Customer360ScorecardsTests extends BaseTest {
 
@@ -56,7 +54,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
         apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
         cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Scorecard Account", true);
+		cp.searchCustomer("Scorecard Account", false, false);
 		cs = (Customer360Scorecard) cp.goToScorecardSection();
 	}
 	

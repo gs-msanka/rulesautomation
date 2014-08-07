@@ -53,7 +53,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret = ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
@@ -76,7 +76,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
@@ -101,7 +101,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
@@ -126,7 +126,7 @@ public class Alerts360Test extends BaseTest {
         List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
         AlertCardLabel alabel = new AlertCardLabel();
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alabel.setLabel5("Alert ASV");
@@ -168,7 +168,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alertData.put(alabel.getLabel1(), alertData.get("status"));
@@ -193,7 +193,7 @@ public class Alerts360Test extends BaseTest {
         List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
         AlertCardLabel alabel = new AlertCardLabel();
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         ret.addAlert(alertData);
         alabel.setLabel5("Alert ASV");
@@ -237,7 +237,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         Assert.assertTrue(ret.isAlertInfoMsgDisplayed(), "Checking No Alerts Found Message Display");
         ret.addAlert(alertData);
@@ -261,7 +261,7 @@ public class Alerts360Test extends BaseTest {
         alabel.setLabel2("Severity");
         alabel.setLabel1("Status");
         alertData.put("date", getDatewithFormat(0));
-        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), true);
+        Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(alertData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetAlertsSec();
         Assert.assertTrue(ret.isAlertInfoMsgDisplayed(), "Checking No Alerts Found Message Display");
         ret.addAlert(alertData);

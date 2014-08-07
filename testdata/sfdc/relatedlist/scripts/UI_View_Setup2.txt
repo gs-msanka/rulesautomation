@@ -8,7 +8,10 @@ JBCXM__C360Sections__c c360Sec1 = new JBCXM__C360Sections__c(JBCXM__AccountRefer
 															 JBCXM__DisplayLabel__c = 'Gainsight-Tasks',
 															 JBCXM__IsActive__c = true,
 															 JBCXM__isStandardObject__c = false,
-															 JBCXM__ObjectId__c = objectId,
+															 JBCXM__InCustomer360__c = true,
+                                                             JBCXM__InAccountWidget__c = true,
+                                                             JBCXM__InOpportunityWidget__c = true,
+                                                             JBCXM__ObjectId__c = objectId,
 															 JBCXM__ObjectName__c = 'JBCXM__CSTask__c',
 															 JBCXM__Type__c = 'RelatedList');
 insert c360Sec1;

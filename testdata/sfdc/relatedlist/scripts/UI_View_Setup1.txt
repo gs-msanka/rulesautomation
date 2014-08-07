@@ -7,6 +7,9 @@ JBCXM__C360Sections__c c360Sec = new JBCXM__C360Sections__c(JBCXM__AccountRefere
 															 JBCXM__IsActive__c = true,
 															 JBCXM__isStandardObject__c = true,
 															 JBCXM__ObjectId__c = '003',
+															 JBCXM__InCustomer360__c = true,
+                                                             JBCXM__InAccountWidget__c = true,
+                                                             JBCXM__InOpportunityWidget__c = true,
 															 JBCXM__ObjectName__c = 'Contact',
 															 JBCXM__Type__c = 'RelatedList');
 insert c360Sec;
