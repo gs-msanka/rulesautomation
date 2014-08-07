@@ -5,7 +5,7 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class WorkflowBasePage extends BasePage{
 	
-	private final String READY_INDICATOR   			= "//a[@title='Cockpit Tab - Selected']";	
+	private final String READY_INDICATOR   			= "//a[@title='Cockpit Tab']";	
 	private final String LISTVIEW_TAB         		= "//a[@class='workflow-list require-tooltip']";	
     private final String CALENDARVIEW_TAB         	= "//a[@class='workflow-calendar require-tooltip']";
     private final String OPERATIONALREPORTING_TAB   = "//a[@class='workflow-reports require-tooltip']";

@@ -58,12 +58,12 @@ public class WorkflowPlaybooksPage extends BasePage {
      * </pre>
      */
     public void addplaybook(HashMap<String, String> playbookData, HashMap<String, String> taskData) {
-		/*item.click(ADD_PLAYBOOK_BUTTON);
-        wait.waitTillElementDisplayed(CREATE_BUTTON, MIN_TIME, MAX_TIME);
+    	item.click(ADD_PLAYBOOK_BUTTON);
+        wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(playbookData);
         fillTaskDetails(taskData);
         item.click(SAVE_PLAYBOOK_BUTTON);
-        amtDateUtil.stalePause();*/
+        amtDateUtil.stalePause();
     }
     
     /**
@@ -149,36 +149,9 @@ public class WorkflowPlaybooksPage extends BasePage {
      * @return void
      */
     public void fillPlaybookDetails(HashMap<String, String> testdata) {
-        /*Report.logInfo("Started filling the playbook details.");
-        if(testdata.get("alert") != null &&  testdata.get("alert").equalsIgnoreCase("true")){
-            String isChecked = element.getElement(ISALERT_PLAYBOOK_CHECK).getAttribute("checked");
-            if(isChecked == null) {
-                item.click(ISALERT_PLAYBOOK_CHECK);
-            }
-        } else if(testdata.get("alert").equalsIgnoreCase("false")) {
-            String isChecked = element.getElement(ISALERT_PLAYBOOK_CHECK).getAttribute("checked");
-            if(isChecked != null) {
-                item.click(ISALERT_PLAYBOOK_CHECK);
-            }
-        }
-        if(testdata.get("event") != null  && testdata.get("event").equalsIgnoreCase("true")) {
-            String isChecked = element.getElement(ISEVENT_PLAYBOOK_CHECK).getAttribute("checked");
-            if(isChecked == null) {
-                item.click(ISEVENT_PLAYBOOK_CHECK);
-            }
-        } else if(testdata.get("event") != null  && testdata.get("event").equalsIgnoreCase("false")) {
-            String isChecked = element.getElement(ISEVENT_PLAYBOOK_CHECK).getAttribute("checked");
-            if(isChecked != null) {
-                item.click(ISEVENT_PLAYBOOK_CHECK);
-            }
-        }
-        if(testdata.get("playbookname")!=null) {
-            field.clearAndSetText(PBNAME_INPUT, testdata.get("playbookname"));
-        }
-        if(testdata.get("description") != null) {
-            field.clearAndSetText(PBDES_INPTU, testdata.get("description"));
-        }
-        Report.logInfo("Finished filling the playbook details");*/
+       Report.logInfo("Started filling the playbook details.");
+        
+        Report.logInfo("Finished filling the playbook details");
     }
     
     /**
@@ -187,23 +160,23 @@ public class WorkflowPlaybooksPage extends BasePage {
      * @return void
      */
     public void fillTaskDetails(HashMap<String, String> testdata) {
-        /*Report.logInfo("Stated filling the task form details.");
+        Report.logInfo("Stated filling the task form details.");
         if(testdata.get("subject") != null) {
-            field.clearAndSetText(TASK_SUB_INPUT, testdata.get("subject"));
+            field.clearAndSetText(SUBJECT_PBTASK_INPUT, testdata.get("subject"));
         }
         if(testdata.get("date") != null) {
-            field.clearAndSetText(TASK_RELDATECOUNT_INPUT, testdata.get("date"));
+            field.clearAndSetText(RELDATECOUNT_PBTASK_INPUT, testdata.get("date"));
         }
         if(testdata.get("priority") != null) {
             //element.selectFromDropDown(TASK_PRIORITY_SELECT, testdata.get("priority"));
-        	element.click(TASK_PRIORITY_SELECT);
+        	element.click(PRIORITY_PBTASK_BUTTON);
         	//element.
             
         }
         if(testdata.get("status") !=null) {
-            element.selectFromDropDown(TASK_STATUS_SELECT, testdata.get("status"));
+            element.selectFromDropDown(STATUS_PBTASK_BUTTON, testdata.get("status"));
         }
-        Report.logInfo("Fininshed filling the task form details.");*/
+        Report.logInfo("Fininshed filling the task form details.");
     }
     
     public void editPlaybook_wf(){
