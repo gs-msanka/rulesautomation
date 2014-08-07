@@ -1,8 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 import org.openqa.selenium.By;
 
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-
 public class Customer360Features extends Customer360Page{
 
 	private final String EDIT_FEATURES_ICON="//a[text()='Edit Features']";
@@ -55,13 +53,13 @@ public class Customer360Features extends Customer360Page{
 	
 	public boolean isHeaderPresent()
 	{
-		wait.waitTillElementPresent(FEATURES_TABLE_HEADER, 1,30);
+		wait.waitTillElementPresent(FEATURES_TABLE_HEADER, MIN_TIME, MAX_TIME);
 		return true;
 	}
 	
 	public boolean isDataGridPresent()
 	{
-		wait.waitTillElementPresent(FEATURES_TABLE_DATA, 1,30);
+		wait.waitTillElementPresent(FEATURES_TABLE_DATA, MIN_TIME, MAX_TIME);
 		return true;
 	}
 

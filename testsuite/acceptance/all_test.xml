@@ -16,9 +16,10 @@
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
-
+            <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
 
             <class name="com.gainsight.sfdc.api.c360.Customer360SectionsTest"/>
+
 
         </classes>
     </test>
