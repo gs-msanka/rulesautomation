@@ -15,6 +15,7 @@ import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
