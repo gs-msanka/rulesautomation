@@ -1,55 +1,49 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.tests.BaseTest;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
-import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.SOQLUtil;
+import java.util.Arrays;
+import java.util.List;
 
 public class Customer360Scorecard extends Customer360Page {
 	
-	
-	private final String READY_INDICATOR = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
+	private final String READY_INDICATOR            = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
 
-	private final String OVERALL_SCORE = "//div[@class='score-area']/ul/li[@class='score']";
-	private final String OVERALL_SCORE_BACKGROUND="//div[@class='overallscore clearfix']/div[@style='background-color:%s;' and @class='score-area']";
-	private final String OVERALL_TREND = "//div[@class='score-area']/ul/li[@class='score-trend trend-%s']";// %s can	be up,down or flat
+	private final String OVERALL_SCORE              = "//div[@class='score-area']/ul/li[@class='score']";
+	private final String OVERALL_SCORE_BACKGROUND   = "//div[@class='overallscore clearfix']/div[@style='background-color: %s;' and @class='score-area']";
+	private final String OVERALL_TREND              = "//div[@class='score-area']/ul/li[@class='score-trend trend-%s']";// %s can	be up,down or flat
+	private final String OVERALL_SUMMARY            = "//div[@class='discription']";
+	private final String EDIT_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']";
+	private final String SAVE_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']/parent::div/div[@class='save-options clearfix']/a[@data-action='SAVE']";
+	private final String CUSTOMER_GOALS_HEADER      = "div.goalsheader.clearfix";
+	private final String CUSTOMER_GOALS             = "//div[@class='goalslist_content' and @title='Click to edit']";
+	private final String EDIT_CUSTOMER_GOALS        = "//div[@class='goalslist_content' and @contenteditable='true']";
+	private final String SAVE_CUSTOMER_GOALS        = "//div[@class='goalslist_content' and @contenteditable='true']/parent::div//a[@data-action='SAVE']";
+    private final String GROUP_LABEL                = "//div[@class='matrix-heading']/h2[contains(.,'%s')]";
+	private final String MEASURE_TITLE              = "//div[@class='floatleft heading' and @title='%s']"; // %s is measure name
+	private final String MEASURE_TREND              = "//div[@title='%s']/following-sibling::div[@class='floatleft trend trend-%s']"; // 2nd %s can be up,down or flat
+	private final String MEASURE_SCORE              = "//div[@title='%s']/parent::div/descendant::div/div[@title='Click to edit']";
+	private final String MEASURE_SCORE_SAVE         = "//div[contains(text(), '%s')]/parent::div/div[@class='sliderH' and contains(@id, 'gs')]/descendant::a[@data-action='SAVE']";
+	private final String MEASURE_COMMENTS           = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container']/div/div[@class='text-edit-area']";
+	private final String MEASURE_COMMENTS_EDIT      = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container edit_on']/div/div[@class='text-edit-area']"; // %s is measure
+	private final String MEASURE_COMMENTS_SAVE      = "//div[contains(.,'%s') and @class='card-holder']//div[@class='editable comment-container edit_on']//a[@data-action='SAVE']";
+	private final String MEASURE_FOOTER_MSG         = "//div[@title='%s']/parent::div/parent::div/div[@class='status']";
+    private final String SCORECARD_COMPACT_VIEW      = "//div[@class='gs-views-main']/a[@data-tabname='DETAIL-COMPACT']";
+    private final String SCORECARD_DETAIL_VIEW       = "//div[@class='gs-views-main']/a[@data-tabname='DETAIL-FULL']";
 
-	private final String OVERALL_SUMMARY = "//div[@class='discription']";
-	private final String EDIT_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']";
-	private final String SAVE_OVERALL_SUMMARY = "//div[@class='discription' and @contenteditable='true']/parent::div/div[@class='save-options clearfix']/a[@data-action='SAVE']";
+    private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
+    private final String HIDE_OR_SHOW_CUSTOMER_GOALS = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-down']";// or//div[@class='gs-head-tgl-btn goals-arrow-down']
 
-	private final String CUSTOMER_GOALS_HEADER="div.goalsheader.clearfix";
-	private final String CUSTOMER_GOALS = "//div[@class='goalslist_content' and @title='Click to edit']";
-	private final String EDIT_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']";
-	private final String SAVE_CUSTOMER_GOALS = "//div[@class='goalslist_content' and @contenteditable='true']/parent::div//a[@data-action='SAVE']";
-	private final String HIDE_OR_SHOW_CUSTOMER_GOALS = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-down']";// or//div[@class='gs-head-tgl-btn goals-arrow-down']
-
-	private final String GROUP_LABEL = "//div[@class='matrix-heading']/h2[contains(.,'%s')]";
-
-	// private final String MEASURE_CARD="";
-	private final String MEASURE_TITLE = "//div[@class='floatleft heading' and @title='%s']"; // %s is measure name
-	private final String MEASURE_TREND = "//div[@title='%s']/following-sibling::div[@class='floatleft trend trend-%s']"; // 2nd %s can be up,down or flat																			
-	private final String MEASURE_SCORE = "//div[@title='%s']/parent::div/descendant::div/div[@title='Click to edit']";
-	private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
-	private final String MEASURE_SCORE_SAVE = "//div[contains(text(), '%s')]/parent::div/div[@class='sliderH' and contains(@id, 'gs')]/descendant::a[@data-action='SAVE']";
-	private final String MEASURE_COMMENTS = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container']/div/div[@class='text-edit-area']";
-	private final String MEASURE_COMMENTS_EDIT = "//div[@title='%s']/parent::div/following-sibling::div[@class='editable comment-container edit_on']/div/div[@class='text-edit-area']"; // %s is measure
-	private final String MEASURE_COMMENTS_SAVE = "//div[contains(.,'%s') and @class='card-holder']//div[@class='editable comment-container edit_on']//a[@data-action='SAVE']";
-	private final String MEASURE_FOOTER_MSG = "//div[@title='%s']/parent::div/parent::div/div[@class='status']";
 
 	public Customer360Scorecard() {
 		wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+        item.click(SCORECARD_DETAIL_VIEW);
+        amtDateUtil.stalePause();
 	}
 
 	public String getOverallScore() {

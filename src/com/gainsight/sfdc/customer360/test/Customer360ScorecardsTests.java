@@ -38,7 +38,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		 String Scorecard_Metrics="JBCXM__ScorecardMetric__c";
 	     String[] SCMetric_ExtId=new String[]{"SCMetric ExternalID"};
 	     try {
-	           cObjFields.createTextFields(removeNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+	           cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
 	     } catch (Exception e) {       	
 	           Report.logInfo("Failed to create fields");
 	           e.printStackTrace();
@@ -58,12 +58,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 		cs = (Customer360Scorecard) cp.goToScorecardSection();
 	}
 	
-	  public String removeNameSpace(String s) {
-	        if(!isPackageInstance) {
-	            return s.replaceAll("JBCXM__", "");
-	        }
-	        return s;
-	    }
+
 	//@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
 	//@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Score_Num")
 	public void addScoreWithNumeric(HashMap<String, String> testData) {

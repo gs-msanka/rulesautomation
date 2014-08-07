@@ -20,6 +20,9 @@ insert(SCcust);
 //Enable scorecard section in c360
 JBCXM__C360Sections__c sections=[select JBCXM__IsActive__c from JBCXM__C360Sections__c where Name='Scorecard'];
 sections.JBCXM__IsActive__c=true;
+sections.JBCXM__InAccountWidget__c=true;
+sections.JBCXM__InCustomer360__c=true;
+sections.JBCXM__InOpportunityWidget__c=true;
 update(sections);
 
 //----------------------------------------------------------------------------------------------------------//
