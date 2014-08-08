@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public class Customer360Page extends BasePage {
 
+    private final String ACC_INS_NAME_INPUT        = "//input[contains(@class, 'search_input search-field gs-left-noradius ui-autocomplete-input' and @type='text')]";
     private final String READY_INDICATOR        = "//input[@placeholder='Enter customer name' and @name='search_text']";
 	private final String LOADING_IMAGES         = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION       = "//div[@class='gs_navtabs']//a[text()='%s']";
@@ -114,8 +115,8 @@ public class Customer360Page extends BasePage {
 
             }
         }
-        driver.findElement(By.xpath(READY_INDICATOR)).sendKeys(name);
-        driver.findElement(By.xpath(READY_INDICATOR)).sendKeys(Keys.ENTER);
+        driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(name);
+        driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
         wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
         Report.logInfo("Customer Search Completed.");
