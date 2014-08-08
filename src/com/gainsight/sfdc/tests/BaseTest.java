@@ -60,8 +60,8 @@ public class BaseTest {
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
             env.launchBrower();
             basepage = new BasePage();
-            userLocale=soql.getUserLocale();
-            userTimezone=TimeZone.getTimeZone(soql.getUserTimeZone());;
+            userLocale = soql.getUserLocale();
+            userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
             Report.logInfo("Initializing Base Page : " + basepage);
             if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
                 basepage.login();
@@ -205,9 +205,10 @@ public class BaseTest {
 
     }
 
-    public String getDatewithFormat(int i) {
+    public String getDateWithFormat(int i) {
         String date = null;
-        Calendar c = Calendar.getInstance();
+        TimeZone tz     = TimeZone.getTimeZone(soql.getUserTimeZone());
+        Calendar c = Calendar.getInstance(tz);
         c.add(Calendar.DATE, i);
         if (userLocale.contains("en_US")) {
             DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
@@ -221,21 +222,6 @@ public class BaseTest {
         return date;
     }
 
-    public String getDateFormat(int i) {
-        String date = null;
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, i);
-        if (userLocale.contains("en_US")) {
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            date = dateFormat.format(c.getTime());
-
-        } else if (userLocale.contains("en_IN")) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            date = dateFormat.format(c.getTime());
-        }
-        Report.logInfo(String.valueOf(date));
-        return date;
-    }
 
     public void deletePickList() {
         String DELETE_SCRIPT_FILE = TestEnvironment.basedir + "/testdata/sfdc/Administration/Picklist_Delte_Script.txt";

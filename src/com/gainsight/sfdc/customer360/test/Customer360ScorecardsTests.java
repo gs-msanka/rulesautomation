@@ -1,9 +1,6 @@
 package com.gainsight.sfdc.customer360.test;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -21,38 +18,34 @@ public class Customer360ScorecardsTests extends BaseTest {
 	Customer360Page cp;
 	Customer360Scorecard cs;
 	final String TEST_DATA_FILE = "testdata/sfdc/Scorecard/ScorecardTests.xls";
-	static boolean isPackageInstance = false;
-	
+
 	public enum Scheme {
 		NUMERIC, GRADE, COLOR
 	};
 	  
 	@BeforeClass
 	public void setUp() {
-		TestEnvironment env = new TestEnvironment();
-	    isPackageInstance = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
 		Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
-		System.out
-				.println("Starting Customer 360 Scorecard module Test Cases...");
-		CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-		 String Scorecard_Metrics="JBCXM__ScorecardMetric__c";
-	     String[] SCMetric_ExtId=new String[]{"SCMetric ExternalID"};
-	     try {
-	           cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-	     } catch (Exception e) {       	
-	           Report.logInfo("Failed to create fields");
-	           e.printStackTrace();
-	     }
-	        
-		 apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/scorecard.apex", isPackageInstance());
-		 
-		basepage.login();
+		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
+        String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
+        String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
+        try {
+          //  cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+        } catch (Exception e) {
+            Report.logInfo("Failed to create fields");
+            e.printStackTrace();
+            throw new RuntimeException("Unable to create fields for scorecard section");
+
+        }
+        //apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/scorecard.apex", isPackageInstance());
+
+        basepage.login();
 		
-		AdministrationBasepage adm=basepage.clickOnAdminTab();
-        AdminScorecardSection as=adm.clickOnScorecardSetion();
-        as.enableScorecard();
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
-        apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
+		//AdministrationBasepage adm=basepage.clickOnAdminTab();
+        //AdminScorecardSection as=adm.clickOnScorecardSetion();
+        //as.enableScorecard();
+		//apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
+        //apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
         cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Scorecard Account", false, false);
 		cs = (Customer360Scorecard) cp.goToScorecardSection();

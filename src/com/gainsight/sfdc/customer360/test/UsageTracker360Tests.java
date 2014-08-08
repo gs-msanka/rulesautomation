@@ -53,7 +53,7 @@ public class UsageTracker360Tests  extends BaseTest {
         for(int i=0; i <= 10 ; i ++) {
             if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
-                usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
+                usageData.put("date", getDateWithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
         }
@@ -73,7 +73,7 @@ public class UsageTracker360Tests  extends BaseTest {
         for(int i=0; i <= 10 ; i ++) {
             if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
-                usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
+                usageData.put("date", getDateWithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
         }
@@ -93,7 +93,7 @@ public class UsageTracker360Tests  extends BaseTest {
         for(int i=0; i <= 10 ; i ++) {
             if(testData.get("UsageData"+i) != null) {
                 HashMap<String, String> usageData = getMapFromData(testData.get("UsageData"+i));
-                usageData.put("date", getDatewithFormat(Integer.valueOf(usageData.get("date"))));
+                usageData.put("date", getDateWithFormat(Integer.valueOf(usageData.get("date"))));
                 udList.add(usageData);
             }
         }

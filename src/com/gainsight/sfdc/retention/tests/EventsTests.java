@@ -70,11 +70,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_030");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(365));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(365));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
 
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -91,11 +91,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_031");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(300));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(300));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
 
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
@@ -112,9 +112,9 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_033");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         eventsPage.changeStatus(eventData, "In Progress");
@@ -129,11 +129,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_032");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(2));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(2));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -147,11 +147,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_029");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(60));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(60));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthlyNth' " +
@@ -167,11 +167,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_028");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(40));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(40));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursMonthly' " +
@@ -186,11 +186,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_027");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(3));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(3));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -207,11 +207,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_026");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(4));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(4));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -228,11 +228,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_025");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
-        eventData.put("startdate", getDatewithFormat(0));
-        eventData.put("enddate", getDatewithFormat(1));
+        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("startdate", getDateWithFormat(0));
+        eventData.put("enddate", getDateWithFormat(1));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         Assert.assertTrue(eventsPage.verifyisRecurringEvent(eventData));
@@ -250,11 +250,11 @@ public class EventsTests extends BaseTest {
         List<HashMap<String, String>> taskDataList  =  new ArrayList<HashMap<String, String>>();
         HashMap<String, String> testData            = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_024");
         HashMap<String, String> eventData           = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData            = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         HashMap<String, String> task1               = getMapFromData(testData.get("task1"));
-        task1.put("date", getDatewithFormat(0));
+        task1.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         taskDataList.add(task1);
@@ -276,17 +276,17 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_018");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         HashMap<String, String> task1       = getMapFromData(testData.get("task1"));
-        task1.put("date", getDatewithFormat(1));
+        task1.put("date", getDateWithFormat(1));
         HashMap<String, String> task2       = getMapFromData(testData.get("task2"));
-        task2.put("date", getDatewithFormat(2));
+        task2.put("date", getDateWithFormat(2));
         HashMap<String, String> task3       = getMapFromData(testData.get("task3"));
-        task3.put("date", getDatewithFormat(3));
+        task3.put("date", getDateWithFormat(3));
         HashMap<String, String> task4       = getMapFromData(testData.get("task4"));
-        task4.put("date", getDatewithFormat(4));
+        task4.put("date", getDateWithFormat(4));
         List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
         taskDataList.add(task1);
         taskDataList.add(task2);
@@ -310,11 +310,11 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_017");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         HashMap<String, String> task1       = getMapFromData(testData.get("task1"));
-        task1.put("date", getDatewithFormat(0));
+        task1.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData), "Checking weather the event is present.");
         List<HashMap<String, String>> taskDataList =  new ArrayList<HashMap<String, String>>();
@@ -332,9 +332,9 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_016");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.changeStatus(eventData, "In Progress");
@@ -347,9 +347,9 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_004");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.changeStatus(eventData, "Complete");
@@ -363,9 +363,9 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_003");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
         eventsPage.deleteEvent(eventData);
@@ -378,9 +378,9 @@ public class EventsTests extends BaseTest {
         eventsPage.waitTillEventCardsLoad();
         HashMap<String, String> testData    = testDataLoader.getDataFromExcel(TESTDATA_DIR+"EventsTests.xls", "Event_001");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDatewithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDatewithFormat(0));
+        taskData.put("date", getDateWithFormat(0));
         eventsPage.addEventandTask(eventData, taskData);
         Assert.assertTrue(eventsPage.isEventDisplayed(eventData));
     }
