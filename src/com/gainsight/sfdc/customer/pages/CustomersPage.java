@@ -21,7 +21,7 @@ public class CustomersPage extends CustomerBasePage {
 
     private final String MORE_ICON            = "//div[@class='gs-moreopt-btn']";
     private final String NEW_CUSTOMER_LINK    = "//a[contains(text(), 'New Customer')]";
-    private final String ACC_NAME_INPUT       = "//input[@class='search_input search-field gs-left-noradius ui-autocomplete-input' and @type='text']";
+    private final String ACC_NAME_INPUT       = "//input[@placeholder='Enter customer name' and @name='search_text']";
     private final String AUTO_SELECT_LIST     = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
     private final String CUSTOMER_SAVE        = "//input[@class='save-customer btn-save' and @value='Save']";
     private final String COMMENTS_INPUT       ="//textarea[@class='commentArea']";
