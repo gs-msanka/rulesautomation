@@ -22,7 +22,7 @@ public class Customer360Page extends BasePage {
     private final String CUST_SERCHBY_SELECT    = "//div[@class='gs-cusstomerseach-icon']";
     //private final String SEARCH_ICON          = "//div[@class='search_input_btn']";
     private final String CUST_SELECT_LIST       = "//li[@class='ui-menu-item' and @role = 'presentation']";
-    private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
+   // private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
     private final String DEBOOK_TRN_CONFIRM     = "//div[@class='gs_tsn_confirmation']";
     private final String DEBOOK_OK_BTN	        ="//div[@class='modal-footer']/a[text()='Ok']";
 
@@ -32,10 +32,10 @@ public class Customer360Page extends BasePage {
 
     private static final String ALERT_SECTION_TAB           = "//ul[@class='alert_tab_nav active']/li[@data-attr='alerts']";
     private static final String EVENT_SECTION_TAB           = "//ul[@class='alert_tab_nav active']/li[@data-attr='events']";
-    private static final String USAGE_SUB_ADOPTION_TAB      = "//ul[@class='alert_tab_nav']/li[@data-tabname='Adoption']";
-    private static final String USAGE_SUB_MILESTONES_TAB    = "//ul[@class='alert_tab_nav']/li[@data-tabname='Milestones']";
+    //private static final String USAGE_SUB_ADOPTION_TAB      = "//ul[@class='alert_tab_nav']/li[@data-tabname='Adoption']";
+    //private static final String USAGE_SUB_MILESTONES_TAB    = "//ul[@class='alert_tab_nav']/li[@data-tabname='Milestones']";
     private static final String USAGE_SUB_TRACKER_TAB       = "//ul[@class='alert_tab_nav']/li[@data-tabname='UsageTracker']";
-    private static final String USAGE_SUB_SECTION_TAB       = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
+    //private static final String USAGE_SUB_SECTION_TAB       = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
 
 	public Customer360Page() {
         Report.logInfo("360 Page Loading");

@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.helpers;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -10,8 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.TimeZone;
-import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.tests.BaseTest;
 
