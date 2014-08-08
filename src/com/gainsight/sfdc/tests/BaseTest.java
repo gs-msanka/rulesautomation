@@ -27,9 +27,9 @@ public class BaseTest {
             + generatePath(dirs);
     public static SOQLUtil soql = new SOQLUtil();
     public ApexUtil apex = new ApexUtil();
-    protected static BasePage basepage = new BasePage();
-    public  static String userLocale=soql.getUserLocale();;
-    public  static TimeZone userTimezone=TimeZone.getTimeZone(soql.getUserTimeZone());;
+    protected static BasePage basepage;
+    public  static String userLocale;
+    public  static TimeZone userTimezone;
     public String userDir = TestEnvironment.basedir;
     public AmountsAndDatesUtil adUtil = new AmountsAndDatesUtil();
     Calendar c = Calendar.getInstance();
@@ -59,6 +59,9 @@ public class BaseTest {
             String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
             env.launchBrower();
+            basepage = new BasePage();
+            userLocale=soql.getUserLocale();
+            userTimezone=TimeZone.getTimeZone(soql.getUserTimeZone());;
             Report.logInfo("Initializing Base Page : " + basepage);
             if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
                 basepage.login();
