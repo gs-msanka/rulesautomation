@@ -16,7 +16,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String ADOP_CHART                         = "//div[@class='trend_data_viz']/div[@class='highcharts-container']";
     private final String PERIOD_WEEK_SELECT_BUTTON          = "//div[@class='upto_sel']/select[contains(@class,'no_of_weeks no_of_weeks_view')]/following-sibling::button";
     private final String PERIOD_MONTH_SELECT_BUTTON         = "//div[@class='upto_sel']/select[contains(@class,'no_of_month no_of_month_view')]/following-sibling::button";
-    private final String CUSTOMER_NAME_INPUT                = "//input[@class='search_input search-field ui-autocomplete-input']";
+    private final String CUSTOMER_NAME_INPUT                = "//input[@class='search_input search-field gs-left-noradius ui-autocomplete-input' and @name='search_text']";
     private final String MEASURE_SELECT_BUTTON              = "//div[@class='m_ctn gs_att_filtsmall']/select[contains(@class,'measure_view')]/following-sibling::button";
     private final String MONTH_SELECT__BUTTON               = "//div[@class='gs_att_filtsmall']/select[contains(@class,'month month_view')]/following-sibling::button";
     private final String YEAR_SELECT_BUTTON                 = "//div[@class='gs_att_filtsmall']/select[contains(@class,'year year_view')]/following-sibling::button";
