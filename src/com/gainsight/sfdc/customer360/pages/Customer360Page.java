@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class Customer360Page extends BasePage {
 
-    private final String ACC_INS_NAME_INPUT        = "//input[contains(@class, 'search_input search-field gs-left-noradius ui-autocomplete-input' and @type='text')]";
-    private final String READY_INDICATOR        = "//input[@placeholder='Enter customer name' and @name='search_text']";
+    private final String ACC_INS_NAME_INPUT     = "//input[contains(@class, 'search_input search-field gs-left-noradius ui-autocomplete-input') and @type='text']";
+    private final String READY_INDICATOR        = "//input[contains(@placeholder, 'Customer name') and @name='search_text']";
 	private final String LOADING_IMAGES         = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION       = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String SUMMARY_NUM_FIELDS     = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";

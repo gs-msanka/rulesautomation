@@ -194,22 +194,20 @@ public class BaseTest {
      */
     public String resolveStrNameSpace(String str) {
         String result = "";
-        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-        if (str != null && !isPackage) {
+        if (str != null && !isPackageInstance()) {
             result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
             Report.logInfo(result);
             return result;
         } else {
             return str;
         }
-
     }
 
-    public String getDateWithFormat(int i) {
+    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
         String date = null;
-        TimeZone tz     = TimeZone.getTimeZone(soql.getUserTimeZone());
-        Calendar c = Calendar.getInstance(tz);
-        c.add(Calendar.DATE, i);
+        Calendar c = Calendar.getInstance(userTimezone);
+        c.add(Calendar.DATE, noOfDaysToAdd);
+        c.add(Calendar.MONTH, noOfMonthsToAdd);
         if (userLocale.contains("en_US")) {
             DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
             date = dateFormat.format(c.getTime());
@@ -221,7 +219,6 @@ public class BaseTest {
         Report.logInfo(String.valueOf(date));
         return date;
     }
-
 
     public void deletePickList() {
         String DELETE_SCRIPT_FILE = TestEnvironment.basedir + "/testdata/sfdc/Administration/Picklist_Delte_Script.txt";

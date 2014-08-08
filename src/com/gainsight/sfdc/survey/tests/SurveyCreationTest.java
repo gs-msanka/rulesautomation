@@ -23,8 +23,8 @@ public class SurveyCreationTest extends BaseTest {
 		basepage.login();
         apex.runApex(resolveStrNameSpace(QUERY));
 		sdata.setTitle("test");
-		sdata.setStartDate(getDateWithFormat(0));
-		sdata.setEndDate(getDateWithFormat(30));
+		sdata.setStartDate(getDateWithFormat(0, 0));
+		sdata.setEndDate(getDateWithFormat(30, 0));
 		sdata.setTUOption("Message");
 	}
 

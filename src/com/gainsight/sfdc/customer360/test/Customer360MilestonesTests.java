@@ -11,165 +11,110 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 public class Customer360MilestonesTests extends BaseTest {
-	Customer360Page cp;
-	Customer360Milestones cm;
-	final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
-	final String CURRENT_DIR = env.basedir;
-	Calendar cal;
-	DateFormat df=null;
-	
+    private final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
+	private final String CURRENT_DIR = env.basedir;
+
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
-		System.out
-				.println("Starting Customer 360 Milestones module Test Cases...");
 		apex.runApexCodeFromFile(CURRENT_DIR
 				+ "/apex_scripts/Milestones/Milestones.apex",
 				isPackageInstance());
 		basepage.login();
-		TimeZone tz=TimeZone.getTimeZone(soql.getUserTimeZone());
-		cal=Calendar.getInstance(tz);			
-		String Lc=soql.getUserLocale();
-		if(Lc.equals("en_US"))	df=new SimpleDateFormat("M/d/yyyy");
-		else if(Lc.equals("en_IN"))	df=new SimpleDateFormat("d/M/yyyy");
-		else df=new SimpleDateFormat("M/d/yyyy");
-		df.setTimeZone(tz);
-		Report.logInfo("Your Org's TimeZone:"+soql.getUserTimeZone()+" && Locale:"+Lc);
 	}
 	 
 	@AfterMethod
 	private void refresh() {
 	        basepage.refreshPage();
-	    }
+	}
 	 
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", false, false);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
+        apex.runApex("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];");
+        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackageInstance());
+        Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
+		Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
 		// Verifying table header
 		if (cm.isHeaderPresent()) {
-			System.out.println("no of columns=" + MsHeaders.size());
+			Report.logInfo("No of columns=" + MsHeaders.size());
 			for (int h = 1; h <= MsHeaders.size(); h++) {
-				System.out.println("Checking for---"+ MsHeaders.get("Column" + h));
+				Report.logInfo("Checking for---"+ MsHeaders.get("Column" + h));
 				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"+ h)));
 			}
 		}
 
 		// Verifying table data
 		if (cm.isMsTableDataPresent()) {
-
-			// Number of milestone data rows = testData-(1 row for header)
-			int NumOfMilestones = testData.size()-1;
-			HashMap<String, String> MsData;
-			System.out.println("number of miles to go:"+NumOfMilestones);
-			for (int i = 1; i <= NumOfMilestones; i++) {
-
+			int noOfMilestones = testData.size()-2;
+			HashMap<String, String> expData;
+			System.out.println("No of Milestones to Verify : "+ noOfMilestones);
+			for (int i = 1; i <= noOfMilestones; i++) {
 				// get data for a Milestone from the excel
-				MsData = getMapFromData(testData.get("M" + i));		
-				int monthsToAdd=Integer.parseInt(MsData.get("Date"));
-				cal.add(Calendar.MONTH,monthsToAdd);
-				Date msDate=cal.getTime();
-				Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsData.get("MilestoneColor"), MsData.get("Milestone"), MsData.get("Opportunity"),MsData.get("Comments")));
-				cal.add(Calendar.MONTH, -(monthsToAdd));
+                expData = getMapFromData(testData.get("M" + i));
+				String Date = getDateWithFormat(0, Integer.parseInt(expData.get("Date")));
+                expData.put("Date", Date);
+				Assert.assertTrue(cm.isMilestonePresent(expData), "Checking Milestone is Present/Displayed");
 			}
 		}
-
 	}
 
-	/*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")*/
-	public void addMilestones(HashMap<String, String> testData) {
-
-		int MsNum = cm.getCurrentNoOfRows()+1;
-		String MsName="M"+MsNum;
-		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
-		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
-		cal.add(Calendar.MONTH,monthsToAdd);
-		Date msDate=cal.getTime();
-		cm.clickOnAddMilestones();
-		cm.setDateInField(df.format(msDate));
-		cm.selectMileStone(MsList.get("Milestone"));
-		cm.selectOpportunityForMilestone(MsList.get("Opportunity"));
-		cm.addComments(MsList.get("Comments"));
-		cm.clickOnSave();
-
-		// Verify if the data is added correctly
-		cm.isMsTableDataPresent();
-		Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsList.get("MilestoneColor"), MsList.get("Milestone"), MsList.get("Opportunity"),MsList.get("Comments")));
-		cal.add(Calendar.MONTH,-(monthsToAdd));
-
-	}
-
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 3)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
-	public void verifyAddandEditMilestones(HashMap<String, String> testData) {
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", false, false);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
-		
-		addMilestones(testData);
-		
-		int MsNum = cm.getCurrentNoOfRows();
-		String MsName="M"+MsNum;
-		HashMap<String, String> MsList = getMapFromData(testData.get(MsName));
-		int monthsToAdd=Integer.parseInt(MsList.get("Date"));
-		cal.add(Calendar.MONTH,monthsToAdd);
-		Date msDate=cal.getTime();
-		//cm.clickOnAddMilestones();
-		cm.clickOnEditMilestone(MsNum);
-		cm.setDateInField(df.format(msDate));
-		cm.selectMileStone(MsList.get("Milestone"));
-		cm.selectOpportunityForMilestone(MsList.get("Opportunity"));
-		cm.addComments(MsList.get("Comments"));
-		cm.clickOnSave();
-
-		// Verify if the data is edited correctly
-		cm.isMsTableDataPresent();
-		
-		Assert.assertTrue(cm.checkMilestoneRow(df.format(msDate), MsList.get("MilestoneColor"), MsList.get("Milestone"), MsList.get("Opportunity"),MsList.get("Comments")));
-		cal.add(Calendar.MONTH,-(monthsToAdd));
-
+	public void verifyAddAndEditMilestones(HashMap<String, String> testData) {
+        Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
+        Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
+        HashMap<String, String> milestoneData1 = getMapFromData(testData.get("Milestone1"));
+        HashMap<String, String> milestoneData2 = getMapFromData(testData.get("Milestone2"));
+        milestoneData1.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData1.get("Date"))));
+        cm.addMilestone(milestoneData1);
+        Assert.assertTrue(cm.isMilestonePresent(milestoneData1), "Checking for Milestone present 1.");
+        milestoneData2.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData2.get("Date"))));
+        cm.editMileStone(milestoneData1, milestoneData2);
+        Assert.assertTrue(cm.isMilestonePresent(milestoneData2), "Checking for Milestone present 2.");
 	}
 
-	@Test(priority = 4)
-	public void verifyDeleteMilestones() {
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", false, false);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
-		int MsNum = cm.getCurrentNoOfRows();
-		cm.clickOnDeleteMilestone(MsNum);
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M3")
+    public void verifyAddMilestone(HashMap<String, String> testData) {
+        Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
+        Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
+        HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
+        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date"))));
+        cm.addMilestone(milestoneData);
+        Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking for is added successfully.");
+    }
 
-		// Verify if the data is deleted correctly
-		cm.isMsTableDataPresent();
-		Assert.assertTrue(cm.isRowPresentAfterDelete(MsNum));
-	}
 
-	@Test(priority = 5)
-	public void verifyNoMilestonesMessage() {
-		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Milestones Account", false, false);
-		cm = cp.goToUsageSection();
-		cm.gotoMilestonesSubtab();
-		// Assuming there are 4 milestones left in the page
-		int MsNum = cm.getCurrentNoOfRows();
-		for (int i = 1; i <= MsNum; i++) {
-			cm.clickOnDeleteMilestone(1);
-		}
-		Assert.assertTrue(cm.isNoMilestoneMessagePresent());
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M4")
+    public void verifyDeleteMilestone(HashMap<String, String> testData) {
+        Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
+        Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
+        HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
+        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date"))));
+        cm.addMilestone(milestoneData);
+        Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking for is added successfully.");
+        cm.deleteMilestone(milestoneData);
+        Assert.assertFalse(cm.isMilestonePresent(milestoneData), "Checking if milestone is deleted successfully");
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M5")
+    public void verifyNoMilestonesMessage(HashMap<String, String> testData) {
+        apex.runApex("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];");
+        Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
+        Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
+        HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
+        milestoneData.put("Date", getDateWithFormat(0, Integer.valueOf(milestoneData.get("Date"))));
+        cm.addMilestone(milestoneData);
+        cm.deleteMilestone(milestoneData);
+        Assert.assertFalse(cm.isMilestonePresent(milestoneData), "Checking is milestone is displayed");
+		Assert.assertFalse(cm.isNoMilestoneMessagePresent(), "Checking is no milestones message displayed");
 	}
 
 	@AfterClass

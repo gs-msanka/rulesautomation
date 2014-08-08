@@ -43,11 +43,11 @@ public class Events360Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_1")
     public void addEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
     }
@@ -56,9 +56,9 @@ public class Events360Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_2")
     public void changeEventStatus(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -71,9 +71,9 @@ public class Events360Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_3")
     public void deleteEvent( HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
         soql.deleteQuery(resolveStrNameSpace(script));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
@@ -90,9 +90,9 @@ public class Events360Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_4")
     public void addTasksToEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -102,7 +102,7 @@ public class Events360Test extends BaseTest {
         for(int a =1 ; a< 20; a++) {
             try {
                 taskData = getMapFromData(testData.get("task"+a));
-                taskData.put("date", getDateWithFormat(a));
+                taskData.put("date", getDateWithFormat(a, a));
                 tasksList.add(taskData);
                 ret.addEventTask(taskData);
             } catch (NullPointerException e) {
@@ -123,9 +123,9 @@ public class Events360Test extends BaseTest {
     public void addTasksToEventFromPlaybook(HashMap<String, String> testData) throws IOException, BiffException {
         String pName = testData.get("playbook");
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
+        eventData.put("schedule", getDateWithFormat(0, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
@@ -137,7 +137,7 @@ public class Events360Test extends BaseTest {
         for(int a =1 ; a< 20; a++) {
             try {
                 taskData = getMapFromData(testData.get("task"+a));
-                taskData.put("date", getDateWithFormat(a));
+                taskData.put("date", getDateWithFormat(a, a));
                 tasksList.add(taskData);
             } catch (NullPointerException e) {
                 Report.logInfo("Finished Loading Tasks");
@@ -157,20 +157,20 @@ public class Events360Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "360_ET_6")
     public void addRecurringEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
-        eventData.put("startdate", getDateWithFormat(0));
-        eventData.put("enddate", getDateWithFormat(5));
+        eventData.put("schedule", getDateWithFormat(0, 0));
+        eventData.put("startdate", getDateWithFormat(0, 0));
+        eventData.put("enddate", getDateWithFormat(5, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
         soql.deleteQuery(resolveStrNameSpace(script));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        eventData.put("date", getDateWithFormat(2));
+        eventData.put("date", getDateWithFormat(2, 0));
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
-        eventData.put("date", getDateWithFormat(4));
+        eventData.put("date", getDateWithFormat(4, 0));
         Assert.assertEquals(true, ret.isEventCardDisplayed(eventData), "Checking Event is Present");
         String query = "Select id from JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name = '"+eventData.get("customer")+
                 "' and JBCXM__IsRecurrence__c = true and JBCXM__RecurrenceType__c = 'RecursDaily' " +
@@ -185,11 +185,11 @@ public class Events360Test extends BaseTest {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         String script = "SELECT id FROM JBCXM__CSEvent__c WHERE JBCXM__Account__r.Name LIKE '"+eventData.get("customer")+"'";
         soql.deleteQuery(resolveStrNameSpace(script));
-        eventData.put("schedule", getDateWithFormat(0));
-        eventData.put("startdate", getDateWithFormat(0));
-        eventData.put("enddate", getDateWithFormat(70));
+        eventData.put("schedule", getDateWithFormat(0, 0));
+        eventData.put("startdate", getDateWithFormat(0, 0));
+        eventData.put("enddate", getDateWithFormat(70, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         Assert.assertTrue(ret.isInfoMessageDisplayed(), "Checking the information message displayed");
@@ -203,10 +203,10 @@ public class Events360Test extends BaseTest {
     public void editEvent(HashMap<String, String> testData) throws IOException, BiffException {
         HashMap<String, String> eventData   = getMapFromData(testData.get("eventdetails"));
         HashMap<String, String> updateEventData   = getMapFromData(testData.get("updateeventdetails"));
-        eventData.put("schedule", getDateWithFormat(0));
-        updateEventData.put("schedule", getDateWithFormat(3));
+        eventData.put("schedule", getDateWithFormat(0, 0));
+        updateEventData.put("schedule", getDateWithFormat(3, 0));
         HashMap<String, String> taskData    = getMapFromData(testData.get("taskdetails"));
-        taskData.put("date", getDateWithFormat(0));
+        taskData.put("date", getDateWithFormat(0, 0));
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(eventData.get("customer"), false, false);
         Retention360 ret         = c360Page.clickOnRetEventsSec();
         ret.addEvent(eventData, taskData);
