@@ -113,8 +113,8 @@ public class Customer360MilestonesTests extends BaseTest {
         milestoneData.put("Date", getDateWithFormat(0, Integer.valueOf(milestoneData.get("Date"))));
         cm.addMilestone(milestoneData);
         cm.deleteMilestone(milestoneData);
-        Assert.assertFalse(cm.isMilestonePresent(milestoneData), "Checking is milestone is displayed");
-		Assert.assertFalse(cm.isNoMilestoneMessagePresent(), "Checking is no milestones message displayed");
+        Assert.assertFalse(cm.isMilestonePresent(milestoneData), "Checking is milestone displayed");
+		Assert.assertFalse(cm.isNoMilestoneMessagePresent(), "Checking if no milestones message displayed");
 	}
 
 	@AfterClass

@@ -146,7 +146,8 @@ public class Customer360Page extends BasePage {
         return new Retention360("Alerts Page");
     }
 
-    public RelatedList360 clickOnRealtedListSec(String secName) {
+    public RelatedList360 clickOnRelatedListSec(String secName) {
+        amtDateUtil.stalePause();
         String xPath = "//ul[@class='nav']/li[contains(@class,'related_list')]/a[contains(text(),'"+secName+"')]";
         wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
         item.click(xPath);

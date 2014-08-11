@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.HashMap;
 
 public class Relatedlisttests extends BaseTest {
-    private final String TEST_DATA_FILE             = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
-    private final String CONTACT_SCRIPT_FILE        = env.basedir+"/testdata/sfdc/relatedlist/scripts/Contact_RelatedList_View_Setup.txt";
-    private final String EVENT_TASKS_CREATE_FILE    = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-    private final String EVENT_PICKLIST_SETUP_FILE  = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
-    private final String UI_VIEW_SCRIPT_FILE1        = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup1.txt";
-    private final String UI_VIEW_SCRIPT_FILE2        = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup2.txt";
-    private final String USER_CREATE_UPDATE         = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
+    private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
+    private final String CONTACT_SCRIPT_FILE            = env.basedir+"/testdata/sfdc/relatedlist/scripts/Contact_RelatedList_View_Setup.txt";
+    private final String EVENT_TASKS_CREATE_FILE        = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
+    private final String EVENT_PICKLIST_SETUP_FILE      = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
+    private final String UI_VIEW_SCRIPT_FILE1           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup1.txt";
+    private final String UI_VIEW_SCRIPT_FILE2           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup2.txt";
+    private final String USER_CREATE_UPDATE             = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     boolean taskScriptCreated = false;
 
     @BeforeClass
@@ -62,7 +62,7 @@ public class Relatedlisttests extends BaseTest {
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
         for(String data : dataList) {
@@ -75,7 +75,7 @@ public class Relatedlisttests extends BaseTest {
     public void stdContactAddFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(testData.get("ObjectId")));
         rLPage.closeWindow();
@@ -87,7 +87,7 @@ public class Relatedlisttests extends BaseTest {
     public void stdContactViewFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values"));
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(testData.get("ObjectId")), "Verifying the Page Url is contact record view or not");
@@ -99,7 +99,7 @@ public class Relatedlisttests extends BaseTest {
     public void stdContactEditViewFunc(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values"));
         Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(testData.get("ObjectId")), "Verifying the Page Url is contact record view or not");
@@ -111,7 +111,8 @@ public class Relatedlisttests extends BaseTest {
     public void custObjEditVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
+        rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
         SObject[] a = soql.getRecords(resolveStrNameSpace(query));
@@ -132,7 +133,8 @@ public class Relatedlisttests extends BaseTest {
     public void custObjViewVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
+        rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
         SObject[] a = soql.getRecords(resolveStrNameSpace(query));
@@ -153,7 +155,7 @@ public class Relatedlisttests extends BaseTest {
     public void standObjNoDataInfoVerif(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
@@ -166,7 +168,7 @@ public class Relatedlisttests extends BaseTest {
         }
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
         SObject[] a = soql.getRecords(resolveStrNameSpace(query));
@@ -199,7 +201,7 @@ public class Relatedlisttests extends BaseTest {
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
-        RelatedList360 rLPage = cPage.clickOnRealtedListSec(relatedListName);
+        RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the table headers");
         for(String data : dataList) {
             Assert.assertTrue(rLPage.isDataDisplayed(relatedListName, data), "Verification of Data in table");

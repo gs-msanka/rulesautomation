@@ -28,7 +28,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-Radio-1")
-    public  void addQuestion1(HashMap<String, String> testData) {
+    public  void addQuestionRadio(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -48,7 +48,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-Checkbox-1")
-    public  void addQuestion2(HashMap<String, String> testData) {
+    public  void addQuestionCheckbox(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -68,7 +68,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-SingleSelect-1")
-    public  void addQuestion3(HashMap<String, String> testData) {
+    public  void addQuestionSingleSelect(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -88,7 +88,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-MultiSelect-1")
-    public  void addQuestion4(HashMap<String, String> testData) {
+    public  void addQuestionMultiSelect(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -107,7 +107,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-Ranking-1")
-    public  void addQuestion5(HashMap<String, String> testData) {
+    public  void addQuestionRanking(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -127,7 +127,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-SingleLine-1")
-    public  void addQuestion6(HashMap<String, String> testData) {
+    public  void addQuestionSingleLine(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -147,7 +147,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-MultiLine-1")
-    public  void addQuestion7(HashMap<String, String> testData) {
+    public  void addQuestionMultiLine(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -167,7 +167,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-NPS-1")
-    public  void addQuestion8(HashMap<String, String> testData) {
+    public  void addQuestionNPS(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -187,7 +187,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-MATRADIO-1")
-    public  void addQuestion9(HashMap<String, String> testData) {
+    public  void addQuestionMATRADIO(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));
@@ -207,7 +207,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-MATCHECK-1")
-    public  void addQuestion10(HashMap<String, String> testData) {
+    public  void addQuestionMATCHECK(HashMap<String, String> testData) {
         SurveyData sdata = new SurveyData();
         HashMap<String, String> survey = getMapFromData(testData.get("Survey"));
         sdata.setCode(survey.get("Code"));

@@ -135,12 +135,13 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public RelatedList360 selectUIView(String secName, String viewName) {
+        amtDateUtil.stalePause();
         String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[@class='case_uiviews']"+
                             "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
         item.click(xPath);
-        wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']", MIN_TIME, MAX_TIME);
-        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[text()='"+viewName+"']");
-        amtDateUtil.stalePause();
+        wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]", MIN_TIME, MAX_TIME);
+        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]");
+        amtDateUtil.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
         return new RelatedList360(secName);
     }
 

@@ -12,6 +12,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class SurveyCreationTest extends BaseTest {
 	SurveyData sdata = new SurveyData();
 	private String surveyname = "";
@@ -19,6 +24,7 @@ public class SurveyCreationTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
         userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 		Report.logInfo("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
         apex.runApex(resolveStrNameSpace(QUERY));
@@ -65,6 +71,22 @@ public class SurveyCreationTest extends BaseTest {
 
 	}
 
+    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
+        String date = null;
+        Calendar c = Calendar.getInstance(userTimezone);
+        c.add(Calendar.DATE, noOfDaysToAdd);
+        c.add(Calendar.MONTH, noOfMonthsToAdd);
+        if (userLocale.contains("en_US")) {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            date = dateFormat.format(c.getTime());
+
+        } else if (userLocale.contains("en_IN")) {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            date = dateFormat.format(c.getTime());
+        }
+        Report.logInfo(String.valueOf(date));
+        return date;
+    }
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();
