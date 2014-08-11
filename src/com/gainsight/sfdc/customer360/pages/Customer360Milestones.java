@@ -5,10 +5,11 @@ import org.openqa.selenium.By;
 
 import java.util.HashMap;
 
+
 public class Customer360Milestones extends Customer360Page {
 
-
-    private final String NO_MILESTONES_MSG          = "//div[@class='noMilestone noDataFound' and contains(text(), 'No Milestones Found')]";
+    private final String LOADING_IMG                = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
+    private final String NO_MILESTONES_MSG          = "//div[contains(@class,'noMilestone noDataFound') and contains(text(), 'No Milestones')]";
     private final String MILESTONES_SUB_TAB         = "//li[@data-tabname='Milestones']/a[contains(.,'Milestones')]";
     private final String ADD_MILESTONES             = "//a[@class='addNewMilestone']";
     private final String DATE_FIELD                 = "//input[@id='DateId']";
@@ -35,7 +36,7 @@ public class Customer360Milestones extends Customer360Page {
     public Customer360Milestones gotoMilestonesSubTab(){
         item.click(MILESTONES_SUB_TAB);
         wait.waitTillElementDisplayed(ADD_MILESTONES, MIN_TIME, MAX_TIME);
-        amtDateUtil.stalePause();
+        waitForLoadingImagesNotPresent();
         return this;
     }
 
@@ -55,6 +56,13 @@ public class Customer360Milestones extends Customer360Page {
             addComments(testData.get("Comments"));
         }
         clickOnSave();
+        waitForLoadingImagesNotPresent();
+    }
+
+    private void waitForLoadingImagesNotPresent() {
+        env.setTimeout(5);
+        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
     }
 
     private void setDateInField(String date){
@@ -95,6 +103,7 @@ public class Customer360Milestones extends Customer360Page {
         item.click(milestoneDelete);
         driver.switchTo().alert().accept();
         amtDateUtil.stalePause();
+        waitForLoadingImagesNotPresent();
     }
 
     private String getMilestoneXpath(HashMap<String, String> testData) {
@@ -140,6 +149,7 @@ public class Customer360Milestones extends Customer360Page {
             addComments(newTestData.get("Comments"));
             clickOnSave();
             amtDateUtil.stalePause();
+            waitForLoadingImagesNotPresent();
         }
     }
 
@@ -161,6 +171,7 @@ public class Customer360Milestones extends Customer360Page {
 
     public boolean isNoMilestoneMessagePresent() {
         amtDateUtil.stalePause();
+        waitForLoadingImagesNotPresent();
         return isElementPresentAndDisplay(By.xpath(NO_MILESTONES_MSG));
     }
 

@@ -4,30 +4,30 @@ import com.gainsight.pageobject.core.Report;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import java.util.*;
+
+import java.util.List;
 
 
 public class CustomersPage extends CustomerBasePage {
-    private final String READY_INDICATOR    = "//div[@class='gs-moreopt-btn']";
+    private final String READY_INDICATOR        = "//div[@class='gs-moreopt-btn']";
 
-
-    private final String CUSTOMER_EDIT_LINK = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Edit']";
-    private final String CUSTOMER_DEL_LINK  = "//table[@id='customerList_IdOfJBaraStandardView']//tr[%d]//a[text()='Delete']";
-    private final String CUSTOMER_TABLE     = "//table[contains(@id,'customerList_IdOf') and @class='ui-jqgrid-btable']";
-    private final String STATUS_FIELD       = "//td[text()='Status: ']/following-sibling::td//select";
-    private final String STAGE_FIELD        = "//td[text()='Stage: ']/following-sibling::td//select";
-    private final String CUSTOMER_NAME_FIELD = "CustomerLink";
-
-
-    private final String MORE_ICON            = "//div[@class='gs-moreopt-btn']";
-    private final String NEW_CUSTOMER_LINK    = "//a[contains(text(), 'New Customer')]";
-    private final String ACC_NAME_INPUT       = "//input[@placeholder='Enter customer name' and @name='search_text']";
-    private final String AUTO_SELECT_LIST     = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
-    private final String CUSTOMER_SAVE        = "//input[@class='save-customer btn-save' and @value='Save']";
-    private final String COMMENTS_INPUT       ="//textarea[@class='commentArea']";
-    private final String STAGE_SELECT_BUTTON  = "//select[@class='stageSelection']/following-sibling::button";
-    private final String STATUS_SELECT_BUTTON = "//select[@class='statusSelection']/following-sibling::button";
-    private final String CUSTOMER_FORM_CANCEL_BUTTON = "//input[@value='Cancel' and @class='cancel btn-cancel']";
+    private final String LOADING_IMG            = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
+    private final String MORE_ICON              = "//div[@class='gs-moreopt-btn']";
+    private final String NEW_CUSTOMER_LINK      = "//a[contains(text(), 'New Customer')]";
+    private final String ACC_NAME_INPUT         = "//input[@placeholder='Enter customer name' and @name='search_text']";
+    private final String AUTO_SELECT_LIST       = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
+    private final String CUSTOMER_SAVE          = "//input[@class='save-customer btn-save' and @value='Save']";
+    private final String COMMENTS_INPUT         = "//textarea[@class='commentArea']";
+    private final String STAGE_SELECT_BUTTON    = "//select[@class='stageSelection']/following-sibling::button";
+    private final String STATUS_SELECT_BUTTON   = "//select[@class='statusSelection']/following-sibling::button";
+    private final String CUSTOMER_FORM_CANCEL_BUTTON        = "//input[@value='Cancel' and @class='cancel btn-cancel']";
+    private final String CUSTOMER_NAME_GIRD_FILTER_INPUT    = "//div[@class='ui-state-default slick-headerrow-column l1 r1']/input[@type='text']";
+    private final String UI_VIEW_BUTTON                     = "//select[@class='components_list']/following-sibling::button[@type='button']";
+    private final String TAGS_OPTION                        = "//li[@action='tags']/a[contains(text(), 'Tags')]";
+    private final String TAG_APPLY_BUTTON                   = "//input[@value='Apply' and @type='button']";
+    private final String TAGS_INPUT                         = "//input[@value='Click here to add tags']";
+    private final String TAG_SELECT                         = "//li[contains(@class, 'active-result') and contains(text(), '%s')]";
+    private final String TAGS_LIST                          = "//div[@class='chosen-drop']";
 
     public CustomersPage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -40,7 +40,37 @@ public class CustomersPage extends CustomerBasePage {
         selectAccount(customerName);
         fillFields(status, stage, comments);
         item.click(CUSTOMER_SAVE);
+        amtDateUtil.stalePause();
+        waitForLoadingImagesNotPresent();
         return this;
+    }
+
+    public CustomersPage applyTags(String customer, String[] tags) {
+        item.click(MORE_ICON);
+        wait.waitTillElementDisplayed(TAGS_OPTION, MIN_TIME, MAX_TIME);
+        item.click(TAGS_OPTION);
+        wait.waitTillElementDisplayed(TAGS_INPUT, MIN_TIME, MAX_TIME);
+        for(String tag :tags) {
+            item.click(TAGS_INPUT);
+            wait.waitTillElementDisplayed(TAGS_LIST, MIN_TIME, MAX_TIME);
+            item.click(String.format(TAG_SELECT, tag));
+        }
+        setCustomerNameFilterOnTag(customer);
+        item.click(TAG_APPLY_BUTTON);
+        amtDateUtil.stalePause();
+        waitForLoadingImagesNotPresent();
+        return this;
+    }
+
+    /**
+     * This is used for filtering if tag row is enabled.
+     * @param customer
+     */
+
+    private void setCustomerNameFilterOnTag(String customer) {
+        field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']", customer);
+        amtDateUtil.stalePause();
+        item.click("//a[contains(text(), '"+customer+"')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
     }
 
     private void selectAccount(String customerName) {
@@ -116,6 +146,13 @@ public class CustomersPage extends CustomerBasePage {
         return ele;
     }
 
+    public CustomersPage selectUIView(String uiViewName) {
+        item.click(UI_VIEW_BUTTON);
+        selectValueInDropDown(uiViewName);
+        waitForLoadingImagesNotPresent();
+        return this;
+    }
+
 
 
     public CustomersPage editCustomer(String customerName, String status,
@@ -127,7 +164,7 @@ public class CustomersPage extends CustomerBasePage {
             wait.waitTillElementDisplayed(ACC_NAME_INPUT, MIN_TIME, MAX_TIME);
             fillFields(status,stage,comments);
             item.click(CUSTOMER_SAVE);
-
+            waitForLoadingImagesNotPresent();
         } else {
             throw new RuntimeException("Customer not found");
         }
@@ -152,10 +189,96 @@ public class CustomersPage extends CustomerBasePage {
         } else {
             throw new RuntimeException("Customer not found");
         }
+        waitForLoadingImagesNotPresent();
         return status;
     }
 
+    private void waitForLoadingImagesNotPresent() {
+        env.setTimeout(5);
+        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+    }
 
+    public boolean isDataPresentInGrid(String values) {
+        Report.logInfo("Data to Verify : " +values);
+        boolean result = false;
+        String[] cellValues = values.split("\\|");
+        setCustomerNameFilter(cellValues[0].trim());
+        WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
+        List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
+        Report.logInfo("Rows :" +rows.size());
+        int a=1;  boolean hasScroll = false;
+        for(WebElement row : rows) {
+            Report.logInfo("Checking Row : " +row.getText());
+            boolean inRowData = true;
+            WebElement rightRow= null;
+            try {
+                element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
+                rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
+                hasScroll = true;
+                Report.logInfo("Checking Row : "+rightRow.getText());
+                Report.logInfo("Grid has scroll bar");
+            } catch (Exception e) {
+                Report.logInfo("Grid Doesn't have scroll bar");
+            }
+            List<WebElement> cells = null;
+            if(hasScroll) {
+                cells = rightRow.findElements(By.cssSelector("div[class*='slick-cell']"));
+            } else {
+                cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
+            }
+
+            Report.logInfo("No of Cells :" +cells.size());
+            int i=1;
+            outerloop:
+            for(String val : cellValues) {
+                //i=1;
+                boolean valTemp  =false;
+                for(WebElement cell : cells) {
+                    if(i==1) {
+                        ++i;
+                        if(!hasScroll) {
+                            Report.logInfo(cell.getText());
+                            Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
+                            if(cell.getText().contains(val.trim())) { valTemp=true; break;}
+                            if(cell.getText().contains(val.trim())) { break outerloop;}
+                        } else {
+                            if(row.getText().contains(val.trim())) { valTemp=true; break;}
+                            if(row.getText().contains(val.trim())) { break outerloop;}
+                        }
+                    } else {
+                        Report.logInfo(val);
+                        Report.logInfo(cell.getText());
+                        if(cell.getText().contains(val.trim())) {
+                            valTemp = true;
+                            Report.logInfo("Value is found in cell");
+                            break;
+                        }
+                    }
+                }
+                if(!valTemp) {
+                    inRowData = false;
+                    break;
+                }
+            }
+            if(inRowData) {
+                result = true;
+            }
+            if(result) {
+                break;
+            }
+            ++a;
+        }
+        return result;
+    }
+
+    private void setCustomerNameFilter(String customerName) {
+        field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
+        if(customerName !=null) {
+            field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, customerName);
+            amtDateUtil.stalePause();
+        }
+    }
 
 
 

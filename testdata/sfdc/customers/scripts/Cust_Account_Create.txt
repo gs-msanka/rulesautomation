@@ -1,0 +1,35 @@
+Delete [SELECT Id FROM Account WHERE Name Like 'Customers Test Case Account%'];
+List<Account> accList = new List<Account>();
+Account acc = null;
+for(Integer i=0; i<=10; i++) {
+    acc = new Account(Name='Customers Test Case Account ' +i);
+    accList.add(acc);
+}
+insert accList;
+
+
+
+//To Check Tag Test cases.
+
+Map<String, String> stageStatusMap = new Map<String, String>();
+List<String> tempList = new List<String>{'Customer Status','Customer Stage'};
+for(JBCXM__Picklist__c pkList : [SELECT Id, JBCXM__SystemName__c FROM
+                                 JBCXM__PickList__c Where JBCXM__Category__c IN :tempList ]) {
+    stageStatusMap.put(pkList.JBCXM__SystemName__c, pkList.Id);
+}
+Delete [SELECT Id FROM Account WHERE Name Like 'Customers Tag Test Case Account%'];
+List<Account> accList1 = new List<Account>();
+for(Integer i=0; i<=10; i++) {
+    Account acc1 = new Account(Name='Customers Tag Test Case Account ' +i);
+    accList1.add(acc1);
+}
+insert accList1;
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+for(Account acc2 : accList1) {
+   JBCXM__CustomerInfo__c cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c = acc2.Id,
+                                        JBCXM__Status__c = stageStatusMap.get('ActiveCustomer'),
+                                        JBCXM__Stage__c = stageStatusMap.get('stage1'));
+    custList.add(cust);
+}
+insert custList;
+
