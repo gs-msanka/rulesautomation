@@ -1,6 +1,8 @@
 package com.gainsight.sfdc.customer360.test;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -41,11 +43,11 @@ public class Customer360ScorecardsTests extends BaseTest {
 
         basepage.login();
 		
-		//AdministrationBasepage adm=basepage.clickOnAdminTab();
-        //AdminScorecardSection as=adm.clickOnScorecardSetion();
-        //as.enableScorecard();
-		//apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
-        //apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
+		AdministrationBasepage adm=basepage.clickOnAdminTab();
+        AdminScorecardSection as=adm.clickOnScorecardSetion();
+        as.enableScorecard();
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex",isPackageInstance());
+        apex.runApexCodeFromFile(env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex",isPackageInstance());
         cp = basepage.clickOnC360Tab();
 		cp.searchCustomer("Scorecard Account", false, false);
 		cs = (Customer360Scorecard) cp.goToScorecardSection();
