@@ -34,7 +34,7 @@ public class Customer360MilestonesTests extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-        apex.runApex("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];");
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
         apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackageInstance());
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
 		Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
@@ -47,7 +47,6 @@ public class Customer360MilestonesTests extends BaseTest {
 				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"+ h)));
 			}
 		}
-
 		// Verifying table data
 		if (cm.isMsTableDataPresent()) {
 			int noOfMilestones = testData.size()-2;
@@ -106,7 +105,7 @@ public class Customer360MilestonesTests extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M5")
     public void verifyNoMilestonesMessage(HashMap<String, String> testData) {
-        apex.runApex("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];");
+        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));

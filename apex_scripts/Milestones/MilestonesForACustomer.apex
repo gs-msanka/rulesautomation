@@ -2,8 +2,11 @@
 List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
 Account acc = [SELECT ID FROM Account WHERE Name='Milestones Account'];
 List<Opportunity> opList=[SELECT id FROM Opportunity where name like 'Milestones Account - new business' LIMIT 1];
-List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
-List<String> comments=new List<String>{'Customer signed off on Implementation','Referred to 2 more customers','Check on Customer Scorecard','First Transactions successfully added','Customer Go Live and using system','Renewal due for this customer','Software release 4.0.2','1st Quarterly Business Review Meet'};
+List<JBCXM__PickList__c> msList=[SELECT id FROM JBCXM__PickList__c where JBCXM__Category__c='Milestones' ORDER BY NAME];
+List<String> comments=new List<String>{'First Transactions successfully added','Customer Go Live and using system',
+                                        'Check on Customer Scorecard','Customer signed off on Implementation',
+                                        '1st Quarterly Business Review Meet', 'Referred to 2 more customers',
+                                        'Renewal due for this customer','Software release 4.0.2'};
 Date myDate = Date.today();
 Integer d=0;
 for(Integer p=0;p<msList.size();p++)

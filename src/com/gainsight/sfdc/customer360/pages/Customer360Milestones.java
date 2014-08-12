@@ -19,7 +19,7 @@ public class Customer360Milestones extends Customer360Page {
     private final String SAVE_BUTTON                = "//a[@class='btn_save']";
     private final String CLOSE_BUTTON               = "//a[@class='btn_cancel']";
     private final String CLOSE_X                    = "//button[@title='close']/span[@title='Close']";
-    private final String MILESTONES_TABLE           = "//table[@class='gs_features_grid gs_milestones_grid']";
+    private final String MILESTONES_TABLE           = "//div[@id='Milestones']/descendant::table[contains(@class,'gs_milestones_grid')]";
     private final String MILESTONES_TABLE_DATA_GRID = MILESTONES_TABLE+"/tbody";
     private final String MILESTONES_ADD_POPUP       = "//div[@class='ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix']/span[contains(text(), 'Add Milestone')]";
     private final String MILESTONES_EDIT_POPUP      = "//div[@class='ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix']/span[contains(text(), 'Edit Milestone')]";
