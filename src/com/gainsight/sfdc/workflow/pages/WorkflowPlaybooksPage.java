@@ -284,7 +284,7 @@ public class WorkflowPlaybooksPage extends BasePage {
 
     /**
      * Edits the Task.
-     * @param oldtaskdata - a HashMap comprsing of tasks data.
+     * @param oldtaskdata - a HashMap comprising of tasks data.
      * @param newtaskdata - a HashMap comprising updated task data.
      * @return void
      */
@@ -377,6 +377,11 @@ public class WorkflowPlaybooksPage extends BasePage {
     	
     }
     
+    /**
+     * Search Playbook.
+     * @param testdata - a HashMap comprising of Task data.
+     * @return void
+     */
     public void searchPlaybook(HashMap<String, String> testdata){
     	String playbookname = testdata.get("playbookname");
     	Report.logInfo("Started searching playbook :" +playbookname);

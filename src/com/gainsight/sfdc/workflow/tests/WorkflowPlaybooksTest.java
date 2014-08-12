@@ -64,7 +64,4 @@ public class WorkflowPlaybooksTest extends BaseTest {
         Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
         Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
    }
-    
-    
-    
 }
