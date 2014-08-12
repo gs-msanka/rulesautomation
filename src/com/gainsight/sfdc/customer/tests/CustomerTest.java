@@ -16,6 +16,7 @@ public class CustomerTest extends BaseTest {
     private final String TEST_DATA_FILE             = "testdata/sfdc/customers/data/Customers_Data.xls";
     private final String STATE_PRESERVATION_QUERY   = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name='CustomersTab'];";
     private final String ACC_SETUP_SCRIPT           = env.basedir+"/testdata/sfdc/customers/scripts/Cust_Account_Create.txt";
+    private final String UIVIEW_SETUP_SCRIPT           = env.basedir+"/testdata/sfdc/customers/scripts/UIView_Create.txt";
 
     @BeforeClass
     public void setUp() {
@@ -23,6 +24,7 @@ public class CustomerTest extends BaseTest {
         basepage.login();
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_QUERY));
         apex.runApexCodeFromFile(ACC_SETUP_SCRIPT,isPackageInstance());
+        apex.runApexCodeFromFile(UIVIEW_SETUP_SCRIPT, isPackageInstance());
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -96,6 +98,13 @@ public class CustomerTest extends BaseTest {
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
         customersPage = customersPage.applyTags(testData.get("Customer"), testData.get("UpdatedTags").split("\\|"));
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(testData.get("UpdatedTags").split("\\|"))));
+    }
+
+    //@Test
+    public void dataExportMessageCheck() {
+        CustomersPage customersPage = basepage.clickOnCustomersTab().clickOnCustomersSubTab();
+        customersPage = customersPage.selectUIView("Standard View");
+
     }
 
 

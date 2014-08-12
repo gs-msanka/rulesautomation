@@ -28,6 +28,7 @@ public class CustomersPage extends CustomerBasePage {
     private final String TAGS_INPUT                         = "//input[@value='Click here to add tags']";
     private final String TAG_SELECT                         = "//li[contains(@class, 'active-result') and contains(text(), '%s')]";
     private final String TAGS_LIST                          = "//div[@class='chosen-drop']";
+    private final String EXPORT_OPTION                      = "//li[@action='export']/a[contains(text(), 'export')]";
 
     public CustomersPage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -150,6 +151,13 @@ public class CustomersPage extends CustomerBasePage {
         item.click(UI_VIEW_BUTTON);
         selectValueInDropDown(uiViewName);
         waitForLoadingImagesNotPresent();
+        return this;
+    }
+
+    public CustomersPage exportGrid() {
+        item.click(MORE_ICON);
+        wait.waitTillElementDisplayed(EXPORT_OPTION, MIN_TIME, MAX_TIME);
+        item.click(EXPORT_OPTION);
         return this;
     }
 

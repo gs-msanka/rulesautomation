@@ -1,0 +1,33 @@
+DELETE [SELECT Id FROM JBCXM__UIViews__c WHERE NAME ='Customer_Tag_UIView'];
+String columnList = '[{"name":"TrendIndicator__c","label":"Trend Indicator","displayOrder":1,'+
+					'"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP",'+
+					'"isGroupable":false,"hasJBCXMNS":true},{"name":"Status__r.Name","label":"Status",'+
+					'"displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c",'+
+					'"fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},'+
+					'{"name":"Stage__r.Name","label":"Stage","displayOrder":3,"visibilityMode":true,'+
+					'"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,'+
+					'"hasJBCXMNS":true},{"name":"Tag__c","label":"Tag","displayOrder":4,"visibilityMode":true,'+
+					'"objectName":"CustomerInfo__c","fieldType":"MULTIPICKLIST","isGroupable":false,'+
+					'"hasJBCXMNS":true},{"name":"ASV__c","label":"ASV","displayOrder":5,'+
+					'"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY",'+
+					'"isGroupable":false,"hasJBCXMNS":true},{"name":"MRR__c","label":"MRR","displayOrder":6,'+
+					'"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY",'+
+					'"isGroupable":false,"hasJBCXMNS":true},{"name":"Users__c","label":"Users",'+
+					'"displayOrder":7,"visibilityMode":true,"objectName":"CustomerInfo__c",'+
+					'"fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":true},{"name":'+
+					'"RevenueBand__c","label":"Revenue Band","displayOrder":8,"visibilityMode":true,'+
+					'"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,'+
+					'"hasJBCXMNS":true},{"name":"Comments__c","label":"Comments","displayOrder":9,'+
+					'"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":'+
+					'"TEXTAREA","isGroupable":false,"hasJBCXMNS":true}]';
+JBCXM__UIViews__c uiview = new JBCXM__UIViews__c(Name = 'Customer_Tag_UIView',
+												JBCXM__ColumnList__c = columnList,
+												JBCXM__FilterConditions__c = '[]',
+												JBCXM__IsShown__c = true,
+												JBCXM__IsStandard__c= false,
+												JBCXM__ReportParams__c = '[]',
+												JBCXM__ShowDefault__c = false,
+												JBCXM__UITabName__c = 'Customers',
+												JBCXM__Visibility__c = 'Public',
+												JBCXM__VisualType__c = 'List');
+insert uiview;
