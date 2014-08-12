@@ -40,18 +40,31 @@ public class WorkflowPlaybooksTest extends BaseTest {
     }
     
     @Test
-    public void testAllPlaybook_wf() throws BiffException, IOException {
+    public void testAllPlaybook() throws BiffException, IOException {
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
          HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
          HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
          pbPage.addplaybook(pbData, taskData);
-         //Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname")));
-         //Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
-         //Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
-       
+         Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname")));
+         Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
+         Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
     }
+    
+    @Test
+    public void testClonePlaybook() throws BiffException, IOException {
+   	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "RET_000");	//Provide the test data
+        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
+        pbPage.addplaybook(pbData, taskData);
+        Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname"))); //Provide the new playbook name
+        Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
+        Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
+   }
+    
     
     
 }
