@@ -11,7 +11,6 @@ import java.util.List;
 public class CustomersPage extends CustomerBasePage {
     private final String READY_INDICATOR        = "//div[@class='gs-moreopt-btn']";
 
-    private final String LOADING_IMG            = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
     private final String MORE_ICON              = "//div[@class='gs-moreopt-btn']";
     private final String NEW_CUSTOMER_LINK      = "//a[contains(text(), 'New Customer')]";
     private final String ACC_NAME_INPUT         = "//input[@placeholder='Enter customer name' and @name='search_text']";
@@ -199,12 +198,6 @@ public class CustomersPage extends CustomerBasePage {
         }
         waitForLoadingImagesNotPresent();
         return status;
-    }
-
-    private void waitForLoadingImagesNotPresent() {
-        env.setTimeout(5);
-        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
     }
 
     public boolean isDataPresentInGrid(String values) {

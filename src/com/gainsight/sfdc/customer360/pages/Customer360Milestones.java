@@ -59,12 +59,6 @@ public class Customer360Milestones extends Customer360Page {
         waitForLoadingImagesNotPresent();
     }
 
-    private void waitForLoadingImagesNotPresent() {
-        env.setTimeout(5);
-        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
-    }
-
     private void setDateInField(String date){
         item.clearAndSetText(DATE_FIELD, date);
     }

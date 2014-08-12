@@ -33,6 +33,8 @@ import java.util.Set;
  */
 public class BasePage extends WebPage implements Constants {
 	private final String READY_INDICATOR    = "//div[@id='userNavButton']";
+
+    private final String LOADING_IMG            = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
 	private final String OPPORTUNITIES_TAB  = "//img[@title='Opportunities']";
 	private final String ALL_TABS           = "//img[@title='All Tabs']";
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
@@ -291,5 +293,11 @@ public class BasePage extends WebPage implements Constants {
             }
         }
         return null;
+    }
+
+    public void waitForLoadingImagesNotPresent() {
+        env.setTimeout(5);
+        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
     }
 }
