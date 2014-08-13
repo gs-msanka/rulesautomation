@@ -26,7 +26,7 @@ public class WorkflowPlaybooksPage extends BasePage {
 	private final String EVENT_PBTYPE_RADIO 		= "//input[@type='radio' and @value='Event' and @name='playbook-type']";	//Event Radio button
 	private final String ALL_PBTYPE_RADIO 			= "//input[@type='radio' and @value='All' and @name='playbook-type']";	//All Radio button
 	private final String DUPLICATE_PLAYBOOK			= "//a[@title='Duplicate playbook']";	//Duplicate Playbook Icon
-	private final String DUPLICATE_PLAYBOOK_NAMe	= "//input[@class='layout_popup_input']";		//Duplicate Playbook Name
+	private final String DUPLICATE_PLAYBOOK_NAME	= "//input[@class='layout_popup_input']";		//Duplicate Playbook Name
 	private final String SAVE_DUPLICATE_PLAYBOOK	= "//input[@class='gs-btn btn-save btn_save saveSummary']";		//Save Duplicate
 	private final String EDIT_PLAYBOOK				= "//a[@title='Edit playbook']";	//Edit Playbook
 	private final String DELETE_PLAYBOOK			= "//a[@title='Delete playbook']";	//Delete Playbook
@@ -70,10 +70,12 @@ public class WorkflowPlaybooksPage extends BasePage {
      * </pre>
      */
     public void addplaybook(HashMap<String, String> playbookData, HashMap<String, String> taskData) {
-    	wait.waitTillElementDisplayed(ADD_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
+//    	wait.waitTillElementDisplayed(ADD_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         item.click(ADD_PLAYBOOK_BUTTON);
+        wait.waitTillElementPresent(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
+        
+//        wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         Report.logInfo("Clicked on Add Playbook button.");
-        wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(playbookData);
         fillTaskDetails(taskData);
         amtDateUtil.stalePause();
@@ -168,6 +170,7 @@ public class WorkflowPlaybooksPage extends BasePage {
      */
     public void fillPlaybookDetails(HashMap<String, String> testdata) {
        Report.logInfo("Started filling the playbook details.");
+       wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
        if(testdata.get("pbType")!=null){
     	   Report.logInfo("Adding Playbook type as: "+testdata.get("pbType"));
            item.click("//input[@type='radio' and @value='"+testdata.get("pbType")+"' and @name='playbook-type']");
@@ -228,7 +231,7 @@ public class WorkflowPlaybooksPage extends BasePage {
     	item.click("//li[contains(text(),'"+playbookname+"')]");
         wait.waitTillElementDisplayed(ADD_PBTASK_BUTTON, MIN_TIME, MAX_TIME);
 //        wait.waitTillElementDisplayed("//div[@class='ga-content ga-contentDetails']/h4[text()='"+playbookname+"']", MIN_TIME, MAX_TIME);
-        wait.waitTillElementDisplayed("//div[@class='playbooks-data']/h3[contains(text(),'"+playbookname+"']", MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed("//div[@class='playbooks-data']/h3[contains(text(),'"+playbookname+"')]", MIN_TIME, MAX_TIME);
     }
     
     /**
@@ -258,14 +261,12 @@ public class WorkflowPlaybooksPage extends BasePage {
      * @param testdata - Playbook data.
      */
     public void editPlaybook(String oldplaybookname, HashMap<String, String> testdata) {
-        Report.logInfo("Started editing the Playbook");
+    	Report.logInfo("Started editing the Playbook");
         openPlaybook(oldplaybookname);
         wait.waitTillElementDisplayed(EDIT_PLAYBOOK, MIN_TIME, MAX_TIME);
         item.click(EDIT_PLAYBOOK);
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(testdata);
-        item.click(SAVE_PLAYBOOK_BUTTON);
-        wait.waitTillElementNotDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         amtDateUtil.stalePause();
         Report.logInfo("Finished editing the playbook.");
     }

@@ -11,13 +11,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.*;
 
 
-//import com.gainsight.pageobject.core.Report;
+
+import com.gainsight.pageobject.core.*;
 import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPlaybooksPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
+
 
 public class WorkflowPlaybooksTest extends BaseTest {
 	String[] dirs = { "wfplaybooktests" };
@@ -41,6 +44,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void testAllPlaybook() throws BiffException, IOException {
+    	System.out.println("IN testAllPlaybook method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
@@ -52,7 +56,34 @@ public class WorkflowPlaybooksTest extends BaseTest {
          Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
     }
     
-    @Test
+    @Test(dependsOnMethods="testAllPlaybook")
+    public void testeditAllPlaybook() throws BiffException, IOException {
+    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
+        
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
+        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("updatedplaybookdetails"));
+        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
+        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
+        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
+    }
+
+    @Test(dependsOnMethods="testeditAllPlaybook")
+    public void testDeleteAllPlaybook() throws BiffException, IOException {
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "RET_001");
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("updatedplaybookdetails"));
+        String playbookname = pbData.get("playbookname");
+        pbPage.deletePlaybook(playbookname);
+        Assert.assertEquals(false, pbPage.isplaybookpresent(playbookname));
+    }
+    
+    
+    
+    /*@Test
     public void testClonePlaybook() throws BiffException, IOException {
    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "RET_000");	//Provide the test data
@@ -63,5 +94,5 @@ public class WorkflowPlaybooksTest extends BaseTest {
         Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname"))); //Provide the new playbook name
         Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
         Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
-   }
+   }*/
 }
