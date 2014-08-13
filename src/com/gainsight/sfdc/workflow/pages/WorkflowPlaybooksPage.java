@@ -71,6 +71,7 @@ public class WorkflowPlaybooksPage extends BasePage {
      */
     public void addplaybook(HashMap<String, String> playbookData, HashMap<String, String> taskData) {
 //    	wait.waitTillElementDisplayed(ADD_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
+    	amtDateUtil.stalePause();
         item.click(ADD_PLAYBOOK_BUTTON);
         wait.waitTillElementPresent(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         
@@ -139,13 +140,39 @@ public class WorkflowPlaybooksPage extends BasePage {
      * @return true - All Playbook, else false. 
      */
     public boolean isAllPlaybook(String playbookname) {
-        Report.logInfo("Strarted verifying the playbook "+playbookname+" is All type of playbook");
+        Report.logInfo("Started verifying the playbook "+playbookname+" is All type of playbook");
         boolean result = false;
         try {
             /*String eleString = "//span[text()='Alert']/ancestor::tr/following-sibling"+
                     "::tr/descendant::td[@class='standartTreeRow']" +
                     "/span[text()='"+playbookname+"']";*/
         	
+        	String eleString = "//h2[text()='Risk']/following-sibling::ul[@class='playbook-Risk']/li[text()='"+playbookname+"']";            
+            System.out.println("Play book Path = " +eleString);
+            wait.waitTillElementDisplayed(eleString, MIN_TIME, MAX_TIME);
+            WebElement ele = element.getElement(eleString);
+
+            if(ele !=null) {
+                if(ele.isDisplayed()) {
+                    result = true;
+                }
+            }
+        } catch(RuntimeException e) {
+            result =false;
+        }
+        Report.logInfo("Finished verifying playbook & resurting result :" +result);
+        return result;
+    }
+    
+    /**
+     * Searches weather the Playbook is of provided type -Risk or Opportunity or Event or All 
+     * @param playbookname - Playbook Name.
+     * @return true - Playbook Type, else false. 
+     */
+    public boolean isPlaybookType(String playbookname,String playbookType) {
+        Report.logInfo("Started verifying the playbook "+playbookname+" is All type of playbook");
+        boolean result = false;
+        try {
         	String eleString = "//h2[text()='Risk']/following-sibling::ul[@class='playbook-Risk']/li[text()='"+playbookname+"']";            
             System.out.println("Play book Path = " +eleString);
             wait.waitTillElementDisplayed(eleString, MIN_TIME, MAX_TIME);
@@ -250,8 +277,8 @@ public class WorkflowPlaybooksPage extends BasePage {
       //input[@value='Yes']
       //input[@class='gs-btn btn-cancel btn_cancel cancelSummary' and @value='Cancel']
         amtDateUtil.stalePause();
-        playbookname = "//div[@class='playbooks-data']/h3[contains(text(),'"+playbookname+"']";
-        wait.waitTillElementNotPresent(playbookname, MIN_TIME, MAX_TIME);
+       /* playbookname = "//div[@class='playbooks-data']/h3[contains(text(),'"+playbookname+"']";
+        wait.waitTillElementNotPresent(playbookname, MIN_TIME, MAX_TIME);*/
         Report.logInfo("Finished deleting the playbook");
     }
     
@@ -264,6 +291,7 @@ public class WorkflowPlaybooksPage extends BasePage {
     	Report.logInfo("Started editing the Playbook");
         openPlaybook(oldplaybookname);
         wait.waitTillElementDisplayed(EDIT_PLAYBOOK, MIN_TIME, MAX_TIME);
+        amtDateUtil.stalePause();
         item.click(EDIT_PLAYBOOK);
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(testdata);
