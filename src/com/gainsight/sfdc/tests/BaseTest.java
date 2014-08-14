@@ -435,4 +435,19 @@ public class BaseTest {
             }
         }
     }
+
+    public void runMetricSetup(String fileName, String scheme) throws IOException {
+        BufferedReader reader;
+        String line = null;
+        String code = "";
+        reader = new BufferedReader(new FileReader(fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line).append("\n");
+        }
+        reader.close();
+        code = String.format(stringBuilder.toString(), scheme);
+        apex.runApex(resolveStrNameSpace(code));
+    }
+
 }
