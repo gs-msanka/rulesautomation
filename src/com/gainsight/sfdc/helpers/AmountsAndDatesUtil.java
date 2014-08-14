@@ -49,31 +49,7 @@ public class AmountsAndDatesUtil {
 		return numberFormatter.format(Integer.parseInt(number));
 	}
 
-	public static HashMap<String, String> updateDatesLocale(
-			HashMap<String, String> nbData)
-			throws ParseException {
-		String locale=BaseTest.userLocale;
-		HashMap<String, String> newData = new HashMap<String, String>();
-		SimpleDateFormat dateFmt = null;
-		Iterator<String> itr = nbData.keySet().iterator();
-		while (itr.hasNext()) {
-			String key = itr.next();
-			String date = nbData.get(key);
-			if (key.contains("Date") || key.contains("date")) {
-				Date dt = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH)
-						.parse(date);
-				dateFmt = date.length() == 10 ? (locale.equals("en_IN") ? EN_IND_10
-						: OTHER_10)
-						: (locale.equals("en_IN") ? EN_IND : OTHER);
-				String formatedDate = dateFmt.format(dt);
-				newData.put(key, formatedDate);
-			} else {
-				newData.put(key, nbData.get(key));
-			}
-		}
-		return newData;
-	}
-
+	
 	public static String getCurrentDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(BaseTest.userTimezone);

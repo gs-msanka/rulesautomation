@@ -78,7 +78,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		/* Renewal Transaction */
 		HashMap<String, String> rnlData = getMapFromData(testData
 				.get("RenewalTRN"));
-		rnlData = AmountsAndDatesUtil.updateDatesLocale(rnlData);
+		
 		String customerName = rnlData.get("customerName");
 		customer360Page = customer360Page.clickOnTransactionTab()
 				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW).selectView(STANDARD_VIEW).addRenewalTransaction(rnlData)
@@ -296,7 +296,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			HashMap<String, String> testData) throws ParseException {
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
-		nbData = AmountsAndDatesUtil.updateDatesLocale(nbData);
+		
 		String customerName = nbData.get("customerName");
 		String transactionValues = customerName + "|" + nbData.get("startDate")
 				+ "|" + nbData.get("endDate") + "|"
@@ -375,6 +375,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		if (ocDate == null) {
 			Assert.assertTrue(c360Summary.getOCD().contains(currentDate));
 		} else {
+			
 			Assert.assertTrue(c360Summary.getOCD().contains(
 					AmountsAndDatesUtil.getFormattedDate(ocDate,0)));
 		}
