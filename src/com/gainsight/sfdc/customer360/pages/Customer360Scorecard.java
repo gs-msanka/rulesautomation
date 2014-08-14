@@ -146,12 +146,9 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
     public Customer360Scorecard expandCustomerGoalsSec() {
-        Actions builder = new Actions(driver);
-        WebElement ele = driver.findElement(By.xpath("//div[@class='goals-section clearfix']/div[contains(@class, 'goalsheader')]"));
-        builder.moveToElement(ele).build().perform();
-        amtDateUtil.sleep(5);
-        builder.click().build().perform();
-        amtDateUtil.stalePause();
+        if (!driver.findElement(By.xpath("//div[@class='goalslist editable-parent']")).isDisplayed()){
+        	item.click("//div[@class='goalsheader clearfix']");
+        }
         return this;
     }
 
@@ -170,16 +167,9 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard updateCustomerGoals(String goals) {
         expandCustomerGoalsSec();
-        Actions builder = new Actions(driver);
-        WebElement ele = driver.findElement(By.xpath("//div[@class='goalslist editable-parent']/descendant::div[@class='goalslist_content']"));
-        builder.moveToElement(ele).build().perform();
-        builder.click().build().perform();
-        amtDateUtil.stalePause();
-        ele = driver.findElement(By.xpath("//div[@class='goalslist editable-parent']/descendant::div[@class='goalslist_content']"));
-        ele.sendKeys(goals);
-        amtDateUtil.sleep(5);
-        new Actions(driver).sendKeys(ele).perform();
-        amtDateUtil.sleep(5);
+        String goalsSectionXPATH="//div[@class='goalslist editable-parent' and contains(@style,'display: block;')]//div[@class='goalslist_content' and @title='Click to edit']";
+        item.click(goalsSectionXPATH);
+        element.setText(goalsSectionXPATH, goals);
         item.click(GOALS_SAVE);
         waitForLoadingImagesNotPresent();
         return this;
