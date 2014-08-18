@@ -48,13 +48,11 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Risk");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
-         HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
-//         HashMap<String, String> pbType = getMapFromData(testdata.get("pbType"));
-         HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
+         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
+         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
          pbPage.addplaybook(pbData, taskData);
          Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
          Assert.assertTrue(pbPage.isTaskPresent(taskData));
-//         Assert.assertTrue(pbPage.isAllPlaybook(pbData.get("playbookname")));
          Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
     }
     
@@ -65,48 +63,158 @@ public class WorkflowPlaybooksTest extends BaseTest {
                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
         
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
-        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("updatedplaybookdetails"));
+        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
         pbPage.addplaybook(pbData, taskData);
         pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
         Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
         Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
     }
-
+    
     @Test
     public void deletePlaybookTypeRisk() throws BiffException, IOException {
 //    	System.out.println("IN testeditAllPlaybook method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-//        HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
-        HashMap<String, String> pbData = getMapFromData(testdata.get("updatedplaybookdetails"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
         String playbookname = pbData.get("playbookname");
         pbPage.addplaybook(pbData, taskData);
         pbPage.deletePlaybook(playbookname);
         Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
     }
     
+    @Test
+    public void addPlaybookTypeEvent() throws BiffException, IOException {
+//    	System.out.println("IN testAllPlaybook method");
+    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
+         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
+         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+         pbPage.addplaybook(pbData, taskData);
+         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
+         Assert.assertTrue(pbPage.isTaskPresent(taskData));
+         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
+    }
     
-  
-    
-    
-    
-    
-    
-    
-    /*@Test
-    public void testClonePlaybook() throws BiffException, IOException {
-   	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "RET_000");	//Provide the test data
-        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("playbookdetails"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("taskdetails"));
+    @Test
+    public void editPlaybookTypeEvent() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "Event");
+        
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
         pbPage.addplaybook(pbData, taskData);
-        Assert.assertEquals(true, pbPage.isplaybookpresent(pbData.get("playbookname"))); //Provide the new playbook name
-        Assert.assertEquals(true, pbPage.isTaskPresent(taskData));
-        Assert.assertEquals(true, pbPage.isAllPlaybook(pbData.get("playbookname")));
-   }*/
+        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
+        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
+        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
+    }
+    
+    @Test
+    public void deletePlaybookTypeEvent() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "Event");
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
+        String playbookname = pbData.get("playbookname");
+        pbPage.addplaybook(pbData, taskData);
+        pbPage.deletePlaybook(playbookname);
+        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
+    }
+    
+    @Test
+    public void addPlaybookTypeOpportunity() throws BiffException, IOException {
+//    	System.out.println("IN testAllPlaybook method");
+    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
+         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
+         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+         pbPage.addplaybook(pbData, taskData);
+         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
+         Assert.assertTrue(pbPage.isTaskPresent(taskData));
+         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
+    }
+    
+    @Test
+    public void editPlaybookTypeOpportunity() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
+        
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
+        pbPage.addplaybook(pbData, taskData);
+        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
+        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
+        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
+    }
+    
+    @Test
+    public void deletePlaybookTypeOpportunity() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
+        String playbookname = pbData.get("playbookname");
+        pbPage.addplaybook(pbData, taskData);
+        pbPage.deletePlaybook(playbookname);
+        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
+    }
+    
+    @Test
+    public void addPlaybookTypeAll() throws BiffException, IOException {
+//    	System.out.println("IN testAllPlaybook method");
+    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                 TESTDATA_DIR + "PlaybookTests.xls", "All");
+         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
+         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+         pbPage.addplaybook(pbData, taskData);
+         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
+         Assert.assertTrue(pbPage.isTaskPresent(taskData));
+         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
+    }
+    
+    @Test
+    public void editPlaybookTypeAll() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "All");
+        
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
+        pbPage.addplaybook(pbData, taskData);
+        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
+        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
+        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
+    }
+    
+    @Test
+    public void deletePlaybookTypeAll() throws BiffException, IOException {
+//    	System.out.println("IN testeditAllPlaybook method");
+        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "All");
+        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
+        String playbookname = pbData.get("playbookname");
+        pbPage.addplaybook(pbData, taskData);
+        pbPage.deletePlaybook(playbookname);
+        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
+    }
 }
