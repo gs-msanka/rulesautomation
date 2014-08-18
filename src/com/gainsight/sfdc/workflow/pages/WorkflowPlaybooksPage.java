@@ -441,6 +441,34 @@ public class WorkflowPlaybooksPage extends BasePage {
     	}
 //    	isTaskPresent(taskData);//call this method in test
     }
+    
+    
+    /**
+     * Adds a Task to the Playbook.
+     * @param testdata
+     * @return void
+     */
+    public void addTask(HashMap<String, String> testdata) {
+        wait.waitTillElementDisplayed(ADD_PBTASK_BUTTON, MIN_TIME, MAX_TIME);
+        item.click(ADD_PBTASK_BUTTON);
+        wait.waitTillElementDisplayed(SAVE_PBTASK_BUTTON, MIN_TIME, MAX_TIME);
+        fillTaskDetails(testdata);
+        item.click(SAVE_PBTASK_BUTTON);
+        wait.waitTillElementDisplayed("//h4[contains(text(),'"+testdata.get("subject") +"')]", MIN_TIME, MAX_TIME);
+        amtDateUtil.stalePause();
+    }
+    
+    /**
+     * Adds a Task to the Playbook Specified.
+     * @param testdata - a HashMap comprising of Task data 
+     * @param playbookname - Name of the Playbook on which task should be added. 
+     */
+    public void addTask(HashMap<String, String> testdata, String playbookname) {
+        Report.logInfo("Started adding the task on the playbook :" +playbookname);
+        openPlaybook(playbookname);
+        addTask(testdata);
+        Report.logInfo("Finished adding task on the playbook :" +playbookname);
+    }
 
 }
    

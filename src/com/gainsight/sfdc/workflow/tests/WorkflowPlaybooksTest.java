@@ -13,8 +13,6 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
-
-
 import com.gainsight.pageobject.core.*;
 import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -55,7 +53,8 @@ public class WorkflowPlaybooksTest extends BaseTest {
          Assert.assertTrue(pbPage.isTaskPresent(taskData));
          Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
     }
-    
+        
+     
     @Test
     public void editPlaybookTypeRisk() throws BiffException, IOException {
 //    	System.out.println("IN testeditAllPlaybook method");
@@ -217,4 +216,31 @@ public class WorkflowPlaybooksTest extends BaseTest {
         pbPage.deletePlaybook(playbookname);
         Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
     }
+    
+    @Test
+    public void addTasksforPbTypeRisk() throws BiffException, IOException {
+//    	System.out.println("IN addTasksforPbTypeRisk method");
+    	List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
+    	HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
+                TESTDATA_DIR + "PlaybookTests.xls", "Tasks");
+        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+        HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
+        taskDataList.add(getMapFromData(testdata.get("task1")));
+        taskDataList.add(getMapFromData(testdata.get("task2")));
+        taskDataList.add(getMapFromData(testdata.get("task3")));
+        taskDataList.add(getMapFromData(testdata.get("task4")));
+        pbPage.addplaybook(pbData, taskData);
+        Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
+        Assert.assertTrue(pbPage.isTaskPresent(taskData));
+        Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
+        for(HashMap<String, String> tData : taskDataList) {
+            pbPage.addTask(tData);
+            Assert.assertTrue(pbPage.isTaskPresent(taskData));
+        }
+    }
+    
+    //Test to edit Tasks
+    //Test to delete Tasks
+    //Test to create duplicate playbooks
 }
