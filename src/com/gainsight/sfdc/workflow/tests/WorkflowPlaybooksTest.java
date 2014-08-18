@@ -42,7 +42,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void addPlaybookTypeRisk() throws BiffException, IOException {
-//    	System.out.println("IN testAllPlaybook method");
+    	System.out.println("IN addPlaybookTypeRisk method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Risk");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
