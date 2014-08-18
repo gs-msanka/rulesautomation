@@ -4,6 +4,7 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.tests.BaseTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -24,6 +25,7 @@ public class Customer360Scorecard extends Customer360Page  {
 	private final String OVERALL_SUMMARY            = "//div[@class='discription']";
     private final String EDIT_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']";
 	private final String SAVE_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']/parent::div/descendant::a[@data-action='SAVE']";
+    private final String SAVE_OVERALL_SCORE         = "//div[@class='score-area']/descendant::a[@data-action='SAVE']";
     private final String GOALS_EXPAND_ICON          = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-down']";
     private final String GOALS_COLLAPSE_ICON        = "//div[@class='goalsheader clearfix']/div[@class='gs-head-tgl-btn goals-arrow-up']";
     private final String GOALS_VIEW                 = "//div[@class='goalslist_content' and @contenteditable='false']";
@@ -48,6 +50,7 @@ public class Customer360Scorecard extends Customer360Page  {
     private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
 
 
+
     public void setScheme(String scheme) {
         this.scheme = scheme;
     }
@@ -62,6 +65,7 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard() {
 		wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+        waitForLoadingImagesNotPresent();
 	}
 
     public Customer360Scorecard openDetailView() {
@@ -69,6 +73,42 @@ public class Customer360Scorecard extends Customer360Page  {
         amtDateUtil.stalePause();
         return this;
     }
+
+    public Customer360Scorecard removeOverAllCustomerScore() {
+        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
+        item.click(OVERALL_SCORE_BG_ELEMENT);
+        amtDateUtil.stalePause();
+        String REMOVE_OVERALL_SCORE = "//div[@class='score-area']/descendant::div[@class='gs-remove-score']/a";
+        item.click(REMOVE_OVERALL_SCORE);
+        wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
+        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
+        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
+        item.click(REMOVE_SCORE_DIALOG_YES);
+        waitForLoadingImagesNotPresent();
+        return this;
+    }
+
+    public Customer360Scorecard updateOverAllScore(String score, Boolean add) {
+        item.click(OVERALL_SCORE_BG_ELEMENT);
+        amtDateUtil.stalePause();
+        driver.switchTo().activeElement();
+        Actions builder = new Actions(driver);
+        List<WebElement> svgObject = driver.findElements(By
+                .xpath(MEASURE_SCORE_SLIDER_CIRCLE));
+        for (WebElement svg : svgObject) {
+            if (svg.isDisplayed())
+            {
+                builder.moveToElement(svg);
+                builder.dragAndDropBy(svg, getOffsetForScore(score, add)+ ((add) ? 1 :0) , 0)
+                        .build().perform();
+            }
+        }
+        amtDateUtil.stalePause();
+        item.click(SAVE_OVERALL_SCORE);
+        waitForLoadingImagesNotPresent();
+        return this;
+    }
+
 
     public Customer360Scorecard openCompactView() {
         item.click(SCORECARD_COMPACT_VIEW);
@@ -84,6 +124,7 @@ public class Customer360Scorecard extends Customer360Page  {
     public Boolean verifyOverallScore(String score) {
         String actScore = getOverallScore();
         Report.logInfo("Actual Score : " +actScore);
+        Report.logInfo("Expected Score : " +score);
         if(actScore.trim().equalsIgnoreCase(score)) {
             return true;
         }
@@ -104,30 +145,39 @@ public class Customer360Scorecard extends Customer360Page  {
         return result;
 	}
 	public boolean verifyOverallScoreTrend(String Trend) {
-        if(Trend == null) {
-            WebElement ele = element.getElement(OVERALL_TREND);
-            String actualTrend = ele.getAttribute("class");
-            Report.logInfo("Actual Class Name : " +actualTrend);
-            if(actualTrend == null || actualTrend=="") {
-                return false;
+        try {
+            if(Trend != null) {
+                WebElement ele = element.getElement(OVERALL_TREND);
+                String actualTrend = ele.getAttribute("class");
+                Report.logInfo("Actual Class Name : " +actualTrend);
+                if(actualTrend == null || actualTrend=="") {
+                    return false;
+                }
+                if(Trend.equalsIgnoreCase("None")) {
+                    return actualTrend.contains("trend-none");
+                } else if(Trend.equalsIgnoreCase("Up")) {
+                    return actualTrend.contains("trend-up");
+                } else if(Trend.equalsIgnoreCase("Down")) {
+                    return actualTrend.contains("trend-down");
+                } else if(Trend.equalsIgnoreCase("Flat")) {
+                    return actualTrend.contains("trend-flat");
+                }
             }
-            if(Trend.equalsIgnoreCase("None")) {
-                return actualTrend.contains("trend-none");
-            } else if(Trend.equalsIgnoreCase("Up")) {
-                return actualTrend.contains("trend-up");
-            } else if(Trend.equalsIgnoreCase("Down")) {
-                return actualTrend.contains("trend-down");
-            } else if(Trend.equalsIgnoreCase("Flat")) {
-                return actualTrend.contains("trend-flat");
-            }
+        }  catch (Exception e) {
+            return false;
         }
+
         return false;
 	}
 
 	public Customer360Scorecard updateCustomerSummary(String scorecardComments) {
-		driver.findElement(By.xpath(OVERALL_SUMMARY)).click();
-        wait.waitTillElementDisplayed(SAVE_OVERALL_SUMMARY, MIN_TIME, MAX_TIME);
-		driver.findElement(By.xpath(EDIT_OVERALL_SUMMARY)).sendKeys(scorecardComments);
+        new Actions(driver).moveToElement(driver.findElement(By.xpath(OVERALL_SUMMARY))).build().perform();
+        new Actions(driver).doubleClick(driver.findElement(By.xpath(OVERALL_SUMMARY))).build().perform();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String a = "var a = document.getElementsByClassName('discription');\n" +
+                "a[0].click();\n" +
+                "a[0].innerHTML = '"+scorecardComments+"';";
+        js.executeScript(a);
 		item.click(SAVE_OVERALL_SUMMARY);
 		waitForLoadingImagesNotPresent();
         return this;
@@ -142,13 +192,20 @@ public class Customer360Scorecard extends Customer360Page  {
     public Boolean verifyOverAllSummary(String expResult) {
         String actResult = getOverallSummary();
         Report.logInfo("Expected Summary : "+expResult);
+        Report.logInfo("Actual Summary : "+actResult);
         return actResult.trim().toLowerCase().contains(expResult.trim().toLowerCase());
     }
 
+    /**
+     * This never works due to java script issues in 360 Page.
+     * @return
+     */
     public Customer360Scorecard expandCustomerGoalsSec() {
-        if (!driver.findElement(By.xpath("//div[@class='goalslist editable-parent']")).isDisplayed()){
-        	item.click("//div[@class='goalsheader clearfix']");
-        }
+        String script = "var a = document.getElementsByClassName('goalsheader');\n" +
+                "a[0].click();" ;
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript(script);
+
         return this;
     }
 
@@ -167,9 +224,11 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard updateCustomerGoals(String goals) {
         expandCustomerGoalsSec();
-        String goalsSectionXPATH="//div[@class='goalslist editable-parent' and contains(@style,'display: block;')]//div[@class='goalslist_content' and @title='Click to edit']";
-        item.click(goalsSectionXPATH);
-        element.setText(goalsSectionXPATH, goals);
+        String script = "var a = document.getElementsByClassName('goalslist_content');\n" +
+                "a[0].click();\n" +
+                "a[0].innerHTML = '"+goals+"';";
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript(script);
         item.click(GOALS_SAVE);
         waitForLoadingImagesNotPresent();
         return this;
@@ -194,7 +253,8 @@ public class Customer360Scorecard extends Customer360Page  {
         measure += "/descendant::div[@class='score']";
         Report.logInfo("Xpath : " +measure);
         String actScore = item.getText(measure);
-        Report.logInfo("Measure Score : " +actScore);
+        Report.logInfo("Actual Score : " +actScore);
+        Report.logInfo("Expected Score : " +expScore);
         if(actScore != null && actScore != "") {
             if(actScore.trim().equalsIgnoreCase(expScore)) {
                 return true;
@@ -206,28 +266,47 @@ public class Customer360Scorecard extends Customer360Page  {
     public boolean verifyMeasureTrend(String groupName, String measureName, String trend) {
         if(trend  != null) {
             String measure = getMeasureXpath(groupName, measureName);
-            measure += "/descendant::div[contains(@class, 'trend')]";
+            measure += "/descendant::div[@class='grade-score']/div[2]";
             Report.logInfo("Xpath : " +measure);
-            String actTrend = element.getElement(measure).getAttribute("class");
-            Report.logInfo("Measure Trend : " +actTrend);
-            String temp = trend.equalsIgnoreCase("Up") ? "trend-up" : trend.equalsIgnoreCase("down") ? "trend-down" : "trend-none";
-            if(actTrend != null && actTrend != "") {
-                if(actTrend.contains(temp)) {
-                    return true;
+            List<WebElement> eleList = element.getAllElement(measure);
+            WebElement el = null;
+            Report.logInfo(String.valueOf(eleList.size()));
+            for(WebElement ele : eleList) {
+                if(ele.isDisplayed()) {
+                    el = ele;
+                    String actTrend = el.getAttribute("class");
+                    Report.logInfo("Measure Trend : " +actTrend);
+                    String temp = trend.equalsIgnoreCase("Up") ? "trend-up" : trend.equalsIgnoreCase("down") ? "trend-down" : "trend-none";
+                    if(actTrend != null && actTrend != "") {
+                        if(actTrend.contains(temp)) {
+                            return true;
+                        }
+                    }
                 }
+                break;
             }
+
         }
         return false;
     }
 
-
-    public Customer360Scorecard removeMeasureScore(String groupName, String measureName, String score) {
-        String xPath = getMeasureXpath(groupName, measureName);
-
-        xPath += "/descendant::div[@class='gs-remove-score']/a";
-
+    public Customer360Scorecard removeMeasureScore(String groupName, String measureName) {
+        String measureXpath = getMeasureXpath(groupName, measureName);
+        Report.logInfo(measureXpath+"/descendant::div[@class='grade-score']");
+        item.click(measureXpath+"/descendant::div[@class='grade-score']");
+        Report.logInfo(measureXpath + "/descendant::div[@class='slider-container clearfix']");
+        wait.waitTillElementDisplayed(measureXpath+"/descendant::div[@class='slider-container clearfix']", MIN_TIME, MAX_TIME);
+        Report.logInfo(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
+        item.click(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
+        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
+        wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
+        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
+        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
+        item.click(REMOVE_SCORE_DIALOG_YES);
+        waitForLoadingImagesNotPresent();
         return this;
     }
+
 
     public Customer360Scorecard updateMeasureScore(String groupName, String measureName, String score, boolean add) {
         String xpath = getMeasureXpath(groupName, measureName);
@@ -312,29 +391,26 @@ public class Customer360Scorecard extends Customer360Page  {
 	}
 
 	public Customer360Scorecard updateMeasureComments(String groupName, String measureName, String comments) {
-        openDetailView();
-        amtDateUtil.sleep(5);
-        String xPath = getMeasureXpath(groupName, measureName);
-        List<WebElement> eleList = element.getAllElement(xPath);
-        Report.logInfo(String.valueOf(eleList.size()));
-        for(WebElement ele : eleList) {
-            if(ele.isDisplayed()) {
-                ele.findElement(By.cssSelector("div.text-edit-area")).click();
-                amtDateUtil.stalePause();
-                ele.findElement(By.cssSelector("div.text-edit-area")).sendKeys(comments);
-            }
-        }
 
-        String save = xPath+"/descendant::div[@class='save-mark']";
-        eleList = element.getAllElement(save);
-        Report.logInfo(String.valueOf(eleList.size()));
-        for(WebElement ele :eleList) {
-            Report.logInfo(String.valueOf(ele.isDisplayed()));
-            if(ele.isDisplayed()) {
-                ele.click();
-                break;
-            }
-        }
+        String script = "var a = document.getElementsByClassName('floatleft');\n" +
+                "a[0].click();\n" +
+                "a[0].innerHTML;\n" +
+                "a.length;\n" +
+                "var text =\"\";\n" +
+                "var i;\n" +
+                "var scorecard;\n" +
+                "for (i = 0; i < a.length; i++) {\n" +
+                "    if((a[i].innerHTML === '"+measureName+"') ) {\n" +
+                "        scorecard = a[i];\n" +
+                "        break;\n" +
+                "    }\n" +
+                "}\n" +
+                "scorecard.parentNode.parentNode.getElementsByClassName('text-edit-area')[0].click();\n" +
+                "scorecard.parentNode.parentNode.getElementsByClassName('text-edit-area')[0].innerHTML='"+comments+"';";
+
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript(script);
+        new Actions(driver).moveToElement(driver.findElement(By.cssSelector(CUSTOMER_GOALS_HEADER))).build().perform();
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -343,13 +419,14 @@ public class Customer360Scorecard extends Customer360Page  {
         String xPath = getMeasureXpath(groupName, measureName);
         String  viewableTextArea = xPath+"/descendant::div[@class='text-edit-area']";
         String comments = item.getText(viewableTextArea);
-        Report.logInfo("Actual Measure (Name -) '"+measureName+"' comments : " +comments);
+        Report.logInfo("Actual Measure '"+measureName+"' comments : " +comments);
 		return comments;
 	}
 
     public Boolean verifyCommentsOfMeasure(String groupName, String measureName, String expComments) {
         String actComments = getCommentsOfMeasure(groupName, measureName);
-        Report.logInfo("Expected Comments : " +actComments);
+        Report.logInfo("Expected Comments : " +expComments);
+        Report.logInfo("Actual Comments : " +actComments);
         return actComments.trim().toLowerCase().contains(expComments.trim().toLowerCase());
     }
 

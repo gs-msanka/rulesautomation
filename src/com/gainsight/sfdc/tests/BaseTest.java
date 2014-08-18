@@ -450,4 +450,18 @@ public class BaseTest {
         apex.runApex(resolveStrNameSpace(code));
     }
 
+    public void overAllCustomerRollUp(Boolean enable) {
+        String s = "List<JBCXM__ScorecardConfig__c> enable_sc=[SELECT JBCXM__ScorecardEnabled__c,JBCXM__CustomerRollup__c FROM JBCXM__ScorecardConfig__c where Name='SCORECARD CONFIGURATION' LIMIT 1];";
+        if(enable) {
+            s+="\n"+"enable_sc.get(0).JBCXM__CustomerRollup__c='WEIGHT';"+"\n";
+            s+="\n"+"enable_sc.get(0).JBCXM__OverrideCustomer__c=false;"+"\n";
+
+        } else {
+            s+="\n"+"enable_sc.get(0).JBCXM__CustomerRollup__c='DISABLED';"+"\n";
+            s+="\n"+"enable_sc.get(0).JBCXM__OverrideCustomer__c=true;"+"\n";
+        }
+        s+="update(enable_sc);"+"\n";
+        apex.runApex(resolveStrNameSpace(s));
+    }
+
 }

@@ -7,8 +7,6 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import org.testng.annotations.BeforeClass;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -23,7 +21,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     private final String TEST_DATA_FILE         = "testdata/sfdc/Scorecard/Color_Scheme_Data.xls";
     private final String SETUP_FILE             = env.basedir+"/apex_scripts/Scorecard/scorecard.apex";
     private final String CLEAN_FILE             = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final String COLOR_SCHEME_FILE    = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_color.apex";
+    private final String COLOR_SCHEME_FILE      = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_color.apex";
     private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
     private final String SCHEME                 = "Color";
 

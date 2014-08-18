@@ -21,10 +21,10 @@ public class AdminScorecardSection extends AdministrationBasepage{
 		
 		public AdminScorecardSection(){
 			try {
-                wait.waitTillElementDisplayed(READY_INDICATOR2, MIN_TIME, MAX_TIME);
+                wait.waitTillElementDisplayed(READY_INDICATOR1, MIN_TIME, MAX_TIME);
 			}
 			catch(TimeoutException e){
-                wait.waitTillElementDisplayed(READY_INDICATOR1, MIN_TIME, MAX_TIME);
+                wait.waitTillElementDisplayed(READY_INDICATOR2, MIN_TIME, MAX_TIME);
 			}
 		}
 		
