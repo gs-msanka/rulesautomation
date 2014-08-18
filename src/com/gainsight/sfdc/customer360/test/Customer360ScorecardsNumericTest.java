@@ -1,13 +1,18 @@
 package com.gainsight.sfdc.customer360.test;
 
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -29,7 +34,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
     @BeforeClass
     public void setUp() {
 
-        /*Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
+        Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
 		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
@@ -42,7 +47,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         }
         apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
         apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
-
+        basepage.login();
 		AdministrationBasepage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSetion();
         as.enableScorecard();
@@ -52,8 +57,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             throw new RuntimeException("Failed to create metrics for scorecards");
-        }*/
-        basepage.login();
+        }
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -323,7 +327,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-9")
-    public void customerGaolsUpdate(HashMap<String, String> testData) {
+    public void customerGoalsUpdate(HashMap<String, String> testData) {
         Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         Customer360Scorecard customer360Scorecard = customer360Page.goToScorecardSection();
         customer360Scorecard.setScheme(testData.get("Scheme"));
