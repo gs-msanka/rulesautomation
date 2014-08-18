@@ -35,9 +35,9 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @AfterClass
     public void tearDown(){
-    	WorkflowBasePage wfb = new WorkflowBasePage();
-    	wfb.showSalesForceHeader();
-        basepage.logout();
+		WorkflowBasePage wfb = new WorkflowBasePage();
+		wfb.showSalesForceHeader();
+	    basepage.logout();
     }
     
     @Test
@@ -57,7 +57,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
      
     @Test
     public void editPlaybookTypeRisk() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN editPlaybookTypeRisk method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
         
@@ -73,13 +73,15 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void deletePlaybookTypeRisk() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+//    	System.out.println("IN deletePlaybookTypeRisk method1");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
+//        System.out.println("IN deletePlaybookTypeRisk method2");
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
+        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         String playbookname = pbData.get("playbookname");
+//        System.out.println("IN deletePlaybookTypeRisk method3");
         pbPage.addplaybook(pbData, taskData);
         pbPage.deletePlaybook(playbookname);
         Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
@@ -87,7 +89,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void addPlaybookTypeEvent() throws BiffException, IOException {
-//    	System.out.println("IN testAllPlaybook method");
+    	System.out.println("IN addPlaybookTypeEvent method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Event");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
@@ -101,7 +103,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void editPlaybookTypeEvent() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN editPlaybookTypeEvent method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
         
@@ -117,7 +119,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void deletePlaybookTypeEvent() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN deletePlaybookTypeEvent method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
@@ -131,7 +133,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void addPlaybookTypeOpportunity() throws BiffException, IOException {
-//    	System.out.println("IN testAllPlaybook method");
+    	System.out.println("IN addPlaybookTypeOpportunity method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
@@ -145,7 +147,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void editPlaybookTypeOpportunity() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN editPlaybookTypeOpportunity method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
         
@@ -161,7 +163,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void deletePlaybookTypeOpportunity() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN deletePlaybookTypeOpportunity method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
@@ -175,7 +177,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void addPlaybookTypeAll() throws BiffException, IOException {
-//    	System.out.println("IN testAllPlaybook method");
+    	System.out.println("IN addPlaybookTypeAll method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "All");
          WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
@@ -189,7 +191,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void editPlaybookTypeAll() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN editPlaybookTypeAll method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "All");
         
@@ -205,7 +207,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     
     @Test
     public void deletePlaybookTypeAll() throws BiffException, IOException {
-//    	System.out.println("IN testeditAllPlaybook method");
+    	System.out.println("IN deletePlaybookTypeAll method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "All");
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
@@ -217,7 +219,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
     }
     
-    @Test
+   /* @Test
     public void addTasksforPbTypeRisk() throws BiffException, IOException {
 //    	System.out.println("IN addTasksforPbTypeRisk method");
     	List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
@@ -238,7 +240,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
             pbPage.addTask(tData);
             Assert.assertTrue(pbPage.isTaskPresent(taskData));
         }
-    }
+    }*/
     
     //Test to edit Tasks
     //Test to delete Tasks
