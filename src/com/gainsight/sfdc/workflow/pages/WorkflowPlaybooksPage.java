@@ -173,7 +173,8 @@ public class WorkflowPlaybooksPage extends BasePage {
         Report.logInfo("Started verifying the playbook "+playbookname+" is All type of playbook");
         boolean result = false;
         try {
-        	String eleString = "//h2[text()='Risk']/following-sibling::ul[@class='playbook-Risk']/li[text()='"+playbookname+"']";            
+        	String eleString = "//h2[text()='"+playbookType+"']/following-sibling::ul[@class='playbook-"+playbookType+"']/li[text()='"+playbookname+"']";            
+//        	String eleString = "//h2[text()='Risk']/following-sibling::ul[@class='playbook-Risk']/li[text()='"+playbookname+"']";
             System.out.println("Play book Path = " +eleString);
             wait.waitTillElementDisplayed(eleString, MIN_TIME, MAX_TIME);
             WebElement ele = element.getElement(eleString);
@@ -209,6 +210,7 @@ public class WorkflowPlaybooksPage extends BasePage {
            field.clearAndSetText(PLAYBOOK_COMMENTS_INPUT, testdata.get("description"));
        }
        item.click(SAVE_PLAYBOOK_BUTTON);	//Calling Save button
+       amtDateUtil.stalePause();
     }
     
     /**
@@ -218,6 +220,7 @@ public class WorkflowPlaybooksPage extends BasePage {
      */
     public void fillTaskDetails(HashMap<String, String> testdata) {
         Report.logInfo("Started filling the task form details.");
+        wait.waitTillElementDisplayed(ADD_PBTASK_BUTTON, MIN_TIME, MAX_TIME);
         item.click(ADD_PBTASK_BUTTON);
         if(testdata.get("subject") != null) {
             field.clearAndSetText(SUBJECT_PBTASK_INPUT, testdata.get("subject"));
@@ -293,6 +296,7 @@ public class WorkflowPlaybooksPage extends BasePage {
         wait.waitTillElementDisplayed(EDIT_PLAYBOOK, MIN_TIME, MAX_TIME);
         amtDateUtil.stalePause();
         item.click(EDIT_PLAYBOOK);
+        amtDateUtil.stalePause();
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         fillPlaybookDetails(testdata);
         amtDateUtil.stalePause();
