@@ -285,7 +285,6 @@ public class Customer360Scorecard extends Customer360Page  {
                 }
                 break;
             }
-
         }
         return false;
     }
@@ -391,7 +390,6 @@ public class Customer360Scorecard extends Customer360Page  {
 	}
 
 	public Customer360Scorecard updateMeasureComments(String groupName, String measureName, String comments) {
-
         String script = "var a = document.getElementsByClassName('floatleft');\n" +
                 "a[0].click();\n" +
                 "a[0].innerHTML;\n" +

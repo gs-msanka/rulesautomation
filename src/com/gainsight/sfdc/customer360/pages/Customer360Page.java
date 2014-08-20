@@ -97,7 +97,7 @@ public class Customer360Page extends BasePage {
 		return new Customer360Scorecard();
 	}
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
-    	Report.logInfo("Searching for customer...");
+    	Report.logInfo("Searching for customer..." +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
