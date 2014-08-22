@@ -9,6 +9,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -343,5 +344,10 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyCustomerGoals(goals));
     }
     */
+
+    @AfterClass
+    public void tearDown() {
+        basepage.logout();
+    }
 
 }

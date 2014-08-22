@@ -14,6 +14,7 @@ public class Customer360Scorecard extends Customer360Page  {
 
     private String scheme               = "Grade";
     private String[] grades_array       = {"F","E","D","C","B","A"};
+    private String[] colors_array       = {"#c53536","#fd9b9c","#eba638", "#32a5c7", "#76ad27"};
     private static HashMap<String, String> gradeColorMap;
     private static HashMap<String, String> scoreColorMap;
     static {
@@ -30,11 +31,7 @@ public class Customer360Scorecard extends Customer360Page  {
         scoreColorMap.put("50-75" , "#eba638");
         scoreColorMap.put("75-100" , "#76ad27");
     }
-
-    private String[] colors_array       = {"#790400","#c46d6c","#d5bf50","#4daddd","#97d477","#4a841e"};
-
     private final String READY_INDICATOR            = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
-
 	private final String OVERALL_SCORE              = "//div[contains(@class,'overallscore')]/descendant::li[@class='score']";
     private final String OVERALL_SCORE_BG_ELEMENT   = "//div[contains(@class, 'overallscore')]/div[@class='score-area']";
     private final String OVERALL_TREND              = "//div[contains(@class, 'overallscore')]/descendant::li[contains(@class, 'score-trend')]";
@@ -64,8 +61,10 @@ public class Customer360Scorecard extends Customer360Page  {
     private final String SCORECARD_DETAIL_VIEW      = "//div[@class='gs-views-main']/a[@data-tabname='DETAIL-FULL']";
     private final String CUSTOMER_GOALS_HEADER      = "div.goalsheader.clearfix";
     private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
-
-
+    private final String REMOVE_SCORE_DIALOG        = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
+    private final String REMOVE_OVERALL_SCORE       = "//div[@class='score-area']/descendant::div[@class='gs-remove-score']/a";
+    private final String REMOVE_SCORE_DIALOG_YES    = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
+    private final String REMOVE_SCORE_DIALOG_NO     = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
 
     public void setScheme(String scheme) {
         this.scheme = scheme;
@@ -83,14 +82,10 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
     public Customer360Scorecard removeOverAllCustomerScore() {
-        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
         item.click(OVERALL_SCORE_BG_ELEMENT);
         amtDateUtil.stalePause();
-        String REMOVE_OVERALL_SCORE = "//div[@class='score-area']/descendant::div[@class='gs-remove-score']/a";
         item.click(REMOVE_OVERALL_SCORE);
         wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
-        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
-        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
         item.click(REMOVE_SCORE_DIALOG_YES);
         waitForLoadingImagesNotPresent();
         return this;
@@ -115,7 +110,6 @@ public class Customer360Scorecard extends Customer360Page  {
         waitForLoadingImagesNotPresent();
         return this;
     }
-
 
     public Customer360Scorecard openCompactView() {
         item.click(SCORECARD_COMPACT_VIEW);
@@ -358,16 +352,10 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard removeMeasureScore(String groupName, String measureName) {
         String measureXpath = getMeasureXpath(groupName, measureName);
-        Report.logInfo(measureXpath+"/descendant::div[@class='grade-score']");
         item.click(measureXpath+"/descendant::div[@class='grade-score']");
-        Report.logInfo(measureXpath + "/descendant::div[@class='slider-container clearfix']");
         wait.waitTillElementDisplayed(measureXpath+"/descendant::div[@class='slider-container clearfix']", MIN_TIME, MAX_TIME);
-        Report.logInfo(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
         item.click(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
-        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
         wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
-        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
-        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
         item.click(REMOVE_SCORE_DIALOG_YES);
         waitForLoadingImagesNotPresent();
         return this;
@@ -532,20 +520,4 @@ public class Customer360Scorecard extends Customer360Page  {
         }
         return new AdminScorecardSection();
     }
-
-
-    public enum Grades {
-        A(1), B(2), C(3), D(4), E(5), F(6), G(7), H(8), I(9), J(10);
-
-        private int value;
-
-        private Grades(int val) {
-            value = val;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
 }
