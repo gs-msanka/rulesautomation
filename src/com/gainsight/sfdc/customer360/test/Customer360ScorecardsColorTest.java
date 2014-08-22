@@ -2,7 +2,7 @@ package com.gainsight.sfdc.customer360.test;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import org.testng.annotations.BeforeClass;
@@ -44,8 +44,8 @@ public class Customer360ScorecardsColorTest extends BaseTest {
 
         basepage.login();
 
-		AdministrationBasepage adm = basepage.clickOnAdminTab();
-        AdminScorecardSection as = adm.clickOnScorecardSetion();
+		AdministrationBasePage adm = basepage.clickOnAdminTab();
+        AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
 		apex.runApexCodeFromFile(COLOR_SCHEME_FILE,isPackageInstance());
         try {

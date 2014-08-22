@@ -2,7 +2,7 @@ package com.gainsight.sfdc.customer360.test;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -48,8 +48,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
         apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
         basepage.login();
-		AdministrationBasepage adm = basepage.clickOnAdminTab();
-        AdminScorecardSection as = adm.clickOnScorecardSetion();
+		AdministrationBasePage adm = basepage.clickOnAdminTab();
+        AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
 		apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE,isPackageInstance());
         try {

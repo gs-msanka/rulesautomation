@@ -3,16 +3,14 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.sfdc.administration.pages.AdminUIViewsSubTab;
 import jxl.read.biff.BiffException;
 
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
-import com.gainsight.sfdc.administration.pages.AdminUIViewssSubTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
@@ -42,7 +40,7 @@ public class AdminUIViewsTabTest extends BaseTest {
 	public void testAdminAddUIViews(HashMap<String, String> testData) throws BiffException, IOException {
 		selectTabName(testData.get("addAvailableFields"));
 	}
-	private AdminUIViewssSubTab selectTabName(String testData) {
+	private AdminUIViewsSubTab selectTabName(String testData) {
 		HashMap<String, String> data = getMapFromData1(testData);
 		String tabName = data.get("tabName");
 		String ViewName =data.get("ViewName");
@@ -56,7 +54,7 @@ public class AdminUIViewsTabTest extends BaseTest {
 		String rpOperator =data.get("rpOperator");
 		String rpvalue = data.get("rpvalue");
 		
-		AdminUIViewssSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewssettingsSubTab();
+		AdminUIViewsSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewsSettingsSubTab();
 		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName,
 				                    selectRfield, rpOperator , rpvalue); 
 		return adUIview;
