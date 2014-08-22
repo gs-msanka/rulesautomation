@@ -6,8 +6,7 @@ import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
 public class AdministrationBasePage extends BasePage {
 
     private final String READY_INDICATOR        = "//h1[@class='pageType noSecondHeader' and contains(text(),'Administration')]";
-
-	private final String SCORECARD_SECTION      = "//a[@href='scorecardsetup']";
+    private final String SCORECARD_SECTION      = "//a[contains(@href, 'scorecardsetup')]";
     private final String ADMIN_RETENTION        = "//a[contains(@href,'Administration-Retention')]";
     private final String ADMIN_NPS              = "//a[contains(@href,'Administration-NPS')]";
     private final String ADMIN_CUSTOMERS        = "//a[contains(@href,'Administration-Customers')]";
@@ -18,14 +17,14 @@ public class AdministrationBasePage extends BasePage {
     private final String ADMIN_NOTIFICATION     = "//a[contains(@href,'Administration-Notifications')]";
     private final String ADMIN_UI_SETTINGS      = "//a[contains(@href,'Administration-UIViews')]";
     private final String ADMIN_RULES_ENGINE     = "//a[contains(@href,'Administration-RulesEngine')]";
-
+    private final String SETUP                  = "//a[@id='setupLink' and @title='Setup']";
 
     public AdministrationBasePage() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
 	public CreateSalesforceUsers clickOnSetup(){
-		item.click("//a[@id='setupLink' and @title='Setup']"); 
+		item.click(SETUP);
 		return new CreateSalesforceUsers();		
 	}
 
@@ -59,7 +58,6 @@ public class AdministrationBasePage extends BasePage {
 		return new AdminMilestoneTab();
 	}
 	
-	
 	public AdminFeaturesSubTab clickOnFeaturesTab() {
 		item.click(ADMIN_FEATURES);
 		return new AdminFeaturesSubTab();
@@ -80,17 +78,8 @@ public class AdministrationBasePage extends BasePage {
 		return new AdminRulesEngineTab();
 	}
 
-
 	public AdminScorecardSection clickOnScorecardSection(){
 		item.click(SCORECARD_SECTION);
 		return new AdminScorecardSection();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
