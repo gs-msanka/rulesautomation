@@ -75,9 +75,9 @@ public class AdministrationBasePage extends BasePage {
         return new AdminNotificationsSubTab();
     }
 
-    public AdminUIViewsSubTab clickOnUIViewsSettingsSubTab() {
+    public AdminUIViewssSubTab clickOnUIViewsSettingsSubTab() {
         item.click(ADMIN_UI_SETTINGS);
-        return new AdminUIViewsSubTab();
+        return new AdminUIViewssSubTab();
     }
 
     public AdminRulesEngineTab clickOnRulesEngineSubTab() {
