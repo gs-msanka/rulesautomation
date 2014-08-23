@@ -67,7 +67,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule(soql.getUserLocale(), "ACCOUNTLEVEL");
+		rSetup.runRule("ACCOUNTLEVEL");
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 	}
 
@@ -93,7 +93,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));//First param is for date...by default i am giving date=today while running rules
+		rSetup.runRule("ACCOUNTLEVEL");//by default i am giving date=today while running rules
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 
 	}
@@ -120,7 +120,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+		rSetup.runRule(alertCriteria.get("TriggeredUsageOn"));
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 	}
 	
@@ -151,7 +151,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+		rSetup.runRule(alertCriteria.get("TriggeredUsageOn"));
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 	}
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
@@ -176,7 +176,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+		rSetup.runRule( alertCriteria.get("TriggeredUsageOn"));
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 	}
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
@@ -201,7 +201,7 @@ public class RulesEngine_AccountMonthly_Tests extends BaseTest {
 				alertCriteria.get("TaskOwnerField"),
 				testData.get("RuleCriteria"),
 				alertCriteria.get("TriggeredUsageOn"));
-		rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+		rSetup.runRule(alertCriteria.get("TriggeredUsageOn"));
 		Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 	}
 }
