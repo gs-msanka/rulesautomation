@@ -23,14 +23,14 @@ public class BaseTest {
     protected TestDataHolder testDataLoader = new TestDataHolder();
     String[] dirs = {"testdata", "sfdc"};
     protected TestEnvironment env = new TestEnvironment();
-    public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
+    public final String TEST_DATA_PATH_PREFIX = env.basedir + "/"
             + generatePath(dirs);
-    public static SOQLUtil soql = new SOQLUtil();
+    public SOQLUtil soql = new SOQLUtil();
     public ApexUtil apex = new ApexUtil();
     protected static BasePage basepage;
-    public  static String userLocale;
-    public  static TimeZone userTimezone;
-    public String userDir = TestEnvironment.basedir;
+    public static String userLocale;
+    public static TimeZone userTimezone;
+    public String userDir = env.basedir;
     public AmountsAndDatesUtil adUtil = new AmountsAndDatesUtil();
     Calendar c = Calendar.getInstance();
     public static final Map<String, String> monthMap;
@@ -90,7 +90,7 @@ public class BaseTest {
 
     @BeforeClass
     public void failureRecovery() {
-        if (TestEnvironment.getDriver() == null) {
+        if (env.getDriver() == null) {
             env.start();
         }
     }
@@ -129,13 +129,15 @@ public class BaseTest {
     }
 
     public List<HashMap<String, String>> getMapFromDataList(String data) {
-        List<HashMap<String, String>> hm = new ArrayList<HashMap<String, String>>();
+        List<HashMap<String, String>> hm = new ArrayList();
         System.out.println(data);
         String[] dataArray = data.substring(1, data.length() - 1).split(",");
+        int i = 0;
         for (String record : dataArray) {
             if (record != null) {
                 System.out.println(record);
                 hm.add(getMapFromData("{" + record + "}"));
+                i++;
             }
         }
         return hm;
@@ -194,20 +196,22 @@ public class BaseTest {
      */
     public String resolveStrNameSpace(String str) {
         String result = "";
-        if (str != null && !isPackageInstance()) {
+        System.out.println("RESOLVING STRING NAMESPACE");
+        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        if (str != null && !isPackage) {
             result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
             Report.logInfo(result);
             return result;
         } else {
             return str;
         }
+
     }
 
-    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
+    public String getDatewithFormat(int i) {
         String date = null;
-        Calendar c = Calendar.getInstance(userTimezone);
-        c.add(Calendar.DATE, noOfDaysToAdd);
-        c.add(Calendar.MONTH, noOfMonthsToAdd);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, i);
         if (userLocale.contains("en_US")) {
             DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
             date = dateFormat.format(c.getTime());
@@ -220,8 +224,24 @@ public class BaseTest {
         return date;
     }
 
+    public String getDateFormat(int i) {
+        String date = null;
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, i);
+        if (userLocale.contains("en_US")) {
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            date = dateFormat.format(c.getTime());
+
+        } else if (userLocale.contains("en_IN")) {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            date = dateFormat.format(c.getTime());
+        }
+        Report.logInfo(String.valueOf(date));
+        return date;
+    }
+
     public void deletePickList() {
-        String DELETE_SCRIPT_FILE = TestEnvironment.basedir + "/testdata/sfdc/Administration/Picklist_Delte_Script.txt";
+        String DELETE_SCRIPT_FILE = env.basedir + "/testdata/sfdc/Administration/Picklist_Delte_Script.txt";
         apex.runApexCodeFromFile(DELETE_SCRIPT_FILE, isPackageInstance());
     }
 
@@ -245,7 +265,7 @@ public class BaseTest {
 
     public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
         if (!isPackageInstance()) {
-            File tempFile = new File(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
+            File tempFile = new File(env.basedir + "/resources/datagen/process/tempJob.txt");
             FileOutputStream fOut = new FileOutputStream(tempFile);
             try {
                 fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
@@ -254,7 +274,7 @@ public class BaseTest {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new FileReader(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
+            return new FileReader(env.basedir + "/resources/datagen/process/tempJob.txt");
         } else {
             return new FileReader(fileName);
 
@@ -387,7 +407,7 @@ public class BaseTest {
     public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean isStartDayOfWeek, String weekStartsOn) throws IOException, InterruptedException {
         Calendar cal = Calendar.getInstance();
         BufferedReader reader;
-        String fileName = TestEnvironment.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+        String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
         String line = null;
         String code = "";
         reader = new BufferedReader(new FileReader(fileName));
@@ -434,6 +454,13 @@ public class BaseTest {
                 waitForBatchExecutionToComplete("AdoptionAggregation");
             }
         }
+
+
+
+
+
+
+
     }
 
     public void runMetricSetup(String fileName, String scheme) throws IOException {

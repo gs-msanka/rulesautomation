@@ -4,7 +4,7 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.accounts.pages.AccountsPage;
-import com.gainsight.sfdc.administration.pages.AdministrationBasepage;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
@@ -153,9 +153,9 @@ public class BasePage extends WebPage implements Constants {
         }
     }
 
-	public AdministrationBasepage clickOnAdminTab() {
+	public AdministrationBasePage clickOnAdminTab() {
 		clickOnTab(ADMINISTRATION_TAB);
-		return new AdministrationBasepage();
+		return new AdministrationBasePage();
 	}
 
 	public void setFilter(String filterFiledName, String value) {

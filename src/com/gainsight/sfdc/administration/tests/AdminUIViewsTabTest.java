@@ -56,7 +56,7 @@ public class AdminUIViewsTabTest extends BaseTest {
 		String rpOperator =data.get("rpOperator");
 		String rpvalue = data.get("rpvalue");
 		
-		AdminUIViewssSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewssettingsSubTab();
+		AdminUIViewssSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewsSettingsSubTab();
 		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName,
 				                    selectRfield, rpOperator , rpvalue); 
 		return adUIview;

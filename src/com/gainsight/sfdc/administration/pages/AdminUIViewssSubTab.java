@@ -16,10 +16,13 @@ public class AdminUIViewssSubTab extends BasePage {
 	private final String NEW                   = "//input[@class='btn uiViewNewBtn']";
 	private final String UI_VIEW_CANCEL        = "//input[@class='btn btnCancelClick']";
 	private final String WAIT_PAGE_LOAD        = "//div[@class='bPageBlock brandSecondaryBrd bEditBlock secondaryPalette']";
-	private final String SELECT_DROPDOWN       = "//select[@class='ddTabsList']";
+	private final String CLICK_ON_SELECTBOX    = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";  //"//select[@class='ddTabsList']";
+	private final String SELECT_DROPDOWN       = "//input[@title='Alerts']";
 	private final String AVAILABLE_FIELDS      = "//select[@id='ddColumnSelectorList' and @multiple='multiple']"; //"ddColumnSelectorList";
 	private final String VIEW_NAME             = "//input[@ class='jbaraDummyUIViewInputCtrl viewNameInput']";
-	private final String FILTER_SELECT_FIELDS  = "//select[@class='ddFilterFields']";
+	private final String CLICK_ON_FSELECTBOX   = "//tbody[@id='tbodyFilterContainer']/tr/td/button";
+	 
+	private final String FILTER_SELECT_FIELDS  = "//tbody[@id='tbodyFilterContainer']/tr/td/button"; //select[@class='ddFilterFields']";
 	private final String FILTER_SELECT_OPERATOR= "//select[@class='dummyOperatorFields ddOperatorClass']";
 	private final String FILTER_VALUE          = "//input[@class='Name filterFieldClass']";
 	
@@ -27,12 +30,16 @@ public class AdminUIViewssSubTab extends BasePage {
 	private final String MULTI_FILTER_VALUE    = "//select[@multiple='multiple']";//select[contains(@multiple,'multiple')]
 	private final String FILTER_VALUE_SELECT   = "//td[@class='tdFilterValue othertds']//select";
 	
+	private final String CLICK_ON_RPSELECTBOX    = "//tbody[@id='tbodyReportParamContainer']/tr/td/button";
 	private final String SPECFY_REPORT_PARM    = "//select[@class='ddReportParamFields']";
 	private final String RPARMS_LABEL          = "//input[@class='selectedReportParamLabel']"; 
 	private final String RPARMS_OPERATOR       = "//div[@ id='divReportParamSelector']//table//tbody//td[3]//select";
 	
 	private final String RPARMS_VALUE_SELECT   = "//div[@ id='divReportParamSelector']//table//tbody//td[4]//select";
-	private final String RPRAMS_VALUE_TEXT     = "//div[@ id='divReportParamSelector']//table//tbody//td[4]//input";  
+	private final String RPRAMS_VALUE_TEXT     = "//div[@ id='divReportParamSelector']//table//tbody//td[4]//input";
+	
+	private final String RIGHT_ARROW_IMG       = "//img[@class='rightArrowIcon']";
+	private final String SAVE_BUTTON           = "//input[@class='btnSaveClick btn']";
 //private final String RPARMS_VALUE_MLTISLCT = "";
 	//Add Rows
 	private final String FILTER_ADD_ROWS       = "//a[@id='fAddRowLink']";
@@ -65,7 +72,13 @@ public class AdminUIViewssSubTab extends BasePage {
 				 selectAvailableFields(sctFieldName);
 			 return this;
 			}}
-			 field.selectFromDropDown(SELECT_DROPDOWN, tabName);
+	         item.click(CLICK_ON_SELECTBOX);
+	         
+	         item.setTextByKeys("//div[@class='ui-multiselect-filter']/input", tabName);
+	         System.out.println("put the tab name:--");
+	      item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']//span[text()='"+tabName+"']");
+	       
+	       wait.waitTillElementPresent(VIEW_NAME, MIN_TIME, MAX_TIME);  
 			 field.clearAndSetText(VIEW_NAME, ViewName);
 			 System.out.println("After the View name:--");
 			 specifyFilterCriteria(selectffield, foperator ,fvalue);
@@ -75,9 +88,11 @@ public class AdminUIViewssSubTab extends BasePage {
 	}
 	                             //Filter Criteria code
 	public AdminUIViewssSubTab specifyFilterCriteria(String selectffield, String foperator ,String fvalue) {
-		field.selectFromDropDown(FILTER_SELECT_FIELDS, selectffield);
+		item.click(CLICK_ON_FSELECTBOX);	
+		 item.click("//label[@class='ui-corner-all']//span[text()='"+selectffield+"']");
+		 
 		wait.waitTillElementDisplayed(FILTER_SELECT_OPERATOR, MIN_TIME, MAX_TIME);
-		System.out.println("foperator value is:--"+foperator);
+		System.out.println("foperator value is:--"+foperator);  
 		field.selectFromDropDown(FILTER_SELECT_OPERATOR, foperator); //equals, contains,lessthan...
 		              // To Select a value	
 	if(isElementPresentAndDisplay(By.xpath(FILTER_VALUE_TEXT))) {
@@ -94,7 +109,10 @@ public class AdminUIViewssSubTab extends BasePage {
 	}	
 	                         // Report Params code.
 	public AdminUIViewssSubTab specifyReportParams(String selectRfield, String rpOperator , String rpvalue) {
-		field.selectFromDropDown(SPECFY_REPORT_PARM, selectRfield);
+		
+		item.click(CLICK_ON_RPSELECTBOX);
+		item.click("//label[@class='ui-corner-all']//span[text()='"+selectRfield+"']");
+		
 		wait.waitTillElementDisplayed(RPARMS_OPERATOR, MIN_TIME, MAX_TIME);
 		System.out.println("rpOperator value is:--"+rpOperator);
 		field.selectFromDropDown(RPARMS_OPERATOR, rpOperator);//equals, contains,lessthan...
@@ -118,9 +136,9 @@ public AdminUIViewssSubTab selectAvailableFields(String sctFieldName ) {
 	 System.out.println("splits.size: " + allsctFieldNames.length);
 	 for(int k=0;k<allsctFieldNames.length;k++){
 		 field.selectFromDropDown(AVAILABLE_FIELDS, allsctFieldNames[k]);//selecting existing field Name
-	     button.click("//img[@class='rightArrowIcon']");
+	     button.click(RIGHT_ARROW_IMG);
 	 }
-	button.click("//input[@class='btnSaveClick btn']");
+	button.click(SAVE_BUTTON);
 		return this;
 }
 	

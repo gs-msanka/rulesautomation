@@ -1,9 +1,10 @@
 package com.gainsight.sfdc.administration.pages;
 
+import com.gainsight.sfdc.pages.BasePage;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.TimeoutException;
 
-public class AdminScorecardSection extends AdministrationBasepage{
+public class AdminScorecardSection extends BasePage {
 
 		private final String READY_INDICATOR1       = "//li[contains(.,'Enable Scorecard')]";
         private final String READY_INDICATOR2       = "//div[@class='overall-score-heading']";

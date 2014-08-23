@@ -8,17 +8,30 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Customer360Scorecard extends Customer360Page  {
 
     private String scheme               = "Grade";
     private String[] grades_array       = {"F","E","D","C","B","A"};
-    private String[] colors_array       = {"#790400","#c46d6c","#d5bf50","#4daddd","#97d477","#4a841e"};
+    private String[] colors_array       = {"#c53536","#fd9b9c","#eba638", "#32a5c7", "#76ad27"};
+    private static HashMap<String, String> gradeColorMap;
+    private static HashMap<String, String> scoreColorMap;
+    static {
+        gradeColorMap = new HashMap<String, String>();
+        gradeColorMap.put("A", "#76ad27");
+        gradeColorMap.put("B", "#97cb4c");
+        gradeColorMap.put("C", "#eba638");
+        gradeColorMap.put("D", "#fbc064");
+        gradeColorMap.put("E", "#f17273");
+        gradeColorMap.put("F", "#c53536");
 
+        scoreColorMap = new HashMap<String, String>();
+        scoreColorMap.put("0-50" , "#c53536");
+        scoreColorMap.put("50-75" , "#eba638");
+        scoreColorMap.put("75-100" , "#76ad27");
+    }
     private final String READY_INDICATOR            = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
-
 	private final String OVERALL_SCORE              = "//div[contains(@class,'overallscore')]/descendant::li[@class='score']";
     private final String OVERALL_SCORE_BG_ELEMENT   = "//div[contains(@class, 'overallscore')]/div[@class='score-area']";
     private final String OVERALL_TREND              = "//div[contains(@class, 'overallscore')]/descendant::li[contains(@class, 'score-trend')]";
@@ -48,19 +61,13 @@ public class Customer360Scorecard extends Customer360Page  {
     private final String SCORECARD_DETAIL_VIEW      = "//div[@class='gs-views-main']/a[@data-tabname='DETAIL-FULL']";
     private final String CUSTOMER_GOALS_HEADER      = "div.goalsheader.clearfix";
     private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
-
-
+    private final String REMOVE_SCORE_DIALOG        = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
+    private final String REMOVE_OVERALL_SCORE       = "//div[@class='score-area']/descendant::div[@class='gs-remove-score']/a";
+    private final String REMOVE_SCORE_DIALOG_YES    = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
+    private final String REMOVE_SCORE_DIALOG_NO     = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
 
     public void setScheme(String scheme) {
         this.scheme = scheme;
-    }
-
-    public void setGrades_array(String[] grades_array) {
-        this.grades_array = grades_array;
-    }
-
-    public void setColors_array(String[] colors_array) {
-        this.colors_array = colors_array;
     }
 
     public Customer360Scorecard() {
@@ -75,14 +82,10 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
     public Customer360Scorecard removeOverAllCustomerScore() {
-        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
         item.click(OVERALL_SCORE_BG_ELEMENT);
         amtDateUtil.stalePause();
-        String REMOVE_OVERALL_SCORE = "//div[@class='score-area']/descendant::div[@class='gs-remove-score']/a";
         item.click(REMOVE_OVERALL_SCORE);
         wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
-        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
-        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
         item.click(REMOVE_SCORE_DIALOG_YES);
         waitForLoadingImagesNotPresent();
         return this;
@@ -96,8 +99,7 @@ public class Customer360Scorecard extends Customer360Page  {
         List<WebElement> svgObject = driver.findElements(By
                 .xpath(MEASURE_SCORE_SLIDER_CIRCLE));
         for (WebElement svg : svgObject) {
-            if (svg.isDisplayed())
-            {
+            if (svg.isDisplayed()) {
                 builder.moveToElement(svg);
                 builder.dragAndDropBy(svg, getOffsetForScore(score, add)+ ((add) ? 1 :0) , 0)
                         .build().perform();
@@ -108,7 +110,6 @@ public class Customer360Scorecard extends Customer360Page  {
         waitForLoadingImagesNotPresent();
         return this;
     }
-
 
     public Customer360Scorecard openCompactView() {
         item.click(SCORECARD_COMPACT_VIEW);
@@ -131,19 +132,79 @@ public class Customer360Scorecard extends Customer360Page  {
         return false;
     }
 
-    private String getOverAllScoreColour() {
-        wait.waitTillElementDisplayed(OVERALL_SCORE_BG_ELEMENT,MIN_TIME, MAX_TIME);
-        WebElement ele = element.getElement(OVERALL_SCORE_BG_ELEMENT);
-        String style = ele.getAttribute("style");
-        Report.logInfo("Style Value : "+style);
-        return style.substring("background-color:".length());
+    private String getNumberColor(String score) {
+        int a = Integer.valueOf(score);
+        Iterator it = scoreColorMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            String key = pair.getKey().toString();
+            int highBoundary = Integer.valueOf(key.substring(key.indexOf("-") + 1));
+            int lowBoundary = Integer.valueOf(key.substring(0,key.indexOf("-")));
+            if((lowBoundary <a && a <=highBoundary )|| (a == 0 && a <=highBoundary && a==lowBoundary)) {
+                return pair.getValue().toString();
+            }
+        }
+        return null;
     }
-	
-	public boolean verifyOverallScoreColor(String score_color){
-		String actualColor = getOverAllScoreColour();
-        Boolean result = actualColor.contains(score_color);
-        return result;
+
+	public Boolean verifyOverallScoreColor(String score){
+        String expColor  = score; //Default to color scheme.
+        if(scheme.equals("Grade")) {
+            expColor = gradeColorMap.get(expColor);
+        } else if(scheme.equals("Score")) {
+            expColor = getNumberColor(expColor);
+        }
+        WebElement ele = element.getElement(OVERALL_SCORE_BG_ELEMENT);
+        String actualColor = ele.getAttribute("style");
+        Report.logInfo("Actual OverAll Score Color :" +actualColor);
+        Report.logInfo("Expected OverAll Score Color :" +expColor);
+        return isColorExists(actualColor, expColor);
 	}
+
+    public Boolean verifyMeasureColor(String groupName, String measureName, String score) {
+        WebElement ele = element.getElement(getMeasureXpath(groupName, measureName)+"/descendant::div[@class='grade-score']");
+        String actualColor = ele.getAttribute("style");
+        Report.logInfo("Actual OverAll Score Color :" +actualColor);
+        String expColor  = score; //Default to color scheme.
+        if(scheme.equals("Grade")) {
+            expColor = gradeColorMap.get(expColor);
+        } else if(scheme.equals("Score")) {
+            expColor = getNumberColor(expColor);
+        }
+        Report.logInfo("Expected OverAll Score Color :" +expColor);
+        return isColorExists(actualColor, expColor);
+    }
+
+    private Boolean isColorExists(String actualColor, String expColor) {
+        if(actualColor.contains("#")) {
+            Report.logInfo("Style has hexadecimal value");
+            if(actualColor.contains(expColor)) {
+                return true;
+            }
+        } else if(actualColor.contains("rgb")){
+            Report.logInfo("Style has RGB value");
+            String[] rgb = actualColor.substring(actualColor.indexOf("(")+1, actualColor.lastIndexOf(")")).split(",");
+            String hexadecimal = rgbToHex(Integer.valueOf(rgb[0].trim()),Integer.valueOf(rgb[1].trim()),Integer.valueOf(rgb[2].trim()));
+            Report.logInfo("Expected color Hexa : " +hexadecimal);
+            if(hexadecimal.equalsIgnoreCase(expColor)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String rgbToHex(int r, int g, int b) {
+        return "#" + toBrowserHexValue(r) + toBrowserHexValue(g) + toBrowserHexValue(b);
+    }
+
+    private String toBrowserHexValue(int number) {
+        StringBuilder builder = new StringBuilder(Integer.toHexString(number & 0xff));
+        while (builder.length() < 2) {
+            builder.append("0");
+        }
+        return builder.toString().toUpperCase();
+    }
+
 	public boolean verifyOverallScoreTrend(String Trend) {
         try {
             if(Trend != null) {
@@ -285,23 +346,16 @@ public class Customer360Scorecard extends Customer360Page  {
                 }
                 break;
             }
-
         }
         return false;
     }
 
     public Customer360Scorecard removeMeasureScore(String groupName, String measureName) {
         String measureXpath = getMeasureXpath(groupName, measureName);
-        Report.logInfo(measureXpath+"/descendant::div[@class='grade-score']");
         item.click(measureXpath+"/descendant::div[@class='grade-score']");
-        Report.logInfo(measureXpath + "/descendant::div[@class='slider-container clearfix']");
         wait.waitTillElementDisplayed(measureXpath+"/descendant::div[@class='slider-container clearfix']", MIN_TIME, MAX_TIME);
-        Report.logInfo(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
         item.click(measureXpath+"/descendant::div[@class='gs-remove-score']/a[text()='Remove Score']");
-        String REMOVE_SCORE_DIALOG = "//div[contains(@class, 'ui-dialog ui-widget') and @role='dialog']";
         wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
-        String REMOVE_SCORE_DIALOG_YES = REMOVE_SCORE_DIALOG +"/descendant::input[@data-action='Yes']";
-        String REMOVE_SCORE_DIALOG_NO = REMOVE_SCORE_DIALOG+"/descendant::input[@data-action='Yes']";
         item.click(REMOVE_SCORE_DIALOG_YES);
         waitForLoadingImagesNotPresent();
         return this;
@@ -391,7 +445,6 @@ public class Customer360Scorecard extends Customer360Page  {
 	}
 
 	public Customer360Scorecard updateMeasureComments(String groupName, String measureName, String comments) {
-
         String script = "var a = document.getElementsByClassName('floatleft');\n" +
                 "a[0].click();\n" +
                 "a[0].innerHTML;\n" +
@@ -467,20 +520,4 @@ public class Customer360Scorecard extends Customer360Page  {
         }
         return new AdminScorecardSection();
     }
-
-
-    public enum Grades {
-        A(1), B(2), C(3), D(4), E(5), F(6), G(7), H(8), I(9), J(10);
-
-        private int value;
-
-        private Grades(int val) {
-            value = val;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
 }
