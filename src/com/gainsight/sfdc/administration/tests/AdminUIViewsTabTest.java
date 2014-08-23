@@ -3,14 +3,16 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.gainsight.sfdc.administration.pages.AdminUIViewsSubTab;
 import jxl.read.biff.BiffException;
 
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
+import com.gainsight.sfdc.administration.pages.AdminUIViewssSubTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
@@ -24,14 +26,14 @@ public class AdminUIViewsTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views", isPackageInstance());
+		/*apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Customer_Tab_ UI_Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views", isPackageInstance());
 		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackageInstance());
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackageInstance());*/
 		basepage.login();
 	}
 	
@@ -40,7 +42,7 @@ public class AdminUIViewsTabTest extends BaseTest {
 	public void testAdminAddUIViews(HashMap<String, String> testData) throws BiffException, IOException {
 		selectTabName(testData.get("addAvailableFields"));
 	}
-	private AdminUIViewsSubTab selectTabName(String testData) {
+	private AdminUIViewssSubTab selectTabName(String testData) {
 		HashMap<String, String> data = getMapFromData1(testData);
 		String tabName = data.get("tabName");
 		String ViewName =data.get("ViewName");
@@ -54,7 +56,7 @@ public class AdminUIViewsTabTest extends BaseTest {
 		String rpOperator =data.get("rpOperator");
 		String rpvalue = data.get("rpvalue");
 		
-		AdminUIViewsSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewsSettingsSubTab();
+		AdminUIViewssSubTab adUIview = basepage.clickOnAdminTab().clickOnUIViewssettingsSubTab();
 		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName,
 				                    selectRfield, rpOperator , rpvalue); 
 		return adUIview;
