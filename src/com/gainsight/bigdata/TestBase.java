@@ -19,12 +19,8 @@ public class TestBase {
 	
 	public void init() throws Exception {
 		sfinfo = SFDCUtil.fetchSFDCinfo();
-		nsinfo = NSUtil.fetchNewStackInfo(sfinfo);
-		wa = new WebAction();
-
 		h = new Header();
-		h.addHeader("Content-Type", "application/json");
-		h.addHeader("authToken", nsinfo.getAuthToken());
-		h.addHeader("Origin", "https://c.ap1.visual.force.com");
+		nsinfo = NSUtil.fetchNewStackInfo(sfinfo, h);
+		wa = new WebAction();
 	}
 }

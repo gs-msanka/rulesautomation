@@ -37,7 +37,7 @@ public class RestTester {
 	private static void init() throws Exception {
 		// TODO Auto-generated method stub
 		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		nsinfo= NSUtil.fetchNewStackInfo(sfinfo);
+		nsinfo= NSUtil.fetchNewStackInfo(sfinfo, new Header());
 		wa = new WebAction();
 	}
 

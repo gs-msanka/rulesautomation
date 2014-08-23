@@ -36,12 +36,12 @@ public class GetCollectionTest extends TestBase {
 		
 		//TestData to Compare
 		CollectionInfo cinfo = new CollectionInfo();
-		cinfo.setCollectionName("SampleCollection");
+		//cinfo.setCollectionName("SampleCollection");
 		Columns col = cinfo.new Columns();
 		col.setDisplayName("Name");
 		col.setDatatype("string");
 		col.setHidden(false);
-		col.setIndexable(0);
+		//col.setIndexable(0);
 		col.setColattribtype(0);
 		
 		List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
