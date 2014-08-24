@@ -1,0 +1,37 @@
+{
+	"row_data": [{
+		"name": [],
+		"data": [["6800",
+		"4800.34"]]
+	}],
+	"ReportLayoutInfo": {
+		"rowLabels": [],
+		"cols": [{
+			"name": [],
+			"data": [[]]
+		}],
+		"measureLables": ["currentReviews",
+		"marketAverageCost"],
+		"pages": []
+	},
+	"metadata": [{
+		"hidden": false,
+		"primary": false,
+		"name": "currentreviews",
+		"format": {
+			
+		},
+		"datatype": "number",
+		"DisplayName": "currentReviews"
+	},
+	{
+		"hidden": false,
+		"primary": false,
+		"name": "marketaveragecost",
+		"format": {
+			
+		},
+		"datatype": "number",
+		"DisplayName": "marketAverageCost"
+	}]
+}

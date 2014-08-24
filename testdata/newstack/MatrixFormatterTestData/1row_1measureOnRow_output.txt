@@ -1,53 +1,83 @@
 {
-    "row_data": [
-        {
-            "name": [
-                "New York",
-                "TotalReviews"
-            ],
-            "data": [
-                [
-                    "23373"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "SFO",
-                "TotalReviews"
-            ],
-            "data": [
-                [
-                    "49222"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "St.Louis",
-                "TotalReviews"
-            ],
-            "data": [
-                [
-                    "322740"
-                ]
-            ]
-        }
-    ],
-    "ReportLayoutInfo": {
-        "rowLabels": [
-            "Market",
-            "Measures"
-        ],
-        "cols": [
-            {
-                "name": [],
-                "data": [
-                    []
-                ]
-            }
-        ],
-        "measureLables": [],
-        "pages": []
+  "row_data": [
+    {
+      "name": [
+        "Gainsight",
+        "currentReviews"
+      ],
+      "data": [
+        [
+          "1600"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "currentReviews"
+      ],
+      "data": [
+        [
+          "2500"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "currentReviews"
+      ],
+      "data": [
+        [
+          "2700"
+        ]
+      ]
     }
+  ],
+  "ReportLayoutInfo": {
+    "rowLabels": [
+      "companyName",
+      "Measures"
+    ],
+    "cols": [
+      {
+        "name": [
+          
+        ],
+        "data": [
+          [
+            
+          ]
+        ]
+      }
+    ],
+    "measureLables": [
+      
+    ],
+    "pages": [
+      
+    ]
+  },
+  "metadata": [
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "companyname",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "companyName"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "currentreviews",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "currentReviews"
+    }
+  ]
 }

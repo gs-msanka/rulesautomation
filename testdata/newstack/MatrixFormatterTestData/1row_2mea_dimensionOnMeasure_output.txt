@@ -2,45 +2,30 @@
   "row_data": [
     {
       "name": [
-        "Gainsight",
-        "Salesforce"
-      ],
-      "data": [
-        [
-          "1600",
-          "34000"
-        ]
-      ]
-    },
-    {
-      "name": [
-        "Jbara",
-        "Salesforce"
+        "CRM"
       ],
       "data": [
         [
           "2500",
-          "28000"
+          "1"
         ]
       ]
     },
     {
       "name": [
-        "NewStack",
-        "BigData"
+        "CSM"
       ],
       "data": [
         [
-          "2700",
-          "28000"
+          "4300",
+          "2"
         ]
       ]
     }
   ],
   "ReportLayoutInfo": {
     "rowLabels": [
-      "companyName",
-      "department"
+      "market"
     ],
     "cols": [
       {
@@ -56,33 +41,13 @@
     ],
     "measureLables": [
       "currentReviews",
-      "totalReviews"
+      "companyName"
     ],
     "pages": [
       
     ]
   },
   "metadata": [
-    {
-      "hidden": false,
-      "primary": false,
-      "name": "companyname",
-      "format": {
-        
-      },
-      "datatype": "string",
-      "DisplayName": "companyName"
-    },
-    {
-      "hidden": false,
-      "primary": false,
-      "name": "department",
-      "format": {
-        
-      },
-      "datatype": "string",
-      "DisplayName": "department"
-    },
     {
       "hidden": false,
       "primary": false,
@@ -96,12 +61,22 @@
     {
       "hidden": false,
       "primary": false,
-      "name": "totalreviews",
+      "name": "market",
       "format": {
         
       },
-      "datatype": "number",
-      "DisplayName": "totalReviews"
+      "datatype": "string",
+      "DisplayName": "market"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "companyname",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "companyName"
     }
   ]
 }

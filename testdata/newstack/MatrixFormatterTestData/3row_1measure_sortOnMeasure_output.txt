@@ -2,39 +2,55 @@
   "row_data": [
     {
       "name": [
-        
+        "NewStack",
+        "BigData",
+        "CSM"
+      ],
+      "data": [
+        [
+          "2700"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "CRM"
+      ],
+      "data": [
+        [
+          "2500"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Gainsight",
+        "Salesforce",
+        "CSM"
       ],
       "data": [
         [
           "1600"
-        ],
-        [
-          "2500"
-        ],
-        [
-          "2700"
         ]
       ]
     }
   ],
   "ReportLayoutInfo": {
     "rowLabels": [
-      
+      "companyName",
+      "department",
+      "market"
     ],
     "cols": [
       {
         "name": [
-          "companyName"
+          
         ],
         "data": [
           [
-            "Gainsight"
-          ],
-          [
-            "Jbara"
-          ],
-          [
-            "NewStack"
+            
           ]
         ]
       }
@@ -56,6 +72,26 @@
       },
       "datatype": "string",
       "DisplayName": "companyName"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "department",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "department"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "market",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "market"
     },
     {
       "hidden": false,

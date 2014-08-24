@@ -17,26 +17,16 @@
           "type": 0
         },
         {
+          "col": "startdate",
+          "axis": "row",
+          "type": 0,
+          "order": "desc"
+        },
+        {
           "col": "currentreviews",
           "axis": "measure",
           "type": 1,
           "agg_func": "sum"
-        },
-        {
-          "col": "totalreviews",
-          "axis": "measure",
-          "type": 1,
-          "agg_func": "sum"
-        },
-        {
-          "col": "market",
-          "axis": "column",
-          "type": 0
-        },
-        {
-          "col": "month",
-          "axis": "column",
-          "type": 0
         }
       ],
       "ReportReadLimit": 1000,

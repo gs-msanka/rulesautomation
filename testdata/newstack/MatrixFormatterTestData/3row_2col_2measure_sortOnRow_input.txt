@@ -14,6 +14,12 @@
         {
           "col": "department",
           "axis": "row",
+          "type": 0,
+          "order": "asc"
+        },
+        {
+          "col": "startdate",
+          "axis": "row",
           "type": 0
         },
         {
@@ -23,20 +29,20 @@
           "agg_func": "sum"
         },
         {
+          "col": "year",
+          "axis": "column",
+          "type": 0
+        },
+        {
+          "col": "upselldate",
+          "axis": "column",
+          "type": 0
+        },
+        {
           "col": "totalreviews",
           "axis": "measure",
           "type": 1,
           "agg_func": "sum"
-        },
-        {
-          "col": "market",
-          "axis": "column",
-          "type": 0
-        },
-        {
-          "col": "month",
-          "axis": "column",
-          "type": 0
         }
       ],
       "ReportReadLimit": 1000,

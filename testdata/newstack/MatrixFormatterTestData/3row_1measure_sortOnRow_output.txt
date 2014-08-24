@@ -1,0 +1,239 @@
+{
+  "row_data": [
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "10-10-2014"
+      ],
+      "data": [
+        [
+          "700"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "11-10-2013"
+      ],
+      "data": [
+        [
+          "700"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "11-10-2013"
+      ],
+      "data": [
+        [
+          "400"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "11-01-2013"
+      ],
+      "data": [
+        [
+          "600"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "11-01-2013"
+      ],
+      "data": [
+        [
+          "300"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Gainsight",
+        "Salesforce",
+        "10-30-2013"
+      ],
+      "data": [
+        [
+          "500"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "10-30-2013"
+      ],
+      "data": [
+        [
+          "800"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "10-30-2013"
+      ],
+      "data": [
+        [
+          "200"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Gainsight",
+        "Salesforce",
+        "10-10-2013"
+      ],
+      "data": [
+        [
+          "300"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "10-10-2013"
+      ],
+      "data": [
+        [
+          "300"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "10-10-2013"
+      ],
+      "data": [
+        [
+          "700"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Gainsight",
+        "Salesforce",
+        "10-01-2013"
+      ],
+      "data": [
+        [
+          "800"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce",
+        "10-01-2013"
+      ],
+      "data": [
+        [
+          "100"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData",
+        "10-01-2013"
+      ],
+      "data": [
+        [
+          "400"
+        ]
+      ]
+    }
+  ],
+  "ReportLayoutInfo": {
+    "rowLabels": [
+      "companyName",
+      "department",
+      "startDate"
+    ],
+    "cols": [
+      {
+        "name": [
+          
+        ],
+        "data": [
+          [
+            
+          ]
+        ]
+      }
+    ],
+    "measureLables": [
+      "currentReviews"
+    ],
+    "pages": [
+      
+    ]
+  },
+  "metadata": [
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "companyname",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "companyName"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "department",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "department"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "startdate",
+      "format": {
+        
+      },
+      "datatype": "date",
+      "DisplayName": "startDate"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "currentreviews",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "currentReviews"
+    }
+  ]
+}

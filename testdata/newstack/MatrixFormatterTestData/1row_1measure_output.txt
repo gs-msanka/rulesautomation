@@ -1,51 +1,79 @@
 {
-    "row_data": [
-        {
-            "name": [
-                "New York"
-            ],
-            "data": [
-                [
-                    "16411"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "SFO"
-            ],
-            "data": [
-                [
-                    "33867"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "St.Louis"
-            ],
-            "data": [
-                [
-                    "293372"
-                ]
-            ]
-        }
-    ],
-    "ReportLayoutInfo": {
-        "rowLabels": [
-            "Market"
-        ],
-        "cols": [
-            {
-                "name": [],
-                "data": [
-                    []
-                ]
-            }
-        ],
-        "measureLables": [
-            "CurrentReviews"
-        ],
-        "pages": []
+  "row_data": [
+    {
+      "name": [
+        "Gainsight"
+      ],
+      "data": [
+        [
+          "1600"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara"
+      ],
+      "data": [
+        [
+          "2500"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack"
+      ],
+      "data": [
+        [
+          "2700"
+        ]
+      ]
     }
+  ],
+  "ReportLayoutInfo": {
+    "rowLabels": [
+      "companyName"
+    ],
+    "cols": [
+      {
+        "name": [
+          
+        ],
+        "data": [
+          [
+            
+          ]
+        ]
+      }
+    ],
+    "measureLables": [
+      "currentReviews"
+    ],
+    "pages": [
+      
+    ]
+  },
+  "metadata": [
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "currentreviews",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "currentReviews"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "companyname",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "companyName"
+    }
+  ]
 }

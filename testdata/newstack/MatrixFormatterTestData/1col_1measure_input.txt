@@ -1,19 +1,27 @@
 {
-    "TenantId": "e51d3578-a68d-4ecf-add2-ee971c50634f",
-    "ReportInfo": [
+  "ReportInfo": [
+    {
+      "SchemaName": "QATestData",
+      "CollectionID": "8d405860-d6ec-46a1-8401-438ff0f635f4",
+      "limit": 500,
+      "Type": "adhoc",
+      "Dimensions": [
         {
-            "SchemaName": "Angies.UsageData",
-            "CollectionID": "20d2e26d-7123-490a-b863-6d478f3f5e24",
-			"limit":10,"Type":"adhoc",
-			"Dimensions":[
-				{"col":"Category","axis":"column"},
-				{"col":"CurrentReviews","axis":"measure","agg_func":"sum"}
-			],
-			"ReportReadLimit": 10,
-			"DimensionBrowserReadLimit": 0,
-			"SortField": "",
-			"SortOption": "asc"
-		}
-	]
+          "col": "companyname",
+          "axis": "column",
+          "type": 0
+        },
+        {
+          "col": "currentreviews",
+          "axis": "measure",
+          "type": 1,
+          "agg_func": "sum"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000,
+      "ReportId": 0,
+      "reportName": ""
+    }
+  ]
 }
-

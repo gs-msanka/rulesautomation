@@ -1,29 +1,25 @@
 {
-    "row_data": [
-        {
-            "name": [
-                "CurrentReviews"
-            ],
-            "data": [
-                [
-                    "343650"
-                ]
-            ]
-        }
-    ],
-    "ReportLayoutInfo": {
-        "rowLabels": [
-            "Measures"
-        ],
-        "cols": [
-            {
-                "name": [],
-                "data": [
-                    []
-                ]
-            }
-        ],
-        "measureLables": [],
-        "pages": []
-    }
+	"row_data": [{
+		"name": ["pubRevenue"],
+		"data": [["44100"]]
+	}],
+	"ReportLayoutInfo": {
+		"rowLabels": ["Measures"],
+		"cols": [{
+			"name": [],
+			"data": [[]]
+		}],
+		"measureLables": [],
+		"pages": []
+	},
+	"metadata": [{
+		"hidden": false,
+		"primary": false,
+		"name": "pubrevenue",
+		"format": {
+			
+		},
+		"datatype": "number",
+		"DisplayName": "pubRevenue"
+	}]
 }

@@ -1,151 +1,279 @@
 {
-    "row_data": [
-        {
-            "name": [
-                "Air Duct Cleaning",
-                "New York"
-            ],
-            "data": [
-                [
-                    "2",
-                    "2"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Alarms",
-                "New York"
-            ],
-            "data": [
-                [
-                    "0",
-                    "0"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Animal & House Sitting",
-                "New York"
-            ],
-            "data": [
-                [
-                    "7",
-                    "13"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Animal Boarding Kennels",
-                "New York"
-            ],
-            "data": [
-                [
-                    "1",
-                    "1"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Animal Grooming",
-                "New York"
-            ],
-            "data": [
-                [
-                    "0",
-                    "0"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Animal Removal",
-                "New York"
-            ],
-            "data": [
-                [
-                    "62",
-                    "75"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Animal Training",
-                "New York"
-            ],
-            "data": [
-                [
-                    "0",
-                    "0"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Antiques",
-                "New York"
-            ],
-            "data": [
-                [
-                    "0",
-                    "1"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Appliance Repair - Large",
-                "New York"
-            ],
-            "data": [
-                [
-                    "2",
-                    "2"
-                ]
-            ]
-        },
-        {
-            "name": [
-                "Appliance Repair - Small",
-                "New York"
-            ],
-            "data": [
-                [
-                    "1",
-                    "1"
-                ]
-            ]
-        }
-    ],
-    "ReportLayoutInfo": {
-        "rowLabels": [
-            "Category",
-            "Market"
+  "row_data": [
+    {
+      "name": [
+        "Gainsight",
+        "Salesforce"
+      ],
+      "data": [
+        [
+          "-",
+          "-"
         ],
-        "cols": [
-            {
-                "name": [
-                    "Year",
-                    "Month"
-                ],
-                "data": [
-                    [
-                        "2011",
-                        [
-                            "5"
-                        ]
-                    ]
-                ]
-            }
+        [
+          "-",
+          "-"
         ],
-        "measureLables": [
-            "CurrentReviews",
-            "TotalReviews"
+        [
+          "-",
+          "-"
         ],
-        "pages": []
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "800",
+          "12000"
+        ],
+        [
+          "300",
+          "9000"
+        ],
+        [
+          "500",
+          "13000"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "Jbara",
+        "Salesforce"
+      ],
+      "data": [
+        [
+          "100",
+          "1000"
+        ],
+        [
+          "300",
+          "5000"
+        ],
+        [
+          "800",
+          "9000"
+        ],
+        [
+          "600",
+          "6000"
+        ],
+        [
+          "700",
+          "7000"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ]
+      ]
+    },
+    {
+      "name": [
+        "NewStack",
+        "BigData"
+      ],
+      "data": [
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "-",
+          "-"
+        ],
+        [
+          "400",
+          "3000"
+        ],
+        [
+          "100",
+          "4000"
+        ],
+        [
+          "200",
+          "3000"
+        ],
+        [
+          "300",
+          "4000"
+        ],
+        [
+          "400",
+          "3000"
+        ],
+        [
+          "600",
+          "4000"
+        ],
+        [
+          "700",
+          "7000"
+        ]
+      ]
     }
+  ],
+  "ReportLayoutInfo": {
+    "rowLabels": [
+      "companyName",
+      "department"
+    ],
+    "cols": [
+      {
+        "name": [
+          "market",
+          "month"
+        ],
+        "data": [
+          [
+            "CRM",
+            [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ]
+          ],
+          [
+            "CSM",
+            [
+              "1",
+              "2",
+              "3",
+              "4",
+              "6",
+              "7",
+              "8"
+            ]
+          ]
+        ]
+      }
+    ],
+    "measureLables": [
+      "currentReviews",
+      "totalReviews"
+    ],
+    "pages": [
+      
+    ]
+  },
+  "metadata": [
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "companyname",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "companyName"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "department",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "department"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "currentreviews",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "currentReviews"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "totalreviews",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "totalReviews"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "market",
+      "format": {
+        
+      },
+      "datatype": "string",
+      "DisplayName": "market"
+    },
+    {
+      "hidden": false,
+      "primary": false,
+      "name": "month",
+      "format": {
+        
+      },
+      "datatype": "number",
+      "DisplayName": "month"
+    }
+  ]
 }

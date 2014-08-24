@@ -1,0 +1,47 @@
+{
+	"row_data": [{
+		"name": ["Gainsight",
+		"Salesforce"],
+		"data": [[]]
+	},
+	{
+		"name": ["Jbara",
+		"Salesforce"],
+		"data": [[]]
+	},
+	{
+		"name": ["NewStack",
+		"BigData"],
+		"data": [[]]
+	}],
+	"ReportLayoutInfo": {
+		"rowLabels": ["companyName",
+		"department"],
+		"cols": [{
+			"name": [],
+			"data": [[]]
+		}],
+		"measureLables": [],
+		"pages": []
+	},
+	"metadata": [{
+		"hidden": false,
+		"primary": false,
+		"name": "companyname",
+		"format": {
+			
+		},
+		"datatype": "string",
+		"DisplayName": "companyName"
+	},
+	{
+		"hidden": false,
+		"primary": false,
+		"name": "department",
+		"format": {
+			
+		},
+		"datatype": "string",
+		"DisplayName": "department"
+	}]
+}

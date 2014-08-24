@@ -5,8 +5,14 @@
 		"limit": 500,
 		"Type": "adhoc",
 		"Dimensions": [{
-			"col": "pubrevenue",
-			"axis": "row",
+			"col": "currentreviews",
+			"axis": "measure",
+			"type": 1,
+			"agg_func": "sum"
+		},
+		{
+			"col": "marketaveragecost",
+			"axis": "measure",
 			"type": 1,
 			"agg_func": "sum"
 		}],

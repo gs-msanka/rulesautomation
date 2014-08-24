@@ -7,36 +7,21 @@
       "Type": "adhoc",
       "Dimensions": [
         {
-          "col": "companyname",
-          "axis": "row",
-          "type": 0
-        },
-        {
-          "col": "department",
-          "axis": "row",
-          "type": 0
-        },
-        {
           "col": "currentreviews",
           "axis": "measure",
           "type": 1,
           "agg_func": "sum"
         },
         {
-          "col": "totalreviews",
-          "axis": "measure",
-          "type": 1,
-          "agg_func": "sum"
-        },
-        {
           "col": "market",
-          "axis": "column",
+          "axis": "row",
           "type": 0
         },
         {
-          "col": "month",
-          "axis": "column",
-          "type": 0
+          "col": "companyname",
+          "axis": "measure",
+          "type": 0,
+          "agg_func": "count"
         }
       ],
       "ReportReadLimit": 1000,

@@ -5,10 +5,14 @@
 		"limit": 500,
 		"Type": "adhoc",
 		"Dimensions": [{
-			"col": "pubrevenue",
+			"col": "companyname",
 			"axis": "row",
-			"type": 1,
-			"agg_func": "sum"
+			"type": 0
+		},
+		{
+			"col": "department",
+			"axis": "row",
+			"type": 0
 		}],
 		"ReportReadLimit": 1000,
 		"DimensionBrowserReadLimit": 1000,
