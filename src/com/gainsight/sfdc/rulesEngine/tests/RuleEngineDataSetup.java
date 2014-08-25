@@ -123,7 +123,7 @@ public class RuleEngineDataSetup extends BaseTest {
 						+ "List<JBCXM__AutomatedAlertRules__c> RuleId=[select id from JBCXM__AutomatedAlertRules__c];"
 						+ "String rId=RuleId.get(0).Id;"
 						+ "ruleParams.put('ruleId',rId);"
-						+ "ruleParams.put('ruleRunDate',"+getDatewithFormat(0));+"
+						+ "ruleParams.put('ruleRunDate',"+getDatewithFormat(0,0));+"
 						+ "ruleParams.put('isAlertCreate',true);"
 						+ "ruleParams.put('usageLevel','"+usageLevel+"');"
 						+ "ruleParams.put('criteriaList',new List<Object>());"
