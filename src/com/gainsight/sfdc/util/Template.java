@@ -1,7 +1,6 @@
 package com.gainsight.sfdc.util;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -53,15 +52,5 @@ public class Template {
 			buffer.replace(lastFound, lastFound + paramString.length(), value);
 		}
 	}
-
-	public static void main(String[] args) throws IOException {
-		File templateFile = new File("./template/CreateJobTemplate.xml");
-		Template t = new Template(templateFile);
-		t.setValue("operation", "query");
-		t.setValue("object", "Account");
-		t.setValue("concurrencyMode", "Parallel");
-		t.setValue("contentType", "CSV");
-		t.export(new FileOutputStream(new File("./template/CreateJob.xml")));
-	}
-
+	
 }

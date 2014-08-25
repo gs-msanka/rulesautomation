@@ -11,15 +11,7 @@ import org.jdom2.input.SAXBuilder;
 
 public class XMLParser {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		parseXMLResponse("id");
-		System.out.println("done");
-	}
-
+	
 	/**
 	 * Fetching the node value only from the top of the node. Does not support nested node query yet
 	 * @param nodeToSearch

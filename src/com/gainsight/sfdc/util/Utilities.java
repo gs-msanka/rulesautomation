@@ -46,11 +46,4 @@ public class Utilities {
 		return dateStr;
 
 	}
-
-	public static void main(String a[]) {
-
-
-		System.out.println(Utilities.generateDate(2));
-		System.out.println(Utilities.getRandomString());
-	}
 }
