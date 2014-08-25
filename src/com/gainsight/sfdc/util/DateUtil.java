@@ -12,9 +12,6 @@ import org.apache.commons.lang3.time.DateUtils;
  */
 public class DateUtil {
 
-	public static void main(String args[]){
-		System.out.println("Date====>"+DateUtil.addDays(new Date(),2, "yyyy-MM-dd'T'HH:mm:ss"));
-	}
 	/**
 	 * Increment or decrement months and also fetch the date in the required format.
 	 * @param date Date Object
