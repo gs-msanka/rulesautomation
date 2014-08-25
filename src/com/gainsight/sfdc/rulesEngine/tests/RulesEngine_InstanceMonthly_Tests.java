@@ -29,7 +29,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 		
 			try {
 				rSetup.initialCleanUp();
-				rSetup.loadUsageDataForRulesEngine(USAGE_LEVEL, true,
+				rSetup.loadUsageDataForRulesEngine(USAGE_LEVEL,
 						USAGEDATA_FILE);
 			} catch (Exception ex) {
 				System.out.println(ex.getLocalizedMessage());
@@ -59,14 +59,15 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertType"),
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
+					alertCriteria.get("alertComments"),
+					alertCriteria.get("isAlert"));
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
 					alertCriteria.get("TaskOwnerField"),
 					testData.get("RuleCriteria"),
 					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule(soql.getUserLocale(), "INSTANCELEVEL");
+			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
 
@@ -84,7 +85,8 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertType"),
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
+					alertCriteria.get("alertComments"),
+					alertCriteria.get("isAlert"));
 			rSetup.clearAlertsFromPreviousTest();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
@@ -92,7 +94,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("TaskOwnerField"),
 					testData.get("RuleCriteria"),
 					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));//First param is for date...by default i am giving date=today while running rules
+			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 
 		}
@@ -111,7 +113,8 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertType"),
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
+					alertCriteria.get("alertComments"),
+					alertCriteria.get("isAlert"));
 			rSetup.clearAlertsFromPreviousTest();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
@@ -119,7 +122,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("TaskOwnerField"),
 					testData.get("RuleCriteria"),
 					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
 		
@@ -138,7 +141,8 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertType"),
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
+					alertCriteria.get("alertComments"),
+					alertCriteria.get("isAlert"));
 
 			System.out.println("alert criteria:" + alertCriteriaJson);
 			rSetup.clearAlertsFromPreviousTest();
@@ -148,7 +152,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("TaskOwnerField"),
 					testData.get("RuleCriteria"),
 					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
 		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", priority = 1)
@@ -165,7 +169,8 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertType"),
 					alertCriteria.get("alertStatus"),
 					alertCriteria.get("alertSubject"),
-					alertCriteria.get("alertComments"));
+					alertCriteria.get("alertComments"),
+					alertCriteria.get("isAlert"));
 
 			System.out.println("alert criteria:" + alertCriteriaJson);
 			rSetup.clearAlertsFromPreviousTest();
@@ -175,7 +180,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("TaskOwnerField"),
 					testData.get("RuleCriteria"),
 					alertCriteria.get("TriggeredUsageOn"));
-			rSetup.runRule("", alertCriteria.get("TriggeredUsageOn"));
+			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
 }
