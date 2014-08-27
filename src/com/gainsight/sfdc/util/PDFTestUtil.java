@@ -36,9 +36,6 @@ public class PDFTestUtil {
 				for (int i = 1; i <= doc1.getNumberOfPages(); i++) {
 					String image1=pdf1Path.replace(".pdf", i+".jpg");
 					String image2=pdf2Path.replace(".pdf", i+".jpg");
-					System.out.println(image1);
-					System.out.println(image2);
-					System.out.println("PDF Comparision : Page " + i);
 					System.out.println("PDF Comparision : Page " + i);
 					if (!md5(image1).equals( md5(image2))) {
 						System.out.println("PDF comparision failed at page " + i);
