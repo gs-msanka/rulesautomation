@@ -1,5 +1,8 @@
 package com.gainsight.sfdc.helpers;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -96,4 +99,27 @@ public class AmountsAndDatesUtil {
 		dateFmt.setTimeZone(BaseTest.userTimezone);
 		return dateFmt.format(c.getTime());
 	}
+	
+	public static int getRandomNumber(int low,int high){
+		return (int) ((Math.random() * (high - low)) + low);
+	}
+	
+	public static String getFileContents(String fileName) {
+        String code = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line = null;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+                stringBuilder.append("\n");
+            }
+            code = stringBuilder.toString();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return code;
+    }
+	
 }
