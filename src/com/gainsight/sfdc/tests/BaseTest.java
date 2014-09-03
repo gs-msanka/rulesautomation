@@ -170,7 +170,7 @@ public class BaseTest {
     public boolean isPackageInstance() {
         Boolean namespace = Boolean.valueOf(env
                 .getProperty("sfdc.managedPackage"));
-        System.out.println("Is Managed Package :" + namespace);
+        //Report.logInfo("Is Managed Package :" + namespace);
         return namespace;
     }
 
@@ -274,8 +274,6 @@ public class BaseTest {
             return new FileReader(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
         } else {
             return new FileReader(fileName);
-
-
         }
     }
 
@@ -291,6 +289,7 @@ public class BaseTest {
 
     }
 
+    //same method is used by rules engine test cases also.
     public void createFieldsOnUsageData() {
         String object = "JBCXM__Usagedata__c";
         String[] numberFields1 = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};

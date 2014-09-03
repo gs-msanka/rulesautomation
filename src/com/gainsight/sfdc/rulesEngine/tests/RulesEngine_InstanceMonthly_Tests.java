@@ -1,23 +1,11 @@
 package com.gainsight.sfdc.rulesEngine.tests;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import com.sforce.soap.partner.sobject.SObject;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
-import com.gainsight.sfdc.rulesEngine.tests.*;
 
 
 public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 	
-
+         /*
 		private static final String TEST_DATA_FILE = "testdata/sfdc/RulesEngine/RETests_InstanceMonthly.xls";
 		private static final String USAGEDATA_FILE = "UsageData_Instance_Monthly";
 		private static final String USAGE_LEVEL="InstanceMonthly";
@@ -87,7 +75,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertSubject"),
 					alertCriteria.get("alertComments"),
 					alertCriteria.get("isAlert"));
-			rSetup.clearAlertsFromPreviousTest();
+			rSetup.clearPreviousTestData();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
@@ -115,7 +103,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("alertSubject"),
 					alertCriteria.get("alertComments"),
 					alertCriteria.get("isAlert"));
-			rSetup.clearAlertsFromPreviousTest();
+			rSetup.clearPreviousTestData();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
@@ -145,7 +133,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("isAlert"));
 
 			System.out.println("alert criteria:" + alertCriteriaJson);
-			rSetup.clearAlertsFromPreviousTest();
+			rSetup.clearPreviousTestData();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
@@ -173,7 +161,7 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 					alertCriteria.get("isAlert"));
 
 			System.out.println("alert criteria:" + alertCriteriaJson);
-			rSetup.clearAlertsFromPreviousTest();
+			rSetup.clearPreviousTestData();
 			rSetup.createRulesForRulesEngine(testData.get("AdvanceCriteria"),
 					alertCriteria.get("AlertCount"), alertCriteriaJson,
 					alertCriteria.get("SourceType"),
@@ -183,4 +171,5 @@ public class RulesEngine_InstanceMonthly_Tests extends BaseTest{
 			rSetup.runRule("INSTANCELEVEL");
 			Assert.assertTrue(rValidate.checkAlertsCreated(alertCriteria));
 		}
+		*/
 }
