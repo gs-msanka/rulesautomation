@@ -6,7 +6,6 @@ import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -28,17 +27,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
         Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
-		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
-        String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
-        String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        try {
-            cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
-            e.printStackTrace();
-            throw new RuntimeException("Unable to create fields for scorecard section");
-        }
-
+        createExtIdFieldForScoreCards();
         apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
         apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
         basepage.login();

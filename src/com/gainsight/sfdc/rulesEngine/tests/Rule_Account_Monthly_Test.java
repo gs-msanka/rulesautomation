@@ -3,6 +3,8 @@ package com.gainsight.sfdc.rulesEngine.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
@@ -36,18 +38,23 @@ import java.util.HashMap;
 public class Rule_Account_Monthly_Test extends BaseTest {
 
 
-    private static final String SET_USAGE_LEVEL_FILE    = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
-    private static final String SET_USAGE_MEASURE_FILE  = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
+    private static final String SET_USAGE_DATA_LEVEL_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
+    private static final String SET_USAGE_DATA_MEASURE_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
     private static final String USAGE_DATA_FILE         = "/testdata/sfdc/RulesEngine/Data/Rules_UsageData_Account.csv";
     private static final String TEST_DATA_FILE          = "testdata/sfdc/RulesEngine/Tests/Rule_Account_Test.xls";
     private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
     private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
     private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
+    private static final String GRADE_SCHEME_FILE       = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_enable_grade.apex";
+    private static final String METRICS_CREATE_FILE     = TestEnvironment.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
+    private static final String SCORECARD_CLEAN_FILE    = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
+
     private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
     private Resty resty;
     private URI uri;
+    private static final String SCHEME = "Grade";
     private boolean isPackageInstance = isPackageInstance();
 
 
@@ -57,16 +64,23 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
-        ruleEngineDataSetup = new RuleEngineDataSetup();
-
+        basepage.login();
+        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackageInstance);
+        AdministrationBasePage adm = basepage.clickOnAdminTab();
+        AdminScorecardSection as = adm.clickOnScorecardSection();
+        as.enableScorecard();
+        createExtIdFieldForScoreCards();
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
-        apex.runApexCodeFromFile(SET_USAGE_LEVEL_FILE, isPackageInstance);
-        apex.runApexCodeFromFile(SET_USAGE_MEASURE_FILE, isPackageInstance);
-        dataETL = new DataETL();
+        apex.runApexCodeFromFile(GRADE_SCHEME_FILE, isPackageInstance);
+        runMetricSetup(METRICS_CREATE_FILE, SCHEME);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackageInstance);
+        ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.initialCleanUp();
+        dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL);
-        ruleEngineDataSetup.loadUsageData(dataETL,USAGE_DATA_FILE, false);
+        ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -82,16 +96,16 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         String ruleId = createRule(rule);
         ruleEngineDataSetup.runRule(ruleId, "ACCOUNTLEVEL", 0, -1);
         waitForBatchExecutionToComplete("StatefulBatchHandler");
-
+        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
+            Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+        }
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
             ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
             for(RuleScorecardCriteria.ActionList action : actionLists) {
                 Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
             }
         }
-        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
-            Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
-        }
+
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -107,16 +121,16 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         String ruleId = createRule(rule);
         ruleEngineDataSetup.runRule(ruleId, "ACCOUNTLEVEL", 0, -1);
         waitForBatchExecutionToComplete("StatefulBatchHandler");
-
+        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
+            Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), sfdcInfo.getUserId(), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+        }
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
             ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
             for(RuleScorecardCriteria.ActionList action : actionLists) {
                 Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
             }
         }
-        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
-            Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), sfdcInfo.getUserId(), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
-        }
+
     }
 
     private String createRule(String rule) throws IOException, JSONException {
@@ -130,6 +144,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
 
     @AfterClass
     public void tearDown() {
-
+        basepage.logout();
     }
 }

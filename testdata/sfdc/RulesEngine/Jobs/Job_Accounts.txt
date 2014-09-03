@@ -42,8 +42,7 @@
                     {
                         "name": "Data_ExternalId__c",
                         "alias": "Data_ExternalId__c"
-                    }
-
+                    },
                     {
                         "name": "AccountNumber",
                         "alias": "AccountNumber"

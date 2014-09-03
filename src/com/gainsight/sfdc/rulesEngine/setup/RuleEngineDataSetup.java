@@ -60,9 +60,9 @@ public class RuleEngineDataSetup extends BaseTest {
 
     public void loadAccountsAndCustomers(DataETL dataETL) throws IOException {
         ObjectMapper mapper     = new ObjectMapper();
-        //dataETL.cleanUp(CUSTOMER_OBJECT, null);
-        JobInfo jobInfo; //= mapper.readValue(resolveNameSpace(JOB_ACCOUNT_LOAD), JobInfo.class);
-        //dataETL.execute(jobInfo);
+        dataETL.cleanUp(CUSTOMER_OBJECT, null);
+        JobInfo jobInfo= mapper.readValue(resolveNameSpace(JOB_ACCOUNT_LOAD), JobInfo.class);
+        dataETL.execute(jobInfo);
         jobInfo = mapper.readValue(resolveNameSpace(JOB_CUSTOMER_LOAD), JobInfo.class);
         dataETL.execute(jobInfo);
     }
