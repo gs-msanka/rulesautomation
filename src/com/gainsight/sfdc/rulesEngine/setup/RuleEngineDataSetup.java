@@ -387,6 +387,21 @@ public class RuleEngineDataSetup extends BaseTest {
         apex.runApex(resolveStrNameSpace(strBuilder.toString()));
     }
 
+    public void runRule(String ruleId, String usageLevel, String weekDay, int daysToAdd, boolean usesEndDate) {
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");
+        strBuilder.append("ruleParams.put('ruleId','"+ruleId+"'); \n");
+        strBuilder.append("ruleParams.put('ruleRunDate', '"+getWeekLabelDate("Sat", daysToAdd, true, true)+"'); \n");
+        strBuilder.append("ruleParams.put('isAlertCreate',true); \n");
+        strBuilder.append("ruleParams.put('usageLevel','"+usageLevel+"'); \n");
+        strBuilder.append("ruleParams.put('criteriaList',new List<Object>()); \n");
+        strBuilder.append("ruleParams.put('areaName','usageData'); \n");
+        strBuilder.append("ruleParams.put('actionType','runRule'); \n");
+        strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
+        Report.logInfo("Running Rule : " + strBuilder.toString());
+        apex.runApex(resolveStrNameSpace(strBuilder.toString()));
+    }
+
     //Pending
     //No Need to write code to check alert tasks as CTA will replace it.
     //Verify tasks created under particular CTA.
