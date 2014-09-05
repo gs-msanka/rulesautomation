@@ -1,16 +1,5 @@
 package com.gainsight.bigdata.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.SerializationUtils;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo.CollectionDetails;
@@ -20,7 +9,16 @@ import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CreateCollectionTest extends TestBase {
 
