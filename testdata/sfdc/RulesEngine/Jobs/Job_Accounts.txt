@@ -46,6 +46,10 @@
                     {
                         "name": "AccountNumber",
                         "alias": "AccountNumber"
+                    },
+                    {
+                        "name": "Employees",
+                        "alias": "NumberOfEmployees"
                     }
                 ]
             }

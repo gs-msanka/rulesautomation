@@ -35,6 +35,7 @@ import java.util.HashMap;
  * Time: 6:34 PM
  * To change this template use File | Settings | File Templates.
  */
+
 public class Rule_Account_Monthly_Test extends BaseTest {
 
 
@@ -55,6 +56,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     private Resty resty;
     private URI uri;
     private static final String SCHEME = "Grade";
+    private static final String USAGE_LEVEL = "ACCOUNTLEVEL";
     private boolean isPackageInstance = isPackageInstance();
 
 
@@ -85,32 +87,89 @@ public class Rule_Account_Monthly_Test extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-    public void myFirstRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        //Always runs for current user.
-        testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
-        testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-
-        ObjectMapper mapper = new ObjectMapper();
-        String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
-        RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
-        String ruleId = createRule(rule);
-        ruleEngineDataSetup.runRule(ruleId, "ACCOUNTLEVEL", 0, -1);
-        waitForBatchExecutionToComplete("StatefulBatchHandler");
-        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
-            Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
-        }
-        if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
-            ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
-            for(RuleScorecardCriteria.ActionList action : actionLists) {
-                Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
-            }
-        }
-
+    public void Equals_NotEquals_LessThan_GreaterThan_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
-    public void mySecondRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+    public void Equals_NotEquals_LessThan_GreaterThan_Static(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
+    public void UsageDroppedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
+    public void UsageIncreasedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
+    public void Sum_Of_Measure_ExcludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
+    public void Sum_Of_Measure_ExcludeNull_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
+    public void Sum_Of_Measure_IncludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule8")
+    public void Sum_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule9")
+    public void Avg_Of_Measure_AccountField_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule10")
+    public void Avg_Of_Measure_StaticValue_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule11")
+    public void Avg_Of_Measure_AccountField_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule12")
+    public void Avg_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule13")
+    public void Measure_OverPeriod_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule14")
+    public void Measure_OverPeriod_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        executeRule(testData);
+    }
+
+    private void executeRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException{
         //Always runs for current user.
         testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
         testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
@@ -119,10 +178,14 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
         RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
         String ruleId = createRule(rule);
-        ruleEngineDataSetup.runRule(ruleId, "ACCOUNTLEVEL", 0, -1);
+        ruleEngineDataSetup.runRule(ruleId, USAGE_LEVEL, 0, -1);
         waitForBatchExecutionToComplete("StatefulBatchHandler");
         if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
-            Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), sfdcInfo.getUserId(), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            if(Boolean.valueOf(testData.get("IsCTARule"))) {
+                Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), sfdcInfo.getUserId(), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            } else {
+                Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            }
         }
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
             ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
@@ -130,7 +193,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
                 Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
             }
         }
-
     }
 
     private String createRule(String rule) throws IOException, JSONException {

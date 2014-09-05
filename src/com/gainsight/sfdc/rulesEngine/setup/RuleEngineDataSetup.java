@@ -94,6 +94,12 @@ public class RuleEngineDataSetup extends BaseTest {
         apex.runApexCodeFromFile(CLEANUP_FILE, isPackageInstance);
     }
 
+    public void deleteAlertsAndCTA() {
+        String query = "Delete [Select Id from JBCXM__Alert__c]; \n" +
+                        "Delete [Select Id from JBCXM__CTA__C];";
+        apex.runApex(query, isPackageInstance);
+    }
+
     public void clearPreviousTestData() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Delete [Select Id from JBCXM__AutomatedAlertRules__c ];");
@@ -228,7 +234,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     public boolean verifyAlertExists(String account, int count, RuleAlertCriteria alertCriteria) {
         SObject[] sObjects = getAlertRecords(account, alertCriteria);
-        if(sObjects.length == count) {
+        if(sObjects.length >= count) {
             return true;
         }
         return false;
@@ -284,7 +290,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     public boolean verifyCTAExists(String account, String owner, int count, RuleAlertCriteria alertCriteria) {
         SObject[] sObjects = getCTARecords(account, owner, alertCriteria);
-        if(sObjects.length == count) {
+        if(sObjects.length >= count) {
             return true;
         }
         return false;

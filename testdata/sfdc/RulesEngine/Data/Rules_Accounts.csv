@@ -1,51 +1,1 @@
-Name,Data_ExternalId__c,AccountNumber
-AAR Corp Hardware Abscoa Division,AAR Corp Hardware Abscoa Division,RulesAccount
-Abacus Programming Corporation,Abacus Programming Corporation,RulesAccount
-Abberley Kooiman,Abberley Kooiman,RulesAccount
-Abbett Electric Corp,Abbett Electric Corp,RulesAccount
-Abbey Press Inc,Abbey Press Inc,RulesAccount
-Bachman Information System Inc.,Bachman Information System Inc.,RulesAccount
-Back Stage Magazine,Back Stage Magazine,RulesAccount
-Baker & McKenzie,Baker & McKenzie,RulesAccount
-Balfour Maclaine International,Balfour Maclaine International,RulesAccount
-Ball & Socket Mfg Co,Ball & Socket Mfg Co,RulesAccount
-Caco-Pacific Corp.,Caco-Pacific Corp.,RulesAccount
-CADAM Inc.,CADAM Inc.,RulesAccount
-Cadbury Beverages Div Cadbury,Cadbury Beverages Div Cadbury,RulesAccount
-Cahn Instruments Inc,Cahn Instruments Inc,RulesAccount
-Cal-Pac Roofing Inc,Cal-Pac Roofing Inc,RulesAccount
-Dai-Ichi Kangyo Bank,Dai-Ichi Kangyo Bank,RulesAccount
-Daisy of California,Daisy of California,RulesAccount
-Daley Business Forms,Daley Business Forms,RulesAccount
-Dame Belts & Bag Co Inc,Dame Belts & Bag Co Inc,RulesAccount
-Dana Marketing Inc,Dana Marketing Inc,RulesAccount
-East Bay Brass Foundry,East Bay Brass Foundry,RulesAccount
-East Coast Traders,East Coast Traders,RulesAccount
-East/West Computers Inc,East/West Computers Inc,RulesAccount
-Eastern Municipal Water Distri,Eastern Municipal Water Distri,RulesAccount
-Eastman Kodak Company Health Sciences Division,Eastman Kodak Company Health Sciences Division,RulesAccount
-Facts on File Newsletter,Facts on File Newsletter,RulesAccount
-Family Magazine,Family Magazine,RulesAccount
-Fedder RP Corp,Fedder RP Corp,RulesAccount
-Fell David H & Company Inc,Fell David H & Company Inc,RulesAccount
-Ferrara Foods & Confections,Ferrara Foods & Confections,RulesAccount
-G Group,G Group,RulesAccount
-G-L Veneer Co Inc.,G-L Veneer Co Inc.,RulesAccount
-Galbreath Co,Galbreath Co,RulesAccount
-Gallo Ernst & Julio Winery,Gallo Ernst & Julio Winery,RulesAccount
-Gamblers Anonymous,Gamblers Anonymous,RulesAccount
-Halcyon Assoc,Halcyon Assoc,RulesAccount
-Hambro International Venture F,Hambro International Venture F,RulesAccount
-Hardy James G & Co,Hardy James G & Co,RulesAccount
-Harkavy Information Service,Harkavy Information Service,RulesAccount
-Harken Marketing Co,Harken Marketing Co,RulesAccount
-IBIS Systems Inc.,IBIS Systems Inc.,RulesAccount
-IBK Capital Inc,IBK Capital Inc,RulesAccount
-IBM Corp Data Systems Div,IBM Corp Data Systems Div,RulesAccount
-ICM Corp,ICM Corp,RulesAccount
-ImageTek Corp,ImageTek Corp,RulesAccount
-Jadow B & Sons Inc,Jadow B & Sons Inc,RulesAccount
-Jaff Brothers Woodworks Inc,Jaff Brothers Woodworks Inc,RulesAccount
-Jandel Scientific Inc.,Jandel Scientific Inc.,RulesAccount
-Japanese American Citizens Lea,Japanese American Citizens Lea,RulesAccount
-K & S Contractors Supply Co,K & S Contractors Supply Co,RulesAccount
+Name,Data_ExternalId__c,AccountNumber,EmployeesRule Account 1,Rule Account 1,RulesAccount,1000Rule Account 2,Rule Account 2,RulesAccount,1000Rule Account 3,Rule Account 3,RulesAccount,1000Rule Account 4,Rule Account 4,RulesAccount,1000Rule Account 5,Rule Account 5,RulesAccount,1600Rule Account 6,Rule Account 6,RulesAccount,1600Rule Account 7,Rule Account 7,RulesAccount,1600Rule Account 8,Rule Account 8,RulesAccount,1600Rule Account 9,Rule Account 9,RulesAccount,555Rule Account 10,Rule Account 10,RulesAccount,555Rule Account 11,Rule Account 11,RulesAccount,555Rule Account 12,Rule Account 12,RulesAccount,555Rule Account 13,Rule Account 13,RulesAccount,300Rule Account 14,Rule Account 14,RulesAccount,0Rule Account 15,Rule Account 15,RulesAccount,0Rule Account 16,Rule Account 16,RulesAccount,0Rule Account 17,Rule Account 17,RulesAccount,0Rule Account 18,Rule Account 18,RulesAccount,0Rule Account 19,Rule Account 19,RulesAccount,0Rule Account 20,Rule Account 20,RulesAccount,0Rule Account 21,Rule Account 21,RulesAccount,0Rule Account 22,Rule Account 22,RulesAccount,0Rule Account 23,Rule Account 23,RulesAccount,0Rule Account 24,Rule Account 24,RulesAccount,0Rule Account 25,Rule Account 25,RulesAccount,0Rule Account 26,Rule Account 26,RulesAccount,0Rule Account 27,Rule Account 27,RulesAccount,0Rule Account 28,Rule Account 28,RulesAccount,0Rule Account 29,Rule Account 29,RulesAccount,0Rule Account 30,Rule Account 30,RulesAccount,0Rule Account 31,Rule Account 31,RulesAccount,0Rule Account 32,Rule Account 32,RulesAccount,0Rule Account 33,Rule Account 33,RulesAccount,0Rule Account 34,Rule Account 34,RulesAccount,0Rule Account 35,Rule Account 35,RulesAccount,0Rule Account 36,Rule Account 36,RulesAccount,0Rule Account 37,Rule Account 37,RulesAccount,0Rule Account 38,Rule Account 38,RulesAccount,0Rule Account 39,Rule Account 39,RulesAccount,0Rule Account 40,Rule Account 40,RulesAccount,0Rule Account 41,Rule Account 41,RulesAccount,0Rule Account 42,Rule Account 42,RulesAccount,0Rule Account 43,Rule Account 43,RulesAccount,0Rule Account 44,Rule Account 44,RulesAccount,0Rule Account 45,Rule Account 45,RulesAccount,0Rule Account 46,Rule Account 46,RulesAccount,0Rule Account 47,Rule Account 47,RulesAccount,0Rule Account 48,Rule Account 48,RulesAccount,0Rule Account 49,Rule Account 49,RulesAccount,0Rule Account 50,Rule Account 50,RulesAccount,0
