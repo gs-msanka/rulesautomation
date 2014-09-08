@@ -93,11 +93,12 @@ public class Customer360Page extends BasePage {
 	}
 	public Customer360Scorecard goToScorecardSection() {
 		item.click(String.format(NAVIGATE_SECTION,"Scorecard"));
+        waitForLoadingImagesNotPresent();
 		wait.waitTillElementDisplayed("//div[@class='scorecardsbody']", MIN_TIME, MAX_TIME);
 		return new Customer360Scorecard();
 	}
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
-    	Report.logInfo("Searching for customer..." +name);
+    	Report.logInfo("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
@@ -119,7 +120,8 @@ public class Customer360Page extends BasePage {
         driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
         wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
-        Report.logInfo("Customer Search Completed.");
+        Report.logInfo("Customer Search Completed. ");
+        waitForLoadingImagesNotPresent();
         return this;
     }
 	

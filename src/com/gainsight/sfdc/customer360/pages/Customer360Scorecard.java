@@ -33,8 +33,8 @@ public class Customer360Scorecard extends Customer360Page  {
     }
     private final String READY_INDICATOR            = "//div[@class='gs_section_title']/h1[contains(.,'Scorecard')]";
 	private final String OVERALL_SCORE              = "//div[contains(@class,'overallscore')]/descendant::li[@class='score']";
-    private final String OVERALL_SCORE_BG_ELEMENT   = "//div[contains(@class, 'overallscore')]/div[@class='score-area']";
-    private final String OVERALL_TREND              = "//div[contains(@class, 'overallscore')]/descendant::li[contains(@class, 'score-trend')]";
+    private final String OVERALL_SCORE_BG_ELEMENT   = "//div[contains(@class, 'overallscore clearfix')]/div[@class='score-area']";
+    private final String OVERALL_TREND              = "//div[contains(@class, 'overallscore clearfix')]/descendant::li[contains(@class, 'score-trend')]";
 	private final String OVERALL_SUMMARY            = "//div[@class='discription']";
     private final String EDIT_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']";
 	private final String SAVE_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']/parent::div/descendant::a[@data-action='SAVE']";
@@ -92,6 +92,11 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
     public Customer360Scorecard updateOverAllScore(String score, Boolean add) {
+        List<WebElement> elements = element.getAllElement(OVERALL_SCORE_BG_ELEMENT);
+        Report.logInfo(String.valueOf(elements.size()));
+        for(WebElement ele : elements) {
+            ele.isDisplayed();
+        }
         item.click(OVERALL_SCORE_BG_ELEMENT);
         amtDateUtil.stalePause();
         driver.switchTo().activeElement();
