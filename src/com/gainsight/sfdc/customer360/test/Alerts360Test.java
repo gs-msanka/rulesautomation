@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Alerts360Test extends BaseTest {
     String[] dirs = {"eventtests"};
@@ -33,6 +34,7 @@ public class Alerts360Test extends BaseTest {
     public void setUp() throws IOException {
         basepage.login();
         userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         DataETL dataETL = new DataETL();
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);

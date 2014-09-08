@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -12,14 +11,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.TimeZone;
 
 public class Adoption_User_Weekly_Test extends BaseTest {
-    Calendar c = Calendar.getInstance();
-    Boolean isAggBatchsCompleted = false;
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
@@ -34,6 +30,8 @@ public class Adoption_User_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
         basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/User_Level_Weekly.txt";
 
@@ -56,7 +54,6 @@ public class Adoption_User_Weekly_Test extends BaseTest {
         dataLoader.execute(jobInfo3);
 
         runAdoptionAggregation(10, true, false, "Wed");
-        isAggBatchsCompleted = true;
     }
 
     @Test

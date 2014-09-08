@@ -46,6 +46,8 @@ public class RuleEngineDataSetup extends BaseTest {
     private ObjectMapper mapper;
 
 
+    public HashMap<String, String> surveyQuestionMap;
+
     public RuleEngineDataSetup() {
         Report.logInfo("In RuleEngine Setup");
         mapper = new ObjectMapper();
@@ -57,6 +59,24 @@ public class RuleEngineDataSetup extends BaseTest {
         playbooksMap            = getPlaybooks();
         Report.logInfo("End RuleEngine Setup Constructor");
 	}
+
+    public RuleEngineDataSetup(Boolean survey) {
+
+
+    }
+
+    private HashMap<String, String> getSurveyQuestionMap(String surveyCode) {
+    String query = "SELECT Id, JBCXM__ParentQuestion__c, JBCXM__SurveyMaster__r.JBCXM__Code__c, JBCXM__Title__c, " +
+            "JBCXM__ParentQuestion__r.JBCXM__Title__c, JBCXM__Type__c, JBCXM__IsActive__c FROM " +
+            "JBCXM__SurveyQuestion__c where JBCXM__IsActive__c= true AND" +
+                "JBCXM__SurveyMaster__r.JBCXM__Code__c='"+surveyCode+"'";
+        SObject[] sFDCSurveyQuestions = soql.getRecords(resolveStrNameSpace(query));
+        for(int i=0; i<sFDCSurveyQuestions.length; i++) {
+
+        }
+
+        return null;
+    }
 
     public void loadAccountsAndCustomers(DataETL dataETL) throws IOException {
         ObjectMapper mapper     = new ObjectMapper();

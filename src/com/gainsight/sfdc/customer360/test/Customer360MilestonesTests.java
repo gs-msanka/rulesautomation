@@ -12,6 +12,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class Customer360MilestonesTests extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
@@ -20,10 +21,10 @@ public class Customer360MilestonesTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
-		apex.runApexCodeFromFile(CURRENT_DIR
-				+ "/apex_scripts/Milestones/Milestones.apex",
-				isPackageInstance());
+		apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackageInstance());
 		basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 	}
 	 
 	@AfterMethod

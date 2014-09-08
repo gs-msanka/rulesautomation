@@ -1,17 +1,9 @@
 package com.gainsight.sfdc.acceptance.tests;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import jxl.read.biff.BiffException;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer.pages.CustomersPage;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
@@ -20,6 +12,16 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
+import jxl.read.biff.BiffException;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 public class TransactionsAcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
@@ -32,7 +34,9 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	@BeforeClass
 	public void setUp() throws Exception {
 		try {
-			Report.logInfo("Starting Acceptance Test Case...");
+            userLocale = soql.getUserLocale();
+            userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+            Report.logInfo("Starting Acceptance Test Case...");
 			apex.runApexCodeFromFile(env.basedir
 					+ "/apex_scripts/acceptance_tests/transactions.apex",
 					isPackageInstance());

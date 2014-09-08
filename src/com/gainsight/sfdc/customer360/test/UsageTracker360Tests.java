@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,8 +30,9 @@ public class UsageTracker360Tests  extends BaseTest {
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
-        apex.runApexCodeFromFile(SETUP_SCRIPT_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(DATA_SCRIPT_FILE, isPackageInstance());
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+        apex.runApexCodeFromFile(SETUP_SCRIPT_FILE, isPackage);
+        apex.runApexCodeFromFile(DATA_SCRIPT_FILE, isPackage);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

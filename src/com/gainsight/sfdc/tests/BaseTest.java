@@ -31,6 +31,7 @@ public class BaseTest {
     public static String userLocale;
     public static TimeZone userTimezone;
     public String userDir = TestEnvironment.basedir;
+    public Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public AmountsAndDatesUtil adUtil = new AmountsAndDatesUtil();
     Calendar c = Calendar.getInstance();
     public static final Map<String, String> monthMap;
@@ -60,8 +61,8 @@ public class BaseTest {
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
             env.launchBrower();
             basepage = new BasePage();
-            userLocale = soql.getUserLocale();
             userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+            userLocale = soql.getUserLocale();
             Report.logInfo("Initializing Base Page : " + basepage);
             if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
                 basepage.login();
@@ -194,7 +195,7 @@ public class BaseTest {
      */
     public String resolveStrNameSpace(String str) {
         String result = "";
-        if (str != null && !isPackageInstance()) {
+        if (str != null && !isPackage) {
             result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
             Report.logInfo(result);
             return result;
@@ -205,34 +206,24 @@ public class BaseTest {
 
     public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
         String date = null;
+        Report.logInfo("User Time Zone :" +userTimezone);
+        Report.logInfo("User Locale :" +userLocale);
         Calendar c = Calendar.getInstance(userTimezone);
+        Report.logInfo("Time : " +c.getTime() );
+        Report.logInfo("Time Zone : " +c.getTimeZone() );
         c.add(Calendar.DATE, noOfDaysToAdd);
         c.add(Calendar.MONTH, noOfMonthsToAdd);
+        DateFormat dateFormat = null;
         if (userLocale.contains("en_US")) {
-            DateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
-            date = dateFormat.format(c.getTime());
+            dateFormat = new SimpleDateFormat("M/d/yyyy");
 
         } else if (userLocale.contains("en_IN")) {
-            DateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
-            date = dateFormat.format(c.getTime());
+            dateFormat = new SimpleDateFormat("d/M/yyyy");
+
         }
-        Report.logInfo(String.valueOf(date));
-        return date;
-    }
+        dateFormat.setTimeZone(userTimezone);
+        date = dateFormat.format(c.getTime());
 
-
-    public String getDateFormat(int i) {
-        String date = null;
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, i);
-        if (userLocale.contains("en_US")) {
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            date = dateFormat.format(c.getTime());
-
-        } else if (userLocale.contains("en_IN")) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            date = dateFormat.format(c.getTime());
-        }
         Report.logInfo(String.valueOf(date));
         return date;
     }
@@ -261,7 +252,7 @@ public class BaseTest {
     }
 
     public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
-        if (!isPackageInstance()) {
+        if (!isPackage) {
             File tempFile = new File(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
             FileOutputStream fOut = new FileOutputStream(tempFile);
             try {
@@ -364,6 +355,7 @@ public class BaseTest {
             //Default format used for bulk data load.
             simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         }
+        simpleDateFormat.setTimeZone(userTimezone);
         String sDate = simpleDateFormat.format(date);
         Report.logInfo(sDate);
         return sDate;
@@ -375,7 +367,7 @@ public class BaseTest {
     Dec = 11
      */
     public String[] getMonthAndYear(int numOfMonthsToAdd) {
-        Calendar cal = Calendar.getInstance()  ;
+        Calendar cal = Calendar.getInstance(userTimezone)  ;
         Report.logInfo("The current date is : " + cal.getTime());
         cal.add(Calendar.MONTH, numOfMonthsToAdd);
         Report.logInfo("Modified Date : " + cal.getTime());
@@ -479,7 +471,8 @@ public class BaseTest {
     }
 
     public void overAllCustomerRollUp(Boolean enable) {
-        String s = "List<JBCXM__ScorecardConfig__c> enable_sc=[SELECT JBCXM__ScorecardEnabled__c,JBCXM__CustomerRollup__c FROM JBCXM__ScorecardConfig__c where Name='SCORECARD CONFIGURATION' LIMIT 1];";
+        String s = "List<JBCXM__ScorecardConfig__c> enable_sc=[SELECT JBCXM__ScorecardEnabled__c,JBCXM__CustomerRollup__c " +
+                                "FROM JBCXM__ScorecardConfig__c where Name='SCORECARD CONFIGURATION' LIMIT 1];";
         if(enable) {
             s+="\n"+"enable_sc.get(0).JBCXM__CustomerRollup__c='WEIGHT';"+"\n";
             s+="\n"+"enable_sc.get(0).JBCXM__OverrideCustomer__c=false;"+"\n";

@@ -14,11 +14,9 @@ import org.testng.annotations.Test;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.TimeZone;
 
 public class Adoption_Account_Weekly_Test extends BaseTest {
-    Calendar c = Calendar.getInstance();
-    Boolean isAggBatchsCompleted = false;
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static ObjectMapper mapper = new ObjectMapper();
@@ -26,13 +24,14 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
     String resDir = userDir + "/resources/datagen/";
-    String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
     String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
 
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Account_Level_Weekly.txt";
 

@@ -1,17 +1,16 @@
 package com.gainsight.sfdc.salesforce.tests;
 
-import java.io.IOException;
-import java.util.HashMap;
-
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
+import com.gainsight.sfdc.tests.BaseTest;
 import jxl.read.biff.BiffException;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
-import com.gainsight.sfdc.tests.BaseTest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 public class CreateSalesforceUsersTest extends BaseTest {
 	
@@ -24,6 +23,8 @@ public class CreateSalesforceUsersTest extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
 		basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 	}
 	
 	

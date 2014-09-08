@@ -29,6 +29,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -79,7 +80,8 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackageInstance);
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();

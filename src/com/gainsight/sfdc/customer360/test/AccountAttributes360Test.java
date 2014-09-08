@@ -8,6 +8,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  * Created by gainsight on 08/01/14.
@@ -23,6 +24,7 @@ public class AccountAttributes360Test extends BaseTest {
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(ACCOUNT_CREATE_FILE, isPackageInstance());
     }
 

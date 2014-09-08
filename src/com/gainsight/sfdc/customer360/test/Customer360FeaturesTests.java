@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Customer360FeaturesTests extends BaseTest {
 
@@ -26,12 +27,10 @@ public class Customer360FeaturesTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Features module Test Cases...");
-		System.out
-				.println("Starting Customer 360 Features module Test Cases...");
-		apex.runApexCodeFromFile(CURRENT_DIR +
-				"/apex_scripts/Features/features.apex",
-				isPackageInstance());
+		apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackageInstance());
 		basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 	}
 	
 	@AfterMethod

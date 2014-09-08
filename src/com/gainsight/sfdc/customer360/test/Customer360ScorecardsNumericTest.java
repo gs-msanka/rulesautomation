@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,6 +50,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
         apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
         basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 		AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();

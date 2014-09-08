@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Events360Test extends BaseTest {
     String[] dirs = {"eventtests"};
@@ -33,6 +34,7 @@ public class Events360Test extends BaseTest {
     public void setUp() {
         basepage.login();
         userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         apex.runApexCodeFromFile(PLAYBOOK_CREATE_FILE, isPackageInstance());
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());

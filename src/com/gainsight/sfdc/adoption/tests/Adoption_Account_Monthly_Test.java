@@ -13,33 +13,30 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.TimeZone;
 
 public class Adoption_Account_Monthly_Test extends BaseTest {
 
-
-    Boolean isAggBatchsCompleted = false;
-
     ObjectMapper mapper = new ObjectMapper();
-
     String resDir = userDir + "/resources/datagen/";
     String USAGE_NAME = "JBCXM__UsageData__c";
     String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
     static JobInfo jobInfo1;
     static JobInfo jobInfo2;
     static JobInfo jobInfo3;
-    String CONDITION = "WHERE JBCXM__Account__r.Jigsaw = 'AUTO_SAMPLE_DATA'";
     String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
     String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
 
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile          = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile   = env.basedir + "/testdata/sfdc/UsageData/Scripts/Account_Level_Monthly.txt";
 
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
         apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
-
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();

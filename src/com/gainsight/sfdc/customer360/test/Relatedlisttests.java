@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class Relatedlisttests extends BaseTest {
     private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
@@ -31,7 +32,8 @@ public class Relatedlisttests extends BaseTest {
 
     @BeforeClass
     public void setUp() {
-        basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackageInstance());
         apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackageInstance());
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());

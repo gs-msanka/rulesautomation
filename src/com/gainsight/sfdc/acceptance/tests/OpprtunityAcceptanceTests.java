@@ -1,19 +1,21 @@
 package com.gainsight.sfdc.acceptance.tests;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
+import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
+import com.gainsight.sfdc.pages.CustomerSuccessPage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 import jxl.read.biff.BiffException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
-import com.gainsight.sfdc.pages.CustomerSuccessPage;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 @Listeners({ com.gainsight.utils.GSTestListener.class })
 public class OpprtunityAcceptanceTests extends BaseTest {
@@ -23,7 +25,9 @@ public class OpprtunityAcceptanceTests extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Acceptance Test Case...");
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+        Report.logInfo("Starting Acceptance Test Case...");
 		basepage.login();
 		loggedIn = true;
 	}

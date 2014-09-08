@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class CustomerTest extends BaseTest {
 
@@ -22,6 +23,8 @@ public class CustomerTest extends BaseTest {
     public void setUp() {
         Report.logInfo("Started Customers Test Cases");
         basepage.login();
+        userLocale = soql.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_QUERY));
         apex.runApexCodeFromFile(ACC_SETUP_SCRIPT,isPackageInstance());
         apex.runApexCodeFromFile(UIVIEW_SETUP_SCRIPT, isPackageInstance());
