@@ -8,7 +8,7 @@
     <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
         <classes>
 
-            <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
+            <!--<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/> -->
             <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
 
             <class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
