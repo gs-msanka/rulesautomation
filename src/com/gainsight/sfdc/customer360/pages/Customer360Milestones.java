@@ -84,6 +84,7 @@ public class Customer360Milestones extends Customer360Page {
 
     public boolean isMilestonePresent(HashMap<String, String> testData) {
         String milestone = getMilestoneXpath(testData);
+        Report.logInfo("Milestone Xpath : "+milestone);
         return isElementPresentAndDisplay(By.xpath(milestone));
     }
 
