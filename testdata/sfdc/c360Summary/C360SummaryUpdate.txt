@@ -1,0 +1,40 @@
+public class applicationException extends Exception {}
+
+List<JBCXM__C360Sections__c> c360Sections = [Select Id, JBCXM__CustomConfig__c, JBCXM__DisplayLabel__c,
+											JBCXM__Type__c, JBCXM__IsActive__c, JBCXM__InCustomer360__c, 
+											JBCXM__InOpportunityWidget__c, JBCXM__InAccountWidget__c,
+											JBCXM__DisplayOrder__c From JBCXM__C360Sections__c WHERE  
+											JBCXM__DisplayLabel__c = 'Summary' AND JBCXM__IsActive__c= true];
+JBCXM__C360Sections__c	 c360Section;									
+if(c360Sections.size() >0) {
+	c360Section = c360Sections.get(0);
+} else {
+	throw new applicationException('Summary Section is not available');
+}											
+
+String s = '{"config":[{"id":"","name":"Status__r.Name","label":"Status","type":"FieldType","dp":"fieldPanel","op":"left","do":1,"meta":{"name":"Status__r.Name","label":"Status","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true}},{"id":"","name":"ASV__c","label":"ASV","type":"FieldType","dp":"fieldPanel","op":"left","do":2,"meta":{"name":"ASV__c","label":"ASV","displayOrder":2,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true}},{"id":"","name":"MRR__c","label":"MRR","type":"FieldType","dp":"fieldPanel","op":"left","do":3,"meta":{"name":"MRR__c","label":"MRR","displayOrder":3,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true}},{"id":"","name":"OneTimeRevenue__c","label":"One-time Rev","type":"FieldType","dp":"fieldPanel","op":"left","do":4,"meta":{"name":"OneTimeRevenue__c","label":"One-time Rev","displayOrder":4,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":true}},{"id":"","name":"OriginalContractDate__c","label":"Orig. Contr. Date","type":"FieldType","dp":"fieldPanel","op":"left","do":5,"meta":{"name":"OriginalContractDate__c","label":"Orig. Contr. Date","displayOrder":5,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DATE","isGroupable":true,"hasJBCXMNS":true}},{"id":"","name":"NextRenewalDate__c","label":"Renewal Date","type":"FieldType","dp":"fieldPanel","op":"left","do":6,"meta":{"name":"NextRenewalDate__c","label":"Renewal Date","displayOrder":6,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"DATE","isGroupable":true,"hasJBCXMNS":true}},{"name":"Stage","type":"FieldType","id":"","op":"left","meta":{"name":"Stage__r.Name","label":"Stage","displayOrder":1,"visibilityMode":true,"objectName":"CustomerInfo__c","fieldType":"CUSTOMLOOKUP","isGroupable":true,"hasJBCXMNS":true},"dp":"widgetPanel","do":1},{"id":"HEALTHSCORE","name":"HEALTHSCORE","label":"Health Score","type":"Standard","meta":{},"op":"right","headerIcon":"ad-healthimg","dp":"widgetPanel","do":2},{"id":"ENGAGEMENT","name":"ENGAGEMENT","label":"Users","type":"Standard","meta":{},"op":"right","headerIcon":"ad-engimg","dp":"widgetPanel","do":3},{"id":"NPS","name":"NPS","label":"NPS","type":"Standard","meta":{},"op":"right","headerIcon":"ad-npsimg","dp":"widgetPanel","do":4},{"id":"OCTA","name":"OCTA","label":"Open Calls To Action","type":"Standard","meta":{},"op":"right","headerIcon":"ad-opencallsimg","dp":"widgetPanel","do":5},{"id":"OPENCASES","name":"OPENCASES","label":"Open Cases","type":"SingleFieldAggregation","meta":{},"op":"right","headerIcon":"ad-opentickimg","dp":"widgetPanel","do":6}],"showComments":true}';
+
+List<JBCXM__Widgets__c>  summaryWidgets = [select Id, JBCXM__Active__c, JBCXM__QueryOption__c , JBCXM__Metadata__c, 
+                                           JBCXM__SystemName__c , JBCXM__Title__c from JBCXM__Widgets__c];
+
+Map<String, String> sampleMap = new Map<String, String>();
+for(JBCXM__Widgets__c wid : summaryWidgets) {
+	sampleMap.put(wid.JBCXM__SystemName__c , wid.Id);    
+}
+
+Map<String, Object> config = (Map<String, Object>)JSON.deserializeUntyped(s);
+List<Object> configList = (List<Object>)config.get('config');
+for(Object sam : configList) {
+	Map<String, Object> dConfig = (Map<String, Object>)sam;
+    System.debug(dConfig.size());
+    String s1 = (String)dConfig.get('id');
+    if(s1 != null && s1 != '') {
+    	dConfig.put('id', (Object)sampleMap.get(s1));
+    }
+}
+System.debug(JSON.serialize(configList));
+config.put('config', configList);
+System.debug(JSON.serialize(config));
+c360Section.JBCXM__CustomConfig__c = JSON.serialize(config);
+update c360Section;
+

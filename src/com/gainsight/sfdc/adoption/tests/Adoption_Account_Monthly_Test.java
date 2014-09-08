@@ -30,6 +30,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile          = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
@@ -40,8 +41,8 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
-        apex.runApexCodeFromFile(measureFile, isPackageInstance());
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackageInstance());
+        apex.runApexCodeFromFile(measureFile, isPackage);
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
         DataETL dataLoader = new DataETL();
         dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
         dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);

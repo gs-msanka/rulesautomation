@@ -48,16 +48,17 @@ public class Customer360ScorecardsColorTest extends BaseTest {
             throw new RuntimeException("Unable to create fields for scorecard section");
         }
 
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
+        isPackage = isPackageInstance();
+        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
+        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
         basepage.login();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 		AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        apex.runApexCodeFromFile(SCHEME_DEFINITION_FILE, isPackageInstance());
-		apex.runApexCodeFromFile(COLOR_SCHEME_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(SCHEME_DEFINITION_FILE, isPackage);
+		apex.runApexCodeFromFile(COLOR_SCHEME_FILE, isPackage);
 
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);

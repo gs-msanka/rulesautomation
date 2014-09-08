@@ -29,6 +29,7 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws InterruptedException, IOException {
         basepage.login();
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
@@ -42,8 +43,8 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         DataETL dataLoader = new DataETL();
-        apex.runApexCodeFromFile(measureFile, isPackageInstance());
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackageInstance());
+        apex.runApexCodeFromFile(measureFile, isPackage);
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
         dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
         dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
         jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);

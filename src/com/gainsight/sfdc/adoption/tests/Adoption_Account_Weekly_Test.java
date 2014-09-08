@@ -31,6 +31,7 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     public void setUp() throws IOException {
         basepage.login();
         userLocale = soql.getUserLocale();
+        isPackage = isPackageInstance();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
         String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Account_Level_Weekly.txt";
@@ -42,8 +43,8 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         Report.logInfo("Field Creation Done");
-        apex.runApexCodeFromFile(measureFile, isPackageInstance());
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackageInstance());
+        apex.runApexCodeFromFile(measureFile, isPackage);
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
         DataETL dataLoader = new DataETL();
         dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
         dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);

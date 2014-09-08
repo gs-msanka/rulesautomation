@@ -36,7 +36,7 @@ public class RuleEngineDataSetup extends BaseTest {
     private final static String CTA_TYPES_QUERY                 = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
     private final static String SCORECARD_METRIC_QUERY          = "SELECT Id, Name FROM JBCXM__ScorecardMetric__c";
     private final static String SCORECARD_SCHEME_DEF_QUERY      = "SELECT Name, Id  FROM JBCXM__ScoringSchemeDefinition__c";
-    public static boolean isPackageInstance = false;
+
 
     public HashMap<String, String> pkListMap;
     public HashMap<String, String> ctaTypeMap;
@@ -51,7 +51,7 @@ public class RuleEngineDataSetup extends BaseTest {
     public RuleEngineDataSetup() {
         Report.logInfo("In RuleEngine Setup");
         mapper = new ObjectMapper();
-		isPackageInstance       = isPackageInstance();
+		isPackage               = isPackageInstance();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
         scorecardMetricMap      = getScorecardMetrics();
@@ -111,13 +111,13 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     public void initialCleanUp() {
-        apex.runApexCodeFromFile(CLEANUP_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(CLEANUP_FILE, isPackage);
     }
 
     public void deleteAlertsAndCTA() {
         String query = "Delete [Select Id from JBCXM__Alert__c]; \n" +
                         "Delete [Select Id from JBCXM__CTA__C];";
-        apex.runApex(query, isPackageInstance);
+        apex.runApex(query, isPackage);
     }
 
     public void clearPreviousTestData() {
@@ -128,7 +128,7 @@ public class RuleEngineDataSetup extends BaseTest {
         stringBuilder.append("\n");
         stringBuilder.append("Delete [select id from JBCXM__CTA__c where JBCXM__Account__r.AccountNumber = 'RulesAccount'];");
         stringBuilder.append("\n");
-        apex.runApex(stringBuilder.toString(), isPackageInstance);
+        apex.runApex(stringBuilder.toString(), isPackage);
     }
 
     private HashMap<String, String> getPickListSetupData() {

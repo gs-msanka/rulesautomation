@@ -33,14 +33,15 @@ public class Alerts360Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         DataETL dataETL = new DataETL();
         apex.runApexCodeFromFile(USER_SETUP_FILE);
         dataETL.cleanUp(resolveStrNameSpace(ALERT_OBJECT), null);
         apex.runApex(resolveStrNameSpace(PLAYBOOKS_DELETE_SCRIPT));
-        apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(ALERT_SETUP_SCRIPT_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(PLAYBOOK_SETUP_FILE, isPackage);
+        apex.runApexCodeFromFile(ALERT_SETUP_SCRIPT_FILE, isPackage);
 
     }
 

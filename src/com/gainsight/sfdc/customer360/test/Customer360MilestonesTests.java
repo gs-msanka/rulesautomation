@@ -7,7 +7,6 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -21,15 +20,11 @@ public class Customer360MilestonesTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
-		apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackageInstance());
 		basepage.login();
+        isPackage = isPackageInstance();
+        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackage);
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-	}
-	 
-	@AfterMethod
-	private void refresh() {
-	        basepage.refreshPage();
 	}
 	 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

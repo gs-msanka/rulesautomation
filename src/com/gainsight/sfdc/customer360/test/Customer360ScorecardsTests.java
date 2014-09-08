@@ -28,16 +28,17 @@ public class Customer360ScorecardsTests extends BaseTest {
 	@BeforeClass
 	public void setUp() {
         Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
+        isPackage = isPackageInstance();
         createExtIdFieldForScoreCards();
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(SETUP_FILE, isPackageInstance());
+        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
+        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
         basepage.login();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-		apex.runApexCodeFromFile(GRADE_SCHEME_FILE,isPackageInstance());
+		apex.runApexCodeFromFile(GRADE_SCHEME_FILE, isPackage);
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         } catch (IOException e) {

@@ -32,21 +32,22 @@ public class Relatedlisttests extends BaseTest {
 
     @BeforeClass
     public void setUp() {
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackageInstance());
-        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(EVENT_TASKS_CREATE_FILE, isPackageInstance());
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE1, isPackageInstance());
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE2, isPackageInstance());
-
+        apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackage);
+        apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackage);
+        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackage);
+        apex.runApexCodeFromFile(EVENT_TASKS_CREATE_FILE, isPackage);
+        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE1, isPackage);
+        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE2, isPackage);
+        basepage.login();
     }
 
     public void createEventsFromScript() {
         String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
         Report.logInfo("File :" +file);
-        apex.runApexCodeFromFile(file, isPackageInstance());
+        apex.runApexCodeFromFile(file, isPackage);
         taskScriptCreated = true;
     }
 

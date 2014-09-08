@@ -29,6 +29,7 @@ public class UsageTracker360Tests  extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(SETUP_SCRIPT_FILE, isPackage);

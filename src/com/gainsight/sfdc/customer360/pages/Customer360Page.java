@@ -16,8 +16,6 @@ public class Customer360Page extends BasePage {
     private final String READY_INDICATOR        = "//input[contains(@placeholder, 'Customer name') and @name='search_text']";
 	private final String LOADING_IMAGES         = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION       = "//div[@class='gs_navtabs']//a[text()='%s']";
-	private final String SUMMARY_NUM_FIELDS     = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
-	private final String SUMMARY_STR_FIELDS     = "//div[@class='gs_summary_details']//li[contains(.,'%s')]/span";
 	private final String ADD_TRAN               = "//a[text()='Add Transaction']";
 	private final String TRANSACTION_FRAME      = "//iframe[contains(@src,'TransactionForm')]";
     private final String CUST_SERCHBY_SELECT    = "//div[@class='gs-cusstomerseach-icon']";
@@ -33,12 +31,17 @@ public class Customer360Page extends BasePage {
 
     private static final String ALERT_SECTION_TAB           = "//ul[@class='alert_tab_nav active']/li[@data-attr='alerts']";
     private static final String EVENT_SECTION_TAB           = "//ul[@class='alert_tab_nav active']/li[@data-attr='events']";
+    //private final String SUMMARY_NUM_FIELDS     = "//div[@class='account_summaryboxtop' and text()='%s']//following-sibling::div";
+    //private final String SUMMARY_STR_FIELDS     = "//div[@class='gs_summary_details']//li[contains(.,'%s')]/span";
     //private static final String USAGE_SUB_ADOPTION_TAB      = "//ul[@class='alert_tab_nav']/li[@data-tabname='Adoption']";
     //private static final String USAGE_SUB_MILESTONES_TAB    = "//ul[@class='alert_tab_nav']/li[@data-tabname='Milestones']";
     private static final String USAGE_SUB_TRACKER_TAB       = "//ul[@class='alert_tab_nav']/li[@data-tabname='UsageTracker']";
     //private static final String USAGE_SUB_SECTION_TAB       = "//li[@data-tabname='UsageTracker']/a[contains(text(), 'Usage Tracker')]";
+    private static final String summaryLeftSection = "//div[@class='gs_summary_details']/descendant::span[@class='gs-label-name' and contains(text(), '%s')]/following-sibling::span";
+    private static final String summaryWidgets = "//div[@class='gs_account_summarymain']/descendant::div[contains(@class, 'gs-sum-widgethead') and text()='%s']/following-sibling::div";
 
-	public Customer360Page() {
+
+    public Customer360Page() {
         Report.logInfo("360 Page Loading");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
@@ -47,32 +50,31 @@ public class Customer360Page extends BasePage {
         Report.logInfo("Sample");
     }
 
+    /**
+     * Needs more attention.
+     * @return
+     */
 	public CustomerSummary getSummaryDetails() {
-		CustomerSummary summary = new CustomerSummary();
+        CustomerSummary summary = new CustomerSummary();
 		SummaryLabels labels = new SummaryLabels();
-		summary.setASV(stripNumber(field.getTextFieldText(String.format(
-				SUMMARY_NUM_FIELDS, labels.getASV()))));
-		summary.setMRR(stripNumber(field.getTextFieldText(String.format(
-				SUMMARY_NUM_FIELDS, labels.getMRR()))));
-		summary.setOTR(stripNumber(field.getTextFieldText(String.format(
-				SUMMARY_NUM_FIELDS, labels.getOTR()))));
-		summary.setUsers(field.getTextFieldText(String.format(
-				SUMMARY_NUM_FIELDS, labels.getUsers())));
-		summary.setARPU(stripNumber(field.getTextFieldText(String.format(
-				SUMMARY_NUM_FIELDS, labels.getARPU()))));
-		summary.setStage(field.getTextFieldText(String.format(
-				SUMMARY_STR_FIELDS, labels.getStage())));
-		summary.setLifetime(field.getTextFieldText(String.format(
-				SUMMARY_STR_FIELDS, labels.getLifeTime())));
-		summary.setTimeToRenew(field.getTextFieldText(String.format(
-				SUMMARY_STR_FIELDS, labels.getDaysToRenew())));
-		summary.setOCD(field.getTextFieldText(String.format(SUMMARY_STR_FIELDS,
-				labels.getOCD())));
-		summary.setRD(field.getTextFieldText(String.format(SUMMARY_STR_FIELDS,
-				labels.getRD())));
-		summary.setStatus(field
-				.getTextFieldText("//div[@class='gs_header']//dt"));
-		return summary;
+		summary.setASV(stripNumber(field.getTextFieldText(String.format(summaryLeftSection, labels.getASV()))));
+		summary.setMRR(stripNumber(field.getTextFieldText(String.format(summaryLeftSection, labels.getMRR()))));
+		summary.setOTR(stripNumber(field.getTextFieldText(String.format(summaryLeftSection, labels.getOTR()))));
+		summary.setOCD(field.getTextFieldText(String.format(summaryLeftSection,labels.getOCD())));
+		summary.setRD(field.getTextFieldText(String.format(summaryLeftSection, labels.getRD())));
+		summary.setStatus(field.getTextFieldText(String.format(summaryLeftSection, "Status")));
+        Report.logInfo("Stage : " + field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
+        summary.setStage(field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
+        summary.setUsers(field.getTextFieldText(String.format(summaryWidgets, labels.getUsers())));
+
+        /*summary.setARPU(stripNumber(field.getTextFieldText(String.format(
+                SUMMARY_NUM_FIELDS, labels.getARPU()))));
+        summary.setLifetime(field.getTextFieldText(String.format(
+                SUMMARY_STR_FIELDS, labels.getLifeTime())));
+        summary.setTimeToRenew(field.getTextFieldText(String.format(
+                SUMMARY_STR_FIELDS, labels.getDaysToRenew())));
+        */
+        return summary;
 	}
 
 	public Customer360Page goToSection(String name) {
