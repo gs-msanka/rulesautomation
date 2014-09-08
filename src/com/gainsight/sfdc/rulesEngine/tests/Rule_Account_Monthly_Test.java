@@ -120,7 +120,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
     public void Equals_NotEquals_LessThan_GreaterThan_AccountField_Rule1(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -128,7 +128,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
     public void Equals_NotEquals_LessThan_GreaterThan_Static_Rule2(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -136,7 +136,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
     public void UsageDroppedOverPeriod_Rule3(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -144,7 +144,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
     public void UsageIncreasedOverPeriod_Rule4(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -152,7 +152,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
     public void Sum_Of_Measure_ExcludeNull_AccountField_Rule5(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -160,7 +160,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
     public void Sum_Of_Measure_ExcludeNull_StaticValue_Rule6(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -168,7 +168,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
     public void Sum_Of_Measure_IncludeNull_AccountField_Rule7(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -176,7 +176,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule8")
     public void Sum_Of_Measure_StaticValue_IncludeNull_Rule8(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -184,7 +184,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule9")
     public void Avg_Of_Measure_AccountField_ExcludeNull_Rule9(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -192,7 +192,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule10")
     public void Avg_Of_Measure_StaticValue_ExcludeNull_Rule10(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -200,7 +200,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule11")
     public void Avg_Of_Measure_AccountField_IncludeNull_Rule11(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -208,7 +208,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule12")
     public void Avg_Of_Measure_StaticValue_IncludeNull_Rule12(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -216,7 +216,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule13")
     public void Measure_OverPeriod_AccountField_Rule13(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -224,7 +224,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule14")
     public void Measure_OverPeriod_StaticValue_Rule14(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         //Just for debugging purpose, because we don't know what payload is delivered i.e. rule is created.
-        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         assertRuleResult(testData);
     }
 
@@ -232,7 +232,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         //Always runs for current user.
         testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
         testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-        String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")));
+        String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         String ruleId = createRule(rule);
         ruleEngineDataSetup.runRule(ruleId, USAGE_LEVEL, 0, -1);
     }

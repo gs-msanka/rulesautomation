@@ -5,11 +5,13 @@ import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.rulesEngine.pojos.AutomatedRule;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.sforce.soap.partner.sobject.SObject;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -47,11 +49,10 @@ public class RuleEngineDataSetup extends BaseTest {
 
 
     public HashMap<String, String> surveyQuestionMap;
+    public HashMap<String, String> surveyAnswerMap;
 
     public RuleEngineDataSetup() {
         Report.logInfo("In RuleEngine Setup");
-        mapper = new ObjectMapper();
-		isPackage               = isPackageInstance();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
         scorecardMetricMap      = getScorecardMetrics();
@@ -60,22 +61,53 @@ public class RuleEngineDataSetup extends BaseTest {
         Report.logInfo("End RuleEngine Setup Constructor");
 	}
 
-    public RuleEngineDataSetup(Boolean survey) {
-
-
+    public RuleEngineDataSetup(String surveyCode) {
+        Report.logInfo("Survey Rule's Engine Setup");
+        mapper = new ObjectMapper();
+        isPackage  = isPackageInstance();
+        pkListMap               = getPickListSetupData();
+        ctaTypeMap              = getCTATypes();
+        scorecardMetricMap      = getScorecardMetrics();
+        scorecardSchemeDefMap   = getScoringSchemeDefinition();
+        playbooksMap            = getPlaybooks();
+        surveyQuestionMap = getSurveyQuestionMap(surveyCode);
+        surveyAnswerMap = getSurveyAnswerMap(surveyCode);
+        Report.logInfo("End of Survey Rule's Engine Setup");
     }
 
-    private HashMap<String, String> getSurveyQuestionMap(String surveyCode) {
-    String query = "SELECT Id, JBCXM__ParentQuestion__c, JBCXM__SurveyMaster__r.JBCXM__Code__c, JBCXM__Title__c, " +
-            "JBCXM__ParentQuestion__r.JBCXM__Title__c, JBCXM__Type__c, JBCXM__IsActive__c FROM " +
-            "JBCXM__SurveyQuestion__c where JBCXM__IsActive__c= true AND" +
-                "JBCXM__SurveyMaster__r.JBCXM__Code__c='"+surveyCode+"'";
-        SObject[] sFDCSurveyQuestions = soql.getRecords(resolveStrNameSpace(query));
-        for(int i=0; i<sFDCSurveyQuestions.length; i++) {
-
+    public HashMap<String, String> getSurveyAnswerMap(String surveyCode) {
+        String query = "SELECT JBCXM__IsActive__c, JBCXM__SurveyMaster__r.JBCXM__Code__c," +
+                            " JBCXM__SurveyQuestion__r.JBCXM__Title__c ,JBCXM__Title__c FROM JBCXM__SurveyAllowedAnswers__c" +
+                            " where JBCXM__SurveyMaster__r.JBCXM__Code__c = '"+surveyCode+"'";
+        HashMap<String, String> result = new HashMap<String, String>();
+        SObject[] sFDCAnswers = soql.getRecords(resolveStrNameSpace(query));
+        for(int i=0; i < sFDCAnswers.length; i++) {
+            SObject sObject = sFDCAnswers[i];
+            result.put(sObject.getField(resolveStrNameSpace("JBCXM__SurveyQuestion__r.JBCXM__Title__c")).toString() +
+                    sObject.getField(resolveStrNameSpace("JBCXM__Title__c")), sObject.getId());
         }
+        return result;
+    }
 
-        return null;
+
+    //Please try to maintain question title's different.
+    private HashMap<String, String> getSurveyQuestionMap(String surveyCode) {
+    String query = "SELECT Id, JBCXM__ParentQuestion__c, JBCXM__ParentQuestion__r.JBCXM__Title__c," +
+            " JBCXM__SurveyMaster__r.JBCXM__Code__c, JBCXM__Title__c, " +
+            " JBCXM__ParentQuestion__r.JBCXM__Title__c, JBCXM__Type__c, JBCXM__IsActive__c FROM " +
+            " JBCXM__SurveyQuestion__c where JBCXM__IsActive__c= true AND" +
+                " JBCXM__SurveyMaster__r.JBCXM__Code__c='"+surveyCode+"'";
+        SObject[] sFDCSurveyQuestions = soql.getRecords(resolveStrNameSpace(query));
+        HashMap<String, String> result = new HashMap<String, String>();
+        for(int i=0; i<sFDCSurveyQuestions.length; i++) {
+            if(sFDCSurveyQuestions[i].getField("JBCXM__ParentQuestion__c").toString() != null ) {
+                result.put(sFDCSurveyQuestions[i].getField("JBCXM__Title__c").toString()+
+                        sFDCSurveyQuestions[i].getField("JBCXM__ParentQuestion__r.JBCXM__Title__c").toString(), sFDCSurveyQuestions[i].getId());
+            } else {
+                result.put(sFDCSurveyQuestions[i].getField("JBCXM__Title__c").toString(), sFDCSurveyQuestions[i].getId());
+            }
+        }
+        return result;
     }
 
     public void loadAccountsAndCustomers(DataETL dataETL) throws IOException {
@@ -167,7 +199,7 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
-    public String generateRuleJson(HashMap<String, String> testData, Boolean isCTA) throws IOException {
+    public String generateRuleJson(HashMap<String, String> testData, Boolean isCTA, Boolean isSurveyRule) throws IOException {
         String result = "";
         AutomatedRule rule = new AutomatedRule();
         rule.setName(testData.get("Name"));
@@ -191,7 +223,27 @@ public class RuleEngineDataSetup extends BaseTest {
         rule.setJBCXM__Status__c(Boolean.valueOf(testData.get("JBCXM__Status__c")));
         rule.setJBCXM__PlayBookIds__c(testData.get("JBCXM__PlayBookIds__c"));
         rule.setJBCXM__TaskDefaultOwner__c(testData.get("JBCXM__TaskDefaultOwner__c"));
-        rule.setJBCXM__TriggerCriteria__c(testData.get("JBCXM__TriggerCriteria__c"));
+        if(isSurveyRule) {
+            String triggerCriteria = testData.get("JBCXM__TriggerCriteria__c");
+            ArrayList<RuleSurveyTriggerCriteria> criteriaList  = mapper.readValue(triggerCriteria, new TypeReference<ArrayList<RuleSurveyTriggerCriteria>>() {});
+            for(RuleSurveyTriggerCriteria criteria : criteriaList) {
+                if(criteria.getpId()!=null) {
+                    criteria.setId(surveyQuestionMap.get(criteria.getId()+surveyQuestionMap.get(criteria.getpId())));
+                    criteria.setpId(surveyQuestionMap.get(criteria.getpId()));
+                } else {
+                    criteria.setId(surveyQuestionMap.get(criteria.getId()));
+                }
+                RuleSurveyTriggerCriteria.AnswerRecords answerRecords = criteria.getAnswerRecords();
+                for(int i=0 ; i <answerRecords.getIdList().length; i++) {
+                    answerRecords.getIdList()[i] = surveyAnswerMap.get(answerRecords.getIdList()[i]);
+                }
+                criteria.setAnswerRecords(answerRecords);
+            }
+            Report.logInfo("Survey Rule Trigger Criteria : " +mapper.writeValueAsString(criteriaList));
+            rule.setJBCXM__TriggerCriteria__c(mapper.writeValueAsString(criteriaList));
+        } else {
+            rule.setJBCXM__TriggerCriteria__c(testData.get("JBCXM__TriggerCriteria__c"));
+        }
         rule.setJBCXM__AdvanceCriteria__c(testData.get("JBCXM__AdvanceCriteria__c"));
         rule.setJBCXM__ScorecardCriteria__c(testData.get("JBCXM__ScorecardCriteria__c"));
         rule.setJBCXM__SelectFields__c(testData.get("JBCXM__SelectFields__c"));
@@ -411,7 +463,7 @@ public class RuleEngineDataSetup extends BaseTest {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");
         strBuilder.append("ruleParams.put('ruleId','"+ruleId+"'); \n");
-        strBuilder.append("ruleParams.put('ruleRunDate', '"+getWeekLabelDate("Sat", daysToAdd, true, true)+"'); \n");
+        strBuilder.append("ruleParams.put('ruleRunDate', '"+getWeekLabelDate(weekDay, daysToAdd, usesEndDate, true)+"'); \n");
         strBuilder.append("ruleParams.put('isAlertCreate',true); \n");
         strBuilder.append("ruleParams.put('usageLevel','"+usageLevel+"'); \n");
         strBuilder.append("ruleParams.put('criteriaList',new List<Object>()); \n");
