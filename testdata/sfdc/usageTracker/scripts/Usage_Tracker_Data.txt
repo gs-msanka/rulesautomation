@@ -2,7 +2,7 @@ List<Account> accList = [SELECT Id FROM Account WHERE Name = 'Lexidata Corporati
 System.debug(accList.size());
 DELETE [SELECT Id FROM JBCXM__UsageTracker__c];
 List<String> utList = new List<String>{'Emails Sent Count', 'Files Upload Count', 'Network Traffic Created'};
-List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE Name IN: utList];
+List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE Name IN: utList ORDER BY Name];
 List<JBCXM__UsageTracker__c> usTList = new List<JBCXM__UsageTracker__c>();
 
 JBCXM__UsageTracker__c ut;
@@ -16,7 +16,7 @@ for(Account acc : accList) {
 										JBCXM__AdoptionMeasure__c = pkList.get(a).Id,
 										JBCXM__ActionTime__c = datetime.now().addDays(-i),
 										JBCXM__Module__c = modulesList.get(b),
-										JBCXM__UserName__c = userNames.get(c)); 
+										JBCXM__UserName__c = userNames.get(c));
 	usTList.add(ut);
     a++;b++;c++;
     if(a==pkList.size()) {a=0;}

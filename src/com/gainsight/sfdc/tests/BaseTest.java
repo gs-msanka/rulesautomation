@@ -206,8 +206,6 @@ public class BaseTest {
 
     public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
         String date = null;
-        Report.logInfo("User Time Zone :" +userTimezone);
-        Report.logInfo("User Locale :" +userLocale);
         Calendar c = Calendar.getInstance(userTimezone);
         Report.logInfo("Time : " +c.getTime() );
         Report.logInfo("Time Zone : " +c.getTimeZone() );
@@ -224,7 +222,7 @@ public class BaseTest {
         dateFormat.setTimeZone(userTimezone);
         date = dateFormat.format(c.getTime());
 
-        Report.logInfo(String.valueOf(date));
+        Report.logInfo("Date : " +String.valueOf(date));
         return date;
     }
 
