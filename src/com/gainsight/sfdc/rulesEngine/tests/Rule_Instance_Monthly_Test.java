@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.rulesEngine.tests;
 
-
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
@@ -35,18 +34,15 @@ import java.util.TimeZone;
 /**
  * Created with IntelliJ IDEA.
  * User: gainsight
- * Date: 02/09/14
- * Time: 6:34 PM
+ * Date: 09/09/14
+ * Time: 7:22 PM
  * To change this template use File | Settings | File Templates.
  */
-
-public class Rule_Account_Monthly_Test extends BaseTest {
-
-
-    private static final String SET_USAGE_DATA_LEVEL_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
+public class Rule_Instance_Monthly_Test extends BaseTest {
+    private static final String SET_USAGE_DATA_LEVEL_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Monthly.apex";
     private static final String SET_USAGE_DATA_MEASURE_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
-    private static final String USAGE_DATA_FILE         = "/testdata/sfdc/RulesEngine/Data/Rules_UsageData_Account.csv";
-    private static final String TEST_DATA_FILE          = "testdata/sfdc/RulesEngine/Tests/Rule_Account_Monthly_Test.xls";
+    private static final String USAGE_DATA_FILE         = "/testdata/sfdc/RulesEngine/Data/Rules_UsageData_Instance.csv";
+    private static final String TEST_DATA_FILE          = "testdata/sfdc/RulesEngine/Tests/Rule_Instance_Monthly_Test.xls";
     private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
     private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
     private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
@@ -60,18 +56,18 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     private Resty resty;
     private URI uri;
     private static final String SCHEME = "Grade";
-    private static final String USAGE_LEVEL = "ACCOUNTLEVEL";
+    private static final String USAGE_LEVEL = "INSTANCELEVEL";
     private boolean isPackageInstance = isPackageInstance();
 
     //Please update this list if new test case need to be added.
     private String[] sheetNames = new String[]{"Rule1", "Rule2", "Rule3", "Rule4", "Rule5", "Rule6", "Rule7", "Rule8", "Rule9"
-                                                    , "Rule10", "Rule11", "Rule12", "Rule13", "Rule14"};
+            , "Rule10", "Rule11", "Rule12", "Rule13", "Rule14"};
 
     /**
      * Make sure that your test cases should always validate different expected value.
      * In Order to reduce time, we are running all the test cases in setup & during assertions in test cases.
      * 14 Test cases took almost 60minutes/.
-     * @throws IOException
+     * @throws java.io.IOException
      */
 
 
@@ -104,7 +100,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         //Run all the rules one by one, Do Assertions in test cases.
         //ExcelDataProvider.getDataFromExcel("", "");
         for(int i=0; i< sheetNames.length; i++) {
-            List<HashMap<String, String>> dummyList =ExcelDataProvider.getDataFromExcel(TestEnvironment.basedir+"/"+TEST_DATA_FILE, sheetNames[i]);
+            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(TestEnvironment.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
             for(HashMap<String, String> testData : dummyList) {
                 executeRule(testData);
                 if((i+1)%5 ==0) {
@@ -272,3 +268,4 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         basepage.logout();
     }
 }
+

@@ -21,6 +21,8 @@
 
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Monthly_Test"/>
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Weekly_Test"/>
         </classes>
     </test>
 </suite>

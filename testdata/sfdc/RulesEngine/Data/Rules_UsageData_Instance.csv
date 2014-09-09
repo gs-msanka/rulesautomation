@@ -1,53 +1,63 @@
-JBCXM__Account__r.Data_ExternalID__c,JBCXM__Date__c,JBCXM__InstanceId__c,JBCXM__InstanceName__c,Page_Visits__c,Page_Views__c,No_of_Report_Run__c,Files_Downloaded__c,Name
-AAR Corp Hardware Abscoa Division,-4,Instance 1,AAR Corp Hardware Abscoa Division - Instance 1,100,207,214,500,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-3,Instance 1,AAR Corp Hardware Abscoa Division - Instance 1,120,170,222,200,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-2,Instance 1,AAR Corp Hardware Abscoa Division - Instance 1,130,185,178,100,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-1,Instance 1,AAR Corp Hardware Abscoa Division - Instance 1,140,206,210,50,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-4,Instance 2,AAR Corp Hardware Abscoa Division - Instance 2,98,198,200,200,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-3,Instance 2,AAR Corp Hardware Abscoa Division - Instance 2,103,202,187,150,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-2,Instance 2,AAR Corp Hardware Abscoa Division - Instance 2,107,175,271,140,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-1,Instance 2,AAR Corp Hardware Abscoa Division - Instance 2,110,201,209,120,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-4,Instance 3,AAR Corp Hardware Abscoa Division - Instance 3,123,174,180,160,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-3,Instance 3,AAR Corp Hardware Abscoa Division - Instance 3,126,192,246,159,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-2,Instance 3,AAR Corp Hardware Abscoa Division - Instance 3,128,178,224,150,INSTANCELEVEL
-AAR Corp Hardware Abscoa Division,-1,Instance 3,AAR Corp Hardware Abscoa Division - Instance 3,130,198,290,150,INSTANCELEVEL
-Abacus Programming Corporation,-4,Instance 1,Abacus Programming Corporation - Instance 1,101,280,160,151,INSTANCELEVEL
-Abacus Programming Corporation,-3,Instance 1,Abacus Programming Corporation - Instance 1,188,260,107,197,INSTANCELEVEL
-Abacus Programming Corporation,-2,Instance 1,Abacus Programming Corporation - Instance 1,162,250,239,179,INSTANCELEVEL
-Abacus Programming Corporation,-1,Instance 1,Abacus Programming Corporation - Instance 1,171,260,249,165,INSTANCELEVEL
-Abacus Programming Corporation,-4,Instance 2,Abacus Programming Corporation - Instance 2,171,280,262,172,INSTANCELEVEL
-Abacus Programming Corporation,-3,Instance 2,Abacus Programming Corporation - Instance 2,152,190,90,185,INSTANCELEVEL
-Abacus Programming Corporation,-2,Instance 2,Abacus Programming Corporation - Instance 2,146,100,223,150,INSTANCELEVEL
-Abacus Programming Corporation,-1,Instance 2,Abacus Programming Corporation - Instance 2,91,50,108,177,INSTANCELEVEL
-Abacus Programming Corporation,-4,Instance 3,Abacus Programming Corporation - Instance 3,249,190,195,188,INSTANCELEVEL
-Abacus Programming Corporation,-3,Instance 3,Abacus Programming Corporation - Instance 3,195,189,127,160,INSTANCELEVEL
-Abacus Programming Corporation,-2,Instance 3,Abacus Programming Corporation - Instance 3,252,180,90,174,INSTANCELEVEL
-Abacus Programming Corporation,-1,Instance 3,Abacus Programming Corporation - Instance 3,200,190,208,159,INSTANCELEVEL
-Abberley Kooiman,-4,Instance 1,Abberley Kooiman - Instance 1,205,116,137,169,INSTANCELEVEL
-Abberley Kooiman,-3,Instance 1,Abberley Kooiman - Instance 1,189,116,189,121,INSTANCELEVEL
-Abberley Kooiman,-2,Instance 1,Abberley Kooiman - Instance 1,258,118,177,155,INSTANCELEVEL
-Abberley Kooiman,-1,Instance 1,Abberley Kooiman - Instance 1,100,134,125,168,INSTANCELEVEL
-Abberley Kooiman,-4,Instance 2,Abberley Kooiman - Instance 2,211,109,119,154,INSTANCELEVEL
-Abberley Kooiman,-3,Instance 2,Abberley Kooiman - Instance 2,159,100,154,159,INSTANCELEVEL
-Abberley Kooiman,-2,Instance 2,Abberley Kooiman - Instance 2,224,106,108,160,INSTANCELEVEL
-Abberley Kooiman,-1,Instance 2,Abberley Kooiman - Instance 2,170,120,110,159,INSTANCELEVEL
-Abberley Kooiman,-4,Instance 3,Abberley Kooiman - Instance 3,245,147,165,141,INSTANCELEVEL
-Abberley Kooiman,-3,Instance 3,Abberley Kooiman - Instance 3,250,143,185,124,INSTANCELEVEL
-Abberley Kooiman,-2,Instance 3,Abberley Kooiman - Instance 3,267,100,205,124,INSTANCELEVEL
-Abberley Kooiman,-1,Instance 3,Abberley Kooiman - Instance 3,224,135,225,143,INSTANCELEVEL
-Abbett Electric Corp,-4,Instance 1,Abbett Electric Corp - Instance 1,162,245,157,120,INSTANCELEVEL
-Abbett Electric Corp,-3,Instance 1,Abbett Electric Corp - Instance 1,144,245,171,130,INSTANCELEVEL
-Abbett Electric Corp,-2,Instance 1,Abbett Electric Corp - Instance 1,138,245,151,145,INSTANCELEVEL
-Abbett Electric Corp,-1,Instance 1,Abbett Electric Corp - Instance 1,155,245,187,160,INSTANCELEVEL
-Abbett Electric Corp,-4,Instance 2,Abbett Electric Corp - Instance 2,152,174,185,180,INSTANCELEVEL
-Abbett Electric Corp,-3,Instance 2,Abbett Electric Corp - Instance 2,159,153,175,179,INSTANCELEVEL
-Abbett Electric Corp,-2,Instance 2,Abbett Electric Corp - Instance 2,141,123,157,165,INSTANCELEVEL
-Abbett Electric Corp,-1,Instance 2,Abbett Electric Corp - Instance 2,167,177,180,170,INSTANCELEVEL
-Abbey Press Inc,-4,Instance 1,Abbey Press Inc - Instance 1,500,219,122,120,INSTANCELEVEL
-Abbey Press Inc,-3,Instance 1,Abbey Press Inc - Instance 1,200,225,183,110,INSTANCELEVEL
-Abbey Press Inc,-2,Instance 1,Abbey Press Inc - Instance 1,100,209,167,113,INSTANCELEVEL
-Abbey Press Inc,-1,Instance 1,Abbey Press Inc - Instance 1,50,246,145,128,INSTANCELEVEL
-Abbey Press Inc,-4,Instance 2,Abbey Press Inc - Instance 2,500,266,263,130,INSTANCELEVEL
-Abbey Press Inc,-3,Instance 2,Abbey Press Inc - Instance 2,200,196,160,109,INSTANCELEVEL
-Abbey Press Inc,-2,Instance 2,Abbey Press Inc - Instance 2,100,144,245,115,INSTANCELEVEL
-Abbey Press Inc,-1,Instance 2,Abbey Press Inc - Instance 2,50,206,139,120,INSTANCELEVEL
+JBCXM__Account__r.Data_ExternalID__c,JBCXM__InstanceId__c,JBCXM__InstanceName__c,JBCXM__Date__c,Page_Visits__c,Page_Views__c,No_of_Report_Run__c,Files_Downloaded__c,Name
+Rule Account 1,Rule Account 1 - Production 1,Rule Account 1 - Production 1,-1,1000,2000,900,1100,INSTANCELEVEL
+Rule Account 2,Rule Account 2 - Production 1,Rule Account 2 - Production 1,-1,500,600,490,510,INSTANCELEVEL
+Rule Account 3,Rule Account 3 - Production 1,Rule Account 3 - Production 1,-5,800,700,,500,INSTANCELEVEL
+Rule Account 3,Rule Account 3 - Production 1,Rule Account 3 - Production 1,-4,700,500,400,600,INSTANCELEVEL
+Rule Account 3,Rule Account 3 - Production 1,Rule Account 3 - Production 1,-3,600,400,600,700,INSTANCELEVEL
+Rule Account 3,Rule Account 3 - Production 1,Rule Account 3 - Production 1,-2,500,600,500,800,INSTANCELEVEL
+Rule Account 3,Rule Account 3 - Production 1,Rule Account 3 - Production 1,-1,410,390,280,900,INSTANCELEVEL
+Rule Account 4,Rule Account 4 - Production 1,Rule Account 4 - Production 1,-5,800,700,400,500,INSTANCELEVEL
+Rule Account 4,Rule Account 4 - Production 1,Rule Account 4 - Production 1,-4,700,500,,600,INSTANCELEVEL
+Rule Account 4,Rule Account 4 - Production 1,Rule Account 4 - Production 1,-3,600,400,600,700,INSTANCELEVEL
+Rule Account 4,Rule Account 4 - Production 1,Rule Account 4 - Production 1,-2,500,600,500,800,INSTANCELEVEL
+Rule Account 4,Rule Account 4 - Production 1,Rule Account 4 - Production 1,-1,850,700,745,900,INSTANCELEVEL
+Rule Account 5,Rule Account 5 - Production 1,Rule Account 5 - Production 1,-5,400,345,456,323,INSTANCELEVEL
+Rule Account 5,Rule Account 5 - Production 1,Rule Account 5 - Production 1,-4,500,345,456,666,INSTANCELEVEL
+Rule Account 5,Rule Account 5 - Production 1,Rule Account 5 - Production 1,-3,600,345,46,777,INSTANCELEVEL
+Rule Account 5,Rule Account 5 - Production 1,Rule Account 5 - Production 1,-2,450,23,45,444,INSTANCELEVEL
+Rule Account 5,Rule Account 5 - Production 1,Rule Account 5 - Production 1,-1,550,565,547,656,INSTANCELEVEL
+Rule Account 6,Rule Account 6 - Production 1,Rule Account 6 - Production 1,-5,400,345,456,323,INSTANCELEVEL
+Rule Account 6,Rule Account 6 - Production 1,Rule Account 6 - Production 1,-4,500,345,456,666,INSTANCELEVEL
+Rule Account 6,Rule Account 6 - Production 1,Rule Account 6 - Production 1,-3,600,345,46,777,INSTANCELEVEL
+Rule Account 6,Rule Account 6 - Production 1,Rule Account 6 - Production 1,-2,450,23,45,444,INSTANCELEVEL
+Rule Account 6,Rule Account 6 - Production 1,Rule Account 6 - Production 1,-1,550,565,547,656,INSTANCELEVEL
+Rule Account 7,Rule Account 7 - Production 1,Rule Account 7 - Production 1,-5,400,345,456,323,INSTANCELEVEL
+Rule Account 7,Rule Account 7 - Production 1,Rule Account 7 - Production 1,-4,500,345,456,666,INSTANCELEVEL
+Rule Account 7,Rule Account 7 - Production 1,Rule Account 7 - Production 1,-3,700,,46,,INSTANCELEVEL
+Rule Account 7,Rule Account 7 - Production 1,Rule Account 7 - Production 1,-2,,1,,,INSTANCELEVEL
+Rule Account 7,Rule Account 7 - Production 1,Rule Account 7 - Production 1,-1,900,550,547,655,INSTANCELEVEL
+Rule Account 8,Rule Account 8 - Production 1,Rule Account 8 - Production 1,-5,400,345,456,323,INSTANCELEVEL
+Rule Account 8,Rule Account 8 - Production 1,Rule Account 8 - Production 1,-4,500,345,456,666,INSTANCELEVEL
+Rule Account 8,Rule Account 8 - Production 1,Rule Account 8 - Production 1,-3,700,,46,,INSTANCELEVEL
+Rule Account 8,Rule Account 8 - Production 1,Rule Account 8 - Production 1,-2,,,,,INSTANCELEVEL
+Rule Account 8,Rule Account 8 - Production 1,Rule Account 8 - Production 1,-1,900,565,547,656,INSTANCELEVEL
+Rule Account 9,Rule Account 9 - Production 1,Rule Account 9 - Production 1,-5,345,345,234,345,INSTANCELEVEL
+Rule Account 9,Rule Account 9 - Production 1,Rule Account 9 - Production 1,-4,564,453,2432,22,INSTANCELEVEL
+Rule Account 9,Rule Account 9 - Production 1,Rule Account 9 - Production 1,-3,765,564,567,645,INSTANCELEVEL
+Rule Account 9,Rule Account 9 - Production 1,Rule Account 9 - Production 1,-2,345,342,22,435,INSTANCELEVEL
+Rule Account 9,Rule Account 9 - Production 1,Rule Account 9 - Production 1,-1,765,645,343,888,INSTANCELEVEL
+Rule Account 10,Rule Account 10 - Production 1,Rule Account 10 - Production 1,-5,345,345,234,345,INSTANCELEVEL
+Rule Account 10,Rule Account 10 - Production 1,Rule Account 10 - Production 1,-4,564,453,2432,22,INSTANCELEVEL
+Rule Account 10,Rule Account 10 - Production 1,Rule Account 10 - Production 1,-3,765,564,567,645,INSTANCELEVEL
+Rule Account 10,Rule Account 10 - Production 1,Rule Account 10 - Production 1,-2,345,342,22,435,INSTANCELEVEL
+Rule Account 10,Rule Account 10 - Production 1,Rule Account 10 - Production 1,-1,765,645,343,888,INSTANCELEVEL
+Rule Account 11,Rule Account 11 - Production 1,Rule Account 11 - Production 1,-5,345,345,234,345,INSTANCELEVEL
+Rule Account 11,Rule Account 11 - Production 1,Rule Account 11 - Production 1,-4,564,453,2432,22,INSTANCELEVEL
+Rule Account 11,Rule Account 11 - Production 1,Rule Account 11 - Production 1,-3,765,,567,,INSTANCELEVEL
+Rule Account 11,Rule Account 11 - Production 1,Rule Account 11 - Production 1,-2,,,,790,INSTANCELEVEL
+Rule Account 11,Rule Account 11 - Production 1,Rule Account 11 - Production 1,-1,555,500,455,888,INSTANCELEVEL
+Rule Account 12 ,Rule Account 12  - Production 1,Rule Account 12  - Production 1,-5,345,345,234,345,INSTANCELEVEL
+Rule Account 12 ,Rule Account 12  - Production 1,Rule Account 12  - Production 1,-4,564,453,2432,22,INSTANCELEVEL
+Rule Account 12 ,Rule Account 12  - Production 1,Rule Account 12  - Production 1,-3,765,,567,,INSTANCELEVEL
+Rule Account 12 ,Rule Account 12  - Production 1,Rule Account 12  - Production 1,-2,,,,790,INSTANCELEVEL
+Rule Account 12 ,Rule Account 12  - Production 1,Rule Account 12  - Production 1,-1,555,601,350,890,INSTANCELEVEL
+Rule Account 13,Rule Account 13 - Production 1,Rule Account 13 - Production 1,-5,300,345,4233,200,INSTANCELEVEL
+Rule Account 13,Rule Account 13 - Production 1,Rule Account 13 - Production 1,-4,300,345,199,301,INSTANCELEVEL
+Rule Account 13,Rule Account 13 - Production 1,Rule Account 13 - Production 1,-3,300,654,299,299,INSTANCELEVEL
+Rule Account 13,Rule Account 13 - Production 1,Rule Account 13 - Production 1,-2,300,345,289,499,INSTANCELEVEL
+Rule Account 13,Rule Account 13 - Production 1,Rule Account 13 - Production 1,-1,300,324,99,302,INSTANCELEVEL
+Rule Account 14,Rule Account 14 - Production 1,Rule Account 14 - Production 1,-5,300,345,4233,200,INSTANCELEVEL
+Rule Account 14,Rule Account 14 - Production 1,Rule Account 14 - Production 1,-4,300,345,199,301,INSTANCELEVEL
+Rule Account 14,Rule Account 14 - Production 1,Rule Account 14 - Production 1,-3,300,654,299,399,INSTANCELEVEL
+Rule Account 14,Rule Account 14 - Production 1,Rule Account 14 - Production 1,-2,300,345,289,499,INSTANCELEVEL
+Rule Account 14,Rule Account 14 - Production 1,Rule Account 14 - Production 1,-1,300,324,99,302,INSTANCELEVEL
