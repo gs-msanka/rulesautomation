@@ -109,26 +109,10 @@ public class SFDCUtil {
         String username = env.getUserName();
         String password = env.getUserPassword();
         String securityToken = env.getProperty("sfdc.stoken");
-        try {
-            ConnectorConfig config = new ConnectorConfig();
-            config.setUsername(username);
-            config.setPassword(password + securityToken);
-            Report.logInfo("AuthEndPoint: " + endPointURL);
-            config.setAuthEndpoint(endPointURL);
-            Connector.newConnection(config);
-            ConnectorConfig soapConfig = new ConnectorConfig();
-            soapConfig.setAuthEndpoint(config.getAuthEndpoint());
-            soapConfig.setServiceEndpoint(config.getServiceEndpoint().replace(
-                    "/u/", "/s/"));
-            soapConfig.setSessionId(config.getSessionId());
-            soapConnection = new SoapConnection(soapConfig);
-            success = true;
-        } catch (ConnectionException ce) {
-            throw new RuntimeException("Error connecting to salesforce", ce);
-        }
+        success=login(username,password,securityToken);
         return success;
     }
-    private boolean login(String username,String password,String securityToken) {
+    public boolean login(String username,String password,String securityToken) {
         boolean success = false;
         if(soapConnection!=null) success=true;
         else{

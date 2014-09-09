@@ -207,7 +207,6 @@ public class CreateObjectAndFields {
         System.out.println(" Job Done Boss!!!!!!!");
     }
 
-
     public void createFields(String objName, String[] fields, boolean isCheckBox, boolean isPhone, boolean isUrl) throws Exception {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
@@ -425,5 +424,21 @@ public class CreateObjectAndFields {
             System.out.println("Status is: " + asyncResult.getState());
         }
 
+    }
+     
+    public void isRemoteSitePresent(String url){
+    	RemoteSiteSetting rss= new RemoteSiteSetting();
+    	
+    }
+    
+    public void createRemoteSiteSetting(String url) throws Exception{
+    	RemoteSiteSetting[] rss= new RemoteSiteSetting[1];
+    	rss[0]=new RemoteSiteSetting();
+    	rss[0].setDescription("ns url for testing");
+    	rss[0].setDisableProtocolSecurity(false);
+    	rss[0].setFullName("NS");
+    	rss[0].setIsActive(true);
+    	rss[0].setUrl(url);
+    	createAndCheckStatus(rss);    	
     }
 }
