@@ -128,4 +128,28 @@ public class SFDCUtil {
         }
         return success;
     }
+    private boolean login(String username,String password,String securityToken) {
+        boolean success = false;
+        if(soapConnection!=null) success=true;
+        else{
+        try {
+            ConnectorConfig config = new ConnectorConfig();
+            config.setUsername(username);
+            config.setPassword(password + securityToken);
+            Report.logInfo("AuthEndPoint: " + endPointURL);
+            config.setAuthEndpoint(endPointURL);
+            Connector.newConnection(config);
+            ConnectorConfig soapConfig = new ConnectorConfig();
+            soapConfig.setAuthEndpoint(config.getAuthEndpoint());
+            soapConfig.setServiceEndpoint(config.getServiceEndpoint().replace(
+                    "/u/", "/s/"));
+            soapConfig.setSessionId(config.getSessionId());
+            soapConnection = new SoapConnection(soapConfig);
+            success = true;
+        } catch (ConnectionException ce) {
+            throw new RuntimeException("Error connecting to salesforce", ce);
+        }
+        }
+        return success;
+    }
 }
