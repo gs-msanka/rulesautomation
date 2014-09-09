@@ -8,6 +8,7 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
+@Deprecated
 public class SFDCUtil {
 
 	private final String endPointURL = "https://login.salesforce.com/services/Soap/u/28.0";

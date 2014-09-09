@@ -6,10 +6,9 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.bigdata.pojo.SFDCInfo;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.bigdata.util.SFDCUtil;
+import com.gainsight.sfdc.util.bulk.*;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
 import com.gainsight.webaction.WebAction;

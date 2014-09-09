@@ -2,6 +2,7 @@ package com.gainsight.bigdata.pojo;
 
 import java.lang.reflect.Field;
 
+@Deprecated
 public class SFDCInfo {
 
 	String org;

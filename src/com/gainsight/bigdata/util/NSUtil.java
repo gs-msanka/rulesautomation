@@ -3,7 +3,7 @@ package com.gainsight.bigdata.util;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.bigdata.pojo.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.*;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
