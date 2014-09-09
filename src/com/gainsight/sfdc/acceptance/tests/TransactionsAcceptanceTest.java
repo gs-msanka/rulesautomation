@@ -326,6 +326,10 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			CustomerSummary summary) throws ParseException {
 		int asv = Integer.parseInt(data.get("asv").trim());
 		int users = Integer.parseInt(data.get("userCount").trim());
+        if(asv >= 100000) {
+            double s = (double)asv/1000;
+            data.put("asv", String.valueOf((int)Math.round(s))+"K");
+        }
 		Assert.assertEquals(data.get("asv").trim(), summary.getASV().trim());
 		Assert.assertEquals(calcMRR(asv),
 				Integer.parseInt(summary.getMRR().trim()));

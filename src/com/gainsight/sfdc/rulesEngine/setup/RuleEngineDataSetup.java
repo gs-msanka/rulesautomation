@@ -80,7 +80,7 @@ public class RuleEngineDataSetup extends BaseTest {
                             " JBCXM__SurveyQuestion__r.JBCXM__Title__c ,JBCXM__Title__c FROM JBCXM__SurveyAllowedAnswers__c" +
                             " where JBCXM__SurveyMaster__r.JBCXM__Code__c = '"+surveyCode+"'";
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] sFDCAnswers = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] sFDCAnswers = soql.getRecords(resolveStrNameSpace(resolveStrNameSpace(query)));
         for(int i=0; i < sFDCAnswers.length; i++) {
             SObject sObject = sFDCAnswers[i];
             result.put(sObject.getField(resolveStrNameSpace("JBCXM__SurveyQuestion__r.JBCXM__Title__c")).toString() +
@@ -90,7 +90,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
 
-    //Please try to maintain question title's different.
+    //Please try to maintain question's title different.
     private HashMap<String, String> getSurveyQuestionMap(String surveyCode) {
     String query = "SELECT Id, JBCXM__ParentQuestion__c, JBCXM__ParentQuestion__r.JBCXM__Title__c," +
             " JBCXM__SurveyMaster__r.JBCXM__Code__c, JBCXM__Title__c, " +
@@ -100,11 +100,11 @@ public class RuleEngineDataSetup extends BaseTest {
         SObject[] sFDCSurveyQuestions = soql.getRecords(resolveStrNameSpace(query));
         HashMap<String, String> result = new HashMap<String, String>();
         for(int i=0; i<sFDCSurveyQuestions.length; i++) {
-            if(sFDCSurveyQuestions[i].getField("JBCXM__ParentQuestion__c").toString() != null ) {
-                result.put(sFDCSurveyQuestions[i].getField("JBCXM__Title__c").toString()+
-                        sFDCSurveyQuestions[i].getField("JBCXM__ParentQuestion__r.JBCXM__Title__c").toString(), sFDCSurveyQuestions[i].getId());
+            if(sFDCSurveyQuestions[i].getField(resolveStrNameSpace("JBCXM__ParentQuestion__c")).toString() != null ) {
+                result.put(sFDCSurveyQuestions[i].getField(resolveStrNameSpace("JBCXM__Title__c")).toString()+
+                        sFDCSurveyQuestions[i].getField(resolveStrNameSpace("JBCXM__ParentQuestion__r.JBCXM__Title__c")).toString(), sFDCSurveyQuestions[i].getId());
             } else {
-                result.put(sFDCSurveyQuestions[i].getField("JBCXM__Title__c").toString(), sFDCSurveyQuestions[i].getId());
+                result.put(sFDCSurveyQuestions[i].getField(resolveStrNameSpace("JBCXM__Title__c")).toString(), sFDCSurveyQuestions[i].getId());
             }
         }
         return result;
@@ -149,7 +149,7 @@ public class RuleEngineDataSetup extends BaseTest {
     public void deleteAlertsAndCTA() {
         String query = "Delete [Select Id from JBCXM__Alert__c]; \n" +
                         "Delete [Select Id from JBCXM__CTA__C];";
-        apex.runApex(query, isPackage);
+        apex.runApex(resolveStrNameSpace(query));
     }
 
     public void clearPreviousTestData() {
@@ -160,7 +160,7 @@ public class RuleEngineDataSetup extends BaseTest {
         stringBuilder.append("\n");
         stringBuilder.append("Delete [select id from JBCXM__CTA__c where JBCXM__Account__r.AccountNumber = 'RulesAccount'];");
         stringBuilder.append("\n");
-        apex.runApex(stringBuilder.toString(), isPackage);
+        apex.runApex(resolveStrNameSpace(stringBuilder.toString()));
     }
 
     private HashMap<String, String> getPickListSetupData() {
@@ -260,7 +260,7 @@ public class RuleEngineDataSetup extends BaseTest {
             }
             rule.setJBCXM__ScorecardCriteria__c(mapper.writeValueAsString(ruleScCriteria));
         }
-        result = mapper.writeValueAsString(rule);
+        result = resolveStrNameSpace(mapper.writeValueAsString(rule));
         Report.logInfo("Rule Json String : " +result);
         return result;
     }
