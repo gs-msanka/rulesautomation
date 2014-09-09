@@ -53,6 +53,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     public RuleEngineDataSetup() {
         Report.logInfo("In RuleEngine Setup");
+        mapper = new ObjectMapper();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
         scorecardMetricMap      = getScorecardMetrics();
