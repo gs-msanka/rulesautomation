@@ -244,7 +244,8 @@ public class Customer360Scorecard extends Customer360Page  {
                 "a[0].click();\n" +
                 "a[0].innerHTML = '"+scorecardComments+"';";
         js.executeScript(a);
-		item.click(SAVE_OVERALL_SUMMARY);
+        new Actions(driver).moveToElement(driver.findElement(By.xpath(READY_INDICATOR))).build().perform();
+		//item.click(SAVE_OVERALL_SUMMARY);
 		waitForLoadingImagesNotPresent();
         return this;
 	}
