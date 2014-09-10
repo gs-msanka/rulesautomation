@@ -76,6 +76,11 @@ public class RuleEngineDataSetup extends BaseTest {
         Report.logInfo("End of Survey Rule's Engine Setup");
     }
 
+    /**
+     * SurveyQuestion+SurveyAnswer as Key & Id as value.
+     * @param surveyCode
+     * @return
+     */
     public HashMap<String, String> getSurveyAnswerMap(String surveyCode) {
         String query = "SELECT JBCXM__IsActive__c, JBCXM__SurveyMaster__r.JBCXM__Code__c," +
                             " JBCXM__SurveyQuestion__r.JBCXM__Title__c ,JBCXM__Title__c FROM JBCXM__SurveyAllowedAnswers__c" +
@@ -90,7 +95,11 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
-
+    /**
+     * QuestionTitle+Parent Question Title as Key & ID as value.
+     * @param surveyCode
+     * @return
+     */
     //Please try to maintain question's title different.
     private HashMap<String, String> getSurveyQuestionMap(String surveyCode) {
     String query = "SELECT Id, JBCXM__ParentQuestion__c, JBCXM__ParentQuestion__r.JBCXM__Title__c," +
@@ -111,6 +120,11 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
+    /**
+     * Loads account's & Customer's
+     * @param dataETL
+     * @throws IOException
+     */
     public void loadAccountsAndCustomers(DataETL dataETL) throws IOException {
         ObjectMapper mapper     = new ObjectMapper();
         dataETL.cleanUp(CUSTOMER_OBJECT, null);
@@ -120,6 +134,13 @@ public class RuleEngineDataSetup extends BaseTest {
         dataETL.execute(jobInfo);
     }
 
+    /**
+     * Load's Usage Data.
+     * @param dataETL
+     * @param fileName
+     * @param isWeekly
+     * @throws IOException
+     */
     public void loadUsageData(DataETL dataETL, String fileName, Boolean isWeekly) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JobInfo jobInfo     = null;
@@ -143,6 +164,10 @@ public class RuleEngineDataSetup extends BaseTest {
         dataETL.execute(jobInfo);
     }
 
+
+    /**
+     * Delete all the rules, Alerts, CTAs that are setup in the org.
+     */
     public void initialCleanUp() {
         apex.runApexCodeFromFile(CLEANUP_FILE, isPackage);
     }
@@ -153,6 +178,9 @@ public class RuleEngineDataSetup extends BaseTest {
         apex.runApex(resolveStrNameSpace(query));
     }
 
+    /**
+     * Delete all the rules, Alerts, CTAs that are setup in the org.
+     */
     public void clearPreviousTestData() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Delete [Select Id from JBCXM__AutomatedAlertRules__c ];");
@@ -191,6 +219,10 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
+    /**
+     * Get the scorecard scheme definition, with name, id as key & value.
+     * @return
+     */
     private HashMap<String, String> getScoringSchemeDefinition() {
         HashMap<String, String> result = new HashMap<String, String>();
         SObject[] pickList = soql.getRecords(resolveStrNameSpace(SCORECARD_SCHEME_DEF_QUERY));
@@ -200,6 +232,14 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
+    /**
+     * Generates the actual payload that's required for rule creation.
+     * @param testData
+     * @param isCTA
+     * @param isSurveyRule
+     * @return
+     * @throws IOException
+     */
     public String generateRuleJson(HashMap<String, String> testData, Boolean isCTA, Boolean isSurveyRule) throws IOException {
         String result = "";
         AutomatedRule rule = new AutomatedRule();
@@ -266,6 +306,12 @@ public class RuleEngineDataSetup extends BaseTest {
         return result;
     }
 
+    /**
+     * String to POJO class mapping.
+     * @param scorecardCriteria
+     * @return
+     * @throws IOException
+     */
     public ArrayList<RuleScorecardCriteria.ActionList> getScorecardActions(String scorecardCriteria) throws IOException {
         RuleScorecardCriteria ruleScCriteria = mapper.readValue(scorecardCriteria, (RuleScorecardCriteria.class));
         ArrayList<RuleScorecardCriteria.ActionInfo> actionInfo = ruleScCriteria.getActionInfo();
@@ -278,6 +324,12 @@ public class RuleEngineDataSetup extends BaseTest {
         return actionLists;
     }
 
+    /**
+     * Get the alert records based on rule criteria.
+     * @param account
+     * @param alertCriteria
+     * @return
+     */
     private SObject[] getAlertRecords(String account, RuleAlertCriteria alertCriteria) {
         String query;
         StringBuilder stringBuilder = new StringBuilder("Select id, JBCXM__Account__r.name, JBCXM__Comment__c From JBCXM__Alert__c ");
@@ -305,6 +357,13 @@ public class RuleEngineDataSetup extends BaseTest {
         return sObjects;
     }
 
+    /**
+     * Verifies if an alert exists for a account on a criteria.
+     * @param account
+     * @param count
+     * @param alertCriteria
+     * @return
+     */
     public boolean verifyAlertExists(String account, int count, RuleAlertCriteria alertCriteria) {
         SObject[] sObjects = getAlertRecords(account, alertCriteria);
         if(sObjects.length >= count) {
@@ -313,6 +372,12 @@ public class RuleEngineDataSetup extends BaseTest {
         return false;
     }
 
+    /**
+     * Returns the Alert ID for the criteria supplied.
+     * @param account
+     * @param alertCriteria
+     * @return
+     */
     public String getAlertId(String account, RuleAlertCriteria alertCriteria) {
         SObject[] sObjects = getAlertRecords(account, alertCriteria);
         if(sObjects != null && sObjects.length> 0) {
@@ -322,6 +387,13 @@ public class RuleEngineDataSetup extends BaseTest {
         return null;
     }
 
+    /**
+     * Returns the CTA Id for the criteria supplied.
+     * @param account
+     * @param owner
+     * @param ruleAlertCriteria
+     * @return
+     */
     public String getCTAId(String account, String owner, RuleAlertCriteria ruleAlertCriteria) {
         SObject[] sObjects = getCTARecords(account, owner, ruleAlertCriteria);
         if(sObjects != null && sObjects.length> 0) {
@@ -331,6 +403,13 @@ public class RuleEngineDataSetup extends BaseTest {
         return null;
     }
 
+    /**
+     * Gets all the CTA records for a account based on criteria.
+     * @param account
+     * @param owner
+     * @param alertCriteria
+     * @return
+     */
     private SObject[] getCTARecords(String account, String owner, RuleAlertCriteria alertCriteria) {
         String query;
         StringBuilder stringBuilder = new StringBuilder("Select id From JBCXM__CTA__c ");
@@ -361,6 +440,14 @@ public class RuleEngineDataSetup extends BaseTest {
         return sObjects;
     }
 
+    /**
+     * Verifies if the cta is present for a account based on criteria.
+     * @param account
+     * @param owner
+     * @param count
+     * @param alertCriteria
+     * @return
+     */
     public boolean verifyCTAExists(String account, String owner, int count, RuleAlertCriteria alertCriteria) {
         SObject[] sObjects = getCTARecords(account, owner, alertCriteria);
         if(sObjects.length >= count) {
@@ -369,6 +456,12 @@ public class RuleEngineDataSetup extends BaseTest {
         return false;
     }
 
+    /**
+     * Verifies Account's metric score & comments.
+     * @param account
+     * @param action
+     * @return
+     */
     public boolean verifyMetricScoreAndComments(String account, RuleScorecardCriteria.ActionList action) {
         String query;
         String SCORE_COMMENTS = "JBCXM__CurComment__c";
@@ -406,6 +499,13 @@ public class RuleEngineDataSetup extends BaseTest {
         return false;
     }
 
+    /**
+     * Verifies the account score & scorecard summary/comments.
+     * @param account
+     * @param score
+     * @param comments
+     * @return
+     */
     public boolean verifyOverAllScoreAndSummary(String account, String score, String comments) {
         String query = null;
         StringBuilder strBuilder = new StringBuilder("Select id, JBCXM__CurScoreId__r.Name, JBCXM__ScorecardComment__c From JBCXM__CustomerInfo__c");
@@ -435,6 +535,10 @@ public class RuleEngineDataSetup extends BaseTest {
         return false;
     }
 
+    /**
+     * Gets all the playbooks - with name as key , playbook ID as value.
+     * @return
+     */
     public HashMap<String, String> getPlaybooks() {
         HashMap<String, String> playbooks = new HashMap<String, String>();
         String query = "select id, Name, JBCXM__PlayBookType__c from JBCXM__Playbook__c";
@@ -445,6 +549,13 @@ public class RuleEngineDataSetup extends BaseTest {
         return playbooks;
     }
 
+    /**
+     * Run the rule.
+     * @param ruleId - Rule ID.
+     * @param usageLevel - Adoption Level.
+     * @param week - Current data - no of weeks.
+     * @param month - Current data - no of months.
+     */
     public void runRule(String ruleId, String usageLevel, int week, int month) {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");
@@ -460,6 +571,14 @@ public class RuleEngineDataSetup extends BaseTest {
         apex.runApex(resolveStrNameSpace(strBuilder.toString()));
     }
 
+    /**
+     * Run the rule.
+     * @param ruleId - The Rule to Run.
+     * @param usageLevel - Level on which the rule need to be triggered. ACCOUNTLEVEL, INSTANCELEVEL, BOTH.
+     * @param weekDay - Week Label.
+     * @param daysToAdd - current date -  no of days passed.
+     * @param usesEndDate - Week Label based on end/start.
+     */
     public void runRule(String ruleId, String usageLevel, String weekDay, int daysToAdd, boolean usesEndDate) {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");

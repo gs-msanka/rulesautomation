@@ -69,7 +69,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
 
     /**
      * Make sure that your test cases should always validate different expected value.
-     * In Order to reduce time, we are running all the test cases in setup & during assertions in test cases.
+     * In Order to reduce time, we are running all the test cases in setup & doing assertions in test cases.
      * 14 Test cases took almost 60minutes/.
      * @throws IOException
      */
@@ -82,6 +82,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
+        isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackageInstance);

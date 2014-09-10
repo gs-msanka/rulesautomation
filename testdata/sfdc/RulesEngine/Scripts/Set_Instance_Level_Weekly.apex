@@ -7,7 +7,7 @@ if(appSettingsList != null && appSettingsList.size() > 0) {
 	 appSettings.JBCXM__AdoptionAggregationType__c = 'INSTANCELEVELWITHAGGREGATION';
 	 appSettings.JBCXM__AdoptionGranularity__c = 'WEEKLY';
 	 appSettings.JBCXM__WeekStartsOn__c = 'Wed';
-	 appSettings.JBCXM__UsesEndDateAsWeekName__c = TRUE;
+	 appSettings.JBCXM__UsesEndDateAsWeekName__c = FALSE;
 	 appSettings.JBCXM__AdoptionAggregationColumns__c  = '[{"ColumnName":"Files_Downloaded__c","Type":"SUM","OnColumn":"Files_Downloaded__c"},'+
 	 														'{"ColumnName":"No_of_Report_Run__c","Type":"AVG","OnColumn":"No_of_Report_Run__c"},'+
 	 														'{"ColumnName":"Page_Views__c","Type":"Count","OnColumn":"Page_Views__c"},'+

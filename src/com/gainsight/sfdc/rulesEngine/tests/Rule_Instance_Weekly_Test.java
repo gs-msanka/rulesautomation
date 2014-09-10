@@ -232,7 +232,7 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
         testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
         String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
         String ruleId = createRule(rule);
-        ruleEngineDataSetup.runRule(ruleId, USAGE_LEVEL, "Sat", -7, true);
+        ruleEngineDataSetup.runRule(ruleId, USAGE_LEVEL, "Wed", -7, false);
     }
 
     private void assertRuleResult(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
