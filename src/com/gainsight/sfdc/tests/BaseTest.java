@@ -353,7 +353,8 @@ public class BaseTest {
             //Default format used for bulk data load.
             simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         }
-        simpleDateFormat.setTimeZone(userTimezone);
+        //Commented as timezone is not required to handle.{Rule, Usage Aggregation etc}
+        //simpleDateFormat.setTimeZone(userTimezone);
         String sDate = simpleDateFormat.format(date);
         Report.logInfo(sDate);
         return sDate;
