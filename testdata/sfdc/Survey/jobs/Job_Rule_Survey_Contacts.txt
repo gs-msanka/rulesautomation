@@ -1,0 +1,13 @@
+{
+    "jobName": "Load contacts for Survey Rules Engine",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+     "load": {
+            "target": "sfdc",
+            "sObject": "Contact",
+            "operation": "upsert",
+            "contentType": "CSV",
+            "externalIDField": "Contact_ExternalID__c",
+            "file": "/testdata/sfdc/survey/data/Rule_Survey_Contacts.csv"
+        }
+}
