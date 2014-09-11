@@ -277,13 +277,14 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		testCustomBookingType(testData);
 	}
 
+    /*
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT33")
 	public void testAddBookingTypeUpsell(HashMap<String, String> testData)
 			throws BiffException, IOException, ParseException {
 		testCustomBookingType(testData);
 	}
-
+    */
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34")
 	public void testAddBookingTypeDownsell(HashMap<String, String> testData)

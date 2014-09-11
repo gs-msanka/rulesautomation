@@ -51,6 +51,9 @@ public class Rule_Account_Weekly_Test extends BaseTest {
     private static final String SCORE_SCHEME_FILE       = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
     private static final String METRICS_CREATE_FILE     = TestEnvironment.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
     private static final String SCORECARD_CLEAN_FILE    = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
+    private final static String JOB_ACCOUNT_LOAD        = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Accounts.txt";
+    private final static String JOB_CUSTOMER_LOAD       = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Customers.txt";
+
 
     private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
@@ -96,7 +99,7 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.initialCleanUp();
         dataETL = new DataETL();
-        ruleEngineDataSetup.loadAccountsAndCustomers(dataETL);
+        ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);
 
         //Run all the rules one by one, Do Assertions in test cases.
