@@ -2,6 +2,8 @@ package com.gainsight.sfdc.survey.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.FileUtil;
@@ -13,6 +15,7 @@ import com.gainsight.sfdc.util.metadata.MetadataUtil;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -23,6 +26,7 @@ import us.monoid.web.Resty;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -75,14 +79,16 @@ public class Rule_Survey_Test extends BaseTest {
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint() + "/services/data/v29.0/sobjects/" + resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
-        apex.runApexCodeFromFile(SURVEY_DESIGN_FILE, isPackage);
+
+        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_DESIGN_FILE), surveyCode, surveyTitle)));
+
         ruleEngineDataSetup = new RuleEngineDataSetup(surveyCode);
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_FILE, JOB_CUSTOMER_FILE);
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_CONTACT_FILE), JobInfo.class);
         dataETL.execute(jobInfo);
-        String apexCode = String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), publishURL);
-        apex.runApex(resolveStrNameSpace(apexCode));
-        apex.runApexCodeFromFile(SURVEY_PARTICIPANT_FILE, isPackage);
+
+        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), surveyCode, surveyTitle, publishURL)));
+        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PARTICIPANT_FILE), surveyCode, surveyTitle)));
 
         SObject[] surveys =  soql.getRecords(resolveStrNameSpace(String.format(SURVEY_MASTER_QUERY, surveyCode, surveyTitle)));
         if(surveys.length >0) {
@@ -94,19 +100,64 @@ public class Rule_Survey_Test extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Template")
-    public void sampleTestCase(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        //testData.put("Name", SURVEY_ID);
-       // executeRule(testData);
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
+    public void Rule1(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+        assertRuleResult(testData);
     }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
+    public void Rule2(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
+    public void Rule3(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
+    public void Rule4(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
+    public void Rule5(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
+    public void Rule6(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
+    public void Rule7(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("Name", SURVEY_ID);
+        executeRule(testData);
+    }
+
 
 
     private void executeRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException{
         //Always runs for current user.
         testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
         testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-        String rule = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), true);
-        createRule(rule);
+        String rulePayLoad = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), true);
+        String ruleId = createRule(rulePayLoad);
     }
 
     private String createRule(String rule) throws IOException, JSONException {
@@ -116,6 +167,27 @@ public class Rule_Survey_Test extends BaseTest {
         String ruleId = jObj.getString("id");
         Report.logInfo("Rule Id : "+ruleId);
         return ruleId;
+    }
+
+    private void assertRuleResult(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+        testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
+
+        ObjectMapper mapper = new ObjectMapper();
+        RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
+        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
+            if(Boolean.valueOf(testData.get("IsCTARule"))) {
+                Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), testData.get("JBCXM__TaskDefaultOwner__c"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            } else {
+                Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            }
+        }
+        if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
+            ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
+            for(RuleScorecardCriteria.ActionList action : actionLists) {
+                Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
+            }
+        }
     }
 
     @AfterClass

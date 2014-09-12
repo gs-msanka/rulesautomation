@@ -1,6 +1,6 @@
 //Design Survey - Non-Anonymous
-String surveyCode = 'Customer Retention';
-String surveyTitle = 'CSR';
+String surveyCode = '%s';
+String surveyTitle = '%s';
 List<JBCXM__Survey__c> Surveys = new List<JBCXM__Survey__c>();
 List<String> codes= new List<String> {surveyCode};
 List<String> titles = new List<String> {surveyTitle};
@@ -77,7 +77,7 @@ List<String> QTypes =new List<String>{'Radio', 'MatrixSingleAnswer','Comment',
 			{
 					surQuestions.add(new JBCXM__SurveyQuestion__c(JBCXM__SurveyMaster__c    = sur.Id,
 					                                            JBCXM__IsActive__c          = true,
-					                                            JBCXM__IsRequired__c        = true,
+					                                            JBCXM__IsRequired__c        = false,
 					                                            JBCXM__Title__c             = Questions.get(qNo),
 					                                            JBCXM__DisplayOrder__c      = qNo+1,
 					                                            JBCXM__Type__c              = QTypes.get(qNo),

@@ -2,10 +2,7 @@ package com.gainsight.sfdc.rulesEngine.setup;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.rulesEngine.pojos.AutomatedRule;
-import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
-import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
-import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.*;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -17,6 +14,8 @@ import org.codehaus.jackson.type.TypeReference;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RuleEngineDataSetup extends BaseTest {
 
@@ -37,7 +36,7 @@ public class RuleEngineDataSetup extends BaseTest {
     private final static String CTA_TYPES_QUERY                 = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
     private final static String SCORECARD_METRIC_QUERY          = "SELECT Id, Name FROM JBCXM__ScorecardMetric__c";
     private final static String SCORECARD_SCHEME_DEF_QUERY      = "SELECT Name, Id  FROM JBCXM__ScoringSchemeDefinition__c";
-    private final static String CUSTOMER_DELETE_QUERY           = "Select Id From JBCXM__CustomerInfo__C Where JBCXM__Account__r.AccountNumber='RulesAccount'";
+    private final static String CUSTOMER_DELETE_QUERY           = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='RulesAccount'];";
 
 
     public HashMap<String, String> pkListMap;
@@ -139,7 +138,8 @@ public class RuleEngineDataSetup extends BaseTest {
             dataETL.execute(jobInfo);
         }
         if(customerJobName != null && customerJobName != "") {
-            dataETL.cleanUp(CUSTOMER_OBJECT, resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
+            apex.runApex(resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
+            //dataETL.cleanUp(CUSTOMER_OBJECT, resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
             JobInfo jobInfo = mapper.readValue(resolveNameSpace(customerJobName), JobInfo.class);
             dataETL.execute(jobInfo);
         }
@@ -252,6 +252,7 @@ public class RuleEngineDataSetup extends BaseTest {
      * @return
      * @throws IOException
      */
+    //I am sick of this method, please some one help me to slit this in to multiple.
     public String generateRuleJson(HashMap<String, String> testData, Boolean isCTA, Boolean isSurveyRule) throws IOException {
         String result = "";
         AutomatedRule rule = new AutomatedRule();
@@ -304,20 +305,60 @@ public class RuleEngineDataSetup extends BaseTest {
         } else {
             rule.setJBCXM__TriggerCriteria__c(testData.get("JBCXM__TriggerCriteria__c"));
         }
-        rule.setJBCXM__AdvanceCriteria__c(testData.get("JBCXM__AdvanceCriteria__c"));
+        if(testData.get("JBCXM__AdvanceCriteria__c") != null && testData.get("JBCXM__AdvanceCriteria__c") != "") {
+            RuleAdvancedCriteria advancedCriteria = mapper.readValue(testData.get("JBCXM__AdvanceCriteria__c"), RuleAdvancedCriteria.class);
+            ArrayList<RuleAdvancedCriteria.FilterCriteria> filterCriterias = advancedCriteria.getFilterCriteria();
+            for(RuleAdvancedCriteria.FilterCriteria filterCriteria : filterCriterias) {
+                if(filterCriteria.getObjectName().equalsIgnoreCase("CustomerInfo__c") && (filterCriteria.getName().equalsIgnoreCase("Stage__c") ||
+                        filterCriteria.getName().equalsIgnoreCase("Status__c"))) {
+                    String values = filterCriteria.getValue();
+                    Pattern pattern = Pattern.compile("'[\\w]{1,30}'");
+                    Matcher matcher = pattern.matcher(values);
+                    while(matcher.find()) {
+                        String dd = matcher.group().substring(1, matcher.group().length()-1);
+                        values = values.replace(dd,pkListMap.get(dd));
+                    }
+                    filterCriteria.setValue(values);
+                }
+            }
+            advancedCriteria.setFilterCriteria(filterCriterias);
+            rule.setJBCXM__AdvanceCriteria__c(mapper.writeValueAsString(advancedCriteria));
+        }
+
         rule.setJBCXM__ScorecardCriteria__c(testData.get("JBCXM__ScorecardCriteria__c"));
         rule.setJBCXM__SelectFields__c(testData.get("JBCXM__SelectFields__c"));
         //scorecard criteria transition.
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!= "") {
             RuleScorecardCriteria ruleScCriteria = mapper.readValue(testData.get("JBCXM__ScorecardCriteria__c"), (RuleScorecardCriteria.class));
             ArrayList<RuleScorecardCriteria.ActionInfo> actionInfoList = ruleScCriteria.getActionInfo();
-            System.out.println(actionInfoList.size());
+            Report.logInfo(String.valueOf(actionInfoList.size()));
             //Updating all the action list & hard coded to "0" as there will be only one action list.
-            for(int i=0; i< actionInfoList.size(); i++) {
-                ArrayList<RuleScorecardCriteria.ActionList> actionLists = actionInfoList.get(i).getActionList();
-                actionLists.get(0).setScore(scorecardSchemeDefMap.get(actionLists.get(0).getScore()));
-                actionLists.get(0).setMetric(scorecardMetricMap.get(actionLists.get(0).getMetric()));
+            for(RuleScorecardCriteria.ActionInfo actionInfo : actionInfoList) {
+                //Changing the Actions list.
+                ArrayList<RuleScorecardCriteria.ActionList> actionLists = actionInfo.getActionList();
+                for(RuleScorecardCriteria.ActionList actionList : actionLists) {
+                    actionList.setScore(scorecardSchemeDefMap.get(actionList.getScore()));
+                    actionList.setMetric(scorecardMetricMap.get(actionList.getMetric()));
+                }
+                //Changing the Conditions List
+                ArrayList<RuleScorecardCriteria.ConditionList> conditionLists = actionInfo.getConditionList();
+                for(RuleScorecardCriteria.ConditionList conditionList :conditionLists ) {
+                    if(conditionList.getObjectName().equalsIgnoreCase("CustomerInfo__c") &&
+                            (conditionList.getName().equalsIgnoreCase("Stage__c") || conditionList.getName().equalsIgnoreCase("Status__c"))) {
+                        String values = conditionList.getValue();
+                        Pattern pattern = Pattern.compile("'[\\w]{1,25}'");
+                        Matcher matcher = pattern.matcher(values);
+                        while(matcher.find()) {
+                            String dd = matcher.group().substring(1, matcher.group().length()-1);
+                            System.out.println(dd);
+                            values = values.replace(dd,pkListMap.get(dd));
+                        }
+                        conditionList.setValue(values);
+                    }
+                }
+                actionInfo.setConditionList(conditionLists);
             }
+            ruleScCriteria.setActionInfo(actionInfoList);
             rule.setJBCXM__ScorecardCriteria__c(mapper.writeValueAsString(ruleScCriteria));
         }
         result = resolveStrNameSpace(mapper.writeValueAsString(rule));

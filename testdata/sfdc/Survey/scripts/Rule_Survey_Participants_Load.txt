@@ -1,6 +1,6 @@
-String surveyCode   = 'Customer Retention';
-String surveyTitle  = 'CSR';
-String account      = 'Survey Rule Account%';
+String surveyCode   = '%s';
+String surveyTitle  = '%s';
+String account      = 'Survey Rule Account%%';
 
 JBCXM__Survey__c survey = [SELECT Id, JBCXM__Code__c, JBCXM__Title__c  FROM JBCXM__Survey__c Where JBCXM__Code__c=:surveyCode and JBCXM__Title__c=:surveyTitle limit 1];
 List<JBCXM__SurveyParticipant__c> surParList = new List<JBCXM__SurveyParticipant__c>();

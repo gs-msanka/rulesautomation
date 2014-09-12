@@ -8,6 +8,6 @@
         "operation": "insert",
         "contentType": "CSV",
         "cleanUp" : true,
-        "file": "/testdata/sfdc/survey/data/Rule_Survey_Contacts.csv"
+        "file": "/testdata/sfdc/survey/data/Rule_Survey_Customers.csv"
     }
 }
