@@ -29,7 +29,7 @@ for(Integer i=0; i < codes.size();i++ ) {
                                     JBCXM__FooterMessge__c	= 'If you have any comments or concerns about this survey please Contact: - [MANAGER_NAME],[phone]',
                                     JBCXM__Status__c 		= 'Design',
                                     SurMaster_ExternalID__c = codes.get(i),
-                                    JBCXM__InternalSubmit__c	= false,
+                                    JBCXM__InternalSubmit__c	= true,
                                     JBCXM__Description__c		= 'Dear Customer:\n	As the manager of [COMPANY], I want to thank you for giving',
                                     JBCXM__ThankyouMessage__c	= 'Thank you for your feedback. We sincerely appreciate your honest opinion'+
 																					' and will take your input into consideration while providing products and services in the future.');
