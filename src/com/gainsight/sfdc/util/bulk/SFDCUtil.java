@@ -104,14 +104,15 @@ public class SFDCUtil {
     }
 
     private boolean login() {
-        boolean success = false;
+        if(soapConnection!=null) return true;
+        else{
         TestEnvironment env = new TestEnvironment();
         String username = env.getUserName();
         String password = env.getUserPassword();
         String securityToken = env.getProperty("sfdc.stoken");
-        success=login(username,password,securityToken);
-        return success;
-    }
+        return login(username,password,securityToken);
+        }    
+     }
     public boolean login(String username,String password,String securityToken) {
         boolean success = false;
         if(soapConnection!=null) success=true;
