@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
 import com.gainsight.bigdata.util.ApiUrl;
+import com.gainsight.bigdata.util.DynamicHeadersTestData;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pojo.Header;
@@ -20,35 +21,106 @@ import com.gainsight.pojo.HttpResponseObj;
 public class ApiAuthenticationTest extends TestBase {
 
 	String host;
-
-	String[] headerList = { "appOrgId", "appSessionId", "appUserId", "Origin" };
-	String authToken = "authToken";
 	String version;
+	List<Header> invalidHeadersList;
+	List<Header> validHeadersList;
 
 	@Parameters("version")
 	@BeforeClass
 	public void setUp(@Optional("") String version) throws Exception {
 		this.version = version;
-		init();
 		host = PropertyReader.nsAppUrl;
-		h.removeHeader(authToken);
-		ApiUrl.getAllApiUrlsWithReqType();
+		init();
+		DynamicHeadersTestData headerTestData = new DynamicHeadersTestData();
+		invalidHeadersList = headerTestData.getAllHeaderCombinationInvalid(h);
+		validHeadersList= headerTestData.getAllHeaderCombinationValid(h);
 	}
 
 	
 	@Test
+	public void testGetURLAuthValid() throws Exception {
+		List<String> failList = new ArrayList<>();
+		for (Iterator<String> uris = ApiUrl.getApiList.iterator(); uris.hasNext();) {
+			String url = host + version + ((String) uris.next());
+			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
+				Report.logInfo("GET:" + url);
+				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
+				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
+					failList.add("GET:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+							+ header.toString() + "\n");
+				}
+			}
+		}
+		Assert.assertEquals(failList.size(), 0, failList.toString());
+	}
+
+	@Test
+	public void testPostURLAuthValid() throws Exception {
+		List<String> failList = new ArrayList<>();
+		for (Iterator<String> iterator = ApiUrl.postApiList.iterator(); iterator.hasNext();) {
+			String url = host + version + ((String) iterator.next());
+			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
+				Report.logInfo("POST:" + url);
+				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
+				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
+					failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+							+ headers.toString() + "\n");
+				}
+			}
+		}
+		Assert.assertEquals(failList.size(), 0, failList.toString());
+	}
+
+	@Test
+	public void testPutURLAuthValid() throws Exception {
+		List<String> failList = new ArrayList<>();
+		for (Iterator<String> iterator = ApiUrl.putApiList.iterator(); iterator.hasNext();) {
+			String url = host + version + ((String) iterator.next());
+			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
+				Report.logInfo("PUT:" + url);
+				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
+				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
+					failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+							+ headers.toString() + "\n");
+				}
+			}
+		}
+		Assert.assertEquals(failList.size(), 0, failList.toString());
+	}
+
+	@Test
+	public void testDeleteURLAuthValid() throws Exception {
+		List<String> failList = new ArrayList<>();
+		for (Iterator<String> iterator = ApiUrl.deleteApiList.iterator(); iterator.hasNext();) {
+			String url = host + version + ((String) iterator.next());
+			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
+				Report.logInfo("DELETE:" + url);
+				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
+				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
+					failList.add("DELETE:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+							+ headers.toString() + "\n");
+				}
+			}
+		}
+		Assert.assertEquals(failList.size(), 0, failList.toString());
+	}
+
+	@Test
 	public void testGetURLAuthInvalid() throws Exception {
 		List<String> failList = new ArrayList<>();
-		for (Iterator<String> iterator = ApiUrl.getApiList.iterator(); iterator.hasNext();) {
-			String url = host + version + ((String) iterator.next());
-			for (int j = 0; j < headerList.length; j++) {
-				Header headers = (Header) h.deepClone();
-				headers.removeHeader(headerList[j]);
+		for (Iterator<String> uris = ApiUrl.getApiList.iterator(); uris.hasNext();) {
+			String url = host + version + ((String) uris.next());
+			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
 				Report.logInfo("GET:" + url);
-				HttpResponseObj result = wa.doGet(url, headers.getAllHeaders());
+				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() != 403) {
 					failList.add("GET:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ headers.toString() + "\n");
+							+ header.toString() + "\n");
 				}
 			}
 		}
@@ -60,11 +132,10 @@ public class ApiAuthenticationTest extends TestBase {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> iterator = ApiUrl.postApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
-			for (int j = 0; j < headerList.length; j++) {
-				Header headers = (Header) h.deepClone();
-				headers.removeHeader(headerList[j]);
+			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
 				Report.logInfo("POST:" + url);
-				HttpResponseObj result = wa.doPost(url, "{}", headers.getAllHeaders());
+				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() != 403) {
 					failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
 							+ headers.toString() + "\n");
@@ -79,11 +150,10 @@ public class ApiAuthenticationTest extends TestBase {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> iterator = ApiUrl.putApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
-			for (int j = 0; j < headerList.length; j++) {
-				Header headers = (Header) h.deepClone();
-				headers.removeHeader(headerList[j]);
+			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
 				Report.logInfo("PUT:" + url);
-				HttpResponseObj result = wa.doPut(url, "{}", headers.getAllHeaders());
+				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() != 403) {
 					failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
 							+ headers.toString() + "\n");
@@ -98,11 +168,10 @@ public class ApiAuthenticationTest extends TestBase {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> iterator = ApiUrl.deleteApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
-			for (int j = 0; j < headerList.length; j++) {
-				Header headers = (Header) h.deepClone();
-				headers.removeHeader(headerList[j]);
+			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
+				Header header = (Header) headers.next();
 				Report.logInfo("DELETE:" + url);
-				HttpResponseObj result = wa.doDelete(url, headers.getAllHeaders());
+				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
 				if (result.getStatusCode() != 403) {
 					failList.add("DELETE:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
 							+ headers.toString() + "\n");
@@ -141,4 +210,5 @@ public class ApiAuthenticationTest extends TestBase {
 		}
 		Assert.assertEquals(failList.size(), 0, failList.toString());
 	}
+
 }
