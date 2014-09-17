@@ -70,8 +70,9 @@ public class Rule_Survey_Test extends BaseTest {
     public void setup() throws IOException {
         publishURL = env.getProperty("sfdc.siteCustomURL");
         metadataUtil = new MetadataUtil();
-        metadataUtil.createExtIdOnContact();
+        metadataUtil.createFieldsOnAccount();
         metadataUtil.createFieldsOnContact();
+
         isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
@@ -80,6 +81,7 @@ public class Rule_Survey_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint() + "/services/data/v29.0/sobjects/" + resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
 
+        //Creates the survey with provided survey Code & Title & Keeps the survey in design mode - Same as UI behaviour.
         apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_DESIGN_FILE), surveyCode, surveyTitle)));
 
         ruleEngineDataSetup = new RuleEngineDataSetup(surveyCode);
@@ -87,11 +89,14 @@ public class Rule_Survey_Test extends BaseTest {
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_CONTACT_FILE), JobInfo.class);
         dataETL.execute(jobInfo);
 
+        //Publishes the survey with site URL provided at Application Properties,
         apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), surveyCode, surveyTitle, publishURL)));
+        //Adds participants to the survey, Running using script provides the advantage of token population dynamically.
+        //And also there's no need to populate to many fields for a survey participant.
         apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PARTICIPANT_FILE), surveyCode, surveyTitle)));
 
         SObject[] surveys =  soql.getRecords(resolveStrNameSpace(String.format(SURVEY_MASTER_QUERY, surveyCode, surveyTitle)));
-        if(surveys.length >0) {
+        if(surveys.length ==1) {
             SURVEY_ID = surveys[0].getId();
         } else {
             throw new RuntimeException("** Survey Not Found **");
@@ -102,6 +107,7 @@ public class Rule_Survey_Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
     public void Rule1(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        ruleEngineDataSetup.deleteAlertsAndCTA();
         testData.put("Name", SURVEY_ID);
         executeRule(testData);
         assertRuleResult(testData);
@@ -192,9 +198,7 @@ public class Rule_Survey_Test extends BaseTest {
 
     @AfterClass
     public void tearDown() {
-//        basepage.logout();
+        //basepage.logout();
     }
-
-
 
 }

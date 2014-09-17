@@ -126,7 +126,17 @@ public class DataETL implements IJobExecutor {
 		try{
 			//Creates a db for the particular job
 			db = new H2Db("jdbc:h2:~/" + jobInfo.getJobName(),"sa","");
-			
+
+            //dateValue Processing
+            JobInfo.DateProcess  dateProcess = jobInfo.getDateProcess();
+            if(dateProcess != null) {
+                File inputFile = new File(userDir+dateProcess.getInputFile());
+                File outputFile = new File(userDir+dateProcess.getOutputFile());
+                outputFile = FileProcessor.getDateProcessedFile(inputFile, outputFile, dateProcess.getFields());
+
+            }
+
+
 			//Pre Process Especially for Usage Data
 			PreProcess preProcess = jobInfo.getPreProcessRule();
 			if(preProcess != null){

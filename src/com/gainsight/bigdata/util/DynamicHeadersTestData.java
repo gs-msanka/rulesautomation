@@ -1,9 +1,9 @@
 package com.gainsight.bigdata.util;
 
+import com.gainsight.pojo.Header;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.gainsight.pojo.Header;
 
 public class DynamicHeadersTestData {
 	
@@ -13,8 +13,8 @@ public class DynamicHeadersTestData {
 	String authToken = "authToken";
 	String Origin = "Origin";
 	
-	List<Header> invalidHeadersList = new ArrayList<>();
-	List<Header> validHeadersList = new ArrayList<>();
+	List<Header> invalidHeadersList = new ArrayList<Header>();
+	List<Header> validHeadersList = new ArrayList<Header>();
 	
 	public List<Header> getAllHeaderCombinationInvalid(Header h) {
 		String[] headerNamesSessionType = { appOrgId, appSessionId, appUserId, Origin };

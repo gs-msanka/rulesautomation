@@ -1,10 +1,11 @@
 package com.gainsight.sfdc.util.datagen;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.codehaus.jackson.annotate.JsonProperty;
 
 public class JobInfo {
 
@@ -12,7 +13,9 @@ public class JobInfo {
 	String jobType;
 	String namespacePrefix;
 	boolean useNameSpace;
-	
+
+    @JsonProperty("dateProcess")
+    DateProcess dateProcess;
 	@JsonProperty("preprocess")
 	PreProcess preProcess;
 	@JsonProperty("extract")
@@ -21,8 +24,16 @@ public class JobInfo {
 	Transform transform;
 	@JsonProperty("load")
 	SfdcLoad load;
-	
-	public String getJobName() {
+
+    public DateProcess getDateProcess() {
+        return dateProcess;
+    }
+
+    public void setDateProcess(DateProcess dateProcess) {
+        this.dateProcess = dateProcess;
+    }
+
+    public String getJobName() {
 		return jobName;
 	}
 
@@ -85,6 +96,93 @@ public class JobInfo {
 	public void setLoad(SfdcLoad load) {
 		this.load = load;
 	}
+
+    public static class DateProcess {
+        String inputFile;
+        String outputFile;
+        @JsonProperty("fields")
+        ArrayList<Fields> fields;
+
+        public String getInputFile() {
+            return inputFile;
+        }
+
+        public void setInputFile(String inputFile) {
+            this.inputFile = inputFile;
+        }
+
+        public String getOutputFile() {
+            return outputFile;
+        }
+
+        public void setOutputFile(String outputFile) {
+            this.outputFile = outputFile;
+        }
+
+        public ArrayList<Fields> getFields() {
+            return fields;
+        }
+
+        public void setFields(ArrayList<Fields> fields) {
+            this.fields = fields;
+        }
+
+        public static class Fields {
+            boolean weekly;
+            boolean daily;
+            boolean dateTime;
+            String fieldName;
+
+            public int getFieldIndex() {
+                return fieldIndex;
+            }
+
+            public void setFieldIndex(int fieldIndex) {
+                this.fieldIndex = fieldIndex;
+            }
+
+            @JsonIgnore
+            int fieldIndex;
+
+            public boolean isWeekly() {
+                return weekly;
+            }
+
+            public void setWeekly(boolean weekly) {
+                this.weekly = weekly;
+            }
+
+            public boolean isDaily() {
+                return daily;
+            }
+
+            public void setDaily(boolean daily) {
+                this.daily = daily;
+            }
+
+            public boolean isDateTime() {
+                return dateTime;
+            }
+
+            public void setDateTime(boolean dateTime) {
+                this.dateTime = dateTime;
+            }
+
+            public String getFieldName() {
+                return fieldName;
+            }
+
+            public void setFieldName(String fieldName) {
+                this.fieldName = fieldName;
+            }
+        }
+
+
+    }
+
+
+
+
 
 	/**
 	 * To Store any pre processing of data required before ETL process

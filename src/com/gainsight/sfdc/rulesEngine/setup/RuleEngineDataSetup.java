@@ -4,14 +4,21 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.rulesEngine.pojos.*;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.bind.XmlObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.testng.Assert;
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
+import us.monoid.web.JSONResource;
+import us.monoid.web.Resty;
 
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -31,14 +38,13 @@ public class RuleEngineDataSetup extends BaseTest {
     private final static String JOB_USAGE_LOAD                  = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_UsageData.txt";
 	private final static String USAGE_OBJECT                    = "JBCXM__UsageData__C";
     private final static String CUSTOMER_OBJECT                 = "JBCXM__CustomerInfo__c";
-    private final static String PICK_LIST_QUERY                 = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c " +
-                                                                    " where JBCXM__Category__c like 'Alert%'order by JBCXM__Category__c, Name";
+    private final static String PICK_LIST_QUERY                 = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
     private final static String CTA_TYPES_QUERY                 = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
     private final static String SCORECARD_METRIC_QUERY          = "SELECT Id, Name FROM JBCXM__ScorecardMetric__c";
     private final static String SCORECARD_SCHEME_DEF_QUERY      = "SELECT Name, Id  FROM JBCXM__ScoringSchemeDefinition__c";
     private final static String CUSTOMER_DELETE_QUERY           = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='RulesAccount'];";
 
-
+    static String userDir = System.getProperty("basedir", ".");
     public HashMap<String, String> pkListMap;
     public HashMap<String, String> ctaTypeMap;
     public HashMap<String, String> scorecardMetricMap;
@@ -134,13 +140,13 @@ public class RuleEngineDataSetup extends BaseTest {
     public void loadAccountsAndCustomers(DataETL dataETL, String accountJobName, String customerJobName) throws IOException {
         ObjectMapper mapper     = new ObjectMapper();
         if(accountJobName != null && accountJobName != "") {
-            JobInfo jobInfo= mapper.readValue(resolveNameSpace(accountJobName), JobInfo.class);
+            JobInfo jobInfo= mapper.readValue((new FileReader(accountJobName)), JobInfo.class);
             dataETL.execute(jobInfo);
         }
         if(customerJobName != null && customerJobName != "") {
             apex.runApex(resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
             //dataETL.cleanUp(CUSTOMER_OBJECT, resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
-            JobInfo jobInfo = mapper.readValue(resolveNameSpace(customerJobName), JobInfo.class);
+            JobInfo jobInfo = mapper.readValue((new FileReader(customerJobName)), JobInfo.class);
             dataETL.execute(jobInfo);
         }
 
@@ -193,7 +199,7 @@ public class RuleEngineDataSetup extends BaseTest {
     /**
      * Delete all the rules, Alerts, CTAs that are setup in the org.
      */
-    public void clearPreviousTestData() {
+    public void deleteRuleAlertAndCTA() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Delete [Select Id from JBCXM__AutomatedAlertRules__c ];");
         stringBuilder.append("\n");
@@ -252,7 +258,7 @@ public class RuleEngineDataSetup extends BaseTest {
      * @return
      * @throws IOException
      */
-    //I am sick of this method, please some one help me to slit this in to multiple.
+    //I am sick of this method, please some one help me to refactor this..
     public String generateRuleJson(HashMap<String, String> testData, Boolean isCTA, Boolean isSurveyRule) throws IOException {
         String result = "";
         AutomatedRule rule = new AutomatedRule();
@@ -309,14 +315,23 @@ public class RuleEngineDataSetup extends BaseTest {
             RuleAdvancedCriteria advancedCriteria = mapper.readValue(testData.get("JBCXM__AdvanceCriteria__c"), RuleAdvancedCriteria.class);
             ArrayList<RuleAdvancedCriteria.FilterCriteria> filterCriterias = advancedCriteria.getFilterCriteria();
             for(RuleAdvancedCriteria.FilterCriteria filterCriteria : filterCriterias) {
-                if(filterCriteria.getObjectName().equalsIgnoreCase("CustomerInfo__c") && (filterCriteria.getName().equalsIgnoreCase("Stage__c") ||
-                        filterCriteria.getName().equalsIgnoreCase("Status__c"))) {
+                if(filterCriteria.getObjectName().equalsIgnoreCase("CustomerInfo__c")) {
                     String values = filterCriteria.getValue();
                     Pattern pattern = Pattern.compile("'[\\w]{1,30}'");
                     Matcher matcher = pattern.matcher(values);
-                    while(matcher.find()) {
-                        String dd = matcher.group().substring(1, matcher.group().length()-1);
-                        values = values.replace(dd,pkListMap.get(dd));
+
+                    if((filterCriteria.getName().equalsIgnoreCase("Stage__c") ||
+                            filterCriteria.getName().equalsIgnoreCase("Status__c"))) {
+                        while(matcher.find()) {
+                            String dd = matcher.group().substring(1, matcher.group().length()-1);
+                            values = values.replace(dd,pkListMap.get(dd));
+                        }
+                    } else if((filterCriteria.getName().equalsIgnoreCase("CurScoreId__c") ||
+                            filterCriteria.getName().equalsIgnoreCase("PrevScoreId__c"))) {
+                        while(matcher.find()) {
+                            String dd = matcher.group().substring(1, matcher.group().length()-1);
+                            values = values.replace(dd,scorecardSchemeDefMap.get(dd));
+                        }
                     }
                     filterCriteria.setValue(values);
                 }
@@ -325,7 +340,6 @@ public class RuleEngineDataSetup extends BaseTest {
             rule.setJBCXM__AdvanceCriteria__c(mapper.writeValueAsString(advancedCriteria));
         }
 
-        rule.setJBCXM__ScorecardCriteria__c(testData.get("JBCXM__ScorecardCriteria__c"));
         rule.setJBCXM__SelectFields__c(testData.get("JBCXM__SelectFields__c"));
         //scorecard criteria transition.
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!= "") {
@@ -343,17 +357,26 @@ public class RuleEngineDataSetup extends BaseTest {
                 //Changing the Conditions List
                 ArrayList<RuleScorecardCriteria.ConditionList> conditionLists = actionInfo.getConditionList();
                 for(RuleScorecardCriteria.ConditionList conditionList :conditionLists ) {
-                    if(conditionList.getObjectName().equalsIgnoreCase("CustomerInfo__c") &&
-                            (conditionList.getName().equalsIgnoreCase("Stage__c") || conditionList.getName().equalsIgnoreCase("Status__c"))) {
-                        String values = conditionList.getValue();
-                        Pattern pattern = Pattern.compile("'[\\w]{1,25}'");
-                        Matcher matcher = pattern.matcher(values);
-                        while(matcher.find()) {
-                            String dd = matcher.group().substring(1, matcher.group().length()-1);
-                            System.out.println(dd);
-                            values = values.replace(dd,pkListMap.get(dd));
+                    if(conditionList.getObjectName().equalsIgnoreCase("CustomerInfo__c")) {
+                        if(conditionList.getName().equalsIgnoreCase("Stage__c") || conditionList.getName().equalsIgnoreCase("Status__c")) {
+                            String values = conditionList.getValue();
+                            Pattern pattern = Pattern.compile("'[\\w]{1,25}'");
+                            Matcher matcher = pattern.matcher(values);
+                            while(matcher.find()) {
+                                String dd = matcher.group().substring(1, matcher.group().length()-1);
+                                values = values.replace(dd,pkListMap.get(dd));
+                            }
+                            conditionList.setValue(values);
+                        } else if((conditionList.getName().equalsIgnoreCase("PrevScoreId__c") || conditionList.getName().equalsIgnoreCase("CurScoreId__c"))) {
+                            String values = conditionList.getValue();
+                            Pattern pattern = Pattern.compile("'[\\w]{1,25}'");
+                            Matcher matcher = pattern.matcher(values);
+                            while(matcher.find()) {
+                                String dd = matcher.group().substring(1, matcher.group().length()-1);
+                                values = values.replace(dd,scorecardSchemeDefMap.get(dd));
+                            }
+                            conditionList.setValue(values);
                         }
-                        conditionList.setValue(values);
                     }
                 }
                 actionInfo.setConditionList(conditionLists);
@@ -543,15 +566,17 @@ public class RuleEngineDataSetup extends BaseTest {
         SObject[]  recordList = soql.getRecords(query);
         Report.logInfo("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
-            if(action.getComment() != null || !action.getComment().isEmpty()) {
-                Report.logInfo(recordList[0].toString());
-                Report.logInfo(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString());
-                String actualComments = recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString().toLowerCase();
-                Report.logInfo("Actual Comments : " +actualComments);
-                Report.logInfo("Expected Comments : " +action.getComment());
-                if(actualComments.toLowerCase().contains(action.getComment())) {
-                    return true;
+            if(action.getComment() != null && !action.getComment().isEmpty()) {
+                if(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)) != null) {
+                    Report.logInfo(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString());
+                    String actualComments = recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString().toLowerCase();
+                    Report.logInfo("Actual Comments : " +actualComments);
+                    Report.logInfo("Expected Comments : " +action.getComment());
+                    if(actualComments.toLowerCase().contains(action.getComment())) {
+                        return true;
+                    }
                 }
+
             }
             return true;
         }
@@ -652,6 +677,59 @@ public class RuleEngineDataSetup extends BaseTest {
         strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
         Report.logInfo("Running Rule : " + strBuilder.toString());
         apex.runApex(resolveStrNameSpace(strBuilder.toString()));
+    }
+
+    public void executeRule(HashMap<String, String> testData, SFDCInfo sfdcInfo, Resty resty, URI uri)  {
+        //Always runs for current user.
+        try {
+            testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+            testData.put("JBCXM__PlayBookIds__c", pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
+            String rule = generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
+            String ruleId = createRule(rule, resty, uri);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to execute rule");
+        }
+    }
+
+    public void assertRuleResult(HashMap<String, String> testData, SFDCInfo sfdcInfo) throws IOException, JSONException, InterruptedException {
+        String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
+        String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
+
+        testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+        testData.put("JBCXM__PlayBookIds__c", pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
+
+        ObjectMapper mapper = new ObjectMapper();
+        RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
+        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
+            if(Boolean.valueOf(testData.get("IsCTARule"))) {
+                Assert.assertTrue(verifyCTAExists(testData.get("Account"), testData.get("JBCXM__TaskDefaultOwner__c"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            } else {
+                Assert.assertTrue(verifyAlertExists(testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
+            }
+        }
+        if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
+            ArrayList<RuleScorecardCriteria.ActionList> actionLists = getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
+            for(RuleScorecardCriteria.ActionList action : actionLists) {
+                Assert.assertTrue(verifyMetricScoreAndComments(testData.get("Account"), action));
+            }
+        }
+    }
+
+    private String createRule(String rule, Resty resty, URI uri) throws IOException, JSONException {
+        JSONResource res = resty.json(uri, Resty.form(rule));
+        JSONObject jObj = res.toObject();
+        Report.logInfo(jObj.toString());
+        String ruleId = jObj.getString("id");
+        Report.logInfo("Rule Id : "+ruleId);
+        return ruleId;
+    }
+
+    public void updateUsageDateToTriggerRule(String accName) {
+        String s = "JBCXM__UsageData__c usagedata= [Select id, Name, JBCXM__Date__c, JBCXM__Processed__c From JBCXM__UsageData__c \n" +
+                "where JBCXM__Account__r.Name='%s' Order by JBCXM__Date__c Desc Limit 1];\n" +
+                "usagedata.JBCXM__Processed__c = true;\n" +
+                "update usagedata;";
+        apex.runApex(resolveStrNameSpace(String.format(s, accName)));
     }
 
     //Pending

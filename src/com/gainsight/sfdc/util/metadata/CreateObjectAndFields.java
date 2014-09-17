@@ -26,6 +26,25 @@ public class CreateObjectAndFields {
     }
     public static void main(String[] args) throws Exception {
         CreateObjectAndFields objVar = new CreateObjectAndFields();
+
+        Metadata metadata = new Metadata();
+        ProfileApexPageAccess  pageAccess = new ProfileApexPageAccess();
+        pageAccess.setApexPage("JBCXM.SurveyEmailOpen");
+        pageAccess.setEnabled(true);
+        ProfileApexPageAccess  pageAccess1 = new ProfileApexPageAccess();
+        pageAccess1.setApexPage("JBCXM.SurveyResponse");
+        pageAccess1.setEnabled(true);
+
+        Metadata[] adf = new Metadata[3];
+
+        Profile p = new Profile();
+        p.setPageAccesses(new ProfileApexPageAccess[]{pageAccess, pageAccess1});
+
+
+
+
+
+
         String ObjName = "Account";
         String[] numberFields = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
 
@@ -136,7 +155,7 @@ public class CreateObjectAndFields {
         return str.replaceAll("JBCXM__", "");
     }
 
-    public void createFormulaFields(String objName, List<HashMap<String, String>> formulafieldsList) throws Exception {
+    public void createFormulaFields(String objName, List<HashMap<String, String>> formulafieldsList) {
         Metadata[] metadata = new Metadata[formulafieldsList.size()];
         int i=0;
         for(HashMap<String, String> testData : formulafieldsList) {
@@ -207,7 +226,7 @@ public class CreateObjectAndFields {
         System.out.println(" Job Done Boss!!!!!!!");
     }
 
-    public void createFields(String objName, String[] fields, boolean isCheckBox, boolean isPhone, boolean isUrl) throws Exception {
+    public void createFields(String objName, String[] fields, boolean isCheckBox, boolean isPhone, boolean isUrl)  {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {
@@ -230,7 +249,7 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createPickListField(String objName, HashMap<String, String[]> pickListFields, boolean isMutipickList) throws Exception {
+    public void createPickListField(String objName, HashMap<String, String[]> pickListFields, boolean isMutipickList) {
         Metadata[] metadata = new Metadata[pickListFields.size()];
         int i=0;
         Iterator itr = pickListFields.keySet().iterator();
@@ -267,7 +286,7 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createTextFields(String objName, String[] fields, boolean isExternalID, boolean isUnique, boolean isTextField, boolean isTextArea, boolean isTextRich) throws Exception {
+    public void createTextFields(String objName, String[] fields, boolean isExternalID, boolean isUnique, boolean isTextField, boolean isTextArea, boolean isTextRich) {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {
@@ -297,7 +316,7 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createCurrencyField(String objName, String[] fields) throws Exception {
+    public void createCurrencyField(String objName, String[] fields) {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {
@@ -313,7 +332,7 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createDateField(String objName, String[] fields, boolean isDateTime) throws Exception {
+    public void createDateField(String objName, String[] fields, boolean isDateTime) {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {
@@ -331,8 +350,15 @@ public class CreateObjectAndFields {
         createAndCheckStatus(metadata);
     }
 
-    public void createAndCheckStatus(Metadata[] metadata) throws Exception {
-        AsyncResult[] ars = metadataConnection.create(metadata);
+    public void createAndCheckStatus(Metadata[] metadata)  {
+        AsyncResult[] ars = null;
+        try {
+            ars  = metadataConnection.create(metadata);
+        } catch (ConnectionException e) {
+            System.out.println("Failed to created fields On Object");
+            throw new RuntimeException("Failed to create fields : " +e.getLocalizedMessage());
+        }
+
         String[] id = new String[ars.length];
         int j =0;
         boolean iserror = false;
@@ -341,28 +367,36 @@ public class CreateObjectAndFields {
             ++j;
         }
         long waitTimeMilliSecs = 1000;
-        Thread.sleep(waitTimeMilliSecs);
-        for(int i =0; i < id.length; i++) {
-            do {
-                ars = metadataConnection.checkStatus(new String[] { id[i]});
-            }
-            while (!ars[0].isDone());
-
-            if(ars[0].getMessage() != null ) {
-                System.out.println("Status of field : "+ars[0].getMessage()+" & Status is: " + ars[0].getState());
-                iserror = true;
-            }
-            if(iserror) {
-                System.out.println("job Done With Error's !!!!!!!");
-            } else {
-                System.out.println("job Done !!!!!!!");
-            }
+        try {
+            Thread.sleep(waitTimeMilliSecs);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            System.out.println(e.getLocalizedMessage());
+            throw new RuntimeException(e.getLocalizedMessage());
         }
+        try {
+            for(int i =0; i < id.length; i++) {
+                do {
+                    ars = metadataConnection.checkStatus(new String[] { id[i]});
+                }
+                while (!ars[0].isDone());
 
-
+                if(ars[0].getMessage() != null ) {
+                    System.out.println("Status is : " + ars[0].getStatusCode() + ", AND Message is : "+ars[0].getMessage());
+                    if(!ars[0].getStatusCode().equals(StatusCode.DUPLICATE_DEVELOPER_NAME)) {
+                        throw new RuntimeException("Failed to Created the Field - " +ars[0].getStatusCode()+ "  -   "+ars[0].getMessage());
+                    }
+                } else {
+                    System.out.println("Field Created Successfully");
+                }
+            }
+        } catch (ConnectionException e) {
+            System.out.println(e.getLocalizedMessage());
+            throw new RuntimeException("Checking Field Creation Failed " +e.getLocalizedMessage());
+        }
     }
 
-    public void createNumberField(String objName, String[] fields, boolean isPercentage) throws Exception {
+    public void createNumberField(String objName, String[] fields, boolean isPercentage) {
         Metadata[] metadata = new Metadata[fields.length];
         int i=0;
         for(String field : fields) {

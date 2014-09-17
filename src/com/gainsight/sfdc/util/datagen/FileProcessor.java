@@ -1,15 +1,15 @@
 package com.gainsight.sfdc.util.datagen;
 
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
+import com.gainsight.sfdc.util.DateUtil;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
-
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-
-import com.gainsight.sfdc.util.DateUtil;
 
 public class FileProcessor {
 
@@ -141,5 +141,66 @@ public class FileProcessor {
 		
 		return outputFile;
 	}
+
+    public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields) throws IOException {
+        CSVReader reader = new CSVReader(new FileReader(inputFile));
+        String[] cols;
+        int fieldIndex = -1;
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
+        cols = reader.readNext();
+        System.out.println(cols.length);
+        writer.writeNext(cols);
+        writer.flush();
+        for(String str : cols) {
+            System.out.println(str);
+        }
+
+
+        for(JobInfo.DateProcess.Fields field : fields) {
+            for(int i=0; i < cols.length ; i++) {
+                if(cols[i].trim().equalsIgnoreCase(field.getFieldName())) {
+                    field.setFieldIndex(i);
+                }
+            }
+            if(!(field.getFieldIndex() > -1)) {
+                throw new RuntimeException("Field not present in the file supplied " +field.getFieldName());
+            }
+        }
+        cols = reader.readNext();
+        while(cols != null) {
+            for(JobInfo.DateProcess.Fields field : fields) {
+                try {
+                    int value = Integer.parseInt(cols[field.getFieldIndex()]);
+                    cols[field.getFieldIndex()] =  getDate(field, value);
+                } catch (NumberFormatException e) {
+                    System.out.println("No Value provided");
+                }
+            }
+            writer.writeNext(cols);
+            writer.flush();
+            cols = reader.readNext();
+        }
+        return outputFile;
+    }
+
+    private static String getDate(JobInfo.DateProcess.Fields field, int value) {
+        if(field.isDateTime())  {
+            if(field.isDaily()) {
+               return DateUtil.addDays(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+            } else if (field.isWeekly()){
+                return DateUtil.addWeeks(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+            } else {
+                return DateUtil.addMonths(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+            }
+        } else {
+            if(field.isDaily()) {
+                return DateUtil.addDays(new Date(), value, "yyyy-MM-dd");
+            } else if (field.isWeekly()){
+                return DateUtil.addWeeks(new Date(), value, "yyyy-MM-dd");
+            } else {
+                return DateUtil.addMonths(new Date(), value, "yyyy-MM-dd");
+            }
+        }
+    }
 
 }

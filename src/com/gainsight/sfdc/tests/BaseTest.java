@@ -269,25 +269,14 @@ public class BaseTest {
 
     public void createExtIdFieldOnAccount() {
         CreateObjectAndFields fieldsCreator = new CreateObjectAndFields();
-        try {
-            fieldsCreator.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create ext id field on account object :" + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
+        fieldsCreator.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
     }
 
     public void createExtIdFieldForScoreCards() {
         CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        try {
-            cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
-            e.printStackTrace();
-            throw new RuntimeException("Unable to create fields for scorecard section");
-        }
+        cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
     }
 
     //same method is used by rules engine test cases also.
@@ -296,13 +285,8 @@ public class BaseTest {
         String[] numberFields1 = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
         CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-        try {
-            cObjFields.createNumberField(resolveStrNameSpace(object), numberFields1, false);
-            cObjFields.createNumberField(resolveStrNameSpace(object), numberFields2, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create Fields on the object :" + object);
-            e.printStackTrace();
-        }
+        cObjFields.createNumberField(resolveStrNameSpace(object), numberFields1, false);
+        cObjFields.createNumberField(resolveStrNameSpace(object), numberFields2, false);
     }
 
     /**

@@ -56,10 +56,10 @@ public final class ApiUrl extends NSUrl {
 	public static final String TENANT_AUTO_PROVISIONING = BASE_TENANTS + "/provision";
 	// ------------------- END -------------------
 
-	public static List<String> getApiList = new ArrayList<>();
-	public static List<String> postApiList = new ArrayList<>();
-	public static List<String> putApiList = new ArrayList<>();
-	public static List<String> deleteApiList = new ArrayList<>();
+	public static List<String> getApiList = new ArrayList<String>();
+	public static List<String> postApiList = new ArrayList<String>();
+	public static List<String> putApiList = new ArrayList<String>();
+	public static List<String> deleteApiList = new ArrayList<String>();
 
 	public static void getAllApiUrlsWithReqType() {
 
