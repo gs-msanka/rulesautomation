@@ -24,6 +24,7 @@ public class AdministrationBasePage extends BasePage {
     private final String ADMIN_UI_SETTINGS      = "//a[contains(@href,'Administration-UIViews')]";
     private final String ADMIN_RULES_ENGINE     = "//a[contains(@href,'Administration-RulesEngine')]";
     private final String SETUP                  = "//a[@id='setupLink' and @title='Setup']";
+    private final String INTEGRATION_PAGE		= "//a[@href='Integration']";
 
 
     public AdministrationBasePage() {
@@ -88,5 +89,10 @@ public class AdministrationBasePage extends BasePage {
     public AdminScorecardSection clickOnScorecardSection(){
         item.click(SCORECARD_SECTION);
         return new AdminScorecardSection();
+    }
+   
+    public AdminIntegrationPage clickOnIntegrationLink(){
+    	item.click(INTEGRATION_PAGE);
+    	return new AdminIntegrationPage();
     }
 }
