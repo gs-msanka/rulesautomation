@@ -3,6 +3,26 @@
     "jobType" : "AccountUpsert",
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
+    "dateProcess" : {
+        "inputFile" : "/testdata/sfdc/RulesEngine/Data/Rules_Accounts.csv",
+        "outputFile" : "/resources/datagen/process/Rules_Temp1_Accounts.csv",
+        "fields" :[
+            {
+                "weekly" : false,
+                "daily"  : false,
+                "dateTime" : false,
+                "fieldName" : "InputDate__c"
+
+            },
+            {
+                "weekly" : true,
+                "daily"  : false,
+                "dateTime" : true,
+                "fieldName" : "InputDateTime__c"
+
+            }
+        ]
+    },
     "extract": {
         "source": "sfdc",
         "connection": "conf/application.conf",
@@ -30,7 +50,7 @@
                 ]
             },
             {
-                "file": "/testdata/sfdc/RulesEngine/Data/Rules_Accounts.csv",
+                "file": "/resources/datagen/process/Rules_Temp1_Accounts.csv",
                 "table": "accounts",
                 "joinColumnName": "Name",
                 "columns": [
@@ -50,13 +70,53 @@
                     {
                         "name": "Employees",
                         "alias": "NumberOfEmployees"
+                    },
+                    {
+                        "name": "ActiveUsers__c",
+                        "alias": "ActiveUsers__c"
+                    },
+                    {
+                        "name": "AnnualRevenue",
+                        "alias": "AnnualRevenue"
+                    },
+                    {
+                        "name": "Type",
+                        "alias": "Type"
+                    },
+                    {
+                        "name": "AccountSource",
+                        "alias": "AccountSource"
+                    },
+                    {
+                        "name": "Industry",
+                        "alias": "Industry"
+                    },
+                    {
+                        "name": "InRegions__c",
+                        "alias": "InRegions__c"
+                    },
+                    {
+                        "name": "AccPercentage__c",
+                        "alias": "AccPercentage__c"
+                    },
+                    {
+                        "name": "IsActive__c",
+                        "alias": "IsActive__c"
+                    },
+                    {
+                        "name": "InputDate__c",
+                        "alias": "InputDate__c"
+                    },
+                    {
+                        "name": "InputDateTime__c",
+                        "alias": "InputDateTime__c"
                     }
                 ]
             }
         ],
         "join": true,
         "picklist": false,
-        "output": "/resources/datagen/process/Rules_Temp1_Accounts.csv"
+        "output": "/resources/datagen/process/Rules_Temp3_Accounts.csv"
     },
     "load": {
         "target": "sfdc",
@@ -64,6 +124,6 @@
         "operation": "upsert",
         "contentType": "CSV",
         "externalIDField": "Id",
-        "file": "/resources/datagen/process/Rules_Temp1_Accounts.csv"
+        "file": "/resources/datagen/process/Rules_Temp3_Accounts.csv"
     }
 }
