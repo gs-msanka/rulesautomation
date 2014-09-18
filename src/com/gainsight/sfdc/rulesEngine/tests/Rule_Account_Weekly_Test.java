@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.rulesEngine.tests;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
@@ -8,7 +9,10 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.metadata.MetadataUtil;
 import com.gainsight.utils.DataProviderArguments;
+import com.sforce.ws.ConnectionException;
+import junit.framework.Assert;
 import jxl.read.biff.BiffException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,19 +55,6 @@ public class Rule_Account_Weekly_Test extends BaseTest {
     private static final String SCHEME = "Score";
     private static final String USAGE_LEVEL = "ACCOUNTLEVEL";
 
-    //Please update this list if new test case need to be added.
-    private String[] sheetNames = new String[]{"Rule1", "Rule2", "Rule3", "Rule4", "Rule5", "Rule6", "Rule7", "Rule8", "Rule9",
-                                                "Rule10", "Rule11", "Rule12", "Rule13", "Rule14", "Rule15", "Rule16", "Rule17",
-                                                "Rule18", "Rule19", "Rule20", "Rule21", "Rule22", "Rule23", "Rule24", "Rule25", "Rule26",
-                                                "Rule27", "Rule28", "Rule29", "Rule30", "Rule31", "Rule32", "Rule33", "Rule34", "Rule35"};
-
-    /**
-     * Make sure that your test cases should always validate different expected value.
-     * In Order to reduce time, we are running all the test cases in setup & during assertions in test cases.
-     * 14 Test cases took almost 60minutes/.
-     * @throws java.io.IOException
-     */
-
 
     @BeforeClass
     public void setUp() throws IOException, BiffException, JSONException, InterruptedException {
@@ -79,8 +70,9 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
+        MetadataUtil metadataUtil =  new MetadataUtil();
+        metadataUtil.createFieldsOnAccount();
         createExtIdFieldForScoreCards();
-        createExtIdFieldOnAccount();
         createFieldsOnUsageData();
         apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
@@ -109,315 +101,226 @@ public class Rule_Account_Weekly_Test extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-    public void Equals_NotEquals_LessThan_GreaterThan_AccountField_Rule1(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule1_Equals_NotEquals_LessThan_GreaterThan_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
-    public void Equals_NotEquals_LessThan_GreaterThan_Static_Rule2(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule2_Equals_NotEquals_LessThan_GreaterThan_Static(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
-    public void UsageDroppedOverPeriod_Rule3(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule3_UsageDroppedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
-    public void UsageIncreasedOverPeriod_Rule4(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule4_UsageIncreasedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
-    public void Sum_Of_Measure_ExcludeNull_AccountField_Rule5(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule5_Sum_Of_Measure_ExcludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
-    public void Sum_Of_Measure_ExcludeNull_StaticValue_Rule6(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule6_Sum_Of_Measure_ExcludeNull_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
-    public void Sum_Of_Measure_IncludeNull_AccountField_Rule7(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule7_Sum_Of_Measure_IncludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule8")
-    public void Sum_Of_Measure_StaticValue_IncludeNull_Rule8(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule8_Sum_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule9")
-    public void Avg_Of_Measure_AccountField_ExcludeNull_Rule9(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule9_Avg_Of_Measure_AccountField_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule10")
-    public void Avg_Of_Measure_StaticValue_ExcludeNull_Rule10(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule10_Avg_Of_Measure_StaticValue_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule11")
-    public void Avg_Of_Measure_AccountField_IncludeNull_Rule11(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule11_Avg_Of_Measure_AccountField_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule12")
-    public void Avg_Of_Measure_StaticValue_IncludeNull_Rule12(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule12_Avg_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule13")
-    public void Measure_OverPeriod_AccountField_Rule13(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule13_Measure_OverPeriod_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule14")
-    public void Measure_OverPeriod_StaticValue_Rule14(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+    public void Rule14_Measure_OverPeriod_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule15")
     public void Rule15(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule16")
     public void Rule16(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule17")
     public void Rule17(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule18")
     public void Rule18(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule19")
     public void Rule19(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule20")
     public void Rule20(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule21")
     public void Rule21(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule22")
     public void Rule22(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule23")
     public void Rule23(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule24")
     public void Rule24(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule25")
     public void Rule25(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule26")
     public void Rule26(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule27")
     public void Rule27(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule28")
     public void Rule28(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule29")
     public void Rule29(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
+
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule30")
     public void Rule30(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule31")
     public void Rule31(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
+
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule32")
     public void Rule32(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule33")
     public void Rule33(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule34")
     public void Rule34(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
-        ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
-        ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        cohabit(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule35")
     public void Rule35(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+        cohabit(testData);
+    }
+
+    private void cohabit(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         ruleEngineDataSetup.deleteRuleAlertAndCTA();
         ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
         ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
-        ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        try {
+            ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+            Report.logInfo("Connection Failed");
+            Assert.assertTrue(false);
+        }
+
     }
 
     @AfterClass

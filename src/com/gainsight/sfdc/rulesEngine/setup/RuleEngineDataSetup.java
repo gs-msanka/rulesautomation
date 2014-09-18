@@ -7,7 +7,12 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.sforce.soap.partner.DescribeSObjectResult;
+import com.sforce.soap.partner.Field;
+import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.sobject.SObject;
+import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.bind.XmlObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -21,6 +26,7 @@ import java.io.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,10 +58,40 @@ public class RuleEngineDataSetup extends BaseTest {
     public HashMap<String, String> playbooksMap;
     private ObjectMapper mapper;
 
-
+    static PartnerConnection connection;
     public HashMap<String, String> surveyQuestionMap;
     public HashMap<String, String> surveyAnswerMap;
 
+    static {
+        Properties p = loadProperties("./conf/application.properties");
+        String userName  =  p.getProperty("sfdc.username");
+        String password = p.getProperty("sfdc.password");
+        String securityToken = p.getProperty("sfdc.stoken");
+        String EndPointURL = p.getProperty("sfdc.soapUrl").replace("/c/", "/u/");//"https://login.salesforce.com/services/Soap/u/28.0";
+        ConnectorConfig config = new ConnectorConfig();
+        config.setUsername(userName);
+        config.setPassword(password + securityToken);
+        Report.logInfo("AuthEndPoint: " + EndPointURL);
+        config.setAuthEndpoint(EndPointURL);
+        try {
+            connection = new PartnerConnection(config);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+            Report.logInfo("Failed to Get Connection");
+        }
+    }
+
+    private static Properties loadProperties(String propFile) {
+        Properties props = new Properties();
+        // Optional properties file to override everything
+        try {
+            props.load(new FileReader(propFile));
+        } catch (Exception e) {
+            // ignore errors
+            throw new RuntimeException("Failed to read the file : " + e.getLocalizedMessage());
+        }
+        return props;
+    }
     public RuleEngineDataSetup() {
         Report.logInfo("In RuleEngine Setup");
         mapper = new ObjectMapper();
@@ -686,19 +722,64 @@ public class RuleEngineDataSetup extends BaseTest {
             testData.put("JBCXM__PlayBookIds__c", pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
             String rule = generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), false);
             String ruleId = createRule(rule, resty, uri);
+            //runRule(ruleId, USAGE_LEVEL, 0, -1);
         } catch (Exception e) {
+            e.printStackTrace();
+            Report.logInfo(e.getLocalizedMessage());
             throw new RuntimeException("Failed to execute rule");
         }
     }
 
-    public void assertRuleResult(HashMap<String, String> testData, SFDCInfo sfdcInfo) throws IOException, JSONException, InterruptedException {
+    public void printSetUpData(SFDCInfo sfdcInfo, String account) throws IOException, JSONException, ConnectionException {
+        Report.logInfo("Print Test Case Set up Data");
+        Resty resty = new Resty();
+        resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
+
+        URI uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject("Account")+((account != null) ? "Where+Name+like+'%"+account+"%'" : "" )+ "+Limit+20");
+        Report.logInfo("Url To Fire :" +uri.toString());
+        JSONResource res = resty.json(uri);
+        JSONObject jObj = res.toObject();
+        ObjectMapper mapper = new ObjectMapper();
+        Object json = mapper.readValue(jObj.toString(), Object.class);
+        Report.logInfo("Account Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject(resolveStrNameSpace("JBCXM__CustomerInfo__c"))+((account != null) ? "Where+"+resolveStrNameSpace("JBCXM__Account__r.Name")+"+like+'%"+account+"%'" : "" )+ "+Limit+50");
+        Report.logInfo("Url To Fire :" +uri.toString());
+        res = resty.json(uri);
+        jObj = res.toObject();
+        json = mapper.readValue(jObj.toString(), Object.class);
+        Report.logInfo("Customer Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject(resolveStrNameSpace("JBCXM__UsageData__c"))+((account != null) ? "Where+"+resolveStrNameSpace("JBCXM__Account__r.Name")+"+like+'%"+account+"%'" : "" )+ "+Limit+50");
+        Report.logInfo("Url To Fire :" +uri.toString());
+        res = resty.json(uri);
+        jObj = res.toObject();
+        json = mapper.readValue(jObj.toString(), Object.class);
+        Report.logInfo("Usage Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+    }
+
+    public String buildQueryOnObject(String sObject) throws ConnectionException, IOException {
+        StringBuilder query = new StringBuilder("Select+");
+        DescribeSObjectResult desSObject = connection.describeSObject(sObject);
+        System.out.println(desSObject.getName());
+        Field[] fields = desSObject.getFields();
+        for(Field field : fields) {
+            if(field.getType().toString().equalsIgnoreCase("reference")) {
+                query.append(field.getRelationshipName() + ".Name,+");
+            }  else {
+                query.append(field.getName() + ",+");
+            }
+        }
+        query.deleteCharAt(query.lastIndexOf(","));
+        query.append("+From+"+desSObject.getName());
+        return query.toString();
+    }
+
+    public void assertRuleResult(HashMap<String, String> testData, SFDCInfo sfdcInfo) throws IOException, JSONException, InterruptedException, ConnectionException {
         String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
         String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
 
         testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
         testData.put("JBCXM__PlayBookIds__c", pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-
-        ObjectMapper mapper = new ObjectMapper();
+        printSetUpData(sfdcInfo, testData.get("Account"));
         RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
         if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
             if(Boolean.valueOf(testData.get("IsCTARule"))) {
@@ -720,7 +801,7 @@ public class RuleEngineDataSetup extends BaseTest {
         JSONObject jObj = res.toObject();
         Report.logInfo(jObj.toString());
         String ruleId = jObj.getString("id");
-        Report.logInfo("Rule Id : "+ruleId);
+        Report.logInfo("Rule Id : " + ruleId);
         return ruleId;
     }
 
