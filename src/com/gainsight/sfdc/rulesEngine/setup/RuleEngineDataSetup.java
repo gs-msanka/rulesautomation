@@ -16,6 +16,7 @@ import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.bind.XmlObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.seleniumhq.jetty7.util.URIUtil;
 import org.testng.Assert;
 import us.monoid.json.JSONException;
 import us.monoid.json.JSONObject;
@@ -58,16 +59,18 @@ public class RuleEngineDataSetup extends BaseTest {
     public HashMap<String, String> playbooksMap;
     private ObjectMapper mapper;
 
-    static PartnerConnection connection;
+    private PartnerConnection connection;
     public HashMap<String, String> surveyQuestionMap;
     public HashMap<String, String> surveyAnswerMap;
 
-    static {
+
+    private PartnerConnection login() {
+        PartnerConnection connection= null;
         Properties p = loadProperties("./conf/application.properties");
         String userName  =  p.getProperty("sfdc.username");
         String password = p.getProperty("sfdc.password");
         String securityToken = p.getProperty("sfdc.stoken");
-        String EndPointURL = p.getProperty("sfdc.soapUrl").replace("/c/", "/u/");//"https://login.salesforce.com/services/Soap/u/28.0";
+        String EndPointURL = p.getProperty("sfdc.appurl")+"/services/Soap/u/28.0";
         ConnectorConfig config = new ConnectorConfig();
         config.setUsername(userName);
         config.setPassword(password + securityToken);
@@ -79,6 +82,7 @@ public class RuleEngineDataSetup extends BaseTest {
             e.printStackTrace();
             Report.logInfo("Failed to Get Connection");
         }
+        return connection;
     }
 
     private static Properties loadProperties(String propFile) {
@@ -100,7 +104,9 @@ public class RuleEngineDataSetup extends BaseTest {
         scorecardMetricMap      = getScorecardMetrics();
         scorecardSchemeDefMap   = getScoringSchemeDefinition();
         playbooksMap            = getPlaybooks();
+        connection              = login();
         Report.logInfo("End RuleEngine Setup Constructor");
+
 	}
 
     public RuleEngineDataSetup(String surveyCode) {
@@ -114,6 +120,7 @@ public class RuleEngineDataSetup extends BaseTest {
         playbooksMap            = getPlaybooks();
         surveyQuestionMap       = getSurveyQuestionMap(surveyCode);
         surveyAnswerMap         = getSurveyAnswerMap(surveyCode);
+        connection              = login();
         Report.logInfo("End of Survey Rule's Engine Setup");
     }
 
@@ -735,20 +742,20 @@ public class RuleEngineDataSetup extends BaseTest {
         Resty resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
 
-        URI uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject("Account")+((account != null) ? "Where+Name+like+'%"+account+"%'" : "" )+ "+Limit+20");
+        URI uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject("Account")+((account != null) ? " Where Name = '"+account+"'" : "" )+ "+Limit+20"));
         Report.logInfo("Url To Fire :" +uri.toString());
         JSONResource res = resty.json(uri);
         JSONObject jObj = res.toObject();
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(jObj.toString(), Object.class);
         Report.logInfo("Account Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject(resolveStrNameSpace("JBCXM__CustomerInfo__c"))+((account != null) ? "Where+"+resolveStrNameSpace("JBCXM__Account__r.Name")+"+like+'%"+account+"%'" : "" )+ "+Limit+50");
+        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject(resolveStrNameSpace("JBCXM__CustomerInfo__c"))+((account != null) ? " Where "+resolveStrNameSpace("JBCXM__Account__r.Name")+" = '"+account+"'" : "" )+ "+Limit+50"));
         Report.logInfo("Url To Fire :" +uri.toString());
         res = resty.json(uri);
         jObj = res.toObject();
         json = mapper.readValue(jObj.toString(), Object.class);
         Report.logInfo("Customer Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+buildQueryOnObject(resolveStrNameSpace("JBCXM__UsageData__c"))+((account != null) ? "Where+"+resolveStrNameSpace("JBCXM__Account__r.Name")+"+like+'%"+account+"%'" : "" )+ "+Limit+50");
+        uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject(resolveStrNameSpace("JBCXM__UsageData__c"))+((account != null) ? " Where "+resolveStrNameSpace("JBCXM__Account__r.Name")+" = '"+account+"'" : "" )+ "+Limit+50"));
         Report.logInfo("Url To Fire :" +uri.toString());
         res = resty.json(uri);
         jObj = res.toObject();
@@ -757,19 +764,20 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     public String buildQueryOnObject(String sObject) throws ConnectionException, IOException {
+        Report.logInfo("Started building query");
         StringBuilder query = new StringBuilder("Select+");
         DescribeSObjectResult desSObject = connection.describeSObject(sObject);
-        System.out.println(desSObject.getName());
+        Report.logInfo("Object Described :"+desSObject.getName());
         Field[] fields = desSObject.getFields();
         for(Field field : fields) {
             if(field.getType().toString().equalsIgnoreCase("reference")) {
-                query.append(field.getRelationshipName() + ".Name,+");
+                query.append(field.getRelationshipName() + ".Name, ");
             }  else {
-                query.append(field.getName() + ",+");
+                query.append(field.getName() + ", ");
             }
         }
         query.deleteCharAt(query.lastIndexOf(","));
-        query.append("+From+"+desSObject.getName());
+        query.append(" From "+desSObject.getName());
         return query.toString();
     }
 
@@ -780,15 +788,15 @@ public class RuleEngineDataSetup extends BaseTest {
         testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
         testData.put("JBCXM__PlayBookIds__c", pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
         printSetUpData(sfdcInfo, testData.get("Account"));
-        RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
-        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
+        if(testData.get(ALERT_CRITERIA_KEY) != null && testData.get(ALERT_CRITERIA_KEY)!="") {
+            RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
             if(Boolean.valueOf(testData.get("IsCTARule"))) {
                 Assert.assertTrue(verifyCTAExists(testData.get("Account"), testData.get("JBCXM__TaskDefaultOwner__c"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
             } else {
                 Assert.assertTrue(verifyAlertExists(testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
             }
         }
-        if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
+        if(testData.get(SCORE_CRITERIA_KEY) != null && testData.get(SCORE_CRITERIA_KEY)!="") {
             ArrayList<RuleScorecardCriteria.ActionList> actionLists = getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
             for(RuleScorecardCriteria.ActionList action : actionLists) {
                 Assert.assertTrue(verifyMetricScoreAndComments(testData.get("Account"), action));
