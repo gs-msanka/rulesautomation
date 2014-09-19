@@ -173,7 +173,7 @@ public class FileProcessor {
                     int value = Integer.parseInt(cols[field.getFieldIndex()]);
                     cols[field.getFieldIndex()] =  getDate(field, value);
                 } catch (NumberFormatException e) {
-                    System.out.println("No Value provided");
+                    //Just Ignore.
                 }
             }
             writer.writeNext(cols);

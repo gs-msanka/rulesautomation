@@ -3,11 +3,14 @@ package com.gainsight.sfdc.rulesEngine.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.metadata.MetadataUtil;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
 import junit.framework.Assert;
@@ -21,6 +24,7 @@ import us.monoid.web.Resty;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -62,7 +66,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
 
-        /*basepage.login();
+        basepage.login();
         isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
