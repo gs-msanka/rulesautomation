@@ -70,7 +70,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackage);
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
@@ -81,10 +81,10 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.initialCleanUp();
         dataETL = new DataETL();
-        apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackageInstance);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackage);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackage);
 
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
@@ -105,9 +105,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         //Waiting for all the rule execution to be completed.
         waitForBatchExecutionToComplete("StatefulBatchHandler");
         */
-        ruleEngineDataSetup = new RuleEngineDataSetup();
-        ruleEngineDataSetup.initialCleanUp();
-
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
