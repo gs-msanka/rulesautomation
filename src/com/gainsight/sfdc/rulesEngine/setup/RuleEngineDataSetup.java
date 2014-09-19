@@ -66,7 +66,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     private PartnerConnection login() {
         PartnerConnection connection= null;
-        Properties p = loadProperties("./conf/application.properties");
+        Properties p = loadProperties(userDir+"/conf/application.properties");
         String userName  =  p.getProperty("sfdc.username");
         String password = p.getProperty("sfdc.password");
         String securityToken = p.getProperty("sfdc.stoken");
