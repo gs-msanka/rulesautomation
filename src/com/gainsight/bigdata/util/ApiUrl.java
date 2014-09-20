@@ -3,8 +3,8 @@ package com.gainsight.bigdata.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ApiUrl extends NSUrl {
-	
+public class ApiUrl extends NSUrl {
+
 	// ------------------- BASE URLS -------------------
 	public static final String API = "/api";
 	public static final String BASE_REPORTS = API + "/reports";
@@ -12,6 +12,8 @@ public final class ApiUrl extends NSUrl {
 	public static final String BASE_TENANTS = API + "/tenants";
 	public static final String BASE_MIXPANEL = API + "/mixpanel";
 	public static final String BASE_TOKENS = API + "/tokens";
+	public static final String BASE_DS = API + "datascience";
+	public static final String BASE_COLLECTIONS = API + "/collections";
 
 	// ------------------- REPORT URLs -------------------
 	public static final String REPORT_GET_ALL = BASE_REPORTS + "/all";
@@ -25,9 +27,11 @@ public final class ApiUrl extends NSUrl {
 	// ------------------- END -------------------
 
 	// ------------------- COLLECTION URLs -------------------
-	public static final String COLLECTIONS_GET_ALL = API + NS_COL_GET_ALL;
-	public static final String COLLECTIONS_GET = API + NS_COL_GET;
-	public static final String COLLECTIONS_GET_DIMENSION = API + NS_COL_GET_DIMENSION;
+	public static final String COLLECTIONS_GET_ALL = BASE_COLLECTIONS + "/all";
+	// @URL_PARAM1: CollectionID
+	public static final String COLLECTIONS_GET = BASE_COLLECTIONS + URL_PARAM1;
+	// @URL_PARAM1: Collection Name
+	public static final String COLLECTIONS_GET_DIMENSION = BASE_COLLECTIONS + URL_PARAM1 + "/dimensions";
 	// ------------------- END -------------------
 
 	// ------------------- ACCOUNT URLs -------------------
@@ -56,12 +60,27 @@ public final class ApiUrl extends NSUrl {
 	public static final String TENANT_AUTO_PROVISIONING = BASE_TENANTS + "/provision";
 	// ------------------- END -------------------
 
+	// --------------- DATA SCIENCE URLs-----------------
+	public static final String DS_SAVE_CONFIG = BASE_DS + "/configuration";
+	public static final String DS_GET_CONFIG = BASE_DS + "/configuration" + URL_PARAM1;
+	public static final String DS_UPDATE_CONFIG = BASE_DS + "/configuration" + URL_PARAM1;
+	public static final String DS_DELTE_CONFIG = BASE_DS + "/configuration" + URL_PARAM1;
+	public static final String DS_GET_ALL_CONFIG = BASE_DS + "/configuration";
+	// @URL_PARAM1:dataModelID
+	public static final String DS_SAVE_N_EXEC = BASE_DS + URL_PARAM1 + "/saveandexecute";
+	// @URL_PARAM1:dataModelID
+	public static final String DS_REMOVE_SCHEDULE = BASE_DS + "/configuration" + URL_PARAM1 + "/removeschedule";
+	// @URL_PARAM1:dataModelID
+	public static final String DS_UPDATE_OUTPUT = BASE_DS + "/configuration" + URL_PARAM1 + "/output";
+	public static final String DS_REMOVE_AUTHTOKEN = BASE_DS + "/done";
+	// ------------------- END -------------------
+
 	public static List<String> getApiList = new ArrayList<String>();
 	public static List<String> postApiList = new ArrayList<String>();
 	public static List<String> putApiList = new ArrayList<String>();
 	public static List<String> deleteApiList = new ArrayList<String>();
 
-	public static void getAllApiUrlsWithReqType() {
+	public static void loadApiUrls() {
 
 		// Add Report API URLs
 		getApiList.add(REPORT_GET_ALL);
@@ -89,5 +108,16 @@ public final class ApiUrl extends NSUrl {
 		deleteApiList.add(ACC_DELETE_MIXPANEL_PROJ);
 		deleteApiList.add(DELETE_SEGMENT_PROJ);
 		postApiList.add(CREATE_SEGMENT_PROJ);
+
+		// Add Data Science API URLs
+		postApiList.add(DS_SAVE_CONFIG);
+		getApiList.add(DS_GET_CONFIG);
+		putApiList.add(DS_UPDATE_CONFIG);
+		deleteApiList.add(DS_DELTE_CONFIG);
+		getApiList.add(DS_GET_ALL_CONFIG);
+		postApiList.add(DS_SAVE_N_EXEC);
+		deleteApiList.add(DS_REMOVE_SCHEDULE);
+		putApiList.add(DS_UPDATE_OUTPUT);
+		postApiList.add(DS_REMOVE_AUTHTOKEN);
 	}
 }
