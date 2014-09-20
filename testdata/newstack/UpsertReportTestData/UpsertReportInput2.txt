@@ -1,37 +1,39 @@
 {
-    "TenantId": "e51d3578-a68d-4ecf-add2-ee971c50634f",
-    "ReportInfo": [
+  "ReportInfo": [
+    {
+      "SchemaName": "QATestData",
+      "CollectionID": "8d405860-d6ec-46a1-8401-438ff0f635f4",
+      "limit": 500,
+      "Type": "adhoc",
+      "Dimensions": [
         {
-            "SchemaName": "Angies.UsageData",
-            "CollectionID": "20d2e26d-7123-490a-b863-6d478f3f5e24",
-            "limit": 500,
-            "Type": "adhoc",
-            "Dimensions": [
-                {
-                    "col": "Category",
-                    "axis": "row"
-                },
-                {
-                    "col": "Year",
-                    "axis": "column"
-                },
-                {
-                    "col": "WebRevenue",
-                    "axis": "measure",
-                    "agg_func": "sum"
-                },
-                {
-                    "col": "TotalReviews",
-                    "axis": "measure",
-                    "agg_func": "sum"
-                }
-            ],
-            "ReportReadLimit": 0,
-            "DimensionBrowserReadLimit": 0,
-            "SortField": "",
-            "SortOption": "asc",
-            "reportName": "AutBurpReport2",
-            "ReportId": ""
+          "col": "companyname",
+          "axis": "row",
+          "type": 0
+        },
+        {
+          "col": "pubrevenue",
+          "axis": "measure",
+          "type": 1,
+          "agg_func": "sum"
+        },
+        {
+          "col": "currentreviews",
+          "axis": "measure",
+          "type": 1,
+          "agg_func": "sum"
+        },
+        {
+          "col": "startdate",
+          "axis": "column",
+          "type": 0
         }
-    ]
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000,
+      "ReportId": "cf286c13-2371-436f-a9b9-85636968717a",
+      "reportName": "Automation Report2"
+    }
+  ],
+  "displayType": "GRID"
 }
