@@ -12,15 +12,18 @@ public class NsResponseObj {
 
 	private Map data;
 
+	private String requestId;
+
 	public NsResponseObj() {
 	}
-	
+
 	public NsResponseObj(boolean result, Map data, String errorCode,
-			String errorDesc) {
+			String errorDesc, String requestId) {
 		this.result = result;
 		this.data = data;
 		this.errorCode = errorCode;
 		this.errorDesc = errorDesc;
+		this.requestId = requestId;
 	}
 
 	private String errorCode;
@@ -62,6 +65,14 @@ public class NsResponseObj {
 
 	public void setData(Map data) {
 		this.data = data;
+	}
+
+	public String getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
 	}
 
 }

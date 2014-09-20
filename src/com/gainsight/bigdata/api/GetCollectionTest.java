@@ -1,9 +1,9 @@
 package com.gainsight.bigdata.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.File;
+import java.io.IOException;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -11,80 +11,52 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
-import com.gainsight.bigdata.pojo.CollectionInfo;
-import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
-import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
 
 public class GetCollectionTest extends TestBase {
 
 	String baseuri;
+	String testDataLoc = testDataBasePath;
 
 	@BeforeClass
 	public void setUp() throws Exception {
 		init();
-		baseuri = PropertyReader.nsAppUrl + "/admin/collections/";
+		baseuri = PropertyReader.nsAppUrl + ApiUrl.COLLECTIONS_GET;
+		baseuri = ApiUrl.setURLParam(baseuri, "8d405860-d6ec-46a1-8401-438ff0f635f4");
 	}
-	
+
 	@Test
 	public void getCollection() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
-		
-		//TestData to Compare
-		CollectionInfo cinfo = new CollectionInfo();
-		//cinfo.setCollectionName("SampleCollection");
-		Columns col = cinfo.new Columns();
-		col.setDisplayName("Name");
-		col.setDatatype("string");
-		col.setHidden(false);
-		//col.setIndexable(0);
-		col.setColattribtype(0);
-		
-		List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
-		colList.add(col);
-		cinfo.setColumns(colList);
-		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(cinfo));
-		
 		HttpResponseObj result = wa.doGet(baseuri, h.getAllHeaders());
 		Report.logInfo(result.toString());
-		
-		JsonNode node = mapper.readTree(result.getContent());
-		JsonNode outputNode  = node.findValue("Columns");
-		
-		Assert.assertNotNull(outputNode, "No Data Found for Columns");
-		Report.logInfo("PRINTING OUTPUT: "  + outputNode.toString());
-		Assert.assertTrue(outputNode.equals(inputNode), "The Collection Response didn't Match");
+		String expectedJson = mapper.readTree(new File(testDataLoc + "/collectionmaste.txt")).toString();
+
+		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
+				"Expected and Actual Json not match. Format/Values are wrong");
 	}
-	
-	@Test
-	public void getCollectionForInvalidTenantId() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/getcollection/asdasdas/ALL";
-		Report.logInfo(uri);
-		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
-		Report.logInfo(result.toString());
-		ObjectMapper mapper = new ObjectMapper();
-		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
-		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
-	}
-	
-	@Test
-	public void getCollectionForInvalidAuthHeader() throws Exception {
-		Header h = new Header();
-		h.addHeader("Content-Type", "application/json");
-		h.addHeader("authToken", "AddingGarbage");
-		h.addHeader("Origin", origin);
-		
-		HttpResponseObj result = wa.doGet(baseuri, h.getAllHeaders());
-		Report.logInfo(result.toString());
-		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");
-	}
-	
+
 	@AfterClass
 	public void tearDown() {
-		
+
+	}
+
+	private boolean jsonOutputCompare(String actual, String expected)
+			throws JsonProcessingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode tree1 = mapper.readTree(actual).get("data");
+		JsonNode tree2 = mapper.readTree(expected).get("data");
+		if (tree1.equals(tree2)) {
+			Report.logInfo("Report output Matched");
+			return true;
+		} else {
+			Report.logInfo("Report output Did Not Match. Expected JSON:\n"
+					+ expected + "\n Actual JSON:" + actual);
+			return false;
+		}
 	}
 }

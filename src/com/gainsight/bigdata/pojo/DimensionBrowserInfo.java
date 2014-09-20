@@ -1,32 +1,35 @@
 package com.gainsight.bigdata.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class DimensionBrowserInfo {
 
-	@JsonProperty("TenantId")
-	String tenantId;
-	@JsonProperty("CollectionName")
-	String collectionName;
-	@JsonProperty("Column")
-	String column;
-	
-	public String getTenantId() {
-		return tenantId;
+	@JsonProperty("DimensionBrowserReadLimit")
+	int dimBrowReadLimit = 1000;
+
+	@JsonProperty("columns")
+	List<String> columns;
+
+	public int getDimBrowReadLimit() {
+		return dimBrowReadLimit;
 	}
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+
+	public void setDimBrowReadLimit(int dimBrowReadLimit) {
+		this.dimBrowReadLimit = dimBrowReadLimit;
 	}
-	public String getCollectionName() {
-		return collectionName;
+
+	public List<String> getColumns() {
+		return columns;
 	}
-	public void setCollectionName(String collectionName) {
-		this.collectionName = collectionName;
-	}
-	public String getColumn() {
-		return column;
-	}
+
 	public void setColumn(String column) {
-		this.column = column;
+		if (columns == null) {
+			columns = new ArrayList<>();
+		}
+		this.columns.add(column);
 	}
+
 }

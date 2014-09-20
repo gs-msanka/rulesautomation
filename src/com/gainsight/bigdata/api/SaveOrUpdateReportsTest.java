@@ -15,7 +15,7 @@ import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pojo.HttpResponseObj;
 
-public class UpsertReportTest extends TestBase {
+public class SaveOrUpdateReportsTest extends TestBase {
 
 	String baseuri;
 	String testDataLoc = testDataBasePath + "/UpsertReportTestData/";
