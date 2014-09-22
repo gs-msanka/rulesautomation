@@ -141,8 +141,8 @@ public class BurpSuiteTest extends TestBase {
 	public void dimensionBrowser() throws Exception {
 		String uri = PropertyReader.nsAppUrl + "/dimenbrowser";
 		DimensionBrowserInfo info = new DimensionBrowserInfo();
-		info.setTenantId(nsinfo.getTenantID());
-		info.setCollectionName("AutCollection1");
+		/*info.setTenantId(nsinfo.getTenantID());
+		info.setCollectionName("AutCollection1");*/
 		info.setColumn("Year");
 		
 		ObjectMapper mapper = new ObjectMapper();
