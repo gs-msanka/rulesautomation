@@ -65,7 +65,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
-
         basepage.login();
         isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
@@ -78,16 +77,16 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         createFieldsOnUsageData();
         MetadataUtil metadataUtil =  new MetadataUtil();
         metadataUtil.createFieldsOnAccount();
-        ruleEngineDataSetup = new RuleEngineDataSetup();
-        ruleEngineDataSetup.initialCleanUp();
-        dataETL = new DataETL();
         apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackage);
         apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackage);
-
+        ruleEngineDataSetup = new RuleEngineDataSetup();
+        ruleEngineDataSetup.cleanDataSetup();
+        dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
+
 
         //Run all the rules one by one, Do Assertions in test cases.
         /*
@@ -316,7 +315,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     }
 
     private void cohabit(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
+        ruleEngineDataSetup.cleanDataSetup();
         ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
         ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
         try {

@@ -80,7 +80,7 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
         apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackage);
         apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackage);
         ruleEngineDataSetup = new RuleEngineDataSetup();
-        ruleEngineDataSetup.initialCleanUp();
+        ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);
@@ -295,7 +295,7 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
     }
 
     private void cohabit(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        ruleEngineDataSetup.deleteRuleAlertAndCTA();
+        ruleEngineDataSetup.cleanDataSetup();
         ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
         ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
         try {

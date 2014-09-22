@@ -229,28 +229,8 @@ public class RuleEngineDataSetup extends BaseTest {
     /**
      * Delete all the Rules, Alerts, CTAs that are setup in the org.
      */
-    public void initialCleanUp() {
+    public void cleanDataSetup() {
         apex.runApexCodeFromFile(CLEANUP_FILE, isPackage);
-    }
-
-    public void deleteAlertsAndCTA() {
-        String query = "Delete [Select Id from JBCXM__Alert__c]; \n" +
-                        "Delete [Select Id from JBCXM__CTA__C];";
-        apex.runApex(resolveStrNameSpace(query));
-    }
-
-    /**
-     * Delete all the rules, Alerts, CTAs that are setup in the org.
-     */
-    public void deleteRuleAlertAndCTA() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Delete [Select Id from JBCXM__AutomatedAlertRules__c ];");
-        stringBuilder.append("\n");
-        stringBuilder.append("Delete [select id from JBCXM__Alert__c where JBCXM__Account__r.AccountNumber = 'RulesAccount'];");
-        stringBuilder.append("\n");
-        stringBuilder.append("Delete [select id from JBCXM__CTA__c where JBCXM__Account__r.AccountNumber = 'RulesAccount'];");
-        stringBuilder.append("\n");
-        apex.runApex(resolveStrNameSpace(stringBuilder.toString()));
     }
 
     private HashMap<String, String> getPickListSetupData() {
