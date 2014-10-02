@@ -68,7 +68,7 @@ public class BaseTest {
                 basepage.login();
                 if ((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
                     basepage.setDefaultApplication("Gainsight");
-                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight, Transactions, Cockpit, Gainsight");
+                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight, Transactions, Cockpit, Gainsight, Actions");
                 }
                 if (loadDefaultData != null && loadDefaultData.equals("true")) {
                     basepage.loadDefaultData();
