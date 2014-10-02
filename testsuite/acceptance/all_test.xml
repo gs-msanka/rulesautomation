@@ -22,10 +22,6 @@
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
-            <class name="com.gainsight.sfdc.customer360.test.Alerts360Test" />
-            <class name="com.gainsight.sfdc.customer360.test.Events360Test" />
-            <class name="com.gainsight.sfdc.retention.tests.AlertsTests"/>
-            <class name="com.gainsight.sfdc.retention.tests.EventsTests"/>
 
 
         </classes>
