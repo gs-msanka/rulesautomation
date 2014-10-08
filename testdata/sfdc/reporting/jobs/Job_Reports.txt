@@ -1,0 +1,14 @@
+{
+    "jobName": "Load Reports",
+    "jobType" : "UsageData",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__UIViews__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "/testdata/sfdc/reporting/data/Reports.csv"
+    }
+}

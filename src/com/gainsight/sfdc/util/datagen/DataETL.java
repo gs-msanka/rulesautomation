@@ -65,7 +65,7 @@ public class DataETL implements IJobExecutor {
 			//Step 4
 			//Decide which job to execute
 			//Currently hard-coding to Job1
-			jobInfo = mapper.readValue(new FileReader(resDir + "jobs/Job_Insert_SurveyUserAnswers"), JobInfo.class);
+			jobInfo = mapper.readValue(new FileReader( "./testdata/sfdc/reporting/jobs/Job_Reports.txt"), JobInfo.class);
 			gen.init();
 			gen.execute(jobInfo);
 			
