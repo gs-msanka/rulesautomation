@@ -48,7 +48,7 @@ public class AdminAuthTest extends TestBase {
 				Report.logInfo("GET:" + url);
 				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("GET:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -66,7 +66,7 @@ public class AdminAuthTest extends TestBase {
 				Report.logInfo("POST:" + url);
 				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -84,7 +84,7 @@ public class AdminAuthTest extends TestBase {
 				Report.logInfo("PUT:" + url);
 				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -102,7 +102,7 @@ public class AdminAuthTest extends TestBase {
 				Report.logInfo("DELETE:" + url);
 				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("DELETE:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -120,10 +120,9 @@ public class AdminAuthTest extends TestBase {
 				Header header = (Header) headers.next();
 				Report.logInfo("GET:" + url + "\t" + header.toString());
 				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("Missing Param:" + headerTestData.invalidHeaderType[i++] + "\tGET:" + url
-							+ " ResCode:"
-							+ result.getStatusCode() + "\tHeaders:" + header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -140,10 +139,9 @@ public class AdminAuthTest extends TestBase {
 				Header header = (Header) headers.next();
 				Report.logInfo("POST:" + url);
 				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("Missing Param:" + headerTestData.invalidHeaderType[i++] + "\tPOST:" + url
-							+ " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -160,10 +158,9 @@ public class AdminAuthTest extends TestBase {
 				Header header = (Header) headers.next();
 				Report.logInfo("PUT:" + url);
 				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("Missing Param:" + headerTestData.invalidHeaderType[i++] + "\tPUT:" + url
-							+ " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -180,16 +177,16 @@ public class AdminAuthTest extends TestBase {
 				Header header = (Header) headers.next();
 				Report.logInfo("DELETE:" + url);
 				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("Missing Param:" + headerTestData.invalidHeaderType[i++] + "\tDELETE:" + url
-							+ " ResCode:" + result.getStatusCode() + "\tHeaders:" + header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
 		Assert.assertEquals(failList.size(), 0, failList.toString());
 	}
 
-	@Test
+	/*@Test
 	public void testCollectionURLAuthInvalid() throws Exception {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> uris = AdminUrl.collectionApiList.iterator(); uris.hasNext();) {
@@ -198,16 +195,16 @@ public class AdminAuthTest extends TestBase {
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = ((Header) headers.next()).deepClone();
 				header.removeHeader("contextTenantId");
-				Report.logInfo("GET:" + url);
+				Report.logInfo("Col:" + url);
 				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("Missing Param:" + headerTestData.invalidHeaderType[i++] + "\tGET:" + url
-							+ " ResCode:" + result.getStatusCode() + "\tHeaders:" + header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
 		Assert.assertEquals(failList.size(), 0, failList.toString());
-	}
+	}*/
 
 	@Test
 	public void testPostReqTypeCheckInvalid() throws Exception {
@@ -217,7 +214,7 @@ public class AdminAuthTest extends TestBase {
 			Report.logInfo("POST:" + url);
 			HttpResponseObj result = wa.doPost(url, "{a}", h.getAllHeaders());
 			if (result.getStatusCode() != 400) {
-				failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+				failList.add("POST:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
 						+ h.toString() + "\n");
 			}
 		}
@@ -232,7 +229,7 @@ public class AdminAuthTest extends TestBase {
 			Report.logInfo("PUT:" + url);
 			HttpResponseObj result = wa.doPut(url, "{a}", h.getAllHeaders());
 			if (result.getStatusCode() != 400) {
-				failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+				failList.add("PUT:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
 						+ h.toString() + "\n");
 			}
 		}

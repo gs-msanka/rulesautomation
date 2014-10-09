@@ -18,10 +18,11 @@ public class DynamicHeadersTestData {
 	String reqTypeAuthToken = "authToken";
 	String reqTypeSession = "session";
 	String reqTypeAdmin = "admin";
+	String contentType = "Content-Type";
 
 	List<Header> invalidHeadersList = new ArrayList<>();
 	List<Header> validHeadersList = new ArrayList<>();
-	public String[] invalidHeaderType = new String[] { appOrgId, appSessionId, appUserId, Origin, authToken, Origin };
+	public String[] invalidHeaderType = new String[10];
 
 	String[] headerNamesSessionType = { appOrgId, appSessionId, appUserId, Origin };
 	String[] headerNamesAuthType = { authToken, Origin };
@@ -51,15 +52,16 @@ public class DynamicHeadersTestData {
 				newHeader.addHeader(element.getName(), element.getValue());
 			}
 		}
+		newHeader.addHeader(contentType, "application/json");
 		return newHeader;
 	}
 
 	public void prepareHeaderSetInvalid(Header header, String[] nameArray) {
 		for (int i = 0; i < nameArray.length; i++) {
 			Header element = (Header) header.deepClone();
-			element.removeHeader(headerNamesSessionType[i]);
+			element.removeHeader(nameArray[i]);
 			invalidHeadersList.add(element);
-			invalidHeaderType[i] = headerNamesSessionType[i];
+			invalidHeaderType[i] = nameArray[i];
 		}
 
 	}

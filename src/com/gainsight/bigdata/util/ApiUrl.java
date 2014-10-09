@@ -12,7 +12,7 @@ public class ApiUrl extends NSUrl {
 	public static final String BASE_TENANTS = API + "/tenants";
 	public static final String BASE_MIXPANEL = API + "/mixpanel";
 	public static final String BASE_TOKENS = API + "/tokens";
-	public static final String BASE_DS = API + "datascience";
+	public static final String BASE_DS = API + "/datascience";
 	public static final String BASE_COLLECTIONS = API + "/collections";
 
 	// ------------------- REPORT URLs -------------------
@@ -88,7 +88,7 @@ public class ApiUrl extends NSUrl {
 		postApiList.add(REPORT_RUN);
 		putApiList.add(REPORT_SAVE);
 		deleteApiList.add(REPORT_DELETE);
-		// postApiList.add(REPORT_EXPORT_XSL);
+		postApiList.add(REPORT_EXPORT_XSL);
 
 		// Add Collection API URLs */
 		getApiList.add(COLLECTIONS_GET_ALL);

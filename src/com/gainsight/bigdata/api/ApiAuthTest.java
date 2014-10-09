@@ -24,6 +24,7 @@ public class ApiAuthTest extends TestBase {
 	String version;
 	List<Header> invalidHeadersList;
 	List<Header> validHeadersList;
+	DynamicHeadersTestData headerTestData = new DynamicHeadersTestData();
 
 	@Parameters("version")
 	@BeforeClass
@@ -32,7 +33,6 @@ public class ApiAuthTest extends TestBase {
 		host = PropertyReader.nsAppUrl;
 		init();
 		ApiUrl.loadApiUrls();
-		DynamicHeadersTestData headerTestData = new DynamicHeadersTestData();
 		invalidHeadersList = headerTestData.getHeadersInvalid(h);
 		validHeadersList = headerTestData.getHeadersValid(h);
 	}
@@ -47,7 +47,7 @@ public class ApiAuthTest extends TestBase {
 				Report.logInfo("GET:" + url);
 				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("GET:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -65,7 +65,7 @@ public class ApiAuthTest extends TestBase {
 				Report.logInfo("POST:" + url);
 				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -83,7 +83,7 @@ public class ApiAuthTest extends TestBase {
 				Report.logInfo("PUT:" + url);
 				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -101,7 +101,7 @@ public class ApiAuthTest extends TestBase {
 				Report.logInfo("DELETE:" + url);
 				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
-					failList.add("DELETE:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
 				}
 			}
@@ -114,13 +114,14 @@ public class ApiAuthTest extends TestBase {
 		List<String> failList = new ArrayList<String>();
 		for (Iterator<String> uris = ApiUrl.getApiList.iterator(); uris.hasNext();) {
 			String url = host + version + ((String) uris.next());
+			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("GET:" + url);
+				Report.logInfo("GET:" + url + "\t" + header.toString());
 				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("GET:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -132,13 +133,14 @@ public class ApiAuthTest extends TestBase {
 		List<String> failList = new ArrayList<String>();
 		for (Iterator<String> iterator = ApiUrl.postApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
+			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("POST:" + url);
+				Report.logInfo("POST:" + url + "\t" + header.toString());
 				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -150,13 +152,14 @@ public class ApiAuthTest extends TestBase {
 		List<String> failList = new ArrayList<String>();
 		for (Iterator<String> iterator = ApiUrl.putApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
+			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("PUT:" + url);
+				Report.logInfo("PUT:" + url + "\t" + header.toString());
 				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -168,13 +171,14 @@ public class ApiAuthTest extends TestBase {
 		List<String> failList = new ArrayList<String>();
 		for (Iterator<String> iterator = ApiUrl.deleteApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
+			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("DELETE:" + url);
+				Report.logInfo("DELETE:" + url + "\t" + header.toString());
 				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
-				if (result.getStatusCode() != 403) {
-					failList.add("DELETE:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
-							+ header.toString() + "\n");
+				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
+					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
+							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
 				}
 			}
 		}
@@ -189,7 +193,7 @@ public class ApiAuthTest extends TestBase {
 			Report.logInfo("POST:" + url);
 			HttpResponseObj result = wa.doPost(url, "{a}", h.getAllHeaders());
 			if (result.getStatusCode() != 400) {
-				failList.add("POST:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+				failList.add("POST:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
 						+ h.toString() + "\n");
 			}
 		}
@@ -204,7 +208,7 @@ public class ApiAuthTest extends TestBase {
 			Report.logInfo("PUT:" + url);
 			HttpResponseObj result = wa.doPut(url, "{a}", h.getAllHeaders());
 			if (result.getStatusCode() != 400) {
-				failList.add("PUT:" + url + " ResCode:" + result.getStatusCode() + "\tHeaders:"
+				failList.add("PUT:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
 						+ h.toString() + "\n");
 			}
 		}
