@@ -4,10 +4,14 @@ import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.ApexUtil;
+import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.utils.TestDataHolder;
+
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -27,6 +31,8 @@ public class BaseTest {
             + generatePath(dirs);
     public static SOQLUtil soql = new SOQLUtil();
     public ApexUtil apex = new ApexUtil();
+    //public MongoUtil mUtil =  new MongoUtil();
+    public SFDCInfo sfinfo=SFDCUtil.fetchSFDCinfo();
     protected static BasePage basepage;
     public static String userLocale;
     public static TimeZone userTimezone;
@@ -75,7 +81,6 @@ public class BaseTest {
                 }
                 basepage.logout();
             }
-
         } catch (Exception e) {
             env.stop();
             Report.logInfo(e.getLocalizedMessage());

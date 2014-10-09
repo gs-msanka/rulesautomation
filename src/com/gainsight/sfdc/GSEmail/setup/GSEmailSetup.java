@@ -19,6 +19,7 @@ import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.MongoUtil;
 import com.gainsight.webaction.WebAction;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.mongodb.ServerAddress;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -36,8 +37,7 @@ public class GSEmailSetup extends BasePage {
 	private String OrgName;
 	static BaseTest bt = new BaseTest();
 	
-	public void updateNSURLInAppSettings() {
-		String NSURL = env.getProperty("ns.appurl");
+	public void updateNSURLInAppSettings(String NSURL) {
 		System.out.println("setting ns url in app settings");
 		bt.soql.getRecordCount("select id from JBCXM__ApplicationSettings__c");
 		bt.apex.login(env.getUserName(), env.getUserPassword(),env.getProperty("sfdc.stoken"));
@@ -58,13 +58,20 @@ public class GSEmailSetup extends BasePage {
 
 	// doing via UI...will change as and when the UI code changes!
 	// backend automation seems to be complicated :(
-	public void enableOAuthForOrg() {
+	public boolean enableOAuthForOrg() {
+		try{
 		AdministrationBasePage admin = clickOnAdminTab();
 		AdminIntegrationPage integ = admin.clickOnIntegrationLink();
 		integ.clickOnEnableGSMDP();
 		amtDateUtil.stalePause();
 		amtDateUtil.stalePause();
 		integ.clickOnAuthorize();
+		return true;
+		}
+		catch(ElementNotFoundException ex){
+			ex.printStackTrace();
+			return false;			
+		}
 	}
 
 	public boolean validateOAuthEnabled() {
@@ -81,7 +88,7 @@ public class GSEmailSetup extends BasePage {
 			hdrs.addHeader("appUserId", userId);
 			hdrs.addHeader("appSessionId", sessionid);
 			System.out.println("endpoint:" + sfinfo.getEndpoint());
-			//"https://jbcxm.na10.visual.force.com"String SFInstance=sfinfo.getEndpoint().split("https://")[1].split("\\.")[0];
+			//"https://jbcxm.na10.visual.force.com"
 			String SFInstance=sfinfo.getEndpoint().split("https://")[1].split("\\.")[0];
 			String OriginHeader="";
 			if(isPackaged)
@@ -152,7 +159,7 @@ public class GSEmailSetup extends BasePage {
 								"List<JBCXM__ApplicationSettings__c> appSet= [select id,JBCXM__AccessKeys__c from JBCXM__ApplicationSettings__c];"+
 								"appSet[0].JBCXM__AccessKeys__c='{\"gainsightEmailKey\":\"'+encoded+'\"}';"+
 								"upsert appSet;", isPackaged);	
-			checkSubAccountInMandrill("fi_h5Ag1dOmqYFV79aYcTA", TenantId, OrgName);
+			//checkSubAccountInMandrill("fi_h5Ag1dOmqYFV79aYcTA", TenantId, OrgName);
 							
 			} 
 			else System.out.println("error in fetching Accesskey!!...could not update the ");
@@ -255,7 +262,10 @@ public class GSEmailSetup extends BasePage {
 		System.out.println("statuscode==" + httpResp.getStatusCode());
 		String status=httpResp.getContent().split("\"status\":")[1].split(",")[0];
 		String name=httpResp.getContent().split("\"name\":\"")[1].split("\"")[0];
-		if(status.equals("active") && name.equals(OrgName)) { System.out.println("found account in mandrill");return true;}
+		System.out.println("why God why!!!..."+name.compareTo(OrgName));
+		System.out.println("name="+name.getBytes("UTF-8"));
+		System.out.println("orgname="+OrgName.getBytes("UTF-8"));
+		if(status.equals("\"active\"") && name.equals(OrgName)) { System.out.println("found account in mandrill");return true;}
 		else return false;
 	}
 
