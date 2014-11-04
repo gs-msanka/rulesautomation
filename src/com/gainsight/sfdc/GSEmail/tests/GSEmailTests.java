@@ -62,8 +62,7 @@ public class GSEmailTests extends BaseTest {
 		gse.enableOAuthForOrg();
 		gse.createSurveyWithGSEmail();
 		gse.sendTestEmail();
-		gse.deleteOldEmailActivityLogFromMongo();
-	
+		gse.deleteOldEmailActivityLogFromMongo();	
 	}
 	
 	 @AfterClass
