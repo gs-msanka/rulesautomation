@@ -109,7 +109,7 @@ public class BasePage extends WebPage implements Constants {
         return new RetentionBasePage();
     }
     
-    public WorkflowBasePage clickonWorkflowTab(){
+    public WorkflowBasePage clickOnWorkflowTab(){
     	clickOnTab(WORKFLOW_TAB);
     	return new WorkflowBasePage();
     }
@@ -205,21 +205,23 @@ public class BasePage extends WebPage implements Constants {
         item.click("DevTools_icon");
         wait.waitTillElementDisplayed("TabSet_font", MIN_TIME, MAX_TIME);
         item.click("TabSet_font");
-        wait.waitTillElementDisplayed("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]", MIN_TIME, MAX_TIME);
-        item.click("//table[@class='list']/descendant::a[contains(text(), 'Gainsight')]");
+        wait.waitTillElementDisplayed("//table[@class='list']/descendant::a[contains(text(), '"+appName+"')]", MIN_TIME, MAX_TIME);
+        item.click("//table[@class='list']/descendant::a[contains(text(), '"+appName+"')]");
         wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
         item.click("//input[@title='Edit' and @name ='edit']");
         wait.waitTillElementDisplayed("//input[@type='submit' and @name='save']", MIN_TIME, MAX_TIME);
         Select multiDropDown = new Select(element.getElement("duel_select_0"));
         String[] tabsList = tabs.split(",");
+        env.setTimeout(1);
         for(String tabName : tabsList) {
             try {
                 multiDropDown.selectByVisibleText(tabName.trim());
                 item.click("//img[@class='rightArrowIcon' and @title='Add']");
             } catch (Exception e) {
-                Report.logInfo("The Following tab is not available : " +tabName);
+                Report.logInfo("The Following tab is not available : " +tabName + " (or) added to application already");
             }
         }
+        env.setTimeout(30);
         item.click("overwrite_user_setting");
         item.click("//input[@type='submit' and @name='save']");
         wait.waitTillElementDisplayed("//input[@title='Edit' and @name ='edit']", MIN_TIME, MAX_TIME);
@@ -234,18 +236,19 @@ public class BasePage extends WebPage implements Constants {
         String a = "//a[contains(@class, 'menuButtonMenuLink') and contains(text(), 'Gainsight')]";
         try{
             item.click(a);
-            wait.waitTillElementDisplayed(SUREVEY_TAB, MIN_TIME, MAX_TIME);
+            wait.waitTillElementDisplayed(CUSTOMER_TAB, MIN_TIME, MAX_TIME);
         } catch (Exception e) {
             String a1 = "//span[@id='tsidLabel' and contains(text(), 'Gainsight')]";
             if(element.isElementPresent(a1)) {
                 Report.logInfo("Gainsight application is not available to select");
             }
         }
-        clickOnSurveyTab();
+        clickOnCustomersTab();
 		URI uri=new URI(driver.getCurrentUrl());
 		String hostName="https://"+uri.getHost();
 		driver.get(hostName+"/apex/loadsetupdata");
 		String intializeButton="//input[@value='INITIALIZE']";
+        env.setTimeout(2);
 		if(element.isElementPresent(intializeButton)){
 			item.click(intializeButton);
 			wait.waitTillElementDisplayed("loadSetupDatatable", MIN_TIME, MAX_TIME);
@@ -267,8 +270,9 @@ public class BasePage extends WebPage implements Constants {
 			item.click(loadButton);
 			wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
 		}
-        driver.get(hostName+"/apex/SurveyList");
-        wait.waitTillElementDisplayed("//input[@class='btn dummyNewSurveyBtn']", MIN_TIME, MAX_TIME);
+        driver.get(hostName+"/apex/Customers");
+        wait.waitTillElementDisplayed("//a[@data-tab='CUSTOMERS']", MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
 
 	}
 
