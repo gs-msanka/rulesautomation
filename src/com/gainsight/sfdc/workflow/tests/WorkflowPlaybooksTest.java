@@ -11,10 +11,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import com.gainsight.pageobject.core.*;
-import com.gainsight.sfdc.retention.pages.PlayBooksPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPlaybooksPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
@@ -31,7 +27,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         Report.logInfo("Starting Playbook Test Case...");
         apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Playbook__c LIMIT 8000];"));
         basepage.login();
-        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         
     }
     
@@ -47,7 +43,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN addPlaybookTypeRisk method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Risk");
-//         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
          WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
          HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
          HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -60,7 +56,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     @Test
     public void editPlaybookTypeRisk() throws BiffException, IOException {
     	System.out.println("IN editPlaybookTypeRisk method");
-//    	WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
     	WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
@@ -78,7 +74,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     public void deletePlaybookTypeRisk() throws BiffException, IOException {
     	System.out.println("IN deletePlaybookTypeRisk method1");
 //    	try{
-//    		WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//    		WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
     	WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
     		HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                     TESTDATA_DIR + "PlaybookTests.xls", "Risk");
@@ -105,7 +101,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN addPlaybookTypeEvent method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Event");
-//         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
     	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
          HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
          HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -121,7 +117,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
         
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -138,7 +134,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN deletePlaybookTypeEvent method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
@@ -153,7 +149,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN addPlaybookTypeOpportunity method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
-//         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
     	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
          HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
          HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -169,7 +165,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
         
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -186,7 +182,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN deletePlaybookTypeOpportunity method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
@@ -201,7 +197,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN addPlaybookTypeAll method");
     	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                  TESTDATA_DIR + "PlaybookTests.xls", "All");
-//         WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
     	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
          HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
          HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -217,7 +213,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "All");
         
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
@@ -234,7 +230,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	System.out.println("IN deletePlaybookTypeAll method");
         HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "All");
-//        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
@@ -250,7 +246,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     	List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
     	HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
                 TESTDATA_DIR + "PlaybookTests.xls", "Tasks");
-        WorkflowPlaybooksPage pbPage = basepage.clickonWorkflowTab().clickOnPlaybooksTab();
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
         taskDataList.add(getMapFromData(testdata.get("task1")));
