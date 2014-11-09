@@ -6,13 +6,14 @@ import com.sforce.soap.metadata.Workflow;
 
 public class WorkflowBasePage extends BasePage {
 	
+	private static final String CREATE_FORM_CUSTOMER_LINK = null;
 	private final String READY_INDICATOR   			= "//input[contains(@class, 'searchTxt form-control global-search')]";
 	private final String LIST_VIEW_TAB         		= "//a[@data-type='LIST']";
     private final String CALENDAR_VIEW_TAB         	= "//a[@data-type='CALENDAR']";
     private final String PLAYBOOKS_TAB     			= "//a[@class='workflow-playbooks require-tooltip']";
     private final String SHOW_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_show']";		//show salesforce header
 	private final String HIDE_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_hide']";		//hide salesforce header
-
+  
     public WorkflowBasePage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
@@ -46,4 +47,6 @@ public class WorkflowBasePage extends BasePage {
     	wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     	Report.logInfo("Ended Method - showSalesForceHeader.");
     }
+    
+   
 }

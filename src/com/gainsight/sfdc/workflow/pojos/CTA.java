@@ -18,7 +18,8 @@ public class CTA {
     private int taskCount;
     private String assignee;
     private List<Att> attributes;
-
+    private boolean isRecurring;
+    
     public String getStatus() {
         return status;
     }
@@ -50,7 +51,15 @@ public class CTA {
     public void setCustomer(String customer) {
         this.customer = customer;
     }
-
+    
+    public void setIsRecurring(boolean isRecurring){
+    	this.isRecurring=isRecurring;
+    }
+    
+    public boolean getIsRecurring(){
+    	return isRecurring;
+    }
+    
     public String getReason() {
         return reason;
     }
