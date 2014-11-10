@@ -33,16 +33,16 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
 
     //Form Page Elements
-    private final String CREATE_CTA_ICON="//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
-    private final String CREATE_RISK_LINK="//a[@data-action='RISK']";
-    private final String CREATE_OPPOR_LINK="//a[@data-action='OPPORTUNITY']";
-    private final String CREATE_EVENT_LINK="//a[@data-action='EVENT']";
-    private final String RISK_CTA_FORM_TITLE="//span[text()='Add Risk']";
-    private final String OPPO_CTA_FORM_TITLE="//span[text()='Add Opportunity']";
-    private final String EVENT_CTA_FORM_TITLE="//span[text()='Add Event']";
-    private final String CREATE_FORM_SUBJECT="//input[@class='form-control cta-subject']";
-    private final String CREATE_FORM_CUSTOMER="//input[@class='form-control strcustomer ui-autocomplete-input']";
-	private final String CREATE_FORM_REASON ="//div[@class='col-md-9']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";// "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String CREATE_CTA_ICON    = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
+    private final String CREATE_RISK_LINK   = "//a[@data-action='RISK']";
+    private final String CREATE_OPPOR_LINK  = "//a[@data-action='OPPORTUNITY']";
+    private final String CREATE_EVENT_LINK  = "//a[@data-action='EVENT']";
+    private final String RISK_CTA_FORM_TITLE    = "//span[text()='Add Risk']";
+    private final String OPPO_CTA_FORM_TITLE    = "//span[text()='Add Opportunity']";
+    private final String EVENT_CTA_FORM_TITLE   = "//span[text()='Add Event']";
+    private final String CREATE_FORM_SUBJECT    = "//input[@class='form-control cta-subject']";
+    private final String CREATE_FORM_CUSTOMER   = "//input[@class='form-control strcustomer ui-autocomplete-input']";
+	private final String CREATE_FORM_REASON     = "//div[@class='col-md-9']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";// "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
 	private final String CREATE_FORM_SELECT_REASON="//ul/li/label/span[text()='%s']";
 	private final String CREATE_FORM_DUE_DATE="//input[@class='form-control cta-dateCtrl']";
 	private final String CREATE_FORM_COMMENTS="//textarea[@class='form-control strdescription']";
@@ -55,7 +55,10 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String RECUR_WEEK_COUNT="//div[@class='schedulereventoptions-weekly']/div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
     private final String RECUR_WEEKDAY="//div[@class='row']/label[@class='checkbox-inline']/input[@value='%s']";
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
-    
+
+    //CTA Expanded View Elements
+
+
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -196,10 +199,10 @@ public class WorkflowPage extends WorkflowBasePage {
             //}
         }
 
-        xPath = xPath+"/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
+        xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
-        xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
-        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
+        xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[conatins(@class, 'gs-cta-head workflow-ctaitem')]";
         if(cta.getAssignee() != null) {
             xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
             xPath = xPath+"/ancestor::div[@class='gs-cta']";
