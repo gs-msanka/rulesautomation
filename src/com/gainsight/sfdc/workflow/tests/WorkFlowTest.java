@@ -70,7 +70,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test
-   public void createRecurringEventCTA()
+   public void createRecurringEventCTA_Daily_EVeryWeekDay()
    {
 	   CTA eventCTA=new CTA();
 	   eventCTA.setType("Event");
@@ -80,6 +80,118 @@ public class WorkFlowTest extends BaseTest {
 	   eventCTA.setDueDate("12/11/2014");
 	   eventCTA.setComments("sample Non Recurring Event CTA");
 	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Daily");
+	   eventCTA.setDailyRecurringInterval("EveryWeekDay");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Daily_EveryNDays()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Daily");
+	   eventCTA.setDailyRecurringInterval("2");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Weekly_EveryNWeeks()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Weekly");
+	   eventCTA.setWeeklyRecurringInterval("Week_2_Mon");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Monthly()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Monthly");
+	   eventCTA.setMonthlyRecurringInterval("Day_2_Month_2");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Monthly_ByWeek()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Monthly");
+	   eventCTA.setMonthlyRecurringInterval("Week_2_Month_2");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Yearly_ByMonth()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Yearly");
+	   eventCTA.setMonthlyRecurringInterval("Day_2_Month_2");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
+	   workflowPage.createCTA(eventCTA);
+   }
+   
+   @Test
+   public void createRecurringEventCTA_Yearly_ByMonthAndWeek()
+   {
+	   CTA eventCTA=new CTA();
+	   eventCTA.setType("Event");
+	   eventCTA.setSubject("sample Non Recurring Event CTA");
+	   eventCTA.setCustomer("Abacus Programming Corp");
+	   eventCTA.setReason("Product Release");
+	   eventCTA.setDueDate("12/11/2014");
+	   eventCTA.setComments("sample Non Recurring Event CTA");
+	   eventCTA.setIsRecurring(true);
+	   eventCTA.setRecurringType("Yearly");
+	   eventCTA.setMonthlyRecurringInterval("Week_2_Month_2");
+	   eventCTA.setRecurStartDate("");
+	   eventCTA.setRecurEndDate("");
 	   workflowPage.createCTA(eventCTA);
    }
 }

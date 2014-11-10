@@ -24,18 +24,19 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EVENT_CTA_FORM_TITLE="//span[text()='Add Event']";
     private final String CREATE_FORM_SUBJECT="//input[@class='form-control cta-subject']";
     private final String CREATE_FORM_CUSTOMER="//input[@class='form-control strcustomer ui-autocomplete-input']";
-    private final String CREATE_FORM_CUST_LIST="//div[@class='wf-dd-profile']/ul/li[@class='ui-menu-item']";//"//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
 	private final String CREATE_FORM_REASON ="//div[@class='col-md-9']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";// "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-	private final String CREATE_FORM_REASON_OPPOR="//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-active ui-state-hover']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
 	private final String CREATE_FORM_SELECT_REASON="//ul/li/label/span[text()='%s']";
 	private final String CREATE_FORM_DUE_DATE="//input[@class='form-control cta-dateCtrl']";
 	private final String CREATE_FORM_COMMENTS="//textarea[@class='form-control strdescription']";
 	private final String SAVE_CTA="//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT="//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
-    private final String CREATE_FORM_RECUR_TYPE="//div[@class='radio-inline']/input[@value='%s']";
+    private final String CREATE_FORM_RECUR_TYPE="//div[@class='row']/div[@class='radio-inline']/input[@value='%s']";
     private final String CREATE_RECUR_EVERYWEEKDAY_EVENT="//div[@class='radio-inline']/input[@value='RecursEveryWeekDay']";
     private final String RECUR_EVENT_START_DATE="//input[@class='form-control date-input scheduler-event-start-datepick']";
     private final String RECUR_EVENT_END_DATE="//input[@class='form-control date-input scheduler-event-end-datepick']";
+    private final String RECUR_WEEK_COUNT="//div[@class='schedulereventoptions-weekly']/div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
+    private final String RECUR_WEEKDAY="//div[@class='row']/label[@class='checkbox-inline']/input[@value='%s']";
+    private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
     
     public WorkflowPage() {
         waitForPageLoad();
@@ -83,17 +84,26 @@ public class WorkflowPage extends WorkflowBasePage {
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.getIsRecurring()){
 		field.selectCheckbox(CREATE_RECURRING_EVENT);
+		
 			if(cta.getRecurringType().equals("Daily")){
-				
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
+				if(cta.getDailyRecurringInterval().equals("EveryWeekday"))
+					item.click(CREATE_RECUR_EVERYWEEKDAY_EVENT);
+				item.setText(RECUR_EVENT_START_DATE, cta.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, cta.getRecurEndDate());
 			}
 			else if (cta.getRecurringType().equals("Weekly")){
-				
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
+				field.setText(RECUR_WEEK_COUNT, cta.getWeeklyRecurringInterval().split("_")[1]);
+				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(cta.getWeeklyRecurringInterval().split("_")[2])));
 			}
 			else if(cta.getRecurringType().equals("Monthly")){
-				
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
+
 			}
-			else if(cta.getReurringType().equals("Yearly")){
-				
+			else if(cta.getRecurringType().equals("Yearly")){
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
+
 			}
 		}
 		button.click(SAVE_CTA);	
