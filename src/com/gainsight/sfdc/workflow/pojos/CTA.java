@@ -1,5 +1,8 @@
 package com.gainsight.sfdc.workflow.pojos;
 
+import com.google.inject.internal.asm.$Attribute;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,24 +12,34 @@ public class CTA {
 	private String type;
 	private String subject;
 	private String customer;
-	private String status;
-	private String reason;
-	private String dueDate;
+	private String status = "Open";
+	private String reason = "Other - Uncategorized" ;
+    private String dueDate;
 	private String comments;
     private boolean isImp = false;
     private boolean isClosed = false;
     private int taskCount = 0;
-    private String priority;
+    private String priority = "Medium";
 	private String assignee;
-	private List<Att> attributes;
-	private boolean isRecurring;
-	private String recurringType;
-	private String dailyRecurringInterval; //should be either "EveryWeekday" or "N" .. where N is number of days
-	private String weeklyRecurringInterval; //should be in the format : "Week_n_Weekday" 
-    private String monthlyRecurInterval;  // should be either "Day_n_Month_n" or "Week_n_Month_n" --where 'n' is valid number --and Day or week is the option to be set
-    private String yearlyRecurringInterval;  //should be in the format : "Month_n" or "Week_n_Month"
-    private String recurStartDate;
-    private String recurEndDate;
+    private List<Attribute> attributes = new ArrayList<Attribute>();
+    private boolean isRecurring = false;
+    private EventRecurring eventRecurring;
+
+    public EventRecurring getEventRecurring() {
+        return eventRecurring;
+    }
+
+    public void setEventRecurring(EventRecurring eventRecurring) {
+        this.eventRecurring = eventRecurring;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
 
     public boolean isClosed() {
         return isClosed;
@@ -44,14 +57,6 @@ public class CTA {
         this.isRecurring = isRecurring;
     }
 
-    public String getMonthlyRecurInterval() {
-        return monthlyRecurInterval;
-    }
-
-    public void setMonthlyRecurInterval(String monthlyRecurInterval) {
-        this.monthlyRecurInterval = monthlyRecurInterval;
-    }
-
     public String getStatus() {
 		return status;
 	}
@@ -60,60 +65,6 @@ public class CTA {
 		this.status = status;
 	}
 
-	public void setRecurringType(String recurringType) {
-		this.recurringType = recurringType;
-	}
-
-	public String getRecurringType() {
-		return recurringType;
-	}
-	public void setDailyRecurringInterval(String dailyRecurringInterval){
-		this.dailyRecurringInterval=dailyRecurringInterval;
-	}
-	
-	public String  getDailyRecurringInterval(){
-		return dailyRecurringInterval;
-	}
-	
-	public void setWeeklyRecurringInterval(String weeklyRecurringInterval) {
-		this.weeklyRecurringInterval = weeklyRecurringInterval;
-	}
-
-	public String getWeeklyRecurringInterval() {
-		return weeklyRecurringInterval;
-	}
-	
-	public void  setMonthlyRecurringInterval(String monthlyRecurInterval){
-		this.monthlyRecurInterval=monthlyRecurInterval;
-	}
-	
-	public String getMonthlyRecurringInterval(){
-		return monthlyRecurInterval;
-	}
-	
-	public void setYearlyRecurringInterval(String yearlyRecurringInterval){
-		this.yearlyRecurringInterval=yearlyRecurringInterval;
-	}
-	
-	public String getYearlyRecurringInterval(){
-		return yearlyRecurringInterval;
-	}
-	
-	public void setRecurStartDate(String recurStartDate){
-		this.recurStartDate=recurStartDate;
-	}
-	
-	public String getRecurStartDate(){
-		return recurStartDate;
-	}
-	
-	public void setRecurEndDate(String recurEndDate){
-		this.recurEndDate =recurEndDate;
-	}
-	
-	public String getRecurEndDate(){
-		return recurEndDate;
-	}
 	public String getType() {
 		return type;
 	}
@@ -138,14 +89,6 @@ public class CTA {
 		this.customer = customer;
 	}
 
-	public void setIsRecurring(boolean isRecurring) {
-		this.isRecurring = isRecurring;
-	}
-
-	public boolean getIsRecurring() {
-		return isRecurring;
-	}
-
 	public String getReason() {
 		return reason;
 	}
@@ -154,13 +97,6 @@ public class CTA {
 		this.reason = reason;
 	}
 
-	public String getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(String dueDate) {
-		this.dueDate = dueDate;
-	}
 
 	public String getComments() {
 		return comments;
@@ -202,28 +138,28 @@ public class CTA {
 		this.assignee = assignee;
 	}
 
-	public List<Att> getAttributes() {
+	public List<Attribute> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(List<Att> attributes) {
+	public void setAttribute(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
 
-	public class Att {
+	public static class Attribute {
 		private String attLabel;
 		private String attValue;
 		private boolean inSummary;
 
-		public boolean isInSummary() {
-			return inSummary;
-		}
+        public boolean isInSummary() {
+            return inSummary;
+        }
 
-		public void setInSummary(boolean inSummary) {
-			this.inSummary = inSummary;
-		}
+        public void setInSummary(boolean inSummary) {
+            this.inSummary = inSummary;
+        }
 
-		public String getAttLabel() {
+        public String getAttLabel() {
 			return attLabel;
 		}
 
@@ -239,5 +175,80 @@ public class CTA {
 			this.attValue = attValue;
 		}
 	}
+
+    public static class EventRecurring {
+        private String recurringType;
+        private String dailyRecurringInterval; //should be either "EveryWeekday" or "N" .. where N is number of days
+        private String weeklyRecurringInterval; //should be in the format : "Week_n_Weekday"
+        private String monthlyRecurInterval;  // should be either "Day_n_Month_n" or "Week_n_Month_n" --where 'n' is valid number --and Day or week is the option to be set
+        private String yearlyRecurringInterval;  //should be in the format : "Month_n" or "Week_n_Month"
+        private String recurStartDate;
+        private String recurEndDate;
+
+        public String getMonthlyRecurInterval() {
+            return monthlyRecurInterval;
+        }
+
+        public void setMonthlyRecurInterval(String monthlyRecurInterval) {
+            this.monthlyRecurInterval = monthlyRecurInterval;
+        }
+
+        public void setDailyRecurringInterval(String dailyRecurringInterval){
+            this.dailyRecurringInterval=dailyRecurringInterval;
+        }
+
+        public String  getDailyRecurringInterval(){
+            return dailyRecurringInterval;
+        }
+
+        public void setWeeklyRecurringInterval(String weeklyRecurringInterval) {
+            this.weeklyRecurringInterval = weeklyRecurringInterval;
+        }
+
+        public String getWeeklyRecurringInterval() {
+            return weeklyRecurringInterval;
+        }
+
+        public void  setMonthlyRecurringInterval(String monthlyRecurInterval){
+            this.monthlyRecurInterval=monthlyRecurInterval;
+        }
+
+        public String getMonthlyRecurringInterval(){
+            return monthlyRecurInterval;
+        }
+
+        public void setYearlyRecurringInterval(String yearlyRecurringInterval){
+            this.yearlyRecurringInterval=yearlyRecurringInterval;
+        }
+
+        public String getYearlyRecurringInterval(){
+            return yearlyRecurringInterval;
+        }
+
+        public void setRecurStartDate(String recurStartDate){
+            this.recurStartDate=recurStartDate;
+        }
+
+        public String getRecurStartDate(){
+            return recurStartDate;
+        }
+
+        public void setRecurEndDate(String recurEndDate){
+            this.recurEndDate =recurEndDate;
+        }
+
+        public String getRecurEndDate(){
+            return recurEndDate;
+        }
+
+        public void setRecurringType(String recurringType) {
+            this.recurringType = recurringType;
+        }
+
+        public String getRecurringType() {
+            return recurringType;
+        }
+
+    }
 
 }

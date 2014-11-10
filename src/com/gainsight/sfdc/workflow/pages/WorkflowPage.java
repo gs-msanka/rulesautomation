@@ -67,7 +67,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     private void waitForPageLoad() {
         Report.logInfo("Loading Cockpit Page");
-        env.setTimeout(10);
+        env.setTimeout(5);
         wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -100,9 +100,10 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
 		field.setText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
-		if(cta.getIsRecurring()){
+		if(cta.isRecurring()){
 		field.selectCheckbox(CREATE_RECURRING_EVENT);
-		
+
+            /*
 			if(cta.getRecurringType().equals("Daily")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
 				if(cta.getDailyRecurringInterval().equals("EveryWeekday"))
@@ -123,8 +124,10 @@ public class WorkflowPage extends WorkflowBasePage {
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
 
 			}
+			*/
 		}
-		button.click(SAVE_CTA);	
+		button.click(SAVE_CTA);
+        amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
 
 	private void fillAndSaveOpporCTAForm(CTA cta) {
@@ -160,7 +163,7 @@ public class WorkflowPage extends WorkflowBasePage {
         try {
             WebElement wEle = driver.findElement(By.xpath(getCTAXPath(cta)));
             return wEle.isDisplayed();
-        } catch (NoSuchElementException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             Report.logInfo("CTA is not displayed / Present, Please check you xPath");
             Report.logInfo(e.getLocalizedMessage());
@@ -186,24 +189,24 @@ public class WorkflowPage extends WorkflowBasePage {
         xPath = xPath+"/descendant::span[contains(text(), '"+cta.getCustomer()+"')]";
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='pull-left cta-score']";
 
-        if(cta.getAttributes() != null) {
-            for(CTA.Att attribute : cta.getAttributes()) {
-                if(attribute.isInSummary()) {
-                    xPath = xPath+"/descendant::span[@title='"+attribute.getAttLabel()+"' and contains(text(), '"+attribute.getAttValue()+"')]";
-                    xPath = xPath+"ancestor::div[@class='pull-left cta-score']";
-                }
-            }
+        for(CTA.Attribute attribute : cta.getAttributes()) {
+            //if(attribute.isInSummary()) {
+                xPath = xPath+"/descendant::span[@title='"+attribute.getAttLabel()+"' and contains(text(), '"+attribute.getAttValue()+"')]";
+                xPath = xPath+"/ancestor::div[@class='pull-left cta-score']";
+            //}
         }
 
         xPath = xPath+"/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
         xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
         xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
-        xPath = xPath+"/descendant::img[@alt='"+cta.getAssignee()+"']";
-        xPath = xPath+"/ancestor::div[@class='gs-cta']";
+        if(cta.getAssignee() != null) {
+            xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
+            xPath = xPath+"/ancestor::div[@class='gs-cta']";
+        } else {
+            throw new RuntimeException("Assignee should be specified.");
+        }
         Report.logInfo("CTA Path : " + xPath);
         return xPath;
     }
-
-
 }

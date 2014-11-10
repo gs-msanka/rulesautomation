@@ -275,7 +275,7 @@ public class WorkflowPlaybooksPage extends BasePage {
         wait.waitTillElementDisplayed(DELETE_PLAYBOOK, MIN_TIME, MAX_TIME);
         item.click(DELETE_PLAYBOOK);
         WorkflowBasePage wfb = new WorkflowBasePage();
-    	wfb.wf_modal_accept();
+    	//wfb.wf_modal_accept();
       //span[@class='ui-dialog-title' and contains(text(),'Confirm')]
       //input[@value='Yes']
       //input[@class='gs-btn btn-cancel btn_cancel cancelSummary' and @value='Cancel']
@@ -397,7 +397,7 @@ public class WorkflowPlaybooksPage extends BasePage {
         item.click("//h4[contains(text(),'"+expsubject+"')]/parent::div/ul/li/a[contains(text(),'Delete')]");
         amtDateUtil.stalePause();
         WorkflowBasePage wfb = new WorkflowBasePage();
-    	wfb.wf_modal_accept();
+    	//wfb.wf_modal_accept();
      
         String task = "//h4[contains(text(),'"+expsubject+"')]";
         wait.waitTillElementNotPresent(task, MIN_TIME, MAX_TIME);
