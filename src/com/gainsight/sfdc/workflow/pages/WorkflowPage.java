@@ -6,6 +6,9 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+import org.openqa.selenium.WebElement;
+
+import java.util.NoSuchElementException;
 
 /**
  * Created by gainsight on 07/11/14.
@@ -15,6 +18,21 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String READY_INDICATOR  = "//div[@title='Add CTA']";
     private final String CALENDAR_VIEW_READY_INDICATOR = "//ul[@class='calendar-tab']";
     private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image-64')]";
+
+    //Header Page Elements
+    private final String SHOW_CLOSED_CTA    = "//li[contains(@class, 'cta-stage baseFilter cta-stage-filter')]";
+    private final String SHOW_IMP_CTA       = "//li[contains(@class, 'cta-flag baseFilter cta-flag-filter')]";
+    private final String SHOW_SNOOZE_CTA    = "//li[contains(@class, 'cta-snooze baseFilter cta-snooze-filter')]";
+
+    private final String TYPE_RISK          = "//div[@class='type cta-types-filter']/ul/li[@name='Risk']";
+    private final String TYPE_OPPORTUNITY   = "//div[@class='type cta-types-filter']/ul/li[@name='Opportunity']";
+    private final String TYPE_EVENT         = "//div[@class='type cta-types-filter']/ul/li[@name='Event']" ;
+
+    private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s']";
+    private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
+    private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
+
+    //Form Page Elements
     private final String CREATE_CTA_ICON="//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
     private final String CREATE_RISK_LINK="//a[@data-action='RISK']";
     private final String CREATE_OPPOR_LINK="//a[@data-action='OPPORTUNITY']";
@@ -130,10 +148,62 @@ public class WorkflowPage extends WorkflowBasePage {
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		button.click(SAVE_CTA);		
 	}
-	  private void setCustomer(String custName) {
-	        field.setText(CREATE_FORM_CUSTOMER, custName);
-	       // field.setTextByKeys(CREATE_FORM_CUSTOMER, "\r");
-	        amtDateUtil.stalePause();
-	        driver.findElement(By.xpath("//li[@class='ui-menu-item']/a/label[contains(text(),'"+custName+"')]")).click();
-	    }
+
+    private void setCustomer(String custName) {
+        field.setText(CREATE_FORM_CUSTOMER, custName);
+       // field.setTextByKeys(CREATE_FORM_CUSTOMER, "\r");
+        amtDateUtil.stalePause();
+        driver.findElement(By.xpath("//li[@class='ui-menu-item']/a/label[contains(text(),'"+custName+"')]")).click();
+    }
+
+    public boolean isCTADisplayed(CTA cta) {
+        try {
+            WebElement wEle = driver.findElement(By.xpath(getCTAXPath(cta)));
+            return wEle.isDisplayed();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            Report.logInfo("CTA is not displayed / Present, Please check you xPath");
+            Report.logInfo(e.getLocalizedMessage());
+            return false;
+        }
+    }
+
+    public String getCTAXPath(CTA cta) {
+        String xPath = "//div[@class='gs-cta']";
+        xPath = xPath+"/descendant::div[@class='title-ctn pull-left']";
+        xPath = cta.isClosed() ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
+                xPath+"/span[@class='check-data ctaCheckBox require-tooltip']";
+        xPath = cta.isImp() ? xPath+"/following-sibling::span[@class='glyphicon glyphicon-bookmark cta-flag require-tooltip' and contains(@style, 'color:#fc8744')]" :
+                xPath+"/following-sibling::span[@class='glyphicon glyphicon-bookmark cta-flag require-tooltip']";
+        if(cta.getPriority() != null) {
+            xPath = xPath+"/following-sibling::span[@class='wf-priority cta-priority' and contains(text(), '"+cta.getPriority().substring(0, 1)+"')]";
+        } else {
+            throw new RuntimeException("Priority should be specified.") ;
+        }
+
+        xPath = xPath+"/following-sibling::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"')]";
+        xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='wf-account pull-left']";
+        xPath = xPath+"/descendant::span[contains(text(), '"+cta.getCustomer()+"')]";
+        xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='pull-left cta-score']";
+
+        if(cta.getAttributes() != null) {
+            for(CTA.Att attribute : cta.getAttributes()) {
+                if(attribute.isInSummary()) {
+                    xPath = xPath+"/descendant::span[@title='"+attribute.getAttLabel()+"' and contains(text(), '"+attribute.getAttValue()+"')]";
+                    xPath = xPath+"ancestor::div[@class='pull-left cta-score']";
+                }
+            }
+        }
+
+        xPath = xPath+"/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
+        xPath = xPath+"/descendant::div[@class='pull-right relative']";
+        xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
+        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[@class='gs-cta-head workflow-ctaitem']";
+        xPath = xPath+"/descendant::img[@alt='"+cta.getAssignee()+"']";
+        xPath = xPath+"/ancestor::div[@class='gs-cta']";
+        Report.logInfo("CTA Path : " + xPath);
+        return xPath;
+    }
+
+
 }

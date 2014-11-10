@@ -13,9 +13,10 @@ public class CTA {
 	private String reason;
 	private String dueDate;
 	private String comments;
-	private boolean isImp;
-	private String priority;
-	private int taskCount;
+    private boolean isImp = false;
+    private boolean isClosed = false;
+    private int taskCount = 0;
+    private String priority;
 	private String assignee;
 	private List<Att> attributes;
 	private boolean isRecurring;
@@ -26,8 +27,32 @@ public class CTA {
     private String yearlyRecurringInterval;  //should be in the format : "Month_n" or "Week_n_Month"
     private String recurStartDate;
     private String recurEndDate;
-    
-	public String getStatus() {
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean isClosed) {
+        this.isClosed = isClosed;
+    }
+
+    public boolean isRecurring() {
+        return isRecurring;
+    }
+
+    public void setRecurring(boolean isRecurring) {
+        this.isRecurring = isRecurring;
+    }
+
+    public String getMonthlyRecurInterval() {
+        return monthlyRecurInterval;
+    }
+
+    public void setMonthlyRecurInterval(String monthlyRecurInterval) {
+        this.monthlyRecurInterval = monthlyRecurInterval;
+    }
+
+    public String getStatus() {
 		return status;
 	}
 
