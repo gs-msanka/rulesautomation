@@ -48,7 +48,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	private final String CREATE_FORM_COMMENTS="//textarea[@class='form-control strdescription']";
 	private final String SAVE_CTA="//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT="//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
-    private final String CREATE_FORM_RECUR_TYPE="//div[@class='row']/div[@class='radio-inline']/input[@value='%s']";
+    private final String CREATE_FORM_RECUR_TYPE="//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
     private final String CREATE_RECUR_EVERYWEEKDAY_EVENT="//div[@class='radio-inline']/input[@value='RecursEveryWeekDay']";
     private final String RECUR_EVENT_START_DATE="//input[@class='form-control date-input scheduler-event-start-datepick']";
     private final String RECUR_EVENT_END_DATE="//input[@class='form-control date-input scheduler-event-end-datepick']";
@@ -121,7 +121,7 @@ public class WorkflowPage extends WorkflowBasePage {
 			}
 			else if(cta.getRecurringType().equals("Monthly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
-
+				
 			}
 			else if(cta.getRecurringType().equals("Yearly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
@@ -202,7 +202,7 @@ public class WorkflowPage extends WorkflowBasePage {
         xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
         xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
-        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[conatins(@class, 'gs-cta-head workflow-ctaitem')]";
+        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         if(cta.getAssignee() != null) {
             xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
             xPath = xPath+"/ancestor::div[@class='gs-cta']";
