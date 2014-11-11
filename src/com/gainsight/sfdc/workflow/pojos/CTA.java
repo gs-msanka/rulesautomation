@@ -14,7 +14,7 @@ public class CTA {
 	private String customer;
 	private String status = "Open";
 	private String reason = "Other - Uncategorized" ;
-    private String dueDate;
+    private String dueDate = "5";
 	private String comments;
     private boolean isImp = false;
     private boolean isClosed = false;
@@ -38,8 +38,7 @@ public class CTA {
     }
 
     public void setDueDate(String dueDate) {
-        if(dueDate=="") dueDate="5";
-        else this.dueDate = dueDate;
+        this.dueDate = dueDate;
     }
 
     public boolean isClosed() {
