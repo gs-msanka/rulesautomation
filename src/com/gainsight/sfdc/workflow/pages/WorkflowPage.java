@@ -49,16 +49,34 @@ public class WorkflowPage extends WorkflowBasePage {
 	private final String SAVE_CTA="//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT="//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
     private final String CREATE_FORM_RECUR_TYPE="//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
-    private final String CREATE_RECUR_EVERYWEEKDAY_EVENT="//div[@class='radio-inline']/input[@value='RecursEveryWeekDay']";
+    private final String CREATE_RECUR_EVERYnDAYS="//label[@class='radio-inline']/input[@value='RecursDaily']";
+    private final String CREATE_RECUR_DAILY_INTERVAL="//div[@class='date-float']/input[@class='form-control width40 text-center daily-every-daynumpick']";
     private final String RECUR_EVENT_START_DATE="//input[@class='form-control date-input scheduler-event-start-datepick']";
     private final String RECUR_EVENT_END_DATE="//input[@class='form-control date-input scheduler-event-end-datepick']";
-    private final String RECUR_WEEK_COUNT="//div[@class='schedulereventoptions-weekly']/div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
-    private final String RECUR_WEEKDAY="//div[@class='row']/label[@class='checkbox-inline']/input[@value='%s']";
+    private final String RECUR_WEEK_COUNT="//div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
+    private final String RECUR_WEEKDAY="//div[@class='row']/label[@class='checkbox-inline']/input[@value='%d']";
+    private final String TO_SELECT_RECUR_DAY_OF_MONTH="//div[@class='date-float']/button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_DAY_OF_MONTH="//li[contains(@class,'ui-multiselect-option')]/label[contains(@class,'ui-corner-all')]/span[contains(text(),'%s')]";
+    private final String RECUR_MONTH_INTERVAL="//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onday-ofevery-monthpick']";
+    private final String RECUR_MONTHLY_BY_WEEKDAY="//label[@class='radio-inline']/input[@value='RecursMonthlyNth']";
+    private final String TO_SELECT_WEEK_NUMBER="//select[@class='form-control1 monthly-onthe-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_WEEK_NUMBER_OF_MONTH="//label[@class='ui-corner-all']/input[@value='%s']/following-sibling::span";
+    private final String TO_SELECT_RECUR_WEEK_OF_MONTH="//select[@class='form-control1 monthly-onthe-daypick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_WEEK_OF_MONTH="//li[contains(@class,'ui-multiselect-option')]//span[contains(text(),'%s')]";
+    private final String RECUR_MONTHLY_INTERVAL_BYWEEK="//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onthe-ofevery-monthpick']";
+  
+    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH="//select[@class='form-control1 yearly-onevery-monthpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_BYMONTH="//input[@value='%s']/following-sibling::span";
+    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_DATE="//select[@class='form-control1 yearly-onevery-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_BYMONTH_DATE="//input[@value='2']/following-sibling::span[contains(text(),'2')]";
+    private final String RECUR_YEARLY_STARTDATE_SELECT="//select[@class='sel-start-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_STARTDATE="//span[contains(text(),'%s')]";
+    private final String RECUR_YEARLY_ENDDATE_SELECT="//select[@class='sel-end-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_ENDDATE="//span[contains(text(),'%s')]";
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-
-
+       
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -105,29 +123,62 @@ public class WorkflowPage extends WorkflowBasePage {
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()){
 		field.selectCheckbox(CREATE_RECURRING_EVENT);
-
-            /*
-			if(cta.getRecurringType().equals("Daily")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
-				if(cta.getDailyRecurringInterval().equals("EveryWeekday"))
-					item.click(CREATE_RECUR_EVERYWEEKDAY_EVENT);
-				item.setText(RECUR_EVENT_START_DATE, cta.getRecurStartDate());
-				item.setText(RECUR_EVENT_END_DATE, cta.getRecurEndDate());
+		CTA.EventRecurring recurProperties=cta.getEventRecurring();
+			if(recurProperties.getRecurringType().equals("Daily")){
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				if(!recurProperties.getDailyRecurringInterval().equals("EveryWeekday")){
+					item.click(CREATE_RECUR_EVERYnDAYS);
+					field.clearAndSetText(CREATE_RECUR_DAILY_INTERVAL,recurProperties.getDailyRecurringInterval());
+				}
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 			}
-			else if (cta.getRecurringType().equals("Weekly")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
-				field.setText(RECUR_WEEK_COUNT, cta.getWeeklyRecurringInterval().split("_")[1]);
-				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(cta.getWeeklyRecurringInterval().split("_")[2])));
+			else if (recurProperties.getRecurringType().equals("Weekly")){
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[1]);
+				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[2]).ordinal()+1));
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 			}
-			else if(cta.getRecurringType().equals("Monthly")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
+			else if(recurProperties.getRecurringType().equals("Monthly")){
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				if(recurProperties.getMonthlyRecurringInterval().startsWith("Day")){
+				item.click(TO_SELECT_RECUR_DAY_OF_MONTH);
+				item.click(String.format(RECUR_DAY_OF_MONTH, recurProperties.getMonthlyRecurringInterval().split("_")[1]));
+				field.clearAndSetText(RECUR_MONTH_INTERVAL, recurProperties.getMonthlyRecurringInterval().split("_")[3]);
+				}
+				else if(recurProperties.getMonthlyRecurringInterval().startsWith("Week")){
+					item.click(RECUR_MONTHLY_BY_WEEKDAY);
+					item.click(TO_SELECT_WEEK_NUMBER);
+					item.click(String.format(RECUR_WEEK_NUMBER_OF_MONTH, recurProperties.getMonthlyRecurringInterval().split("_")[1]));
+					item.click(TO_SELECT_RECUR_WEEK_OF_MONTH);
+					item.click(String.format(RECUR_WEEK_OF_MONTH,recurProperties.getMonthlyRecurringInterval().split("_")[2]));
+					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[4]);
+				}
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 				
 			}
-			else if(cta.getRecurringType().equals("Yearly")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,cta.getRecurringType()));
-
-			}
-			*/
+			else if(recurProperties.getRecurringType().equals("Yearly")){
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				if (recurProperties.getYearlyRecurringInterval().startsWith("Week")){
+					
+				}
+				else{
+					item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH);
+					for(WebElement ele : driver.findElements(By.xpath(String.format(RECUR_YEARLY_BYMONTH, recurProperties.getYearlyRecurringInterval().split("_")[0]))))
+					 if(ele.isDisplayed()) ele.click();
+					
+					item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_DATE);
+					item.click(String.format(RECUR_YEARLY_BYMONTH_DATE,recurProperties.getYearlyRecurringInterval().split("_")[1]));
+				}
+				item.click(RECUR_YEARLY_STARTDATE_SELECT);
+				item.click(String.format(RECUR_YEARLY_STARTDATE, recurProperties.getRecurStartDate()));
+				
+				item.click(RECUR_YEARLY_ENDDATE_SELECT);
+				item.click(String.format(RECUR_YEARLY_ENDDATE, recurProperties.getRecurEndDate()));
+					
+				}
 		}
 		button.click(SAVE_CTA);
         amtDateUtil.stalePause(); //In - Case, Should add wait logic here.

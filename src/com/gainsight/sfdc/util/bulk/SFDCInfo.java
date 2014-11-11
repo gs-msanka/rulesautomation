@@ -8,6 +8,51 @@ public class SFDCInfo {
 	String userId;
 	String sessionId;
 	String endpoint;
+	String userName;
+	String userEmail;
+	String authEndPoint;
+	String serviceEndPoint;
+	String userCurrencySymbol;
+	
+	public String getUserCurrencySymbol() {
+		return userCurrencySymbol;
+	}
+
+	public void setUserCurrencySymbol(String userCurrencySymbol) {
+		this.userCurrencySymbol = userCurrencySymbol;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
+	public String getAuthEndPoint() {
+		return authEndPoint;
+	}
+
+	public void setAuthEndPoint(String authEndPoint) {
+		this.authEndPoint = authEndPoint;
+	}
+
+	public String getServiceEndPoint() {
+		return serviceEndPoint;
+	}
+
+	public void setServiceEndPoint(String serviceEndPoint) {
+		this.serviceEndPoint = serviceEndPoint;
+	}
 
 	public String getOrg() {
 		return org;

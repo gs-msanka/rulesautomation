@@ -40,6 +40,11 @@ public class SFDCUtil {
 			info.setOrg(userInfo.getOrganizationId());
 			info.setUserId(userInfo.getUserId());
 			info.setSessionId(config.getSessionId());
+			info.setAuthEndPoint(config.getAuthEndpoint());
+			info.setServiceEndPoint(config.getServiceEndpoint());
+			info.setUserEmail(userInfo.getUserEmail());
+			info.setUserName(userInfo.getUserName());
+			info.setUserCurrencySymbol(userInfo.getCurrencySymbol());
 			String sept = config.getServiceEndpoint();
 			sept = sept.substring(0, sept.indexOf(".com") + 4);
 			info.setEndpoint(sept);

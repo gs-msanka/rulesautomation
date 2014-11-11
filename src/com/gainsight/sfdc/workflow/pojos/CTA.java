@@ -34,11 +34,12 @@ public class CTA {
     }
 
     public String getDueDate() {
-        return dueDate;
+    	return dueDate;
     }
 
     public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+        if(dueDate=="") dueDate="5";
+        else this.dueDate = dueDate;
     }
 
     public boolean isClosed() {
@@ -180,18 +181,11 @@ public class CTA {
         private String recurringType;
         private String dailyRecurringInterval; //should be either "EveryWeekday" or "N" .. where N is number of days
         private String weeklyRecurringInterval; //should be in the format : "Week_n_Weekday"
-        private String monthlyRecurInterval;  // should be either "Day_n_Month_n" or "Week_n_Month_n" --where 'n' is valid number --and Day or week is the option to be set
+        private String monthlyRecurringInterval;  // should be either "Day_n_Month_n" or "Week_n_WEEKDAY_Month_n" --where 'n' is valid number --and Day or week is the option to be set
         private String yearlyRecurringInterval;  //should be in the format : "Month_n" or "Week_n_Month"
         private String recurStartDate;
         private String recurEndDate;
 
-        public String getMonthlyRecurInterval() {
-            return monthlyRecurInterval;
-        }
-
-        public void setMonthlyRecurInterval(String monthlyRecurInterval) {
-            this.monthlyRecurInterval = monthlyRecurInterval;
-        }
 
         public void setDailyRecurringInterval(String dailyRecurringInterval){
             this.dailyRecurringInterval=dailyRecurringInterval;
@@ -209,12 +203,12 @@ public class CTA {
             return weeklyRecurringInterval;
         }
 
-        public void  setMonthlyRecurringInterval(String monthlyRecurInterval){
-            this.monthlyRecurInterval=monthlyRecurInterval;
+        public void  setMonthlyRecurringInterval(String monthlyRecurringInterval){
+            this.monthlyRecurringInterval=monthlyRecurringInterval;
         }
 
         public String getMonthlyRecurringInterval(){
-            return monthlyRecurInterval;
+            return monthlyRecurringInterval;
         }
 
         public void setYearlyRecurringInterval(String yearlyRecurringInterval){
