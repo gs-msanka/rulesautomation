@@ -6,9 +6,11 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
-import java.util.NoSuchElementException;
+import java.util.List;
 
 /**
  * Created by gainsight on 07/11/14.
@@ -43,40 +45,52 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String CREATE_FORM_SUBJECT    = "//input[@class='form-control cta-subject']";
     private final String CREATE_FORM_CUSTOMER   = "//input[@class='form-control strcustomer ui-autocomplete-input']";
 	private final String CREATE_FORM_REASON     = "//div[@class='col-md-9']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";// "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-	private final String CREATE_FORM_SELECT_REASON="//ul/li/label/span[text()='%s']";
-	private final String CREATE_FORM_DUE_DATE="//input[@class='form-control cta-dateCtrl']";
-	private final String CREATE_FORM_COMMENTS="//textarea[@class='form-control strdescription']";
-	private final String SAVE_CTA="//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
-	private final String CREATE_RECURRING_EVENT="//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
-    private final String CREATE_FORM_RECUR_TYPE="//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
-    private final String CREATE_RECUR_EVERYnDAYS="//label[@class='radio-inline']/input[@value='RecursDaily']";
-    private final String CREATE_RECUR_DAILY_INTERVAL="//div[@class='date-float']/input[@class='form-control width40 text-center daily-every-daynumpick']";
-    private final String RECUR_EVENT_START_DATE="//input[@class='form-control date-input scheduler-event-start-datepick']";
-    private final String RECUR_EVENT_END_DATE="//input[@class='form-control date-input scheduler-event-end-datepick']";
-    private final String RECUR_WEEK_COUNT="//div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
-    private final String RECUR_WEEKDAY="//div[@class='row']/label[@class='checkbox-inline']/input[@value='%d']";
-    private final String TO_SELECT_RECUR_DAY_OF_MONTH="//div[@class='date-float']/button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_DAY_OF_MONTH="//li[contains(@class,'ui-multiselect-option')]/label[contains(@class,'ui-corner-all')]/span[contains(text(),'%s')]";
-    private final String RECUR_MONTH_INTERVAL="//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onday-ofevery-monthpick']";
-    private final String RECUR_MONTHLY_BY_WEEKDAY="//label[@class='radio-inline']/input[@value='RecursMonthlyNth']";
-    private final String TO_SELECT_WEEK_NUMBER="//select[@class='form-control1 monthly-onthe-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_WEEK_NUMBER_OF_MONTH="//label[@class='ui-corner-all']/input[@value='%s']/following-sibling::span";
-    private final String TO_SELECT_RECUR_WEEK_OF_MONTH="//select[@class='form-control1 monthly-onthe-daypick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_WEEK_OF_MONTH="//li[contains(@class,'ui-multiselect-option')]//span[contains(text(),'%s')]";
-    private final String RECUR_MONTHLY_INTERVAL_BYWEEK="//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onthe-ofevery-monthpick']";
+	private final String CREATE_FORM_SELECT_REASON  = "//ul/li/label/span[text()='%s']";
+	private final String CREATE_FORM_DUE_DATE       = "//input[@class='form-control cta-dateCtrl']";
+	private final String CREATE_FORM_COMMENTS       = "//textarea[@class='form-control strdescription']";
+	private final String SAVE_CTA                   = "//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
+	private final String CREATE_RECURRING_EVENT     = "//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
+    private final String CREATE_FORM_RECUR_TYPE     = "//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
+    private final String CREATE_RECUR_EVERYnDAYS    = "//label[@class='radio-inline']/input[@value='RecursDaily']";
+    private final String CREATE_RECUR_DAILY_INTERVAL    = "//div[@class='date-float']/input[@class='form-control width40 text-center daily-every-daynumpick']";
+    private final String RECUR_EVENT_START_DATE         = "//input[@class='form-control date-input scheduler-event-start-datepick']";
+    private final String RECUR_EVENT_END_DATE           = "//input[@class='form-control date-input scheduler-event-end-datepick']";
+    private final String RECUR_WEEK_COUNT               = "//div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
+    private final String RECUR_WEEKDAY                  = "//div[@class='row']/label[@class='checkbox-inline']/input[@value='%d']";
+    private final String TO_SELECT_RECUR_DAY_OF_MONTH   = "//div[@class='date-float']/button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_DAY_OF_MONTH             = "//li[contains(@class,'ui-multiselect-option')]/label[contains(@class,'ui-corner-all')]/span[contains(text(),'%s')]";
+    private final String RECUR_MONTH_INTERVAL           = "//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onday-ofevery-monthpick']";
+    private final String RECUR_MONTHLY_BY_WEEKDAY       = "//label[@class='radio-inline']/input[@value='RecursMonthlyNth']";
+    private final String TO_SELECT_WEEK_NUMBER          = "//select[@class='form-control1 monthly-onthe-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_WEEK_NUMBER_OF_MONTH     = "//label[@class='ui-corner-all']/input[@value='%s']/following-sibling::span";
+    private final String TO_SELECT_RECUR_WEEK_OF_MONTH  = "//select[@class='form-control1 monthly-onthe-daypick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_WEEK_OF_MONTH            = "//li[contains(@class,'ui-multiselect-option')]//span[contains(text(),'%s')]";
+    private final String RECUR_MONTHLY_INTERVAL_BYWEEK  = "//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onthe-ofevery-monthpick']";
   
-    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH="//select[@class='form-control1 yearly-onevery-monthpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_BYMONTH="//input[@value='%s']/following-sibling::span";
-    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_DATE="//select[@class='form-control1 yearly-onevery-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_BYMONTH_DATE="//input[@value='2']/following-sibling::span[contains(text(),'2')]";
-    private final String RECUR_YEARLY_STARTDATE_SELECT="//select[@class='sel-start-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_STARTDATE="//span[contains(text(),'%s')]";
-    private final String RECUR_YEARLY_ENDDATE_SELECT="//select[@class='sel-end-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_ENDDATE="//span[contains(text(),'%s')]";
+    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH   = "//select[@class='form-control1 yearly-onevery-monthpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_BYMONTH                   = "//input[@value='%s']/following-sibling::span";
+    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_DATE    = "//select[@class='form-control1 yearly-onevery-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_BYMONTH_DATE              = "//input[@value='2']/following-sibling::span[contains(text(),'2')]";
+    private final String RECUR_YEARLY_STARTDATE_SELECT          = "//select[@class='sel-start-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_STARTDATE                 = "//span[contains(text(),'%s')]";
+    private final String RECUR_YEARLY_ENDDATE_SELECT            = "//select[@class='sel-end-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String RECUR_YEARLY_ENDDATE                   = "//span[contains(text(),'%s')]";
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-       
+    private final String CTA_DETAILED_FORM              = "//div[@class='widget workflow-details' and contains(@style, 'opacity: 1;')]";
+    private final String EXP_VIEW_SUBJECT_INPUT         = "//input[contains(@class, 'editblue_title_input cta-title')]";
+    private final String EXP_VIEW_REASON_BUTTON         = "//select[@class='select-cta-reason cockpit-multiselect']/following-sibling::button";
+    private final String EXP_VIEW_PRIORITY_BUTTON       = "//select[@class='cta-select-priority cockpit-multiselect']/following-sibling::button";
+    private final String EXP_VIEW_STATUS_BUTTON         = "//select[@class='cta-select-stage cockpit-multiselect']/following-sibling::button";
+    private final String EXP_VIEW_CUSTOMER              = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accountname')]";
+    private final String EXP_VIEW_TYPE                  = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accounttype')]";
+    private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
+    private final String EXP_VIEW_DUE_DATE_INPUT        = "frmDateCtrl";
+    private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
+    private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
+    private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']/descendant::label[contains(@class, 'cta-username') and contains(text(), '%s')]";
+
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -88,13 +102,17 @@ public class WorkflowPage extends WorkflowBasePage {
 
     private void waitForPageLoad() {
         Report.logInfo("Loading Cockpit Page");
-        env.setTimeout(5);
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
+        waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
         Report.logInfo("Cockpit Page Loaded Successfully");
     }
-    
+
+    private void waitTillNoLoadingIcon() {
+        env.setTimeout(1);
+        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+    }
+
     public void createCTA(CTA cta){
     	Report.logInfo("Adding CTA of Type - RISK");
     	item.click(CREATE_CTA_ICON);
@@ -213,19 +231,149 @@ public class WorkflowPage extends WorkflowBasePage {
         driver.findElement(By.xpath("//li[@class='ui-menu-item']/a/label[contains(text(),'"+custName+"')]")).click();
     }
 
-    public boolean isCTADisplayed(CTA cta) {
-        try {
-            WebElement wEle = driver.findElement(By.xpath(getCTAXPath(cta)));
-            return wEle.isDisplayed();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            Report.logInfo("CTA is not displayed / Present, Please check you xPath");
-            Report.logInfo(e.getLocalizedMessage());
-            return false;
+    public WorkflowPage updateCTADetails(CTA oldCta, CTA newCta) {
+        expandCTAView(oldCta);
+        newCta.setSubject("Sample");
+        newCta.setPriority("High");
+        newCta.setStatus("In Progress");
+        newCta.setReason("Product Release");
+        if(newCta.getSubject() !=null) {
+            item.click(EXP_VIEW_SUBJECT_INPUT);
+            item.clearText(EXP_VIEW_SUBJECT_INPUT);
+            Actions action = new Actions(driver);
+            action.moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).sendKeys(newCta.getSubject()).build().perform();;
+            amtDateUtil.stalePause();
+            action.moveToElement(element.getElement(EXP_VIEW_PRIORITY_BUTTON));
+        }
+
+        if(newCta.getPriority() != null) {
+            item.click(EXP_VIEW_PRIORITY_BUTTON);
+            selectValueInDropDown(newCta.getPriority());
+        }
+
+        if(newCta.getStatus() != null) {
+            item.click(EXP_VIEW_STATUS_BUTTON);
+            selectValueInDropDown(newCta.getStatus());
+        }
+
+        if(newCta.getReason() != null) {
+            item.click(EXP_VIEW_REASON_BUTTON);
+            selectValueInDropDown(newCta.getReason());
+        }
+        amtDateUtil.sleep(5); //Due to inline editing.
+        return this;
+    }
+
+    public void selectValueInDropDown(String value) {
+        boolean selected = false;
+        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+            Report.logInfo("Checking : "+ele.isDisplayed());
+            if(ele.isDisplayed()) {
+                ele.click();
+                selected = true;
+                break;
+            }
+        }
+        if(selected != true) {
+            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
         }
     }
 
-    public String getCTAXPath(CTA cta) {
+
+    public boolean isCTADisplayed(CTA cta) {
+        waitTillNoLoadingIcon();
+        try {
+            List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
+            Report.logInfo("NUmber of elements :" +webElements);
+            for(WebElement ele : webElements) {
+                if(ele.isDisplayed()) {
+                    return true;
+                }
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            Report.logInfo("CTA is not displayed / Present, Please check your XPath (or) CTA Data");
+            Report.logInfo(e.getLocalizedMessage());
+            return false;
+        }
+        Report.logInfo("CTA is not displayed");
+        return false;
+    }
+
+    public WorkflowPage collapseCTAView(CTA cta) {
+        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        item.click(xPath);
+        env.setTimeout(2);
+        wait.waitTillElementNotPresent(CTA_DETAILED_FORM, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+        return this;
+    }
+
+    public WorkflowPage expandCTAView(CTA cta) {
+        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        item.click(xPath);
+        if(!isCTAExpandedViewLoaded(cta)) {
+            throw new RuntimeException("CTA expand view failed");
+        }
+        return this;
+    }
+
+    public boolean verifyCTADetails(CTA cta) {
+        expandCTAView(cta);
+
+        if(!element.getElement(String.format(EXP_VIEW_ASSIGNEE, cta.getAssignee())).isDisplayed()) {
+            Report.logInfo("CTA is not assigned to right user.");
+            return false;
+        }
+        String dueDate = element.getElement(EXP_VIEW_DUE_DATE_INPUT).getAttribute("value");
+        if(dueDate == null || dueDate.trim().equalsIgnoreCase(cta.getDueDate())) {
+            Report.logInfo("CTA due data is not correct");
+            return false;
+        }
+
+        List<CTA.Attribute> attributes = cta.getAttributes();
+        for(int i=1; i <= attributes.size(); i++) {
+            //table[@class='wf-score-table cta-dynamic-fields-table']/tbody/tr[1]/td
+            System.out.println("//table[@class='wf-score-table cta-dynamic-fields-table']/tbody/tr" +
+                    "/th[contains(text(), '"+attributes.get(i-1).getAttLabel()+"')]" +
+                    "/following-sibling::td[contains(text(), '"+attributes.get(i-1).getAttValue()+"')]");
+            if(!element.getElement("//table[@class='wf-score-table cta-dynamic-fields-table']/tbody/tr" +
+                    "/th[contains(text(), '"+attributes.get(i-1).getAttLabel()+"')]" +
+                    "/following-sibling::td[contains(text(), '"+attributes.get(i-1).getAttValue()+"')]").isDisplayed()) {
+                Report.logInfo("Data in the table didn't match");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCTAExpandedViewLoaded(CTA cta) {
+        wait.waitTillElementDisplayed(CTA_DETAILED_FORM, MIN_TIME, MAX_TIME);
+        CTA expViewCta = new CTA();
+        for(int i=0; i< 5; i++) {
+            expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
+            expViewCta.setCustomer(element.getText(EXP_VIEW_CUSTOMER).trim());
+            expViewCta.setType(element.getText(EXP_VIEW_TYPE).trim());
+            expViewCta.setPriority(element.getText(EXP_VIEW_PRIORITY_BUTTON).trim());
+            expViewCta.setStatus(element.getText(EXP_VIEW_STATUS_BUTTON).trim());
+            expViewCta.setReason(element.getText(EXP_VIEW_REASON_BUTTON).trim());
+            expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
+
+            if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
+                    cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
+                    cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
+                    cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus()) &&
+                    cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                return true;
+            } else {
+                amtDateUtil.stalePause();
+            }
+        }
+        Report.logInfo("CTA expand mode is not loaded properly.");
+        return false;
+    }
+
+    private String getCTAXPath(CTA cta) {
         String xPath = "//div[@class='gs-cta']";
         xPath = xPath+"/descendant::div[@class='title-ctn pull-left']";
         xPath = cta.isClosed() ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
