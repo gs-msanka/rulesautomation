@@ -7,9 +7,9 @@ public class Task {
 
     private String assignee;
     private String subject;
-    private String date;
-    private String priority;
-    private String status;
+    private String date = "1";
+    private String priority = "Medium";
+    private String status = "Open";
     private String playbookName;
     private String comments;
 

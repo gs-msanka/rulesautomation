@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.workflow.pages;
 
 
+import com.gainsight.sfdc.workflow.pojos.Task;
 import org.openqa.selenium.By;
 
 import com.gainsight.pageobject.core.Report;
@@ -392,10 +393,10 @@ public class WorkflowPage extends WorkflowBasePage {
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='pull-left cta-score']";
 
         for(CTA.Attribute attribute : cta.getAttributes()) {
-            //if(attribute.isInSummary()) {
+            if(attribute.isInSummary()) {
                 xPath = xPath+"/descendant::span[@title='"+attribute.getAttLabel()+"' and contains(text(), '"+attribute.getAttValue()+"')]";
                 xPath = xPath+"/ancestor::div[@class='pull-left cta-score']";
-            //}
+            }
         }
 
         xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
@@ -410,5 +411,43 @@ public class WorkflowPage extends WorkflowBasePage {
         }
         Report.logInfo("CTA Path : " + xPath);
         return xPath;
+    }
+
+    private static String getTaskXPath(Task task) {
+        String xPath = "//div[@class='gs-cta-item']";
+        if(task.getStatus().equalsIgnoreCase("Open")) {
+            xPath = xPath+"/descendant::div[@class='title-ctn pull-left']/span[@class='check-data taskCheckBox require-tooltip']" +
+                    "/following-sibling::span[@class='wf-priority' and contains(text(), '"+task.getPriority().substring(0,1)+"')]" +
+                    "/following-sibling::span[contains(@class, 'workflow-task-title') and contains(text(), '"+task.getSubject().trim()+"')]";
+        } else {
+            xPath = xPath+"/descendant::div[@class='title-ctn pull-left']/span[@class='check-data taskCheckBox require-tooltip active']" +
+                    "/following-sibling::span[@class='wf-priority' and contains(text(), '"+task.getPriority().substring(0,1)+"')]" +
+                    "/following-sibling::span[contains(@class, 'workflow-task-title') and contains(@style, 'line-through;') and contains(text(), '"+task.getSubject().trim()+"')]";
+        }
+        xPath = xPath+"/ancestor::div[@class='gs-cta-item']";
+        xPath = xPath+"/descendant::div[contains(@class, 'pull-right')]/div[@class='date']/span[contains(text(), '"+task.getDate()+"')]";
+        if(task.getAssignee() != null) {
+            xPath = xPath+"/ancestor::div[contains(@class, 'pull-right')]/div[contains(@class, 'task-assignee')]/img[contains(@alt, '"+task.getAssignee()+"')] ";
+        } else {
+            throw new RuntimeException("Task Owner is Mandatory");
+        }
+        xPath=xPath+"/ancestor::div[@class='gs-cta-item']";
+        System.out.println("Task XPath : " + xPath);
+        return xPath;
+    }
+
+    public boolean isTaskDisplayed(Task task) {
+        List<WebElement> elements = element.getAllElement(getTaskXPath(task));
+        if(elements.size() > 0) {
+            for(WebElement ele : elements) {
+                if(ele.isDisplayed()) {
+                    return true;
+                }
+            }
+        } else {
+            Report.logInfo("Task is not displayed");
+            return false;
+        }
+        return false;
     }
 }
