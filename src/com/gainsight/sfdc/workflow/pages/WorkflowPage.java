@@ -34,6 +34,10 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s']";
     private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
+    private final String FILTER             = "//a[@class='dashboard-filter-btn']";
+
+    private final String SAVE_SUMMARY       = "//input[@data-action='Yes' and contains(@class, 'saveSummary')]";
+    private final String CANCEL_SUMMARY     = "//input[@data-action='Cancel' and contains(@class, 'cancelSummary')]";
 
     //Form Page Elements
     private final String CREATE_CTA_ICON    = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
@@ -91,6 +95,22 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
     private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']/descendant::label[contains(@class, 'cta-username') and contains(text(), '%s')]";
+    private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
+
+    //Task Expanded View Elements
+    private final String TASK_EXP_VIEW_ASSIGNEE     = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
+    private final String TASK_EXP_SUBJECT           = "//input[contain(@class, 'editblue_title_input task-title')]";
+    private final String TASK_EXP_PRIORITY          = "//select[contains(@class, 'taspriorityk-select')]/following-sibling::button";
+    private final String TASK_EXP_STATUS            = "//select[contains(@class, 'task-select-status')]/following-sibling::button";
+    private final String TASK_COMMENTS              = "//div[contains(@class, 'task-description-textarea')]";
+    private final String TASK_DUE_DATE              = "task-date-id";
+    private final String TASK_EXP_SLIDE_ICON        = "//div[@class='task-detail-set']/div[@class='slide-icon']";
+
+    //Filter View Elements
+    private final String FILTER_TITLE   = "//span[@class='ui-dialog-title']";
+    private final String FILTER_ADD     = "//div[@data-filter='ADD_ADV_FILTER']";
+    private final String FILTER_APPLY   = "//input[@data-action='APPLY_CHANGES']";
+    private final String FILTER_CANCEL  = "//input[@data-action='CANCEL']";
 
     public WorkflowPage() {
         waitForPageLoad();
@@ -301,12 +321,9 @@ public class WorkflowPage extends WorkflowBasePage {
         return false;
     }
 
-    public WorkflowPage collapseCTAView(CTA cta) {
-        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
-        item.click(xPath);
-        env.setTimeout(2);
-        wait.waitTillElementNotPresent(CTA_DETAILED_FORM, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
+    public WorkflowPage collapseCTAView() {
+        item.click(CTA_EXP_SLIDE_ICON);
+        amtDateUtil.stalePause();
         return this;
     }
 
@@ -318,6 +335,21 @@ public class WorkflowPage extends WorkflowBasePage {
         }
         return this;
     }
+
+    public WorkflowPage expandTaskView(Task task) {
+        String xPath = getTaskXPath(task)+"/div[@class='gs-cta-head child-task workflow-ctataskitem']";
+        item.click(xPath);
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+    public WorkflowPage collapseTaskView() {
+        item.click("TASK_EXP_SLIDE_ICON");
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+
 
     public boolean verifyCTADetails(CTA cta) {
         expandCTAView(cta);
@@ -444,10 +476,51 @@ public class WorkflowPage extends WorkflowBasePage {
                     return true;
                 }
             }
-        } else {
-            Report.logInfo("Task is not displayed");
-            return false;
         }
+        Report.logInfo("Task is not displayed");
         return false;
     }
+
+    public WorkflowPage showCTATasks(CTA cta) {
+        String eventXPath = getCTAXPath(cta);
+        item.click(eventXPath+"/descendant::div[contains(@class, 'workflow-taskscnt')]");
+        String eventTaskBody = eventXPath+"descendant::div[@class='gs-cta-body']";
+        wait.waitTillElementDisplayed(eventTaskBody, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage closeCTA(CTA cta, boolean hasOpenTasks) {
+        String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip']";
+        item.click(xPath);
+        if(hasOpenTasks) {
+            wait.waitTillElementDisplayed(SAVE_SUMMARY, MIN_TIME, MAX_TIME);
+            item.click(SAVE_SUMMARY);
+        }
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+    public WorkflowPage openCTA(CTA cta) {
+        String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip active']";
+        item.click(xPath);
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+    public WorkflowPage openORCloseTask(Task task) {
+        String xPath = getTaskXPath(task)+"/descendant::span[contains(@class, 'check-data taskCheckBox')]";
+        item.click(xPath);
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+    public WorkflowPage flagCTA(CTA cta) {
+        String xPath = getCTAXPath(cta)+"/descendant::span[contains(@class, 'glyphicon glyphicon-bookmark cta-flag')]";
+        item.click(xPath);
+        amtDateUtil.stalePause();
+        waitTillNoLoadingIcon();
+        return this;
+    }
+
+
 }
