@@ -10,7 +10,6 @@ import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.SOQLUtil;
@@ -56,6 +55,9 @@ public class rules {
 	 * @throws Exception
 	 * 
 	 */
+	
+	//Work In Progress Need to optimize the code as we will proceed
+	
 	@BeforeClass
 	public void beforeClass() throws Exception {
 		nsinfo = NSUtil.fetchNewStackInfo(sfinfo, new Header());
@@ -120,7 +122,7 @@ public class rules {
 						.equals(rules2[0].getChild("expr0").getValue()), true);
 		}
 
-	
+	@Test
 	// Load to customer with Account names starts with A and ASV=4545
 	public void rulesTwo() throws Exception {
 		sfdc.runApexCodeFromFile(LoadToCustomer, true);
@@ -152,7 +154,7 @@ public class rules {
 		}
 
 	
-	
+	@Test
 	//Load to customer with picklist excludes all in where condition
     public void rulesThree() throws Exception {
 		sfdc.runApexCodeFromFile(LoadtoCust_Picklist, true);
@@ -183,7 +185,7 @@ public class rules {
 						.equals(rules2[0].getChild("expr0").getValue()), true);
 		}
 
-	
+	@Test
 	// In FIlters And+Or condition
     public void rulesFour() throws Exception {
 		sfdc.runApexCodeFromFile(WithAndOrConditionFilters, true);
@@ -214,8 +216,8 @@ public class rules {
 						.equals(rules2[0].getChild("expr0").getValue()), true);
 		}
 
-	
-	// Date Sync for Load to Customer with Today's date (In Where Account Namecontains B)
+	@Test
+	// Date Sync for Load to Customer with Today's date (In Where Account Name contains B)
     public void rulesFive() throws Exception {
 		sfdc.runApexCodeFromFile(OCD_Today, true);
 		System.out.print("Filename = " + OCD_Today);
