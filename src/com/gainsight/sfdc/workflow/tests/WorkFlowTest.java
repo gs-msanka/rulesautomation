@@ -1,19 +1,23 @@
 package com.gainsight.sfdc.workflow.tests;
 
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
-import com.gainsight.sfdc.workflow.pojos.CTA;
+import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
 import com.sun.jna.platform.win32.Netapi32Util.UserInfo;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by gainsight on 07/11/14.
@@ -184,7 +188,24 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Yearly_ByMonthAndWeek() {
       //<TBD>
    }
-
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_TASKS")
+   public void createRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       workflowPage.createCTA(cta);
+      
+       if(cta.getAssignee()==null) {
+           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+       } 
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+       workflowPage.addTaskToCTA(cta, tasks);
+       for(Task task : tasks)
+       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the tasks for Risk CTA");
+   }
     @AfterClass
     public void tearDown() {
         basepage.logout();
