@@ -2,12 +2,11 @@ package com.gainsight.sfdc.workflow.pages;
 
 
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.sforce.soap.metadata.Workflow;
 import org.openqa.selenium.By;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -83,7 +82,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-    private final String CTA_DETAILED_FORM              = "//div[@class='widget workflow-details' and contains(@style, 'opacity: 1;')]";
+    private final String DETAILED_FORM                  = "//div[@class='widget workflow-details' and contains(@style, 'opacity: 1;')]";
     private final String EXP_VIEW_SUBJECT_INPUT         = "//input[contains(@class, 'editblue_title_input cta-title')]";
     private final String EXP_VIEW_REASON_BUTTON         = "//select[@class='select-cta-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_PRIORITY_BUTTON       = "//select[@class='cta-select-priority cockpit-multiselect']/following-sibling::button";
@@ -254,10 +253,9 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage updateCTADetails(CTA oldCta, CTA newCta) {
         expandCTAView(oldCta);
-        newCta.setSubject("Sample");
-        newCta.setPriority("High");
-        newCta.setStatus("In Progress");
-        newCta.setReason("Product Release");
+        if(newCta.getDueDate() != null) {
+            field.clearAndSetText(EXP_VIEW_DUE_DATE_INPUT, newCta.getDueDate());
+        }
         if(newCta.getSubject() !=null) {
             item.click(EXP_VIEW_SUBJECT_INPUT);
             item.clearText(EXP_VIEW_SUBJECT_INPUT);
@@ -331,7 +329,7 @@ public class WorkflowPage extends WorkflowBasePage {
         String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         item.click(xPath);
         if(!isCTAExpandedViewLoaded(cta)) {
-            throw new RuntimeException("CTA expand view failed");
+            throw new RuntimeException("CTA expand view failed to load");
         }
         return this;
     }
@@ -339,7 +337,9 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage expandTaskView(Task task) {
         String xPath = getTaskXPath(task)+"/div[@class='gs-cta-head child-task workflow-ctataskitem']";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        if(!isTaskExpandedViewLoaded(task)) {
+            throw new RuntimeException("Task expand view failed to load");
+        }
         return this;
     }
 
@@ -349,11 +349,8 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-
-
     public boolean verifyCTADetails(CTA cta) {
         expandCTAView(cta);
-
         if(!element.getElement(String.format(EXP_VIEW_ASSIGNEE, cta.getAssignee())).isDisplayed()) {
             Report.logInfo("CTA is not assigned to right user.");
             return false;
@@ -380,8 +377,28 @@ public class WorkflowPage extends WorkflowBasePage {
         return true;
     }
 
+    public boolean isTaskExpandedViewLoaded(Task task) {
+        wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
+        Task expViewTask = new Task();
+        for(int i=0; i<5; i++) {
+            expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
+            expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
+            expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
+            if(task.getPriority().equalsIgnoreCase(expViewTask.getPriority()) &&
+                    task.getStatus().equalsIgnoreCase(expViewTask.getStatus()) &&
+                    task.getSubject().equalsIgnoreCase(expViewTask.getSubject())) {
+                return true;
+            }  else {
+                Report.logInfo("Waiting for Task Details to Load");
+                amtDateUtil.stalePause();
+            }
+        }
+        Report.logInfo("Task expand mode is not loaded properly.");
+        return false;
+    }
+
     public boolean isCTAExpandedViewLoaded(CTA cta) {
-        wait.waitTillElementDisplayed(CTA_DETAILED_FORM, MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
             expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
@@ -399,6 +416,7 @@ public class WorkflowPage extends WorkflowBasePage {
                     cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
                 return true;
             } else {
+                Report.logInfo("Waiting for Event Details to Load");
                 amtDateUtil.stalePause();
             }
         }
@@ -521,6 +539,32 @@ public class WorkflowPage extends WorkflowBasePage {
         waitTillNoLoadingIcon();
         return this;
     }
+
+    public WorkflowPage updateTaskDetails(Task oldTask, Task newTask) {
+        expandTaskView(oldTask);
+        if(newTask.getDate() != null) {
+            field.clearAndSetText(TASK_DUE_DATE, newTask.getDate());
+        }
+        if(newTask.getSubject() !=null) {
+            item.click(TASK_EXP_SUBJECT);
+            item.clearText(TASK_EXP_SUBJECT);
+            Actions action = new Actions(driver);
+            action.moveToElement(element.getElement(TASK_EXP_SUBJECT)).sendKeys(newTask.getSubject()).build().perform();;
+            amtDateUtil.stalePause();
+            action.moveToElement(element.getElement(TASK_EXP_PRIORITY));
+        }
+        if(newTask.getPriority() != null) {
+            item.click(TASK_EXP_PRIORITY);
+            selectValueInDropDown(newTask.getPriority());
+        }
+        if(newTask.getStatus() !=null) {
+            item.click(TASK_EXP_STATUS);
+            selectValueInDropDown(newTask.getStatus());
+        }
+        amtDateUtil.stalePause();
+        return this;
+    }
+
 
 
 }
