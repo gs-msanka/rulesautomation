@@ -32,15 +32,14 @@ public class WorkFlowTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
-       WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
-       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       workflowPage.createCTA(cta);
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        workflowPage.createCTA(cta);
        
-       if(testData.get("Assignee")==null)
-       cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-       else
-    	   cta.setAssignee(testData.get("Assignee"));
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created");
     }
    
@@ -50,29 +49,26 @@ public class WorkFlowTest extends BaseTest {
        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         workflowPage.createCTA(cta);
-        
-        if(testData.get("Assignee")==null)
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-            else
-         	   cta.setAssignee(testData.get("Assignee"));
-        
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-        workflowPage.isCTADisplayed(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created");
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_OPPOR_1")
     public void createOpportunityCTA(HashMap<String, String> testData) throws IOException {
-    	  WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
-          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-          workflowPage.createCTA(cta);
-          
-          if(testData.get("Assignee")==null)
-              cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-              else
-           	   cta.setAssignee(testData.get("Assignee"));      
-          cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-           Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        workflowPage.createCTA(cta);
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -80,18 +76,17 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Daily_EVeryWeekDay(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         
-         if(testData.get("Assignee")==null)
-             cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-             else
-          	   cta.setAssignee(testData.get("Assignee"));      
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-          recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-          recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-        		 
-         workflowPage.createCTA(cta);
-          Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs EveryWeekday) CTA is created");
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        CTA.EventRecurring recurEvent=cta.getEventRecurring();
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+
+        workflowPage.createCTA(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs EveryWeekday) CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -99,19 +94,17 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Daily_EveryNDays(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         
-         if(testData.get("Assignee")==null)
-             cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-             else
-          	   cta.setAssignee(testData.get("Assignee"));      
-         
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-          recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-          recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-        		 
-         workflowPage.createCTA(cta);
-          Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs Every N Days) CTA is created");
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        CTA.EventRecurring recurEvent=cta.getEventRecurring();
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+
+        workflowPage.createCTA(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs Every N Days) CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -119,19 +112,17 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Weekly_EveryNWeeks(HashMap<String, String> testData) throws IOException  {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        
-        if(testData.get("Assignee")==null)
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-            else
-         	   cta.setAssignee(testData.get("Assignee"));      
-        
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-       		 
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+
         workflowPage.createCTA(cta);
-         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Weekly Recurring ( Recurs Every N Weeks) CTA is created");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Weekly Recurring ( Recurs Every N Weeks) CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -139,19 +130,17 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        
-        if(testData.get("Assignee")==null)
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-            else
-         	   cta.setAssignee(testData.get("Assignee"));      
-        
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-       		 
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+
         workflowPage.createCTA(cta);
-         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every Month) CTA is created");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every Month) CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -159,19 +148,18 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Monthly_ByWeek(HashMap<String, String> testData) throws IOException {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        
-        if(testData.get("Assignee")==null)
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-            else
-         	   cta.setAssignee(testData.get("Assignee"));      
-        
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
+
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-       		 
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+
         workflowPage.createCTA(cta);
-         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every n No.of Months on a specific day of Week) CTA is created");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every n No.of Months on a specific day of Week) CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -179,19 +167,17 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Yearly_ByMonth(HashMap<String, String> testData) throws IOException {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        
-        if(testData.get("Assignee")==null)
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data 
-            else
-         	   cta.setAssignee(testData.get("Assignee"));      
-        
+
+        if(cta.getAssignee()==null) {
+            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+        }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0).split("/")[2]);
-         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0).split("/")[2]);
-       		 
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0).split("/")[2]);
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0).split("/")[2]);
+
         workflowPage.createCTA(cta);
-         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Yearly Recurring ( Recurs On a specific day of a specific month yearly) CTA is created");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Yearly Recurring ( Recurs On a specific day of a specific month yearly) CTA is created");
    }
    
    @Test
