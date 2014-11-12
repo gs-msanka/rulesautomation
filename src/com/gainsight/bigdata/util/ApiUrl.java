@@ -14,6 +14,7 @@ public class ApiUrl extends NSUrl {
 	public static final String BASE_TOKENS = API + "/tokens";
 	public static final String BASE_DS = API + "/datascience";
 	public static final String BASE_COLLECTIONS = API + "/collections";
+	public static final String BASE_UT = API + "/usagetracker";
 
 	// ------------------- REPORT URLs -------------------
 	public static final String REPORT_GET_ALL = BASE_REPORTS + "/all";
@@ -73,6 +74,16 @@ public class ApiUrl extends NSUrl {
 	// @URL_PARAM1:dataModelID
 	public static final String DS_UPDATE_OUTPUT = BASE_DS + "/configuration" + URL_PARAM1 + "/output";
 	public static final String DS_REMOVE_AUTHTOKEN = BASE_DS + "/done";
+	// ------------------- END -------------------
+
+	// --------------- USAGE TRACKER URLs-----------------
+	public static final String UT_DISTINCT_EVENTS_BY_ACC = BASE_UT + "/accounts" + URL_PARAM1
+			+ "/events/distinct";
+	public static final String UT_GET_DATA = BASE_UT + "/accounts" + URL_PARAM1 + "/data";
+	// ------------------- END -------------------
+
+	// --------------- USAGE SUMMARY URLs-----------------
+
 	// ------------------- END -------------------
 
 	public static List<String> getApiList = new ArrayList<String>();
