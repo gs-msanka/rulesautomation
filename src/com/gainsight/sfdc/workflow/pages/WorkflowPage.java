@@ -683,7 +683,7 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    public WorkflowPage deleteEvent(CTA cta) {
+    public WorkflowPage deleteCTA(CTA cta) {
         expandCTAView(cta);
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         item.click(String.format(EXP_VIEW_DELETE_CTA, cta.getType()));

@@ -9,11 +9,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class CompareJSON {
+    /*
 	public static boolean compareJSONs(File f1, File f2, boolean ignoreSFDCIDs)
 			throws IOException, JSONException {
 		BufferedReader bfr = new BufferedReader(new FileReader(f1));
@@ -70,5 +68,5 @@ public class CompareJSON {
 		} else {
 			return elem;
 		}
-	}
+	} */
 }
