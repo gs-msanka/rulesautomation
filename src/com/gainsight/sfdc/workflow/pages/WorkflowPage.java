@@ -2,16 +2,19 @@ package com.gainsight.sfdc.workflow.pages;
 
 
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import com.sforce.soap.metadata.Workflow;
 import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import java.util.List;
+
 /**
  * Created by gainsight on 07/11/14.
  */
@@ -19,9 +22,8 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	private final String READY_INDICATOR  = "//div[@title='Add CTA']";
     private final String CALENDAR_VIEW_READY_INDICATOR = "//ul[@class='calendar-tab']";
-    private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image-64')]";
+    private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
-
 
     //Header Page Elements
     private final String SHOW_CLOSED_CTA    = "//li[contains(@class, 'cta-stage baseFilter cta-stage-filter')]";
@@ -40,11 +42,12 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
     private final String FILTER             = "//a[@class='dashboard-filter-btn']";
 
+    private final String OK_ACTION          = "//input[@data-action='Ok' and contains(@class, 'btn_save')]";
     private final String SAVE_ACTION        = "//input[@data-action='Yes' and contains(@class, 'btn_save')]";
     private final String CANCEL_ACTION      = "//input[@data-action='Cancel' and contains(@class, 'btn_cancel')]";
     private final String DELETE_ACTION      = "//input[@data-action='Delete' and contains(@class, 'btn_save')]";
 
-    //Form Page Elements
+    //CTA Form Page Elements
     private final String CREATE_CTA_ICON    = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
     private final String CREATE_RISK_LINK   = "//a[@data-action='RISK']";
     private final String CREATE_OPPOR_LINK  = "//a[@data-action='OPPORTUNITY']";
@@ -93,7 +96,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_APPLY_PLAYBOOK        = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Apply Playbook']";
     private final String EXP_VIEW_REPLACE_PLAYBOOK      = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Replace Playbook']";
     private final String EXP_VIEW_DELETE_CTA            = "//a[@data-action='DELETE_CTA' and contains(text(), 'Delete %s')]";
-    private final String DETAILED_FORM              = "//div[@class='widget workflow-details' and contains(@style, 'opacity: 1;')]";
+    private final String DETAILED_FORM                  = "//div[@class='widget workflow-details' and contains(@style, 'opacity: 1;')]";
     private final String EXP_VIEW_SUBJECT_INPUT         = "//input[contains(@class, 'editblue_title_input cta-title')]";
     private final String EXP_VIEW_REASON_BUTTON         = "//select[@class='select-cta-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_PRIORITY_BUTTON       = "//select[@class='cta-select-priority cockpit-multiselect']/following-sibling::button";
@@ -105,8 +108,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
     private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']";
-    
-private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::input[@name='search_text']";
+    private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::input[@name='search_text']";
     private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='wf-dropdown-menu']/descendant::label[contains(text(), '%s')]";
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
 
@@ -122,7 +124,6 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
     private final String TASK_EXP_SLIDE_ICON        = "//div[@class='task-detail-set']/div[@class='slide-icon']";
     private final String TASK_EXP_MORE_OPTIONS      = "//div[@class='task-detail-set']/descendant::a[contains(@class, 'more-options')]";
     private final String TASK_EXP_EDIT_OPTION       = "//div[@class='task-detail-set']/descendant::a[@data-action='EDIT_TASK']";
-
     private final String TASK_EXP_DELETE_OPTION     = "//div[@class='task-detail-set']/descendant::a[@data-action='DELETE_TASK']";
 
     //Filter View Elements
@@ -150,12 +151,6 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
     private final String PLAYBOOK_CANCEL = "//button[contains(@class, 'btn-cancel') and text()='Cancel']";
 
 
-
-
-
-
-
-
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -178,15 +173,11 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
         env.setTimeout(30);
     }
 
-
-	private void waitTillNoSearchIcon() {
+    private void waitTillNoSearchIcon() {
         env.setTimeout(1);
         wait.waitTillElementNotDisplayed(SEARCH_LOADING, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
-
-
-
 
     public void createCTA(CTA cta){
     	Report.logInfo("Adding CTA of Type - RISK");
@@ -293,29 +284,6 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
 		button.click(SAVE_CTA);
         amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public void addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
 		for(Task task : tasks){
@@ -356,13 +324,28 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
 
     public WorkflowPage updateCTADetails(CTA oldCta, CTA newCta) {
         expandCTAView(oldCta);
-         if(newCta.getSubject() !=null) {
+        if(!oldCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
+            item.click(EXP_VIEW_ASSIGNEE);
+            field.setTextByKeys(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
+            waitTillNoLoadingIcon();
+            item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
+        }
+        if(newCta.getDueDate() != null) {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
+            js.executeScript(a);
+        }
+        if(newCta.getSubject() !=null) {
             item.click(EXP_VIEW_SUBJECT_INPUT);
-            item.clearText(EXP_VIEW_SUBJECT_INPUT);
-            Actions action = new Actions(driver);
-            action.moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).sendKeys(newCta.getSubject()).build().perform();;
-            amtDateUtil.stalePause();
-            action.moveToElement(element.getElement(EXP_VIEW_PRIORITY_BUTTON));
+
+            item.click(EXP_VIEW_SUBJECT_INPUT);
+            new Actions(driver).moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).build().perform();
+            field.setText(EXP_VIEW_SUBJECT_INPUT, newCta.getSubject());
+            new Actions(driver).moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).sendKeys(Keys.ENTER).build().perform();
+
+            WebElement elements = element.getElement(EXP_VIEW_SUBJECT_INPUT);
+            JavascriptLibrary javascript = new JavascriptLibrary();
+            javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
         }
 
         if(newCta.getPriority() != null) {
@@ -383,12 +366,6 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
         return this;
     }
 
-    public void deleteCTA(CTA cta){
-    	expandCTAView(cta);
-    	item.click(SELECT_MORE_OPTIONS);
-    	item.click(DELETE_CTA_OPTION);
-    	item.click(DELETE_CONFIRMATION);
-    }
     public void selectValueInDropDown(String value) {
         boolean selected = false;
         for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
@@ -409,7 +386,7 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
         waitTillNoLoadingIcon();
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
-            Report.logInfo("NUmber of elements :" +webElements);
+            Report.logInfo("NUmber of elements :" +webElements.size());
             for(WebElement ele : webElements) {
                 if(ele.isDisplayed()) {
                     return true;
@@ -431,7 +408,6 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
         return this;
     }
     public WorkflowPage expandCTAView(CTA cta) {
-    	
         String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         item.click(xPath);
         if(!isCTAExpandedViewLoaded(cta)) {
@@ -483,7 +459,7 @@ private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-
         return true;
     }
 
-public boolean isTaskExpandedViewLoaded(Task task) {
+    public boolean isTaskExpandedViewLoaded(Task task) {
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
         for(int i=0; i<5; i++) {
@@ -510,9 +486,9 @@ public boolean isTaskExpandedViewLoaded(Task task) {
         Report.logInfo("Task expand mode is not loaded properly.");
         return false;
     }
-	
+
     public boolean isCTAExpandedViewLoaded(CTA cta) {
-        wait.waitTillElementDisplayed(CTA_DETAILED_FORM, MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
             expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
@@ -612,7 +588,8 @@ public boolean isTaskExpandedViewLoaded(Task task) {
         Report.logInfo("Task is not displayed");
         return false;
     }
-public WorkflowPage showCTATasks(CTA cta) {
+
+    public WorkflowPage showCTATasks(CTA cta) {
         String eventXPath = getCTAXPath(cta);
         item.click(eventXPath+"/descendant::div[contains(@class, 'workflow-taskscnt')]");
         String eventTaskBody = eventXPath+"descendant::div[@class='gs-cta-body']";
@@ -662,15 +639,25 @@ public WorkflowPage showCTATasks(CTA cta) {
             item.click(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()));
         }
         if(newTask.getDate() != null) {
-            field.clearAndSetText(TASK_DUE_DATE, newTask.getDate());
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            String a = "j$('#"+TASK_DUE_DATE+"').val(\""+newTask.getDate()+"\").trigger(\"change\")" ;
+            js.executeScript(a);
         }
         if(newTask.getSubject() !=null) {
-            item.click(TASK_EXP_SUBJECT);
-            item.clearText(TASK_EXP_SUBJECT);
-            Actions action = new Actions(driver);
-            action.moveToElement(element.getElement(TASK_EXP_SUBJECT)).sendKeys(newTask.getSubject()).build().perform();;
-            amtDateUtil.stalePause();
-            action.moveToElement(element.getElement(TASK_EXP_PRIORITY));
+            try {
+                item.click(TASK_EXP_SUBJECT);
+                item.clearText(TASK_EXP_SUBJECT);
+                new Actions(driver).moveToElement(element.getElement(TASK_EXP_SUBJECT)).build().perform();
+                field.setText(TASK_EXP_SUBJECT, newTask.getSubject());
+                new Actions(driver).moveToElement(element.getElement(TASK_EXP_SUBJECT)).sendKeys(Keys.ENTER).build().perform();
+
+                WebElement elements = element.getElement(TASK_EXP_SUBJECT);
+                JavascriptLibrary javascript = new JavascriptLibrary();
+                javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         if(newTask.getPriority() != null) {
             item.click(TASK_EXP_PRIORITY);
