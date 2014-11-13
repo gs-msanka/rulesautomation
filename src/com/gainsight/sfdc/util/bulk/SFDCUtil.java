@@ -44,6 +44,7 @@ public class SFDCUtil {
 			info.setServiceEndPoint(config.getServiceEndpoint());
 			info.setUserEmail(userInfo.getUserEmail());
 			info.setUserName(userInfo.getUserName());
+			info.setUserFullName(userInfo.getUserFullName());
 			info.setUserCurrencySymbol(userInfo.getCurrencySymbol());
 			String sept = config.getServiceEndpoint();
 			sept = sept.substring(0, sept.indexOf(".com") + 4);

@@ -4,7 +4,10 @@ package com.gainsight.sfdc.workflow.pages;
 import com.gainsight.sfdc.workflow.pojos.Task;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 import com.sforce.soap.metadata.Workflow;
+import com.sforce.soap.partner.sobject.SObject;
+
 import org.openqa.selenium.By;
+
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
@@ -13,6 +16,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
+
 import java.util.List;
 
 /**
@@ -137,7 +141,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String ADD_NEW_TASK					="//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String ADD_TASK_POPUP_TITLE	="//span[text()='Add Task']";
     private final String ADD_ASSIGNEE_TO_TASK	="//input[@class='search_input form-control ui-autocomplete-input']";
-    private final String SELECT_ASSIGNEE_FOR_TASK="//label[contains(text(),'%s')]";
+    private final String SELECT_ASSIGNEE_FOR_TASK="//div[@class='gs_searchform']/descendant::label[contains(text(),'%s')]";
     private final String ADD_SUBJECT_TO_TASK		="//input[@class='Subject__c form-control']";
     private final String ADD_DATE_TO_TASK			="//input[@class='Date__c form-control gs-calendar']";
     private final String TO_SELECT_PRIORITY_IN_TASK    		= "//select[@class='Priority__c form-control form-select']/following-sibling::button";
@@ -196,8 +200,8 @@ public class WorkflowPage extends WorkflowBasePage {
 
     	}
     	if(cta.getType().equals("Event")){
-    		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		item.click(CREATE_EVENT_LINK);
+    		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
     	}
@@ -284,15 +288,29 @@ public class WorkflowPage extends WorkflowBasePage {
 		button.click(SAVE_CTA);
         amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
+
 	public void addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
 		for(Task task : tasks){
+			
 			item.click(SELECT_MORE_OPTIONS);
 			item.click(ADD_NEW_TASK);
 			wait.waitTillElementDisplayed(ADD_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
 			item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, task.getAssignee());
-			//item.setTextByKeys(ADD_ASSIGNEE_TO_TASK, "\r");
-			item.click(String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
+			driver.findElement(By.xpath(ADD_ASSIGNEE_TO_TASK)).sendKeys(Keys.ENTER);
+			waitTillNoLoadingIcon();
+			System.out.println("clicking on ....."+String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
+			//item.click(String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
+			   boolean selected = false;
+	            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+task.getAssignee()+"')]")) {
+	                if(ele.isDisplayed()) {
+	                    ele.click();
+	                    selected = true;
+	                }
+	            }
+	            if(!selected) {
+	                throw new RuntimeException("Unable to select owner");
+	            }
 			item.setText(ADD_SUBJECT_TO_TASK, task.getSubject());
 			item.clearAndSetText(ADD_DATE_TO_TASK, task.getDate());
 			item.click(ADD_TASK_POPUP_TITLE);  //just clicking on the form because the date picker is not vanishing and not able to set the priority
@@ -314,7 +332,6 @@ public class WorkflowPage extends WorkflowBasePage {
     public void createMilestoneForCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_MILESTONE);
-    	
     }
     
     public void snoozeCTA(CTA cta){
@@ -717,7 +734,6 @@ public class WorkflowPage extends WorkflowBasePage {
         amtDateUtil.sleep(5);
         return this;
     }
-
 
     private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
         for(Task task : tasks) {

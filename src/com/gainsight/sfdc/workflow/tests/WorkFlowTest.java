@@ -6,6 +6,8 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.partner.sobject.SObject;
+
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -36,11 +38,8 @@ public class WorkFlowTest extends BaseTest {
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-              
-
-
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         workflowPage.createCTA(cta);
@@ -52,10 +51,8 @@ public class WorkFlowTest extends BaseTest {
     public void createNonRecurringEventCTA(HashMap<String, String> testData) throws IOException {
        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
-
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));    
         workflowPage.createCTA(cta);
@@ -67,10 +64,8 @@ public class WorkFlowTest extends BaseTest {
     public void createOpportunityCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
-
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         workflowPage.createCTA(cta);
@@ -82,9 +77,8 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Daily_EVeryWeekDay(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
@@ -102,7 +96,7 @@ public class WorkFlowTest extends BaseTest {
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
@@ -120,7 +114,7 @@ public class WorkFlowTest extends BaseTest {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
@@ -138,7 +132,7 @@ public class WorkFlowTest extends BaseTest {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
@@ -156,7 +150,7 @@ public class WorkFlowTest extends BaseTest {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
 
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
@@ -175,7 +169,7 @@ public class WorkFlowTest extends BaseTest {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
         if(cta.getAssignee()==null) {
-            cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+            cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
         }
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
@@ -196,18 +190,15 @@ public class WorkFlowTest extends BaseTest {
    public void createRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
-
-
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-     //  workflowPage.createCTA(cta);      
+     //workflowPage.createCTA(cta);      
        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserName());
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
         
@@ -223,14 +214,14 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
       workflowPage.createCTA(cta);      
        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserName());
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
         
@@ -246,14 +237,14 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
       workflowPage.createCTA(cta);      
        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserName());
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
         
@@ -269,12 +260,55 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-      workflowPage.createCTA(cta);      
+       workflowPage.createCTA(cta);      
       workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
    }
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPORTUNITY_CTA_WITH_MILESTONES")
+   public void createMilestoneForOpportunityCTA(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+
+       if(cta.getAssignee()==null) {
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
+       } 
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       workflowPage.createCTA(cta);      
+      workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
+   }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_MILESTONES")
+   public void createMilestoneForEventCTA(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+
+       if(cta.getAssignee()==null) {
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
+       } 
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       workflowPage.createCTA(cta);      
+      workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
+   }
+   
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_FOR_SNOOZE")
@@ -289,7 +323,7 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
       workflowPage.createCTA(cta); 
@@ -297,7 +331,7 @@ public class WorkFlowTest extends BaseTest {
       CTA updatedCta=mapper.readValue(testData.get("UpdatedCTA"), CTA.class);
       
       if(updatedCta.getAssignee()==null)
-    	  updatedCta.setAssignee(sfinfo.getUserName());
+    	  updatedCta.setAssignee(sfinfo.getUserFullName());
       updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()),0));
       workflowPage.updateCTADetails(cta, updatedCta);
       Assert.assertTrue(workflowPage.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
@@ -311,7 +345,7 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
        if(cta.getAssignee()==null) {
-           cta.setAssignee(sfinfo.getUserName()); //  Setting the current logged in user..if there is no data provided in test data
+           cta.setAssignee(sfinfo.getUserFullName()); //  Setting the current logged in user..if there is no data provided in test data
        } 
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
       workflowPage.createCTA(cta); 

@@ -9,6 +9,7 @@ public class SFDCInfo {
 	String sessionId;
 	String endpoint;
 	String userName;
+	String userFullName;
 	String userEmail;
 	String authEndPoint;
 	String serviceEndPoint;
@@ -20,6 +21,14 @@ public class SFDCInfo {
 
 	public void setUserCurrencySymbol(String userCurrencySymbol) {
 		this.userCurrencySymbol = userCurrencySymbol;
+	}
+	
+	public String getUserFullName() {
+		return userFullName;
+	}
+
+	public void setUserFullName(String userFullName) {
+		this.userFullName = userFullName;
 	}
 
 	public String getUserName() {
