@@ -1,101 +1,68 @@
 package com.gainsight.bigdata.rulesengine;
 
+import java.util.List;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
 
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 public class rules {
 	private static final String CustomerInfo = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/CustomerInfo.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/CustomerInfo.apex";
 	private static final String CustomerInfo1 = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/CustomerInfo1.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/CustomerInfo1.apex";
 	private static final String LoadToCustomer = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/LoadToCustomer.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomer.apex";
 	private static final String LoadToCustomer1 = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/LoadToCustomer1.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomer1.apex";
 	private static final String LoadtoCust_Picklist = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/LoadtoCust_Picklist.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/LoadtoCust_Picklist.apex";
 	private static final String LoadtoCust_Picklist1 = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/LoadtoCust_Picklist1.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/LoadtoCust_Picklist1.apex";
 	private static final String WithAndOrConditionFilters = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/WithAndOrConditionFilters.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/WithAndOrConditionFilters.apex";
 	private static final String WithAndOrConditionFilters1 = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/WithAndOrConditionFilters1.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/WithAndOrConditionFilters1.apex";
 	private static final String OCD_Today = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/OCD_Today.apex";
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/OCD_Today.apex";
 	private static final String OCD_Today1 = TestEnvironment.basedir
-			+ "/testdata/newstack/RulesEngine/OCD_Today1.apex";
-	static NSInfo nsinfo;
-	static WebAction wa;
-	protected SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-	protected TestEnvironment env = new TestEnvironment();
-	private Boolean isPackaged =Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-	public static SFDCUtil sfdc = new SFDCUtil();
-	public Header h;
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/OCD_Today1.apex";
+	private static final String CountCust = TestEnvironment.basedir
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/CountCust.apex";
+	private static final String CountCust1 = TestEnvironment.basedir
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/CountCust1.apex";
+	private static final String PreviewResults = TestEnvironment.basedir
+			+ "/testdata/newstack/RulesEngine/LoadToCustomers/PreviewResults.apex";
+	private static final boolean isEnabled = false;
+	static WebAction wa = new WebAction();
+
+	public SFDCUtil sfdc = new SFDCUtil();
+	public Header header = new Header();
 	SOQLUtil soql = new SOQLUtil();
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 * 
-	 */
-	
-	//Work In Progress Need to optimize the code as we will proceed
-	
+	// Work In Progress Need to optimize the code as we will proceed
+
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		nsinfo = NSUtil.fetchNewStackInfo(sfinfo, new Header());
-		
-		soql.login(env.getUserName(), env.getUserPassword(),
-				env.getProperty("sfdc.stoken"));
-
-		wa = new WebAction();
-		h = new Header();
-		h.addHeader("appOrgId", sfinfo.getOrg());
-		h.addHeader("appSessionId", sfinfo.getSessionId());
-		h.addHeader("appUserId", sfinfo.getUserId());
-		h.addHeader("Content-Type", "application/json");
-		System.out.println("endpoint:" + sfinfo.getEndpoint());
-		//"https://jbcxm.na10.visual.force.com"
-		String SFInstance=sfinfo.getEndpoint().split("https://")[1].split("\\.")[0];
-		String OriginHeader="";
-		if(isPackaged)
-		OriginHeader	="https://jbcxm."+SFInstance+".visual.force.com";
-		else
-			OriginHeader	="https://"+SFInstance+".visual.force.com";
-		
-		System.out.println("OriginHeader value="+OriginHeader);
-		h.addHeader("Origin", OriginHeader);
-		
+		LoginUtil.sfdcLogin(soql, header, wa);
 	}
-
-	@AfterClass
-	public void afterClass() {
-
-	}
-
-	// Its for CustomerInfo Sync when Checkbox Apply to Gainsight customers is
-	// not enabled
 
 	@Test
+	// Its for CustomerInfo Sync when Checkbox Apply to Gainsight customers is
+	// not enabled
 	public void rulesOne() throws Exception {
-
 		sfdc.runApexCodeFromFile(CustomerInfo, true);
 		System.out.print("Filename = " + CustomerInfo);
 		sfdc.runApexCodeFromFile(CustomerInfo1, true);
@@ -106,21 +73,22 @@ public class rules {
 			String rawBody = ("{}");
 			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
 					+ "/eventrule" + "/" + r.getId() + "", rawBody,
-					h.getAllHeaders());
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode tree1 = mapper.readTree(result.getContent());
-			Assert.assertTrue(tree1.findValue("result").asBoolean());
-			Assert.assertNotNull(tree1.findValue("requestId").isNull());
-			Thread.sleep(10000);
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
+			Thread.sleep(15000);
 		}
 		SObject[] rules1 = soql.getRecords("SELECT count(Id) FROM Account");
-		SObject[] rules2 = soql.getRecords("SELECT count(Id) FROM JBCXM__CustomerInfo__c");
+		SObject[] rules2 = soql
+				.getRecords("SELECT count(Id) FROM JBCXM__CustomerInfo__c");
 		System.out.println(rules1[0].getChild("expr0").getValue());
 		System.out.println(rules2[0].getChild("expr0").getValue());
 		Assert.assertEquals(
 				rules1[0].getChild("expr0").getValue()
 						.equals(rules2[0].getChild("expr0").getValue()), true);
-		}
+	}
 
 	@Test
 	// Load to customer with Account names starts with A and ASV=4545
@@ -135,11 +103,11 @@ public class rules {
 			String rawBody = ("{}");
 			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
 					+ "/eventrule" + "/" + r.getId() + "", rawBody,
-					h.getAllHeaders());
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode tree1 = mapper.readTree(result.getContent());
-			Assert.assertTrue(tree1.findValue("result").asBoolean());
-			Assert.assertNotNull(tree1.findValue("requestId").isNull());
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
 			Thread.sleep(30000);
 		}
 		SObject[] rules1 = soql
@@ -151,12 +119,11 @@ public class rules {
 		Assert.assertEquals(
 				rules1[0].getChild("expr0").getValue()
 						.equals(rules2[0].getChild("expr0").getValue()), true);
-		}
+	}
 
-	
 	@Test
-	//Load to customer with picklist excludes all in where condition
-    public void rulesThree() throws Exception {
+	// Load to customer with picklist excludes all in where condition
+	public void rulesThree() throws Exception {
 		sfdc.runApexCodeFromFile(LoadtoCust_Picklist, true);
 		System.out.print("Filename = " + LoadtoCust_Picklist);
 		sfdc.runApexCodeFromFile(LoadtoCust_Picklist1, true);
@@ -167,11 +134,11 @@ public class rules {
 			String rawBody = ("{}");
 			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
 					+ "/eventrule" + "/" + r.getId() + "", rawBody,
-					h.getAllHeaders());
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode tree1 = mapper.readTree(result.getContent());
-			Assert.assertTrue(tree1.findValue("result").asBoolean());
-			Assert.assertNotNull(tree1.findValue("requestId").isNull());
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
 			Thread.sleep(30000);
 		}
 		SObject[] rules1 = soql
@@ -183,11 +150,11 @@ public class rules {
 		Assert.assertEquals(
 				rules1[0].getChild("expr0").getValue()
 						.equals(rules2[0].getChild("expr0").getValue()), true);
-		}
+	}
 
 	@Test
 	// In FIlters And+Or condition
-    public void rulesFour() throws Exception {
+	public void rulesFour() throws Exception {
 		sfdc.runApexCodeFromFile(WithAndOrConditionFilters, true);
 		System.out.print("Filename = " + WithAndOrConditionFilters);
 		sfdc.runApexCodeFromFile(WithAndOrConditionFilters1, true);
@@ -198,11 +165,11 @@ public class rules {
 			String rawBody = ("{}");
 			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
 					+ "/eventrule" + "/" + r.getId() + "", rawBody,
-					h.getAllHeaders());
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode tree1 = mapper.readTree(result.getContent());
-			Assert.assertTrue(tree1.findValue("result").asBoolean());
-			Assert.assertNotNull(tree1.findValue("requestId").isNull());
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
 			Thread.sleep(30000);
 		}
 		SObject[] rules1 = soql
@@ -214,11 +181,12 @@ public class rules {
 		Assert.assertEquals(
 				rules1[0].getChild("expr0").getValue()
 						.equals(rules2[0].getChild("expr0").getValue()), true);
-		}
+	}
 
 	@Test
-	// Date Sync for Load to Customer with Today's date (In Where Account Name contains B)
-    public void rulesFive() throws Exception {
+	// Date Sync for Load to Customer with Today's date (In Where Account Name
+	// contains B)
+	public void rulesFive() throws Exception {
 		sfdc.runApexCodeFromFile(OCD_Today, true);
 		System.out.print("Filename = " + OCD_Today);
 		sfdc.runApexCodeFromFile(OCD_Today1, true);
@@ -229,11 +197,11 @@ public class rules {
 			String rawBody = ("{}");
 			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
 					+ "/eventrule" + "/" + r.getId() + "", rawBody,
-					h.getAllHeaders());
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode tree1 = mapper.readTree(result.getContent());
-			Assert.assertTrue(tree1.findValue("result").asBoolean());
-			Assert.assertNotNull(tree1.findValue("requestId").isNull());
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
 			Thread.sleep(30000);
 		}
 		SObject[] rules1 = soql
@@ -245,5 +213,68 @@ public class rules {
 		Assert.assertEquals(
 				rules1[0].getChild("expr0").getValue()
 						.equals(rules2[0].getChild("expr0").getValue()), true);
+	}
+
+	@Test
+	// Data Sync for load to customers with aggregation in setup rule and
+	// advance criteria in setup actions.
+	public void rulesSix() throws Exception {
+		sfdc.runApexCodeFromFile(CountCust, true);
+		System.out.print("Filename = " + CountCust);
+		sfdc.runApexCodeFromFile(CountCust1, true);
+		System.out.print("Filename =" + CountCust1);
+		SObject[] rules = soql
+				.getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CountCust'");
+		for (SObject r : rules) {
+			String rawBody = ("{}");
+			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
+					+ "/eventrule" + "/" + r.getId() + "", rawBody,
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
+
+			Thread.sleep(30000);
 		}
+		SObject[] rules1 = soql
+				.getRecords("Select Count(Id) From Account Where ((Id != null) AND (JBCXM__CustomerInfo__r.Id != null)) AND JBCXM__CustomerInfo__c != null");
+		SObject[] rules2 = soql
+				.getRecords("SELECT count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__MRR__c=1");
+		System.out.println(rules1[0].getChild("expr0").getValue());
+		System.out.println(rules2[0].getChild("expr0").getValue());
+		Assert.assertEquals(
+				rules1[0].getChild("expr0").getValue()
+						.equals(rules2[0].getChild("expr0").getValue()), true);
+	}
+
+	@Test
+	// Preview Results
+	public void rulesSeven() throws Exception {
+		sfdc.runApexCodeFromFile(PreviewResults, true);
+		System.out.print("Filename = " + PreviewResults);
+		SObject[] rules = soql
+				.getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='PreviewResults'");
+		for (SObject r : rules) {
+			String rawBody = "{\"numberOfRecords\": \"10\"}";
+			System.out.println(PropertyReader.nsAppUrl + "/api" + "/eventrule"
+					+ "/" + r.getId() + "/result");
+			HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
+					+ "/eventrule" + "/" + r.getId() + "/result", rawBody,
+					header.getAllHeaders());
+			ResponseObject responseObj = LoginUtil.convertToObject(result
+					.getContent());
+			// Assert.assertEquals(ro.getData().size(), 10);
+			List<Object> data = (List<Object>) responseObj.getData();
+			Assert.assertTrue(data.size() <= 10);
+			Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+			Assert.assertNotNull(responseObj.getRequestId());
+
+		}
+	}
+
+	@AfterClass
+	public void afterClass() {
+		soql = null;
+	}
 }
