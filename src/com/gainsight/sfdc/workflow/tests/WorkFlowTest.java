@@ -3,6 +3,9 @@ package com.gainsight.sfdc.workflow.tests;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
+import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
@@ -25,12 +28,17 @@ import java.util.List;
 public class WorkFlowTest extends BaseTest {
 
     ObjectMapper mapper = new ObjectMapper();
-    private final String TEST_DATA_FILE = "testdata/sfdc/workflow/WorkFlow_Test.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/workflow/tests/WorkFlow_Test.xls";
+    private final String CTA_OBJECT     = "JBCXM__CTA__C";
+    private final String DELETE_CTA_SCRIPT = "Delete [Select id from JBCXM__CTA__c];";
+
 
     @BeforeClass
     public void setup() {
         userLocale = soql.getUserLocale();
+        sfinfo= SFDCUtil.fetchSFDCinfo();
         basepage.login();
+        isPackage = isPackageInstance();
     }
     
     @BeforeMethod
@@ -302,7 +310,7 @@ public class WorkFlowTest extends BaseTest {
       System.out.println("querying for:"+milestoneQuery);
       SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
       System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
-      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -525,6 +533,10 @@ public class WorkFlowTest extends BaseTest {
     @AfterClass
     public void tearDown() {
         basepage.logout();
+    }
+
+    private void deleteAllCTA() {
+        apex.runApex(resolveStrNameSpace(DELETE_CTA_SCRIPT));
     }
 
 }
