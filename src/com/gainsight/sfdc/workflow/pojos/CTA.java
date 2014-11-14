@@ -24,8 +24,26 @@ public class CTA {
     private List<Attribute> attributes = new ArrayList<Attribute>();
     private boolean isRecurring = false;
     private EventRecurring eventRecurring;
+    private String snoozeDate="5";
+    private String snoozeReason;
+    
+    public String getSnoozeReason() {
+		return snoozeReason;
+	}
 
-    public EventRecurring getEventRecurring() {
+	public void setSnoozeReason(String snoozeReason) {
+		this.snoozeReason = snoozeReason;
+	}
+
+	public String getSnoozeDate() {
+		return snoozeDate;
+	}
+
+	public void setSnoozeDate(String snoozeDate) {
+		this.snoozeDate = snoozeDate;
+	}
+
+	public EventRecurring getEventRecurring() {
         return eventRecurring;
     }
 

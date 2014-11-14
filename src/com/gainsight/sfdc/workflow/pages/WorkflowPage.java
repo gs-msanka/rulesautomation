@@ -3,6 +3,7 @@ package com.gainsight.sfdc.workflow.pages;
 
 import com.gainsight.sfdc.workflow.pojos.Task;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
+import com.thoughtworks.selenium.webdriven.commands.SelectFrame;
 import com.sforce.soap.metadata.Workflow;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -11,12 +12,15 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +99,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
+    private final String EXP_VIEW_HEADER ="//div[@class='wf-details-header']";
     private final String EXP_VIEW_CTA_MORE_OPTIONS      = "//a[@class='more-edit more-options']";
     private final String EXP_VIEW_ADD_NEW_TASK          = "//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String EXP_VIEW_APPLY_PLAYBOOK        = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Apply Playbook']";
@@ -110,12 +115,16 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
     private final String EXP_VIEW_DUE_DATE_INPUT        = "frmDateCtrl";
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
+    private final String EXP_VIEW_SET_SNOOZE_DATE = "//input[@class='form-control cta-snooze-input']";
+	private final String EXP_VIEW_SNOOZE_REASON_BUTTON = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
     private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']";
     private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::input[@name='search_text']";
     private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='wf-dropdown-menu']/descendant::label[contains(text(), '%s')]";
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
-
+    
+    private final String VIEW_TASKS="//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
+    
     //Task Expanded View Elements
     private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
     private final String TASK_EXP_ASSIGNEE_SEARCH   = "//div[@class='task-detail-set']/descendant::input[@name='search_text']";
@@ -335,9 +344,20 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     
     public void snoozeCTA(CTA cta){
-    	
+    	expandCTAView(cta);
+    	item.click(EXP_VIEW_SNOOZE);
+    	//
+    	item.clearAndSetText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
+    	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
+    	selectValueInDropDown(cta.getSnoozeReason());
+    	item.click(EXP_VIEW_HEADER); //click somewhere else
     }
     
+    public boolean verifySnoozeCTA(CTA cta){
+    	item.click(SHOW_SNOOZE_CTA);
+    	if(isCTADisplayed(cta)) return true;
+    	else return false;
+    }
 
     public WorkflowPage updateCTADetails(CTA oldCta, CTA newCta) {
         expandCTAView(oldCta);
@@ -544,7 +564,9 @@ public class WorkflowPage extends WorkflowBasePage {
             throw new RuntimeException("Priority should be specified.") ;
         }
 
-        xPath = xPath+"/following-sibling::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"')]";
+        xPath = cta.isClosed() ?xPath+"/following-sibling::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"') and contains(@style,'text-decoration: line-through;')]":
+        				xPath+"/following-sibling::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"')]" ;
+        				
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='wf-account pull-left']";
         xPath = xPath+"/descendant::span[contains(text(), '"+cta.getCustomer()+"')]";
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='pull-left cta-score']";
@@ -622,6 +644,8 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(SAVE_ACTION);
         }
         amtDateUtil.stalePause();
+        cta.setClosed(true);
+        cta.setStatus("Closed Won");
         return this;
     }
 
@@ -629,6 +653,8 @@ public class WorkflowPage extends WorkflowBasePage {
         String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip active']";
         item.click(xPath);
         amtDateUtil.stalePause();
+        cta.setClosed(false);
+        cta.setStatus("Open");
         return this;
     }
 
@@ -644,9 +670,33 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(xPath);
         amtDateUtil.stalePause();
         waitTillNoLoadingIcon();
+        cta.setImp(true);
         return this;
     }
-
+    
+    public boolean verifyImpCTA(CTA cta){
+    	item.click(SHOW_IMP_CTA);
+    	if(verifyCTADetails(cta))   	return true;
+    	return false;
+    	
+    }
+    
+    public boolean verifyClosedCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
+    	item.click(SHOW_CLOSED_CTA);
+    	if(!hasTasks){
+    	if(verifyCTADetails(cta)) return true;
+    	return false;
+    	}
+    	else{
+    		item.click(VIEW_TASKS);
+    		boolean allTasksClosed=true;
+    		for(Task task :tasks )
+    			if(!isTaskDisplayed(task)) allTasksClosed=false;
+    		
+    		return allTasksClosed;
+    	}
+    }
+    
     public WorkflowPage updateTaskDetails(Task oldTask, Task newTask) {
         expandTaskView(oldTask);
         if(!oldTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
@@ -720,7 +770,7 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    public WorkflowPage applyBook(CTA cta, String playBookName, List<Task> tasks) {
+    public WorkflowPage applyPlayBook(CTA cta, String playBookName, List<Task> tasks) {
         expandCTAView(cta);
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         item.click(EXP_VIEW_APPLY_PLAYBOOK);
@@ -756,4 +806,14 @@ public class WorkflowPage extends WorkflowBasePage {
             }
         }
     }
+
+	public void syncTasksToSF(ArrayList<Task> tasks) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean areTasksSyncedToSF(ArrayList<Task> tasks) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
