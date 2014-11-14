@@ -1,0 +1,38 @@
+List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'Standard User'];
+System.debug(profileList);
+
+Map<String, String> userNamesMap = new Map<String, String>{'GiribabuG' => 'ggolla@gainsight.com',
+                                            'SrividyaR' => 'srallapalli@gainsight.com',
+                                            'RajeshY' => 'ryaddanapalli@gainsight.com',
+                                            'SaiRamP' => 'spulluri@gainsight.com',
+                                            'SivaPrasadN' => 'snasika@gainsight.com',
+                                            'RamyaK' => 'rkalisipudi@gainsight.com',
+                                            'HiteshS' => 'hsharma@gainsight.com',
+                                            'SunandP' => 'spadmanabhan@gainsight.com'};
+List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias,
+                     ProfileId FROM User WHERE Lastname In : userNamesMap.keySet() AND Alias = 'Auto' AND
+                       ProfileId =: profileList.get(0).Id];
+List<User> newUsers = new List<User>();
+if(extuser != null && extuser.size() == 0) {
+
+    for(String s : userNamesMap.keySet()) {
+        Integer a = (Integer) (Math.random() * 1000);
+        User sampleUser = new User();
+        sampleUser.Username= s+a+'@'+'automationUser'+a+'.com';
+        sampleUser.Email = userNamesMap.get(s);
+        sampleUser.Lastname = s;
+        sampleUser.Alias = 'Auto';
+        sampleUser.CommunityNickname = s+a;
+        sampleUser.ProfileId = profileList.get(0).Id;
+        sampleUser.TimeZoneSidKey = 'GMT';
+        sampleUser.LocaleSidKey = 'en_US';
+        sampleUser.EmailEncodingKey = 'ISO-8859-1';
+        sampleUser.LanguageLocaleKey = 'en_US';
+        sampleUser.UserPermissionsMobileUser = false;
+        newUsers.add(sampleUser);
+    }
+    system.debug(newUsers);
+    insert newUsers;
+} else {
+    System.debug('No New users Created');
+ }
