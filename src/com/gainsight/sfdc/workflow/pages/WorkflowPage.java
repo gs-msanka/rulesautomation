@@ -46,8 +46,9 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String PRIORITY_CTA_ACTIVE= "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority') and contains(@class, 'active')]";
 
     private final String OWNER              = "//div[@class='wf-owner-search']";
-    private final String OWNER_SEARCH       = "//input[@type='text' and @name='search_text']";
-    private final String OWNER_SELECT       = "//div[@class='wf-dropdown-menu']/label[contains(text(), '%s')]";
+    private final String OWNER_SEARCH       = "//div[@class='wf-dd-profile']/descendant::input[@type='text' and @name='search_text']";
+    private final String OWNER_SELECT       = "//div[@class='wf-dd-profile']/descendant::label[contains(text(), '%s')]";
+    private final String OWNER_ALL          = "//div[@class='wf-dd-profile']/descendant::a[@id='All']";
     private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
     private final String FILTER             = "//a[@class='dashboard-filter-btn']";
@@ -354,6 +355,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
+        amtDateUtil.stalePause();
     }
     
     public boolean verifySnoozeCTA(CTA cta){
@@ -366,19 +368,20 @@ public class WorkflowPage extends WorkflowBasePage {
         expandCTAView(oldCta);
         if(!oldCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
             item.click(EXP_VIEW_ASSIGNEE);
-            field.setTextByKeys(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
+            amtDateUtil.stalePause();
+            field.clearAndSetText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
+            driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
             waitTillNoLoadingIcon();
             item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
         }
-        if(newCta.getDueDate() != null) {
+        if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(oldCta.getDueDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
         }
         if(newCta.getSubject() !=null) {
             item.click(EXP_VIEW_SUBJECT_INPUT);
-
-            item.click(EXP_VIEW_SUBJECT_INPUT);
+            field.clearText(EXP_VIEW_SUBJECT_INPUT);
             new Actions(driver).moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).build().perform();
             field.setText(EXP_VIEW_SUBJECT_INPUT, newCta.getSubject());
             new Actions(driver).moveToElement(element.getElement(EXP_VIEW_SUBJECT_INPUT)).sendKeys(Keys.ENTER).build().perform();
@@ -402,7 +405,8 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(EXP_VIEW_REASON_BUTTON);
             selectValueInDropDown(newCta.getReason());
         }
-        amtDateUtil.sleep(5); //Due to inline editing.
+        amtDateUtil.stalePause();
+        collapseCTAView();
         return this;
     }
 
@@ -424,9 +428,11 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public boolean isCTADisplayed(CTA cta) {
         waitTillNoLoadingIcon();
+        env.setTimeout(5);
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
             Report.logInfo("NUmber of elements :" +webElements.size());
+            System.out.println();
             for(WebElement ele : webElements) {
                 if(ele.isDisplayed()) {
                     return true;
@@ -439,7 +445,9 @@ public class WorkflowPage extends WorkflowBasePage {
             return false;
         }
         Report.logInfo("CTA is not displayed");
+        env.setTimeout(30);
         return false;
+
     }
 
  public WorkflowPage collapseCTAView() {
@@ -625,6 +633,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public boolean isTaskDisplayed(Task task) {
+        env.setTimeout(5);
         List<WebElement> elements = element.getAllElement(getTaskXPath(task));
         if(elements.size() > 0) {
             for(WebElement ele : elements) {
@@ -634,6 +643,7 @@ public class WorkflowPage extends WorkflowBasePage {
             }
         }
         Report.logInfo("Task is not displayed");
+        env.setTimeout(30);
         return false;
     }
 
@@ -715,7 +725,7 @@ public class WorkflowPage extends WorkflowBasePage {
             waitTillNoLoadingIcon();
             item.click(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()));
         }
-        if(newTask.getDate() != null) {
+        if(newTask.getDate() != null && !newTask.getDate().equalsIgnoreCase(oldTask.getDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             String a = "j$('#"+TASK_DUE_DATE+"').val(\""+newTask.getDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
@@ -772,9 +782,14 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage changeAssigneeView(String assignee) {
         item.click(OWNER);
-        field.clearAndSetText(OWNER_SEARCH, assignee);
-        waitTillNoLoadingIcon();
-        item.click(String.format(OWNER_SELECT, assignee));
+        amtDateUtil.stalePause();
+        if(assignee != null) {
+            field.clearAndSetText(OWNER_SEARCH, assignee);
+            waitTillNoLoadingIcon();
+            item.click(String.format(OWNER_SELECT, assignee));
+        } else {
+            item.click(OWNER_ALL);
+        }
         waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
         return this;
@@ -848,7 +863,7 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    public WorkflowPage hideFlaggedCTA() {
+    public WorkflowPage disabledFlaggedCTAView() {
         item.click(HIDE_FLAG_CTA);
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(SHOW_IMP_CTA, MIN_TIME, MAX_TIME);
