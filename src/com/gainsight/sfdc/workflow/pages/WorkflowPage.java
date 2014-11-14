@@ -12,7 +12,6 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
-
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -35,21 +34,25 @@ public class WorkflowPage extends WorkflowBasePage {
 
     //Header Page Elements
     private final String SHOW_CLOSED_CTA    = "//li[contains(@class, 'cta-stage baseFilter cta-stage-filter')]";
+    private final String HIDE_CLOSED_CTA    = "//li[starts-with(@class, 'cta-stage') and contains(@class, 'active')]";
     private final String SHOW_IMP_CTA       = "//li[contains(@class, 'cta-flag baseFilter cta-flag-filter')]";
+    private final String HIDE_FLAG_CTA      = "//li[starts-with(@class, 'cta-flag') and contains(@class, 'active')]";
     private final String SHOW_SNOOZE_CTA    = "//li[contains(@class, 'cta-snooze baseFilter cta-snooze-filter')]";
+    private final String HIDE_SNOOZE_CTA    = "//li[starts-with(@class, 'cta-snooze') and contains(@class, 'active')]";
 
-    private final String TYPE_RISK          = "//div[@class='type cta-types-filter']/ul/li[@name='Risk']";
-    private final String TYPE_OPPORTUNITY   = "//div[@class='type cta-types-filter']/ul/li[@name='Opportunity']";
-    private final String TYPE_EVENT         = "//div[@class='type cta-types-filter']/ul/li[@name='Event']" ;
+    private final String TYPE_CTA           = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and @name='%s']";
+    private final String TYPE_CTA_ACTIVE    = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and contains(@class, 'active') and @name='%s']";
+    private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority')]";
+    private final String PRIORITY_CTA_ACTIVE= "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority') and contains(@class, 'active')]";
 
     private final String OWNER              = "//div[@class='wf-owner-search']";
     private final String OWNER_SEARCH       = "//input[@type='text' and @name='search_text']";
     private final String OWNER_SELECT       = "//div[@class='wf-dropdown-menu']/label[contains(text(), '%s')]";
-    private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s']";
     private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
     private final String FILTER             = "//a[@class='dashboard-filter-btn']";
 
+    //Popup Page Elements
     private final String OK_ACTION          = "//input[@data-action='Ok' and contains(@class, 'btn_save')]";
     private final String SAVE_ACTION        = "//input[@data-action='Yes' and contains(@class, 'btn_save')]";
     private final String CANCEL_ACTION      = "//input[@data-action='Cancel' and contains(@class, 'btn_cancel')]";
@@ -581,7 +584,13 @@ public class WorkflowPage extends WorkflowBasePage {
         xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
         xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
-        xPath = xPath+"/descendant::span[@class='cta-duedate' and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        String color = "";
+        if(cta.getType() != null) {
+            color = cta.getType().equals("Risk") ? "#f45655" : cta.getType().equals("Event") ? "#f0ac41" : "#42b899";
+        } else {
+            throw  new RuntimeException("CTA Type is mandatory");
+        }
+        xPath = xPath+"/descendant::span[@class='cta-duedate'  and contains(@style, 'background:"+color+"') and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         if(cta.getAssignee() != null) {
             xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
             xPath = xPath+"/ancestor::div[@class='gs-cta']";
@@ -816,4 +825,90 @@ public class WorkflowPage extends WorkflowBasePage {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    public WorkflowPage showClosedCTA() {
+        item.click(SHOW_CLOSED_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(HIDE_CLOSED_CTA, MIN_TIME, MAX_TIME );
+        return this;
+    }
+
+    public WorkflowPage hideClosedCTA() {
+        item.click(HIDE_CLOSED_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(SHOW_CLOSED_CTA, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage showFlaggedCTA() {
+        item.click(SHOW_IMP_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(HIDE_FLAG_CTA, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage hideFlaggedCTA() {
+        item.click(HIDE_FLAG_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(SHOW_IMP_CTA, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage showSnoozeCTA() {
+        item.click(SHOW_SNOOZE_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(HIDE_SNOOZE_CTA, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage hideSnoozeCTA() {
+        item.click(HIDE_SNOOZE_CTA);
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(SHOW_SNOOZE_CTA, MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage selectCTATypeFilter(String type) {
+        item.click(String.format(TYPE_CTA, type));
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(String.format(TYPE_CTA_ACTIVE, type), MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage unSelectCTATypeFilter( String type) {
+        item.click(String.format(TYPE_CTA_ACTIVE, type));
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(String.format(TYPE_CTA, type), MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage selectCTAPriorityFilter(String priority) {
+        item.click(String.format(PRIORITY_CTA, priority));
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(String.format(PRIORITY_CTA_ACTIVE, priority), MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage unSelectCTAPriorityFilter(String priority) {
+        item.click(String.format(PRIORITY_CTA_ACTIVE, priority));
+        waitTillNoSearchIcon();
+        wait.waitTillElementDisplayed(String.format(PRIORITY_CTA, priority), MIN_TIME, MAX_TIME);
+        return this;
+    }
+
+    public WorkflowPage selectGroupBy(String val) {
+        item.click(GROUP_BY);
+        selectValueInDropDown(val);
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+    public WorkflowPage selectSortBy(String val) {
+        item.click(SORT_BY);
+        selectValueInDropDown(val);
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+
 }
