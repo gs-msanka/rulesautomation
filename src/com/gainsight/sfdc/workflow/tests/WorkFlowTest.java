@@ -420,7 +420,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
        workflowPage.closeCTA(cta, false);
-       workflowPage.openCTA(cta);
+       workflowPage.openCTA(cta,false,null);
        Assert.assertTrue(workflowPage.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
    }
    
@@ -440,11 +440,20 @@ public class WorkFlowTest extends BaseTest {
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
-       for(Task task : tasks)
-       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+      
        workflowPage.closeCTA(cta, true);
-       workflowPage.openCTA(cta);
-       Assert.assertFalse(workflowPage.verifyClosedCTA(cta,true,tasks),"Verified that the CTA and all the corresponding tasks are Open again");
+       cta.setStatus("Closed Won");
+       cta.setClosed(true);
+       for(Task t : tasks) t.setStatus("Closed"); 
+       
+       workflowPage.openCTA(cta,true,tasks);
+       cta.setStatus("Open");
+       cta.setClosed(false);
+       for(Task t : tasks) t.setStatus("Open");
+       
+       Assert.assertTrue(workflowPage.verifyCTADetails(cta),"Verified that the CTA and all the corresponding tasks are Open again");
+       for(Task task : tasks)
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" is open again");
    }
    
    
@@ -462,7 +471,7 @@ public class WorkFlowTest extends BaseTest {
       
       if(updatedCta.getAssignee()==null)
     	  updatedCta.setAssignee(sfinfo.getUserFullName());
-      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()),0));
+      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0));
       workflowPage.updateCTADetails(cta, updatedCta);
       Assert.assertTrue(workflowPage.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
    }

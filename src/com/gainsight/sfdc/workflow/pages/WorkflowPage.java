@@ -653,17 +653,18 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(SAVE_ACTION);
         }
         amtDateUtil.stalePause();
-        cta.setClosed(true);
-        cta.setStatus("Closed Won");
         return this;
     }
 
-    public WorkflowPage openCTA(CTA cta) {
+    public WorkflowPage openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks) {
         String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip active']";
         item.click(xPath);
         amtDateUtil.stalePause();
-        cta.setClosed(false);
-        cta.setStatus("Open");
+        if(hasTasks){
+        	for(Task task : tasks){
+        		openORCloseTask(task);
+        	}
+        }
         return this;
     }
 
