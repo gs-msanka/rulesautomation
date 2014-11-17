@@ -26,7 +26,15 @@ public class CTA {
     private EventRecurring eventRecurring;
     private String snoozeDate="1";
     private String snoozeReason = "Other";
+    private boolean isOverDue= false;
     
+    public boolean isCTAOverDue() {
+        return isOverDue;
+    }
+
+    public void setOverDue(boolean isOverDue) {
+        this.isOverDue=isOverDue;
+    }
     public String getSnoozeReason() {
 		return snoozeReason;
 	}

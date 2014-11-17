@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -128,6 +129,10 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
     
     private final String VIEW_TASKS="//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
+    private final String DESYNCED_ICON="//div[contains(@class,'task require-tooltip task-sync')]/span[@class='glyphicon glyphicon-refresh']";
+    private final String SYNCED_ICON="//div[contains(@class,'task require-tooltip task-sync  active')]/span[@class='glyphicon glyphicon-refresh']";
+    private final String DESYNC_BUT_KEEP_INSF="//div[@class='modal_footer']/input[@data-action='Keep']";
+    private final String DESYNC_AND_DELETE="//div[@class='modal_footer']/input[@data-action='Delete']";
     
     //Task Expanded View Elements
     private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
@@ -167,7 +172,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String PLAYBOOK_APPLY  = "//button[contains(@class, 'btn-save') and text()='Apply']";
     private final String PLAYBOOK_CANCEL = "//button[contains(@class, 'btn-cancel') and text()='Cancel']";
 
-
+   
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -225,7 +230,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		setCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
-		field.setText(CREATE_FORM_DUE_DATE, cta.getDueDate());
+		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()) fillAndSaveRecurringEventCTAForm(cta);
 		else		button.click(SAVE_CTA);
@@ -237,7 +242,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		setCustomer(cta.getCustomer());
 		button.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
-		field.setText(CREATE_FORM_DUE_DATE, cta.getDueDate());
+		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()){
 		field.selectCheckbox(CREATE_RECURRING_EVENT);
@@ -463,6 +468,11 @@ public class WorkflowPage extends WorkflowBasePage {
         if(!isCTAExpandedViewLoaded(cta)) {
             throw new RuntimeException("CTA expand view failed to load");
         }
+        return this;
+    }
+    public WorkflowPage collapseCTAView(CTA cta) {
+        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        item.click(xPath);
         return this;
     }
   public WorkflowPage expandTaskView(Task task) {
@@ -834,16 +844,21 @@ public class WorkflowPage extends WorkflowBasePage {
         }
     }
 
-	public void syncTasksToSF(ArrayList<Task> tasks) {
-		// TODO Auto-generated method stub
-		
+	public WorkflowPage syncTasksToSF(CTA cta,Task task) {
+		//item.click(VIEW_TASKS);
+		item.click(String.format(DESYNCED_ICON,task.getSubject()));
+		wait.waitTillElementDisplayed(SYNCED_ICON, MIN_TIME, MAX_TIME);
+		return this;
 	}
-
-	public boolean areTasksSyncedToSF(ArrayList<Task> tasks) {
-		// TODO Auto-generated method stub
-		return false;
+	
+	public WorkflowPage deSyncTaskFromSF(CTA cta,Task task, boolean keepInSF){
+		item.click(SYNCED_ICON);
+		if(keepInSF) item.click(DESYNC_BUT_KEEP_INSF);
+		else item.click(DESYNC_AND_DELETE);
+		wait.waitTillElementDisplayed(DESYNCED_ICON, MIN_TIME, MAX_TIME);
+		return this;	
 	}
-
+	
     public WorkflowPage showClosedCTA() {
         item.click(SHOW_CLOSED_CTA);
         waitTillNoSearchIcon();
@@ -927,6 +942,11 @@ public class WorkflowPage extends WorkflowBasePage {
         waitTillNoSearchIcon();
         return this;
     }
-
+    
+    public boolean  isOverDueCTADisplayed(CTA cta) {
+        String xPath = getCTAXPath(cta)+"/descendant::div[contains(@class,'cta-overdue widget-alert')]";
+        item.click(xPath);
+        return  isCTAExpandedViewLoaded(cta);
+    }
 
 }
