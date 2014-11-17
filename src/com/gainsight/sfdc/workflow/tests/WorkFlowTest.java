@@ -667,9 +667,9 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
+            workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         workflowPage = workflowPage.selectCTATypeFilter("Risk");
@@ -768,9 +768,9 @@ public class WorkFlowTest extends BaseTest {
         List<CTA> ctaList1 =  mapper.readValue(testData.get("CTA1"), new TypeReference<ArrayList<CTA>>() {});
         List<CTA> ctaList2  = mapper.readValue(testData.get("CTA2"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList1) {
-           workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
+            workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         CTA cta = ctaList2.get(0);
@@ -813,9 +813,9 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
+            workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         workflowPage = workflowPage.closeCTA(ctaList.get(0), false);
@@ -861,9 +861,9 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = workflowBasePage.clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
+            workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         workflowPage = workflowPage.selectGroupBy("Customer");
@@ -906,9 +906,9 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnCalendarView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
+            workflowPage.createCTA(cta);
         }
 
         Calendar cal = Calendar.getInstance();
@@ -942,11 +942,7 @@ public class WorkFlowTest extends BaseTest {
         }
     }
 
-
-
-
-
-        @AfterClass
+    @AfterClass
     public void tearDown() {
         basepage.logout();
     }

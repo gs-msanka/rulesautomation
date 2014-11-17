@@ -560,6 +560,18 @@ public class WorkflowPage extends WorkflowBasePage {
             expViewCta.setReason(element.getText(EXP_VIEW_REASON_BUTTON).trim());
             expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
 
+            if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())) {
+                Report.logInfo("Customer Name not matched.");
+            } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
+                Report.logInfo("Type not matched.");
+            } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
+                Report.logInfo("Priority not matched.");
+            } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
+                Report.logInfo("Status not matched.");
+            } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                Report.logInfo("Reason not matched.");
+            }
+
             if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
                     cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
                     cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
