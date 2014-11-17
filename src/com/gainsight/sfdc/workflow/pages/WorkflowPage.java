@@ -12,7 +12,6 @@ import org.openqa.selenium.By;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
-
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -172,7 +171,11 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String PLAYBOOK_APPLY  = "//button[contains(@class, 'btn-save') and text()='Apply']";
     private final String PLAYBOOK_CANCEL = "//button[contains(@class, 'btn-cancel') and text()='Cancel']";
 
-   
+    //Calendar Page Elements
+    String CALENDER_VIEW_SELECT         = "//ul[@class='calendar-tab']/descendant::a[@data-type='%s']";
+    String CALENDER_DIR_LEFT            = "//div[@class='calendar-ctn']/div[@data-direction='LEFT']";
+    String CALENDER_DIR_RIGHT           = "//div[@class='calendar-ctn']/div[@data-direction='RIGHT']";
+
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -232,8 +235,12 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
-		if(cta.isRecurring()) fillAndSaveRecurringEventCTAForm(cta);
-		else		button.click(SAVE_CTA);
+		if(cta.isRecurring()) {
+            fillAndSaveRecurringEventCTAForm(cta);
+        }
+        button.click(SAVE_CTA);
+        waitTillNoLoadingIcon();
+        waitTillNoSearchIcon();
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
@@ -241,7 +248,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
 		setCustomer(cta.getCustomer());
 		button.click(CREATE_FORM_REASON);
-		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
+		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()){
@@ -303,8 +310,7 @@ public class WorkflowPage extends WorkflowBasePage {
 					
 				}
 		}
-		button.click(SAVE_CTA);
-        amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
+		amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
 
 	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
@@ -468,11 +474,6 @@ public class WorkflowPage extends WorkflowBasePage {
         if(!isCTAExpandedViewLoaded(cta)) {
             throw new RuntimeException("CTA expand view failed to load");
         }
-        return this;
-    }
-    public WorkflowPage collapseCTAView(CTA cta) {
-        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
-        item.click(xPath);
         return this;
     }
   public WorkflowPage expandTaskView(Task task) {
@@ -846,7 +847,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	public WorkflowPage syncTasksToSF(CTA cta,Task task) {
 		//item.click(VIEW_TASKS);
-		item.click(String.format(DESYNCED_ICON,task.getSubject()));
+		item.click(String.format(DESYNCED_ICON, task.getSubject()));
 		wait.waitTillElementDisplayed(SYNCED_ICON, MIN_TIME, MAX_TIME);
 		return this;
 	}
@@ -948,5 +949,159 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(xPath);
         return  isCTAExpandedViewLoaded(cta);
     }
+
+    public int countOfCTASInGroup(String groupName, CTA cta) {
+        int count;
+        if(groupName == null && cta ==null)
+            throw new RuntimeException("Either groupName (or) cta is mandatory");
+        if(groupName !=null && groupName.equalsIgnoreCase("Opportunity")) {
+            groupName =  "Opportunities";
+        }
+        if(cta != null && groupName != null) {
+            String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
+                    "/a[contains(text(), '"+groupName+"')]/span[contains(@class, 'grouped-ctas-count')]";
+            Report.logInfo("Group Xpath :" +xPath);
+            count = Integer.valueOf(element.getText(xPath).trim());
+            Report.logInfo("No of CTA's in Group :" +count);
+            return count;
+        } else if(groupName != null){
+            String xPath = "//div[@class='gs-wf-group-head']/a[contains(text(), '"+groupName+"')]/span[contains(@class, 'grouped-ctas-count')]" ;
+            Report.logInfo("Group Xpath :" +xPath);
+            count = Integer.valueOf(element.getText(xPath).trim());
+            Report.logInfo("No of CTA's in Group :" +count);
+            return count;
+        } else {
+            String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
+                    "/a/span[contains(@class, 'grouped-ctas-count')]";
+            Report.logInfo("Group Xpath :" +xPath);
+            count = Integer.valueOf(element.getText(xPath).trim());
+            Report.logInfo("No of CTA in Group :" +count);
+            return count;
+        }
+    }
+
+    public boolean isCTADisplayedInGroup(String groupName, CTA cta) {
+        boolean status = false;
+        try {
+            if(cta != null && groupName != null) {
+                if(groupName.equalsIgnoreCase("Opportunity")) {
+                    groupName =  "Opportunities";
+                }
+                String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
+                        "/a[contains(text(), '"+groupName+"')]";
+                Report.logInfo("Group Xpath :" +xPath);
+                status = element.getElement(xPath).isDisplayed();
+                Report.logInfo("CTA Display Status " +status);
+                return status;
+            } else {
+                throw new RuntimeException("Both CTA, GroupName are mandatory");
+            }
+        } catch (Exception e) {
+            Report.logInfo(e.getLocalizedMessage());
+            Report.logInfo("CTA is not displayed");
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+    /**
+     *
+     * @param cta
+     * @param task
+     * @return
+     */
+    public boolean isTaskDisplayedUnderCTA(CTA cta, Task task) {
+        boolean status = false;
+
+        String ctaXpath = getCTAXPath(cta);
+        String taskXpath = getTaskXPath(task);
+        String xpath = ctaXpath+"/div[@class='gs-cta-body']"+getTaskXPath(task);
+        Report.logInfo("Xpath of CTA, TASK : " +cta);
+        try {
+            if(element.getElement(ctaXpath).isDisplayed()) {
+                status = element.getElement(xpath).isDisplayed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Report.logInfo(e.getLocalizedMessage());
+            Report.logInfo("CTA (Or) Task is not displayed");
+        }
+        return status;
+    }
+
+    /**
+     *
+     * @param view - DAILY, WEEKLY, MONTHLY.
+     * @return
+     */
+    public WorkflowPage selectCalendarView(String view) {
+        item.click(String.format(CALENDER_VIEW_SELECT, view));
+        waitTillNoLoadingIcon();
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+    /**
+     *
+     * @param month - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+     * @param year - 2014, 2015, 2016.....
+     * @return
+     */
+    public WorkflowPage selectCalendarMonth(String month, int year) {
+        String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='month' and starts-with(text(), '"+month+"') and contains(text(), '"+year+"')]";
+        Report.logInfo("Selecting month : " +xPath);
+        item.click(xPath);
+        waitTillNoLoadingIcon();
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+    /**
+     *
+     * @param day - 1,2,3....
+     * @param month - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+     * @param weekDay - Mon, Tue, Wed, Thu, Fri, Sat, Sun
+     * @return
+     */
+    public WorkflowPage selectCalendarDay(int day, String month, String weekDay) {
+        String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='cell-lbl wf-date' and contains(text(), '"+day+"')]" +
+                "/following-sibling::div[@class='wf-week-month']/span[contains(text(), '"+month.toUpperCase()+"')]" +
+                "/following-sibling::span[contains(text(), '"+weekDay.toUpperCase()+"')]";
+        Report.logInfo("Selecting day : " +xPath);
+        item.click(xPath);
+        waitTillNoLoadingIcon();
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+    /**
+     *
+     * @param day - 1,2,3...
+     * @param week - 1,2,3...
+     * @param month - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+     * @return
+     */
+    public WorkflowPage selectCalendarWeek(int day, int week, String month) {
+        String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='wk' and contains(text(), 'Week "+week+"')]" +
+                "/following-sibling::div[@class='wk-month']/span[contains(text(), '"+month+" "+day+"')]";
+        Report.logInfo("Selecting week : " +xPath);
+        item.click(xPath);
+        waitTillNoLoadingIcon();
+        waitTillNoSearchIcon();
+        return this;
+    }
+
+    public WorkflowPage clickOnCalenderArrow(boolean right) {
+        if(right) {
+            item.click(CALENDER_DIR_RIGHT);
+        } else {
+            item.click(CALENDER_DIR_LEFT);
+        }
+        amtDateUtil.stalePause();
+        return this;
+    }
+
+
+
 
 }

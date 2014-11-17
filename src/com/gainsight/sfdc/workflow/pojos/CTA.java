@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by gainsight on 07/11/14.
  */
-public class CTA {
+public class CTA  implements Cloneable {
 	private String type;
 	private String subject;
 	private String customer;
@@ -268,6 +268,10 @@ public class CTA {
             return recurringType;
         }
 
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
 }

@@ -9,6 +9,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
@@ -23,6 +24,7 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class WorkFlowTest extends BaseTest {
     private final String DELETE_CTA_SCRIPT = "Delete [Select id from JBCXM__CTA__c];";
     private final String DELETE_CSTASKS_SCRIPT="Delete [select id from JBCXM__CSTask__c];";
     private final String DELETE_SF_TASKS_SCRIPT="Delete [select id from Task];";
+    private HashMap<Integer, String> weekDayMap = new HashMap<>();
 
 
     @BeforeClass
@@ -45,6 +48,14 @@ public class WorkFlowTest extends BaseTest {
         sfinfo= SFDCUtil.fetchSFDCinfo();
         basepage.login();
         isPackage = isPackageInstance();
+        weekDayMap.put(1, "Sun");
+        weekDayMap.put(2, "Mon");
+        weekDayMap.put(3, "Tue");
+        weekDayMap.put(4, "Wed");
+        weekDayMap.put(5, "Thu");
+        weekDayMap.put(6, "Fri");
+        weekDayMap.put(7, "Sat");
+
     }
     
     @BeforeMethod
@@ -85,7 +96,6 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
-        
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
     }
 
@@ -96,11 +106,10 @@ public class WorkFlowTest extends BaseTest {
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
          cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
-        cta.setAssignee(sfinfo.getUserFullName());
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0));
+        cta.setAssignee(sfinfo.getUserFullName()); 
         workflowPage.createCTA(cta);
-        
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs EveryWeekday) CTA is created");
    }
    
@@ -172,7 +181,7 @@ public class WorkFlowTest extends BaseTest {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0).split("/")[2]);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0).split("/")[2]);
         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0).split("/")[2]);
         cta.setAssignee(sfinfo.getUserFullName());
 
@@ -337,7 +346,7 @@ public class WorkFlowTest extends BaseTest {
       System.out.println("querying for:"+milestoneQuery);
       SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
       System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
-      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -354,7 +363,7 @@ public class WorkFlowTest extends BaseTest {
       System.out.println("querying for:"+milestoneQuery);
       SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
       System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
-      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: "+cta.getSubject()+", Reason: "+cta.getReason()));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
    }
    
    
@@ -393,7 +402,7 @@ public class WorkFlowTest extends BaseTest {
        workflowPage.createCTA(cta);     
        
        workflowPage.closeCTA(cta, false);
-       Assert.assertTrue(workflowPage.verifyClosedCTA(cta,false,null), "Verifying the CTA has been set under Closed CTAs");
+       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, false, null), "Verifying the CTA has been set under Closed CTAs");
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -418,7 +427,7 @@ public class WorkFlowTest extends BaseTest {
     	   	task.setStatus("Closed Won");
     	   }
        workflowPage.closeCTA(cta, true);
-       Assert.assertTrue(workflowPage.verifyClosedCTA(cta,true,tasks),"Verified that the CTA and all the corresponding tasks are closed");
+       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -542,7 +551,7 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView(cta);
+        workflowPage.collapseCTAView();
       /*  for (Task task : tasks)
             Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
         */
@@ -578,7 +587,7 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView(cta);
+        workflowPage.collapseCTAView();
       /*  for (Task task : tasks)
             Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
         */
@@ -618,7 +627,7 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView(cta);
+        workflowPage.collapseCTAView();
       /*  for (Task task : tasks)
             Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
         */
@@ -834,7 +843,108 @@ public class WorkFlowTest extends BaseTest {
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
+        ctaList.get(0).setSnoozeDate(getDateWithFormat(Integer.valueOf(ctaList.get(0).getSnoozeDate()), 0));
+
+        workflowPage.snoozeCTA(ctaList.get(0));
+        workflowPage = workflowPage.showSnoozeCTA();
+        Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(0)));
+        Assert.assertFalse(workflowPage.isCTADisplayed(ctaList.get(1)));
+        workflowPage = workflowPage.hideSnoozeCTA();
+        Assert.assertFalse(workflowPage.isCTADisplayed(ctaList.get(0)));
+        Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(1)));
     }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
+    public void verifyCTAGrouping(HashMap<String,String> testData) throws IOException, CloneNotSupportedException {
+        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
+        List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
+        for(CTA cta : ctaList) {
+            workflowPage.createCTA(cta);
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setAssignee(sfinfo.getUserFullName());
+            Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+        workflowPage = workflowPage.selectGroupBy("Customer");
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayedInGroup(cta.getCustomer(), cta));
+        }
+        Assert.assertEquals(1, workflowPage.countOfCTASInGroup(ctaList.get(0).getCustomer(), null));
+
+        workflowPage = workflowPage.selectGroupBy("Type");
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayedInGroup(cta.getType(), cta));
+        }
+        Assert.assertEquals(3, workflowPage.countOfCTASInGroup(ctaList.get(0).getType(), null));
+
+        workflowPage = workflowPage.selectGroupBy("Status");
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayedInGroup(cta.getStatus(), cta));
+        }
+        Assert.assertEquals(9, workflowPage.countOfCTASInGroup(ctaList.get(0).getStatus(), null));
+        workflowPage = workflowPage.selectGroupBy("All");
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayedInGroup("All", cta));
+        }
+        Assert.assertEquals(9, workflowPage.countOfCTASInGroup("All", null));
+        CTA cta = (CTA) ctaList.get(0).clone();
+        cta.setDueDate(getDateWithFormat(-1, 0));
+        cta.setStatus("In Progress");
+        workflowPage = workflowPage.updateCTADetails(ctaList.get(0), cta);
+
+        workflowPage = workflowBasePage.clickOnListView();
+        workflowPage = workflowPage.selectGroupBy("New and Due");
+        Assert.assertTrue(workflowPage.isCTADisplayedInGroup("Due", cta));
+        Assert.assertEquals(1, workflowPage.countOfCTASInGroup("Due", null));
+        Assert.assertEquals(8, workflowPage.countOfCTASInGroup("New", null));
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
+    public void verifyCalenderView(HashMap<String,String> testData) throws IOException, CloneNotSupportedException {
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnCalendarView();
+        List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
+        for(CTA cta : ctaList) {
+            workflowPage.createCTA(cta);
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setAssignee(sfinfo.getUserFullName());
+            //Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+
+        Calendar cal = Calendar.getInstance();
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        workflowPage = workflowPage.selectCalendarView("DAILY");
+        cal.add(Calendar.DATE, 5); // Added 5 Days
+        System.out.println(monthMap.get(String.valueOf(cal.get(Calendar.MONTH))));
+        System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
+        workflowPage = workflowPage.selectCalendarDay(cal.get(Calendar.DATE), monthMap.get(String.valueOf(cal.get(Calendar.MONTH))), weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+        workflowPage = workflowPage.selectCalendarView("MONTHLY");
+        workflowPage = workflowPage.selectCalendarMonth(monthMap.get(String.valueOf(cal.get(Calendar.MONTH))), cal.get(Calendar.YEAR));
+
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+
+        workflowPage = workflowPage.selectCalendarView("WEEKLY");
+
+        int a = -cal.get(Calendar.DAY_OF_WEEK)+cal.getFirstDayOfWeek();
+        System.out.println("no of days added to label :" +a);
+        cal.add(Calendar.DATE, a);
+        System.out.println(cal.get(Calendar.DATE));
+        System.out.println(cal.get(Calendar.WEEK_OF_YEAR));
+
+        workflowPage = workflowPage.selectCalendarWeek(cal.get(Calendar.DATE), cal.get(Calendar.WEEK_OF_YEAR), monthMap.get(String.valueOf(cal.get(Calendar.MONTH))));
+        for(CTA cta : ctaList) {
+            Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+    }
+
+
+
 
 
         @AfterClass
