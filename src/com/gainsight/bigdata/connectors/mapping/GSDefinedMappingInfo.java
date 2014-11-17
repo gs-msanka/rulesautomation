@@ -37,7 +37,7 @@ public class GSDefinedMappingInfo {
 	}
 
 	public void setTarget(Field trgt) {
-		target.put("dbName", "");
+		target.put("dbName", trgt.getDBName());
 		target.put("displayName", trgt.getDisplayName());
 	}
 

@@ -28,9 +28,6 @@ public class SysDefMappingInfo {
 	}
 
 	public SysDefMappingInfo(Field source, Field target) {
-		if(source == null){
-			return;
-		}
 		this.source = new Source(source);
 		this.target = new Target(target);
 	}

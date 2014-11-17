@@ -2,13 +2,14 @@ package com.gainsight.bigdata.connectors.enums;
 
 public enum Field {
 	/* Segment Properties */
-	SIO_ACCOUNTID("Group groupId", "gsgroup_groupid"),
-	SIO_USERID("Identify userId", "gsidentify_userid"),
-	SIO_EVENT("Track event", "gstrack_event"),
-	SIO_TIMESTAMP("Track timestamp", "gstrack_timestamp"),
-	SIO_ACCOUNTNAME("Group traits.name", "gsgroup_traitsname"),
-	SIO_USEREMAIL("Identify traits.email", "gsidentify_traitsemail"),
-	SIO_USERNAME("Identify traits.name", "gsidentify_traitsname"),
+	SIO_ACCOUNTID("AccountID", "aid"),
+	SIO_USERID("UserID", "uid"),
+	SIO_EVENT("Browser", "browser"),
+	SIO_TIMESTAMP("End Date", "edate"),
+	SIO_ACCOUNTNAME("Account Name", "aname"),
+	SIO_USEREMAIL("User Email", "uemail"),
+	SIO_USERNAME("User Name", "uname"),
+	SIO_MEA1("ARR","arr"),
 	/* SFDC Properties */
 	SFDC_ACCOUNTID("gssfdcaccountid", "gssfdcaccountid"),
 	SFDC_ACCOUNTNAME("Account Name", "Name"),

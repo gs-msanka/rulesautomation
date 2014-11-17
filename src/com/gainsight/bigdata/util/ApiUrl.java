@@ -55,6 +55,8 @@ public class ApiUrl extends NSUrl {
 	// @URL_PARAM1: AccountID
 	public static final String DELETE_SEGMENT_PROJ = BASE_TOKENS + "/integrations/SEGMENT_IO/projects" + URL_PARAM1;
 	public static final String CREATE_SEGMENT_PROJ = BASE_TOKENS + "/v2";
+	public static final String ACC_SYNC = BASE_ACCOUNTS + URL_PARAM1 + "/update";
+	public static final String ACC_SYNC_STATUS = API + "/async/process" + URL_PARAM1;
 	// ------------------- END -------------------
 
 	// --------------- TENANT URLs-----------------
