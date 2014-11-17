@@ -454,9 +454,16 @@ public class WorkFlowTest extends BaseTest {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
-      workflowPage.createCTA(cta);      
-       workflowPage.closeCTA(cta, false);
+      workflowPage.createCTA(cta);
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+       workflowPage = workflowPage.closeCTA(cta, false);
+       cta.setStatus("Closed Won");
+       cta.setClosed(true);
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        workflowPage.openCTA(cta,false,null);
+       cta.setStatus("Open");
+       cta.setClosed(false);
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        Assert.assertTrue(workflowPage.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
    }
    
