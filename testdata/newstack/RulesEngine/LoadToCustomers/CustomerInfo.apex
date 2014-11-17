@@ -6,3 +6,7 @@ for(integer i=0; i<1 ; i++) {
    ar.add(acc);
 }
 insert ar;
+
+JBCXM__AutomatedAlertRules__c AAR = [select id from JBCXM__AutomatedAlertRules__c where Name like 'CusotomerSync_Initially no customers'];
+AAR.JBCXM__externalId__c=AAR.Id;
+update AAR;
