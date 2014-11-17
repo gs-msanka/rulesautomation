@@ -1,22 +1,15 @@
 package com.gainsight.sfdc.workflow.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
-import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
-import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
-import com.sun.java.swing.plaf.windows.resources.windows_pt_BR;
 
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -36,9 +29,11 @@ public class WorkFlowTest extends BaseTest {
     ObjectMapper mapper = new ObjectMapper();
     private final String TEST_DATA_FILE = "testdata/sfdc/workflow/tests/WorkFlow_Test.xls";
     private final String CTA_OBJECT     = "JBCXM__CTA__C";
-    private final String DELETE_CTA_SCRIPT = "Delete [Select id from JBCXM__CTA__c];";
-    private final String DELETE_CSTASKS_SCRIPT="Delete [select id from JBCXM__CSTask__c];";
-    private final String DELETE_SF_TASKS_SCRIPT="Delete [select id from Task];";
+    private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
+    																	"Delete [select id from JBCXM__CSTask__c];"+
+    																	"Delete [select id from Task];"+
+    																	"Delete [Select id from JBCXM__StatePreservation__c];";
+
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
 
 
@@ -60,10 +55,7 @@ public class WorkFlowTest extends BaseTest {
     
     @BeforeMethod
     public void clearCTAs(){
-    	apex.runApex(resolveStrNameSpace(DELETE_CTA_SCRIPT));
-    	apex.runApex(resolveStrNameSpace(DELETE_CSTASKS_SCRIPT));
-    	apex.runApex(resolveStrNameSpace(DELETE_SF_TASKS_SCRIPT));
-    	
+    	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -203,7 +195,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
 
        	workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -212,18 +204,18 @@ public class WorkFlowTest extends BaseTest {
         
        workflowPage.addTaskToCTA(cta, tasks);
        for(Task task : tasks)
-       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+       Assert.assertTrue(workflowPage.isTaskDisplayedUnderCTA(cta, task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPOR_CTA_WITH_TASKS")
-   public void creatOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
+   public void createOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -243,7 +235,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -263,7 +255,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -283,7 +275,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -303,7 +295,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -324,6 +316,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
       String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
       System.out.println("querying for:"+milestoneQuery);
@@ -341,6 +334,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
+      Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
       String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
       System.out.println("querying for:"+milestoneQuery);
@@ -376,6 +370,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
+      Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.snoozeCTA(cta);
        Assert.assertTrue(workflowPage.verifySnoozeCTA(cta), "Verifying the CTA has been set under Snoozed CTAs");
    }
@@ -388,6 +383,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.flagCTA(cta);
        Assert.assertTrue(workflowPage.verifyImpCTA(cta), "Verifying the CTA has been set under Important CTAs");
    }
@@ -400,7 +396,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);     
-       
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.closeCTA(cta, false);
        Assert.assertTrue(workflowPage.verifyClosedCTA(cta, false, null), "Verifying the CTA has been set under Closed CTAs");
    }
@@ -413,7 +409,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
      workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -516,7 +512,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -543,7 +539,7 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
-        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
@@ -579,7 +575,7 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
-        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
@@ -619,7 +615,7 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
-        //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
