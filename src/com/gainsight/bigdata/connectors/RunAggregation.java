@@ -8,8 +8,6 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.TestBase;
-import com.gainsight.bigdata.connectors.enums.UsageTrackerType;
-import com.gainsight.bigdata.connectors.pojo.AccountDetails;
 import com.gainsight.bigdata.connectors.pojo.UsageTracker;
 import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.bigdata.util.PropertyReader;
@@ -40,7 +38,7 @@ public class RunAggregation extends TestBase {
 		init();
 	}
 
-	@Test
+	/*@Test
 	public void testDirectLookup() throws Exception {
 		HttpResponseObj result;
 		String url;
@@ -83,15 +81,105 @@ public class RunAggregation extends TestBase {
 		result = wa.doPost(url, mapper.writeValueAsString(ut), h.getAllHeaders());
 		System.out.println("Response Data:" + result.getContent());
 	}
-
+*/
 	@Test
-	public void testDataSync() throws Exception {
+	public void testAccDateSync() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		String url;
 		h.addHeader("actionType", "SAVE_AND_RUN");
 		url = ApiUrl.setURLParam(dataSyncUrl, "new");
 		DataAPITestData data = new DataAPITestData();
-		RequestInfo info = data.getMappingWithAccNDateIdentifiers();
+		AccountDetails info = data.getMappingWithAccNDate_DirectLookup();
+		String rawBody = mapper.writeValueAsString(info);
+		System.out.println(rawBody);
+		HttpResponseObj result = wa.doPut(url, rawBody, h.getAllHeaders());
+		Report.logInfo(result.toString());
+		JsonNode resContent = mapper.readTree(result.getContent());
+		Report.logInfo("Status ID" + resContent.get("data").get("statusId").toString());
+		String statusID = resContent.get("data").get("statusId").toString().replace("\"", "");
+		SYNC_STATUS_URL = ApiUrl.setURLParam(SYNC_STATUS_URL, statusID);
+		result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+		resContent = mapper.readTree(result.getContent());
+		int counter = 0;
+		while (resContent.get("data") == null || resContent.get("data").get("status").toString().replace("\"", "").equalsIgnoreCase("COMPLETED")) {
+			if (counter++ > 30)
+				return;
+			System.out.println("Polling the status");
+			result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+			resContent = mapper.readTree(result.getContent());
+		}
+
+		Report.logInfo("Async Status Response:" + result.toString());
+	}
+	
+	@Test
+	public void testAccUserDateSync() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String url;
+		h.addHeader("actionType", "SAVE_AND_RUN");
+		url = ApiUrl.setURLParam(dataSyncUrl, "new");
+		DataAPITestData data = new DataAPITestData();
+		AccountDetails info = data.getMappingWithAccUserNDate_DirectLookup();
+		String rawBody = mapper.writeValueAsString(info);
+		System.out.println(rawBody);
+		HttpResponseObj result = wa.doPut(url, rawBody, h.getAllHeaders());
+		Report.logInfo(result.toString());
+		JsonNode resContent = mapper.readTree(result.getContent());
+		Report.logInfo("Status ID" + resContent.get("data").get("statusId").toString());
+		String statusID = resContent.get("data").get("statusId").toString().replace("\"", "");
+		SYNC_STATUS_URL = ApiUrl.setURLParam(SYNC_STATUS_URL, statusID);
+		result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+		resContent = mapper.readTree(result.getContent());
+		int counter = 0;
+		while (resContent.get("data") == null || resContent.get("data").get("status").toString().replace("\"", "").equalsIgnoreCase("COMPLETED")) {
+			if (counter++ > 30)
+				return;
+			System.out.println("Polling the status");
+			result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+			resContent = mapper.readTree(result.getContent());
+		}
+
+		Report.logInfo("Async Status Response:" + result.toString());
+	}
+	
+	@Test
+	public void testAccUserDateEvent() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String url;
+		h.addHeader("actionType", "SAVE_AND_RUN");
+		url = ApiUrl.setURLParam(dataSyncUrl, "new");
+		DataAPITestData data = new DataAPITestData();
+		AccountDetails info = data.getMappingWithAccUserEventDate_DirectLookup();
+		String rawBody = mapper.writeValueAsString(info);
+		System.out.println(rawBody);
+		HttpResponseObj result = wa.doPut(url, rawBody, h.getAllHeaders());
+		Report.logInfo(result.toString());
+		JsonNode resContent = mapper.readTree(result.getContent());
+		Report.logInfo("Status ID" + resContent.get("data").get("statusId").toString());
+		String statusID = resContent.get("data").get("statusId").toString().replace("\"", "");
+		SYNC_STATUS_URL = ApiUrl.setURLParam(SYNC_STATUS_URL, statusID);
+		result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+		resContent = mapper.readTree(result.getContent());
+		int counter = 0;
+		while (resContent.get("data") == null || resContent.get("data").get("status").toString().replace("\"", "").equalsIgnoreCase("COMPLETED")) {
+			if (counter++ > 30)
+				return;
+			System.out.println("Polling the status");
+			result = wa.doGet(SYNC_STATUS_URL, h.getAllHeaders());
+			resContent = mapper.readTree(result.getContent());
+		}
+
+		Report.logInfo("Async Status Response:" + result.toString());
+	}
+	
+	@Test
+	public void testAccDateEvent() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String url;
+		h.addHeader("actionType", "SAVE_AND_RUN");
+		url = ApiUrl.setURLParam(dataSyncUrl, "new");
+		DataAPITestData data = new DataAPITestData();
+		AccountDetails info = data.getMappingWithAccEventDate_DirectLookup();
 		String rawBody = mapper.writeValueAsString(info);
 		System.out.println(rawBody);
 		HttpResponseObj result = wa.doPut(url, rawBody, h.getAllHeaders());

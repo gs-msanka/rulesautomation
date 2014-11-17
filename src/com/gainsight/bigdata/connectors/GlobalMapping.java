@@ -2,54 +2,56 @@ package com.gainsight.bigdata.connectors;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import java.util.Map;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.gainsight.bigdata.connectors.enums.*;
 import com.gainsight.bigdata.connectors.mapping.*;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class GlobalMapping {
 	@JsonProperty("accountIdentifier")
-	CommonMappingInfo accountIdentifier;
+	Map<String, Object> accountIdentifier;
 	@JsonProperty("userIdentifier")
-	CommonMappingInfo userIdentifier;
+	Map<String, Object> userIdentifier;
 	@JsonProperty("timestampIdentifier")
-	CommonMappingInfo timestampIdentifier;
+	Map<String, Object> timestampIdentifier;
 	@JsonProperty("eventIdentifier")
-	CommonMappingInfo eventIdentifier;
+	Map<String, Object> eventIdentifier;
 	@JsonProperty("custom")
-	List<CustomMappingInfo> custom;
+	List<Map<String, Object>> custom;
 	@JsonProperty("measures")
-	List<MeasureMappingInfo> measures;
+	List<Map<String, Object>> measures;
 	@JsonProperty("systemDefined")
-	List<SysDefMappingInfo> systemDefined;
+	List<SysDefFieldInfo> systemDefined;
 	@JsonProperty("eventMeasureMappings")
-	List<SysDefMappingInfo> eventMeasureMappings;
+	List<SysDefFieldInfo> eventMeasureMappings;
 	@JsonProperty("instanceIdentifier")
-	CommonMappingInfo instanceIdentifier;
+	Map<String, Object> instanceIdentifier;
 	@JsonProperty("gsDefined")
-	List<GSDefinedMappingInfo> gsDefined;
+	List<Map<String, Object>> gsDefined;
 
 	public GlobalMapping() {
 		try {
-			userIdentifier = new CommonMappingInfo();
-			systemDefined = new ArrayList<SysDefMappingInfo>();
-			measures = new ArrayList<MeasureMappingInfo>();
-			custom = new ArrayList<CustomMappingInfo>();
-			gsDefined = new ArrayList<GSDefinedMappingInfo>();
+			systemDefined = new ArrayList<SysDefFieldInfo>();
+			measures = new ArrayList<Map<String, Object>>();
+			custom = new ArrayList<Map<String, Object>>();
+			gsDefined = new ArrayList<Map<String, Object>>();
 			// Setting GSDefined variables
-			gsDefined.add(new GSDefinedMappingInfo(Field.SFDC_ACCOUNTID));
+			gsDefined.add(new MappingInfo().getGSIdentifier(Field.SFDC_ACCOUNTID));
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
 	}
 
-	public void addMeasure(Field field, String aggType) {
-		measures.add(new MeasureMappingInfo(field, aggType));
+	public void addMeasure(Field field, String aggFunc) {
+		measures.add(new MappingInfo().getMeasure(field, aggFunc));
 	}
 
 	public void addCustomField(Field source, Field target) {
-		custom.add(new CustomMappingInfo(source, target));
+		custom.add(new MappingInfo().getCustomIdentifier(source, target));
 	}
 
 	public void setDefaultSysDefIdentifiers() {
@@ -57,14 +59,14 @@ public class GlobalMapping {
 	}
 
 	public void setSysDefIdetifiers(Field accountName, Field userEmail, Field userName) {
-		SysDefMappingInfo fieldMappingInfo = new SysDefMappingInfo(accountName, Field.SYS_ACCOUNTNAME);
+		SysDefFieldInfo fieldMappingInfo = new SysDefFieldInfo(accountName, Field.SYS_ACCOUNTNAME);
 		systemDefined.add(fieldMappingInfo);
 		if (userEmail != null) {
-			fieldMappingInfo = new SysDefMappingInfo(userEmail, Field.SYS_USEREMAIL);
+			fieldMappingInfo = new SysDefFieldInfo(userEmail, Field.SYS_USEREMAIL);
 			systemDefined.add(fieldMappingInfo);
 		}
 		if (userName != null) {
-			fieldMappingInfo = new SysDefMappingInfo(userName, Field.SYS_USERNAME);
+			fieldMappingInfo = new SysDefFieldInfo(userName, Field.SYS_USERNAME);
 			systemDefined.add(fieldMappingInfo);
 		}
 	}
@@ -76,10 +78,11 @@ public class GlobalMapping {
 
 	public void setCommonIdentifiers(Field sioAcc, Field sioUser, Field sioEvent, Field sioTimestamp,
 			SfdcIdentifier sfdcAcc, SfdcIdentifier sfdcUser) {
-		CommonMappingInfo fieldMappingInfo = new CommonMappingInfo(sioAcc, Field.SYS_ACCOUNTID, sfdcAcc);
+		Map<String, Object> fieldMappingInfo = new MappingInfo().getAccountIdentifier(sioAcc, Field.SYS_ACCOUNTID,
+				sfdcAcc);
 		accountIdentifier = fieldMappingInfo;
 		if (sfdcUser != null) {
-			fieldMappingInfo = new CommonMappingInfo(sioUser, Field.SYS_USERID, sfdcUser);
+			fieldMappingInfo = new MappingInfo().getUserIdentifier(sioUser, Field.SYS_USERID, sfdcUser);
 			// If user Lookup is optional
 			/*
 			 * if (sfdcUser == null) { fieldMappingInfo.setLookup(false); }
@@ -87,10 +90,10 @@ public class GlobalMapping {
 			userIdentifier = fieldMappingInfo;
 		}
 		if (sioEvent != null) {
-			fieldMappingInfo = new CommonMappingInfo(sioEvent, Field.SYS_EVENT, null);
+			fieldMappingInfo = new MappingInfo().getEventIdentifier(sioEvent, Field.SYS_EVENT, null);
 			eventIdentifier = fieldMappingInfo;
 		}
-		fieldMappingInfo = new CommonMappingInfo(sioTimestamp, Field.SYS_TIMESTAMP, null);
+		fieldMappingInfo = new MappingInfo().getTimestampIdentifier(sioTimestamp, Field.SYS_TIMESTAMP, null);
 		timestampIdentifier = fieldMappingInfo;
 	}
 

@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.gainsight.bigdata.connectors.enums.Field;
 
 
-public class SysDefMappingInfo {
+public class SysDefFieldInfo {
 	@JsonProperty("source")
 	Source source;
 	@JsonProperty("target")
@@ -27,7 +27,7 @@ public class SysDefMappingInfo {
 		this.target = target;
 	}
 
-	public SysDefMappingInfo(Field source, Field target) {
+	public SysDefFieldInfo(Field source, Field target) {
 		this.source = new Source(source);
 		this.target = new Target(target);
 	}

@@ -5,7 +5,7 @@ public enum SfdcIdentifier {
 	AM_ACCOUNTNAME("", "", "Name"),
 	AM_EXTERNALID("Contact", "EID__c", "AccountId"),
 	AM_CUSTOMER_NAME("JBCXM__customerinfo__c", "JBCXM__CustomerName__c", "JBCXM__Account__c"),
-	UM_USERID("Contact", "id", null),
+	UM_USERID("Contact", "Id", "Id"),
 	UM_EXTERNALID_USER("Contact", "EID__c", "id");
 
 	String lookupObject;

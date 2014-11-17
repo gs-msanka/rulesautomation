@@ -17,7 +17,7 @@ public enum Field {
 	SFDC_USERNAME("Full Name", "Name"),
 	/* System Properties */
 	SYS_ACCOUNTID("Account Id", "gsaccountid"),
-	SYS_USERID("User Id", "gsuserid"),
+	SYS_USERID("UserID", "gsuserid"),
 	SYS_EVENT("Event", "gsevent"),
 	SYS_TIMESTAMP("Timestamp", "gstimestamp"),
 	SYS_ACCOUNTNAME("Account Name", "gsaccountname"),
