@@ -909,7 +909,6 @@ public class WorkFlowTest extends BaseTest {
             workflowPage.createCTA(cta);
             cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
             cta.setAssignee(sfinfo.getUserFullName());
-            //Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
 
         Calendar cal = Calendar.getInstance();

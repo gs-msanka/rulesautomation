@@ -18,7 +18,7 @@ import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
 
-public class rules {
+public class LoadToCustomers {
     private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
     private static final String CustomerInfo = rulesDir + "CustomerInfo.apex";
     private static final String CustomerInfo1 = rulesDir + "CustomerInfo1.apex";
