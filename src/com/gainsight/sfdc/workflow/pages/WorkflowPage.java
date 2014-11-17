@@ -57,7 +57,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String OK_ACTION          = "//input[@data-action='Ok' and contains(@class, 'btn_save')]";
     private final String SAVE_ACTION        = "//input[@data-action='Yes' and contains(@class, 'btn_save')]";
     private final String CANCEL_ACTION      = "//input[@data-action='Cancel' and contains(@class, 'btn_cancel')]";
-    private final String DELETE_ACTION      = "//input[@data-action='Delete' and contains(@class, 'btn_save')]";
+    private final String DELETE_ACTION      = "//input[@data-action='Delete' and contains(@class, 'btn-save')]";
 
     //CTA Form Page Elements
     private final String CREATE_CTA_ICON    = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
@@ -196,7 +196,7 @@ public class WorkflowPage extends WorkflowBasePage {
         env.setTimeout(30);
     }
 
-    public void createCTA(CTA cta){
+    public WorkflowPage createCTA(CTA cta){
     	Report.logInfo("Adding CTA of Type - RISK");
     	item.click(CREATE_CTA_ICON);
     	if(cta.getType().equals("Risk"))
@@ -216,8 +216,8 @@ public class WorkflowPage extends WorkflowBasePage {
     		item.click(CREATE_EVENT_LINK);
     		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
-
     	}
+    	return this;
 	}
     
     private void fillAndSaveCTAForm(CTA cta) {
@@ -302,7 +302,7 @@ public class WorkflowPage extends WorkflowBasePage {
         amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
 
-	public void addTaskToCTA(CTA cta,List<Task> tasks){
+	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
 		for(Task task : tasks){
 			
@@ -335,6 +335,7 @@ public class WorkflowPage extends WorkflowBasePage {
 			cta.setTaskCount(cta.getTaskCount()+1);
 			wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, task.getSubject()), MIN_TIME, MAX_TIME);
 		}
+		return this;
 	}
     private void setCustomer(String custName) {
         field.setText(CREATE_FORM_CUSTOMER, custName);
@@ -347,7 +348,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_MILESTONE);
     }
     
-    public void snoozeCTA(CTA cta){
+    public WorkflowPage snoozeCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_SNOOZE);
     	//
@@ -356,6 +357,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
         amtDateUtil.stalePause();
+        return this;
     }
     
     public boolean verifySnoozeCTA(CTA cta){
@@ -511,7 +513,7 @@ public class WorkflowPage extends WorkflowBasePage {
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
         for(int i=0; i<5; i++) {
-            expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("title").trim());
+            expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
             expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
 

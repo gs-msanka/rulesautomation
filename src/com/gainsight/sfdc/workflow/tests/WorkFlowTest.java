@@ -477,7 +477,7 @@ public class WorkFlowTest extends BaseTest {
    
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK1")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
    public void createAndDeleteCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -510,6 +510,8 @@ public class WorkFlowTest extends BaseTest {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
        
        Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
+       updatedTask.setAssignee(sfinfo.getUserFullName());
+       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0));
        workflowPage.updateTaskDetails(tasks.get(0), updatedTask);  //assuming that we are taking only one task for updation
        Assert.assertTrue(workflowPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
    }
