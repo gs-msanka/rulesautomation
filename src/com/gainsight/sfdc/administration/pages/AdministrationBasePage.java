@@ -25,7 +25,7 @@ public class AdministrationBasePage extends BasePage {
     private final String ADMIN_RULES_ENGINE     = "//a[contains(@href,'Administration-RulesEngine')]";
     private final String SETUP                  = "//a[@id='setupLink' and @title='Setup']";
     private final String INTEGRATION_PAGE		= "//a[@href='Integration']";
-    private final String COCKPIT_CONFIG_PAGE="//a[@href=​'WorkflowConfiguration']";
+    private final String COCKPIT_CONFIG_PAGE    = "//a[@href='WorkflowConfiguration']";
 
     public AdministrationBasePage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -96,7 +96,7 @@ public class AdministrationBasePage extends BasePage {
     	return new AdminIntegrationPage();
     }
     
-    public AdminCockpitConfigPage clickOnConpitConfigSubTab(){
+    public AdminCockpitConfigPage clickOnCockpitConfigSubTab(){
     	item.click(COCKPIT_CONFIG_PAGE);
     	return new AdminCockpitConfigPage();
     }

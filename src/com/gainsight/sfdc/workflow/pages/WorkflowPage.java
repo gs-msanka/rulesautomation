@@ -60,10 +60,10 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String DELETE_ACTION      = "//input[@data-action='Delete' and contains(@class, 'btn-save')]";
 
     //CTA Form Page Elements
-    private final String CREATE_CTA_ICON    = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
-    private final String CREATE_RISK_LINK   = "//a[@data-action='RISK']";
-    private final String CREATE_OPPOR_LINK  = "//a[@data-action='OPPORTUNITY']";
-    private final String CREATE_EVENT_LINK  = "//a[@data-action='EVENT']";
+    private final String CREATE_CTA_ICON        = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
+    private final String CREATE_RISK_LINK       = "//a[@data-action='RISK']";
+    private final String CREATE_OPPOR_LINK      = "//a[@data-action='OPPORTUNITY']";
+    private final String CREATE_EVENT_LINK      = "//a[@data-action='EVENT']";
     private final String RISK_CTA_FORM_TITLE    = "//span[text()='Add Risk']";
     private final String OPPO_CTA_FORM_TITLE    = "//span[text()='Add Opportunity']";
     private final String EVENT_CTA_FORM_TITLE   = "//span[text()='Add Event']";
@@ -103,7 +103,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-    private final String EXP_VIEW_HEADER ="//div[@class='wf-details-header']";
+    private final String EXP_VIEW_HEADER                = "//div[@class='wf-details-header']";
     private final String EXP_VIEW_CTA_MORE_OPTIONS      = "//a[@class='more-edit more-options']";
     private final String EXP_VIEW_ADD_NEW_TASK          = "//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String EXP_VIEW_APPLY_PLAYBOOK        = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Apply Playbook']";
@@ -119,19 +119,19 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
     private final String EXP_VIEW_DUE_DATE_INPUT        = "frmDateCtrl";
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
-    private final String EXP_VIEW_SET_SNOOZE_DATE = "//input[@class='form-control cta-snooze-input']";
-	private final String EXP_VIEW_SNOOZE_REASON_BUTTON = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
+    private final String EXP_VIEW_SET_SNOOZE_DATE       = "//input[@class='form-control cta-snooze-input']";
+	private final String EXP_VIEW_SNOOZE_REASON_BUTTON  = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
     private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']";
     private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::input[@name='search_text']";
     private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='wf-dropdown-menu']/descendant::label[contains(text(), '%s')]";
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
     
-    private final String VIEW_TASKS="//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
-    private final String DESYNCED_ICON="//div[contains(@class,'task require-tooltip task-sync')]/span[@class='glyphicon glyphicon-refresh']";
-    private final String SYNCED_ICON="//div[contains(@class,'task require-tooltip task-sync  active')]/span[@class='glyphicon glyphicon-refresh']";
-    private final String DESYNC_BUT_KEEP_INSF="//div[@class='modal_footer']/input[@data-action='Keep']";
-    private final String DESYNC_AND_DELETE="//div[@class='modal_footer']/input[@data-action='Delete']";
+    private final String VIEW_TASKS             = "//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
+    private final String DESYNCED_ICON          = "//div[contains(@class,'task require-tooltip task-sync')]/span[@class='glyphicon glyphicon-refresh']";
+    private final String SYNCED_ICON            = "//div[contains(@class,'task require-tooltip task-sync  active')]/span[@class='glyphicon glyphicon-refresh']";
+    private final String DESYNC_BUT_KEEP_INSF   = "//div[@class='modal_footer']/input[@data-action='Keep']";
+    private final String DESYNC_AND_DELETE      = "//div[@class='modal_footer']/input[@data-action='Delete']";
     
     //Task Expanded View Elements
     private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
@@ -154,17 +154,17 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String FILTER_CANCEL  = "//input[@data-action='CANCEL']";
 
 	//Task Form Elements
-    private final String SELECT_MORE_OPTIONS		="//a[@class='more-edit more-options']";
-    private final String ADD_NEW_TASK					="//a[@data-action='ADD_TASK']/span[@class='add']";
-    private final String ADD_TASK_POPUP_TITLE	="//span[text()='Add Task']";
-    private final String ADD_ASSIGNEE_TO_TASK	="//input[@class='search_input form-control ui-autocomplete-input']";
-    private final String SELECT_ASSIGNEE_FOR_TASK="//div[@class='gs_searchform']/descendant::label[contains(text(),'%s')]";
-    private final String ADD_SUBJECT_TO_TASK		="//input[@class='Subject__c form-control']";
-    private final String ADD_DATE_TO_TASK			="//input[@class='Date__c form-control gs-calendar']";
-    private final String TO_SELECT_PRIORITY_IN_TASK    		= "//select[@class='Priority__c form-control form-select']/following-sibling::button";
-    private final String TO_SELECT_STATUS_IN_TASK	 = "//select[@class='Status__c form-control form-select']/following-sibling::button";
-    private final String SAVE_TASK		="//div[@class='taskForm']//button[contains(text(),'Save')]";
-    private final String TASK_TITLE_TO_VERIFY		="//span[@class='title-name workflow-task-title' and contains(text(),'%s')]";
+    private final String SELECT_MORE_OPTIONS	    = "//a[@class='more-edit more-options']";
+    private final String ADD_NEW_TASK			    = "//a[@data-action='ADD_TASK']/span[@class='add']";
+    private final String ADD_TASK_POPUP_TITLE	    = "//span[text()='Add Task']";
+    private final String ADD_ASSIGNEE_TO_TASK	    = "//input[@class='search_input form-control ui-autocomplete-input']";
+    private final String SELECT_ASSIGNEE_FOR_TASK   = "//div[@class='gs_searchform']/descendant::label[contains(text(),'%s')]";
+    private final String ADD_SUBJECT_TO_TASK		= "//input[@class='Subject__c form-control']";
+    private final String ADD_DATE_TO_TASK			= "//input[@class='Date__c form-control gs-calendar']";
+    private final String TO_SELECT_PRIORITY_IN_TASK = "//select[@class='Priority__c form-control form-select']/following-sibling::button";
+    private final String TO_SELECT_STATUS_IN_TASK	= "//select[@class='Status__c form-control form-select']/following-sibling::button";
+    private final String SAVE_TASK		            = "//div[@class='taskForm']//button[contains(text(),'Save')]";
+    private final String TASK_TITLE_TO_VERIFY		= "//span[@class='title-name workflow-task-title' and contains(text(),'%s')]";
     
     //Playbook From Elements
     private final String PLAYBOOK_SELECT = "//select[@class='playbook-list']/following-sibling::button";
@@ -244,15 +244,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
-
-		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
-		setCustomer(cta.getCustomer());
-		button.click(CREATE_FORM_REASON);
-		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
-		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
-		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
-		if(cta.isRecurring()){
-		field.selectCheckbox(CREATE_RECURRING_EVENT);
+    	field.selectCheckbox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
 			if(recurProperties.getRecurringType().equals("Daily")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
@@ -309,14 +301,12 @@ public class WorkflowPage extends WorkflowBasePage {
 				item.click(String.format(RECUR_YEARLY_ENDDATE, recurProperties.getRecurEndDate()));
 					
 				}
-		}
-		amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
+		    amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}
 
 	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
 		for(Task task : tasks){
-			
 			item.click(SELECT_MORE_OPTIONS);
 			item.click(ADD_NEW_TASK);
 			wait.waitTillElementDisplayed(ADD_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
@@ -345,9 +335,12 @@ public class WorkflowPage extends WorkflowBasePage {
 			item.click(SAVE_TASK);
 			cta.setTaskCount(cta.getTaskCount()+1);
 			wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, task.getSubject()), MIN_TIME, MAX_TIME);
+            waitTillNoLoadingIcon();
 		}
+        collapseCTAView();
 		return this;
 	}
+
     private void setCustomer(String custName) {
         field.setText(CREATE_FORM_CUSTOMER, custName);
         amtDateUtil.stalePause();
@@ -362,7 +355,6 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage snoozeCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_SNOOZE);
-    	//
     	item.clearAndSetText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
@@ -370,16 +362,10 @@ public class WorkflowPage extends WorkflowBasePage {
         amtDateUtil.stalePause();
         return this;
     }
-    
-    public boolean verifySnoozeCTA(CTA cta){
-    	item.click(SHOW_SNOOZE_CTA);
-    	if(isCTADisplayed(cta)) return true;
-    	else return false;
-    }
 
-    public WorkflowPage updateCTADetails(CTA oldCta, CTA newCta) {
-        expandCTAView(oldCta);
-        if(!oldCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
+    public WorkflowPage updateCTADetails(CTA ExpectedCta, CTA newCta) {
+        expandCTAView(ExpectedCta);
+        if(!ExpectedCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
             item.click(EXP_VIEW_ASSIGNEE);
             amtDateUtil.stalePause();
             field.clearAndSetText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
@@ -387,7 +373,7 @@ public class WorkflowPage extends WorkflowBasePage {
             waitTillNoLoadingIcon();
             item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
         }
-        if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(oldCta.getDueDate())) {
+        if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(ExpectedCta.getDueDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
@@ -441,7 +427,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public boolean isCTADisplayed(CTA cta) {
         waitTillNoLoadingIcon();
-        env.setTimeout(5);
+        env.setTimeout(2);
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
             Report.logInfo("NUmber of elements :" +webElements.size());
@@ -486,11 +472,27 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public WorkflowPage collapseTaskView() {
-        item.click("TASK_EXP_SLIDE_ICON");
+        item.click(TASK_EXP_SLIDE_ICON);
         amtDateUtil.stalePause();
         return this;
     }
-	
+
+    public boolean verifyTaskDetails(Task task) {
+        expandTaskView(task);
+        String xpath = TASK_EXP_ASSIGNEE;
+        if(!element.getText(xpath).trim().equalsIgnoreCase(task.getAssignee())) {
+            Report.logInfo("CTA is not assigned to right user.");
+            return false;
+        }
+        String dueDate = element.getElement(TASK_DUE_DATE).getAttribute("value");
+        if(dueDate == null || !dueDate.trim().equalsIgnoreCase(task.getDate())) {
+            Report.logInfo("CTA due data is not correct");
+            return false;
+        }
+        collapseTaskView();
+        return true;
+    }
+
    public boolean verifyCTADetails(CTA cta) {
         expandCTAView(cta);
         String xpath = EXP_VIEW_ASSIGNEE+"/descendant::label[contains(@class, 'cta-username')]";
@@ -561,14 +563,24 @@ public class WorkflowPage extends WorkflowBasePage {
             expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
 
             if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())) {
+                Report.logInfo("Expected Value : " +cta.getCustomer());
+                Report.logInfo("Actual Value : " +expViewCta.getCustomer());
                 Report.logInfo("Customer Name not matched.");
             } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
+                Report.logInfo("Expected Value :" +cta.getType()+"a");
+                Report.logInfo("Actual Value :" +expViewCta.getType()+"a");
                 Report.logInfo("Type not matched.");
             } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
+                Report.logInfo("Expected Value : " +cta.getPriority());
+                Report.logInfo("Actual Value : " +expViewCta.getPriority());
                 Report.logInfo("Priority not matched.");
             } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
+                Report.logInfo("Expected Value : " +cta.getStatus());
+                Report.logInfo("Actual Value : " +expViewCta.getStatus());
                 Report.logInfo("Status not matched.");
             } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                Report.logInfo("Expected Value : " +cta.getReason());
+                Report.logInfo("Actual Value : " +expViewCta.getReason());
                 Report.logInfo("Reason not matched.");
             }
 
@@ -658,7 +670,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public boolean isTaskDisplayed(Task task) {
-        env.setTimeout(5);
+        env.setTimeout(3);
         List<WebElement> elements = element.getAllElement(getTaskXPath(task));
         if(elements.size() > 0) {
             for(WebElement ele : elements) {
@@ -718,39 +730,38 @@ public class WorkflowPage extends WorkflowBasePage {
         cta.setImp(true);
         return this;
     }
-    
-    public boolean verifyImpCTA(CTA cta){
-    	item.click(SHOW_IMP_CTA);
-    	if(verifyCTADetails(cta))   	return true;
-    	return false;
-    	
-    }
-    
+
+    //Need to Visit Again.
     public boolean verifyClosedCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
-    	item.click(SHOW_CLOSED_CTA);
     	if(!hasTasks){
-    	if(verifyCTADetails(cta)) return true;
-    	return false;
-    	}
-    	else{
+            return verifyCTADetails(cta);
+        } else{
     		item.click(VIEW_TASKS);
+            if(!verifyCTADetails(cta)) {
+                return false;
+            }
     		boolean allTasksClosed=true;
-    		for(Task task :tasks )
-    			if(!isTaskDisplayed(task)) allTasksClosed=false;
-    		
-    		return allTasksClosed;
+    		for(Task task :tasks ) {
+                if(!isTaskDisplayed(task)) {
+                    return false;
+                }
+                if(!verifyTaskDetails(task)) {
+                    return false;
+                }
+            }
+            return allTasksClosed;
     	}
     }
     
-    public WorkflowPage updateTaskDetails(Task oldTask, Task newTask) {
-        expandTaskView(oldTask);
-        if(!oldTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
+    public WorkflowPage updateTaskDetails(Task ExpectedTask, Task newTask) {
+        expandTaskView(ExpectedTask);
+        if(!ExpectedTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
             item.click(TASK_EXP_ASSIGNEE);
             field.setTextByKeys(TASK_EXP_ASSIGNEE_SEARCH, newTask.getAssignee());
             waitTillNoLoadingIcon();
             item.click(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()));
         }
-        if(newTask.getDate() != null && !newTask.getDate().equalsIgnoreCase(oldTask.getDate())) {
+        if(newTask.getDate() != null && !newTask.getDate().equalsIgnoreCase(ExpectedTask.getDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             String a = "j$('#"+TASK_DUE_DATE+"').val(\""+newTask.getDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
@@ -832,12 +843,12 @@ public class WorkflowPage extends WorkflowBasePage {
         applyOwnersToTasksInPlaybook(tasks);
         item.click(PLAYBOOK_APPLY);
         amtDateUtil.sleep(5);
+        collapseCTAView();
         return this;
     }
 
     private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
         for(Task task : tasks) {
-            //h4[contains(text(), 'Schedule call with Admin and/or Power User to identify reason for drop')]/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']
             String path = "//h4[contains(text(), '"+task.getSubject()+"')]" +
                     "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";
             field.clearAndSetText(path, task.getAssignee());

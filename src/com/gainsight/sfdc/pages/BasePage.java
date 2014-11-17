@@ -46,13 +46,14 @@ public class BasePage extends WebPage implements Constants {
     private final String RETENTION_TAB      = "//a[contains(@title, 'Retention Tab')]";
     private final String CHURN_TAB          = "//a[contains(@title,'Churn Tab')]";
     private final String ADOPTION_TAB       = "//a[contains(@title,'Engagement Tab')]";
-    private final String SUREVEY_TAB        = "//a[contains(text(),'Survey')]";
+    private final String SURVEY_TAB         = "//a[contains(text(),'Survey')]";
     private final String ADMINISTRATION_TAB = "//a[contains(@title,'Administration')]";
+    private final String WORKFLOW_TAB		= "//a[contains(@title, 'Cockpit Tab')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
-	private final String WORKFLOW_TAB		= "//a[@title='Cockpit Tab']";
+
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
@@ -115,7 +116,7 @@ public class BasePage extends WebPage implements Constants {
     }
 
 	public SurveyBasePage clickOnSurveyTab() {
-        clickOnTab(SUREVEY_TAB);
+        clickOnTab(SURVEY_TAB);
 		return new SurveyBasePage();
 	}
 

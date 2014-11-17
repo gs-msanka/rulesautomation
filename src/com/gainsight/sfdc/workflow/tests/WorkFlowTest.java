@@ -10,6 +10,7 @@ import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -261,10 +262,12 @@ public class WorkFlowTest extends BaseTest {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
-        
-       workflowPage.addTaskToCTA(cta, tasks);
-       for(Task task : tasks)
-       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
+
    }
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -281,10 +284,12 @@ public class WorkFlowTest extends BaseTest {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
-        
-       workflowPage.addTaskToCTA(cta, tasks);
-       for(Task task : tasks)
-       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       //workflowPage.addTaskToCTA(cta, tasks);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -302,9 +307,11 @@ public class WorkFlowTest extends BaseTest {
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
         	}
         
-       workflowPage.addTaskToCTA(cta, tasks);
-       for(Task task : tasks)
-       Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
+
    }
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -364,7 +371,8 @@ public class WorkFlowTest extends BaseTest {
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_FOR_SNOOZE")
    public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
-	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0));
@@ -372,7 +380,9 @@ public class WorkFlowTest extends BaseTest {
       workflowPage.createCTA(cta);      
       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.snoozeCTA(cta);
-       Assert.assertTrue(workflowPage.verifySnoozeCTA(cta), "Verifying the CTA has been set under Snoozed CTAs");
+       workflowPage = workflowBasePage.clickOnListView();
+        workflowPage = workflowPage.showSnoozeCTA();
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying the CTA has been set under Snoozed CTAs");
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -384,31 +394,38 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
-       workflowPage.flagCTA(cta);
-       Assert.assertTrue(workflowPage.verifyImpCTA(cta), "Verifying the CTA has been set under Important CTAs");
+       workflowPage = workflowPage.flagCTA(cta);
+       cta.setImp(true);
+       workflowPage = workflowPage.showFlaggedCTA();
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying the CTA has been set under Important CTAs");
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE")
    public void createAndCloseCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
-	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);     
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.closeCTA(cta, false);
-       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, false, null), "Verifying the CTA has been set under Closed CTAs");
+       cta.setClosed(true);
+       workflowPage = workflowBasePage.clickOnListView();
+       workflowPage = workflowPage.showClosedCTA();
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE_WITH_TASKS")
    public void createAndCloseRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
-	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
        cta.setAssignee(sfinfo.getUserFullName());
-     workflowPage.createCTA(cta);      
+       workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
@@ -420,9 +437,14 @@ public class WorkFlowTest extends BaseTest {
        for(Task task : tasks)
     	   { 
     	   	Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
-    	   	task.setStatus("Closed Won");
+    	   	task.setStatus("Closed");
     	   }
        workflowPage.closeCTA(cta, true);
+       cta.setClosed(true);
+       cta.setStatus("Closed Won");
+       workflowPage = workflowBasePage.clickOnListView();
+       Assert.assertFalse(workflowPage.isCTADisplayed(cta));
+       workflowPage = workflowPage.showClosedCTA();
        Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
    }
    
@@ -441,13 +463,13 @@ public class WorkFlowTest extends BaseTest {
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE_WITH_TASKS")
-   public void createClose_AndOpenRiskCTA_WithTasks(HashMap<String,String> testData) throws IOException{
+   public void createClose_AndRe_OpenRiskCTA_WithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
          cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
          cta.setAssignee(sfinfo.getUserFullName());
          workflowPage.createCTA(cta);      
-       //Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -533,6 +555,7 @@ public class WorkFlowTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
     public void syncTaskToSF(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -547,18 +570,6 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView();
-      /*  for (Task task : tasks)
-            Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
-        */
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
-        String priorityMap=appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
-        if(!priorityMap.contains("priorityMapping"))
-        {
-          	AdministrationBasePage admin = basepage.clickOnAdminTab();
-    		AdminCockpitConfigPage wf_config = admin.clickOnConpitConfigSubTab();
-    		wf_config.editAndSaveTaskMapping();	
-        }
         workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
         
         SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
@@ -569,6 +580,7 @@ public class WorkFlowTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
     public void deSyncTaskFromSFButKeepTask(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -583,18 +595,6 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView();
-      /*  for (Task task : tasks)
-            Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
-        */
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
-        String priorityMap=appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
-        if(!priorityMap.contains("priorityMapping"))
-        {
-          	AdministrationBasePage admin = basepage.clickOnAdminTab();
-    		AdminCockpitConfigPage wf_config = admin.clickOnConpitConfigSubTab();
-    		wf_config.editAndSaveTaskMapping();	
-        }
         workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
         SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
@@ -609,6 +609,7 @@ public class WorkFlowTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
     public void deSyncTaskFromSFAndDeleteTask(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -623,18 +624,6 @@ public class WorkFlowTest extends BaseTest {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.collapseCTAView();
-      /*  for (Task task : tasks)
-            Assert.assertTrue(workflowPage.isTaskDisplayed(task), "Verifying the task -\"" + task.getSubject() + "\" created for Risk CTA");
-        */
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
-        String priorityMap=appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
-        if(!priorityMap.contains("priorityMapping"))
-        {
-          	AdministrationBasePage admin = basepage.clickOnAdminTab();
-    		AdminCockpitConfigPage wf_config = admin.clickOnConpitConfigSubTab();
-    		wf_config.editAndSaveTaskMapping();	
-        }
         workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
         SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
@@ -770,9 +759,9 @@ public class WorkFlowTest extends BaseTest {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         CTA cta = ctaList2.get(0);
-        workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
         cta.setAssignee(sfinfo.getUserFullName());
+        workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         CTA updateCta = ctaList2.get(1);
         updateCta.setDueDate(getDateWithFormat(Integer.valueOf(updateCta.getDueDate()), 0));
@@ -935,6 +924,17 @@ public class WorkFlowTest extends BaseTest {
         workflowPage = workflowPage.selectCalendarWeek(cal.get(Calendar.DATE), cal.get(Calendar.WEEK_OF_YEAR), monthMap.get(String.valueOf(cal.get(Calendar.MONTH))));
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+        }
+    }
+
+    private void enableSFDCSync() throws IOException {
+        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
+        CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
+        if(!Boolean.valueOf(config.getAutoSync())) {
+            AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+            admin = admin.enableAutoSync();
+            admin = admin.editAndSaveTaskMapping();
         }
     }
 
