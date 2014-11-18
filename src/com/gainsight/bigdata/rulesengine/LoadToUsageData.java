@@ -37,7 +37,7 @@ public class LoadToUsageData {
         CreateObjectAndFields creatFields = new CreateObjectAndFields();
 
         String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        creatFields.createNumberField("JBCXM__UsageData__c", fields, false);
+        creatFields.createNumberField(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields, false);
 
     }
 
@@ -96,7 +96,7 @@ public class LoadToUsageData {
     public void afterClass() throws ConnectionException, InterruptedException {
         CreateObjectAndFields deleteFields = new CreateObjectAndFields();
         String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        deleteFields.deletefields("JBCXM__UsageData__c", fields);
+        deleteFields.deletefields(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields);
         GSUtil.soql = null;
     }
 }
