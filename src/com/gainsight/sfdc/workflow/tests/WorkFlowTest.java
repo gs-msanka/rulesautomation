@@ -106,14 +106,8 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         List<String> dates = new ArrayList<String>();
         Assert.assertEquals(1, countOfRecords(cta, true, dates));
-        cta.setDueDate(getDateWithFormat(0, 0, false));
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
-        cta.setDueDate(getDateWithFormat(1, 0, false));
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
-        cta.setDueDate(getDateWithFormat(2, 0, false));
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
-        cta.setDueDate(getDateWithFormat(3, 0, false));
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
+        Assert.assertEquals(getDates(recurEvent, true).size(), countOfRecords(cta, true, getDates(recurEvent, true)));
+
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -126,7 +120,6 @@ public class WorkFlowTest extends BaseTest {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
         recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
         cta.setAssignee(sfinfo.getUserFullName());
-
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs Every N Days) CTA is created");
    }
