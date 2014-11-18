@@ -32,11 +32,16 @@ public class SendEmail {
     public String GSEmailEmailStrategy = rulesDir + "GSEmailEmailStrategy.apex";
     public String GSEmailEmailStrategy1 = rulesDir + "GSEmailEmailStrategy1.apex";
     public String Contacts = rulesDir + "Contacts.apex";
+    public String AutomatedAlertRulesObjectName = "JBCXM__AutomatedAlertRules__c";
+    public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
+
 
     @BeforeClass
     public void beforeClass() throws Exception {
-    	sfdc.runApexCodeFromFile(Contacts, true);
+        sfdc.runApexCodeFromFile(Contacts, true);
         LoginUtil.sfdcLogin(soql, header, webAction);
+        AutomatedAlertRulesObjectName = LoginUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
+        LastRunResultFieldName = LoginUtil.resolveStrNameSpace(LastRunResultFieldName);
     }
 
     @Test
@@ -45,7 +50,7 @@ public class SendEmail {
         sfdc.runApexCodeFromFile(GSEmailAccountStrategy1, true);
 
         SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Account Strategy'");
+                .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Account Strategy'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
@@ -58,10 +63,10 @@ public class SendEmail {
             Thread.sleep(20000);
 
             SObject[] res = soql
-                    .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
+                    .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
             for (SObject obj : res) {
-                Assert.assertNotNull(obj.getChild("JBCXM__LastRunResult__c").getValue());
-                Assert.assertEquals("success", obj.getChild("JBCXM__LastRunResult__c").getValue().toString().toLowerCase());
+                Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue());
+                Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
         }
     }
@@ -73,7 +78,7 @@ public class SendEmail {
         sfdc.runApexCodeFromFile(GSEmailContactStrategy1, true);
 
         SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Contact Strategy'");
+                .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Contact Strategy'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
@@ -86,10 +91,10 @@ public class SendEmail {
             Thread.sleep(20000);
 
             SObject[] res = soql
-                    .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
+                    .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
             for (SObject obj : res) {
-                Assert.assertNotNull(obj.getChild("JBCXM__LastRunResult__c").getValue());
-                Assert.assertEquals("success", obj.getChild("JBCXM__LastRunResult__c").getValue().toString().toLowerCase());
+                Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue());
+                Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
         }
     }
@@ -100,7 +105,7 @@ public class SendEmail {
         sfdc.runApexCodeFromFile(GSEmailEmailStrategy1, true);
 
         SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Email Strategy'");
+                .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Email Strategy'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
@@ -113,16 +118,16 @@ public class SendEmail {
             Thread.sleep(20000);
 
             SObject[] res = soql
-                    .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
+                    .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
             for (SObject obj : res) {
-                Assert.assertNotNull(obj.getChild("JBCXM__LastRunResult__c").getValue());
-                Assert.assertEquals("success", obj.getChild("JBCXM__LastRunResult__c").getValue().toString().toLowerCase());
+                Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue());
+                Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
         }
     }
     @AfterClass
 	public void afterClass() throws ConnectionException, InterruptedException {
 		soql = null;
-	}
+    }
 
 }
