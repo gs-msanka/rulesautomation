@@ -34,12 +34,14 @@ public class LoadToCustomers {
     private static final boolean isEnabled = false;
     static WebAction wa = new WebAction();
     public Header header = new Header();
+    public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
 
     // Work In Progress Need to optimize the code as we will proceed
 
     @BeforeClass
     public void beforeClass() throws Exception {
         GSUtil.sfdcLogin(header, wa);
+        LastRunResultFieldName = GSUtil.resolveStrNameSpace(LastRunResultFieldName);
     }
 
     @Test
@@ -62,8 +64,8 @@ public class LoadToCustomers {
 
             SObject[] res = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
             for (SObject obj : res) {
-                Assert.assertNotNull(obj.getChild("JBCXM__LastRunResult__c").getValue());
-                Assert.assertEquals("success", obj.getChild("JBCXM__LastRunResult__c").getValue().toString().toLowerCase());
+                Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue());
+                Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
         }
         SObject[] rules1 = GSUtil.execute("SELECT count(Id) FROM Account");
