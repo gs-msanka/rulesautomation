@@ -58,7 +58,7 @@ public class WorkFlowTest extends BaseTest {
     	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
     
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+  @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -570,8 +570,8 @@ public class WorkFlowTest extends BaseTest {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
-    public void syncTaskToSF(HashMap<String, String> testData) throws IOException {
-        enableSFDCSync();
+    public void syncTaskToSF_Manual(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -595,8 +595,8 @@ public class WorkFlowTest extends BaseTest {
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
-    public void deSyncTaskFromSFButKeepTask(HashMap<String, String> testData) throws IOException {
-        enableSFDCSync();
+    public void deSyncTaskFromSFButKeepTask_Manual(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -619,13 +619,13 @@ public class WorkFlowTest extends BaseTest {
         SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
         int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
-        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is created successfully in SF");
+        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
-    public void deSyncTaskFromSFAndDeleteTask(HashMap<String, String> testData) throws IOException {
-        enableSFDCSync();
+    public void deSyncTaskFromSFAndDeleteTask_Manual(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
@@ -648,7 +648,93 @@ public class WorkFlowTest extends BaseTest {
         SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 
         int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
-        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is created successfully in SF");
+        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task desynced from SF and SF task is deleted too");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    public void syncTaskToSF_AutoSync(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Auto();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        workflowPage.createCTA(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for (Task task : tasks) {
+            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+        }
+
+        workflowPage.addTaskToCTA(cta, tasks);
+        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+        
+        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+        int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
+        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
+        disableSFAutoSync();
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    public void deSyncTaskFromSFButKeepTask_AutoSync(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Auto();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        workflowPage.createCTA(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for (Task task : tasks) {
+            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+        }
+
+        workflowPage.addTaskToCTA(cta, tasks);
+        workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+        
+        workflowPage.deSyncTaskFromSF(cta,tasks.get(0),true);
+        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
+        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
+        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF but remains in SF");
+        disableSFAutoSync();
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    public void deSyncTaskFromSFAndDeleteTask_AutoSync(HashMap<String, String> testData) throws IOException {
+        enableSFDCSync_Auto();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        workflowPage.createCTA(cta);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for (Task task : tasks) {
+            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+        }
+
+        workflowPage.addTaskToCTA(cta, tasks);
+        workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+        
+        workflowPage.deSyncTaskFromSF(cta,tasks.get(0),false);
+        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+
+        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
+        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
+        disableSFAutoSync();
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -943,17 +1029,42 @@ public class WorkFlowTest extends BaseTest {
         }
     }
 
-    private void enableSFDCSync() throws IOException {
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+    private void enableSFDCSync_Manual() throws IOException {
+         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
         String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
         CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
-        if(!Boolean.valueOf(config.getAutoSync())) {
+        boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
+        
+        if(config.getPriorityMapping()=="{}" || !autoSync_FromConfig) { //priority mapping is empty ==> no SF to GS task mapping
             AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
-            admin = admin.enableAutoSync();
+            if(autoSync_FromConfig){ //in case autosync is enabled...disabling it...since this is only manual Sync case
+            	admin=admin.disableAutoSync();            	
+            }
             admin = admin.editAndSaveTaskMapping();
         }
     }
-
+    
+    private void enableSFDCSync_Auto() throws IOException {
+        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+       String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
+       CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
+       boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
+       
+       if(!autoSync_FromConfig) { //If autosync is true from config ==> already synced...so not entering the method
+           AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+           admin=admin.enableAutoSync();
+           admin = admin.editAndSaveTaskMapping();
+       }
+   }
+    private void disableSFAutoSync() throws IOException {
+        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
+        CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
+        if(Boolean.valueOf(config.getAutoSync()))  { //If auto sync is already disabled..nothing to do
+            AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+          	 admin = admin.disableAutoSync();
+            }
+    }
     public int countOfRecords(CTA cta, boolean recurring, List<String> dueDates) {
         String query = "Select id, Name, JBCXM__Account__R.Name, JBCXM__Assignee__c, " +
                 "JBCXM__DueDate__c, JBCXM__IsRecurring__c, JBCXM__Reason__r.Name, " +

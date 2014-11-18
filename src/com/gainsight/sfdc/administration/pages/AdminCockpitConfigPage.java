@@ -23,7 +23,14 @@ public class AdminCockpitConfigPage extends BasePage {
         waitTillNoLoadingIcon();
         return this;
     }
-
+    
+    public AdminCockpitConfigPage disableAutoSync() {
+        String xpath = "//div[contains(text(), 'Auto-sync task to SFDC:')]/following-sibling::span[@class='gs-sync-switch gs_switch gs_on']";
+        item.click(xpath);
+        waitTillNoLoadingIcon();
+        return this;
+    }
+    
     public void waitTillNoLoadingIcon() {
         env.setTimeout(5);
         wait.waitTillElementNotPresent("div[contains(@class, 'gs-loader-image')]", MIN_TIME, MAX_TIME);
