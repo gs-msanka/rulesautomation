@@ -87,19 +87,20 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String RECUR_MONTH_INTERVAL           = "//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onday-ofevery-monthpick']";
     private final String RECUR_MONTHLY_BY_WEEKDAY       = "//label[@class='radio-inline']/input[@value='RecursMonthlyNth']";
     private final String TO_SELECT_WEEK_NUMBER          = "//select[@class='form-control1 monthly-onthe-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_WEEK_NUMBER_OF_MONTH     = "//label[@class='ui-corner-all']/input[@value='%s']/following-sibling::span";
+    private final String RECUR_WEEK_NUMBER_OF_MONTH     = "//label[@class='ui-corner-all']/input[@title='%s']/following-sibling::span";
     private final String TO_SELECT_RECUR_WEEK_OF_MONTH  = "//select[@class='form-control1 monthly-onthe-daypick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
     private final String RECUR_WEEK_OF_MONTH            = "//li[contains(@class,'ui-multiselect-option')]//span[contains(text(),'%s')]";
     private final String RECUR_MONTHLY_INTERVAL_BYWEEK  = "//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onthe-ofevery-monthpick']";
-  
-    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH   = "//select[@class='form-control1 yearly-onevery-monthpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_BYMONTH                   = "//input[@value='%s']/following-sibling::span";
+
+    private final String RECURS_YEARLY_INPUT                    = "//input[@value='RecursYearly' and @name='Yearly-on']";
+    private final String RECURS_YEARLY_NTH_INPUT                = "//input[@value='RecursYearlyNth' and @name='Yearly-on']";
+    private final String RECURS_YEARLY_ON_DAY_NUM_PICK          = "//select[contains(@class, 'yearly-onthe-daynumpick')]/following-sibling::button";
+    private final String RECURS_YEARLY_ON_DAY_PICK              = "//select[contains(@class, 'yearly-onthe-daypick')]/following-sibling::button";
+    private final String RECURS_YEARLY_MONTH_PICK               = "//select[contains(@class, 'yearly-onthe-monthpick')]/following-sibling::button";
+    private final String RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH   = "//select[@class='form-control1 yearly-onevery-monthpick']/following-sibling::button";
     private final String RECUR_YEARLY_BYMONTH_TO_SELECT_DATE    = "//select[@class='form-control1 yearly-onevery-daynumpick']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_BYMONTH_DATE              = "//input[@value='2']/following-sibling::span[contains(text(),'2')]";
-    private final String RECUR_YEARLY_STARTDATE_SELECT          = "//select[@class='sel-start-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_STARTDATE                 = "//span[contains(text(),'%s')]";
-    private final String RECUR_YEARLY_ENDDATE_SELECT            = "//select[@class='sel-end-year']/following-sibling::button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
-    private final String RECUR_YEARLY_ENDDATE                   = "//span[contains(text(),'%s')]";
+    private final String RECUR_YEARLY_STARTDATE_SELECT          = "//select[@class='sel-start-year']/following-sibling::button";
+    private final String RECUR_YEARLY_ENDDATE_SELECT            = "//select[@class='sel-end-year']/following-sibling::button";
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
@@ -233,7 +234,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
 		setCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
-		item.click(String.format(CREATE_FORM_SELECT_REASON,cta.getReason()));
+		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()) {
@@ -273,7 +274,7 @@ public class WorkflowPage extends WorkflowBasePage {
 				else if(recurProperties.getMonthlyRecurringInterval().startsWith("Week")){
 					item.click(RECUR_MONTHLY_BY_WEEKDAY);
 					item.click(TO_SELECT_WEEK_NUMBER);
-					item.click(String.format(RECUR_WEEK_NUMBER_OF_MONTH, recurProperties.getMonthlyRecurringInterval().split("_")[1]));
+                    selectValueInDropDown(recurProperties.getMonthlyRecurringInterval().split("_")[1]);
 					item.click(TO_SELECT_RECUR_WEEK_OF_MONTH);
 					item.click(String.format(RECUR_WEEK_OF_MONTH,recurProperties.getMonthlyRecurringInterval().split("_")[2]));
 					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[3]);
@@ -284,23 +285,28 @@ public class WorkflowPage extends WorkflowBasePage {
 			}
 			else if(recurProperties.getRecurringType().equals("Yearly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
-				if (recurProperties.getYearlyRecurringInterval().startsWith("Week")){
-					
-				}
-				else{
-					item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH);
-					for(WebElement ele : driver.findElements(By.xpath(String.format(RECUR_YEARLY_BYMONTH, recurProperties.getYearlyRecurringInterval().split("_")[0]))))
-					 if(ele.isDisplayed()) ele.click();
-					
-					item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_DATE);
-					item.click(String.format(RECUR_YEARLY_BYMONTH_DATE,recurProperties.getYearlyRecurringInterval().split("_")[1]));
-				}
-				item.click(RECUR_YEARLY_STARTDATE_SELECT);
-				item.click(String.format(RECUR_YEARLY_STARTDATE, recurProperties.getRecurStartDate()));
-				
-				item.click(RECUR_YEARLY_ENDDATE_SELECT);
-				item.click(String.format(RECUR_YEARLY_ENDDATE, recurProperties.getRecurEndDate()));
-					
+                String exp[] = recurProperties.getYearlyRecurringInterval().split("_");
+				if (exp[0].equalsIgnoreCase("Day")){
+                    item.click(RECURS_YEARLY_NTH_INPUT);
+                    item.click(RECURS_YEARLY_ON_DAY_NUM_PICK);
+                    selectValueInDropDown(exp[1]);
+                    item.click(RECURS_YEARLY_ON_DAY_PICK);
+                    selectValueInDropDown(exp[2]);
+                    item.click(RECURS_YEARLY_MONTH_PICK);
+                    selectValueInDropDown(exp[3]);
+
+				} else {
+                    item.click(RECURS_YEARLY_INPUT);
+                    item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_MONTH);
+                    selectValueInDropDown(exp[0]);
+                    item.click(RECUR_YEARLY_BYMONTH_TO_SELECT_DATE);
+                    selectValueInDropDown(exp[1]);
+                }
+
+                item.click(RECUR_YEARLY_STARTDATE_SELECT);
+                selectValueInDropDown(recurProperties.getRecurStartDate());
+                item.click(RECUR_YEARLY_ENDDATE_SELECT);
+                selectValueInDropDown(recurProperties.getRecurEndDate());
 				}
 		    amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
 		}

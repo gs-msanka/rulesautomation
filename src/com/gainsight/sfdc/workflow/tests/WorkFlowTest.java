@@ -147,7 +147,7 @@ public class WorkFlowTest extends BaseTest {
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_MONTH")
-   public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException {
+   public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException, InterruptedException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         int temp = Integer.valueOf(cta.getDueDate());
@@ -176,6 +176,7 @@ public class WorkFlowTest extends BaseTest {
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
+
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
         Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
@@ -190,8 +191,6 @@ public class WorkFlowTest extends BaseTest {
         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
         List<String> dates = getDates(recurEvent);
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
-        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -208,8 +207,6 @@ public class WorkFlowTest extends BaseTest {
        cta.setDueDate(getDateWithFormat(temp, 0, false));
        CTA.EventRecurring recurEvent=cta.getEventRecurring();
        List<String> dates = getDates(recurEvent);
-       recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
-       recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);
        cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -1368,7 +1365,7 @@ public class WorkFlowTest extends BaseTest {
         }
 
         else if(recurring.getRecurringType().equalsIgnoreCase("Monthly")) {
-            String exp[] = recurring.getWeeklyRecurringInterval().split("_");
+            String exp[] = recurring.getMonthlyRecurringInterval().split("_");
             if(exp[0].equalsIgnoreCase("Day")) {
                 int day = Integer.valueOf(exp[1].substring(0, exp[1].length()-2));
                 int months = Integer.valueOf(exp[2]);
@@ -1382,16 +1379,16 @@ public class WorkFlowTest extends BaseTest {
                 return getFormatDates(a);
             }
         } else if(recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
-            String exp[] = recurring.getWeeklyRecurringInterval().split("_");
+            String exp[] = recurring.getYearlyRecurringInterval().split("_");
             if(exp[0].equalsIgnoreCase("Day")) {
-                int day = Integer.valueOf(exp[1]);
+                int day = Integer.valueOf(exp[1].substring(0, exp[1].length()-2));
                 String weekDay = exp[2].substring(0,3);
-                String month = exp[3].substring(0,3);
+                String month = exp[3].substring(0, 3);
                 List<io.lamma.Date> a = Dates.from(start, cal.mm(), cal.dd()).to(end, cal.mm(), cal.dd()).byYear().byYear().on(Locators.nth(day, DayOfWeek.of(weekDayMap.get(weekDay))).of(Month.of(monthlyMap.get(month)))).build();
                 return getFormatDates(a);
             } else {
-                int day = Integer.valueOf(exp[2]);
-                String month = exp[1].substring(0, 3);
+                int day = Integer.valueOf(exp[1]);
+                String month = exp[0].substring(0, 3);
                 List<io.lamma.Date> a = Dates.from(start, cal.mm(), cal.dd()).to(end, cal.mm(), cal.dd()).byYear().on(Locators.nthDay(day).of(Month.of(monthlyMap.get(month)))).build();
                 return getFormatDates(a);
 
@@ -1402,12 +1399,16 @@ public class WorkFlowTest extends BaseTest {
 
     private static List<String> getFormatDates(List<io.lamma.Date>  dates) {
         List<String> fDates = new ArrayList<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for(io.lamma.Date date : dates) {
-            fDates.add(String.valueOf(date.yyyy()+"-"+date.mm()+"-"+date.dd()));
+            Calendar cal = Calendar.getInstance();
+            cal.set(date.yyyy(), date.mm()-1, date.dd(), 0, 0, 0);
+            fDates.add(dateFormat.format(cal.getTime()));
         }
         System.out.println(dates);
         return fDates;
     }
+
     @AfterClass
     public void tearDown() {
         basepage.logout();
