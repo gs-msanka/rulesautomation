@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.rulesengine;
 
 import com.gainsight.bigdata.util.PropertyReader;
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
@@ -19,6 +20,13 @@ public class SendEmail {
     public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
     public SOQLUtil soql = new SOQLUtil();
+    public String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
+    public String GSEmailAccountStrategy = rulesDir + "GSEmailAccountStrategy.apex";
+    public String GSEmailAccountStrategy1 = rulesDir + "GSEmailAccountStrategy1.apex";
+    public String GSEmailContactStrategy = rulesDir + "GSEmailContactStrategy.apex";
+    public String GSEmailContactStrategy1 = rulesDir + "GSEmailContactStrategy1.apex";
+    public String GSEmailEmailStrategy = rulesDir + "GSEmailEmailStrategy.apex";
+    public String GSEmailEmailStrategy1 = rulesDir + "GSEmailEmailStrategy1.apex";
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -27,6 +35,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailAccountStrategy() throws Exception {
+        sfdc.runApexCodeFromFile(GSEmailAccountStrategy, true);
+        sfdc.runApexCodeFromFile(GSEmailAccountStrategy1, true);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Account Strategy'");
@@ -53,6 +63,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailContactStrategy() throws Exception {
+        sfdc.runApexCodeFromFile(GSEmailContactStrategy, true);
+        sfdc.runApexCodeFromFile(GSEmailContactStrategy1, true);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Contact Strategy'");
@@ -78,6 +90,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailEmailStrategy() throws Exception {
+        sfdc.runApexCodeFromFile(GSEmailEmailStrategy, true);
+        sfdc.runApexCodeFromFile(GSEmailEmailStrategy1, true);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='Send Email Email Strategy'");
