@@ -274,13 +274,51 @@ public class WorkFlowTest extends BaseTest {
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
 
-       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
        }
 
    }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_UPDATE_PLAYBOOK")
+   public void createandReplacePlaybook_RiskCTA(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);    
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for(Task task : tasks) {
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	}
+        
+        //Applying Playbook and verifying tasks
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
+       
+       //Replacing Playbook and verifying updated tasks
+       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       for(Task task : updatedTasks) {
+          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+          	}
+       workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
+       for(Task task : updatedTasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
+
+       for(Task task : tasks) {
+           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
+    }
+   
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPOR_CTA_WITH_PLAYBOOK")
    public void createOpportunityCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
@@ -296,7 +334,7 @@ public class WorkFlowTest extends BaseTest {
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
 
-       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        //workflowPage.addTaskToCTA(cta, tasks);
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
@@ -318,7 +356,7 @@ public class WorkFlowTest extends BaseTest {
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
-       workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
+       workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
        }

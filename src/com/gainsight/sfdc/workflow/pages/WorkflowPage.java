@@ -874,10 +874,11 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    public WorkflowPage applyPlayBook(CTA cta, String playBookName, List<Task> tasks) {
+    public WorkflowPage applyPlayBook(CTA cta, String playBookName, List<Task> tasks,boolean isApply) {
         expandCTAView(cta);
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
-        item.click(EXP_VIEW_APPLY_PLAYBOOK);
+        if(isApply) item.click(EXP_VIEW_APPLY_PLAYBOOK);
+        else item.click(EXP_VIEW_REPLACE_PLAYBOOK);
         amtDateUtil.stalePause();
         waitTillNoLoadingIcon();
         item.click(PLAYBOOK_SELECT);
