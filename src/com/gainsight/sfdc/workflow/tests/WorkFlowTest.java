@@ -1,7 +1,7 @@
 package com.gainsight.sfdc.workflow.tests;
 
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
-import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
@@ -10,7 +10,6 @@ import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -64,7 +63,7 @@ public class WorkFlowTest extends BaseTest {
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created");
@@ -75,7 +74,7 @@ public class WorkFlowTest extends BaseTest {
     public void createNonRecurringEventCTA(HashMap<String, String> testData) throws IOException {
        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));    
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created");
@@ -86,7 +85,7 @@ public class WorkFlowTest extends BaseTest {
     public void createOpportunityCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
@@ -97,13 +96,24 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Daily_EVeryWeekDay(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+           int temp = Integer.valueOf(cta.getDueDate());
+         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0));
-        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0));
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName()); 
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs EveryWeekday) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        List<String> dates = new ArrayList<String>();
+        Assert.assertEquals(1, countOfRecords(cta, true, dates));
+        cta.setDueDate(getDateWithFormat(0, 0, false));
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
+        cta.setDueDate(getDateWithFormat(1, 0, false));
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
+        cta.setDueDate(getDateWithFormat(2, 0, false));
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
+        cta.setDueDate(getDateWithFormat(3, 0, false));
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -111,10 +121,10 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Daily_EveryNDays(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
         cta.setAssignee(sfinfo.getUserFullName());
 
         workflowPage.createCTA(cta);
@@ -126,10 +136,10 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Weekly_EveryNWeeks(HashMap<String, String> testData) throws IOException  {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
         cta.setAssignee(sfinfo.getUserFullName());
 
         workflowPage.createCTA(cta);
@@ -141,10 +151,10 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
         cta.setAssignee(sfinfo.getUserFullName());
 
         workflowPage.createCTA(cta);
@@ -157,10 +167,10 @@ public class WorkFlowTest extends BaseTest {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0));
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
         cta.setAssignee(sfinfo.getUserFullName());
 
         workflowPage.createCTA(cta);
@@ -172,10 +182,10 @@ public class WorkFlowTest extends BaseTest {
    public void createRecurringEventCTA_Yearly_ByMonth(HashMap<String, String> testData) throws IOException {
     	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0).split("/")[2]);
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0).split("/")[2]);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false).split("/")[2]);
+        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false).split("/")[2]);
         cta.setAssignee(sfinfo.getUserFullName());
 
         workflowPage.createCTA(cta);
@@ -192,7 +202,7 @@ public class WorkFlowTest extends BaseTest {
    public void createRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
 
        	workflowPage.createCTA(cta);      
@@ -200,7 +210,7 @@ public class WorkFlowTest extends BaseTest {
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -213,14 +223,14 @@ public class WorkFlowTest extends BaseTest {
    public void createOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -233,14 +243,14 @@ public class WorkFlowTest extends BaseTest {
    public void createEventCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -253,14 +263,14 @@ public class WorkFlowTest extends BaseTest {
    public void createRiskCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
 
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
@@ -275,14 +285,14 @@ public class WorkFlowTest extends BaseTest {
    public void createOpportunityCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
 
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
@@ -297,14 +307,14 @@ public class WorkFlowTest extends BaseTest {
    public void createEventCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks);
@@ -319,7 +329,7 @@ public class WorkFlowTest extends BaseTest {
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
@@ -337,7 +347,7 @@ public class WorkFlowTest extends BaseTest {
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
@@ -355,7 +365,7 @@ public class WorkFlowTest extends BaseTest {
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 
-      cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+      cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
       cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
       workflowPage.createMilestoneForCTA(cta);
@@ -373,8 +383,8 @@ public class WorkFlowTest extends BaseTest {
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
-       cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);      
       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
@@ -389,7 +399,7 @@ public class WorkFlowTest extends BaseTest {
    public void markCTAAsImp(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
@@ -405,7 +415,7 @@ public class WorkFlowTest extends BaseTest {
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);     
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
@@ -422,14 +432,14 @@ public class WorkFlowTest extends BaseTest {
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -452,7 +462,7 @@ public class WorkFlowTest extends BaseTest {
    public void create_CloseAndOpenCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
       workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -460,7 +470,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setStatus("Closed Won");
        cta.setClosed(true);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
-       workflowPage.openCTA(cta,false,null);
+       workflowPage.openCTA(cta, false, null);
        cta.setStatus("Open");
        cta.setClosed(false);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -472,14 +482,14 @@ public class WorkFlowTest extends BaseTest {
    public void createClose_AndRe_OpenRiskCTA_WithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
          cta.setAssignee(sfinfo.getUserFullName());
          workflowPage.createCTA(cta);      
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -504,7 +514,7 @@ public class WorkFlowTest extends BaseTest {
    public void createAndUpdateCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta); 
       
@@ -512,7 +522,7 @@ public class WorkFlowTest extends BaseTest {
       
       if(updatedCta.getAssignee()==null)
     	  updatedCta.setAssignee(sfinfo.getUserFullName());
-      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0));
+      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0, false));
       workflowPage.updateCTADetails(cta, updatedCta);
       Assert.assertTrue(workflowPage.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
    }
@@ -523,7 +533,7 @@ public class WorkFlowTest extends BaseTest {
    public void createAndDeleteCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta); 
       
@@ -537,14 +547,14 @@ public class WorkFlowTest extends BaseTest {
    public void createAndUpdateCTATasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0));      	
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
        workflowPage.addTaskToCTA(cta, tasks);
@@ -553,7 +563,7 @@ public class WorkFlowTest extends BaseTest {
        
        Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
        updatedTask.setAssignee(sfinfo.getUserFullName());
-       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0));
+       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0, false));
        workflowPage.updateTaskDetails(tasks.get(0), updatedTask);  //assuming that we are taking only one task for updation
        Assert.assertTrue(workflowPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
    }
@@ -565,14 +575,14 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
-            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0));
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
@@ -590,14 +600,14 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
-            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0));
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
@@ -619,14 +629,14 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for (Task task : tasks) {
             if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
-            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0));
+            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
@@ -646,7 +656,7 @@ public class WorkFlowTest extends BaseTest {
     public void createRiskCTA_Overdue(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         cta.setOverDue(true);
@@ -658,7 +668,7 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
             cta.setAssignee(sfinfo.getUserFullName());
             workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -698,25 +708,25 @@ public class WorkFlowTest extends BaseTest {
         List<CTA> ctaList3  = mapper.readValue(testData.get("CTA3"), new TypeReference<ArrayList<CTA>>() {});
 
         CTA cta = ctaList1.get(0);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(ctaList1.get(0));
         Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 
         cta = ctaList2.get(0);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 
         cta = ctaList3.get(0);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 
         ctaList1.get(1).setAssignee(sfinfo.getUserFullName());
-        ctaList1.get(1).setDueDate(getDateWithFormat(Integer.valueOf(ctaList1.get(1).getDueDate()), 0));
+        ctaList1.get(1).setDueDate(getDateWithFormat(Integer.valueOf(ctaList1.get(1).getDueDate()), 0, false));
         workflowPage = workflowPage.updateCTADetails(ctaList1.get(0), ctaList1.get(1));
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList1.get(1)));
 
@@ -730,7 +740,7 @@ public class WorkFlowTest extends BaseTest {
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList3.get(0)));
 
         ctaList2.get(1).setAssignee(sfinfo.getUserFullName());
-        ctaList2.get(1).setDueDate(getDateWithFormat(Integer.valueOf(ctaList2.get(1).getDueDate()), 0));
+        ctaList2.get(1).setDueDate(getDateWithFormat(Integer.valueOf(ctaList2.get(1).getDueDate()), 0, false));
         workflowPage = workflowPage.updateCTADetails(ctaList2.get(0), ctaList2.get(1));
 
         workflowPage = workflowPage.selectCTAPriorityFilter(ctaList2.get(1).getPriority());
@@ -759,18 +769,18 @@ public class WorkFlowTest extends BaseTest {
         List<CTA> ctaList1 =  mapper.readValue(testData.get("CTA1"), new TypeReference<ArrayList<CTA>>() {});
         List<CTA> ctaList2  = mapper.readValue(testData.get("CTA2"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList1) {
-            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
             cta.setAssignee(sfinfo.getUserFullName());
             workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         CTA cta = ctaList2.get(0);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         CTA updateCta = ctaList2.get(1);
-        updateCta.setDueDate(getDateWithFormat(Integer.valueOf(updateCta.getDueDate()), 0));
+        updateCta.setDueDate(getDateWithFormat(Integer.valueOf(updateCta.getDueDate()), 0, false));
         workflowPage = workflowPage.updateCTADetails(cta, updateCta);
         Assert.assertTrue(workflowPage.isCTADisplayed(updateCta));
         workflowPage = workflowPage.changeAssigneeView(updateCta.getAssignee());
@@ -786,7 +796,7 @@ public class WorkFlowTest extends BaseTest {
         workflowPage = workflowPage.changeAssigneeView(updateCta.getAssignee());
         Assert.assertTrue(workflowPage.isCTADisplayed(updateCta));
         CTA updateCta1 = ctaList2.get(2);
-        updateCta1.setDueDate(getDateWithFormat(Integer.valueOf(updateCta1.getDueDate()), 1));
+        updateCta1.setDueDate(getDateWithFormat(Integer.valueOf(updateCta1.getDueDate()), 1, false));
         workflowPage = workflowPage.updateCTADetails(updateCta, updateCta1);
         Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));
         workflowPage  = workflowPage.changeAssigneeView(updateCta1.getAssignee());
@@ -804,7 +814,7 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
             cta.setAssignee(sfinfo.getUserFullName());
             workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -834,7 +844,7 @@ public class WorkFlowTest extends BaseTest {
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
-        ctaList.get(0).setSnoozeDate(getDateWithFormat(Integer.valueOf(ctaList.get(0).getSnoozeDate()), 0));
+        ctaList.get(0).setSnoozeDate(getDateWithFormat(Integer.valueOf(ctaList.get(0).getSnoozeDate()), 0, false));
 
         workflowPage.snoozeCTA(ctaList.get(0));
         workflowPage = workflowPage.showSnoozeCTA();
@@ -852,7 +862,7 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = workflowBasePage.clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
             cta.setAssignee(sfinfo.getUserFullName());
             workflowPage.createCTA(cta);
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -880,7 +890,7 @@ public class WorkFlowTest extends BaseTest {
         }
         Assert.assertEquals(9, workflowPage.countOfCTASInGroup("All", null));
         CTA cta = (CTA) ctaList.get(0).clone();
-        cta.setDueDate(getDateWithFormat(-1, 0));
+        cta.setDueDate(getDateWithFormat(-1, 0, false));
         cta.setStatus("In Progress");
         workflowPage = workflowPage.updateCTADetails(ctaList.get(0), cta);
 
@@ -897,7 +907,7 @@ public class WorkFlowTest extends BaseTest {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnCalendarView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
         for(CTA cta : ctaList) {
-            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0));
+            cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
             cta.setAssignee(sfinfo.getUserFullName());
             workflowPage.createCTA(cta);
         }
@@ -942,6 +952,51 @@ public class WorkFlowTest extends BaseTest {
             admin = admin.enableAutoSync();
             admin = admin.editAndSaveTaskMapping();
         }
+    }
+
+    public int countOfRecords(CTA cta, boolean recurring, List<String> dueDates) {
+        String query = "Select id, Name, JBCXM__Account__R.Name, JBCXM__Assignee__c, " +
+                "JBCXM__DueDate__c, JBCXM__IsRecurring__c, JBCXM__Reason__r.Name, " +
+                "JBCXM__Priority__r.Name, JBCXM__Stage__r.Name, JBCXM__Type__r.Name From JBCXM__CTA__C where " +
+                "Name like '%"+cta.getSubject()+"%'  AND JBCXM__Account__R.Name Like '%"+cta.getCustomer()+"%' " +
+                "AND JBCXM__IsRecurring__c = "+recurring+" AND JBCXM__Reason__r.Name='"+cta.getReason()+"' AND " +
+                "JBCXM__Priority__r.Name = '"+cta.getPriority()+"' AND JBCXM__Stage__r.Name = '"+cta.getStatus()+"' " +
+                "AND isDeleted = false";
+        String filter = "";
+        for(String s : dueDates) {
+            filter = filter+" JBCXM__DueDate__c = "+s+" OR ";
+        }
+        if(filter.length() > 1) {
+            query = query+ " AND ( "+filter.substring(0, filter.length()-3)+" )";
+        }
+
+        Report.logInfo("Query : " +resolveStrNameSpace(query));
+        return getQueryRecordCount(resolveStrNameSpace(query));
+    }
+
+    public List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
+        List<String> dates = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        int start = Integer.valueOf(recurring.getRecurStartDate());
+        int end = Integer.valueOf(recurring.getRecurEndDate());
+        cal.add(Calendar.DATE, start);
+        if(recurring.getRecurringType().equalsIgnoreCase("Daily")) {
+            if(recurring.getDailyRecurringInterval().equalsIgnoreCase("EveryWeekday")) {
+                while (start<=end) {
+
+                }
+            } else {
+
+            }
+
+        } else if(recurring.getRecurringType().equalsIgnoreCase("Weekly")) {
+
+        } else if(recurring.getRecurringType().equalsIgnoreCase("Monthly")) {
+
+        } else if(recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
+
+        }
+        return dates;
     }
 
     @AfterClass
