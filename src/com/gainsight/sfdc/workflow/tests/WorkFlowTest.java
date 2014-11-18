@@ -29,14 +29,12 @@ public class WorkFlowTest extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/workflow/tests/WorkFlow_Test.xls";
     private final String CTA_OBJECT     = "JBCXM__CTA__C";
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
-    																	"Delete [select id from JBCXM__CSTask__c];"+
-    																	"Delete [select id from Task];"+
-    																	"Delete [Select id from JBCXM__StatePreservation__c];"+
-    																	"Delete [Select id from JBCXM__Milestone__c];";
+                                        "Delete [select id from JBCXM__CSTask__c];"+
+                                        "Delete [select id from Task];"+
+                                        "Delete [Select id from JBCXM__StatePreservation__c];"+
+                                        "Delete [Select id from JBCXM__Milestone__c];";
 
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
-
-
     @BeforeClass
     public void setup() {
         userLocale = soql.getUserLocale();
@@ -99,15 +97,14 @@ public class WorkFlowTest extends BaseTest {
            int temp = Integer.valueOf(cta.getDueDate());
          cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
+        List<String> dates = getDates(recurEvent, true);
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName()); 
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
-        List<String> dates = new ArrayList<String>();
-        Assert.assertEquals(1, countOfRecords(cta, true, dates));
-        Assert.assertEquals(getDates(recurEvent, true).size(), countOfRecords(cta, true, getDates(recurEvent, true)));
-
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1277,19 +1274,19 @@ public class WorkFlowTest extends BaseTest {
                 "JBCXM__Priority__r.Name = '"+cta.getPriority()+"' AND JBCXM__Stage__r.Name = '"+cta.getStatus()+"' " +
                 "AND isDeleted = false";
         String filter = "";
-        for(String s : dueDates) {
-            filter = filter+" JBCXM__DueDate__c = "+s+" OR ";
+        if(dueDates != null) {
+            for(String s : dueDates) {
+                filter = filter+" JBCXM__DueDate__c = "+s+" OR ";
+            }
+            if(filter.length() > 1) {
+                query = query+ " AND ( "+filter.substring(0, filter.length()-3)+" )";
+            }
         }
-        if(filter.length() > 1) {
-            query = query+ " AND ( "+filter.substring(0, filter.length()-3)+" )";
-        }
-
         Report.logInfo("Query : " +resolveStrNameSpace(query));
         return getQueryRecordCount(resolveStrNameSpace(query));
     }
 
-    public static List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
-        HashMap<Integer, String> weekDayMap = new HashMap<>();
+    public List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
         HashMap<String , Integer> monthlyMap = new HashMap<>();
         monthlyMap.put("January", 0);
         monthlyMap.put("February", 1);
@@ -1303,15 +1300,6 @@ public class WorkFlowTest extends BaseTest {
         monthlyMap.put("October", 9);
         monthlyMap.put("November", 10);
         monthlyMap.put("December", 11);
-
-        weekDayMap.put(1, "Sun");
-        weekDayMap.put(2, "Mon");
-        weekDayMap.put(3, "Tue");
-        weekDayMap.put(4, "Wed");
-        weekDayMap.put(5, "Thu");
-        weekDayMap.put(6, "Fri");
-        weekDayMap.put(7, "Sat");
-        String userLocale = null;
         List<String> dates = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         int start = Integer.valueOf(recurring.getRecurStartDate());
