@@ -16,10 +16,9 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by gainsight on 07/11/14.
@@ -1296,29 +1295,206 @@ public class WorkFlowTest extends BaseTest {
         return getQueryRecordCount(resolveStrNameSpace(query));
     }
 
-    public List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
+    public static List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
+        HashMap<Integer, String> weekDayMap = new HashMap<>();
+        HashMap<String , Integer> monthlyMap = new HashMap<>();
+        monthlyMap.put("January", 0);
+        monthlyMap.put("February", 1);
+        monthlyMap.put("March", 2);
+        monthlyMap.put("April", 3);
+        monthlyMap.put("May", 4);
+        monthlyMap.put("June", 5);
+        monthlyMap.put("July", 6);
+        monthlyMap.put("Augest", 7);
+        monthlyMap.put("September", 8);
+        monthlyMap.put("October", 9);
+        monthlyMap.put("November", 10);
+        monthlyMap.put("December", 11);
+
+        weekDayMap.put(1, "Sun");
+        weekDayMap.put(2, "Mon");
+        weekDayMap.put(3, "Tue");
+        weekDayMap.put(4, "Wed");
+        weekDayMap.put(5, "Thu");
+        weekDayMap.put(6, "Fri");
+        weekDayMap.put(7, "Sat");
+        String userLocale = null;
         List<String> dates = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         int start = Integer.valueOf(recurring.getRecurStartDate());
         int end = Integer.valueOf(recurring.getRecurEndDate());
-        cal.add(Calendar.DATE, start);
+        DateFormat dateFormat = null;
+        String date = null;
+        if(bulkFormat) {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        } else if (userLocale.contains("en_US")) {
+            dateFormat = new SimpleDateFormat("M/d/yyyy");
+
+        } else if (userLocale.contains("en_IN")) {
+            dateFormat = new SimpleDateFormat("d/M/yyyy");
+        }
+
         if(recurring.getRecurringType().equalsIgnoreCase("Daily")) {
+            cal.add(Calendar.DATE, start);
             if(recurring.getDailyRecurringInterval().equalsIgnoreCase("EveryWeekday")) {
                 while (start<=end) {
-
+                    if(!(cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7 )) {
+                        date = dateFormat.format(cal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    }
+                    cal.add(Calendar.DATE, 1);
+                    ++start;
                 }
             } else {
-
+                int jumpNoOfDays = Integer.valueOf(recurring.getDailyRecurringInterval());
+                while (start<=end) {
+                    date = dateFormat.format(cal.getTime());
+                    System.out.println(date);
+                    dates.add(date);
+                    cal.add(Calendar.DATE, jumpNoOfDays);
+                    start +=jumpNoOfDays;
+                }
+            }
+        } else if(recurring.getRecurringType().equalsIgnoreCase("Weekly")) {
+            cal.add(Calendar.DATE, start);
+            String exp[] = recurring.getWeeklyRecurringInterval().split("_");
+            if(exp.length > 2)  {
+                int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
+                while(start <= end) {
+                    System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
+                    if(Arrays.asList(exp).contains(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)))) {
+                        date = dateFormat.format(cal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    }
+                    cal.add(Calendar.DATE, 1);
+                    ++start;
+                    System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
+                    if(currentWeek < cal.get(Calendar.WEEK_OF_YEAR)) {
+                        if(Integer.valueOf(exp[1]) != 1) {
+                            int a= Integer.valueOf(exp[1]) * 7;
+                            cal.add(Calendar.DATE, a);
+                            start += a;
+                            currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
+                        }
+                    }
+                }
+            } else {
+                throw  new RuntimeException("Week Configuration is not properly provided.");
             }
 
-        } else if(recurring.getRecurringType().equalsIgnoreCase("Weekly")) {
-
         } else if(recurring.getRecurringType().equalsIgnoreCase("Monthly")) {
-
+            cal.add(Calendar.DATE, start);
+            String exp[] = recurring.getWeeklyRecurringInterval().split("_");
+            Calendar tempCal = Calendar.getInstance();
+            Calendar endDate = Calendar.getInstance();
+            endDate.add(Calendar.DATE, end);
+            cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 0, 0,0);
+            if(exp[0].equalsIgnoreCase("Day")) {
+                int months = Integer.valueOf(exp[3]);
+                if(exp[1].equalsIgnoreCase("Last")) {
+                    tempCal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.getMaximum(Calendar.DATE), 0, 0, 0);
+                } else {
+                    tempCal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.valueOf(exp[1]));
+                }
+                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
+                        date = dateFormat.format(tempCal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    } else {
+                        tempCal.add(Calendar.MONTH, 1);
+                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                            date = dateFormat.format(tempCal.getTime());
+                            System.out.println(date);
+                            dates.add(date);
+                        }
+                    }
+                    tempCal.add(Calendar.MONTH, months);
+                }
+            } else {
+                tempCal = getNthDayInMonthByWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                int months = Integer.valueOf(exp[4]);
+                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
+                        date = dateFormat.format(tempCal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    } else {
+                        tempCal.add(Calendar.MONTH, 1);
+                        tempCal = getNthDayInMonthByWeek(tempCal.get(Calendar.MONTH), tempCal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                            date = dateFormat.format(tempCal.getTime());
+                            System.out.println(date);
+                            dates.add(date);
+                        }
+                    }
+                    tempCal.add(Calendar.MONTH, months);
+                    tempCal = getNthDayInMonthByWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                }
+            }
         } else if(recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
-
+            Calendar tempCal = Calendar.getInstance();
+            Calendar endDate = Calendar.getInstance();
+            String exp[] = recurring.getYearlyRecurringInterval().split("_");
+            endDate.set(end, cal.get(Calendar.MONTH), cal.getMaximum(Calendar.DATE), 0, 0, 0);
+            if(exp[0].equalsIgnoreCase("Month")) {
+                tempCal.set(cal.get(Calendar.YEAR), monthlyMap.get(exp[0]),Integer.valueOf(exp[1]), 0, 0, 0);
+                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
+                        date = dateFormat.format(tempCal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    } else {
+                        tempCal.add(Calendar.YEAR, 1);
+                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                            date = dateFormat.format(tempCal.getTime());
+                            System.out.println(date);
+                            dates.add(date);
+                        }
+                    }
+                    tempCal.add(Calendar.YEAR, 1);
+                }
+            } else {
+                tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
+                        date = dateFormat.format(tempCal.getTime());
+                        System.out.println(date);
+                        dates.add(date);
+                    } else {
+                        tempCal.add(Calendar.YEAR, 1);
+                        tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
+                            date = dateFormat.format(tempCal.getTime());
+                            System.out.println(date);
+                            dates.add(date);
+                        }
+                    }
+                    tempCal.add(Calendar.YEAR, 1);
+                    tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
+                }
+            }
         }
         return dates;
+    }
+
+    private static Calendar getNthDayInMonthByWeek(int month, int year, int nthDay, String weekDay) {
+        HashMap<String, Integer> weeklyMap = new HashMap<>();
+        weeklyMap.put("Sunday", 1);
+        weeklyMap.put("Monday", 2);
+        weeklyMap.put("Tuesday", 3);
+        weeklyMap.put("Wednesday", 4);
+        weeklyMap.put("Thursday", 5);
+        weeklyMap.put("Friday", 6);
+        weeklyMap.put("Saturday", 7);
+
+        Calendar  c = Calendar.getInstance();
+        c.set(year, month, 1, 0, 0 ,0);
+        c.set(Calendar.DAY_OF_WEEK_IN_MONTH, weeklyMap.get(weekDay));
+        c.set(Calendar.DAY_OF_WEEK, nthDay);
+        return c;
     }
 
     @AfterClass
