@@ -32,7 +32,8 @@ public class WorkFlowTest extends BaseTest {
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
     																	"Delete [select id from JBCXM__CSTask__c];"+
     																	"Delete [select id from Task];"+
-    																	"Delete [Select id from JBCXM__StatePreservation__c];";
+    																	"Delete [Select id from JBCXM__StatePreservation__c];"+
+    																	"Delete [Select id from JBCXM__Milestone__c];";
 
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
 
@@ -376,6 +377,83 @@ public class WorkFlowTest extends BaseTest {
       Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
    }
    
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_MILESTONES")
+   public void createMilestoneForRiskCTA_Resolved(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+      workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+      
+      //Closing Risk CTA - to check if a RiskResolved Milestone is created.
+      workflowPage.closeCTA(cta,false);
+      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Resolved'";
+      System.out.println("querying for:"+milestoneQuery_afterClose);
+      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+     
+   }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPORTUNITY_CTA_WITH_MILESTONES")
+   public void createMilestoneForOpportunityCTA_Won(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+      workflowPage.createCTA(cta);      
+      Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+      workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+      
+    //Closing Opportunity CTA - to check if a Opportunity Won Milestone is created.
+      workflowPage.closeCTA(cta,false);
+      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Won'";
+      System.out.println("querying for:"+milestoneQuery_afterClose);
+      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+   }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_MILESTONES")
+   public void createMilestoneForEventCTA_Completed(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+
+      cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+      cta.setAssignee(sfinfo.getUserFullName());
+      workflowPage.createCTA(cta);      
+      workflowPage.createMilestoneForCTA(cta);
+      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
+      System.out.println("querying for:"+milestoneQuery);
+      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+      
+    //Closing Event CTA - to check if a Event Completed Milestone is created.
+      workflowPage.closeCTA(cta,false);
+      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Completed'";
+      System.out.println("querying for:"+milestoneQuery_afterClose);
+      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
+      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
+   }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_FOR_SNOOZE")
