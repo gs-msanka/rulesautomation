@@ -5,7 +5,6 @@ import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
@@ -23,7 +22,7 @@ public class SendEmail {
     public WebAction webAction = new WebAction();
     public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
-    public SOQLUtil soql = new SOQLUtil();
+    public SOQLUtil soql;
     public String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
     public String GSEmailAccountStrategy = rulesDir + "GSEmailAccountStrategy.apex";
     public String GSEmailAccountStrategy1 = rulesDir + "GSEmailAccountStrategy1.apex";
@@ -39,9 +38,10 @@ public class SendEmail {
     @BeforeClass
     public void beforeClass() throws Exception {
         sfdc.runApexCodeFromFile(Contacts, true);
-        LoginUtil.sfdcLogin(soql, header, webAction);
-        AutomatedAlertRulesObjectName = LoginUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
-        LastRunResultFieldName = LoginUtil.resolveStrNameSpace(LastRunResultFieldName);
+        GSUtil.sfdcLogin(header, webAction);
+        soql = GSUtil.soql;
+        AutomatedAlertRulesObjectName = GSUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
+        LastRunResultFieldName = GSUtil.resolveStrNameSpace(LastRunResultFieldName);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SendEmail {
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
@@ -84,7 +84,7 @@ public class SendEmail {
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
@@ -111,7 +111,7 @@ public class SendEmail {
             HttpResponseObj result = webAction.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
@@ -125,9 +125,10 @@ public class SendEmail {
             }
         }
     }
+
     @AfterClass
-	public void afterClass() throws ConnectionException, InterruptedException {
-		soql = null;
+    public void afterClass() throws ConnectionException, InterruptedException {
+        soql = null;
     }
 
 }

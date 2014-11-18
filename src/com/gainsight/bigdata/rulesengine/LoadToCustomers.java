@@ -2,8 +2,6 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,13 +36,12 @@ public class LoadToCustomers {
 
     public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
-    SOQLUtil soql = new SOQLUtil();
 
     // Work In Progress Need to optimize the code as we will proceed
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        LoginUtil.sfdcLogin(soql, header, wa);
+        GSUtil.sfdcLogin(header, wa);
     }
 
     @Test
@@ -53,22 +50,26 @@ public class LoadToCustomers {
     public void rulesOne() throws Exception {
         sfdc.runApexCodeFromFile(CustomerInfo, true);
         sfdc.runApexCodeFromFile(CustomerInfo1, true);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CusotomerSync_Initially no customers'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CusotomerSync_Initially no customers'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
             Thread.sleep(15000);
+
+            SObject[] res = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
+            for (SObject obj : res) {
+                Assert.assertNotNull(obj.getChild("JBCXM__LastRunResult__c").getValue());
+                Assert.assertEquals("success", obj.getChild("JBCXM__LastRunResult__c").getValue().toString().toLowerCase());
+            }
         }
-        SObject[] rules1 = soql.getRecords("SELECT count(Id) FROM Account");
-        SObject[] rules2 = soql
-                .getRecords("SELECT count(Id) FROM JBCXM__CustomerInfo__c");
+        SObject[] rules1 = GSUtil.execute("SELECT count(Id) FROM Account");
+        SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__CustomerInfo__c");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -83,23 +84,20 @@ public class LoadToCustomers {
         System.out.print("Filename = " + LoadToCustomer);
         sfdc.runApexCodeFromFile(LoadToCustomer1, true);
         System.out.print("Filename =" + LoadToCustomer1);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadToCustomer'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadToCustomer'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
             Thread.sleep(30000);
         }
-        SObject[] rules1 = soql
-                .getRecords("Select count(Id) From Account Where ((JBCXM__CustomerInfo__r.JBCXM__CustomerName__c LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
-        SObject[] rules2 = soql
-                .getRecords("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c LIKE 'A%' and JBCXM__ASV__c=4545");
+        SObject[] rules1 = GSUtil.execute("Select count(Id) From Account Where ((JBCXM__CustomerInfo__r.JBCXM__CustomerName__c LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+        SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c LIKE 'A%' and JBCXM__ASV__c=4545");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -114,23 +112,20 @@ public class LoadToCustomers {
         System.out.print("Filename = " + LoadtoCust_Picklist);
         sfdc.runApexCodeFromFile(LoadtoCust_Picklist1, true);
         System.out.print("Filename =" + LoadtoCust_Picklist1);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadtoCust_Picklist'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadtoCust_Picklist'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
             Thread.sleep(30000);
         }
-        SObject[] rules1 = soql
-                .getRecords("Select count(Id) From Account Where ((Rating NOT IN ('Hot','Warm','Cold'))) AND JBCXM__CustomerInfo__c != null");
-        SObject[] rules2 = soql
-                .getRecords("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
+        SObject[] rules1 = GSUtil.execute("Select count(Id) From Account Where ((Rating NOT IN ('Hot','Warm','Cold'))) AND JBCXM__CustomerInfo__c != null");
+        SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -145,23 +140,20 @@ public class LoadToCustomers {
         System.out.print("Filename = " + WithAndOrConditionFilters);
         sfdc.runApexCodeFromFile(WithAndOrConditionFilters1, true);
         System.out.print("Filename =" + WithAndOrConditionFilters1);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='WithAndOrConditionFilters'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='WithAndOrConditionFilters'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
             Thread.sleep(30000);
         }
-        SObject[] rules1 = soql
-                .getRecords("Select Count(Id) From Account Where ((Id != null) AND ((IsDeleted != false) OR (JBCXM__CustomerInfo__r.Id != null))) AND JBCXM__CustomerInfo__c != null");
-        SObject[] rules2 = soql
-                .getRecords("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
+        SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Id != null) AND ((IsDeleted != false) OR (JBCXM__CustomerInfo__r.Id != null))) AND JBCXM__CustomerInfo__c != null");
+        SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -177,23 +169,20 @@ public class LoadToCustomers {
         System.out.print("Filename = " + OCD_Today);
         sfdc.runApexCodeFromFile(OCD_Today1, true);
         System.out.print("Filename =" + OCD_Today1);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='OCD_Today'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='OCD_Today'");
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
             Thread.sleep(30000);
         }
-        SObject[] rules1 = soql
-                .getRecords("Select Count(Id) From Account Where ((Name LIKE '%A%')) AND JBCXM__CustomerInfo__c != null ");
-        SObject[] rules2 = soql
-                .getRecords("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__OriginalContractDate__c=TODAY and JBCXM__CustomerName__c Like'%A%'");
+        SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Name LIKE '%A%')) AND JBCXM__CustomerInfo__c != null ");
+        SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__OriginalContractDate__c=TODAY and JBCXM__CustomerName__c Like'%A%'");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -209,24 +198,21 @@ public class LoadToCustomers {
         System.out.print("Filename = " + CountCust);
         sfdc.runApexCodeFromFile(CountCust1, true);
         System.out.print("Filename =" + CountCust1);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CountCust'");
+        SObject[] rules = GSUtil.execute(GSUtil.resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CountCust'"));
         for (SObject r : rules) {
             String rawBody = ("{}");
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
 
             Thread.sleep(30000);
         }
-        SObject[] rules1 = soql
-                .getRecords("Select Count(Id) From Account Where ((Id != null) AND (JBCXM__CustomerInfo__r.Id != null)) AND JBCXM__CustomerInfo__c != null");
-        SObject[] rules2 = soql
-                .getRecords("SELECT count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__MRR__c=1");
+        SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Id != null) AND (JBCXM__CustomerInfo__r.Id != null)) AND JBCXM__CustomerInfo__c != null");
+        SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__MRR__c=1");
         System.out.println(rules1[0].getChild("expr0").getValue());
         System.out.println(rules2[0].getChild("expr0").getValue());
         Assert.assertEquals(
@@ -239,8 +225,7 @@ public class LoadToCustomers {
     public void rulesSeven() throws Exception {
         sfdc.runApexCodeFromFile(PreviewResults, true);
         System.out.print("Filename = " + PreviewResults);
-        SObject[] rules = soql
-                .getRecords("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='PreviewResults'");
+        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='PreviewResults'");
         for (SObject r : rules) {
             String rawBody = "{\"numberOfRecords\": \"10\"}";
             System.out.println(PropertyReader.nsAppUrl + "/api" + "/eventrule"
@@ -248,7 +233,7 @@ public class LoadToCustomers {
             HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
                             + "/eventrule" + "/" + r.getId() + "/result", rawBody,
                     header.getAllHeaders());
-            ResponseObject responseObj = LoginUtil.convertToObject(result
+            ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             // Assert.assertEquals(ro.getData().size(), 10);
             List<Object> data = (List<Object>) responseObj.getData();
@@ -261,6 +246,6 @@ public class LoadToCustomers {
 
     @AfterClass
     public void afterClass() {
-        soql = null;
+        GSUtil.soql = null;
     }
 }
