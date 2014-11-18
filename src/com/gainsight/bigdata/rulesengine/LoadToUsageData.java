@@ -24,8 +24,6 @@ public class LoadToUsageData {
     private static final String UsageDateSync1 = rulesDir + "/UsageDateSync1.apex";
     private static final boolean isEnabled = false;
     static WebAction wa = new WebAction();
-
-    public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
 
     // Work In Progress Need to optimize the code as we will proceed
@@ -44,8 +42,8 @@ public class LoadToUsageData {
     @Test(enabled = isEnabled)
     // Its for UsageData sync with Account Id's only
     public void rulesUsageOne() throws Exception {
-        sfdc.runApexCodeFromFile(UsageDataSync, true);
-        sfdc.runApexCodeFromFile(UsageDataSync1, true);
+        GSUtil.runApexCode(UsageDataSync);
+        GSUtil.runApexCode(UsageDataSync1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDataSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");
@@ -69,8 +67,8 @@ public class LoadToUsageData {
 
     @Test
     public void rulesUsageTwo() throws Exception {
-        sfdc.runApexCodeFromFile(UsageDateSync, true);
-        sfdc.runApexCodeFromFile(UsageDateSync1, true);
+        GSUtil.runApexCode(UsageDateSync);
+        GSUtil.runApexCode(UsageDateSync1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDateSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");

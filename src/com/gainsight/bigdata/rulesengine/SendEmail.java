@@ -20,7 +20,6 @@ import org.testng.annotations.Test;
  */
 public class SendEmail {
     public WebAction webAction = new WebAction();
-    public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
     public SOQLUtil soql;
     public String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
@@ -37,7 +36,7 @@ public class SendEmail {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        sfdc.runApexCodeFromFile(Contacts, true);
+        GSUtil.runApexCode(Contacts);
         GSUtil.sfdcLogin(header, webAction);
         soql = GSUtil.soql;
         AutomatedAlertRulesObjectName = GSUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
@@ -46,8 +45,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailAccountStrategy() throws Exception {
-        sfdc.runApexCodeFromFile(GSEmailAccountStrategy, true);
-        sfdc.runApexCodeFromFile(GSEmailAccountStrategy1, true);
+        GSUtil.runApexCode(GSEmailAccountStrategy);
+        GSUtil.runApexCode(GSEmailAccountStrategy1);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Account Strategy'");
@@ -74,8 +73,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailContactStrategy() throws Exception {
-        sfdc.runApexCodeFromFile(GSEmailContactStrategy, true);
-        sfdc.runApexCodeFromFile(GSEmailContactStrategy1, true);
+        GSUtil.runApexCode(GSEmailContactStrategy);
+        GSUtil.runApexCode(GSEmailContactStrategy1);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Contact Strategy'");
@@ -101,8 +100,8 @@ public class SendEmail {
 
     @Test
     public void testGSEmailEmailStrategy() throws Exception {
-        sfdc.runApexCodeFromFile(GSEmailEmailStrategy, true);
-        sfdc.runApexCodeFromFile(GSEmailEmailStrategy1, true);
+        GSUtil.runApexCode(GSEmailEmailStrategy);
+        GSUtil.runApexCode(GSEmailEmailStrategy1);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Email Strategy'");

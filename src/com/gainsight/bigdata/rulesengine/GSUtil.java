@@ -19,6 +19,7 @@ public class GSUtil {
     protected static TestEnvironment env = new TestEnvironment();
     public static Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static SOQLUtil soql = new SOQLUtil();
+    public static SFDCUtil sfdc = new SFDCUtil();
 
 
     public static void sfdcLogin(Header header, WebAction wa)
@@ -77,5 +78,10 @@ public class GSUtil {
 
     public static SObject[] execute(String query) {
         return soql.getRecords(GSUtil.resolveStrNameSpace(query));
+    }
+
+    public static void runApexCode(String string) {
+        sfdc.runApexCodeFromFile(string, isPackage);
+
     }
 }

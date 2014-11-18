@@ -33,8 +33,6 @@ public class LoadToCustomers {
     private static final String PreviewResults = rulesDir + "PreviewResults.apex";
     private static final boolean isEnabled = false;
     static WebAction wa = new WebAction();
-
-    public SFDCUtil sfdc = new SFDCUtil();
     public Header header = new Header();
 
     // Work In Progress Need to optimize the code as we will proceed
@@ -48,8 +46,8 @@ public class LoadToCustomers {
     // Its for CustomerInfo Sync when Checkbox Apply to Gainsight customers is
     // not enabled
     public void rulesOne() throws Exception {
-        sfdc.runApexCodeFromFile(CustomerInfo, true);
-        sfdc.runApexCodeFromFile(CustomerInfo1, true);
+        GSUtil.runApexCode(CustomerInfo);
+        GSUtil.runApexCode(CustomerInfo1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CusotomerSync_Initially no customers'");
         for (SObject r : rules) {
             String rawBody = ("{}");
@@ -80,9 +78,9 @@ public class LoadToCustomers {
     @Test
     // Load to customer with Account names starts with A and ASV=4545
     public void rulesTwo() throws Exception {
-        sfdc.runApexCodeFromFile(LoadToCustomer, true);
+        GSUtil.runApexCode(LoadToCustomer);
         System.out.print("Filename = " + LoadToCustomer);
-        sfdc.runApexCodeFromFile(LoadToCustomer1, true);
+        GSUtil.runApexCode(LoadToCustomer1);
         System.out.print("Filename =" + LoadToCustomer1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadToCustomer'");
         for (SObject r : rules) {
@@ -108,9 +106,9 @@ public class LoadToCustomers {
     @Test
     // Load to customer with picklist excludes all in where condition
     public void rulesThree() throws Exception {
-        sfdc.runApexCodeFromFile(LoadtoCust_Picklist, true);
+        GSUtil.runApexCode(LoadtoCust_Picklist);
         System.out.print("Filename = " + LoadtoCust_Picklist);
-        sfdc.runApexCodeFromFile(LoadtoCust_Picklist1, true);
+        GSUtil.runApexCode(LoadtoCust_Picklist1);
         System.out.print("Filename =" + LoadtoCust_Picklist1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadtoCust_Picklist'");
         for (SObject r : rules) {
@@ -136,9 +134,9 @@ public class LoadToCustomers {
     @Test
     // In FIlters And+Or condition
     public void rulesFour() throws Exception {
-        sfdc.runApexCodeFromFile(WithAndOrConditionFilters, true);
+        GSUtil.runApexCode(WithAndOrConditionFilters);
         System.out.print("Filename = " + WithAndOrConditionFilters);
-        sfdc.runApexCodeFromFile(WithAndOrConditionFilters1, true);
+        GSUtil.runApexCode(WithAndOrConditionFilters1);
         System.out.print("Filename =" + WithAndOrConditionFilters1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='WithAndOrConditionFilters'");
         for (SObject r : rules) {
@@ -165,9 +163,9 @@ public class LoadToCustomers {
     // Date Sync for Load to Customer with Today's date (In Where Account Name
     // contains B)
     public void rulesFive() throws Exception {
-        sfdc.runApexCodeFromFile(OCD_Today, true);
+        GSUtil.runApexCode(OCD_Today);
         System.out.print("Filename = " + OCD_Today);
-        sfdc.runApexCodeFromFile(OCD_Today1, true);
+        GSUtil.runApexCode(OCD_Today1);
         System.out.print("Filename =" + OCD_Today1);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='OCD_Today'");
         for (SObject r : rules) {
@@ -194,9 +192,9 @@ public class LoadToCustomers {
     // Data Sync for load to customers with aggregation in setup rule and
     // advance criteria in setup actions.
     public void rulesSix() throws Exception {
-        sfdc.runApexCodeFromFile(CountCust, true);
+        GSUtil.runApexCode(CountCust);
         System.out.print("Filename = " + CountCust);
-        sfdc.runApexCodeFromFile(CountCust1, true);
+        GSUtil.runApexCode(CountCust1);
         System.out.print("Filename =" + CountCust1);
         SObject[] rules = GSUtil.execute(GSUtil.resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CountCust'"));
         for (SObject r : rules) {
@@ -223,7 +221,7 @@ public class LoadToCustomers {
     @Test
     // Preview Results
     public void rulesSeven() throws Exception {
-        sfdc.runApexCodeFromFile(PreviewResults, true);
+        GSUtil.runApexCode(PreviewResults);
         System.out.print("Filename = " + PreviewResults);
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='PreviewResults'");
         for (SObject r : rules) {
