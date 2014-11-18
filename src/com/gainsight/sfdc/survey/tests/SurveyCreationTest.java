@@ -29,8 +29,8 @@ public class SurveyCreationTest extends BaseTest {
 		basepage.login();
         apex.runApex(resolveStrNameSpace(QUERY));
 		sdata.setTitle("test");
-		sdata.setStartDate(getDateWithFormat(0, 0));
-		sdata.setEndDate(getDateWithFormat(30, 0));
+		sdata.setStartDate(getDateWithFormat(0, 0, false));
+		sdata.setEndDate(getDateWithFormat(30, 0, false));
 		sdata.setTUOption("Message");
 	}
 
@@ -71,7 +71,7 @@ public class SurveyCreationTest extends BaseTest {
 
 	}
 
-    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
+    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd, boolean bulkFormat) {
         String date = null;
         Calendar c = Calendar.getInstance(userTimezone);
         c.add(Calendar.DATE, noOfDaysToAdd);

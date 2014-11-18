@@ -668,7 +668,7 @@ public class RuleEngineDataSetup extends BaseTest {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");
         strBuilder.append("ruleParams.put('ruleId','"+ruleId+"'); \n");
-        strBuilder.append("ruleParams.put('ruleRunDate', '"+getDateWithFormat(week,month)+"'); \n");
+        strBuilder.append("ruleParams.put('ruleRunDate', '"+getDateWithFormat(week,month, false)+"'); \n");
         strBuilder.append("ruleParams.put('isAlertCreate',true); \n");
         strBuilder.append("ruleParams.put('usageLevel','"+usageLevel+"'); \n");
         strBuilder.append("ruleParams.put('criteriaList',new List<Object>()); \n");

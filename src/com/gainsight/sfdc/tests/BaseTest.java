@@ -209,7 +209,7 @@ public class BaseTest {
         }
     }
 
-    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd) {
+    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd, boolean bulkFormat) {
         String date = null;
         Calendar c = Calendar.getInstance(userTimezone);
         Report.logInfo("Time : " +c.getTime() );
@@ -217,7 +217,9 @@ public class BaseTest {
         c.add(Calendar.DATE, noOfDaysToAdd);
         c.add(Calendar.MONTH, noOfMonthsToAdd);
         DateFormat dateFormat = null;
-        if (userLocale.contains("en_US")) {
+        if(bulkFormat) {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        } else if (userLocale.contains("en_US")) {
             dateFormat = new SimpleDateFormat("M/d/yyyy");
 
         } else if (userLocale.contains("en_IN")) {

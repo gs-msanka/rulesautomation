@@ -9,9 +9,9 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminCockpitConfigPage extends BasePage {
 	private static final String READY_INDICATOR="//div[@class='gs-cockpit-heading']/span[contains(text(),'Cockpit Configuration')]";
-	private final String EDIT_TASK_MAPPING_BUTTON="//div[@class='gs-cockpit-buttons']/a[@class='btn-apply']";
-	private final String SAVE_TASK_MAPPING_BUTTON="//div[@class='gs-cockpit-buttons']/a[@class='btn-save']";
-	private final String SAVE_TASK_MAPPING_BUTTON_AFTER_SAVING="//div[@class='gs-cockpit-buttons']/a[@class='btn-save' and @style='display: none;']";
+	private final String EDIT_TASK_MAPPING_BUTTON="//div[@class='gs-cockpit-priority-mapping gs-cockpit-task-priority-mapping']/descendant::a[@class='btn-apply']";
+	private final String SAVE_TASK_MAPPING_BUTTON="//div[@class='gs-cockpit-priority-mapping gs-cockpit-task-priority-mapping']/descendant::a[@class='btn-save']";
+
 
 	public void AdminIntegrationPage(){
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);

@@ -51,7 +51,7 @@ public class Customer360MilestonesTests extends BaseTest {
 			for (int i = 1; i <= noOfMilestones; i++) {
 				// get data for a Milestone from the excel
                 expData = getMapFromData(testData.get("M" + i));
-				String Date = getDateWithFormat(0, Integer.parseInt(expData.get("Date")));
+				String Date = getDateWithFormat(0, Integer.parseInt(expData.get("Date")), false);
                 expData.put("Date", Date);
 				Assert.assertTrue(cm.isMilestonePresent(expData), "Checking Milestone is Present/Displayed");
 			}
@@ -65,10 +65,10 @@ public class Customer360MilestonesTests extends BaseTest {
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData1 = getMapFromData(testData.get("Milestone1"));
         HashMap<String, String> milestoneData2 = getMapFromData(testData.get("Milestone2"));
-        milestoneData1.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData1.get("Date"))));
+        milestoneData1.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData1.get("Date")), false));
         cm.addMilestone(milestoneData1);
         Assert.assertTrue(cm.isMilestonePresent(milestoneData1), "Checking for Milestone present 1.");
-        milestoneData2.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData2.get("Date"))));
+        milestoneData2.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData2.get("Date")), false));
         cm.editMileStone(milestoneData1, milestoneData2);
         Assert.assertTrue(cm.isMilestonePresent(milestoneData2), "Checking for Milestone present 2.");
 	}
@@ -79,7 +79,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
-        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date"))));
+        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date")), false));
         cm.addMilestone(milestoneData);
         Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking for is added successfully.");
     }
@@ -91,7 +91,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
-        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date"))));
+        milestoneData.put("Date", getDateWithFormat(0,Integer.valueOf(milestoneData.get("Date")), false));
         cm.addMilestone(milestoneData);
         Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking for is added successfully.");
         cm.deleteMilestone(milestoneData);
@@ -105,7 +105,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));
-        milestoneData.put("Date", getDateWithFormat(0, Integer.valueOf(milestoneData.get("Date"))));
+        milestoneData.put("Date", getDateWithFormat(0, Integer.valueOf(milestoneData.get("Date")), false));
         cm.addMilestone(milestoneData);
         Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking is milestone displayed");
         cm.deleteMilestone(milestoneData);

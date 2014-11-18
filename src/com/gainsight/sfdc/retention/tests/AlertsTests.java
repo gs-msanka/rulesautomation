@@ -39,7 +39,7 @@ public class AlertsTests extends BaseTest {
     public  void addAlert(HashMap<String, String> testData) {
         AlertsPage alertsPage = basepage.clickOnRetentionTab().clickOnAlertsTab();
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
-        alertData.put("date", getDateWithFormat(0, 0));
+        alertData.put("date", getDateWithFormat(0, 0, false));
         alertsPage.addAlert(alertData);
         AlertCardLabel alertCardLabel = new AlertCardLabel();
         alertCardLabel.setLabel4("Renewal Date");
@@ -57,12 +57,12 @@ public class AlertsTests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Alert_Test_2")
     public  void addTasksOnAlert(HashMap<String, String> testData) {
         HashMap<String, String> alertData = getMapFromData(testData.get("Alert"));
-        alertData.put("date", getDateWithFormat(0, 0));
+        alertData.put("date", getDateWithFormat(0, 0, false));
         List<HashMap<String, String>> tasksList = new ArrayList<HashMap<String, String>>();
         for(int a=1;a <= 20 ; a++ ) {
             if(testData.get("Task"+a) != null) {
                 HashMap<String, String> taskData = getMapFromData(testData.get("Task"+a));
-                taskData.put("date", getDateWithFormat(a, a));
+                taskData.put("date", getDateWithFormat(a, a, false));
                 tasksList.add(taskData);
             }
         }
