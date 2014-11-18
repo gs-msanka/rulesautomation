@@ -5,10 +5,14 @@ import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
+import com.sforce.ws.ConnectionException;
+
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -27,9 +31,11 @@ public class SendEmail {
     public String GSEmailContactStrategy1 = rulesDir + "GSEmailContactStrategy1.apex";
     public String GSEmailEmailStrategy = rulesDir + "GSEmailEmailStrategy.apex";
     public String GSEmailEmailStrategy1 = rulesDir + "GSEmailEmailStrategy1.apex";
+    public String Contacts = rulesDir + "Contacts.apex";
 
     @BeforeClass
     public void beforeClass() throws Exception {
+    	sfdc.runApexCodeFromFile(Contacts, true);
         LoginUtil.sfdcLogin(soql, header, webAction);
     }
 
@@ -114,5 +120,9 @@ public class SendEmail {
             }
         }
     }
+    @AfterClass
+	public void afterClass() throws ConnectionException, InterruptedException {
+		soql = null;
+	}
 
 }
