@@ -10,6 +10,8 @@ import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
+import io.lamma.*;
+import io.lamma.Date;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -97,7 +99,7 @@ public class WorkFlowTest extends BaseTest {
            int temp = Integer.valueOf(cta.getDueDate());
          cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        List<String> dates = getDates(recurEvent, true);
+        List<String> dates = getDates(recurEvent);
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName()); 
@@ -110,81 +112,109 @@ public class WorkFlowTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_N_DAYS")
    public void createRecurringEventCTA_Daily_EveryNDays(HashMap<String, String> testData) throws IOException  {
-    	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
-         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        int temp = Integer.valueOf(cta.getDueDate());
+        cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
+        List<String> dates = getDates(recurEvent);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Daily Recurring ( Recurs Every N Days) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_N_WEEKS")
    public void createRecurringEventCTA_Weekly_EveryNWeeks(HashMap<String, String> testData) throws IOException  {
-    	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        int temp = Integer.valueOf(cta.getDueDate());
+        cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
+        List<String> dates = getDates(recurEvent);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
-
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Weekly Recurring ( Recurs Every N Weeks) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_MONTH")
    public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException {
-    	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        int temp = Integer.valueOf(cta.getDueDate());
+        cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
+        List<String> dates = getDates(recurEvent);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
-
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every Month) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_MONTHLY_BYWEEK")
    public void createRecurringEventCTA_Monthly_ByWeek(HashMap<String, String> testData) throws IOException {
-    	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        int temp = Integer.valueOf(cta.getDueDate());
+        cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()),0, false));
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false));
+        List<String> dates = getDates(recurEvent);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
-
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Monthly Recurring ( Recurs Every n No.of Months on a specific day of Week) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_YEARLY_BYMONTH")
    public void createRecurringEventCTA_Yearly_ByMonth(HashMap<String, String> testData) throws IOException {
-    	WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        int temp = Integer.valueOf(cta.getDueDate());
+        cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false).split("/")[2]);
-        recurEvent.setRecurEndDate( getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()),0, false).split("/")[2]);
+        List<String> dates = getDates(recurEvent);
+        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
-
         workflowPage.createCTA(cta);
-        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Yearly Recurring ( Recurs On a specific day of a specific month yearly) CTA is created");
+        cta.setDueDate(getDateWithFormat(temp, 0, true));
+        Assert.assertEquals(1, countOfRecords(cta, true, null));
+        Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
-   
-   @Test
-   public void createRecurringEventCTA_Yearly_ByMonthAndWeek() {
-      //<TBD>
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_YEARLY_BYWEEK")
+   public void createRecurringEventCTA_Yearly_ByMonthAndWeek(HashMap<String, String> testData) throws IOException {
+       WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       int temp = Integer.valueOf(cta.getDueDate());
+       cta.setDueDate(getDateWithFormat(temp, 0, false));
+       CTA.EventRecurring recurEvent=cta.getEventRecurring();
+       List<String> dates = getDates(recurEvent);
+       recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
+       recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);
+       cta.setDueDate(getDateWithFormat(temp, 0, true));
+       Assert.assertEquals(1, countOfRecords(cta, true, null));
+       Assert.assertEquals(dates.size(), countOfRecords(cta, false, dates));
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1286,198 +1316,98 @@ public class WorkFlowTest extends BaseTest {
         return getQueryRecordCount(resolveStrNameSpace(query));
     }
 
-    public List<String> getDates(CTA.EventRecurring recurring, boolean bulkFormat) {
-        HashMap<String , Integer> monthlyMap = new HashMap<>();
-        monthlyMap.put("January", 0);
-        monthlyMap.put("February", 1);
-        monthlyMap.put("March", 2);
-        monthlyMap.put("April", 3);
-        monthlyMap.put("May", 4);
-        monthlyMap.put("June", 5);
-        monthlyMap.put("July", 6);
-        monthlyMap.put("Augest", 7);
-        monthlyMap.put("September", 8);
-        monthlyMap.put("October", 9);
-        monthlyMap.put("November", 10);
-        monthlyMap.put("December", 11);
-        List<String> dates = new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
+    public static List<String> getDates(CTA.EventRecurring recurring) {
         int start = Integer.valueOf(recurring.getRecurStartDate());
         int end = Integer.valueOf(recurring.getRecurEndDate());
-        DateFormat dateFormat = null;
-        String date = null;
-        if(bulkFormat) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        } else if (userLocale.contains("en_US")) {
-            dateFormat = new SimpleDateFormat("M/d/yyyy");
-
-        } else if (userLocale.contains("en_IN")) {
-            dateFormat = new SimpleDateFormat("d/M/yyyy");
+        HashMap<String , Integer> monthlyMap = new HashMap<>();
+        monthlyMap.put("Jan", 1);
+        monthlyMap.put("Feb", 2);
+        monthlyMap.put("Mar", 3);
+        monthlyMap.put("Apr", 4);
+        monthlyMap.put("May", 5);
+        monthlyMap.put("Jun", 6);
+        monthlyMap.put("Jul", 7);
+        monthlyMap.put("Aug", 8);
+        monthlyMap.put("Sep", 9);
+        monthlyMap.put("Oct", 10);
+        monthlyMap.put("Nov", 11);
+        monthlyMap.put("Dec", 12);
+        HashMap<String, Integer> weekDayMap = new HashMap<>();
+        weekDayMap.put("Mon", 1);
+        weekDayMap.put("Tue", 2);
+        weekDayMap.put("Wed", 3);
+        weekDayMap.put("Thu", 4);
+        weekDayMap.put("Fri", 5);
+        weekDayMap.put("Sat", 6);
+        weekDayMap.put("Sun", 7);
+        Date startDate = Date.today();
+        Date endDate = Date.today();
+        Date cal = Date.today();
+        if(!recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
+            startDate= startDate.plusDays(start);
+            endDate = endDate.plusDays(end);
         }
 
+        List<String> dates = new ArrayList<>();
         if(recurring.getRecurringType().equalsIgnoreCase("Daily")) {
-            cal.add(Calendar.DATE, start);
             if(recurring.getDailyRecurringInterval().equalsIgnoreCase("EveryWeekday")) {
-                while (start<=end) {
-                    if(!(cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7 )) {
-                        date = dateFormat.format(cal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    }
-                    cal.add(Calendar.DATE, 1);
-                    ++start;
-                }
+                List<io.lamma.Date> a = Dates.from(startDate).to(endDate).except(HolidayRules.weekends()).build();
+                return getFormatDates(a);
             } else {
-                int jumpNoOfDays = Integer.valueOf(recurring.getDailyRecurringInterval());
-                while (start<=end) {
-                    date = dateFormat.format(cal.getTime());
-                    System.out.println(date);
-                    dates.add(date);
-                    cal.add(Calendar.DATE, jumpNoOfDays);
-                    start +=jumpNoOfDays;
-                }
+                int byNoDays =  Integer.valueOf(recurring.getDailyRecurringInterval());
+                List<io.lamma.Date> a = Dates.from(startDate).to(endDate).byDays(byNoDays).build();
+                return getFormatDates(a);
             }
         } else if(recurring.getRecurringType().equalsIgnoreCase("Weekly")) {
-            cal.add(Calendar.DATE, start);
             String exp[] = recurring.getWeeklyRecurringInterval().split("_");
-            if(exp.length > 2)  {
-                int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
-                while(start <= end) {
-                    System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
-                    if(Arrays.asList(exp).contains(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)))) {
-                        date = dateFormat.format(cal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    }
-                    cal.add(Calendar.DATE, 1);
-                    ++start;
-                    System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
-                    if(currentWeek < cal.get(Calendar.WEEK_OF_YEAR)) {
-                        if(Integer.valueOf(exp[1]) != 1) {
-                            int a= Integer.valueOf(exp[1]) * 7;
-                            cal.add(Calendar.DATE, a);
-                            start += a;
-                            currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
-                        }
-                    }
-                }
-            } else {
-                throw  new RuntimeException("Week Configuration is not properly provided.");
+            int byNoWeeks =  Integer.valueOf(exp[0]);
+            for(int x=1; x<exp.length; x++) {
+                dates.addAll(getFormatDates(Dates.from(startDate).to(endDate).byWeeks(byNoWeeks).on(DayOfWeek.of(weekDayMap.get(exp[x]))).build()));
             }
+            return dates;
+        }
 
-        } else if(recurring.getRecurringType().equalsIgnoreCase("Monthly")) {
-            cal.add(Calendar.DATE, start);
+        else if(recurring.getRecurringType().equalsIgnoreCase("Monthly")) {
             String exp[] = recurring.getWeeklyRecurringInterval().split("_");
-            Calendar tempCal = Calendar.getInstance();
-            Calendar endDate = Calendar.getInstance();
-            endDate.add(Calendar.DATE, end);
-            cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 0, 0,0);
             if(exp[0].equalsIgnoreCase("Day")) {
-                int months = Integer.valueOf(exp[3]);
-                if(exp[1].equalsIgnoreCase("Last")) {
-                    tempCal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.getMaximum(Calendar.DATE), 0, 0, 0);
-                } else {
-                    tempCal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), Integer.valueOf(exp[1]));
-                }
-                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
-                        date = dateFormat.format(tempCal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    } else {
-                        tempCal.add(Calendar.MONTH, 1);
-                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                            date = dateFormat.format(tempCal.getTime());
-                            System.out.println(date);
-                            dates.add(date);
-                        }
-                    }
-                    tempCal.add(Calendar.MONTH, months);
-                }
+                int day = Integer.valueOf(exp[1].substring(0, exp[1].length()-2));
+                int months = Integer.valueOf(exp[2]);
+                List<io.lamma.Date> a =Dates.from(startDate).to(endDate).byMonths(months).on(Locators.nthDay(day)).build();
+                return getFormatDates(a);
             } else {
-                tempCal = getNthDayInMonthByWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                int months = Integer.valueOf(exp[4]);
-                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
-                        date = dateFormat.format(tempCal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    } else {
-                        tempCal.add(Calendar.MONTH, 1);
-                        tempCal = getNthDayInMonthByWeek(tempCal.get(Calendar.MONTH), tempCal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                            date = dateFormat.format(tempCal.getTime());
-                            System.out.println(date);
-                            dates.add(date);
-                        }
-                    }
-                    tempCal.add(Calendar.MONTH, months);
-                    tempCal = getNthDayInMonthByWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                }
+                int day = Integer.valueOf(exp[1].substring(0, exp[1].length()-2));
+                String weekDay = exp[2].substring(0,3);
+                int months = Integer.valueOf(exp[3]);
+                List<io.lamma.Date> a = Dates.from(startDate).to(endDate).byMonths(months).on(Locators.nth(day, DayOfWeek.of(weekDayMap.get(weekDay)))).build();
+                return getFormatDates(a);
             }
         } else if(recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
-            Calendar tempCal = Calendar.getInstance();
-            Calendar endDate = Calendar.getInstance();
-            String exp[] = recurring.getYearlyRecurringInterval().split("_");
-            endDate.set(end, cal.get(Calendar.MONTH), cal.getMaximum(Calendar.DATE), 0, 0, 0);
-            if(exp[0].equalsIgnoreCase("Month")) {
-                tempCal.set(cal.get(Calendar.YEAR), monthlyMap.get(exp[0]),Integer.valueOf(exp[1]), 0, 0, 0);
-                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
-                        date = dateFormat.format(tempCal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    } else {
-                        tempCal.add(Calendar.YEAR, 1);
-                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                            date = dateFormat.format(tempCal.getTime());
-                            System.out.println(date);
-                            dates.add(date);
-                        }
-                    }
-                    tempCal.add(Calendar.YEAR, 1);
-                }
+            String exp[] = recurring.getWeeklyRecurringInterval().split("_");
+            if(exp[0].equalsIgnoreCase("Day")) {
+                int day = Integer.valueOf(exp[1]);
+                String weekDay = exp[2].substring(0,3);
+                String month = exp[3].substring(0,3);
+                List<io.lamma.Date> a = Dates.from(start, cal.mm(), cal.dd()).to(end, cal.mm(), cal.dd()).byYear().byYear().on(Locators.nth(day, DayOfWeek.of(weekDayMap.get(weekDay))).of(Month.of(monthlyMap.get(month)))).build();
+                return getFormatDates(a);
             } else {
-                tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                while(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                    if(tempCal.getTimeInMillis() >= cal.getTimeInMillis()) {
-                        date = dateFormat.format(tempCal.getTime());
-                        System.out.println(date);
-                        dates.add(date);
-                    } else {
-                        tempCal.add(Calendar.YEAR, 1);
-                        tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                        if(tempCal.getTimeInMillis() <= endDate.getTimeInMillis()) {
-                            date = dateFormat.format(tempCal.getTime());
-                            System.out.println(date);
-                            dates.add(date);
-                        }
-                    }
-                    tempCal.add(Calendar.YEAR, 1);
-                    tempCal = getNthDayInMonthByWeek(monthlyMap.get(exp[3]), cal.get(Calendar.YEAR), Integer.valueOf(exp[1]), exp[2]);
-                }
+                int day = Integer.valueOf(exp[2]);
+                String month = exp[1].substring(0, 3);
+                List<io.lamma.Date> a = Dates.from(start, cal.mm(), cal.dd()).to(end, cal.mm(), cal.dd()).byYear().on(Locators.nthDay(day).of(Month.of(monthlyMap.get(month)))).build();
+                return getFormatDates(a);
+
             }
         }
         return dates;
     }
 
-    private static Calendar getNthDayInMonthByWeek(int month, int year, int nthDay, String weekDay) {
-        HashMap<String, Integer> weeklyMap = new HashMap<>();
-        weeklyMap.put("Sunday", 1);
-        weeklyMap.put("Monday", 2);
-        weeklyMap.put("Tuesday", 3);
-        weeklyMap.put("Wednesday", 4);
-        weeklyMap.put("Thursday", 5);
-        weeklyMap.put("Friday", 6);
-        weeklyMap.put("Saturday", 7);
-
-        Calendar  c = Calendar.getInstance();
-        c.set(year, month, 1, 0, 0 ,0);
-        c.set(Calendar.DAY_OF_WEEK_IN_MONTH, weeklyMap.get(weekDay));
-        c.set(Calendar.DAY_OF_WEEK, nthDay);
-        return c;
+    private static List<String> getFormatDates(List<io.lamma.Date>  dates) {
+        List<String> fDates = new ArrayList<>();
+        for(io.lamma.Date date : dates) {
+            fDates.add(String.valueOf(date.yyyy()+"-"+date.mm()+"-"+date.dd()));
+        }
+        System.out.println(dates);
+        return fDates;
     }
-
     @AfterClass
     public void tearDown() {
         basepage.logout();

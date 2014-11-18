@@ -258,8 +258,8 @@ public class WorkflowPage extends WorkflowBasePage {
 			}
 			else if (recurProperties.getRecurringType().equals("Weekly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
-				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[1]);
-				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[2]).ordinal()+1));
+				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[0]);
+				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[1]).ordinal()+1));
 				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
 				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 			}
@@ -268,7 +268,7 @@ public class WorkflowPage extends WorkflowBasePage {
 				if(recurProperties.getMonthlyRecurringInterval().startsWith("Day")){
 				item.click(TO_SELECT_RECUR_DAY_OF_MONTH);
 				item.click(String.format(RECUR_DAY_OF_MONTH, recurProperties.getMonthlyRecurringInterval().split("_")[1]));
-				field.clearAndSetText(RECUR_MONTH_INTERVAL, recurProperties.getMonthlyRecurringInterval().split("_")[3]);
+				field.clearAndSetText(RECUR_MONTH_INTERVAL, recurProperties.getMonthlyRecurringInterval().split("_")[2]);
 				}
 				else if(recurProperties.getMonthlyRecurringInterval().startsWith("Week")){
 					item.click(RECUR_MONTHLY_BY_WEEKDAY);
@@ -276,7 +276,7 @@ public class WorkflowPage extends WorkflowBasePage {
 					item.click(String.format(RECUR_WEEK_NUMBER_OF_MONTH, recurProperties.getMonthlyRecurringInterval().split("_")[1]));
 					item.click(TO_SELECT_RECUR_WEEK_OF_MONTH);
 					item.click(String.format(RECUR_WEEK_OF_MONTH,recurProperties.getMonthlyRecurringInterval().split("_")[2]));
-					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[4]);
+					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[3]);
 				}
 				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
 				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
