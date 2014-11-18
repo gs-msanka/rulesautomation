@@ -157,6 +157,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String SELECT_MORE_OPTIONS	    = "//a[@class='more-edit more-options']";
     private final String ADD_NEW_TASK			    = "//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String ADD_TASK_POPUP_TITLE	    = "//span[text()='Add Task']";
+    private final String EDIT_TASK_POPUP_TITLE		="//span[text()='Edit Task']";
     private final String ADD_ASSIGNEE_TO_TASK	    = "//input[@class='search_input form-control ui-autocomplete-input']";
     private final String SELECT_ASSIGNEE_FOR_TASK   = "//div[@class='gs_searchform']/descendant::label[contains(text(),'%s')]";
     private final String ADD_SUBJECT_TO_TASK		= "//input[@class='Subject__c form-control']";
@@ -340,7 +341,42 @@ public class WorkflowPage extends WorkflowBasePage {
         collapseCTAView();
 		return this;
 	}
-
+	
+	public WorkflowPage editTasks(CTA cta,Task newTask,Task oldTask){
+		//item.click(VIEW_TASKS);
+		expandTaskView(oldTask);
+		item.click(TASK_EXP_MORE_OPTIONS);
+		item.click(TASK_EXP_EDIT_OPTION);
+		wait.waitTillElementDisplayed(EDIT_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
+		item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, newTask.getAssignee());
+		driver.findElement(By.xpath(ADD_ASSIGNEE_TO_TASK)).sendKeys(Keys.ENTER);
+		waitTillNoLoadingIcon();
+		System.out.println("clicking on ....."+String.format(SELECT_ASSIGNEE_FOR_TASK,newTask.getAssignee()));
+			//item.click(String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
+		   boolean selected = false;
+	           for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+newTask.getAssignee()+"')]")) {
+	               if(ele.isDisplayed()) {
+	                   ele.click();
+	                    selected = true;
+	                }
+	            }
+	            if(!selected) {
+	                throw new RuntimeException("Unable to select owner");
+	            }
+			item.clearAndSetText(ADD_SUBJECT_TO_TASK, newTask.getSubject());
+			item.clearAndSetText(ADD_DATE_TO_TASK, newTask.getDate());
+			item.click(EDIT_TASK_POPUP_TITLE);  //just clicking on the form because the date picker is not vanishing and not able to set the priority
+			item.click(TO_SELECT_PRIORITY_IN_TASK);
+			selectValueInDropDown(newTask.getPriority());
+			item.click(TO_SELECT_STATUS_IN_TASK);
+			selectValueInDropDown(newTask.getStatus());
+			item.click(SAVE_TASK);
+			cta.setTaskCount(cta.getTaskCount()+1);
+			wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, newTask.getSubject()), MIN_TIME, MAX_TIME);
+            waitTillNoLoadingIcon();
+		return this;
+	}
+	
     private void setCustomer(String custName) {
         field.setText(CREATE_FORM_CUSTOMER, custName);
         amtDateUtil.stalePause();
@@ -408,7 +444,15 @@ public class WorkflowPage extends WorkflowBasePage {
         collapseCTAView();
         return this;
     }
-
+    
+    public WorkflowPage updateCTAStatus_toClosedLost(CTA cta) {
+        expandCTAView(cta);
+        item.click(EXP_VIEW_STATUS_BUTTON);
+       selectValueInDropDown("Closed Lost");
+        amtDateUtil.stalePause();
+        collapseCTAView();
+        return this;
+    }
     public void selectValueInDropDown(String value) {
         boolean selected = false;
         for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
@@ -602,7 +646,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private String getCTAXPath(CTA cta) {
         String xPath = "//div[@class='gs-cta']";
         xPath = xPath+"/descendant::div[@class='title-ctn pull-left']";
-        xPath = cta.isClosed() ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
+        xPath =(cta.isClosed() && !cta.getStatus().equals("Closed Lost")) ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
                 xPath+"/span[@class='check-data ctaCheckBox require-tooltip']";
         xPath = cta.isImp() ? xPath+"/following-sibling::span[@class='glyphicon glyphicon-bookmark cta-flag require-tooltip' and contains(@style, 'color:#fc8744')]" :
                 xPath+"/following-sibling::span[@class='glyphicon glyphicon-bookmark cta-flag require-tooltip']";
@@ -731,7 +775,6 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    //Need to Visit Again.
     public boolean verifyClosedCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
     	if(!hasTasks){
             return verifyCTADetails(cta);
@@ -740,7 +783,6 @@ public class WorkflowPage extends WorkflowBasePage {
             if(!verifyCTADetails(cta)) {
                 return false;
             }
-    		boolean allTasksClosed=true;
     		for(Task task :tasks ) {
                 if(!isTaskDisplayed(task)) {
                     return false;
@@ -749,7 +791,7 @@ public class WorkflowPage extends WorkflowBasePage {
                     return false;
                 }
             }
-            return allTasksClosed;
+            return true;
     	}
     }
     
@@ -793,7 +835,8 @@ public class WorkflowPage extends WorkflowBasePage {
         amtDateUtil.stalePause();
         return this;
     }
-
+    
+    
     public WorkflowPage deleteTask(Task task) {
         expandTaskView(task);
         item.click(TASK_EXP_MORE_OPTIONS);
