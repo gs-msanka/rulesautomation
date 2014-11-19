@@ -392,6 +392,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public void createMilestoneForCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_MILESTONE);
+        amtDateUtil.stalePause();
     }
     
     public WorkflowPage snoozeCTA(CTA cta){
