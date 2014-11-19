@@ -72,7 +72,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	private final String CREATE_FORM_REASON     = "//div[@class='col-md-9']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";// "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
 	private final String CREATE_FORM_SELECT_REASON  = "//ul/li/label/span[text()='%s']";
 	private final String CREATE_FORM_DUE_DATE       = "//input[@class='form-control cta-dateCtrl']";
-	private final String CREATE_FORM_COMMENTS       = "//textarea[@class='form-control strdescription']";
+	private final String CREATE_FORM_COMMENTS       = "//div[@class='form-control strdescription']";
 	private final String SAVE_CTA                   = "//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT     = "//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
     private final String CREATE_FORM_RECUR_TYPE     = "//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
