@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <suite name="Automation Project">
-	<parameter name="version"  value="/v1.0"/>
 	<test name="Acceptance Tests">
 		<classes>
-			<class name="com.gainsight.bigdata.api.SaveOrUpdateReportsTest"></class>
-			<class name="com.gainsight.bigdata.api.PrepareReportApiTest"></class>
-			<class name="com.gainsight.bigdata.api.GetCollectionTest"></class>
-			<class name="com.gainsight.bigdata.api.DimensionBrowserTest"></class>
-			<class name="com.gainsight.bigdata.api.GetAllReportsTest"></class>
-			<class name="com.gainsight.bigdata.api.ApiAuthTest"></class>
-			<!-- <class name="com.gainsight.bigdata.api.AdminAuthTest"></class>  -->
+			<class name="com.gainsight.sfdc.acceptance.tests.AcceptanceTest">
+				<methods>
+					<include name="testAddNewCustomer" />
+					<include name="testAddNewCustomerAndTransaction" />
+					<include name="testChurnTransaction" />
+					<include name="testOpportunityWithoutSettings" />
+				</methods>
+			</class>
 		</classes>
 	</test>
 </suite>
