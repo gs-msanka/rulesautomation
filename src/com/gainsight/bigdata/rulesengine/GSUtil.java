@@ -1,8 +1,12 @@
 package com.gainsight.bigdata.rulesengine;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
+import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.Report;
+import com.gainsight.pojo.HttpResponseObj;
 import com.sforce.soap.partner.sobject.SObject;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -20,7 +24,6 @@ public class GSUtil {
     public static Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static SOQLUtil soql = new SOQLUtil();
     public static SFDCUtil sfdc = new SFDCUtil();
-
 
     public static void sfdcLogin(Header header, WebAction wa)
             throws Exception {
@@ -82,6 +85,23 @@ public class GSUtil {
 
     public static void runApexCode(String string) {
         sfdc.runApexCodeFromFile(string, isPackage);
-
     }
+
+    public static void waitForCompletion(String ruleId, WebAction webAction, Header header) throws Exception {
+        boolean flag = true;
+        while (flag) {
+            Thread.sleep(10000);
+            HttpResponseObj result = webAction.doGet(PropertyReader.nsAppUrl + "/api/async/process/?ruleId=" + ruleId + "", header.getAllHeaders());
+            ResponseObject res = GSUtil.convertToObject(result.getContent());
+            List<Object> data = (List<Object>) res.getData();
+            Map<String, Object> map = (Map<String, Object>) data.get(0);
+            if (map.get("status") != null) {
+                String status = (String) map.get("status");
+                if (status.equalsIgnoreCase("completed")) {
+                    flag = false;
+                }
+            }
+        }
+    }
+
 }

@@ -59,8 +59,7 @@ public class SendEmail {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(20000);
-
+            GSUtil.waitForCompletion(r.getId(), webAction, header);
             SObject[] res = soql
                     .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
             for (SObject obj : res) {
@@ -87,7 +86,7 @@ public class SendEmail {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(20000);
+            GSUtil.waitForCompletion(r.getId(), webAction, header);
 
             SObject[] res = soql
                     .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
@@ -114,7 +113,7 @@ public class SendEmail {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(20000);
+            GSUtil.waitForCompletion(r.getId(), webAction, header);
 
             SObject[] res = soql
                     .getRecords("select " + LastRunResultFieldName + " from " + AutomatedAlertRulesObjectName + " where Id='" + r.getId() + "'");
