@@ -308,6 +308,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
+       System.out.println("");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -316,6 +317,8 @@ public class WorkFlowTest extends BaseTest {
         
         //Applying Playbook and verifying tasks
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
+       cta.setDueDate(tasks.get(tasks.size()).getDate());
+
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
@@ -327,6 +330,8 @@ public class WorkFlowTest extends BaseTest {
            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
+       cta.setDueDate(updatedTasks.get(updatedTasks.size()).getDate());
+
 
        for(Task task : updatedTasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
@@ -372,7 +377,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -385,7 +390,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
@@ -431,7 +436,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -444,7 +449,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
@@ -1336,6 +1341,7 @@ public class WorkFlowTest extends BaseTest {
 
     private void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
         String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
         CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
         boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
@@ -1348,9 +1354,15 @@ public class WorkFlowTest extends BaseTest {
             admin = admin.editAndSaveTaskMapping();
         }
     }
+        else{
+        	  AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+        	  admin = admin.editAndSaveTaskMapping();
+        }
+    }
     
     private void enableSFDCSync_Auto() throws IOException {
         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
        String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
        CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
        boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
@@ -1360,6 +1372,13 @@ public class WorkFlowTest extends BaseTest {
            admin=admin.enableAutoSync();
            admin = admin.editAndSaveTaskMapping();
        }
+   }
+        else{
+            AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+            admin=admin.enableAutoSync();
+            admin = admin.editAndSaveTaskMapping();
+        }
+        
    }
     private void disableSFAutoSync() throws IOException {
         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
@@ -1500,7 +1519,7 @@ public class WorkFlowTest extends BaseTest {
             throw new RuntimeException("No tasks where found for the playbook");
         }
         for(SObject record : records) {
-            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))!=null) continue;
+            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))==null) continue;
             String s = record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c")).toString();
             try {
                 List<PlaybookTask> pTemps = mapper.readValue(s, new TypeReference<ArrayList<PlaybookTask>>() {});
@@ -1515,8 +1534,8 @@ public class WorkFlowTest extends BaseTest {
                     } else if(pk.getFieldName().equalsIgnoreCase("Status__c")) {
                         t.setStatus(pk.getValue().get(0).get("key"));
                     }
-                    tasks.add(t);
                 }
+                tasks.add(t);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed While Parsing.");
