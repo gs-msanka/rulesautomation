@@ -1507,6 +1507,9 @@ public class WorkFlowTest extends BaseTest {
     private  String getTaskDateForPlaybook(int day) {
         Date today = Date.today();
         Date endDate = Date.today().plusDays(day);
+        if(endDate.dayOfWeek() == DayOfWeek.SATURDAY) {
+            endDate= endDate.plusDays(1);
+        }
         int a = (Dates.from(today).to(endDate).build().size()) - (Dates.from(today).to(endDate).except(HolidayRules.weekends()).build().size());
         return getDateWithFormat(day+a, 0, false);
     } 
