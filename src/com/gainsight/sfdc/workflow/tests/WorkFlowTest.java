@@ -286,7 +286,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
@@ -308,7 +308,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
             task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
@@ -321,7 +321,7 @@ public class WorkFlowTest extends BaseTest {
        }
        
        //Replacing Playbook and verifying updated tasks
-       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
@@ -347,7 +347,7 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
             task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
@@ -369,10 +369,10 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
         	}
         
         //Applying Playbook and verifying tasks
@@ -382,7 +382,7 @@ public class WorkFlowTest extends BaseTest {
        }
        
        //Replacing Playbook and verifying updated tasks
-       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
           	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
@@ -407,8 +407,8 @@ public class WorkFlowTest extends BaseTest {
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
-        for(Task task : tasks) {
+       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+       for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
             task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
@@ -421,15 +421,15 @@ public class WorkFlowTest extends BaseTest {
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA19")
-   public void createandReplacePlaybook_EventCTA(HashMap<String,String> testData) throws IOException{
+   public void createAndReplacePlaybook_EventCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
-        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
-        for(Task task : tasks) {
+       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+       for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
@@ -441,7 +441,7 @@ public class WorkFlowTest extends BaseTest {
        }
        
        //Replacing Playbook and verifying updated tasks
-       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
           	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
@@ -1492,6 +1492,37 @@ public class WorkFlowTest extends BaseTest {
         Date endDate = Date.today().plusDays(day);
         int a = (Dates.from(today).to(endDate).build().size()) - (Dates.from(today).to(endDate).except(HolidayRules.weekends()).build().size());
         return getDateWithFormat(day+a, 0, false);
+    } 
+    private ArrayList<Task> getTaskFromSFDC(String playbookName) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        SObject[] records = soql.getRecords("Select name, JBCXM__TaskJSON__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
+        if(!(records.length > 0)) {
+            throw new RuntimeException("No tasks where found for the playbook");
+        }
+        for(SObject record : records) {
+            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))!=null) continue;
+            String s = record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c")).toString();
+            try {
+                List<PlaybookTask> pTemps = mapper.readValue(s, new TypeReference<ArrayList<PlaybookTask>>() {});
+                Task t = new Task();
+                for(PlaybookTask pk : pTemps) {
+                    if(pk.getFieldName().equalsIgnoreCase("Subject__C")) {
+                        t.setSubject(pk.getValue().get(0).get("key"));
+                    } else if(pk.getFieldName().equalsIgnoreCase("Date__c")) {
+                        t.setDate(pk.getValue().get(0).get("key"));
+                    } else if(pk.getFieldName().equalsIgnoreCase("Priority__c")) {
+                        t.setPriority(pk.getValue().get(0).get("key"));
+                    } else if(pk.getFieldName().equalsIgnoreCase("Status__c")) {
+                        t.setStatus(pk.getValue().get(0).get("key"));
+                    }
+                    tasks.add(t);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed While Parsing.");
+            }
+        }
+       return tasks;
     }
 
     @AfterClass
