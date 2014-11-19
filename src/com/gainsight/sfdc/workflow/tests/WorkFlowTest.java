@@ -9,6 +9,7 @@ import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.enterprise.sobject.Holiday;
 import com.sforce.soap.partner.sobject.SObject;
 
 import io.lamma.*;
@@ -60,7 +61,8 @@ public class WorkFlowTest extends BaseTest {
     	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
     
-  @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -289,7 +291,7 @@ public class WorkFlowTest extends BaseTest {
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
 
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -301,7 +303,7 @@ public class WorkFlowTest extends BaseTest {
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_UPDATE_PLAYBOOK")
-   public void createandReplacePlaybook_RiskCTA(HashMap<String,String> testData) throws IOException{
+   public void createAndReplacePlaybook_RiskCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
@@ -311,7 +313,7 @@ public class WorkFlowTest extends BaseTest {
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -324,7 +326,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
@@ -349,7 +351,7 @@ public class WorkFlowTest extends BaseTest {
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
 
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -371,7 +373,7 @@ public class WorkFlowTest extends BaseTest {
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -1409,6 +1411,13 @@ public class WorkFlowTest extends BaseTest {
         }
         System.out.println(dates);
         return fDates;
+    }
+
+    private  String getTaskDateForPlaybook(int day) {
+        Date today = Date.today();
+        Date endDate = Date.today().plusDays(day);
+        int a = (Dates.from(today).to(endDate).build().size()) - (Dates.from(today).to(endDate).except(HolidayRules.weekends()).build().size());
+        return getDateWithFormat(day+a, 0, false);
     }
 
     @AfterClass
