@@ -60,7 +60,7 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(15000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
 
             SObject[] res = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
             for (SObject obj : res) {
@@ -94,7 +94,7 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(30000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
         }
         SObject[] rules1 = GSUtil.execute("Select count(Id) From Account Where ((JBCXM__CustomerInfo__r.JBCXM__CustomerName__c LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
         SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c LIKE 'A%' and JBCXM__ASV__c=4545");
@@ -122,7 +122,8 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(30000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
+
         }
         SObject[] rules1 = GSUtil.execute("Select count(Id) From Account Where ((Rating NOT IN ('Hot','Warm','Cold'))) AND JBCXM__CustomerInfo__c != null");
         SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
@@ -150,7 +151,7 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(30000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
         }
         SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Id != null) AND ((IsDeleted != false) OR (JBCXM__CustomerInfo__r.Id != null))) AND JBCXM__CustomerInfo__c != null");
         SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c");
@@ -179,7 +180,8 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(30000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
+
         }
         SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Name LIKE '%A%')) AND JBCXM__CustomerInfo__c != null ");
         SObject[] rules2 = GSUtil.execute("SELECT Count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__OriginalContractDate__c=TODAY and JBCXM__CustomerName__c Like'%A%'");
@@ -208,8 +210,8 @@ public class LoadToCustomers {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
+            GSUtil.waitForCompletion(r.getId(), wa, header);
 
-            Thread.sleep(30000);
         }
         SObject[] rules1 = GSUtil.execute("Select Count(Id) From Account Where ((Id != null) AND (JBCXM__CustomerInfo__r.Id != null)) AND JBCXM__CustomerInfo__c != null");
         SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__CustomerInfo__c where JBCXM__MRR__c=1");

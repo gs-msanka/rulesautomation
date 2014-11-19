@@ -54,7 +54,7 @@ public class LoadToUsageData {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(25000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
         }
         SObject[] rules1 = GSUtil.execute("SELECT count(Id) FROM Account");
         SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__UsageData__c");
@@ -79,7 +79,7 @@ public class LoadToUsageData {
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            Thread.sleep(25000);
+            GSUtil.waitForCompletion(r.getId(), wa, header);
         }
         SObject[] rules1 = GSUtil.execute(" Select count(Id) From Account Where ((Name LIKE 'B%')) AND JBCXM__CustomerInfo__c != null");
         SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__UsageData__c where FilesDownloaded__c=12345");
