@@ -9,7 +9,6 @@ import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.*;
 import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.enterprise.sobject.Holiday;
 import com.sforce.soap.partner.sobject.SObject;
 
 import io.lamma.*;
@@ -21,6 +20,7 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -326,6 +326,7 @@ public class WorkFlowTest extends BaseTest {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
+       cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
        for(Task task : updatedTasks) {
@@ -362,7 +363,7 @@ public class WorkFlowTest extends BaseTest {
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA17")
-   public void createandReplacePlaybook_OpporCTA(HashMap<String,String> testData) throws IOException{
+   public void createAndReplacePlaybook_OpporCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
@@ -372,7 +373,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -385,8 +386,9 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
+       cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
        for(Task task : updatedTasks) {
@@ -431,7 +433,7 @@ public class WorkFlowTest extends BaseTest {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -439,13 +441,14 @@ public class WorkFlowTest extends BaseTest {
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
-       
+
        //Replacing Playbook and verifying updated tasks
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
+       cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
        for(Task task : updatedTasks) {
@@ -1500,7 +1503,7 @@ public class WorkFlowTest extends BaseTest {
             throw new RuntimeException("No tasks where found for the playbook");
         }
         for(SObject record : records) {
-            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))!=null) continue;
+            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))==null) continue;
             String s = record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c")).toString();
             try {
                 List<PlaybookTask> pTemps = mapper.readValue(s, new TypeReference<ArrayList<PlaybookTask>>() {});
@@ -1515,14 +1518,43 @@ public class WorkFlowTest extends BaseTest {
                     } else if(pk.getFieldName().equalsIgnoreCase("Status__c")) {
                         t.setStatus(pk.getValue().get(0).get("key"));
                     }
-                    tasks.add(t);
                 }
+                tasks.add(t);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed While Parsing.");
             }
         }
        return tasks;
+    }
+
+    private String getHighestTaskDate(List<Task> tasks) {
+        java.util.Date date = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");;
+        if (userLocale.contains("en_US")) {
+            dateFormat = new SimpleDateFormat("M/d/yyyy");
+
+        } else if (userLocale.contains("en_IN")) {
+            dateFormat = new SimpleDateFormat("d/M/yyyy");
+        }
+        try {
+            date = dateFormat.parse(tasks.get(0).getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Please check the date format "+e.getErrorOffset());
+        }
+        for(Task t : tasks) {
+            try {
+                java.util.Date temp = dateFormat.parse(t.getDate());
+                if(temp.getTime() > date.getTime()) {
+                    date = temp;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Please check the date format "+e.getErrorOffset());
+            }
+        }
+        return dateFormat.format(date);
     }
 
     @AfterClass
