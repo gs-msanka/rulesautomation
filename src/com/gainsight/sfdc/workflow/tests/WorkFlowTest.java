@@ -24,9 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * Created by gainsight on 07/11/14.
- */
+
 public class WorkFlowTest extends BaseTest {
 
 
@@ -63,7 +61,7 @@ public class WorkFlowTest extends BaseTest {
     
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -74,7 +72,7 @@ public class WorkFlowTest extends BaseTest {
     }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_EVENT_2")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA2")
     public void createNonRecurringEventCTA(HashMap<String, String> testData) throws IOException {
        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -85,7 +83,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_OPPOR_1")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA3")
     public void createOpportunityCTA(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -96,7 +94,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_DAILY")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA4")
    public void createRecurringEventCTA_Daily_EVeryWeekDay(HashMap<String, String> testData) throws IOException  {
     	 WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
          CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -114,7 +112,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_N_DAYS")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA5")
    public void createRecurringEventCTA_Daily_EveryNDays(HashMap<String, String> testData) throws IOException  {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -132,7 +130,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_N_WEEKS")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA6")
    public void createRecurringEventCTA_Weekly_EveryNWeeks(HashMap<String, String> testData) throws IOException  {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -150,7 +148,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_EVERY_MONTH")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA7")
    public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException, InterruptedException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -168,7 +166,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_MONTHLY_BYWEEK")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA8")
    public void createRecurringEventCTA_Monthly_ByWeek(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -187,7 +185,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_YEARLY_BYMONTH")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA9")
    public void createRecurringEventCTA_Yearly_ByMonth(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -203,7 +201,7 @@ public class WorkFlowTest extends BaseTest {
    }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RECUR_EVENT_YEARLY_BYWEEK")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA10")
    public void createRecurringEventCTA_Yearly_ByMonthAndWeek(HashMap<String, String> testData) throws IOException {
        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -219,7 +217,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA11")
    public void createRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -240,7 +238,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPOR_CTA_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA12")
    public void createOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -260,7 +258,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA13")
    public void createEventCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -280,7 +278,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_PLAYBOOK")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA14")
    public void createRiskCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -302,14 +300,14 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_UPDATE_PLAYBOOK")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA15")
    public void createAndReplacePlaybook_RiskCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);    
-       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
@@ -319,7 +317,7 @@ public class WorkFlowTest extends BaseTest {
         //Applying Playbook and verifying tasks
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
-           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
        
        //Replacing Playbook and verifying updated tasks
@@ -331,16 +329,17 @@ public class WorkFlowTest extends BaseTest {
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
        for(Task task : updatedTasks) {
-           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
 
        for(Task task : tasks) {
-           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
     }
    
+  
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPOR_CTA_WITH_PLAYBOOK")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA16")
    public void createOpportunityCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -362,7 +361,45 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_PLAYBOOK")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA17")
+   public void createandReplacePlaybook_OpporCTA(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);    
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
+        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for(Task task : tasks) {
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	}
+        
+        //Applying Playbook and verifying tasks
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+       
+       //Replacing Playbook and verifying updated tasks
+       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       for(Task task : updatedTasks) {
+          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+          	}
+       workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
+
+       for(Task task : updatedTasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+
+       for(Task task : tasks) {
+           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+    }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA18")
    public void createEventCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -383,7 +420,44 @@ public class WorkFlowTest extends BaseTest {
    }
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA19")
+   public void createandReplacePlaybook_EventCTA(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);    
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
+        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for(Task task : tasks) {
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	}
+        
+        //Applying Playbook and verifying tasks
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+       
+       //Replacing Playbook and verifying updated tasks
+       ArrayList<Task> updatedTasks  = mapper.readValue(testData.get("UpdatedTasks"), new TypeReference<ArrayList<Task>>() {});
+       for(Task task : updatedTasks) {
+          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+          	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+          	}
+       workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
+
+       for(Task task : updatedTasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+
+       for(Task task : tasks) {
+           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+       }
+    }
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
    public void createMilestoneForRiskCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -401,7 +475,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPORTUNITY_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
    public void createMilestoneForOpportunityCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -419,7 +493,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
    public void createMilestoneForEventCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -436,7 +510,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
    public void createMilestoneForRiskCTA_Resolved(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -463,7 +537,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OPPORTUNITY_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
    public void createMilestoneForOpportunityCTA_Won(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -489,7 +563,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "EVENT_CTA_WITH_MILESTONES")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
    public void createMilestoneForEventCTA_Completed(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -514,7 +588,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_FOR_SNOOZE")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
    public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -531,7 +605,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_MARK_AS_IMP")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA24")
    public void markCTAAsImp(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -546,7 +620,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
    public void createAndCloseCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -564,7 +638,7 @@ public class WorkFlowTest extends BaseTest {
    
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
    public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -582,8 +656,8 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE_WITH_TASKS")
-   public void createAndCloseRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
+   public void createAndCloseCTAWithTasks(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -613,7 +687,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
    public void createCTA_WithTasks_AndCloseTasks(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -638,7 +712,7 @@ public class WorkFlowTest extends BaseTest {
     	   }   		
    }
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
    public void create_CloseAndRe_OpenCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -658,7 +732,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_CLOSE_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
    public void createClose_AndRe_OpenRiskCTA_WithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -690,7 +764,7 @@ public class WorkFlowTest extends BaseTest {
    }
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_FOR_UPDATE")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA27")
    public void createAndUpdateCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -709,7 +783,7 @@ public class WorkFlowTest extends BaseTest {
    
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA_RISK_1")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
    public void createAndDeleteCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -723,7 +797,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RISK_CTA_WITH_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA11")
    public void createCTAWithTasks_AndDeleteTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -748,7 +822,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UPDATE_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
    public void createAndUpdateCTATasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -774,7 +848,7 @@ public class WorkFlowTest extends BaseTest {
    }
 
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "UPDATE_TASKS")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
    public void createAndEditCTATasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -800,7 +874,7 @@ public class WorkFlowTest extends BaseTest {
    }
    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void syncTaskToSF_Manual(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -825,7 +899,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void deSyncTaskFromSFButKeepTask_Manual(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -854,7 +928,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void deSyncTaskFromSFAndDeleteTask_Manual(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Manual();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -883,7 +957,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void syncTaskToSF_AutoSync(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Auto();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -909,7 +983,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void deSyncTaskFromSFButKeepTask_AutoSync(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Auto();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -939,7 +1013,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SYNC_TASK_TO_SF")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
     public void deSyncTaskFromSFAndDeleteTask_AutoSync(HashMap<String, String> testData) throws IOException {
         enableSFDCSync_Auto();
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -969,7 +1043,7 @@ public class WorkFlowTest extends BaseTest {
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "OVERDUE_RISK")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA30")
     public void createRiskCTA_Overdue(HashMap<String, String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -980,7 +1054,7 @@ public class WorkFlowTest extends BaseTest {
         Assert.assertTrue(workflowPage.isOverDueCTADisplayed(cta), "Verifying risk CTA is created - which is overdue");
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA31")
     public void verifyHeaderTypeFilter(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
@@ -1017,7 +1091,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA32")
     public void verifyHeaderPriorityFilter(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList1 =  mapper.readValue(testData.get("CTA1"), new TypeReference<ArrayList<CTA>>() {});
@@ -1080,7 +1154,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA33")
     public void changeAssigneeViewAndVerify(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList1 =  mapper.readValue(testData.get("CTA1"), new TypeReference<ArrayList<CTA>>() {});
@@ -1126,7 +1200,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA34")
     public void verifyHeaderShowFilter(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
@@ -1173,7 +1247,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA35")
     public void verifyCTAGrouping(HashMap<String,String> testData) throws IOException, CloneNotSupportedException {
         WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
         WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -1219,7 +1293,7 @@ public class WorkFlowTest extends BaseTest {
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA36")
     public void verifyCalenderView(HashMap<String,String> testData) throws IOException, CloneNotSupportedException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnCalendarView();
         List<CTA> ctaList =  mapper.readValue(testData.get("CTAs"), new TypeReference<ArrayList<CTA>>() {});
