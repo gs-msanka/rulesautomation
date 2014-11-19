@@ -441,7 +441,7 @@ public class WorkFlowTest extends BaseTest {
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
-
+       
        //Replacing Playbook and verifying updated tasks
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
@@ -1339,6 +1339,7 @@ public class WorkFlowTest extends BaseTest {
 
     private void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
         String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
         CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
         boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
@@ -1351,9 +1352,15 @@ public class WorkFlowTest extends BaseTest {
             admin = admin.editAndSaveTaskMapping();
         }
     }
+        else{
+        	  AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+        	  admin = admin.editAndSaveTaskMapping();
+        }
+    }
     
     private void enableSFDCSync_Auto() throws IOException {
         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
        String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
        CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
        boolean autoSync_FromConfig=Boolean.valueOf(config.getAutoSync());
@@ -1363,6 +1370,13 @@ public class WorkFlowTest extends BaseTest {
            admin=admin.enableAutoSync();
            admin = admin.editAndSaveTaskMapping();
        }
+   }
+        else{
+            AdminCockpitConfigPage admin = basepage.clickOnAdminTab().clickOnCockpitConfigSubTab();
+            admin=admin.enableAutoSync();
+            admin = admin.editAndSaveTaskMapping();
+        }
+        
    }
     private void disableSFAutoSync() throws IOException {
         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
