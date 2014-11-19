@@ -1499,22 +1499,26 @@ public class WorkFlowTest extends BaseTest {
         return fDates;
     }
 
-    private  String getTaskDateForPlaybook(int day) {
-        Date today = Date.today();
-        Date endDate = Date.today().plusDays(day);
-        if(endDate.dayOfWeek() == DayOfWeek.SATURDAY) {
-            endDate= endDate.plusDays(1);
+    public static String getTaskDateForPlaybook(int day) {
+        Calendar sDate = Calendar.getInstance();
+        Calendar eDate = Calendar.getInstance();
+        eDate.add(Calendar.DATE, day);
+        while(sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
+            if(sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                eDate.add(Calendar.DATE, 1);
+            }
+            sDate.add(Calendar.DATE, 1);
         }
-        int a = (Dates.from(today).to(endDate).build().size()) - (Dates.from(today).to(endDate).except(HolidayRules.weekends()).build().size());
-        Date temp = Date.today().plusDays(day+a);
-        if(temp.dayOfWeek() == DayOfWeek.SUNDAY) {
-            a = a+1;
-        } else if(temp.dayOfWeek() == DayOfWeek.SATURDAY) {
-            a = a+2;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (userLocale.contains("en_US")) {
+            dateFormat = new SimpleDateFormat("M/d/yyyy");
+
+        } else if (userLocale.contains("en_IN")) {
+            dateFormat = new SimpleDateFormat("d/M/yyyy");
         }
-        a = (Dates.from(today).to(endDate.plusDays(a)).build().size()) - (Dates.from(today).to(endDate.plusDays(a)).except(HolidayRules.weekends()).build().size());
-        return getDateWithFormat(day+a, 0, false);
-    } 
+        return dateFormat.format(eDate.getTime());
+    }
+
     private ArrayList<Task> getTaskFromSFDC(String playbookName) {
         ArrayList<Task> tasks = new ArrayList<>();
         SObject[] records = soql.getRecords("Select name, JBCXM__TaskJSON__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");

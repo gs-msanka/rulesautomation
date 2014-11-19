@@ -171,6 +171,7 @@ public class WorkflowPage extends WorkflowBasePage {
     //Playbook From Elements
     private final String PLAYBOOK_SELECT = "//select[@class='playbook-list']/following-sibling::button";
     private final String PLAYBOOK_APPLY  = "//button[contains(@class, 'btn-save') and text()='Apply']";
+    private final String PLAYBOOK_REPLACE  = "//button[contains(@class, 'btn-save') and text()='Replace']";
     private final String PLAYBOOK_CANCEL = "//button[contains(@class, 'btn-cancel') and text()='Cancel']";
 
     //Calendar Page Elements
@@ -402,7 +403,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
-        amtDateUtil.stalePause();
+        amtDateUtil.sleep(5);
         return this;
     }
 
@@ -605,45 +606,49 @@ public class WorkflowPage extends WorkflowBasePage {
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
-            expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
-            expViewCta.setCustomer(element.getText(EXP_VIEW_CUSTOMER).trim());
-            expViewCta.setType(element.getText(EXP_VIEW_TYPE).trim());
-            expViewCta.setPriority(element.getText(EXP_VIEW_PRIORITY_BUTTON).trim());
-            expViewCta.setStatus(element.getText(EXP_VIEW_STATUS_BUTTON).trim());
-            expViewCta.setReason(element.getText(EXP_VIEW_REASON_BUTTON).trim());
-            expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
+            try {
+                expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
+                expViewCta.setCustomer(element.getText(EXP_VIEW_CUSTOMER).trim());
+                expViewCta.setType(element.getText(EXP_VIEW_TYPE).trim());
+                expViewCta.setPriority(element.getText(EXP_VIEW_PRIORITY_BUTTON).trim());
+                expViewCta.setStatus(element.getText(EXP_VIEW_STATUS_BUTTON).trim());
+                expViewCta.setReason(element.getText(EXP_VIEW_REASON_BUTTON).trim());
+                expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
 
-            if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())) {
-                Report.logInfo("Expected Value : " +cta.getCustomer());
-                Report.logInfo("Actual Value : " +expViewCta.getCustomer());
-                Report.logInfo("Customer Name not matched.");
-            } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
-                Report.logInfo("Expected Value :" +cta.getType()+"a");
-                Report.logInfo("Actual Value :" +expViewCta.getType()+"a");
-                Report.logInfo("Type not matched.");
-            } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
-                Report.logInfo("Expected Value : " +cta.getPriority());
-                Report.logInfo("Actual Value : " +expViewCta.getPriority());
-                Report.logInfo("Priority not matched.");
-            } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
-                Report.logInfo("Expected Value : " +cta.getStatus());
-                Report.logInfo("Actual Value : " +expViewCta.getStatus());
-                Report.logInfo("Status not matched.");
-            } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
-                Report.logInfo("Expected Value : " +cta.getReason());
-                Report.logInfo("Actual Value : " +expViewCta.getReason());
-                Report.logInfo("Reason not matched.");
-            }
+                if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())) {
+                    Report.logInfo("Expected Value : " +cta.getCustomer());
+                    Report.logInfo("Actual Value : " +expViewCta.getCustomer());
+                    Report.logInfo("Customer Name not matched.");
+                } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
+                    Report.logInfo("Expected Value :" +cta.getType()+"a");
+                    Report.logInfo("Actual Value :" +expViewCta.getType()+"a");
+                    Report.logInfo("Type not matched.");
+                } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
+                    Report.logInfo("Expected Value : " +cta.getPriority());
+                    Report.logInfo("Actual Value : " +expViewCta.getPriority());
+                    Report.logInfo("Priority not matched.");
+                } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
+                    Report.logInfo("Expected Value : " +cta.getStatus());
+                    Report.logInfo("Actual Value : " +expViewCta.getStatus());
+                    Report.logInfo("Status not matched.");
+                } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                    Report.logInfo("Expected Value : " +cta.getReason());
+                    Report.logInfo("Actual Value : " +expViewCta.getReason());
+                    Report.logInfo("Reason not matched.");
+                }
 
-            if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
-                    cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
-                    cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
-                    cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus()) &&
-                    cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
-                return true;
-            } else {
-                Report.logInfo("Waiting for Event Details to Load");
-                amtDateUtil.stalePause();
+                if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
+                        cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
+                        cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
+                        cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus()) &&
+                        cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                    return true;
+                } else {
+                    Report.logInfo("Waiting for Event Details to Load");
+                    amtDateUtil.stalePause();
+                }
+            } catch (Exception e) {
+                Report.logInfo("Trying Again to check card loaded successfully.");
             }
         }
         Report.logInfo("CTA expand mode is not loaded properly.");
@@ -679,7 +684,8 @@ public class WorkflowPage extends WorkflowBasePage {
 
         xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
-        xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        xPath = xPath+"/descendant::span[@class='task-no' and contains(text(), '"+cta.getTaskCount()+"')]";
+        xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         String color = "";
         if(cta.getType() != null) {
             color = cta.getType().equals("Risk") ? "#f45655" : cta.getType().equals("Event") ? "#f0ac41" : "#42b899";
@@ -892,15 +898,19 @@ public class WorkflowPage extends WorkflowBasePage {
         selectValueInDropDown(playBookName);
         waitTillNoLoadingIcon();
         applyOwnersToTasksInPlaybook(tasks);
-        item.click(PLAYBOOK_APPLY);
+        if(isApply) {
+            item.click(PLAYBOOK_APPLY);
+            cta.setTaskCount(tasks.size()+cta.getTaskCount());
+        } else {
+            item.click(PLAYBOOK_REPLACE);
+        }
         amtDateUtil.sleep(5);
-        collapseCTAView();
         return this;
     }
 
     private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
         for(Task task : tasks) {
-            String path = "//h4[contains(text(), '"+task.getSubject()+"')]" +
+            String path = "//h4[contains(text(), '"+task.getSubject().replace("\\\"", "'")+"')]" +
                     "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";
             field.clearAndSetText(path, task.getAssignee());
             driver.findElement(By.xpath(path)).sendKeys(Keys.ENTER);
