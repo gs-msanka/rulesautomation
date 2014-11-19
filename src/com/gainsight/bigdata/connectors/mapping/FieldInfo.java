@@ -16,8 +16,12 @@ public class FieldInfo {
 
 	public FieldInfo(Field src, Field trgt) {
 		fieldInfo = new HashMap<String, Object>();
-		setSource(src);
-		setTarget(trgt);
+		if (src != null) {
+			setSource(src);
+		}
+		if (trgt != null) {
+			setTarget(trgt);
+		}
 	}
 
 	public FieldInfo(Field src, Field trgt, SfdcIdentifier prop) {

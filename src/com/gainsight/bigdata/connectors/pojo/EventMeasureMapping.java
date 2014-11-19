@@ -1,58 +1,26 @@
 package com.gainsight.bigdata.connectors.pojo;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.gainsight.bigdata.connectors.enums.ConnConstants;
+import com.gainsight.bigdata.connectors.enums.Field;
 
 public class EventMeasureMapping {
 
-	@JsonProperty("event")
-	String event;
-	@JsonProperty("aggregationFunction")
-	String aggregationFunction;
-	@JsonProperty("aggregationKey")
-	String aggregationKey;
-	@JsonProperty("flippedMeasureDisplayName")
-	String flippedMeasureDisplayName;
-	@JsonProperty("flippedMeasureDbName")
-	String flippedMeasureDbName;
+	Map<String, String> eventMeasureMapping;
 
-	public String getEvent() {
-		return event;
+	public EventMeasureMapping(ConnConstants.Events event, Field field, ConnConstants.AggType aggType) {
+		eventMeasureMapping = new HashMap<String, String>();
+		eventMeasureMapping.put("event", event.getEvent());
+		eventMeasureMapping.put("aggregationFunction", aggType.getAggType());
+		eventMeasureMapping.put("aggregationKey", field.getDBName());
+		eventMeasureMapping.put("flippedMeasureDisplayName", field.getDisplayName() + " " + aggType.getAggType());
+		eventMeasureMapping.put("flippedMeasureDbName", "");
 	}
 
-	public void setEvent(String event) {
-		this.event = event;
-	}
-
-	public String getAggregationFunction() {
-		return aggregationFunction;
-	}
-
-	public void setAggregationFunction(String aggregationFunction) {
-		this.aggregationFunction = aggregationFunction;
-	}
-
-	public String getAggregationKey() {
-		return aggregationKey;
-	}
-
-	public void setAggregationKey(String aggregationKey) {
-		this.aggregationKey = aggregationKey;
-	}
-
-	public String getFlippedMeasureDisplayName() {
-		return flippedMeasureDisplayName;
-	}
-
-	public void setFlippedMeasureDisplayName(String flippedMeasureDisplayName) {
-		this.flippedMeasureDisplayName = flippedMeasureDisplayName;
-	}
-
-	public String getFlippedMeasureDbName() {
-		return flippedMeasureDbName;
-	}
-
-	public void setFlippedMeasureDbName(String flippedMeasureDbName) {
-		this.flippedMeasureDbName = flippedMeasureDbName;
+	public Map<String, String> getEventMeasureMapping() {
+		return eventMeasureMapping;
 	}
 
 }

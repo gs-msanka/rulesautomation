@@ -8,7 +8,11 @@ import com.gainsight.bigdata.connectors.enums.SfdcIdentifier;
 public class MappingInfo {
 
 	public Map<String, Object> getAccountIdentifier(Field src, Field trgt, SfdcIdentifier prop) {
-		return new FieldInfo(src, trgt, prop).getFieldInfo();
+		if (prop.equals(SfdcIdentifier.AM_ACCOUNTID)) {
+			return new FieldInfo(src, trgt, prop, true, true).getFieldInfo();
+		} else {
+			return new FieldInfo(src, trgt, prop, true, false).getFieldInfo();
+		}
 	}
 
 	public Map<String, Object> getAccountIdentifier(Field src, Field trgt, SfdcIdentifier prop, boolean lookup,
