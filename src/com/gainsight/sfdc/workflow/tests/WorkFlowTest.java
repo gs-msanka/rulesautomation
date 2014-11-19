@@ -435,7 +435,6 @@ public class WorkFlowTest extends BaseTest {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
-        
         //Applying Playbook and verifying tasks
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
@@ -453,10 +452,6 @@ public class WorkFlowTest extends BaseTest {
 
        for(Task task : updatedTasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
-       }
-
-       for(Task task : tasks) {
-           Assert.assertFalse(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
        }
     }
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1511,6 +1506,13 @@ public class WorkFlowTest extends BaseTest {
             endDate= endDate.plusDays(1);
         }
         int a = (Dates.from(today).to(endDate).build().size()) - (Dates.from(today).to(endDate).except(HolidayRules.weekends()).build().size());
+        Date temp = Date.today().plusDays(day+a);
+        if(temp.dayOfWeek() == DayOfWeek.SUNDAY) {
+            a = a+1;
+        } else if(temp.dayOfWeek() == DayOfWeek.SATURDAY) {
+            a = a+2;
+        }
+        a = (Dates.from(today).to(endDate.plusDays(a)).build().size()) - (Dates.from(today).to(endDate.plusDays(a)).except(HolidayRules.weekends()).build().size());
         return getDateWithFormat(day+a, 0, false);
     } 
     private ArrayList<Task> getTaskFromSFDC(String playbookName) {
