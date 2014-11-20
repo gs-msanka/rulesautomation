@@ -45,10 +45,10 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority')]";
     private final String PRIORITY_CTA_ACTIVE= "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority') and contains(@class, 'active')]";
 
-    private final String OWNER              = "//div[@class='wf-owner-search']";
-    private final String OWNER_SEARCH       = "//div[@class='wf-dd-profile']/descendant::input[@type='text' and @name='search_text']";
-    private final String OWNER_SELECT       = "//div[@class='wf-dd-profile']/descendant::label[contains(text(), '%s')]";
-    private final String OWNER_ALL          = "//div[@class='wf-dd-profile']/descendant::a[@id='All']";
+    private final String OWNER              = "//div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
+    private final String OWNER_SEARCH       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@type='text' and @name='search_text']";
+    private final String OWNER_SELECT       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
+    private final String OWNER_ALL          = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::a[@id='All']";
     private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
     private final String FILTER             = "//a[@class='dashboard-filter-btn']";
@@ -123,9 +123,9 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_SET_SNOOZE_DATE       = "//input[@class='form-control cta-snooze-input']";
 	private final String EXP_VIEW_SNOOZE_REASON_BUTTON  = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
-    private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']";
-    private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::input[@name='search_text']";
-    private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='wf-dropdown-menu']/descendant::label[contains(text(), '%s')]";
+    private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
+    private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
+    private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
     
     private final String VIEW_TASKS             = "//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
@@ -136,8 +136,8 @@ public class WorkflowPage extends WorkflowBasePage {
     
     //Task Expanded View Elements
     private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
-    private final String TASK_EXP_ASSIGNEE_SEARCH   = "//div[@class='task-detail-set']/descendant::input[@name='search_text']";
-    private final String TASK_EXP_ASSIGNEE_SELECT   = "//div[@class='task-detail-set']/descendant::div[@class='wf-dropdown-menu']/descendant::label[contains(text(), '%s')]";
+    private final String TASK_EXP_ASSIGNEE_SEARCH   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
+    private final String TASK_EXP_ASSIGNEE_SELECT   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
     private final String TASK_EXP_SUBJECT           = "//input[contains(@class, 'editblue_title_input task-title')]";
     private final String TASK_EXP_PRIORITY          = "//select[contains(@class, 'task-select-priority')]/following-sibling::button";
     private final String TASK_EXP_STATUS            = "//select[contains(@class, 'task-select-status')]/following-sibling::button";
@@ -413,7 +413,7 @@ public class WorkflowPage extends WorkflowBasePage {
             boolean status = false;
             wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE, MIN_TIME, MAX_TIME);
             item.click(EXP_VIEW_ASSIGNEE);
-            amtDateUtil.stalePause();
+            wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, MIN_TIME, MAX_TIME);
             field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
             field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
             driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
@@ -911,6 +911,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage changeAssigneeView(String assignee) {
         item.click(OWNER);
         amtDateUtil.stalePause();
+        wait.waitTillElementDisplayed(OWNER_SEARCH, MIN_TIME, MAX_TIME);
         if(assignee != null) {
             boolean status = false;
             field.clearAndSetText(OWNER_SEARCH, assignee);

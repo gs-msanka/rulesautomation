@@ -62,7 +62,7 @@ public class WorkFlowTest extends BaseTest {
     public void clearCTAs(){
     	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
-    
+
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
