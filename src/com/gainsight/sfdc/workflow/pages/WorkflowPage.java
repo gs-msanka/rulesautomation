@@ -569,7 +569,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
    public boolean verifyCTADetails(CTA cta) {
         expandCTAView(cta);
-        String xpath = EXP_VIEW_ASSIGNEE+"/descendant::label[contains(@class, 'cta-username')]";
+        String xpath = EXP_VIEW_ASSIGNEE;
         if(!element.getText(xpath).trim().equalsIgnoreCase(cta.getAssignee())) {
             Report.logInfo("CTA is not assigned to right user.");
             return false;
