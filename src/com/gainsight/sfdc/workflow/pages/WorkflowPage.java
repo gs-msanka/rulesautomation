@@ -411,21 +411,18 @@ public class WorkflowPage extends WorkflowBasePage {
         expandCTAView(ExpectedCta);
         if(!ExpectedCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
             boolean status = false;
-            for(int i=0; i< 3; i++) {
-                try {
-                    item.click(EXP_VIEW_ASSIGNEE);
-                    amtDateUtil.stalePause();
-                    field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
-                    field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
-                    driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-                    waitTillNoLoadingIcon();
-                    wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
-                    item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
+            item.click(EXP_VIEW_ASSIGNEE);
+            amtDateUtil.stalePause();
+            field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
+            field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
+            driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
+            waitTillNoLoadingIcon();
+            wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
+            for(WebElement ele : element.getAllElement(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()))){
+                if(ele.isDisplayed()) {
+                    ele.click();
                     status = true;
                     break;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Report.logInfo("Trying again to change the assignee." +e.getLocalizedMessage());
                 }
             }
             if(!status) {
@@ -835,9 +832,22 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage updateTaskDetails(Task ExpectedTask, Task newTask) {
         expandTaskView(ExpectedTask);
         if(!ExpectedTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
+            boolean status = false;
             item.click(TASK_EXP_ASSIGNEE);
             field.setTextByKeys(TASK_EXP_ASSIGNEE_SEARCH, newTask.getAssignee());
             waitTillNoLoadingIcon();
+            wait.waitTillElementDisplayed(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()), MIN_TIME, MAX_TIME);
+            for(WebElement ele : element.getAllElement(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()))) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    status = true;
+                    break;
+                }
+            }
+            if(!status) {
+                throw new RuntimeException("Failed to change the assignee");
+            }
+
             item.click(String.format(TASK_EXP_ASSIGNEE_SELECT, newTask.getAssignee()));
         }
         if(newTask.getDate() != null && !newTask.getDate().equalsIgnoreCase(ExpectedTask.getDate())) {
