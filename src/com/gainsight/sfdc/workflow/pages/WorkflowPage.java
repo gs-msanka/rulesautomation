@@ -411,6 +411,7 @@ public class WorkflowPage extends WorkflowBasePage {
         expandCTAView(ExpectedCta);
         if(!ExpectedCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
             boolean status = false;
+            wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE, MIN_TIME, MAX_TIME);
             item.click(EXP_VIEW_ASSIGNEE);
             amtDateUtil.stalePause();
             field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
@@ -833,6 +834,7 @@ public class WorkflowPage extends WorkflowBasePage {
         expandTaskView(ExpectedTask);
         if(!ExpectedTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
             boolean status = false;
+            wait.waitTillElementDisplayed(TASK_EXP_ASSIGNEE, MIN_TIME, MAX_TIME);
             item.click(TASK_EXP_ASSIGNEE);
             field.setTextByKeys(TASK_EXP_ASSIGNEE_SEARCH, newTask.getAssignee());
             waitTillNoLoadingIcon();
