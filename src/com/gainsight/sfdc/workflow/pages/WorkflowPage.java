@@ -48,7 +48,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String OWNER              = "//div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
     private final String OWNER_SEARCH       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@type='text' and @name='search_text']";
     private final String OWNER_SELECT       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
-    private final String OWNER_ALL          = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::a[@id='All']";
+    private final String OWNER_ALL          = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), 'All Owners')]";
     private final String GROUP_BY           = "//select[@class='form-control cta-group-by']/following-sibling::button";
     private final String SORT_BY            = "//select[@class='form-control cta-sort-by']/following-sibling::button";
     private final String FILTER             = "//a[@class='dashboard-filter-btn']";
