@@ -410,12 +410,24 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage updateCTADetails(CTA ExpectedCta, CTA newCta) {
         expandCTAView(ExpectedCta);
         if(!ExpectedCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
-            item.click(EXP_VIEW_ASSIGNEE);
-            amtDateUtil.stalePause();
-            field.clearAndSetText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
-            driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-            waitTillNoLoadingIcon();
-            item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
+            boolean status = false;
+            for(int i=0; i< 3; i++) {
+                try {
+                    item.click(EXP_VIEW_ASSIGNEE);
+                    amtDateUtil.stalePause();
+                    field.clearAndSetText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
+                    waitTillNoLoadingIcon();
+                    item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
+                    status = true;
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Report.logInfo("Trying again to change the assignee." +e.getLocalizedMessage());
+                }
+            }
+            if(!status) {
+                throw new RuntimeException("Failed to change the assignee");
+            }
         }
         if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(ExpectedCta.getDueDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
