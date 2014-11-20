@@ -2,6 +2,8 @@ package com.gainsight.bigdata.connectors.pojo;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.gainsight.bigdata.connectors.enums.ConnConstants;
+
 public class UsageTracker {
 	@JsonProperty("usageTrackerType")
 	String usageTrackerType;
@@ -14,45 +16,12 @@ public class UsageTracker {
 
 	public UsageTracker() {
 		frequency = "DAY";
-		numberOfDays = 7;
+		numberOfDays = 20;
 	}
 
-	public UsageTracker(String usageTrackerType, String accountId) {
+	public UsageTracker(ConnConstants.TrackerData usageTrackerType, String accountId) {
 		this();
-		this.usageTrackerType = usageTrackerType;
+		this.usageTrackerType = usageTrackerType.getDataType();
 		this.accountId = accountId;
 	}
-
-	public String getUsageTrackerType() {
-		return usageTrackerType;
-	}
-
-	public void setUsageTrackerType(String usageTrackerType) {
-		this.usageTrackerType = usageTrackerType;
-	}
-
-	public String getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-
-	public int getNumberOfDays() {
-		return numberOfDays;
-	}
-
-	public void setNumberOfDays(int numberOfDays) {
-		this.numberOfDays = numberOfDays;
-	}
-
 }

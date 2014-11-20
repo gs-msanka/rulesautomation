@@ -14,7 +14,7 @@ public class DataAPITestData {
 	String accountType = "DATA_API";
 	String displayName = "Automation" + System.currentTimeMillis();
 	GlobalMapping globalMapping;
-
+	
 	public AccountDetails getMappingWithAccNDate_DirectLookup() {
 		accountDetails = new AccountDetails();
 		globalMapping = accountDetails.globalMapping;
@@ -56,6 +56,7 @@ public class DataAPITestData {
 				SfdcIdentifier.AM_ACCOUNTID, null);
 		globalMapping.setSysDefIdetifiers(Field.SFDC_ACCOUNTNAME, null, null);
 		globalMapping.addMeasure(Field.SIO_MEA1, "AVG");
+		
 		setDefaultParams(accountDetails);
 		return accountDetails;
 	}
