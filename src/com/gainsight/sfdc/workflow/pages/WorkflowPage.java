@@ -237,7 +237,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
-		field.setText(CREATE_FORM_COMMENTS, cta.getComments());
+		//field.setText(CREATE_FORM_COMMENTS, cta.getComments());
 		if(cta.isRecurring()) {
             fillAndSaveRecurringEventCTAForm(cta);
         }
