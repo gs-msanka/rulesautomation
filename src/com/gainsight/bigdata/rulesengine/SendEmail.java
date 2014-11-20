@@ -32,7 +32,7 @@ public class SendEmail {
     public String Contacts = rulesDir + "Contacts.apex";
     public String AutomatedAlertRulesObjectName = "JBCXM__AutomatedAlertRules__c";
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
-
+    public String templateId = "";
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -41,12 +41,14 @@ public class SendEmail {
         soql = GSUtil.soql;
         AutomatedAlertRulesObjectName = GSUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
         LastRunResultFieldName = GSUtil.resolveStrNameSpace(LastRunResultFieldName);
+        SObject[] templates = soql.getRecords("SELECT Id FROM EmailTemplate where Name='Gainsight sample template - measure below threshold'");
+        templateId = (String) templates[0].getChild("Id").getValue();
     }
 
     @Test
     public void testGSEmailAccountStrategy() throws Exception {
         GSUtil.runApexCode(GSEmailAccountStrategy);
-        GSUtil.runApexCode(GSEmailAccountStrategy1);
+        GSUtil.runApexCodeByReplacingTemplateId(GSEmailAccountStrategy1, templateId);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Account Strategy'");
@@ -73,7 +75,7 @@ public class SendEmail {
     @Test
     public void testGSEmailContactStrategy() throws Exception {
         GSUtil.runApexCode(GSEmailContactStrategy);
-        GSUtil.runApexCode(GSEmailContactStrategy1);
+        GSUtil.runApexCodeByReplacingTemplateId(GSEmailContactStrategy1, templateId);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Contact Strategy'");
@@ -100,7 +102,7 @@ public class SendEmail {
     @Test
     public void testGSEmailEmailStrategy() throws Exception {
         GSUtil.runApexCode(GSEmailEmailStrategy);
-        GSUtil.runApexCode(GSEmailEmailStrategy1);
+        GSUtil.runApexCodeByReplacingTemplateId(GSEmailEmailStrategy1, templateId);
 
         SObject[] rules = soql
                 .getRecords("select Id,Name from " + AutomatedAlertRulesObjectName + " where Name='Send Email Email Strategy'");

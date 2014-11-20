@@ -83,8 +83,17 @@ public class GSUtil {
         return soql.getRecords(GSUtil.resolveStrNameSpace(query));
     }
 
-    public static void runApexCode(String string) {
-        sfdc.runApexCodeFromFile(string, isPackage);
+    public static void runApexCode(String fileName) {
+        sfdc.runApexCodeFromFile(fileName, isPackage);
+    }
+
+    public static void runApexCodeByReplacingTemplateId(String fileName, String templateId) {
+        String code = sfdc.getFileContents(fileName);
+        code = code.replace("$templateId", templateId);
+        if (!isPackage) {
+            code = code.replace("JBCXM__", "");
+        }
+        sfdc.runApex(code);
     }
 
     public static void waitForCompletion(String ruleId, WebAction webAction, Header header) throws Exception {
