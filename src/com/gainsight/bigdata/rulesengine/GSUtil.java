@@ -106,7 +106,7 @@ public class GSUtil {
             Map<String, Object> map = (Map<String, Object>) data.get(0);
             if (map.get("status") != null) {
                 String status = (String) map.get("status");
-                if (status.equalsIgnoreCase("completed")) {
+                if (status.equalsIgnoreCase("completed") || status.equalsIgnoreCase("failed_while_processing")) {
                     flag = false;
                 }
             }
