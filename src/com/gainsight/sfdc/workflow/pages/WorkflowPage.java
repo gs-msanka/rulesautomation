@@ -910,9 +910,19 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(OWNER);
         amtDateUtil.stalePause();
         if(assignee != null) {
+            boolean status = false;
             field.clearAndSetText(OWNER_SEARCH, assignee);
             waitTillNoLoadingIcon();
-            item.click(String.format(OWNER_SELECT, assignee));
+            for(WebElement ele : element.getAllElement(String.format(OWNER_SELECT, assignee))){
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    status = true;
+                    break;
+                }
+            }
+            if(!status) {
+                throw new RuntimeException("Failed to Change Assignee View ");
+            }
         } else {
             item.click(OWNER_ALL);
         }
