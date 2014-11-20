@@ -415,8 +415,11 @@ public class WorkflowPage extends WorkflowBasePage {
                 try {
                     item.click(EXP_VIEW_ASSIGNEE);
                     amtDateUtil.stalePause();
-                    field.clearAndSetText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee());
+                    field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
+                    field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
+                    driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
                     waitTillNoLoadingIcon();
+                    wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
                     item.click(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()));
                     status = true;
                     break;
