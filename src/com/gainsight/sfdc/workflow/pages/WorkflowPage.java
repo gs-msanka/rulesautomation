@@ -491,7 +491,16 @@ public class WorkflowPage extends WorkflowBasePage {
         }
     }
 
-
+    public boolean isCTADisplayed_WithScore(CTA cta,String scheme){
+    	String scoredCTAXpath;
+    	if(scheme.equals("Color"))
+    		scoredCTAXpath = getCTAXPath(cta)+"/descendant::span[@class='health-score-text' and @style='background-color:"+cta.getScoreOfCustomer()+"']";
+    	else
+    		scoredCTAXpath=getCTAXPath(cta)+"/descendant::span[@class='health-score-text' and contains(text(),'"+cta.getScoreOfCustomer()+"')]";
+    	item.click(scoredCTAXpath);
+    	return isCTAExpandedViewLoaded(cta);
+    }
+    
     public boolean isCTADisplayed(CTA cta) {
         waitTillNoLoadingIcon();
         env.setTimeout(2);

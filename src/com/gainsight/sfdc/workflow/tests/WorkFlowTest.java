@@ -3,6 +3,9 @@ package com.gainsight.sfdc.workflow.tests;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
@@ -13,6 +16,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 import io.lamma.*;
 import io.lamma.Date;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -1331,7 +1335,69 @@ public class WorkFlowTest extends BaseTest {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
     }
-
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA37")
+    public void createRiskCTA_WithScore(HashMap<String, String> testData) throws IOException {
+    	//check if scorecard is enabled
+    	Customer360ScorecardsNumericTest scoreNum=new Customer360ScorecardsNumericTest();
+    	scoreNum.setUp();
+    	scoreNum.addScoreToMeasureWithWeight(testData);
+    	
+    	//give score to a customer 
+    	
+    	//add cta to customer    	
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        cta.setScoreOfCustomer(getMapFromData(testData.get("CustomerHealth")).get("Score"));
+        workflowPage.createCTA(cta);
+        
+        //verify if cta is displayed along with the score
+        Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA38")
+    public void createRiskCTA_WithGradeScore(HashMap<String, String> testData) throws IOException {
+    	//check if scorecard is enabled
+    	Customer360ScorecardsTests scoreGrade=new Customer360ScorecardsTests();
+    	scoreGrade.setUp();
+    	scoreGrade.addScoreToMeasureWithWeight(testData);
+    	
+    	//give score to a customer 
+    	
+    	//add cta to customer    	
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        cta.setScoreOfCustomer(getMapFromData(testData.get("CustomerHealth")).get("Score"));
+        workflowPage.createCTA(cta);
+        
+        //verify if cta is displayed along with the score
+        Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
+    }
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA39")
+    public void createRiskCTA_WithColorScore(HashMap<String, String> testData) throws IOException {
+    	//check if scorecard is enabled
+    	Customer360ScorecardsColorTest scoreColor=new Customer360ScorecardsColorTest();
+    	scoreColor.setUp();
+    	scoreColor.addScoreToMeasureWithWeight(testData);
+    	
+    	//add cta to customer    	
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfinfo.getUserFullName());
+        cta.setScoreOfCustomer(getMapFromData(testData.get("CustomerHealth")).get("Score"));
+        workflowPage.createCTA(cta);
+        
+        //verify if cta is displayed along with the score
+        Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
+    }
     private void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
         if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
@@ -1481,7 +1547,6 @@ public class WorkFlowTest extends BaseTest {
                 String month = exp[0].substring(0, 3);
                 List<io.lamma.Date> a = Dates.from(start, cal.mm(), cal.dd()).to(end, cal.mm(), cal.dd()).byYear().on(Locators.nthDay(day).of(Month.of(monthlyMap.get(month)))).build();
                 return getFormatDates(a);
-
             }
         }
         return dates;
