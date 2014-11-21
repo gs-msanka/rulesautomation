@@ -1,23 +1,22 @@
 package com.gainsight.bigdata.rulesengine;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.HttpResponseObj;
-import com.sforce.soap.partner.sobject.SObject;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.gainsight.bigdata.pojo.NSInfo;
 import com.gainsight.bigdata.util.NSUtil;
+import com.gainsight.bigdata.util.PropertyReader;
+import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
+import com.gainsight.pojo.HttpResponseObj;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
+import com.sforce.soap.partner.sobject.SObject;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class GSUtil {
     protected static TestEnvironment env = new TestEnvironment();
@@ -98,7 +97,10 @@ public class GSUtil {
 
     public static void waitForCompletion(String ruleId, WebAction webAction, Header header) throws Exception {
         boolean flag = true;
-        while (flag) {
+        int maxWaitingTime = 300000;
+        long startTime = System.currentTimeMillis();
+        long currentTime = 0;
+        while (flag || currentTime < maxWaitingTime) {
             Thread.sleep(10000);
             HttpResponseObj result = webAction.doGet(PropertyReader.nsAppUrl + "/api/async/process/?ruleId=" + ruleId + "", header.getAllHeaders());
             ResponseObject res = GSUtil.convertToObject(result.getContent());
@@ -110,6 +112,8 @@ public class GSUtil {
                     flag = false;
                 }
             }
+
+            currentTime = System.currentTimeMillis() - startTime;
         }
     }
 
