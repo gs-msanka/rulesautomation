@@ -915,7 +915,7 @@ public class WorkflowPage extends WorkflowBasePage {
         if(assignee != null) {
             boolean status = false;
             field.clearAndSetText(OWNER_SEARCH, assignee);
-            waitTillNoLoadingIcon();
+           // waitTillNoLoadingIcon();
             for(WebElement ele : element.getAllElement(String.format(OWNER_SELECT, assignee))){
                 if(ele.isDisplayed()) {
                     ele.click();

@@ -243,6 +243,27 @@ public class WorkFlowTest extends BaseTest {
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA40")
+   public void createRiskCTAWithTasks_AssignedToDifferentUsers(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+
+       	workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for(Task task : tasks) {
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+        	}
+        
+       workflowPage.addTaskToCTA(cta, tasks);
+       for(Task task : tasks)
+       Assert.assertTrue(workflowPage.isTaskDisplayedUnderCTA(cta, task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+   }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA12")
    public void createOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -301,7 +322,30 @@ public class WorkFlowTest extends BaseTest {
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
        }
+   }
+   
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA41")
+   public void createRiskCTAWithPlaybook_DifferentAssignees(HashMap<String,String> testData) throws IOException{
+	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+       cta.setAssignee(sfinfo.getUserFullName());
+       workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+       String[] users={"GiribabuG","SrividyaR","RajeshY","RamyaK","SunandP","HiteshS"};
+       int i=0;
+        for(Task task : tasks) {
+        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+        	task.setAssignee(users[i]); if(++i >=5) i=0;
+        	}
 
+       workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
+       for(Task task : tasks) {
+           Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+       }
    }
    
    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
