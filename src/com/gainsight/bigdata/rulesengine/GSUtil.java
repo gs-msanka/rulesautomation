@@ -112,8 +112,7 @@ public class GSUtil {
                 if (status.equalsIgnoreCase("completed") || status.equalsIgnoreCase("failed_while_processing")) {
                     flag = false;
                     if(!status.equalsIgnoreCase("completed")){
-                    	map.get("executionMessages");
-                    	Report.logInfo("ruledID - "+ruleId+ " "+(String) map.get("executionMessages"));
+                    	Report.logInfo("ruledID - "+ruleId+ " "+map.get("executionMessages"));
                     }
                 }
             }
