@@ -10,6 +10,7 @@ public class WorkflowBasePage extends BasePage {
 	private final String READY_INDICATOR   			= "//input[contains(@class, 'searchTxt form-control global-search')]";
 	private final String LIST_VIEW_TAB         		= "//a[@data-type='LIST']";
     private final String CALENDAR_VIEW_TAB         	= "//a[@data-type='CALENDAR']";
+    private final String REPORTING_TAB              = "//a[@data-type='REPORTS']";
     private final String PLAYBOOKS_TAB     			= "//a[@class='workflow-playbooks require-tooltip']";
     private final String SHOW_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_show']";		//show salesforce header
 	private final String HIDE_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_hide']";		//hide salesforce header
@@ -26,6 +27,11 @@ public class WorkflowBasePage extends BasePage {
     public WorkflowPage clickOnCalendarView() {
         item.click(CALENDAR_VIEW_TAB);
         return new WorkflowPage("Calendar");
+    }
+
+    public WorkFlowReportingPage clickOnReportingView() {
+        item.click(REPORTING_TAB);
+        return new WorkFlowReportingPage();
     }
 
     /**
