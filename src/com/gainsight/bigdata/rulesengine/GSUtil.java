@@ -12,6 +12,7 @@ import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
+
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -100,7 +101,7 @@ public class GSUtil {
         int maxWaitingTime = 300000;
         long startTime = System.currentTimeMillis();
         long executionTime = 0;
-        while (flag || executionTime < maxWaitingTime) {
+        while (flag && executionTime < maxWaitingTime) {
             Thread.sleep(10000);
             HttpResponseObj result = webAction.doGet(PropertyReader.nsAppUrl + "/api/async/process/?ruleId=" + ruleId + "", header.getAllHeaders());
             ResponseObject res = GSUtil.convertToObject(result.getContent());
@@ -110,6 +111,10 @@ public class GSUtil {
                 String status = (String) map.get("status");
                 if (status.equalsIgnoreCase("completed") || status.equalsIgnoreCase("failed_while_processing")) {
                     flag = false;
+                    if(!status.equalsIgnoreCase("completed")){
+                    	map.get("executionMessages");
+                    	Report.logInfo("ruledID - "+ruleId+ " "+(String) map.get("executionMessages"));
+                    }
                 }
             }
             executionTime = System.currentTimeMillis() - startTime;
