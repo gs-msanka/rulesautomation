@@ -99,8 +99,8 @@ public class GSUtil {
         boolean flag = true;
         int maxWaitingTime = 300000;
         long startTime = System.currentTimeMillis();
-        long currentTime = 0;
-        while (flag || currentTime < maxWaitingTime) {
+        long executionTime = 0;
+        while (flag || executionTime < maxWaitingTime) {
             Thread.sleep(10000);
             HttpResponseObj result = webAction.doGet(PropertyReader.nsAppUrl + "/api/async/process/?ruleId=" + ruleId + "", header.getAllHeaders());
             ResponseObject res = GSUtil.convertToObject(result.getContent());
@@ -112,8 +112,7 @@ public class GSUtil {
                     flag = false;
                 }
             }
-
-            currentTime = System.currentTimeMillis() - startTime;
+            executionTime = System.currentTimeMillis() - startTime;
         }
     }
 
