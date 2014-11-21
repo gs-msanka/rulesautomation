@@ -1540,8 +1540,8 @@ public class WorkFlowTest extends BaseTest {
         weekDayMap.put("Sun", 7);
         Calendar calendar =   Calendar.getInstance(userTimezone);
         Date startDate = new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DATE));
-        Date endDate = startDate;
-        Date cal = startDate;
+        Date endDate =  new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DATE));
+        Date cal =  new Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DATE));
         if(!recurring.getRecurringType().equalsIgnoreCase("Yearly")) {
             startDate= startDate.plusDays(start);
             endDate = endDate.plusDays(end);
@@ -1612,7 +1612,7 @@ public class WorkFlowTest extends BaseTest {
 
     public String getTaskDateForPlaybook(int day) {
         Calendar sDate = Calendar.getInstance(userTimezone);
-        Calendar eDate = sDate;
+        Calendar eDate = Calendar.getInstance(userTimezone);
         eDate.add(Calendar.DATE, day);
         while(sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
             if(sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
