@@ -43,8 +43,9 @@ public class WorkFlowTest extends BaseTest {
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
     @BeforeClass
     public void setup() {
-        userLocale = soql.getUserLocale();
         sfinfo= SFDCUtil.fetchSFDCinfo();
+        userLocale = sfinfo.getUserLocale();
+        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         basepage.login();
         isPackage = isPackageInstance();
         apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
@@ -1469,7 +1470,7 @@ public class WorkFlowTest extends BaseTest {
         return getQueryRecordCount(resolveStrNameSpace(query));
     }
 
-    public static List<String> getDates(CTA.EventRecurring recurring) {
+    public List<String> getDates(CTA.EventRecurring recurring) {
         int start = Integer.valueOf(recurring.getRecurStartDate());
         int end = Integer.valueOf(recurring.getRecurEndDate());
         HashMap<String , Integer> monthlyMap = new HashMap<>();
@@ -1552,11 +1553,11 @@ public class WorkFlowTest extends BaseTest {
         return dates;
     }
 
-    private static List<String> getFormatDates(List<io.lamma.Date>  dates) {
+    private List<String> getFormatDates(List<io.lamma.Date>  dates) {
         List<String> fDates = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for(io.lamma.Date date : dates) {
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = Calendar.getInstance(userTimezone);
             cal.set(date.yyyy(), date.mm()-1, date.dd(), 0, 0, 0);
             fDates.add(dateFormat.format(cal.getTime()));
         }
@@ -1564,9 +1565,9 @@ public class WorkFlowTest extends BaseTest {
         return fDates;
     }
 
-    public static String getTaskDateForPlaybook(int day) {
-        Calendar sDate = Calendar.getInstance();
-        Calendar eDate = Calendar.getInstance();
+    public String getTaskDateForPlaybook(int day) {
+        Calendar sDate = Calendar.getInstance(userTimezone);
+        Calendar eDate = Calendar.getInstance(userTimezone);
         eDate.add(Calendar.DATE, day);
         while(sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
             if(sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {

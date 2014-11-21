@@ -14,8 +14,26 @@ public class SFDCInfo {
 	String authEndPoint;
 	String serviceEndPoint;
 	String userCurrencySymbol;
-	
-	public String getUserCurrencySymbol() {
+    String userLocale;
+    String userTimeZone;
+
+    public String getUserLocale() {
+        return userLocale;
+    }
+
+    public void setUserLocale(String userLocale) {
+        this.userLocale = userLocale;
+    }
+
+    public String getUserTimeZone() {
+        return userTimeZone;
+    }
+
+    public void setUserTimeZone(String userTimeZone) {
+        this.userTimeZone = userTimeZone;
+    }
+
+    public String getUserCurrencySymbol() {
 		return userCurrencySymbol;
 	}
 
