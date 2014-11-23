@@ -1,16 +1,16 @@
 package com.gainsight.bigdata.connectors.pojo;
 
 public class AccountProperties {
-	String accountID;
+	String accountDetailsID;
 	String accountName;
 	String sourceCollection;
 	String dayAggCollection;
 	String flippedColleciton;
-	public String getAccountID() {
-		return accountID;
+	public String getAccountDetailsID() {
+		return accountDetailsID;
 	}
-	public void setAccountID(String accountID) {
-		this.accountID = accountID;
+	public void setAccountDetailsID(String accountID) {
+		this.accountDetailsID = accountID;
 	}
 	public String getAccountName() {
 		return accountName;

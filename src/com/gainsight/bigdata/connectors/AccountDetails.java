@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.connectors;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.gainsight.bigdata.connectors.pojo.Scheduler;
 import com.gainsight.bigdata.connectors.pojo.UsageConfiguration;
+import com.gainsight.sfdc.util.DateUtil;
 
 public class AccountDetails {
 	@JsonProperty("globalMapping")
@@ -29,6 +31,10 @@ public class AccountDetails {
 		properties = new HashMap<String, String>();
 	}
 
+	public GlobalMapping getGlobalMapping() {
+		return globalMapping;
+	}
+
 	public Map<String, String> getProperties() {
 		return properties;
 	}
@@ -41,18 +47,24 @@ public class AccountDetails {
 		this.displayName = displayName;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+
 	public void setProperties(String collectionId, String timeZone) {
 		properties.put("collectionId", collectionId);
 		properties.put("timeZone", timeZone);
 	}
 
-	public void setUsageConfig() {
+	public void setDefaultUsageConfig() {
 		usageConfiguration = new UsageConfiguration();
 	}
 
-	public void addScheduler() {
+	public void setDefaultScheduler() {
 		scheduler = new Scheduler();
-		scheduler.schedule("RUN_NOW", "2014-11-10T00:00:00.000", "2014-11-14T00:00:00.000");
+		Date date = new Date();
+		String startDate = DateUtil.addDays(date, -10, "yyyy-MM-dd") + "T00:00:00.000";
+		String endDate = DateUtil.addDays(date, 0, "yyyy-MM-dd") + "T00:00:00.000";
+		scheduler.saveAndRun(startDate, endDate);
 	}
-
 }

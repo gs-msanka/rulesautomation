@@ -16,7 +16,7 @@ public class UsageTracker {
 
 	public UsageTracker() {
 		frequency = "DAY";
-		numberOfDays = 20;
+		numberOfDays = 7;
 	}
 
 	public UsageTracker(ConnConstants.TrackerData usageTrackerType, String accountId) {

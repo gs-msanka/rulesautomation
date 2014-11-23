@@ -51,7 +51,7 @@ public class ApiUrl extends NSUrl {
 	// @URL_PARAM1: AccountID
 	public static final String ACC_DATA_FETCH_MIXPANEL = BASE_MIXPANEL + "/accounts" + URL_PARAM1 + "/fetch";
 	// @URL_PARAM1: AccountID
-	public static final String ACC_DELETE_MIXPANEL_PROJ = BASE_ACCOUNTS + "/accountId" + URL_PARAM1;
+	public static final String ACC_DELETE = BASE_ACCOUNTS + "/accountId" + URL_PARAM1;
 	// @URL_PARAM1: AccountID
 	public static final String DELETE_SEGMENT_PROJ = BASE_TOKENS + "/integrations/SEGMENT_IO/projects" + URL_PARAM1;
 	public static final String CREATE_SEGMENT_PROJ = BASE_TOKENS + "/v2";
@@ -118,7 +118,7 @@ public class ApiUrl extends NSUrl {
 		putApiList.add(ACC_ONOFF_CONNCTOR);
 		postApiList.add(ACC_CREATE_MIXPANEL_PROJ);
 		postApiList.add(ACC_DATA_FETCH_MIXPANEL);
-		deleteApiList.add(ACC_DELETE_MIXPANEL_PROJ);
+		deleteApiList.add(ACC_DELETE);
 		deleteApiList.add(DELETE_SEGMENT_PROJ);
 		postApiList.add(CREATE_SEGMENT_PROJ);
 

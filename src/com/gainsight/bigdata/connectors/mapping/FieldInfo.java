@@ -35,6 +35,7 @@ public class FieldInfo {
 		}
 		setSource(src);
 		setTarget(trgt);
+		setTargetSFDCMapping(trgt);
 		fieldInfo.put("lookup", lookup);
 		fieldInfo.put("directLookup", directLookup);
 		if (prop != null) {
@@ -86,6 +87,13 @@ public class FieldInfo {
 		Map<String, String> prop = new HashMap<>();
 		prop.put("aggregationFunction", aggFunc);
 		target.put("properties", prop);
+	}
 
+	public void setTargetSFDCMapping(Field trgt) {
+		if (trgt.equals(Field.SYS_TIMESTAMP)) {
+			Map<String, String> properties = new HashMap<String, String>();
+			properties.put("sfdcmapping", "date");
+			target.put("properties", properties);
+		}
 	}
 }

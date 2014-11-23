@@ -3,10 +3,12 @@ package com.gainsight.bigdata.connectors.enums;
 public enum SfdcIdentifier {
 	AM_ACCOUNTID("", "", "ID"),
 	AM_ACCOUNTNAME("", "", "Name"),
-	AM_EXTERNALID("Contact", "Id", "AccountId"),
+	AM_CONTACTID("Contact", "Id", "AccountId"),
+	AM_CONTACTEMAIL("Contact", "Email", "AccountId"),
 	AM_CUSTOMER_NAME("JBCXM__customerinfo__c", "JBCXM__CustomerName__c", "JBCXM__Account__c"),
-	UM_USERID("Contact", "Id", "Id"),
-	UM_EXTERNALID_USER("Contact", "EID__c", "id");
+	UM_CONTACTID("Contact", "Id", "Id"),
+	UM_CONTACTEMAIL("Contact", "Email", "Id"),
+	UM_CONTACT_EXTERNALID("Contact", "EID__c", "id");
 
 	String lookupObject;
 	String lookupKey;

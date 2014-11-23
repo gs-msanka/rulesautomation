@@ -2,6 +2,7 @@ package com.gainsight.bigdata.connectors.mapping;
 
 import java.util.Map;
 
+import com.gainsight.bigdata.connectors.enums.ConnConstants;
 import com.gainsight.bigdata.connectors.enums.Field;
 import com.gainsight.bigdata.connectors.enums.SfdcIdentifier;
 
@@ -50,6 +51,7 @@ public class MappingInfo {
 	public Map<String, Object> getCustomIdentifier(Field src, Field trgt) {
 		FieldInfo mappingInfo = new FieldInfo(src, trgt);
 		mappingInfo.setSourceType("USAGE_FEED");
+		mappingInfo.target.put("dbName", "");
 		return mappingInfo.getFieldInfo();
 	}
 
@@ -60,11 +62,11 @@ public class MappingInfo {
 		return mappingInfo.getFieldInfo();
 	}
 
-	public Map<String, Object> getMeasure(Field src, String aggFunc) {
+	public Map<String, Object> getMeasure(Field src, ConnConstants.AggType aggFunc) {
 		FieldInfo mappingInfo = new FieldInfo(src, src);
 		mappingInfo.setSourceType("USAGE_FEED");
 		mappingInfo.target.put("dbName", "");
-		mappingInfo.setTargetAggFunc(aggFunc);
+		mappingInfo.setTargetAggFunc(aggFunc.getAggType());
 		return mappingInfo.getFieldInfo();
 	}
 
