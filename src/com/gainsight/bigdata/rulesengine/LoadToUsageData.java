@@ -39,7 +39,7 @@ public class LoadToUsageData {
 
     }
 
-    @Test(enabled = isEnabled)
+    @Test
     // Its for UsageData sync with Account Id's only
     public void rulesUsageOne() throws Exception {
         GSUtil.runApexCode(UsageDataSync);
@@ -47,8 +47,7 @@ public class LoadToUsageData {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDataSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
-                            + "/eventrule" + "/" + r.getId() + "", rawBody,
+            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
@@ -72,8 +71,7 @@ public class LoadToUsageData {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDateSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
-                            + "/eventrule" + "/" + r.getId() + "", rawBody,
+            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
                     header.getAllHeaders());
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
