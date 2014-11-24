@@ -629,7 +629,7 @@ public class RuleEngineDataSetup extends BaseTest {
         SObject[]  recordList = soql.getRecords(query);
         Report.logInfo("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
-            if(comments != null || !comments.isEmpty()) {
+            if(comments != null && !comments.isEmpty()) {
                 String actualComments = recordList[0].getField(resolveStrNameSpace("JBCXM__ScorecardComment__c")).toString().toLowerCase();
                 Report.logInfo("Actual Comments : " +actualComments);
                 Report.logInfo("Expected Comments : " +comments);

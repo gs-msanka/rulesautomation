@@ -8,21 +8,54 @@
     <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
         <classes>
 
-            <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
+            <!--Sriniva's Test -->
             <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
+            <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
 
-            <class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest"/>
-            <class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests"/>
-
-            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
-            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <!-- Srividya, Giri -->
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>
 
+            <!--Should run  separately
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/> -->
+
+            <!-- Sai's Test-->
+            <class name="com.gainsight.sfdc.administration.tests.AdminCustomersTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminFeatureTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminMilestoneTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminNotificationTabTest" />
+
+            <!--Can be deleted
+            <class name="com.gainsight.sfdc.administration.tests.AdminNotificationTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminUIViewsTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminAdoptionTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminRetentionTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminRulesEngineTabTest" />
+            <class name="com.gainsight.sfdc.administration.tests.AdminTransactionsTabTest" />
+            <class name="com.gainsight.sfdc.salesforce.tests.CreateSalesforceUsersTest" />
+            <class name="com.gainsight.sfdc.retention.tests.AlertsTests" />
+            <class name="com.gainsight.sfdc.retention.tests.EventsTests" />
+            <class name="com.gainsight.sfdc.retention.tests.PlaybooksTests" />
+            <class name="com.gainsight.sfdc.survey.tests.SurveyAcceptanceTests" />
+            <class name="com.gainsight.sfdc.survey.tests.SurveyCreationTest" />
+            <class name="com.gainsight.sfdc.survey.tests.SurveyPublishTest" /> -->
 
         </classes>
     </test>
