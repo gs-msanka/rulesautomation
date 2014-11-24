@@ -34,6 +34,7 @@ public class WorkFlowTest extends BaseTest {
 
 
     private final String TEST_DATA_FILE         = "testdata/sfdc/workflow/tests/WorkFlow_Test.xls";
+    private final String LEADERBOARD_DATAGEN_SCRIPT =TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
     private final String CREATE_USERS_SCRIPT    = TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
                                         "Delete [select id from JBCXM__CSTask__c];"+
@@ -318,7 +319,6 @@ public class WorkFlowTest extends BaseTest {
         	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
         	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
-
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
@@ -1447,6 +1447,7 @@ public class WorkFlowTest extends BaseTest {
 
     @Test
     public void reportSampleTest() throws IOException {
+    	apex.runApexCodeFromFile(LEADERBOARD_DATAGEN_SCRIPT,isPackage);
         WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab().clickOnReportingView();
         Assert.assertEquals(getCountOfUserCTAs("Giribabu Golla", "Risk", false, false), workflowPage.getCountOfUserClosedCTAs("Giribabu Golla", "Risk"));
     }

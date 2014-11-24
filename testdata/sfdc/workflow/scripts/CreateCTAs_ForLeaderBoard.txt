@@ -1,0 +1,98 @@
+Delete [Select id from JBCXM__CTA__c];
+Delete [select id from JBCXM__CSTask__c];
+Delete [select id from Task];
+delete [select id from Account where name like 'CTA Account%'];
+
+//Create Accounts
+List<Account> accList = new List<Account>();
+for(integer i=1; i<4 ; i++) {
+   Account acc = new Account(Name ='CTA Account ' +i);
+   accList.add(acc);
+}
+insert accList;
+
+//Add Accounts to Customers
+List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
+                                 JBCXM__SystemName__c = 'ActiveCustomer'];
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+JBCXM__CustomerInfo__c cust = null;
+for(Account acc : [SELECT id FROM Account where name like 'CTA Account%']) {
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = acc.id, JBCXM__Status__c  = (pkList.get(0)).id);
+			custList.add(cust);
+    
+}
+
+insert custList;
+
+//Get the list of users in the org - assign 1 CTA per user in the org
+List<User> users = [select id,Name from User where Name in ('GiribabuG','SrividyaR','HiteshS')];
+
+//Get the list of customers inthe org - assign 1 CTA per customer
+List<Account> accounts=[select id,Name from Account where name like 'CTA Account%'];
+
+//Get the list of CTATypes in the org
+List<JBCXM__CTATypes__c> ctaTypes=[select id,Name from JBCXM__CTATypes__c];  
+
+List<JBCXM__PickList__c> reason = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Reason'];                        
+List<JBCXM__PickList__c> severity = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Severity'];                        
+List<JBCXM__PickList__c> status = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Status' and JBCXM__SystemName__c in ('Open','In Progress')];            
+                        
+//Create CTAs - for last 2 quarters
+List<JBCXM__CTA__c> ctas= new List<JBCXM__CTA__c>();
+integer j=0,k=0,l=0;
+integer numWeeks=26;
+//Creating CTAs - for each customer - for each type of CTA - for each user per week
+for(integer i=0;i<=numWeeks;i++)
+{
+   for(Account acnt : accounts)
+   {
+       for(JBCXM__CTATypes__c ctaType : ctaTypes){
+           for(User user : users){
+           system.debug('adding CTA for the type -- '+ctaType.Name+' for acount -- '+acnt.Name+' for '+user.Name);
+      		ctas.add(new JBCXM__CTA__c(Name=acnt.Name+'-'+ctaType.Name+' CTA - for'+user.Name,JBCXM__Account__c=acnt.id,JBCXM__Assignee__c=user.Id,JBCXM__CreatedDate__c=system.Date.today().addDays((i-numWeeks)*7)                                           ,JBCXM__Type__c=ctaType.id,JBCXM__DueDate__c=system.Date.today().addDays(((i-numWeeks)*7)+5),JBCXM__Priority__c=severity.get(j).id
+            ,JBCXM__Reason__c=reason.get(k).id,JBCXM__Stage__c=status.get(l).id));   
+        if(++j==severity.size()) j=0;
+		if(++k == reason.size()) k=0;
+		if(++l == status.size()) l=0;     
+        }
+       }
+   }  
+   
+}
+
+insert ctas;
+
+//Create Tasks for CTAs 
+List<JBCXM__CSTask__c> csTasks=new List<JBCXM__CSTask__c>();
+List<JBCXM__CTA__c> allCtas=[select id,JBCXM__OpenTaskCount__c,JBCXM__TaskCount__c,JBCXM__Account__c,JBCXM__DueDate__c,Name from JBCXM__CTA__c where JBCXM__Account__r.Name like 'CTA Account%'];
+String[] priorities = new String[]{'High','Low','Medium'};
+integer userCnt=0;
+for(JBCXM__CTA__c ct : allCtas){
+	for(User user : users){
+    for(integer i=0;i<=2;i++){
+		if(i<2)
+		csTasks.add(new JBCXM__CSTask__c(JBCXM__Account__c=ct.JBCXM__Account__c                                               																							
+                                                     ,JBCXM__Assigned__c=user.Id,JBCXM__CTA__c=ct.Id
+													,JBCXM__Date__c=ct.JBCXM__DueDate__c.addDays(i)
+                                                     ,JBCXM__Description__c='Task'+i+' for CTA '+ct.Name
+                                                     ,JBCXM__OriginalDueDate__c=ct.JBCXM__DueDate__c.addDays(i)
+                                                     ,JBCXM__Priority__c=priorities[i],JBCXM__Status__c='Open'
+                                                     ,JBCXM__Subject__c='Task'+i+' for CTA '+ct.Name));
+		else
+		csTasks.add(new JBCXM__CSTask__c(JBCXM__Account__c=ct.JBCXM__Account__c                                               																							
+                                                     ,JBCXM__Assigned__c=user.Id,JBCXM__CTA__c=ct.Id
+													,JBCXM__Date__c=ct.JBCXM__DueDate__c.addDays(i)
+                                                     ,JBCXM__Description__c='Task'+i+' for CTA '+ct.Name
+                                                     ,JBCXM__OriginalDueDate__c=ct.JBCXM__DueDate__c.addDays(i)
+                                                     ,JBCXM__Priority__c=priorities[i],JBCXM__Status__c='Closed'
+                                                     ,JBCXM__Subject__c='Task'+i+' for CTA '+ct.Name));
+		}
+		    ct.JBCXM__OpenTaskCount__c=ct.JBCXM__OpenTaskCount__c+2;
+			ct.JBCXM__TaskCount__c=ct.JBCXM__TaskCount__c+3;
+    }
+}
+insert csTasks;
+upsert allCtas;
+
+
+
