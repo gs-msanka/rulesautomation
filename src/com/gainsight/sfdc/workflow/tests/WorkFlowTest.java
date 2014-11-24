@@ -144,7 +144,6 @@ public class WorkFlowTest extends BaseTest {
         int temp = Integer.valueOf(cta.getDueDate());
         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        List<String> dates = getDates(recurEvent);
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
@@ -180,7 +179,6 @@ public class WorkFlowTest extends BaseTest {
         int temp = Integer.valueOf(cta.getDueDate());
         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        List<String> dates = getDates(recurEvent);
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfinfo.getUserFullName());
@@ -199,7 +197,6 @@ public class WorkFlowTest extends BaseTest {
         int temp = Integer.valueOf(cta.getDueDate());
         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
-        List<String> dates = getDates(recurEvent);
         cta.setAssignee(sfinfo.getUserFullName());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -215,7 +212,6 @@ public class WorkFlowTest extends BaseTest {
        int temp = Integer.valueOf(cta.getDueDate());
        cta.setDueDate(getDateWithFormat(temp, 0, false));
        CTA.EventRecurring recurEvent=cta.getEventRecurring();
-       List<String> dates = getDates(recurEvent);
        cta.setAssignee(sfinfo.getUserFullName());
        workflowPage.createCTA(cta);
        cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -235,9 +231,11 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
-        	}
+        }
         
        workflowPage.addTaskToCTA(cta, tasks);
        for(Task task : tasks)
@@ -256,9 +254,11 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
-        	}
+        }
         
        workflowPage.addTaskToCTA(cta, tasks);
        for(Task task : tasks)
@@ -276,9 +276,11 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
-        	}
+        }
         
        workflowPage.addTaskToCTA(cta, tasks);
        for(Task task : tasks)
@@ -296,7 +298,9 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
         	}
         
@@ -316,7 +320,9 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -338,7 +344,9 @@ public class WorkFlowTest extends BaseTest {
        String[] users={"GiribabuG","SrividyaR","RajeshY","RamyaK","SunandP","HiteshS"};
        int i=0;
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
         	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	task.setAssignee(users[i]); if(++i >=5) i=0;
         	}
@@ -360,7 +368,9 @@ public class WorkFlowTest extends BaseTest {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
-        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+        	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
             task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
         	}
         
@@ -373,8 +383,10 @@ public class WorkFlowTest extends BaseTest {
        //Replacing Playbook and verifying updated tasks
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
-          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+          	if(task.getAssignee()==null) {
+                task.setAssignee(sfinfo.getUserFullName());
+            }
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -943,7 +955,7 @@ public class WorkFlowTest extends BaseTest {
         
         SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
-        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
+        Assert.assertTrue(sfTask==1, "Verified that the task is created successfully in SF");
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -972,7 +984,8 @@ public class WorkFlowTest extends BaseTest {
         SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
         int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
-        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
+        Assert.assertTrue((sfTask==1 &&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
+        Assert.assertEquals(1, sfTask);
     }
     
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1355,8 +1368,6 @@ public class WorkFlowTest extends BaseTest {
         int week = cal.get(Calendar.WEEK_OF_YEAR);
         workflowPage = workflowPage.selectCalendarView("DAILY");
         cal.add(Calendar.DATE, 5); // Added 5 Days
-        System.out.println(monthMap.get(String.valueOf(cal.get(Calendar.MONTH))));
-        System.out.println(weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
         workflowPage = workflowPage.selectCalendarDay(cal.get(Calendar.DATE), monthMap.get(String.valueOf(cal.get(Calendar.MONTH))), weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
@@ -1449,7 +1460,7 @@ public class WorkFlowTest extends BaseTest {
     public void reportSampleTest() throws IOException {
     	apex.runApexCodeFromFile(LEADERBOARD_DATAGEN_SCRIPT,isPackage);
         WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab().clickOnReportingView();
-        Assert.assertEquals(getCountOfUserCTAs("Giribabu Golla", "Risk", false, false), workflowPage.getCountOfUserClosedCTAs("Giribabu Golla", "Risk"));
+        Assert.assertEquals(getCountOfUserCTAs("Giribabu Golla", "Risk", false), workflowPage.getCountOfUserClosedCTAs("Giribabu Golla", "Risk"));
     }
 
     private void enableSFDCSync_Manual() throws IOException {
@@ -1673,7 +1684,7 @@ public class WorkFlowTest extends BaseTest {
 
     private String getHighestTaskDate(List<Task> tasks) {
         java.util.Date date = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (userLocale.contains("en_US")) {
             dateFormat = new SimpleDateFormat("M/d/yyyy");
 
@@ -1700,19 +1711,30 @@ public class WorkFlowTest extends BaseTest {
         return dateFormat.format(date);
     }
 
-    public int getCountOfUserCTAs(String assignee, String type, boolean isOpen, boolean isForCustomers) {
+    public int getCountOfUserCTAs(String assignee, String type, boolean isOpen) {
         int count;
         String query = "Select id From JBCXM__CTA__C " +
                 " where isDeleted = false AND JBCXM__Type__r.Name='"+type+"' AND JBCXM__Assignee__r.name='"+assignee+"' ";
-        if(!isForCustomers) {
-            if(isOpen) {
-                query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = true ";
-            } else {
-                query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = false ";
-            }
+        if(isOpen) {
+            query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = true ";
+        } else {
+            query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = false ";
         }
         Report.logInfo("Query : " +resolveStrNameSpace(query));
         count = soql.getRecordCount(resolveStrNameSpace(query));
+        return count;
+    }
+
+    public int getCountOfUserCTAsByCustomer(String assignee, String type) {
+        int count = 0;
+        String query = "select count(JBCXM__Account__c), JBCXM__assignee__c from JBCXM__CTA__c where " +
+                "JBCXM__Stage__r.IncludeInWidget__c = true AND JBCXM__Type__r.Name='"+type+"' AND" +
+                "JBCXM__Assignee__r.name='"+assignee+"' group by JBCXM__assignee__c";
+        Report.logInfo("Query : " +resolveStrNameSpace(query));
+        SObject[] records = soql.getRecords(query);
+        if(records.length >0) {
+            count = Integer.valueOf(records[0].getField("expr0").toString());
+        }
         return count;
     }
 
