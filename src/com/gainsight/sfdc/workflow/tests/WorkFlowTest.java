@@ -62,7 +62,7 @@ public class WorkFlowTest extends BaseTest {
     
     @BeforeMethod
     public void clearCTAs(){
-    	//apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
+    	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
 
 
