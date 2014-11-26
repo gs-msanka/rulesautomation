@@ -8,9 +8,6 @@
     <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
         <classes>
 
-            <!--Sriniva's Test -->
-            <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
-            <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
 
             <!-- Srividya, Giri -->
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
@@ -24,7 +21,11 @@
             <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>
 
-            <!--Should run  separately
+            <!--Sriniva's Test -->
+            <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
+            <class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
+
+            <!--Adoption Test -->
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Monthly_Test"/>
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Weekly_Test"/>
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Monthly_Test"/>
@@ -34,7 +35,7 @@
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/> -->
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/>
 
             <!-- Sai's Test-->
             <class name="com.gainsight.sfdc.administration.tests.AdminCustomersTabTest" />
