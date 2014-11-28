@@ -7,21 +7,16 @@
 	
 	<test verbose="3" name="C360 Tests" preserve-order="true">
 		<classes>
-			<!--Srividya's Tests -->
-			
-			<class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
-		    <!-- class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
-			<class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests">
-          	<methods>
-					<include name="addAndEditNumericScores" />
-					<include name="addAndEditGradeScores" />
-					<include name="addAndEditColorScores" />
-					<include name="addAndEditCommentsInMeasure" />
-					<include name="addAndEditOverallSummary" />	
-					<include name="addAndEditCustomerGoals"/>		
-				</methods>
-          	</class> -->
-          	<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>
 		</classes>
 	</test>
 </suite>
