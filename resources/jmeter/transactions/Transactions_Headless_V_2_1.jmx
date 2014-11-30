@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9 r1437961">
+<jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -7831,9 +7831,9 @@ var sindex=data.indexOf(&apos;(&apos;,index);
 var lindex=data.indexOf(&apos;)&apos;,index);
 var jstring=data.substr(sindex,lindex-sindex+1);
 var json=eval(jstring);
-vars.put(&quot;jcsrf&quot;,json.actions[&quot;JBCXM.Customer360Broker&quot;].ms[0].csrf);
+vars.put(&quot;jcsrf&quot;,json.actions[&quot;JBCXM.Customer360Broker&quot;].ms[1].csrf);
 vars.put(&quot;jvid&quot;,json.vf.vid);
-vars.put(&quot;jver&quot;,json.actions[&quot;JBCXM.Customer360Broker&quot;].ms[0].ver);
+vars.put(&quot;jver&quot;,json.actions[&quot;JBCXM.Customer360Broker&quot;].ms[1].ver);
 
 // to write to file
 //Summary fields
@@ -8836,6 +8836,7 @@ log.info(el.getElementsByTag(&quot;input&quot;).get(index).attr(&quot;name&quot;
               <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
               <assertionsResultsToSave>0</assertionsResultsToSave>
               <bytes>true</bytes>
+              <threadCounts>true</threadCounts>
             </value>
           </objProp>
           <stringProp name="filename"></stringProp>
