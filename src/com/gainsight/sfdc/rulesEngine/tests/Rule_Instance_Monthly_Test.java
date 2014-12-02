@@ -100,212 +100,216 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
     public void Rule1_Equals_NotEquals_LessThan_GreaterThan_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
     public void Rule2_Equals_NotEquals_LessThan_GreaterThan_Static(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
     public void Rule3_UsageDroppedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
     public void Rule4_UsageIncreasedOverPeriod(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
     public void Rule5_Sum_Of_Measure_ExcludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
     public void Rule6_Sum_Of_Measure_ExcludeNull_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
     public void Rule7_Sum_Of_Measure_IncludeNull_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule8")
     public void Rule8_Sum_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule9")
     public void Rule9_Avg_Of_Measure_AccountField_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule10")
     public void Rule10_Avg_Of_Measure_StaticValue_ExcludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule11")
     public void Rule11_Avg_Of_Measure_AccountField_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule12")
     public void Rule12_Avg_Of_Measure_StaticValue_IncludeNull(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule13")
     public void Rule13_Measure_OverPeriod_AccountField(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule14")
     public void Rule14_Measure_OverPeriod_StaticValue(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule15")
     public void Rule15(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule16")
     public void Rule16(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule17")
     public void Rule17(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule18")
     public void Rule18(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule19")
     public void Rule19(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule20")
     public void Rule20(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule21")
     public void Rule21(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule22")
     public void Rule22(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule23")
     public void Rule23(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule24")
     public void Rule24(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule25")
     public void Rule25(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule26")
     public void Rule26(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule27")
     public void Rule27(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule28")
     public void Rule28(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule29")
     public void Rule29(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule30")
     public void Rule30(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule31")
     public void Rule31(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule32")
     public void Rule32(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule33")
     public void Rule33(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
+        executeRule(testData);
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule34")
-    public void Rule34(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
-    }
+    /**
+     * Alerts are no more supported.
+     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule34")
+     public void Rule34(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+     executeRule(testData);
+     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule35")
-    public void Rule35(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        cohabit(testData);
-    }
+     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule35")
+     public void Rule35(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+     executeRule(testData);
+     }
 
-    private void cohabit(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
+     */
+
+    private void executeRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
         ruleEngineDataSetup.cleanDataSetup();
         ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
         ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
