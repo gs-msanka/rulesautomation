@@ -1238,7 +1238,7 @@ public class WorkflowPage extends WorkflowBasePage {
      */
     public WorkflowPage selectCalendarWeek(int day, int week, String month) {
         String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='wk' and contains(text(), 'Week "+week+"')]" +
-                "/following-sibling::div[@class='wk-month']/span(contains(text(), '"+month+"') and contains(text(), '"+day+"'))";
+                "/following-sibling::div[@class='wk-month']/span[contains(text(), '"+month+"') and contains(text(), '"+day+"')]";
         Report.logInfo("Selecting week : " +xPath);
         item.click(xPath);
         waitTillNoLoadingIcon();
