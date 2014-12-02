@@ -1731,7 +1731,7 @@ public class WorkFlowTest extends BaseTest {
                 "JBCXM__Stage__r.IncludeInWidget__c = true AND JBCXM__Type__r.Name='"+type+"' AND" +
                 "JBCXM__Assignee__r.name='"+assignee+"' group by JBCXM__assignee__c";
         Report.logInfo("Query : " +resolveStrNameSpace(query));
-        SObject[] records = soql.getRecords(query);
+        SObject[] records = soql.getRecords(resolveStrNameSpace(query));
         if(records.length >0) {
             count = Integer.valueOf(records[0].getField("expr0").toString());
         }

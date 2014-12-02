@@ -122,11 +122,11 @@ public class BaseTest {
 
     public HashMap<String, String> getMapFromData(String data) {
         HashMap<String, String> hm = new HashMap<String, String>();
-        System.out.println(data);
-        String[] dataArray = data.substring(1, data.length() - 1).split("\\|");
+        Report.logInfo("Supplied Data :  " +data);
+        String[] dataArray = data.substring(data.indexOf("{")+1, data.lastIndexOf("}")).split("\\|");
         for (String record : dataArray) {
             if (record != null) {
-                System.out.println(record);
+                Report.logInfo("Record to split : " +record);
                 String[] pair = record.split("\\:");
                 hm.put(pair[0], pair[1].trim());
             }

@@ -3,20 +3,14 @@ package com.gainsight.sfdc.workflow.pages;
 
 import com.gainsight.sfdc.workflow.pojos.Task;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
-import com.thoughtworks.selenium.webdriven.commands.SelectFrame;
-import com.sforce.soap.metadata.Workflow;
-import com.sforce.soap.partner.sobject.SObject;
 
 import org.openqa.selenium.By;
 
 import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 
 import java.util.ArrayList;
@@ -197,33 +191,37 @@ public class WorkflowPage extends WorkflowBasePage {
 
     private void waitTillNoLoadingIcon() {
         env.setTimeout(1);
+        Report.logInfo("Waiting for no loading icons");
         wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
 
     private void waitTillNoSearchIcon() {
         env.setTimeout(1);
+        Report.logInfo("Waiting for no search/loading icons");
         wait.waitTillElementNotDisplayed(SEARCH_LOADING, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
 
     public WorkflowPage createCTA(CTA cta){
-    	Report.logInfo("Adding CTA of Type - RISK");
     	item.click(CREATE_CTA_ICON);
     	if(cta.getType().equals("Risk"))
     	{
+            Report.logInfo("Adding CTA of Type - RISK");
     		item.click(CREATE_RISK_LINK);
     		wait.waitTillElementDisplayed(RISK_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
     	}
     	if(cta.getType().equals("Opportunity")){
+            Report.logInfo("Adding CTA of Type - Opportunity");
     		item.click(CREATE_OPPOR_LINK);
     		wait.waitTillElementDisplayed(OPPO_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
     	}
     	if(cta.getType().equals("Event")){
+            Report.logInfo("Adding CTA of Type - Event");
     		item.click(CREATE_EVENT_LINK);
     		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
@@ -232,8 +230,9 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
     
     private void fillAndSaveCTAForm(CTA cta) {
+        Report.logInfo("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
-		setCustomer(cta.getCustomer());
+		selectCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
@@ -242,11 +241,13 @@ public class WorkflowPage extends WorkflowBasePage {
             fillAndSaveRecurringEventCTAForm(cta);
         }
         button.click(SAVE_CTA);
+        Report.logInfo("Clicked on Save CTA");
         waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
+        Report.logInfo("Starting to fill recurring event part");
     	field.selectCheckbox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
 			if(recurProperties.getRecurringType().equals("Daily")){
@@ -310,7 +311,8 @@ public class WorkflowPage extends WorkflowBasePage {
                 selectValueInDropDown(recurProperties.getRecurEndDate());
 				}
 		    amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
-		}
+        Report.logInfo("Completed Recurring event form");
+    }
 
 	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
@@ -318,21 +320,7 @@ public class WorkflowPage extends WorkflowBasePage {
 			item.click(SELECT_MORE_OPTIONS);
 			item.click(ADD_NEW_TASK);
 			wait.waitTillElementDisplayed(ADD_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
-			item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, task.getAssignee());
-			driver.findElement(By.xpath(ADD_ASSIGNEE_TO_TASK)).sendKeys(Keys.ENTER);
-			waitTillNoLoadingIcon();
-			System.out.println("clicking on ....."+String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
-			//item.click(String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
-			   boolean selected = false;
-	            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+task.getAssignee()+"')]")) {
-	                if(ele.isDisplayed()) {
-	                    ele.click();
-	                    selected = true;
-	                }
-	            }
-	            if(!selected) {
-	                throw new RuntimeException("Unable to select owner");
-	            }
+            selectTaskOwner(task.getAssignee().trim());
 			item.setText(ADD_SUBJECT_TO_TASK, task.getSubject());
 			item.clearAndSetText(ADD_DATE_TO_TASK, task.getDate());
 			item.click(ADD_TASK_POPUP_TITLE);  //just clicking on the form because the date picker is not vanishing and not able to set the priority
@@ -348,6 +336,28 @@ public class WorkflowPage extends WorkflowBasePage {
         collapseCTAView();
 		return this;
 	}
+
+
+    private void selectTaskOwner(String owner) {
+        Report.logInfo("Selecting Task Owner : " +owner);
+        boolean selected = false;
+        for(int i=0; i< 3; i++) {
+            item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, owner);
+            driver.findElement(By.xpath(ADD_ASSIGNEE_TO_TASK)).sendKeys(Keys.ENTER);
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+owner+"')]")) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+            amtDateUtil.stalePause();
+        }
+        if(!selected) {
+            throw new RuntimeException("Unable to select owner");
+        }
+        Report.logInfo("Selected Task Owner Successfully: " +owner);
+    }
 	
 	public WorkflowPage editTasks(CTA cta,Task newTask,Task oldTask){
 		//item.click(VIEW_TASKS);
@@ -355,40 +365,43 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(TASK_EXP_MORE_OPTIONS);
 		item.click(TASK_EXP_EDIT_OPTION);
 		wait.waitTillElementDisplayed(EDIT_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
-		item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, newTask.getAssignee());
-		driver.findElement(By.xpath(ADD_ASSIGNEE_TO_TASK)).sendKeys(Keys.ENTER);
-		waitTillNoLoadingIcon();
-		System.out.println("clicking on ....."+String.format(SELECT_ASSIGNEE_FOR_TASK,newTask.getAssignee()));
-			//item.click(String.format(SELECT_ASSIGNEE_FOR_TASK,task.getAssignee()));
-		   boolean selected = false;
-	           for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+newTask.getAssignee()+"')]")) {
-	               if(ele.isDisplayed()) {
-	                   ele.click();
-	                    selected = true;
-	                }
-	            }
-	            if(!selected) {
-	                throw new RuntimeException("Unable to select owner");
-	            }
-			item.clearAndSetText(ADD_SUBJECT_TO_TASK, newTask.getSubject());
-			item.clearAndSetText(ADD_DATE_TO_TASK, newTask.getDate());
-			item.click(EDIT_TASK_POPUP_TITLE);  //just clicking on the form because the date picker is not vanishing and not able to set the priority
-			item.click(TO_SELECT_PRIORITY_IN_TASK);
-			selectValueInDropDown(newTask.getPriority());
-			item.click(TO_SELECT_STATUS_IN_TASK);
-			selectValueInDropDown(newTask.getStatus());
-			item.click(SAVE_TASK);
-			cta.setTaskCount(cta.getTaskCount()+1);
-			wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, newTask.getSubject()), MIN_TIME, MAX_TIME);
-            waitTillNoLoadingIcon();
+        if(!oldTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
+            selectTaskOwner(newTask.getAssignee());
+        }
+        item.clearAndSetText(ADD_SUBJECT_TO_TASK, newTask.getSubject());
+        item.clearAndSetText(ADD_DATE_TO_TASK, newTask.getDate());
+        item.click(EDIT_TASK_POPUP_TITLE);  //just clicking on the form because the date picker is not vanishing and not able to set the priority
+        item.click(TO_SELECT_PRIORITY_IN_TASK);
+        selectValueInDropDown(newTask.getPriority());
+        item.click(TO_SELECT_STATUS_IN_TASK);
+        selectValueInDropDown(newTask.getStatus());
+        item.click(SAVE_TASK);
+        wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, newTask.getSubject()), MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
 		return this;
 	}
 	
-    private void setCustomer(String custName) {
-        field.setText(CREATE_FORM_CUSTOMER, custName);
-        amtDateUtil.stalePause();
-        driver.findElement(By.xpath("//li[@class='ui-menu-item']/a/label[contains(text(),'"+custName+"')]")).click();
+    private void selectCustomer(String cName) {
+        Report.logInfo("Selecting Customer : " +cName);
+        boolean selected = false;
+        for(int i=0; i< 3; i++) {
+            item.clearAndSetText(CREATE_FORM_CUSTOMER, cName);
+            driver.findElement(By.xpath(CREATE_FORM_CUSTOMER)).sendKeys(Keys.ENTER);
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+cName+"')]")) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+            amtDateUtil.stalePause();
+        }
+        if(!selected) {
+            throw new RuntimeException("Unable to select owner");
+        }
+        Report.logInfo("Selected Customer Successfully: " +cName);
     }
+
     
     public void createMilestoneForCTA(CTA cta){
     	expandCTAView(cta);
@@ -523,25 +536,31 @@ public class WorkflowPage extends WorkflowBasePage {
 
     }
 
- public WorkflowPage collapseCTAView() {
+    public WorkflowPage collapseCTAView() {
+        Report.logInfo("Collapsing CTA View");
         item.click(CTA_EXP_SLIDE_ICON);
         amtDateUtil.stalePause();
+        Report.logInfo("CTA View Collapsed");
         return this;
     }
     public WorkflowPage expandCTAView(CTA cta) {
+        Report.logInfo("Expanding CTA");
         String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         item.click(xPath);
         if(!isCTAExpandedViewLoaded(cta)) {
             throw new RuntimeException("CTA expand view failed to load");
         }
+        Report.logInfo("CTA expanded view loaded successfully");
         return this;
     }
-  public WorkflowPage expandTaskView(Task task) {
+    public WorkflowPage expandTaskView(Task task) {
+        Report.logInfo("Expanding Task View");
         String xPath = getTaskXPath(task)+"/div[@class='gs-cta-head child-task workflow-ctataskitem']";
         item.click(xPath);
         if(!isTaskExpandedViewLoaded(task)) {
             throw new RuntimeException("Task expand view failed to load");
         }
+        Report.logInfo("Task View Expanded Successfully");
         return this;
     }
 
@@ -568,6 +587,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
    public boolean verifyCTADetails(CTA cta) {
+       Report.logInfo("Verifying CTA Details in expanded view");
         expandCTAView(cta);
         String xpath = EXP_VIEW_ASSIGNEE;
         if(!element.getText(xpath).trim().equalsIgnoreCase(cta.getAssignee())) {
@@ -597,6 +617,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public boolean isTaskExpandedViewLoaded(Task task) {
+        Report.logInfo("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
         for(int i=0; i<5; i++) {
@@ -625,6 +646,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public boolean isCTAExpandedViewLoaded(CTA cta) {
+        Report.logInfo("Verify CTA expanded view loaded successfully.");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
@@ -678,6 +700,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     private String getCTAXPath(CTA cta) {
+        Report.logInfo("Generating CTA XPath");
         String xPath = "//div[@class='gs-cta']";
         xPath = xPath+"/descendant::div[@class='title-ctn pull-left']";
         xPath =(cta.isClosed() && !cta.getStatus().equals("Closed Lost")) ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
@@ -726,6 +749,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     private static String getTaskXPath(Task task) {
+        Report.logInfo("Generating Task XPath");
         String xPath = "//div[@class='gs-cta-item']";
         if(task.getStatus().equalsIgnoreCase("Open")) {
             xPath = xPath+"/descendant::div[@class='title-ctn pull-left']/span[@class='check-data taskCheckBox require-tooltip']" +
