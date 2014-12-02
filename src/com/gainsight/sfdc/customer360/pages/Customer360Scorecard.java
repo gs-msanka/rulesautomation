@@ -153,7 +153,9 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
 	public Boolean verifyOverallScoreColor(String score){
-        String expColor  = score; //Default to color scheme.
+		String expColor ; //Default to color scheme.
+		if(score.equalsIgnoreCase("NA")) expColor="#cccccc";
+		else expColor=score;
         if(scheme.equals("Grade")) {
             expColor = gradeColorMap.get(expColor);
         } else if(scheme.equals("Score")) {
