@@ -105,7 +105,7 @@ public class Customer360ScorecardsTests extends BaseTest {
 
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScoreColor(customerHealth.get("Score")));
-        Assert.assertTrue(customer360Scorecard.verifyOverallScoreTrend(customerHealth.get("Trend")));
+       //Assert.assertTrue(customer360Scorecard.verifyOverallScoreTrend(customerHealth.get("Trend")));
 
         customer360Scorecard = customer360Scorecard.removeMeasureScore(measure1.get("GroupName"), measure1.get("MeasureName"));
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure1.get("GroupName"), measure1.get("MeasureName"), "NA"));
