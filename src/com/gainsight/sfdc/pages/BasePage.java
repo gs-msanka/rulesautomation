@@ -16,6 +16,7 @@ import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -51,6 +52,8 @@ public class BasePage extends WebPage implements Constants {
     private final String WORKFLOW_TAB		= "//a[contains(@title, 'Cockpit Tab')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
+    private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
+    private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
 
@@ -276,6 +279,18 @@ public class BasePage extends WebPage implements Constants {
         env.setTimeout(30);
 
 	}
+	
+	public  void waitTillNoLoadingIcon() {
+        env.setTimeout(1);
+        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+    }
+
+    public void waitTillNoSearchIcon() {
+        env.setTimeout(1);
+        wait.waitTillElementNotDisplayed(SEARCH_LOADING, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+    }
 
 	public void goBack() {
 		driver.navigate().back();
