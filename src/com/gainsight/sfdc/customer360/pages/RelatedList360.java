@@ -98,7 +98,7 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public SalesforceRecordForm clickOnAdd(String secName) {
-        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[@class='gs_edit_icon']/a[contains(text(),'Add')]";
+        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[contains(@class,'gs_edit_icon')]/a[contains(text(),'Add')]";
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
@@ -136,7 +136,7 @@ public class RelatedList360 extends Customer360Page {
 
     public RelatedList360 selectUIView(String secName, String viewName) {
         amtDateUtil.stalePause();
-        String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[@class='case_uiviews']"+
+        String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[contains(@class,'case_uiviews')]"+
                             "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
         item.click(xPath);
         wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]", MIN_TIME, MAX_TIME);
