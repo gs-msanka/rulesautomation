@@ -323,7 +323,7 @@ public class SfdcBulkApi {
         //Waiting until the batch job is complete
         while (!tempList.isEmpty()) {
             try {
-                Thread.sleep(30000L);
+                Thread.sleep(15000L);
             } catch (InterruptedException e) {}
             for(String batch_id : batchIds) {
                 async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;

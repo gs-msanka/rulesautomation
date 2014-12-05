@@ -380,7 +380,7 @@ public class BaseTest {
                 break;
             } else {
                 Report.logInfo("Waiting for aggregation batch to complete");
-                Thread.sleep(30000L);
+                Thread.sleep(15000L);
             }
         }
     }
@@ -425,11 +425,10 @@ public class BaseTest {
                     Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
                     apex.runApex(resolveStrNameSpace(code));
                 }
-                Thread.sleep(30000L);
+                Thread.sleep(15000L);
                 waitForBatchExecutionToComplete("AdoptionAggregation");
             }
         } else {
-            cal.add(Calendar.MONTH, -1);
             for (int k = 0; k < noOfTimesToLoop; k++) {
                 for (int i = 0; i < 5; i++) {
                     month = String.valueOf(cal.get(Calendar.MONTH)+1);    //Added one as java return 0 for January month.
@@ -440,7 +439,7 @@ public class BaseTest {
                     apex.runApex(resolveStrNameSpace(code));
                     cal.add(Calendar.MONTH, -1);
                 }
-                Thread.sleep(30000L);
+                Thread.sleep(15000L);
                 waitForBatchExecutionToComplete("AdoptionAggregation");
             }
         }

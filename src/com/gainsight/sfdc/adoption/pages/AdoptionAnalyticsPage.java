@@ -6,6 +6,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AdoptionAnalyticsPage extends AdoptionBasePage {
@@ -104,6 +105,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     }
 
     private void selectCustomer(String customerName) {
+        Report.logInfo("Customer : " +customerName);
         wait.waitTillElementDisplayed(CUSTOMER_NAME_INPUT, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).clear();
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).sendKeys(customerName);
@@ -124,6 +126,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 
     //Files Downloaded, Page Views.
     private void selectMeasures(String measures) {
+        Report.logInfo("Measures : " +measures);
         item.click(MEASURE_SELECT_BUTTON);
         amtDateUtil.stalePause();
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
@@ -152,6 +155,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         if (weekLabelDate != null && !weekLabelDate.isEmpty()) {
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).clear();
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).sendKeys(weekLabelDate);
+            Report.logInfo("Week Label : " +weekLabelDate);
         }
         button.click(GO_BUTTON);
         amtDateUtil.stalePause();
@@ -235,37 +239,25 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     }
 
 
-    public boolean isDataPresentInGrid(String s) {
-        Report.logInfo("Checking Weather data is displayed in the grid : " +s);
-        List<String> values = new ArrayList<String>();
-        for (String v : s.split("\\|")) {
-            values.add(v.trim());
-        }
+    public boolean isDataPresentInGrid(String value) {
+        Report.logInfo("Checking Weather data is displayed in the grid : " +value);
         boolean result = false;
-        WebElement table = element.getElement("//table[contains(@id,'dynamicAdoptionTableList')]");
+        List<String> values = Arrays.asList(value.split("\\|"));
+        WebElement table = element.getElement("dynamicAdoptionTableList");
         List<WebElement> rows = table.findElements(By.tagName("tr"));
-        int index = 0;
-        String rowtext = null;
+        Report.logInfo("The Number of actual Rows : " + rows.size());
         for (WebElement row : rows) {
-            if (row.getAttribute("role").equalsIgnoreCase("row")) {
-                rowtext = row.getText();
-                Report.logInfo("Actual Text : " + row.getText());
-                Report.logInfo("Expected Text: " + values.toString());
+            List<String> actualValues = new ArrayList<>();
+            Report.logInfo("Actual Row text : " +row.getText());
+            for(WebElement cell : row.findElements(By.tagName("td"))) {
+                actualValues.add(cell.getText().trim());
             }
-            for (String val : values) {
-                if (rowtext.contains(val)) {
-                    result = true;
-                } else {
-                    result = false;
-                    break;
-                }
-            }
-            if (result) {
+            Report.logInfo("Actual Values : " +actualValues);
+            if(actualValues.containsAll(values)) {
+                result = true;
                 break;
             }
-            index++;
         }
-        System.out.println("The Number of actual Rows : " + rows.size());
         Report.logInfo("Checked the data in the grid & returning result :" + result);
         return result;
     }

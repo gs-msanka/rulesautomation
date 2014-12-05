@@ -31,7 +31,7 @@ public class ScorecardDataSetup {
         DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();
         BaseTest bt=new BaseTest();
-        
+        /*
         //STEP 1 : Create External Ids in Account and all the Scorecard objects 
         System.out.println("STEP 1 : Create External Ids in Account and all the Scorecard objects");
         accSetup.createExtIdFieldOnAccount();
@@ -91,7 +91,7 @@ public class ScorecardDataSetup {
         System.out.println("STEP 9 : Upload Scorecard History - Skipped");
         /*JobInfo job_SCHistory= mapper.readValue(new File(env.basedir+"/resources/datagen/jobs/Job_SCHistory_Insert.txt"), JobInfo.class);
         dataLoader.execute(job_SCHistory);
-        System.out.println("STEP 9 : DONE!");*/
+        System.out.println("STEP 9 : DONE!");
 
         //STEP 10 : Upsert Customer Info with Scores and Scorecard Comments
         System.out.println("STEP 10 : Upsert Customer Info with Scores and Scorecard Comments");
@@ -103,7 +103,7 @@ public class ScorecardDataSetup {
         	Report.logInfo(ex.getLocalizedMessage());
         	ex.printStackTrace();
         }
-      
+         */
     }
 
     public void createExtIdFieldInScorecardObjects() {

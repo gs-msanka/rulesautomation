@@ -3,7 +3,7 @@ Integer year = THEYEARCHANGE;
 Date d = date.newInstance(THEYEARCHANGE, THEMONTHCHANGE, THEDAYCHANGE);
 List<JBCXM__ApplicationSettings__c> appSettingsList = [SELECT ID, JBCXM__AdoptionAggregationType__c, JBCXM__AdoptionGranularity__c,
 													JBCXM__AdoptionAggregationColumns__c, JBCXM__AdoptionMeasureColMap__c, JBCXM__WeekStartsOn__c,
-													JBCXM__UsesEndDateAsWeekName__c from JBCXM__ApplicationSettings__c LIMIT 1];
+													JBCXM__UsesEndDateAsWeekName__c, JBCXM__UsageUtilizationCalc__c from JBCXM__ApplicationSettings__c LIMIT 1];
 if(appSettingsList != null && appSettingsList.Size() >0) {
     JBCXM__ApplicationSettings__c appSettingsObj = appSettingsList.get(0);
     String granularity = appSettingsObj.JBCXM__AdoptionGranularity__c;
@@ -11,36 +11,95 @@ if(appSettingsList != null && appSettingsList.Size() >0) {
 }
 
 public void runBatchToAggregateAdoptionData(Integer selMonth, Integer selYear, date selWeekLabel, JBCXM__ApplicationSettings__c appSettingsObj, String adoptionGranularity) {
-    try {
-     	Boolean isAggregationIsNeeded 	= (appSettingsObj.JBCXM__AdoptionAggregationType__c != null) ? ((appSettingsObj.JBCXM__AdoptionAggregationType__c == 'USERLEVEL' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCEUSERLEVEL' || (appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHAGGREGATION' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHOUTAGGREGATION')) ? true : false) : false;
-		if(isAggregationIsNeeded) {
-	    	String adpAggType 	= appSettingsObj.JBCXM__AdoptionAggregationType__c.trim();
-	    	String adpAggCols 	= (appSettingsObj.JBCXM__AdoptionAggregationColumns__c != null && appSettingsObj.JBCXM__AdoptionAggregationColumns__c != '') ? appSettingsObj.JBCXM__AdoptionAggregationColumns__c.trim() : '[]';
-			String query		= 'SELECT Id, JBCXM__Account__c, JBCXM__CustomerName__c ';
-			query				+= ''+((adpAggType == 'INSTANCEUSERLEVEL' || (adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION')) ? ', JBCXM__InstanceList__c' : '')+'';
-			query				+= ' FROM JBCXM__CustomerInfo__c WHERE JBCXM__Account__c IN (SELECT JBCXM__Account__c FROM JBCXM__UsageData__c WHERE ';
-			query				+= (adoptionGranularity == 'WEEKLY') ? 'JBCXM__WeekLabel__c =:  selWeekLabel AND' : '(CALENDAR_MONTH(JBCXM__Date__c) =: selMonth AND CALENDAR_YEAR(JBCXM__Date__c) =: selYear) AND ';
-			query 				+= ' Name = '+((adpAggType == 'INSTANCEUSERLEVEL') ? '\'INSTANCEUSERLEVEL\'' : ((adpAggType == 'USERLEVEL') ? '\'USERLEVEL\'' : ((adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION') ? '\'INSTANCELEVEL\'' : '\'ACCOUNTLEVEL\'')) )+')';
+    Boolean isAggregationIsNeeded 	= (appSettingsObj.JBCXM__AdoptionAggregationType__c != null) ? ((appSettingsObj.JBCXM__AdoptionAggregationType__c == 'USERLEVEL' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCEUSERLEVEL' || (appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHAGGREGATION' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHOUTAGGREGATION')) ? true : false) : false;
+    if(isAggregationIsNeeded) {
+        String adpAggType 	= appSettingsObj.JBCXM__AdoptionAggregationType__c.trim();
+        String adpAggCols 	= (appSettingsObj.JBCXM__AdoptionAggregationColumns__c != null && appSettingsObj.JBCXM__AdoptionAggregationColumns__c != '') ? appSettingsObj.JBCXM__AdoptionAggregationColumns__c.trim() : '[]';
+        String query		= 'SELECT Id, JBCXM__Users__c, JBCXM__Account__c, JBCXM__CustomerName__c ';
+        query				+= ''+((adpAggType == 'INSTANCEUSERLEVEL' || (adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION')) ? ', JBCXM__InstanceList__c' : '')+'';
+        query				+= ' FROM JBCXM__CustomerInfo__c WHERE JBCXM__Account__c IN (SELECT JBCXM__Account__c FROM JBCXM__UsageData__c WHERE ';
+        query				+= (adoptionGranularity == 'WEEKLY') ? 'JBCXM__WeekLabel__c =:  selWeekLabel AND' : '(CALENDAR_MONTH(JBCXM__Date__c) =: selMonth AND CALENDAR_YEAR(JBCXM__Date__c) =: selYear) AND ';
+        query 				+= ' Name = '+((adpAggType == 'INSTANCEUSERLEVEL') ? '\'INSTANCEUSERLEVEL\'' : ((adpAggType == 'USERLEVEL') ? '\'USERLEVEL\'' : ((adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION') ? '\'INSTANCELEVEL\'' : '\'ACCOUNTLEVEL\'')) )+')';
 
-			JBCXM.AdoptionAggregation batchApex = new JBCXM.AdoptionAggregation(query, adpAggCols, adpAggType, selMonth, selYear);
-			batchApex.selWeekLabel = selWeekLabel;
-			batchApex.adpGranularity = adoptionGranularity;
-			ID batchprocessid = Database.executeBatch(batchApex, 15);
-		}
-	}
-    catch(Exception e) {
-    	String errMsg = 'Received a ' + e.getTypeName() + ' at line No. ' + e.getLineNumber() + ' while running batch';
-    	insertLogIntoLogObject(errMsg, e.getMessage());
-        throw e;
+        JBCXM.AdoptionAggregation batchApex = new JBCXM.AdoptionAggregation(query, adpAggCols, adpAggType, selMonth, selYear);
+        batchApex.selWeekLabel = selWeekLabel;
+        batchApex.title = (adoptionGranularity == 'WEEKLY') ? selWeekLabel.format() : getMonthLabel(selMonth)+'-'+selYear+'';
+        batchApex.adpGranularity = adoptionGranularity;
+        batchApex.getUsageIndicatorMap = getUsageIndicator();
+        batchApex.fieldDetailsByObject = getFieldDetailsByObject('JBCXM__UsageData__c', false);
+        batchApex.extraParameters = new Map<String, Object>{'calculateUtilizationForPrecPeriod' => false};
+        ID batchprocessid = Database.executeBatch(batchApex, 15);
     }
 }
 
-public void insertLogIntoLogObject(string customMsg, string expMsg){
-	JBCXM__Log__c errorLog = New JBCXM__Log__c(
-	    JBCXM__ExceptionDescription__c = expMsg,
-		JBCXM__LogDateTime__c = datetime.now(),
-	    JBCXM__SourceData__c = expMsg,
-	    JBCXM__SourceObject__c = 'UsageData__c',
-	    JBCXM__Type__c = 'Testing Load of Adoption');
-	insert errorLog;
+public static String getMonthLabel(Integer mth) {
+		Map<Integer, String> monthLabels = new Map<Integer, String>{1 => 'Jan', 2 => 'Feb', 3=> 'Mar', 4 => 'April', 5 => 'May', 6 => 'June',
+    																			7 => 'July', 8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'};
+    	return monthLabels.get(mth);
+	}
+
+public static Map<String, Object> getUsageIndicator() {
+    Map<String, Object> obj = new Map<String, Object>();
+    Map<String, Object> adoptionMeasureColMap = (Map<String, Object>)json.deserializeUntyped(appSettingsList.get(0).JBCXM__AdoptionMeasureColMap__c);
+    System.debug('Measure Name ' + adoptionMeasureColMap.get('DB Size'));
+    obj.put('UsageUtilizationCalc', 'None');
+    if(appSettingsList.get(0).JBCXM__UsageUtilizationCalc__c != null) {
+        JBCXM__PickList__c pkList = [Select id, name, JBCXM__SystemName__c from JBCXM__PickList__c where
+                                    JBCXM__IncludeInWidget__c= true AND JBCXM__AdoptionMeasure__c = true AND
+                                    JBCXM__Active__c = true AND JBCXM__Category__c = 'Adoption Measure Types' Limit 1];
+		    System.debug(appSettingsList.get(0).JBCXM__UsageUtilizationCalc__c);
+    System.debug(pkList.JBCXM__SystemName__c);
+    System.debug(adoptionMeasureColMap.get('DB Size'));
+        obj.put('UsageUtilizationCalc', appSettingsList.get(0).JBCXM__UsageUtilizationCalc__c);
+        obj.put('usageIndicatorField', adoptionMeasureColMap.get(pkList.JBCXM__SystemName__c));
+        obj.put('usageIndicatorName', pkList.JBCXM__SystemName__c);
+    }
+    system.debug(obj);
+    return obj;
 }
+
+
+
+
+    public static Map<String, Object> getFieldDetailsByObject(String objName, Boolean isStdObj) {
+    	Map<String, Object> fTypeMap = new Map<String, Object>();
+		List<schema.describefieldresult> listOfObjectFieldsWithDesc = getAllFieldsDetailsByObject(objName, isStdObj);
+		Boolean isReference;
+		String refObjName;
+		for(schema.describefieldresult dField : listOfObjectFieldsWithDesc) {
+			isReference	= ('REFERENCE'.equalsIgnoreCase(dField.getType().name())) ? true : false;
+			if(isReference) {
+				List<Schema.SObjectType> referenceObjs = dfield.getReferenceTo();
+	 			for(Schema.SObjectType sType : referenceObjs) {
+	 				refObjName = String.valueOf(sType.getDescribe().getName()).toLowerCase();
+	 				break;
+	 			}
+			}
+			fTypeMap.put(dField.getName().toLowerCase(), new Map<String, Object>{'type' => String.valueOf(dfield.getType()),
+									 'label' => String.valueOf(dfield.getLabel()), 'refObj' => isReference ? refObjName : null,
+									 'isCalculated'=>Boolean.valueOf(dfield.isCalculated()) });
+		}
+		return fTypeMap;
+    }
+
+
+    public List<schema.describefieldresult> getAllFieldsDetailsByObject(String objectName, Boolean isStandardObject) {
+		List<schema.describefieldresult> listOfFieldsWithDesc;
+		try {
+			listOfFieldsWithDesc = new List<schema.describefieldresult>();
+			schema.describefieldresult fieldDesc;
+		    Map<String, Schema.SObjectField> fieldMap = new Map <String, Schema.SObjectField>();
+
+		    Map<String, Schema.SObjectType> schemaMap 		= Schema.getGlobalDescribe();
+		    Schema.SObjectType associatedObjectSObjectType 	= schemaMap.get(objectName);
+		    fieldMap = associatedObjectSObjectType.getDescribe().fields.getMap();
+		    for (Schema.SObjectField sfield: fieldMap.Values()) {
+		    	fieldDesc = sfield.getDescribe();
+		    	listOfFieldsWithDesc.add(fieldDesc);
+	    	}
+		}
+		catch(System.Exception e) {
+			listOfFieldsWithDesc = new List<schema.describefieldresult>();
+		}
+	   	return listOfFieldsWithDesc;
+	}

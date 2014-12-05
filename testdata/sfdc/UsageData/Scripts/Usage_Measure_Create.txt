@@ -29,6 +29,11 @@ for(String measure : measureNameList) {
 	if(j == colorList.size()) {
 		j= 0;
 	}
+	//This is to make the measure as usage indicator.
+	if(measure.equalsIgnoreCase('Active Users')) {
+        pkMeasure.JBCXM__IncludeInWidget__c = true;
+	}
 	pkList.add(pkMeasure);
 }
+
 insert pkList;

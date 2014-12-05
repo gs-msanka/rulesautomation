@@ -37,10 +37,10 @@ public class AdoptionBasePage extends BasePage {
     public void selectValueInDropDown(String value) {
         boolean selected = false;
         for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
-            Report.logInfo("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
                 ele.click();
                 selected = true;
+                Report.logInfo("Selected From Drop-down : " +value);
                 break;
             }
         }

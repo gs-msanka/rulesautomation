@@ -1,30 +1,35 @@
 package com.gainsight.sfdc.adoption.tests;
 
+import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.utils.DataProviderArguments;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class Adoption_Instance_Monthly_Test extends BaseTest {
-    String USAGE_NAME = "JBCXM__UsageData__c";
-    String CUSTOMER_INFO = "JBCXM__CustomerInfo__c";
-    static ObjectMapper mapper = new ObjectMapper();
-    String resDir = userDir + "/resources/datagen/";
-    static JobInfo jobInfo1;
-    static JobInfo jobInfo2;
-    static JobInfo jobInfo3;
-    String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
-    String CUST_SET_DELETE = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
+    ObjectMapper mapper = new ObjectMapper();
+    private final String USAGE_OBJECT = "JBCXM__UsageData__c";
+
+    private final String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
+    private final String CUSTOM_SETTINGS_SCRIPT = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
+    private final String resDir                 = TestEnvironment.basedir + "/testdata/sfdc/UsageData/";
+    private final String measureFile            = resDir+"Scripts/Usage_Measure_Create.txt";
+    private final String advUsageConfigFile     = resDir+"Scripts/Instance_Level_Monthly.txt";
+    private final String JOB_Account            = resDir + "Jobs/Job_Adop_Accounts.txt";
+    private final String JOB_Customers          = resDir + "Jobs/Job_Adop_Customers.txt";
+    private final String JOB_UsageData          = resDir + "Jobs/Job_Adop_Inst_Monthly.txt";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/UsageData/Tests/Adop_Inst_Monthly_Test.xls";
 
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
@@ -32,189 +37,156 @@ public class Adoption_Instance_Monthly_Test extends BaseTest {
         isPackage = isPackageInstance();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        String measureFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Usage_Measure_Create.txt";
-        String advUsageConfigFile = env.basedir + "/testdata/sfdc/UsageData/Scripts/Instance_Level_Monthly.txt";
 
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
-
+        apex.runApex(resolveStrNameSpace(CUSTOM_SETTINGS_SCRIPT));
         //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
         createExtIdFieldOnAccount();
         createFieldsOnUsageData();
-        DataETL dataLoader = new DataETL();
         apex.runApexCodeFromFile(measureFile, isPackage);
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
-        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-        jobInfo1 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Accounts.txt"), JobInfo.class);
-        dataLoader.execute(jobInfo1);
-        jobInfo2 = mapper.readValue(resolveNameSpace(resDir + "jobs/Job_Customers.txt"), JobInfo.class);
-        dataLoader.execute(jobInfo2);
-        jobInfo3 = mapper.readValue(new FileReader(resDir + "jobs/Job_Instance_Monthly.txt"), JobInfo.class);
-        dataLoader.execute(jobInfo3);
+        //This is to set the Standard Gainsight Utilization Percentage Calculation.
+        apex.runApex(getFileContents(advUsageConfigFile).replace("USAGE_PERCENTAGE_CALCULATION", "STANDARD"), isPackage);
+        DataETL dataLoader = new DataETL();
+        dataLoader.cleanUp(resolveStrNameSpace(USAGE_OBJECT), null);
+        dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
 
+        JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_Account), JobInfo.class);
+        dataLoader.execute(jobInfo);
+        jobInfo = mapper.readValue(resolveNameSpace(JOB_Customers), JobInfo.class);
+        dataLoader.execute(jobInfo);
+        jobInfo = mapper.readValue(resolveNameSpace(JOB_UsageData), JobInfo.class);
+        dataLoader.execute(jobInfo);
         runAdoptionAggregation(10, false, false, null);
-
     }
 
-    @Test
-    public void Ins_MonthlyInsData() {
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void T1_InstMonthly1Measure1Period_ByInstance(Map<String, String> testData) {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
-        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = getMonthAndYear(-1);
+        usage.selectUIView(testData.get("UI_View"));
+        usage.setMeasure(testData.get("Measures"));
+        usage.setNoOfMonths(testData.get("Period"));
+        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
-        usage.setDataGranularity("Instance");
         usage = usage.displayMonthlyUsageData();
-        usage.selectUIView("Standard View");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        Assert.assertTrue(usage.isDataPresentInGrid("BOESDORFER & BOESDORFER INC|BOESDORFER & BOESDORFER INC - Instance 3|19|1,699|795|9,164|1,713|1,010|9,758|6,153|3,885"));
-        Assert.assertTrue(usage.isDataPresentInGrid("BOESDORFER & BOESDORFER INC|BOESDORFER & BOESDORFER INC - Instance 2|80|1,419|458|5,089|2,070|787|6,242|4,926|2,862"));
-        Assert.assertTrue(usage.isDataPresentInGrid("BOESDORFER & BOESDORFER INC|BOESDORFER & BOESDORFER INC - Instance 1|122|1,865|619|6,711|1,679|789|5,449|2,291|8,863"));
+        Assert.assertTrue(usage.isAdoptionGridDisplayed());
+        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
     }
 
-
-    @Test
-    public void Ins_MonthlyAccData() {
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void T2_InstMonthly1Measure1Period_ByAccount(Map<String, String> testData) {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
-        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("1 Month");
-        String[] monthAndYear = getMonthAndYear(-1);
+        usage.selectUIView(testData.get("UI_View"));
+        usage.setMeasure(testData.get("Measures"));
+        usage.setNoOfMonths(testData.get("Period"));
+        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
         usage.setMonth(monthMap.get(monthAndYear[0]));
         usage.setYear(String.valueOf(monthAndYear[1]));
-        usage.setDataGranularity("Account");
         usage = usage.displayMonthlyUsageData();
-        usage.selectUIView("Standard View");
-        Assert.assertEquals(true, usage.isAdoptionGridDisplayed());
-        Assert.assertTrue(usage.isDataPresentInGrid("Addis Housewares Ltd|295|1,491|3|21,630|1,923|1,011|6,629|3|19,862"));
-        Assert.assertTrue(usage.isDataPresentInGrid("AGENCE PRESSE|405|1,789|3|13,491|1,868|843|2,971|3|13,982"));
+        Assert.assertTrue(usage.isAdoptionGridDisplayed());
+        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
     }
 
 
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T3_InstMonthlyMultipleMeasure1Period_ByInstance(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.selectUIView(testData.get("UI_View"));
+        usage.setMeasure(testData.get("Measures"));
+        usage.setNoOfMonths(testData.get("Period"));
+        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayMonthlyUsageData();
+        Assert.assertTrue(usage.isAdoptionGridDisplayed());
+        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
+    }
 
-    @Test
-    public void Ins_MonthlyFormDisplayed() {
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T14_InstMonthlySingleMeasureMultiplePeriods_ByInstance(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T15_InstMonthlySingleMeasureMultiplePeriods_ByAccount(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+
+    }
+
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T4_InstMonthlyMultipleMeasure1Period_ByAccount(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T5_InstMonthly_VerifyUtilization_ByInstance(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.selectUIView(testData.get("UI_View"));
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T6_InstMonthly_VerifyUtilization_ByAccount(Map<String, String> testData) {
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T7_InstMonthlyTrend_MultipleMeasures_AccountAndInstance(Map<String, String> testData) {
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T8_InstMonthlyTrend_SingleMeasures_AccountAndInstance(Map<String, String> testData) {
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T9_InstMonthlyTrend_AccountMissingInfoMsg(Map<String, String> testData) {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         Assert.assertTrue(usage.isMonthlyFormEleDisplayed(), "Checking if Monthly form is displayed");
         Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
-    @Test
-    public void Ins_MonthlyAccExport() {
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T10_InstMonthlyTrend_InstanceMissingInfoMsg(Map<String, String> testData) {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
-        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("12 Months");
-        String[] monthAndYear = getMonthAndYear(-1);
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
-        usage.setDataGranularity("Account");
-        usage = usage.displayMonthlyUsageData();
-        usage.selectUIView("Standard View");
-        Assert.assertTrue(usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
-        Assert.assertTrue(usage.exportGrid(), "Checking grid export.");
+        Assert.assertTrue(usage.isMonthlyFormEleDisplayed(), "Checking if Monthly form is displayed");
+        Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
-    @Test
-    public void Ins_MonthlyInsExport() {
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T11_InstMonthly_Export_ByAccount(Map<String, String> testData) {
+
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T12_InstMonthly_Export_ByInstance(Map<String, String> testData) {
+
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void T13_InstMonthly_FormDisplayed(Map<String, String> testData) {
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
-        usage.setMeasure("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        usage.setNoOfMonths("6 Months");
-        String[] monthAndYear = getMonthAndYear(-2);
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
-        usage.setDataGranularity("Instance");
-        usage = usage.displayMonthlyUsageData();
-        usage.selectUIView("Standard View");
-        Assert.assertTrue(usage.isAdoptionGridDisplayed(), "checking adoption grid is displayed");
-        Assert.assertTrue(usage.exportGrid(), "Checking grid export.");
-    }
-
-    //This can be decoupled in to 2.
-    @Test
-    public void Ins_MonthlyAccAndInsUsageGraph() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
-        analyticsPage.setCustomerName("DeeTag USA");
-        analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = getMonthAndYear(-1);
-        analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
-        analyticsPage.setYear(String.valueOf(monthAndYear[1]));
-        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDisplayed());
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Active Users||115.67|287|209.33|194|252.67"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("DB Size||1,588|1,259|1,945|1,637|1,960"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Emails Sent Count||3|3|3|3|3"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded||16,362|26,184|14,585|16,098|17,938"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Leads||1,917|1,697|1,895|1,658|1,545"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Campaigns||867|998|762|842|1,003"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run||4,358.33|6,955|5,851|4,699|7,171.33"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views||3|3|3|3|3"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits||11,948|10,076|13,180|8,661|20,707"));
-        analyticsPage.setInstance("DeeTag USA - Instance 1");
-        analyticsPage.setForTimeMonthPeriod("12 Months");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDisplayed());
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Active Users|313|490|16|333|39|103|357|219|468|455|392|126"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("DB Size|1,020|1,828|1,994|1,575|1,513|1,133|1,097|1,070|1,417|1,945|1,637|1,136"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Emails Sent Count|445|398|492|311|416|411|732|379|762|584|547|324"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Files Downloaded|2,617|6,066|2,624|7,469|3,819|6,520|8,520|4,658|9,762|6,941|2,125|86"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Leads|2,222|2,116|2,051|2,072|1,931|2,291|1,617|1,917|2,212|1,975|1,995|2,349"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Campaigns|600|682|954|872|743|652|1,056|867|998|762|748|1,003"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("No of Report Run|1,962|8,877|216|4,144|1,696|3,031|7,142|2,401|4,364|3,698|8,994|4,730"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Views|8,394|9,071|5,477|9,707|2,104|2,779|7,404|9,827|7,590|2,731|8,771|5,556"));
-        Assert.assertTrue(analyticsPage.isDataPresentInGrid("Page Visits|5,603|3,012|8,514|1,550|5,900|9,628|5,343|8,534|22|3,159|2,757|4,054"));
-    }
-
-
-    @Test
-    public void Ins_MonthlyAccUsageGraph() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
-        analyticsPage.setCustomerName("Vicor");
-        analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = getMonthAndYear(-1);
-        analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
-        analyticsPage.setYear(String.valueOf(monthAndYear[1]));
-        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-
-    }
-
-    @Test
-    public void Ins_MonthlyAccUsageGraphMissingInfo() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
-        analyticsPage.setCustomerName("Quince Hungary Kft");
-        analyticsPage.setForTimeMonthPeriod("6 Months");
-        String[] monthAndYear = getMonthAndYear(2);
-        analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
-        analyticsPage.setYear(String.valueOf(monthAndYear[1]));
-        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some"));
-    }
-
-    @Test
-    public void Ins_MonthlyInsUsageGraphMissingInfo() {
-        AdoptionAnalyticsPage analyticsPage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
-        analyticsPage.setCustomerName("Cadbury Beverages Div Cadbury");
-        analyticsPage.setForTimeMonthPeriod("24 Months");
-        String[] monthAndYear = getMonthAndYear(2);
-        analyticsPage.setMonth(monthMap.get(monthAndYear[0]));
-        analyticsPage.setYear(String.valueOf(monthAndYear[1]));
-        analyticsPage.setMeasureNames("Active Users|DB Size|Emails Sent Count|Leads|No of Campaigns|Page Views|No of Report Run|Files Downloaded|Page Visits");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isGridDisplayed());
-        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some"));
-        analyticsPage.setInstance("Cadbury Beverages Div Cadbury - Instance 1");
-        analyticsPage = analyticsPage.displayCustMonthlyData();
-        Assert.assertTrue(analyticsPage.isChartDisplayed());
-        Assert.assertTrue(analyticsPage.isMissingDataInfoDisplayed("Missing data for some"));
-        Assert.assertTrue(analyticsPage.isGridDisplayed());
+        Assert.assertTrue(usage.isMonthlyFormEleDisplayed(), "Checking if Monthly form is displayed");
+        Assert.assertTrue(usage.isDataGranularitySelectionDisplayed(), "Checking instance level selection displayed");
     }
 
     @AfterClass

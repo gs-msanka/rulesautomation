@@ -290,9 +290,9 @@ public class BasePage extends WebPage implements Constants {
     public WebElement getFirstDisplayedElement(String identifier) {
         Report.logInfo("Element Identifier : " +identifier);
         List<WebElement> elements = element.getAllElement(identifier);
-        Report.logInfo("Total Number of Elements :" +elements.size());
+        //Report.logInfo("Total Number of Elements :" +elements.size());
         for(WebElement ele : elements) {
-            Report.logInfo("Element displayed : "+ele.isDisplayed() );
+            //Report.logInfo("Element displayed : "+ele.isDisplayed() );
             if(ele.isDisplayed()) {
                 return ele;
             }

@@ -1,0 +1,20 @@
+{
+    "jobName": "Adoption Instance Level Weekly Data",
+    "jobType" : "UsageData",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "preprocess" : {
+    	"inputFile" : "/testdata/sfdc/UsageData/Data/Adop_Inst_Weekly.csv",
+    	"monthly" : false,
+    	"weekly" : true,
+    	"fieldName" : "JBCXM__Date__c",
+    	"outputFile" : "/resources/datagen/process/Final_Adop_Inst_Weekly.csv"
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__UsageData__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "/resources/datagen/process/Final_Adop_Inst_Weekly.csv"
+    }
+}

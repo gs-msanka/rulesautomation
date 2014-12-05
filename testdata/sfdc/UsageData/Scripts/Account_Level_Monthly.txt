@@ -6,6 +6,8 @@ if(appSettingsList != null && appSettingsList.size() > 0) {
 	 appSettings = appSettingsList.get(0);
 	 appSettings.JBCXM__AdoptionAggregationType__c = 'ACCOUNTLEVEL';
 	 appSettings.JBCXM__AdoptionGranularity__c = 'MONTHLY';
+	 appSettings.JBCXM__UsageUtilizationCalc__c = 'USAGE_PERCENTAGE_CALCULATION';
+	 appSettings.JBCXM__Stats__c = null;
      appSettings.JBCXM__AdoptionMeasureColMap__c = '{"Active Users":"Active_Users__c","DB Size":"DB_Size__c",'+
      	                                                    '"Emails Sent Count":"Emails_Sent_Count__c",'+
      	                                                    '"Files Downloaded":"Files_Downloaded__c",'+

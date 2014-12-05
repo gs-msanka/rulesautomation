@@ -3,8 +3,11 @@ package com.gainsight.sfdc.adoption.pages;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String FILTER_BUTTON            = "//a[@data-action='FILTER']";
     private final String NO_VIEW_INFO_DIV         = "//div[@id='aGrid_view1']/center[contains(text(), 'No views configured')]";
     private final String NO_DATA_FOUND_DIV        = "//div[@class='jbaraInfoMessageClassMain']/div[@class='noDataFound' and text()='No Data Found']";
-    private final String LOADING_IMG              = "//div[@class='no-float gs-loader-image-64']";
+    private final String LOADING_ICON             = "//div[contains(@class, 'gs-loader-image')]";
 
     String uiView           = "";
     String measure          = "";
@@ -57,43 +60,23 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     public void setUiView(String uiView) {
         this.uiView = uiView;
     }
-    /**
-     * No of weeks i.e. 3 Weeks, 6 Weeks, 9 Weeks, 12 Weeks.
-     * @param noOfWeeks
-     */
 
     public void setNoOfWeeks(String noOfWeeks) {
         this.noOfWeeks = noOfWeeks;
     }
 
-    /**
-     * Data granularity is "By Account", "By Instance".
-     * @param dataGranularity
-     */
     public void setDataGranularity(String dataGranularity) {
         this.dataGranularity = dataGranularity;
     }
 
-    /**
-     * Month value Format is like Apr for April, Jan for January
-     * @param month
-     */
     public void setMonth(String month) {
         this.month = month;
     }
 
-    /**
-     * Year value format 2013, 2012
-     * @param year
-     */
     public void setYear(String year) {
         this.year = year;
     }
 
-    /**
-     * Measure name which are configurable.
-     * @param measure
-     */
     public void setMeasure(String measure) {
         this.measure = measure;
     }
@@ -102,12 +85,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         this.weekDate = weekDate;
     }
 
-
-
-    /**
-     * Displays month level data.
-     * @return this.
-     */
     public AdoptionUsagePage displayMonthlyUsageData() {
 
         Report.logInfo("Displaying Monthly usage Data");
@@ -121,14 +98,13 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(noOfMonths);
             Report.logInfo("No of Months Selected : " +noOfMonths);
         }
-        Report.logInfo(" Before if condition : "  +month);
         if(month != null && month != "") {
-            Report.logInfo("Block Start : " +month);
+
             item.click(MONTH_SELECT_BUTTON);
             selectValueInDropDown(month);
-            Report.logInfo("Block End : " +month);
+            Report.logInfo("Month Selected : " +month);
         }
-        Report.logInfo(" Before if condition : "  +month);
+
         if(year != null && year != "") {
             item.click(YEAR_SELECT_BUTTON);
             selectValueInDropDown(year);
@@ -137,20 +113,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         if(dataGranularity != null && dataGranularity != "") {
           item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
-            Report.logInfo("Data Granularity : " +dataGranularity);
+            Report.logInfo("Data Granularity Selected : " +dataGranularity);
         }
-
-        WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
-        Report.logInfo(wle.getCssValue("value"));
-        Report.logInfo(wle.getCssValue("type"));
-        Report.logInfo(wle.getCssValue("checked"));
-        Report.logInfo(wle.getCssValue("style"));
-        Report.logInfo(wle.getAttribute("value"));
-        Report.logInfo(wle.getAttribute("type"));
-        Report.logInfo(wle.getAttribute("checked"));
-        Report.logInfo(wle.getAttribute("style"));
         item.click(GO_BUTTON);
-        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
@@ -174,15 +140,16 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(dataGranularity);
         }
         item.click(GO_BUTTON);
-        wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
     //Files Downloaded, Page Views.
-    private void selectMeasures(String mesaures) {
+    private void selectMeasures(String measures) {
+        Report.logInfo("Selecting measures : " +measures);
         item.click(MEASURE_SELECT_BUTTON);
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
-        String[] args = mesaures.split("\\|");
+        String[] args = measures.split("\\|");
         for(String str : args) {
             getFirstDisplayedElement(SEARCH_MEASURE_INPUT).clear();
             getFirstDisplayedElement(SEARCH_MEASURE_INPUT).sendKeys(str.trim());
@@ -190,11 +157,19 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
     }
 
+    private void waitTillNoLoadingIcon() {
+        env.setTimeout(1);
+        Report.logInfo("Waiting for page load");
+        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
+        env.setTimeout(30);
+    }
+
     public AdoptionUsagePage selectUIView(String viewName) {
+        Report.logInfo("Selecting UI View : "+viewName);
         if(viewName != null && viewName!= "") {
             item.click(UI_VIEW_SELECT_BUTTON);
             selectValueInDropDown(viewName);
-            wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
+            waitTillNoLoadingIcon();
         } else {
             throw new RuntimeException("Please Specify UI-View to select");
         }
@@ -222,76 +197,62 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return result;
     }
 
-    public boolean isDataPresentInGrid(String values) {
-        Report.logInfo("Data to Verify : " +values);
-        boolean result = false;
-        String[] cellValues = values.split("\\|");
-        setCustomerNameFilter(cellValues[0].trim());
-        WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
-        List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
-        Report.logInfo("Rows :" +rows.size());
-        int a=1;  boolean hasScroll = false;
-        for(WebElement row : rows) {
-            Report.logInfo("Checking Row : " +row.getText());
-            boolean inRowData = true;
-            WebElement rightRow= null;
-            try {
-                element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
-                rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
-                hasScroll = true;
-                Report.logInfo("Checking Row : "+rightRow.getText());
-                Report.logInfo("Grid has scroll bar");
-            } catch (Exception e) {
-                Report.logInfo("Grid Doesn't have scroll bar");
-            }
-            List<WebElement> cells = null;
-            if(hasScroll) {
-                cells = rightRow.findElements(By.cssSelector("div[class*='slick-cell']"));
-            } else {
-                cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
-            }
+    public boolean gridHasScrollBar() {
+        boolean hasScroll = false;
+        try {
+            hasScroll = element.getElement("//div[@class='slick-pane slick-pane-top slick-pane-right']").isDisplayed();
+            Report.logInfo("Grid has scroll bar");
+        } catch (Exception e) {
+            Report.logInfo("Grid Doesn't have scroll bar");
+        }
+        return hasScroll;
+    }
 
-            Report.logInfo("No of Cells :" +cells.size());
-            int i=1;
-            outerloop:
-            for(String val : cellValues) {
-                //i=1;
-                boolean valTemp  =false;
-                for(WebElement cell : cells) {
-                    if(i==1) {
-                        ++i;
-                        if(!hasScroll) {
-                            Report.logInfo(cell.getText());
-                            Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
-                            if(cell.getText().contains(val.trim())) { valTemp=true; break;}
-                            if(cell.getText().contains(val.trim())) { break outerloop;}
-                        } else {
-                            if(row.getText().contains(val.trim())) { valTemp=true; break;}
-                            if(row.getText().contains(val.trim())) { break outerloop;}
-                        }
-                    } else {
-                        Report.logInfo(val);
-                        Report.logInfo(cell.getText());
-                        if(cell.getText().contains(val.trim())) {
-                            valTemp = true;
-                            Report.logInfo("Value is found in cell");
-                            break;
-                        }
+
+
+    public boolean isDataPresentInGrid(String value) {
+        boolean result = false;
+        String[] values = value.split("\\|");
+        setCustomerNameFilter(values[0].trim());
+        Report.logInfo("Expected Data : " +value);
+        env.setTimeout(2);
+        if(gridHasScrollBar()) {
+            List<WebElement> leftRows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div[contains(@class, 'ui-widget-content slick-row')]");
+            for(int i=0; i< leftRows.size(); i++) {
+                List<String> actualRowText = new ArrayList<>();
+                String actualText = leftRows.get(i).getText();
+                if(actualText.contains(values[0])) {
+                    actualRowText.add(actualText);
+                    WebElement rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class, 'ui-widget-content slick-row')]["+(i+1)+"]");
+                    List<WebElement> cells = rightRow.findElements(By.cssSelector("div[class*='slick-cell']"));
+                    for(WebElement cell : cells) {
+                        actualRowText.add(cell.getText().trim());
+                    }
+                    Report.logInfo("Actual Data : "+actualRowText);
+                    if(actualRowText.containsAll(Arrays.asList(values))) {
+                        result = true;
+                        break;
                     }
                 }
-                if(!valTemp) {
-                    inRowData = false;
+            }
+        } else {
+            List<WebElement> rows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div[contains(@class, 'ui-widget-content slick-row')]");
+            for(WebElement row : rows) {
+                String rowText = row.getText();
+                Report.logInfo("Actual Row Text : "+rowText.replaceAll("\n", ", "));
+                List<WebElement> cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
+                List<String> actualRowText = new ArrayList<>();
+                for(WebElement cell : cells) {
+                    actualRowText.add(cell.getText().trim());
+                }
+                Report.logInfo("Actual Data : "+actualRowText);
+                if(actualRowText.containsAll(Arrays.asList(values))) {
+                    result = true;
                     break;
                 }
             }
-            if(inRowData) {
-                result = true;
-            }
-            if(result) {
-                break;
-            }
-            ++a;
         }
+        env.setTimeout(30);
         return result;
     }
 
@@ -316,11 +277,16 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return new Customer360Page();
     }
 
-    private void setCustomerNameFilter(String custName) {
+    private void setCustomerNameFilter(String cName) {
+        Report.logInfo("Filtering By Customer : "+cName);
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
-        if(custName !=null) {
-            field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, custName);
-            amtDateUtil.sleep(5);
+        if(cName !=null) {
+            field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, cName);
+            driver.findElement(By.xpath(CUSTOMER_NAME_GIRD_FILTER_INPUT)).sendKeys(Keys.ENTER);
+            amtDateUtil.stalePause();
+            waitTillNoLoadingIcon();
+        } else {
+            throw new RuntimeException("Customer name is mandatory");
         }
     }
 

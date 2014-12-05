@@ -1364,7 +1364,7 @@ public class WorkFlowTest extends BaseTest {
             workflowPage.createCTA(cta);
         }
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(userTimezone);
         int week = cal.get(Calendar.WEEK_OF_YEAR);
         workflowPage = workflowPage.selectCalendarView("DAILY");
         cal.add(Calendar.DATE, 5); // Added 5 Days
