@@ -36,7 +36,7 @@ public class AdminScorecardSection extends BasePage {
 			item.selectCheckBox(ENABLE_SCORECARD);
 			item.selectCheckBox(CUST_ROLLUP);
 			item.click(APPLY_GLOBAL_SETTINGS);
-			amtDateUtil.stalePause();			
+			waitTillNoLoadingIcon();			
 		}
 		
 		public void applyNumericScheme(){
@@ -48,6 +48,7 @@ public class AdminScorecardSection extends BasePage {
 			amtDateUtil.stalePause();	
 			try{
 				driver.switchTo().alert().accept();
+				waitTillNoLoadingIcon();
 			}
 			catch(NoAlertPresentException ae){
 				
@@ -63,6 +64,7 @@ public class AdminScorecardSection extends BasePage {
 			amtDateUtil.stalePause();	
 			try{
 				driver.switchTo().alert().accept();
+				waitTillNoLoadingIcon();
 			}
 			catch(NoAlertPresentException ae){
 				
@@ -77,6 +79,7 @@ public class AdminScorecardSection extends BasePage {
 			amtDateUtil.stalePause();	
 			try{
 				driver.switchTo().alert().accept();
+				waitTillNoLoadingIcon();
 			}
 			catch(NoAlertPresentException ae){
 				

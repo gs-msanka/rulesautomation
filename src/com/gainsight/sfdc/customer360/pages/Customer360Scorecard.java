@@ -25,6 +25,7 @@ public class Customer360Scorecard extends Customer360Page  {
         gradeColorMap.put("D", "#fbc064");
         gradeColorMap.put("E", "#f17273");
         gradeColorMap.put("F", "#c53536");
+        gradeColorMap.put("NA","#cccccc");
 
         scoreColorMap = new HashMap<String, String>();
         scoreColorMap.put("0-50" , "#c53536");
@@ -35,6 +36,7 @@ public class Customer360Scorecard extends Customer360Page  {
 	private final String OVERALL_SCORE              = "//div[contains(@class,'overallscore')]/descendant::li[@class='score']";
     private final String OVERALL_SCORE_BG_ELEMENT   = "//div[contains(@class, 'overallscore clearfix')]/div[@class='score-area']";
     private final String OVERALL_TREND              = "//div[contains(@class, 'overallscore clearfix')]/descendant::li[contains(@class, 'score-trend')]";
+    private final String OVERALL_TREND_NO_TREND="//div[contains(@class, 'overallscore clearfix')]/descendant::li[contains(@class,'')]";
 	private final String OVERALL_SUMMARY            = "//div[@class='discription']";
     private final String EDIT_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']";
 	private final String SAVE_OVERALL_SUMMARY       = "//div[@class='discription' and @contenteditable='true']/parent::div/descendant::a[@data-action='SAVE']";
@@ -153,12 +155,17 @@ public class Customer360Scorecard extends Customer360Page  {
     }
 
 	public Boolean verifyOverallScoreColor(String score){
-        String expColor  = score; //Default to color scheme.
-        if(scheme.equals("Grade")) {
-            expColor = gradeColorMap.get(expColor);
-        } else if(scheme.equals("Score")) {
-            expColor = getNumberColor(expColor);
-        }
+		String expColor ; //Default to color scheme.
+		if(score.equalsIgnoreCase("NA")) expColor="#cccccc";
+		else 
+			{
+			expColor=score;
+			 if(scheme.equals("Grade")) {
+				 expColor = gradeColorMap.get(expColor);
+			 } else if(scheme.equals("Score")) {
+				 expColor = getNumberColor(expColor);
+			 }
+		}
         WebElement ele = element.getElement(OVERALL_SCORE_BG_ELEMENT);
         String actualColor = ele.getAttribute("style");
         Report.logInfo("Actual OverAll Score Color :" +actualColor);
@@ -213,14 +220,18 @@ public class Customer360Scorecard extends Customer360Page  {
 	public boolean verifyOverallScoreTrend(String Trend) {
         try {
             if(Trend != null) {
-                WebElement ele = element.getElement(OVERALL_TREND);
+            	WebElement ele;
+            	if(Trend.equalsIgnoreCase("NA")||Trend.equalsIgnoreCase("None"))
+            		ele=element.getElement(OVERALL_TREND_NO_TREND);
+            	else
+            		 ele = element.getElement(OVERALL_TREND);
                 String actualTrend = ele.getAttribute("class");
                 Report.logInfo("Actual Class Name : " +actualTrend);
                 if(actualTrend == null || actualTrend=="") {
                     return false;
                 }
-                if(Trend.equalsIgnoreCase("None")) {
-                    return actualTrend.contains("trend-none");
+                if(Trend.equalsIgnoreCase("None")||Trend.equalsIgnoreCase("NA")) {
+                    return actualTrend.contains("");
                 } else if(Trend.equalsIgnoreCase("Up")) {
                     return actualTrend.contains("trend-up");
                 } else if(Trend.equalsIgnoreCase("Down")) {

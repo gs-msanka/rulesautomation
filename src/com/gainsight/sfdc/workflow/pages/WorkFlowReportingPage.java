@@ -14,7 +14,7 @@ public class WorkFlowReportingPage extends BasePage {
     private final String LEADER_BOARD_TAB   = "//a[@data-tab='LEADERBOARD']";
     private final String PERIOD_SELECT      = "//[@class='date-dropdown-anchor']";
     //Drop-down filter menu options
-    private final String DROP_DOWN_MENU     = "//div[@class='wf-dropdown-menu date-menu open']";
+    private final String DROP_DOWN_MENU     = "//div[contains(@class,'gs-dropdown gs-dropdown-date-action pull-left')]";
     private final String LAST_7DAYS         = "//a[@data-value='JBlast7']";
     private final String LAST_30DAYS        = "//a[@data-value='JBlast30']";
     private final String CURRENT_MONTH      = "//a[@data-value='JBthismonth']";
@@ -97,12 +97,7 @@ public class WorkFlowReportingPage extends BasePage {
         return this;
     }
 
-    private void waitTillNoLoadingIcon() {
-        env.setTimeout(1);
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
-    }
-
+    
 
     public boolean isUserDisplayedInLeaderBoard(String assignee) {
         Report.logInfo("Checking is user is dispalyed in leader board.");

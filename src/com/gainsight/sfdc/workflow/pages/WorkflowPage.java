@@ -23,8 +23,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	private final String READY_INDICATOR  = "//div[@title='Add CTA']";
     private final String CALENDAR_VIEW_READY_INDICATOR = "//ul[@class='calendar-tab']";
-    private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
-    private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
+
 
     //Header Page Elements
     private final String SHOW_CLOSED_CTA    = "//li[contains(@class, 'cta-stage baseFilter cta-stage-filter')]";
@@ -189,19 +188,6 @@ public class WorkflowPage extends WorkflowBasePage {
         Report.logInfo("Cockpit Page Loaded Successfully");
     }
 
-    private void waitTillNoLoadingIcon() {
-        env.setTimeout(1);
-        Report.logInfo("Waiting for no loading icons");
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
-    }
-
-    private void waitTillNoSearchIcon() {
-        env.setTimeout(1);
-        Report.logInfo("Waiting for no search/loading icons");
-        wait.waitTillElementNotDisplayed(SEARCH_LOADING, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
-    }
 
     public WorkflowPage createCTA(CTA cta){
     	item.click(CREATE_CTA_ICON);
