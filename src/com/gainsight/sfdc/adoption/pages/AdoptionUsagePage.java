@@ -157,13 +157,6 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
     }
 
-    private void waitTillNoLoadingIcon() {
-        env.setTimeout(1);
-        Report.logInfo("Waiting for page load");
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
-        env.setTimeout(30);
-    }
-
     public AdoptionUsagePage selectUIView(String viewName) {
         Report.logInfo("Selecting UI View : "+viewName);
         if(viewName != null && viewName!= "") {
