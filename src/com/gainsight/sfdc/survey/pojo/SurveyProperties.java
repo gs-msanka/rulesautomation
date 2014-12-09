@@ -2,24 +2,26 @@ package com.gainsight.sfdc.survey.pojo;
 
 public class SurveyProperties {
 
-    private String code;
-    private String title;
-    private String anonymous_option;
+    private String surveyCode;
+    private String surveyTitle;
     private String accountName;
+  //  private String anonymous_option;
     private String tOption;
     private String imageName;
     private String filePath;
     private String startDate;
     private String endDate;
+    private String emailService;
     private String description = "This is loaded form pojo class";
     private String thankYou;
-    private String status = "Design";
+    private String status ;
     private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
+    private String backgroundColor;
     private boolean anonymous = false;
     private boolean cloneLogicRules = true;
     private boolean cloneParticipants = true;
     private boolean cloneAlertRules = true;
-    private boolean allowInternalSub = false;
+    private boolean allowInternalSub = true;
     private boolean loadPartFromCustomObj = false;
 
     public String getStatus() {
@@ -64,13 +66,13 @@ public class SurveyProperties {
     }
 
 
-    public String getAnonymous_option() {
-        return anonymous_option;
-    }
-
-    public void setAnonymous_option(String anonymous_option) {
-        this.anonymous_option = anonymous_option;
-    }
+//    public String getAnonymous_option() {
+//        return anonymous_option;
+//    }
+//
+//    public void setAnonymous_option(String anonymous_option) {
+//        this.anonymous_option = anonymous_option;
+//    }
 
     public String gettOption() {
         return tOption;
@@ -113,30 +115,30 @@ public class SurveyProperties {
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.surveyCode = code;
     }
 
     public String getCode() {
 
-        return code;
+        return surveyCode;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.surveyTitle = title;
     }
 
     public String getTitle() {
 
-        return title;
+        return surveyTitle;
     }
 
-    public void setAOption(String anomymous_option) {
-        this.anonymous_option = anomymous_option;
-    }
-
-    public String getAOption() {
-        return anonymous_option;
-    }
+//    public void setAOption(String anomymous_option) {
+//        this.anonymous_option = anomymous_option;
+//    }
+//
+//    public String getAOption() {
+//        return anonymous_option;
+//    }
 
     public void setAccountName(String accountname) {
         this.accountName = accountname;
@@ -194,5 +196,6 @@ public class SurveyProperties {
     public String getEndDate() {
         return endDate;
     }
-}
+    
+  }
 
