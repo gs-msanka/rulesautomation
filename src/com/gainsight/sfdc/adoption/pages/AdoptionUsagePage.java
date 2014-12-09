@@ -115,6 +115,16 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(dataGranularity);
             Report.logInfo("Data Granularity Selected : " +dataGranularity);
         }
+        try {
+            env.setTimeout(1);
+            WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
+            if(Boolean.valueOf(wle.getAttribute("checked"))) {
+                wle.click();
+            }
+        } catch (Exception e) {
+            Report.logInfo("Failed to unCheck/Check spark lines" +e.getLocalizedMessage());
+        }
+        env.setTimeout(30);
         item.click(GO_BUTTON);
         waitTillNoLoadingIcon();
         return this;
@@ -263,10 +273,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return success;
     }
 
-    public Customer360Page navigateTo360(String custName) {
+    public Customer360Page navigateTo360(String cName) {
         Report.logInfo("Clicking on Customer link to navigate to 360 Page");
-        setCustomerNameFilter(custName);
-        item.click("//div[@class='slick-cell l0 r0 slick-customer-format']/a[contains(text(), '"+custName+"')]");
+        setCustomerNameFilter(cName);
+        item.click("//div[@class='slick-cell l0 r0 slick-customer-format']/a[contains(text(), '"+cName+"')]");
         return new Customer360Page();
     }
 
@@ -325,13 +335,33 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         return this;
     }
 
-    public boolean isGridHeaderMapped(String hRowsText) {
-        Report.logInfo("Checking the header of the grid for values in-puted.");
-        //String hRowsText = "Customer | InstanceID | Renewal Date";
+    public boolean isGridHeaderMapped(String value) {
+        Report.logInfo("Checking the header of the grid for values entered.");
         boolean result = false;
+        String[] values = value.split("\\|");
+        Report.logInfo("Expected Data : " +value);
+        env.setTimeout(2);
+        List<String> actualHeaderColumns = new ArrayList<>();
+        if(gridHasScrollBar()) {
+             //Verifying first element i.e. customer.
+             if(element.isElementPresent("//div[contains(@class, 'slick-header-columns slick-header-columns-left')]/div[contains(@class, 'slick-header-column')]/span[contains(text(), '"+values[0]+"')]")) {
+                for(String s : Arrays.copyOfRange(values, 1, values.length)) {
+                    if(!element.isElementPresent("//div[contains(@class, 'slick-header-columns slick-header-columns-right')]/div[contains(@class, 'slick-header-column')]/span[@class='slick-column-name' and contains(text(), '"+s.trim()+"')]")) {
+                        return false;
+                    }
+                }
+                result = true;
+             }
+        } else {
+            WebElement header = element.getElement("//div[contains(@class, 'slick-header-columns slick-header-columns-left')]");
+            for(WebElement ele : header.findElements(By.tagName("div"))) {
+                actualHeaderColumns.add(ele.getText().trim());
+            }
+            Report.logInfo("Actual Data : " +actualHeaderColumns);
+            result = actualHeaderColumns.containsAll(Arrays.asList(values));
+        }
         return result;
     }
-
 
 
 

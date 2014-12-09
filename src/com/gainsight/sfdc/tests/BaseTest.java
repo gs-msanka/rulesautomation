@@ -38,7 +38,6 @@ public class BaseTest {
     public static TimeZone userTimezone;
     public String userDir = TestEnvironment.basedir;
     public Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-    public AmountsAndDatesUtil adUtil = new AmountsAndDatesUtil();
     Calendar c = Calendar.getInstance();
     public static final Map<String, String> monthMap;
     static
@@ -256,20 +255,25 @@ public class BaseTest {
         return code;
     }
 
-    public FileReader resolveNameSpace(String fileName) throws FileNotFoundException {
-        if (!isPackage) {
-            File tempFile = new File(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
-            FileOutputStream fOut = new FileOutputStream(tempFile);
-            try {
-                fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
-                fOut.close();
-                fOut.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public FileReader resolveNameSpace(String fileName) {
+        try {
+            if (!isPackage) {
+                File tempFile = new File(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
+                FileOutputStream fOut = new FileOutputStream(tempFile);
+                try {
+                    fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
+                    fOut.close();
+                    fOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return new FileReader(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
+            } else {
+                return new FileReader(fileName);
             }
-            return new FileReader(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
-        } else {
-            return new FileReader(fileName);
+        } catch (FileNotFoundException e) {
+            Report.logInfo(e.getLocalizedMessage());
+            throw new RuntimeException("File Not Found : " +fileName);
         }
     }
 
@@ -385,65 +389,7 @@ public class BaseTest {
         }
     }
 
-    /**
-     * To trigger adoption aggregation.
-     * @param isWeekly - true - Runs weekly aggregation, else - Runs Monthly aggregation.
-     * @param isStartDayOfWeek - Week label is based on start of week or end of week.
-     * @param weekStartsOn - Week starts on Sun, Mon, Tue
-     * @param noOfPeriods - No of weeks/months to run aggregation.  {Good to send multiples of 5}
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean isStartDayOfWeek, String weekStartsOn) throws IOException, InterruptedException {
-        Calendar cal = Calendar.getInstance();
-        BufferedReader reader;
-        String fileName = TestEnvironment.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
-        String line = null;
-        String code = "";
-        reader = new BufferedReader(new FileReader(fileName));
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line).append("\n");
-        }
-        reader.close();
-        String year = "", month = "", day = "15";
-        String dateStr;
-        int noOfTimesToLoop = (Integer.valueOf(noOfPeriods%5) ==0)  ? noOfPeriods/5 : noOfPeriods/5+1;
 
-        if(isWeekly) {
-            int i = -7;
-            for (int k = 0; k < noOfTimesToLoop; k++) {
-                for (int m = 0; m < 5; m++, i = i - 7) {
-                    //if the start day of the week configuration is changed then method parameter should be changed appropriately..
-                    // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                    dateStr = getWeekLabelDate(weekStartsOn, i, isStartDayOfWeek, false);
-                    year = (dateStr != null && dateStr.split("-").length > 0) ? String.valueOf(dateStr.split("-")[0]) : String.valueOf(c.get(Calendar.YEAR));
-                    month = (dateStr != null && dateStr.split("-").length > 1) ? String.valueOf(dateStr.split("-")[1]) : String.valueOf(c.get(Calendar.MONTH));
-                    day = (dateStr != null && dateStr.split("-").length > 2) ? String.valueOf(dateStr.split("-")[2]) : String.valueOf(c.get(Calendar.DATE));
-                    code = stringBuilder.toString();
-                    code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                    Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
-                    apex.runApex(resolveStrNameSpace(code));
-                }
-                Thread.sleep(15000L);
-                waitForBatchExecutionToComplete("AdoptionAggregation");
-            }
-        } else {
-            for (int k = 0; k < noOfTimesToLoop; k++) {
-                for (int i = 0; i < 5; i++) {
-                    month = String.valueOf(cal.get(Calendar.MONTH)+1);    //Added one as java return 0 for January month.
-                    year = String.valueOf(cal.get(Calendar.YEAR));
-                    code = stringBuilder.toString();
-                    code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                    Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
-                    apex.runApex(resolveStrNameSpace(code));
-                    cal.add(Calendar.MONTH, -1);
-                }
-                Thread.sleep(15000L);
-                waitForBatchExecutionToComplete("AdoptionAggregation");
-            }
-        }
-    }
 
     public void runMetricSetup(String fileName, String scheme) throws IOException {
         BufferedReader reader;
@@ -473,5 +419,4 @@ public class BaseTest {
         s+="update(enable_sc);"+"\n";
         apex.runApex(resolveStrNameSpace(s));
     }
-
 }
