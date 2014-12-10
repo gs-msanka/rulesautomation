@@ -1,0 +1,114 @@
+Name,JBCXM__Account__r.Data_ExternalId__c,JBCXM__Assignee__r.User_ExternalId__c,JBCXM__CreatedDate__c,JBCXM__Type__r.Name,JBCXM__DueDate__c,JBCXM__Priority__r.JBCXM__SystemName__c,JBCXM__Reason__r.JBCXM__SystemName__c,JBCXM__Stage__r.JBCXM__SystemName__c
+CTA Account 1-SrividyaR-Risk,CTA Account 1,SrividyaR,-100,Risk,-95,Medium,Onboarding Process,Open
+CTA Account 1-SrividyaR-Opportunity,CTA Account 1,SrividyaR,-123,Opportunity,-118,Medium,Customer Case Study,Open
+CTA Account 1-SrividyaR-Event,CTA Account 1,SrividyaR,-98,Event,-93,Low,Periodic Check-In,Open
+CTA Account 1-SrividyaR-Risk,CTA Account 1,SrividyaR,-95,Risk,-90,High,Support Process,Closed Won
+CTA Account 1-SrividyaR-Risk,CTA Account 1,SrividyaR,-88,Risk,-83,High,Invoice Payment,Open
+CTA Account 1-SrividyaR-Risk,CTA Account 1,SrividyaR,-40,Risk,-35,Medium,Professional Services Process,Open
+CTA Account 2-SrividyaR-Opportunity,CTA Account 2,SrividyaR,-33,Opportunity,-28,High,Product Release Reason,Open
+CTA Account 2-SrividyaR-Event,CTA Account 2,SrividyaR,-20,Event,-15,Low,Key Sponsor/Executive Departure,Closed Won
+CTA Account 2-SrividyaR-Event,CTA Account 2,SrividyaR,-10,Event,-5,Medium,Upsell Reason,Open
+CTA Account 2-SrividyaR-Event,CTA Account 2,SrividyaR,-20,Event,-15,Low,Other - Uncategorized,Open
+CTA Account 2-SrividyaR-Event,CTA Account 2,SrividyaR,-21,Event,-16,Low,Survey Response,Open
+CTA Account 2-SrividyaR-Opportunity,CTA Account 2,SrividyaR,-82,Opportunity,-77,Medium,Product Training,Open
+CTA Account 2-SrividyaR-Opportunity,CTA Account 2,SrividyaR,-65,Opportunity,-60,High,In-Person Meeting,Open
+CTA Account 2-SrividyaR-Risk,CTA Account 2,SrividyaR,-1,Risk,4,High,Product Adoption,Closed Won
+CTA Account 2-SrividyaR-Risk,CTA Account 2,SrividyaR,-32,Risk,-27,High,Vision Alignment,Open
+CTA Account 2-SrividyaR-Opportunity,CTA Account 2,SrividyaR,-47,Opportunity,-42,Medium,Expectation Mismatch,Open
+CTA Account 3-SrividyaR-Event,CTA Account 3,SrividyaR,-69,Event,-64,Low,Renewal Reason,Open
+CTA Account 3-SrividyaR-Risk,CTA Account 3,SrividyaR,-49,Risk,-44,Medium,Marketing Activity,Open
+CTA Account 3-SrividyaR-Event,CTA Account 3,SrividyaR,-23,Event,-18,Low,Product Performance,Closed Won
+CTA Account 3-SrividyaR-Opportunity,CTA Account 3,SrividyaR,-55,Opportunity,-50,Medium,Process Training,Open
+CTA Account 3-SrividyaR-Opportunity,CTA Account 3,SrividyaR,-27,Opportunity,-22,Medium,Power User Training,Open
+CTA Account 3-SrividyaR-Opportunity,CTA Account 3,SrividyaR,-19,Opportunity,-14,High,Customer Reference,Open
+CTA Account 3-SrividyaR-Event,CTA Account 3,SrividyaR,-38,Event,-33,Low,Onboarding Process,Open
+CTA Account 3-SrividyaR-Event,CTA Account 3,SrividyaR,-26,Event,-21,Medium,Customer Case Study,Closed Won
+CTA Account 3-SrividyaR-Risk,CTA Account 3,SrividyaR,-5,Risk,0,Medium,Periodic Check-In,Open
+CTA Account 3-SrividyaR-Event,CTA Account 3,SrividyaR,-4,Event,1,Low,Support Process,Open
+CTA Account 3-SrividyaR-Opportunity,CTA Account 3,SrividyaR,-39,Opportunity,-34,High,Invoice Payment,Open
+CTA Account 1-GiribabuG-Event,CTA Account 1,GiribabuG,-18,Event,-13,Medium,Professional Services Process,Open
+CTA Account 1-GiribabuG-Opportunity,CTA Account 1,GiribabuG,-39,Opportunity,-34,Medium,Product Release Reason,Open
+CTA Account 1-GiribabuG-Risk,CTA Account 1,GiribabuG,-33,Risk,-28,Medium,Key Sponsor/Executive Departure,Open
+CTA Account 1-GiribabuG-Risk,CTA Account 1,GiribabuG,-100,Risk,-95,Medium,Upsell Reason,Closed Won
+CTA Account 1-GiribabuG-Risk,CTA Account 1,GiribabuG,-140,Risk,-135,High,Other - Uncategorized,Open
+CTA Account 1-GiribabuG-Risk,CTA Account 1,GiribabuG,-123,Risk,-118,High,Survey Response,Open
+CTA Account 1-GiribabuG-Risk,CTA Account 1,GiribabuG,-90,Risk,-85,High,Product Training,Open
+CTA Account 1-GiribabuG-Event,CTA Account 1,GiribabuG,-20,Event,-15,High,In-Person Meeting,Open
+CTA Account 1-GiribabuG-Event,CTA Account 1,GiribabuG,-10,Event,-5,Low,Product Adoption,Open
+CTA Account 1-GiribabuG-Opportunity,CTA Account 1,GiribabuG,-23,Opportunity,-18,Low,Vision Alignment,Closed Won
+CTA Account 1-GiribabuG-Event,CTA Account 1,GiribabuG,-9,Event,-4,Low,Expectation Mismatch,Open
+CTA Account 1-GiribabuG-Event,CTA Account 1,GiribabuG,-66,Event,-61,Low,Renewal Reason,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,-129,Risk,-124,Medium,Marketing Activity,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,-109,Risk,-104,High,Product Performance,Open
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-34,Opportunity,-29,Low,Process Training,Closed Won
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-20,Opportunity,-15,Medium,Power User Training,Open
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-39,Opportunity,-34,High,Customer Reference,Open
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-48,Opportunity,-43,Low,Onboarding Process,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,-56,Risk,-51,Medium,Customer Case Study,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,-67,Risk,-62,High,Periodic Check-In,Closed Won
+CTA Account 2-GiribabuG-Event,CTA Account 2,GiribabuG,-78,Event,-73,Low,Support Process,Open
+CTA Account 2-GiribabuG-Event,CTA Account 2,GiribabuG,-98,Event,-93,Medium,Invoice Payment,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,-2,Risk,3,High,Professional Services Process,Open
+CTA Account 2-GiribabuG-Risk,CTA Account 2,GiribabuG,0,Risk,5,Low,Product Release Reason,Closed Won
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-9,Opportunity,-4,Medium,Key Sponsor/Executive Departure,Open
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-44,Opportunity,-39,Low,Upsell Reason,Open
+CTA Account 2-GiribabuG-Opportunity,CTA Account 2,GiribabuG,-28,Opportunity,-23,High,Other - Uncategorized,Open
+CTA Account 3-GiribabuG-Event,CTA Account 3,GiribabuG,-83,Event,-78,Low,Survey Response,Open
+CTA Account 3-GiribabuG-Event,CTA Account 3,GiribabuG,-99,Event,-94,Low,Product Training,Closed Won
+CTA Account 3-GiribabuG-Event,CTA Account 3,GiribabuG,-38,Event,-33,Low,In-Person Meeting,Open
+CTA Account 3-GiribabuG-Event,CTA Account 3,GiribabuG,-23,Event,-18,Low,Product Adoption,Open
+CTA Account 3-GiribabuG-Event,CTA Account 3,GiribabuG,-45,Event,-40,High,Vision Alignment,Open
+CTA Account 3-GiribabuG-Risk,CTA Account 3,GiribabuG,-78,Risk,-73,High,Expectation Mismatch,Closed Won
+CTA Account 3-GiribabuG-Risk,CTA Account 3,GiribabuG,-5,Risk,0,High,Renewal Reason,Open
+CTA Account 3-GiribabuG-Risk,CTA Account 3,GiribabuG,-3,Risk,2,High,Marketing Activity,Open
+CTA Account 3-GiribabuG-Risk,CTA Account 3,GiribabuG,-22,Risk,-17,High,Product Performance,Open
+CTA Account 3-GiribabuG-Risk,CTA Account 3,GiribabuG,-18,Risk,-13,High,Process Training,Closed Won
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-9,Risk,-4,High,Onboarding Process,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-19,Event,-14,High,Customer Case Study,Open
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-29,Opportunity,-24,High,Periodic Check-In,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-39,Risk,-34,High,Support Process,Closed Won
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-49,Event,-44,High,Invoice Payment,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-59,Event,-54,High,Professional Services Process,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-69,Event,-64,High,Product Release Reason,Open
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-79,Opportunity,-74,High,Key Sponsor/Executive Departure,Closed Won
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-89,Event,-84,High,Upsell Reason,Open
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-99,Opportunity,-94,High,Other - Uncategorized,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-109,Event,-104,Low,Survey Response,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-119,Risk,-114,Low,Product Training,Closed Won
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-129,Opportunity,-124,Low,In-Person Meeting,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-139,Risk,-134,Low,Product Adoption,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-22,Risk,-17,Low,Vision Alignment,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-33,Event,-28,Low,Expectation Mismatch,Closed Won
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-44,Risk,-39,Low,Renewal Reason,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-55,Risk,-50,High,Marketing Activity,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-66,Event,-61,High,Product Performance,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-77,Risk,-72,High,Process Training,Closed Won
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-88,Event,-83,High,Power User Training,Open
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-99,Opportunity,-94,Medium,Customer Reference,Open
+CTA Account 1-HiteshS-Opportunity,CTA Account 1,HiteshS,-1,Opportunity,4,High,Onboarding Process,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-2,Event,3,Medium,Customer Case Study,Closed Won
+CTA Account 1-HiteshS-A1Risk,CTA Account 1,HiteshS,-17,Risk,-12,High,Periodic Check-In,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-27,Event,-22,High,Support Process,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-28,Event,-23,Medium,Invoice Payment,Open
+CTA Account 1-HiteshS-Event,CTA Account 1,HiteshS,-58,Event,-53,Low,Professional Services Process,Closed Won
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-49,Risk,-44,High,Product Release Reason,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-90,Risk,-85,High,Key Sponsor/Executive Departure,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-35,Risk,-30,High,Upsell Reason,Open
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-45,Risk,-40,Low,Other - Uncategorized,Closed Won
+CTA Account 1-HiteshS-Risk,CTA Account 1,HiteshS,-44,Risk,-39,Low,Survey Response,Open
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-78,Opportunity,-73,Low,Product Training,Open
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-88,Opportunity,-83,Low,In-Person Meeting,Closed Won
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-98,Opportunity,-93,Low,Product Adoption,Closed Won
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-108,Opportunity,-103,Medium,Vision Alignment,Open
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-38,Opportunity,-33,Medium,Expectation Mismatch,Open
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-48,Opportunity,-43,Medium,Renewal Reason,Closed Won
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-58,Opportunity,-53,Medium,Marketing Activity,Open
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-9,Opportunity,-4,Medium,Product Performance,Closed Won
+CTA Account 3-HiteshS-Opportunity,CTA Account 3,HiteshS,-8,Opportunity,-3,High,Process Training,Open
+CTA Account 3-HiteshS-Event,CTA Account 3,HiteshS,-7,Event,-2,High,Power User Training,Open
+CTA Account 3-HiteshS-Event,CTA Account 3,HiteshS,-3,Event,2,High,Customer Reference,Open
+CTA Account 3-HiteshS-Risk,CTA Account 3,HiteshS,-2,Risk,3,High,Onboarding Process,Closed Won
+CTA Account 3-HiteshS-Risk,CTA Account 3,HiteshS,0,Risk,5,High,Customer Case Study,Open
+CTA Account 3-HiteshS-Risk,CTA Account 3,HiteshS,-42,Risk,-37,High,Periodic Check-In,Open
+CTA Account 3-HiteshS-Risk,CTA Account 3,HiteshS,-40,Risk,-35,High,Support Process,Open
+CTA Account 3-HiteshS-Risk,CTA Account 3,HiteshS,-10,Risk,-5,High,Invoice Payment,Closed Won

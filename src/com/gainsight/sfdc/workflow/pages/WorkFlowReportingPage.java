@@ -13,6 +13,7 @@ public class WorkFlowReportingPage extends BasePage {
     private final String OVERVIEW_SUB_TAB   = "//a[@data-tab='OVERVIEW']";
     private final String LEADER_BOARD_TAB   = "//a[@data-tab='LEADERBOARD']";
     private final String PERIOD_SELECT      = "//[@class='date-dropdown-anchor']";
+    
     //Drop-down filter menu options
     private final String DROP_DOWN_MENU     = "//div[contains(@class,'gs-dropdown gs-dropdown-date-action pull-left')]";
     private final String LAST_7DAYS         = "//a[@data-value='JBlast7']";
@@ -34,8 +35,9 @@ public class WorkFlowReportingPage extends BasePage {
     private final String LEADER_TABLE_CUSTOMER_COLUMN   = LEADER_TABLE+"/tbody/tr/td[4]";
     private final String LEADER_TABLE_ASV_COLUMN        = LEADER_TABLE+"/tbody/tr/td[5]";
     private final String LEADER_TABLE_TASK_COLUMN       = LEADER_TABLE+"/tbody/tr/td[6]";
-
-
+    private final String NO_DATA_MSG		="//div[@class='leaderboard-table-nodata']/div[@class='noDataFound' and contains(text(),'No data found')]";
+    
+    
     public WorkFlowReportingPage() {
         wait.waitTillElementDisplayed(LEADER_BOARD_TAB, MIN_TIME, MAX_TIME);
     }
@@ -92,6 +94,7 @@ public class WorkFlowReportingPage extends BasePage {
         item.click(DROP_DOWN_MENU);
         element.clearAndSetText(FROM_DATE_INPUT, fromDate);
         element.clearAndSetText(TO_DATE_INPUT, endDate);
+        item.click("//div[@class='dropdown-date']/descendant::label[contains(text(),'To')]");//just clicking somewhere else because the dropdown does not collapse..because of datepicker
         item.click(APPLY_BUTTON);
         waitTillNoLoadingIcon();
         return this;
@@ -103,7 +106,9 @@ public class WorkFlowReportingPage extends BasePage {
         Report.logInfo("Checking is user is dispalyed in leader board.");
         return element.isElementPresent(String.format(USER, assignee));
     }
-
+    public boolean checkforNoDataMessage(){
+    	return element.isElementPresent(NO_DATA_MSG);
+    }
     public int getCountOfUserOpenCTAs(String assignee, String type) {
         try {
             if(type.equalsIgnoreCase("Risk")) {

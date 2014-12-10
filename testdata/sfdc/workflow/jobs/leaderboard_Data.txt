@@ -1,0 +1,32 @@
+{
+    "jobName": "Load CTAs for reporting-leaderboard cases",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+            "inputFile" : "/testdata/sfdc/workflow/Data/CTAs_Leaderboard.csv",
+            "outputFile" : "/resources/datagen/process/CTA_Leaderboard_Temp.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__CreatedDate__c"
+
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__DueDate__c"
+                }
+            ]
+        },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CTA__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "cleanUp" : true,
+        "file": "/resources/datagen/process/CTA_Leaderboard_Temp.csv"
+    }
+}
