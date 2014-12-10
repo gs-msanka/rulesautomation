@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class Adoption_Account_Weekly_Test extends BaseTest {
+public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
     ObjectMapper mapper = new ObjectMapper();
     private final String USAGE_NAME         = "JBCXM__UsageData__c";
     private final String CUSTOMER_INFO      = "JBCXM__CustomerInfo__c";
@@ -38,27 +38,12 @@ public class Adoption_Account_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-
-        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
-        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        createExtIdFieldOnAccount();
-        createFieldsOnUsageData();
-        apex.runApexCodeFromFile(measureFile, isPackage);
+        basepage.login();
+        AdoptionDataSetup dataSetup = new AdoptionDataSetup();
         apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
-        DataETL dataLoader = new DataETL();
-        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-        dataLoader.cleanUp(resolveStrNameSpace(CUSTOMER_INFO), null);
-
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_Account), JobInfo.class);
-        dataLoader.execute(jobInfo);
-        jobInfo = mapper.readValue(resolveNameSpace(JOB_Customers), JobInfo.class);
-        dataLoader.execute(jobInfo);
-        jobInfo = mapper.readValue(resolveNameSpace(JOB_UsageData), JobInfo.class);
-        dataLoader.execute(jobInfo);
+        dataSetup.initialSetup();
+        dataSetup.loadUsageAccountAndCustomersData();
+        dataSetup.loadUsageData(JOB_UsageData);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
