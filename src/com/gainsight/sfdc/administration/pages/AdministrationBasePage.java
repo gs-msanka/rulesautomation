@@ -26,6 +26,8 @@ public class AdministrationBasePage extends BasePage {
     private final String SETUP                  = "//a[@id='setupLink' and @title='Setup']";
     private final String INTEGRATION_PAGE		= "//a[@href='Integration']";
     private final String COCKPIT_CONFIG_PAGE    = "//a[@href='WorkflowConfiguration']";
+    private final String ADMIN_360_SECTION	    = "//a/span[text()='CS360 Sections']";
+
 
     public AdministrationBasePage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -100,4 +102,8 @@ public class AdministrationBasePage extends BasePage {
     	item.click(COCKPIT_CONFIG_PAGE);
     	return new AdminCockpitConfigPage();
     }
+    public AdminCustomer360Section clickOnC360TabAdmin() {
+		item.click(ADMIN_360_SECTION);
+        return new AdminCustomer360Section();
+	}
 }

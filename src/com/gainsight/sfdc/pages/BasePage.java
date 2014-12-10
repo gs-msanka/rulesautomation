@@ -40,7 +40,8 @@ public class BasePage extends WebPage implements Constants {
 	private final String ALL_TABS           = "//img[@title='All Tabs']";
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO  = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
-	private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select";
+	private final String TAB_SELECT         = "//td[contains(@class,'labelCol') and contains(.,'%s')]//following-sibling::td//select";
+	//private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select"; Not working to select customer 360 as default.
 	private final String C360_TAB           = "//a[contains(@title,'Customer Success 360')]";
     private final String CUSTOMER_TAB       = "//a[contains(@title,'Customers Tab')]";
     private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
@@ -272,11 +273,13 @@ public class BasePage extends WebPage implements Constants {
         }
 		if(element.isElementPresent(loadButton)){
 			item.click(loadButton);
-			wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
+			//wait.waitTillElementDisplayed("loadSampleDatatable", MIN_TIME, MAX_TIME);
+			wait.waitTillElementDisplayed("//input[@class='btn' and contains(@value, 'Go')]", MIN_TIME, MAX_TIME);
 		}
         driver.get(hostName+"/apex/Customers");
         wait.waitTillElementDisplayed("//a[@data-tab='CUSTOMERS']", MIN_TIME, MAX_TIME);
         env.setTimeout(30);
+
 
 	}
 	

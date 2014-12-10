@@ -101,10 +101,10 @@ public class BaseTest {
         }
     }
 
-    @BeforeMethod
+    /*@BeforeMethod
     public void beInMainWindow() {
         basepage.beInMainWindow();
-    }
+    }*/
 
     public String generatePath(String[] dirs) {
         String path = "";
