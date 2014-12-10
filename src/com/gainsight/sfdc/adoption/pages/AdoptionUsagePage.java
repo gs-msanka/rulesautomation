@@ -149,13 +149,18 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
         try {
             env.setTimeout(1);
-            WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
-            if(Boolean.valueOf(wle.getAttribute("checked"))) {
-                wle.click();
+            List<WebElement> wleList = element.getAllElement("//div[@class='sparks-check']/input");
+            for(WebElement ele : wleList) {
+                if(ele.isDisplayed() && Boolean.valueOf(ele.getAttribute("checked"))) {
+                    ele.click();
+                    break;
+                }
             }
         } catch (Exception e) {
-            Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
+            e.printStackTrace();
+                Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
         }
+
         env.setTimeout(30);
         item.click(GO_BUTTON);
         waitTillNoLoadingIcon();

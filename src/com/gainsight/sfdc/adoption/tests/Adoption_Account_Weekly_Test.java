@@ -25,13 +25,13 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
     public void setUp() throws IOException {
         basepage.login();
         dataSetup = new AdoptionDataSetup();
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
+        /*apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
         dataSetup.updateUtilizationCal("STANDARD");
         dataSetup.updateUsersDisplayInUsageGrids(true);
-        dataSetup.runAdoptionAggregation(1, true, isEndDate, WEEKDAY);
+        dataSetup.runAdoptionAggregation(1, true, isEndDate, WEEKDAY); */
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -252,8 +252,8 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
-        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
-        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers1")));
+        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header1")));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

@@ -277,8 +277,8 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
-        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
-        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers1")));
+        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header1")));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -365,9 +365,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
-        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
-        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers1")));
-        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers2")));
+        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header1")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header2")));
     }
 
 
