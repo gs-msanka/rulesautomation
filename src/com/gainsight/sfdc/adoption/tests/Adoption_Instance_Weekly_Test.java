@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class Adoption_Instance_Weekly_Test extends BaseTest {
+public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
     ObjectMapper mapper = new ObjectMapper();
     private final String USAGE_NAME         = "JBCXM__UsageData__c";
     private final String STATE_PRESERVATION_SCRIPT = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
@@ -34,27 +34,11 @@ public class Adoption_Instance_Weekly_Test extends BaseTest {
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-
-        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
-        //Measure's Creation, Advanced Usage Data Configuration, Adoption data load part will be carried here.
-        createExtIdFieldOnAccount();
-        createFieldsOnUsageData();
-        apex.runApexCodeFromFile(measureFile, isPackage);
+        AdoptionDataSetup dataSetup = new AdoptionDataSetup();
         apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
-        DataETL dataLoader = new DataETL();
-        dataLoader.cleanUp(resolveStrNameSpace(USAGE_NAME), null);
-        dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
-
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_Account), JobInfo.class);
-        dataLoader.execute(jobInfo);
-        jobInfo = mapper.readValue(resolveNameSpace(JOB_Customers), JobInfo.class);
-        dataLoader.execute(jobInfo);
-        jobInfo = mapper.readValue(resolveNameSpace(JOB_UsageData), JobInfo.class);
-        dataLoader.execute(jobInfo);
+        dataSetup.initialSetup();
+        dataSetup.loadUsageAccountAndCustomersData();
+        dataSetup.loadUsageData(JOB_UsageData);
         runAdoptionAggregation(10, true, true, "Wed");
         //usage.setDate(getWeekLabelDate("Wed", -7, true, true));
     }

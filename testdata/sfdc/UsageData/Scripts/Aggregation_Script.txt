@@ -11,25 +11,22 @@ if(appSettingsList != null && appSettingsList.Size() >0) {
 }
 
 public void runBatchToAggregateAdoptionData(Integer selMonth, Integer selYear, date selWeekLabel, JBCXM__ApplicationSettings__c appSettingsObj, String adoptionGranularity) {
-    Boolean isAggregationIsNeeded 	= (appSettingsObj.JBCXM__AdoptionAggregationType__c != null) ? ((appSettingsObj.JBCXM__AdoptionAggregationType__c == 'USERLEVEL' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCEUSERLEVEL' || (appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHAGGREGATION' || appSettingsObj.JBCXM__AdoptionAggregationType__c == 'INSTANCELEVELWITHOUTAGGREGATION')) ? true : false) : false;
-    if(isAggregationIsNeeded) {
-        String adpAggType 	= appSettingsObj.JBCXM__AdoptionAggregationType__c.trim();
-        String adpAggCols 	= (appSettingsObj.JBCXM__AdoptionAggregationColumns__c != null && appSettingsObj.JBCXM__AdoptionAggregationColumns__c != '') ? appSettingsObj.JBCXM__AdoptionAggregationColumns__c.trim() : '[]';
-        String query		= 'SELECT Id, JBCXM__Users__c, JBCXM__Account__c, JBCXM__CustomerName__c ';
-        query				+= ''+((adpAggType == 'INSTANCEUSERLEVEL' || (adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION')) ? ', JBCXM__InstanceList__c' : '')+'';
-        query				+= ' FROM JBCXM__CustomerInfo__c WHERE JBCXM__Account__c IN (SELECT JBCXM__Account__c FROM JBCXM__UsageData__c WHERE ';
-        query				+= (adoptionGranularity == 'WEEKLY') ? 'JBCXM__WeekLabel__c =:  selWeekLabel AND' : '(CALENDAR_MONTH(JBCXM__Date__c) =: selMonth AND CALENDAR_YEAR(JBCXM__Date__c) =: selYear) AND ';
-        query 				+= ' Name = '+((adpAggType == 'INSTANCEUSERLEVEL') ? '\'INSTANCEUSERLEVEL\'' : ((adpAggType == 'USERLEVEL') ? '\'USERLEVEL\'' : ((adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION') ? '\'INSTANCELEVEL\'' : '\'ACCOUNTLEVEL\'')) )+')';
+    String adpAggType 	= appSettingsObj.JBCXM__AdoptionAggregationType__c.trim();
+    String adpAggCols 	= (appSettingsObj.JBCXM__AdoptionAggregationColumns__c != null && appSettingsObj.JBCXM__AdoptionAggregationColumns__c != '') ? appSettingsObj.JBCXM__AdoptionAggregationColumns__c.trim() : '[]';
+    String query		= 'SELECT Id, JBCXM__Users__c, JBCXM__Account__c, JBCXM__CustomerName__c ';
+    query				+= ''+((adpAggType == 'INSTANCEUSERLEVEL' || (adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION')) ? ', JBCXM__InstanceList__c' : '')+'';
+    query				+= ' FROM JBCXM__CustomerInfo__c WHERE JBCXM__Account__c IN (SELECT JBCXM__Account__c FROM JBCXM__UsageData__c WHERE ';
+    query				+= (adoptionGranularity == 'WEEKLY') ? 'JBCXM__WeekLabel__c =:  selWeekLabel AND' : '(CALENDAR_MONTH(JBCXM__Date__c) =: selMonth AND CALENDAR_YEAR(JBCXM__Date__c) =: selYear) AND ';
+    query 				+= ' Name = '+((adpAggType == 'INSTANCEUSERLEVEL') ? '\'INSTANCEUSERLEVEL\'' : ((adpAggType == 'USERLEVEL') ? '\'USERLEVEL\'' : ((adpAggType == 'INSTANCELEVELWITHAGGREGATION' || adpAggType == 'INSTANCELEVELWITHOUTAGGREGATION') ? '\'INSTANCELEVEL\'' : '\'ACCOUNTLEVEL\'')) )+')';
 
-        JBCXM.AdoptionAggregation batchApex = new JBCXM.AdoptionAggregation(query, adpAggCols, adpAggType, selMonth, selYear);
-        batchApex.selWeekLabel = selWeekLabel;
-        batchApex.title = (adoptionGranularity == 'WEEKLY') ? selWeekLabel.format() : getMonthLabel(selMonth)+'-'+selYear+'';
-        batchApex.adpGranularity = adoptionGranularity;
-        batchApex.getUsageIndicatorMap = getUsageIndicator();
-        batchApex.fieldDetailsByObject = getFieldDetailsByObject('JBCXM__UsageData__c', false);
-        batchApex.extraParameters = new Map<String, Object>{'calculateUtilizationForPrecPeriod' => false};
-        ID batchprocessid = Database.executeBatch(batchApex, 15);
-    }
+    JBCXM.AdoptionAggregation batchApex = new JBCXM.AdoptionAggregation(query, adpAggCols, adpAggType, selMonth, selYear);
+    batchApex.selWeekLabel = selWeekLabel;
+    batchApex.title = (adoptionGranularity == 'WEEKLY') ? selWeekLabel.format() : getMonthLabel(selMonth)+'-'+selYear+'';
+    batchApex.adpGranularity = adoptionGranularity;
+    batchApex.getUsageIndicatorMap = getUsageIndicator();
+    batchApex.fieldDetailsByObject = getFieldDetailsByObject('JBCXM__UsageData__c', false);
+    batchApex.extraParameters = new Map<String, Object>{'calculateUtilizationForPrecPeriod' => false};
+    ID batchprocessid = Database.executeBatch(batchApex, 15);
 }
 
 public static String getMonthLabel(Integer mth) {

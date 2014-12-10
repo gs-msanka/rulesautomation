@@ -76,6 +76,12 @@ public class Customer360Page extends BasePage {
         */
         return summary;
 	}
+	
+	public Customer360Features goToSponsorSection() {
+		item.click(String.format(NAVIGATE_SECTION,"Sponsor Tracking"));
+		wait.waitTillElementDisplayed("//div[@class='gs_sponsortracking']", MIN_TIME, MAX_TIME);
+        return new Customer360Features();
+	}
 
 	public Customer360Page goToSection(String name) {
 		item.click(String.format(NAVIGATE_SECTION, name));
