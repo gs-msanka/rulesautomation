@@ -154,7 +154,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 wle.click();
             }
         } catch (Exception e) {
-            Report.logInfo("Failed to unCheck/Check spark lines" +e.getLocalizedMessage());
+            Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
         }
         env.setTimeout(30);
         item.click(GO_BUTTON);
