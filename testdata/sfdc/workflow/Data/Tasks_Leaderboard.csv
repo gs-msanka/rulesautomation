@@ -1,0 +1,2 @@
+JBCXM__CTA__r.CTA_ExternalID__c,JBCXM__Account__r.Data_ExternalID__c,JBCXM__Assigned__r.User_ExternalId__c,JBCXM__ClosedDate__c,JBCXM__Date__c,JBCXM__Description__c,JBCXM__IsImp__c,JBCXM__OriginalDueDate__c,JBCXM__Playbook__c,JBCXM__Priority__c,JBCXM__RelatedRecordId__c,JBCXM__Status__c,JBCXM__Subject__c,JBCXM__TaskReference__c
+CTA1,CTA Account 1,GiribabuG,,-95,Task 1 for CTA 1,,-95,,High,,Open,Task 1 for CTA 1,

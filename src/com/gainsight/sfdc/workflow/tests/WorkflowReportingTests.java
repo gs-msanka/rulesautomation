@@ -42,14 +42,18 @@ public class WorkflowReportingTests extends BaseTest {
         ObjectMapper mapper = new ObjectMapper();
         accSetup.createExtIdFieldOnAccount();
 		apex.runApexCodeFromFile(CREATE_ACCs,isPackage);
-
+		
         createExtIdFieldOnUser();
 		apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
 		apex.runApex(CLEANUP_SCRIPT, isPackage);
 		
+		createExternalIdFieldOnCTA();
         JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadCTAs);
-        System.out.println("loaded CTAS!!!!");
+        
+        JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
+        dataLoader.execute(loadCSTasks);
+        
 	}
 	 public void createExtIdFieldOnUser(){
 	    	CreateObjectAndFields cObjFields = new CreateObjectAndFields();
@@ -62,7 +66,18 @@ public class WorkflowReportingTests extends BaseTest {
 	            e.printStackTrace();
 	        }
 	    }
-
+	 
+	 public void createExternalIdFieldOnCTA(){
+		 CreateObjectAndFields cObjFields = new CreateObjectAndFields();
+	        String CtaObj = "JBCXM__CTA__c";
+	        String[] Cta_ExtId = new String[]{"CTA ExternalID"};
+	        try {
+	            cObjFields.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
+	        } catch (Exception e) {
+	            Report.logInfo("Failed to create fields in CTA object");
+	            e.printStackTrace();
+	        }
+	 }
 	@Test
 	public void reportForLast7Days() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
@@ -187,8 +202,8 @@ public class WorkflowReportingTests extends BaseTest {
 		for(String user : users)
 		{
 			Assert.assertEquals(getCountOfUserCTAs(user, "Risk", false, false,"120","90"),	workflowPage.getCountOfUserClosedCTAs(user, "Risk"));
-			Assert.assertEquals(getCountOfUserCTAs(user, "Event", false, false,"LastQuarter","0"),	workflowPage.getCountOfUserClosedCTAs(user, "Event"));
-			Assert.assertEquals(getCountOfUserCTAs(user, "Opportunity", false, false,"LastQuarter","0"),	workflowPage.getCountOfUserClosedCTAs(user, "Opportunity"));
+			Assert.assertEquals(getCountOfUserCTAs(user, "Event", false, false,"120","90"),	workflowPage.getCountOfUserClosedCTAs(user, "Event"));
+			Assert.assertEquals(getCountOfUserCTAs(user, "Opportunity", false, false,"120","90"),	workflowPage.getCountOfUserClosedCTAs(user, "Opportunity"));
 			
 			Assert.assertEquals(getCountOfUserCTAs(user, "Risk", true, false,"120","90"),	workflowPage.getCountOfUserOpenCTAs(user, "Risk"));
 			Assert.assertEquals(getCountOfUserCTAs(user, "Event", true, false,"120","90"),	workflowPage.getCountOfUserOpenCTAs(user, "Event"));
@@ -204,6 +219,8 @@ public class WorkflowReportingTests extends BaseTest {
 		workflowPage.selectCustomDate(getDateWithFormat(-300,0,false),getDateWithFormat(-280, 0,false));
 		Assert.assertTrue(workflowPage.checkforNoDataMessage(), "No data found message found!");
 	}
+	
+	
 	public int getCountOfUserCTAs(String assignee, String type, boolean isOpen,
 			boolean isForCustomers,String startDays,String endDays) {//In case of Custom date use both startDays and endDays...else give only startDays and endDays as 0
 		int count;
