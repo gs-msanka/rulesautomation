@@ -82,13 +82,13 @@ public class AdoptionDataSetup extends BaseTest {
     /**
      * To trigger adoption aggregation.
      * @param isWeekly - true - Runs weekly aggregation, else - Runs Monthly aggregation.
-     * @param isStartDayOfWeek - Week label is based on start of week or end of week.
+     * @param usesEndDate - Week label is based on start of week or end of week.
      * @param weekStartsOn - Week starts on Sun, Mon, Tue
      * @param noOfPeriods - No of weeks/months to run aggregation.  {Good to send multiples of 5}
      * @throws java.io.IOException
      * @throws InterruptedException
      */
-    public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean isStartDayOfWeek, String weekStartsOn) {
+    public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean usesEndDate, String weekStartsOn) {
         try {
             Calendar cal = Calendar.getInstance(userTimezone);
             BufferedReader reader;
@@ -106,12 +106,12 @@ public class AdoptionDataSetup extends BaseTest {
             int noOfTimesToLoop = (Integer.valueOf(noOfPeriods%5) ==0)  ? noOfPeriods/5 : noOfPeriods/5+1;
 
             if(isWeekly) {
-                int i = -7;
+                int i = 0;
                 for (int k = 0; k < noOfTimesToLoop; k++) {
                     for (int m = 0; m < 5; m++, i = i - 7) {
                         //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                         // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                        dateStr = getWeekLabelDate(weekStartsOn, i, isStartDayOfWeek, false);
+                        dateStr = getWeekLabelDate(weekStartsOn, i, usesEndDate, false);
                         year = (dateStr != null && dateStr.split("-").length > 0) ? String.valueOf(dateStr.split("-")[0]) : String.valueOf(cal.get(Calendar.YEAR));
                         month = (dateStr != null && dateStr.split("-").length > 1) ? String.valueOf(dateStr.split("-")[1]) : String.valueOf(cal.get(Calendar.MONTH));
                         day = (dateStr != null && dateStr.split("-").length > 2) ? String.valueOf(dateStr.split("-")[2]) : String.valueOf(cal.get(Calendar.DATE));
@@ -145,13 +145,13 @@ public class AdoptionDataSetup extends BaseTest {
         }
     }
 
-    public void updateUtilizationCal(boolean toMeasure) {
+    public void updateUtilizationCal(String val) {
         String apexCode = "JBCXM__ApplicationSettings__c appSettings = [SELECT ID, JBCXM__AdoptionAggregationType__c, JBCXM__UsageUtilizationCalc__c, JBCXM__AdoptionGranularity__c,\n" +
                 "JBCXM__AdoptionAggregationColumns__c, JBCXM__AdoptionMeasureColMap__c, JBCXM__WeekStartsOn__c,\n" +
                 "JBCXM__UsesEndDateAsWeekName__c from JBCXM__ApplicationSettings__c LIMIT 1];\n";
-        apexCode += toMeasure ? "appSettings.JBCXM__UsageUtilizationCalc__c = 'MEASURE';" : "appSettings.JBCXM__UsageUtilizationCalc__c = 'STANDARD';\n";
+        apexCode += (val != null) ? "appSettings.JBCXM__UsageUtilizationCalc__c = '"+val+"';" : "appSettings.JBCXM__UsageUtilizationCalc__c = null;";
         apexCode += "update appSettings;";
-        apex.runApex(apexCode, isPackage);
+        apex.runApex(resolveStrNameSpace(apexCode));
     }
 
     public void updateUsersDisplayInUsageGrids(boolean display) {
@@ -160,6 +160,6 @@ public class AdoptionDataSetup extends BaseTest {
                 "JBCXM__UsesEndDateAsWeekName__c, JBCXM__LicensedUserNotInAdoptionGrid__c from JBCXM__ApplicationSettings__c LIMIT 1];\n" +
                 "appSettings.JBCXM__LicensedUserNotInAdoptionGrid__c = "+!(display)+"\n;" +
                 "update appSettings;";
-        apex.runApex(apexCode, isPackage);
+        apex.runApex(resolveStrNameSpace(apexCode));
     }
 }

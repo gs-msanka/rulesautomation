@@ -14,8 +14,6 @@ import java.util.List;
 
 public class AdoptionUsagePage extends AdoptionBasePage {
     private final String READY_INDICATOR1         = "//div[@id='aGrid_view1']/center[text()='No views configured']";
-    private final String READY_INDICATOR2         = "//div[@class='results-btn' and text()='Go']";
-
     private final String ADOPTION_GRID            = "//div[contains(@class, 'home-page-slick-grid ui-widget slickgrid')]";
     private final String GO_BUTTON                = "//div[@class='results-btn' and text()='Go']";
     private final String UI_VIEW_SELECT_BUTTON    = "//select[@class='components_list']/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
@@ -149,6 +147,16 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
         }
+        try {
+            env.setTimeout(1);
+            WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
+            if(Boolean.valueOf(wle.getAttribute("checked"))) {
+                wle.click();
+            }
+        } catch (Exception e) {
+            Report.logInfo("Failed to unCheck/Check spark lines" +e.getLocalizedMessage());
+        }
+        env.setTimeout(30);
         item.click(GO_BUTTON);
         waitTillNoLoadingIcon();
         return this;

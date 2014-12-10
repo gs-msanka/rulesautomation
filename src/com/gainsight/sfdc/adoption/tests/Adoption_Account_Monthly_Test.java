@@ -29,7 +29,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
-        dataSetup.updateUtilizationCal(false);
+        dataSetup.updateUtilizationCal("STANDARD");
         dataSetup.updateUsersDisplayInUsageGrids(true);
         dataSetup.runAdoptionAggregation(1, false, false, null);
     }
@@ -197,7 +197,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", groups = "UtilMeasure", dependsOnGroups = {"UtilStandard"}, alwaysRun = true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
     public void T10_AccMonth_UsageByMeasure1Period(Map<String, String> testData) {
-        dataSetup.updateUtilizationCal(true);
+        dataSetup.updateUtilizationCal("MEASURE");
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
@@ -216,7 +216,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", groups = "UtilMeasure", dependsOnGroups = {"UtilStandard"}, alwaysRun = true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
     public void T11_AccMonth_UsageByMeasureNPeriods(Map<String, String> testData) {
-        dataSetup.updateUtilizationCal(true);
+        dataSetup.updateUtilizationCal("MEASURE");
         AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
@@ -250,7 +250,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnGroups = {"UsersVerification", "UtilStandard", "UtilMeasure"}, alwaysRun = true)
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", groups = {"NoUsers"}, dependsOnGroups = {"UsersVerification", "UtilStandard", "UtilMeasure"}, alwaysRun = true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T13")
     public void T13_AccMonth_NoUsersInEngagementGrid(Map<String, String> testData) {
         dataSetup.updateUsersDisplayInUsageGrids(false);
@@ -263,7 +263,8 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setYear(String.valueOf(monthAndYear[1]));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
-        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers")));
+        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers1")));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", groups = "UsersVerification")
@@ -334,6 +335,27 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data8")));
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data9")));
     }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", dependsOnGroups = "NoUsers", alwaysRun = true)
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T18")
+    public void T18_AccMonth_NoUsagePercentageAndUsersInGrid(Map<String, String> testData) {
+        dataSetup.updateUtilizationCal(null);
+        dataSetup.updateUsersDisplayInUsageGrids(false);
+        AdoptionUsagePage usage = basepage.clickOnAdoptionTab().clickOnOverviewSubTab();
+        usage.selectUIView(testData.get("UI_View"));
+        usage.setMeasure(testData.get("Measures"));
+        usage.setNoOfMonths(testData.get("Period"));
+        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
+        usage.setMonth(monthMap.get(monthAndYear[0]));
+        usage.setYear(String.valueOf(monthAndYear[1]));
+        usage = usage.displayMonthlyUsageData();
+        Assert.assertTrue(usage.isAdoptionGridDisplayed());
+        Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers1")));
+        Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Headers2")));
+    }
+
+
 
     @AfterClass
     public void tearDown() {
