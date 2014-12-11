@@ -149,13 +149,12 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         }
         try {
             env.setTimeout(1);
-            WebElement wle = element.getElement(By.xpath("//div[@class='sparks-check']/input"));
-            if(Boolean.valueOf(wle.getAttribute("checked"))) {
-                wle.click();
-            }
+            element.click("//div[@class='sparks-check']/input");
         } catch (Exception e) {
+            e.printStackTrace();
             Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
         }
+
         env.setTimeout(30);
         item.click(GO_BUTTON);
         waitTillNoLoadingIcon();
@@ -222,6 +221,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
 
     public boolean isDataPresentInGrid(String value) {
+        if(value==null) return true;
         boolean result = false;
         String[] values = value.split("\\|");
         setCustomerNameFilter(values[0].trim());
