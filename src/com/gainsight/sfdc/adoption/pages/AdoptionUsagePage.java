@@ -151,6 +151,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             try {
                 env.setTimeout(1);
                 List<WebElement> eleList = element.getAllElement("//div[@class='sparks-check']/input[@type='checkbox']");
+                System.out.println(eleList.size());
                 if(Boolean.valueOf(eleList.get(eleList.size() - 1).getAttribute("checked"))) {
                     eleList.get(eleList.size()-1).click();
                     break;
@@ -158,6 +159,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             } catch (Exception e) {
                 e.printStackTrace();
                 Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
+                amtDateUtil.sleep(5);
             }
         }
         env.setTimeout(30);
