@@ -29,6 +29,7 @@ if(extuser != null && extuser.size() == 0) {
         sampleUser.EmailEncodingKey = 'ISO-8859-1';
         sampleUser.LanguageLocaleKey = 'en_US';
         sampleUser.UserPermissionsMobileUser = false;
+        sampleUser.User_ExternalId__c=s;
         newUsers.add(sampleUser);
     }
     system.debug(newUsers);

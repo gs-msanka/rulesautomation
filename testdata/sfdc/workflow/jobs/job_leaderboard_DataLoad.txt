@@ -18,6 +18,12 @@
                     "daily"  : true,
                     "dateTime" : false,
                     "fieldName" : "JBCXM__DueDate__c"
+                },
+                 {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__ClosedDate__c"
                 }
             ]
         },
@@ -26,6 +32,7 @@
         "sObject": "JBCXM__CTA__c",
         "operation": "insert",
         "contentType": "CSV",
+		"externalIDField": "CTA_ExternalID__c",
         "cleanUp" : true,
         "file": "/resources/datagen/process/CTA_Leaderboard_Temp.csv"
     }

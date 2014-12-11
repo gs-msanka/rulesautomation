@@ -18,6 +18,12 @@
                     "daily"  : true,
                     "dateTime" : false,
                     "fieldName" : "JBCXM__OriginalDueDate__c"
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__ClosedDate__c"
                 }
             ]
         },
