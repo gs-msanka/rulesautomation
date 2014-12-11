@@ -147,14 +147,19 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
         }
-        try {
-            env.setTimeout(1);
-            element.click("//div[@class='sparks-check']/input");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
+        for(int i=0; i< 3; i++) {
+            try {
+                env.setTimeout(1);
+                List<WebElement> eleList = element.getAllElement("//div[@class='sparks-check']/input[@type='checkbox']");
+                if(Boolean.valueOf(eleList.get(eleList.size() - 1).getAttribute("checked"))) {
+                    eleList.get(eleList.size()-1).click();
+                    break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
+            }
         }
-
         env.setTimeout(30);
         item.click(GO_BUTTON);
         waitTillNoLoadingIcon();
