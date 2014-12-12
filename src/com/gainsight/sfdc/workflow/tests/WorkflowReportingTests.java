@@ -243,7 +243,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForCustomDateRange_NoData() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectCustomDate(getDateWithFormat(-300,0,false),getDateWithFormat(-280, 0,false));
 		Assert.assertTrue(workflowPage.checkforNoDataMessage(), "No data found message found!");
 	}

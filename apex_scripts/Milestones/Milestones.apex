@@ -1,5 +1,5 @@
-delete [select Name from JBCXM__Milestone__c];
-delete [select Name from JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
+delete [select Name from JBCXM__Milestone__c ];
+delete [select Name from JBCXM__PickList__c where JBCXM__Category__c='Milestones' and JBCXM__SystemName__c in ('Implementation end date','Referral','HealthCheck','First Transaction','Go Live!','Renewal!','Software Upgrade','Quarterly Business Review Meet')];
 delete [SELECT id FROM Opportunity where name like 'Milestones Account - new business'];
 delete [select id from Account where name like 'Milestones Account'];
 
