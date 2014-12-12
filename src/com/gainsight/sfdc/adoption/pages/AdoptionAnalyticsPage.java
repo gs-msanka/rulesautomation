@@ -138,6 +138,18 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         }
     }
 
+    public AdoptionAnalyticsPage viewCustomerInstanceData(String inst) {
+        if (inst != null && !inst.isEmpty()) {
+            wait.waitTillElementDisplayed(INSTANCE_SELECT_BUTTON, MIN_TIME, MAX_TIME);
+            item.click(INSTANCE_SELECT_BUTTON);
+            selectValueInDropDown(inst.trim());
+        }
+        button.click(GO_BUTTON);
+        amtDateUtil.stalePause();
+        waitTillNoLoadingIcon();
+        return this;
+    }
+
     public AdoptionAnalyticsPage displayCustWeeklyData() {
         selectCustomer(customerName);
 
@@ -159,6 +171,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         }
         button.click(GO_BUTTON);
         amtDateUtil.stalePause();
+        waitTillNoLoadingIcon();
         return this;
 
     }
@@ -185,6 +198,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         }
         button.click(GO_BUTTON);
         amtDateUtil.stalePause();
+        waitTillNoLoadingIcon();
         return this;
     }
 

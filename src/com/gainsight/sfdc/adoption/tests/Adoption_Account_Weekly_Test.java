@@ -327,7 +327,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, true, true));
+        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
