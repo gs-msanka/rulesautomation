@@ -181,7 +181,7 @@ public class WorkFlowReportingPage extends BasePage {
     public int getCountOfUserTasks(String assignee, boolean isOpenTask, boolean isAll) {
         int count = 0;
         try {
-            String temp = field.getText(LEADER_TABLE_TASK_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']");
+            String temp = field.getText(LEADER_TABLE_TASK_COLUMN+"/div[@class='cta-tc' and @data-username='"+assignee+"']");
             if(temp.split("\\(").length>1) {
                 if(isAll) {
                     count = Integer.valueOf(temp.split("\\(")[0].trim());

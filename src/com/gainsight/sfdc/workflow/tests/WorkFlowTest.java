@@ -1257,7 +1257,7 @@ public class WorkFlowTest extends BaseTest {
         for(CTA ct : ctaList1) {
             Assert.assertTrue(workflowPage.isCTADisplayed(ct));
         }
-        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1)); */
+        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));*/ 
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
