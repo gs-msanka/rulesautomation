@@ -151,7 +151,8 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             try {
                 env.setTimeout(1);
                 List<WebElement> eleList = element.getAllElement("//div[@class='sparks-check']/input[@type='checkbox']");
-                System.out.println(eleList.size());
+                Report.logInfo(String.valueOf(eleList.size()));
+                //trying on last element
                 if(Boolean.valueOf(eleList.get(eleList.size() - 1).getAttribute("checked"))) {
                     eleList.get(eleList.size()-1).click();
                     break;
