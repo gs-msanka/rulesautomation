@@ -4,7 +4,8 @@ public class SurveyProperties {
 
     private String surveyCode;
     private String surveyTitle;
-    private String accountName;
+    private String anonymousAccount;
+    private String type;
   //  private String anonymous_option;
     private String tOption;
     private String imageName;
@@ -17,6 +18,7 @@ public class SurveyProperties {
     private String status ;
     private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
     private String backgroundColor;
+    private String message;
     private boolean anonymous = false;
     private boolean cloneLogicRules = true;
     private boolean cloneParticipants = true;
@@ -31,7 +33,41 @@ public class SurveyProperties {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
+    public String getEmailService() {
+    	return emailService;
+    }
+    
+    public void setEmailService(String emailService) {
+    	this.emailService = emailService;
+    }
+    
+    
+    public String getBackgroundColor() {
+    	return backgroundColor;
+    }
+    
+    public void setBackgroundColor(String backgroundColor) {
+    	this.backgroundColor = backgroundColor;
+    }
+    
     public String getFooterMsg() {
         return footerMsg;
     }
@@ -114,20 +150,20 @@ public class SurveyProperties {
         this.cloneParticipants = cloneParticipants;
     }
 
-    public void setCode(String code) {
-        this.surveyCode = code;
+    public void setCode(String surveyCode) {
+        this.surveyCode = surveyCode;
     }
 
-    public String getCode() {
+    public String getSurveyCode() {
 
         return surveyCode;
     }
 
-    public void setTitle(String title) {
-        this.surveyTitle = title;
+    public void setTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
     }
 
-    public String getTitle() {
+    public String getSurveyTitle() {
 
         return surveyTitle;
     }
@@ -140,12 +176,12 @@ public class SurveyProperties {
 //        return anonymous_option;
 //    }
 
-    public void setAccountName(String accountname) {
-        this.accountName = accountname;
+    public void setAnonymousAccount(String anonymousAccount) {
+        this.anonymousAccount = anonymousAccount;
     }
 
     public String getAccountName() {
-        return accountName;
+        return anonymousAccount;
     }
 
     public void setTUOption(String toption) {

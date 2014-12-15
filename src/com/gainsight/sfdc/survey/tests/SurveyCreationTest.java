@@ -23,8 +23,7 @@ import jxl.read.biff.BiffException;
 
 public class SurveyCreationTest extends BaseTest {
 	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";
-	//private String surveytitle = "";
-	String QUERY = "DELETE [SELECT Id FROM JBCXM__Survey__c WHERE JBCXM__Title__c  = 'test'];";
+	String QUERY = "DELETE [SELECT Id FROM JBCXM__Survey__c WHERE JBCXM__Title__c  = 'Survey_01'];";
 
 
 	@BeforeClass
@@ -41,18 +40,63 @@ public class SurveyCreationTest extends BaseTest {
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
-	public void createNewSurvey(HashMap<String, String> testData)
+	public void createNonanonymousSurvey(HashMap<String, String> testData)
 			throws BiffException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		SurveyProperties sdata = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+		SurveyProperties sdata = mapper.readValue(testData.get("Survey"), SurveyProperties.class);	
+		sdata.setStartDate(getDateWithFormat(Integer.valueOf(sdata.getStartDate()), 0, false));
+		sdata.setEndDate(getDateWithFormat(Integer.valueOf(sdata.getEndDate()), 19, false));
 		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
-		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata.getTitle(), true);
+		@SuppressWarnings("unused")
+		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata.getSurveyTitle(), true);
+		surPropPage.fillAndSaveSurveyProperties(sdata);
+		
+		
 		
 	//	SurveyDesignPage surDesignPage = 
 		
 		
 	}
+	
 
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet2")
+	public void createPartialanonymousSurvey(HashMap<String, String> testData)
+			throws BiffException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		SurveyProperties sdata = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+		sdata.setStartDate(getDateWithFormat(Integer.valueOf(sdata.getStartDate()), 0, false));
+		sdata.setEndDate(getDateWithFormat(Integer.valueOf(sdata.getEndDate()), 19, false));
+		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
+		@SuppressWarnings("unused")
+		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata.getSurveyTitle(), true);
+		surPropPage.fillAndSaveSurveyProperties(sdata);
+		
+	//	SurveyDesignPage surDesignPage = 
+		
+		
+	}
+	
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet3")
+	public void createCompleteanonymousSurvey(HashMap<String, String> testData)
+			throws BiffException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		SurveyProperties sdata = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+		sdata.setStartDate(getDateWithFormat(Integer.valueOf(sdata.getStartDate()), 0, false));
+		sdata.setEndDate(getDateWithFormat(Integer.valueOf(sdata.getEndDate()), 19, false));
+		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
+		@SuppressWarnings("unused")
+		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata.getSurveyTitle(), true);
+		surPropPage.fillAndSaveSurveyProperties(sdata);
+		
+	//	SurveyDesignPage surDesignPage = 
+		
+		
+	}
+	
+	
+	
     @Test
     public void sampleTest() {
 
