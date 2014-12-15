@@ -295,7 +295,7 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
-    public void T15_InsWeek_Trend_1Measure12PeriodsCurrentPeriod(Map<String, String> testData) {
+    public void T15_InsWeek_Trend_1MeasureNPeriodsCurrentPeriod(Map<String, String> testData) {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
@@ -321,7 +321,7 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T16")
-    public void T16_InsWeek_Trend_1Measure6PeriodsPreviousPeriod(Map<String, String> testData) {
+    public void T16_InsWeek_Trend_1MeasureNPeriodsPreviousPeriod(Map<String, String> testData) {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
@@ -348,7 +348,7 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T17")
-    public void T17_InsWeek_Trend_NMeasure6PeriodsCurrentPeriod(Map<String, String> testData) {
+    public void T17_InsWeek_Trend_NMeasureNPeriodsCurrentPeriod(Map<String, String> testData) {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
