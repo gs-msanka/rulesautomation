@@ -160,7 +160,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             } catch (Exception e) {
                 e.printStackTrace();
                 Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
-                amtDateUtil.sleep(5);
+                //clicking on Go button and trying again...in some cases this works...but needs to be fixed in product...
+                item.click(GO_BUTTON);
+                waitTillNoLoadingIcon();
+                //amtDateUtil.sleep(5);
             }
         }
         env.setTimeout(30);
@@ -181,6 +184,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             getFirstDisplayedElement("//span[contains(text(), '"+str.trim()+"')]/preceding-sibling::input").click();
         }
     }
+
 
     public AdoptionUsagePage selectUIView(String viewName) {
         Report.logInfo("Selecting UI View : "+viewName);
