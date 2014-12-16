@@ -235,8 +235,13 @@ public class WorkflowPage extends WorkflowBasePage {
         }
         button.click(SAVE_CTA);
         Report.logInfo("Clicked on Save CTA");
-        waitTillNoLoadingIcon();
-        waitTillNoSearchIcon();
+        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        else {
+        	env.setTimeout(1);
+            wait.waitTillElementNotPresent("//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]", MIN_TIME, MAX_TIME);
+            env.setTimeout(30);
+        }
+       if(!cta.isFromCustomer360()) waitTillNoSearchIcon();
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
@@ -506,7 +511,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     
     public boolean isCTADisplayed(CTA cta) {
-        waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
         env.setTimeout(2);
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
@@ -644,15 +649,18 @@ public class WorkflowPage extends WorkflowBasePage {
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
             try {
+            	if(!cta.isFromCustomer360())
+            	{
+            		expViewCta.setCustomer(element.getText(EXP_VIEW_CUSTOMER).trim());
+            	}
                 expViewCta.setDueDate(element.getText(EXP_VIEW_DUE_DATE_INPUT).trim());
-                expViewCta.setCustomer(element.getText(EXP_VIEW_CUSTOMER).trim());
                 expViewCta.setType(element.getText(EXP_VIEW_TYPE).trim());
                 expViewCta.setPriority(element.getText(EXP_VIEW_PRIORITY_BUTTON).trim());
                 expViewCta.setStatus(element.getText(EXP_VIEW_STATUS_BUTTON).trim());
                 expViewCta.setReason(element.getText(EXP_VIEW_REASON_BUTTON).trim());
                 expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
-
-                if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())) {
+                
+                if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())&&!cta.isFromCustomer360()) {
                     Report.logInfo("Expected Value : " +cta.getCustomer());
                     Report.logInfo("Actual Value : " +expViewCta.getCustomer());
                     Report.logInfo("Customer Name not matched.");
@@ -673,14 +681,22 @@ public class WorkflowPage extends WorkflowBasePage {
                     Report.logInfo("Actual Value : " +expViewCta.getReason());
                     Report.logInfo("Reason not matched.");
                 }
-
-                if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
+                if(!cta.isFromCustomer360()){
+                	if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
                         cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
                         cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
                         cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus()) &&
-                        cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
-                    return true;
-                } else {
+                        cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) 
+                		return true;
+                }
+                else if(cta.isFromCustomer360()){
+                	if(cta.getType().trim().equalsIgnoreCase(expViewCta.getType()) &&
+                            cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority()) &&
+                            cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus()) &&
+                            cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) 
+                    		return true;               	
+                }
+                else {
                     Report.logInfo("Waiting for Event Details to Load");
                     amtDateUtil.stalePause();
                 }
@@ -710,15 +726,18 @@ public class WorkflowPage extends WorkflowBasePage {
         				xPath+"/following-sibling::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"')]" ;
         				
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='wf-account pull-left']";
-        xPath = xPath+"/descendant::span[contains(text(), '"+cta.getCustomer()+"')]";
+       if(!cta.isFromCustomer360()) {
+    	   xPath = xPath+"/descendant::span[contains(text(), '"+cta.getCustomer()+"')]";
+       
         xPath = xPath+"/ancestor::div[@class='pull-left']/div[@class='pull-left cta-score']";
-
+        
         for(CTA.Attribute attribute : cta.getAttributes()) {
             if(attribute.isInSummary()) {
                 xPath = xPath+"/descendant::span[@title='"+attribute.getAttLabel()+"' and contains(text(), '"+attribute.getAttValue()+"')]";
                 xPath = xPath+"/ancestor::div[@class='pull-left cta-score']";
-            }
-        }
+             }
+        	}
+       }
 
         xPath = xPath+"/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         xPath = xPath+"/descendant::div[@class='pull-right relative']";
@@ -957,10 +976,12 @@ public class WorkflowPage extends WorkflowBasePage {
         if(isApply) item.click(EXP_VIEW_APPLY_PLAYBOOK);
         else item.click(EXP_VIEW_REPLACE_PLAYBOOK);
         amtDateUtil.stalePause();
-        waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         item.click(PLAYBOOK_SELECT);
         selectValueInDropDown(playBookName);
-        waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360())waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         applyOwnersToTasksInPlaybook(tasks);
         if(isApply) {
             item.click(PLAYBOOK_APPLY);

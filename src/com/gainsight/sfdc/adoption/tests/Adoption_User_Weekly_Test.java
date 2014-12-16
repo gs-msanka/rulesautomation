@@ -33,13 +33,13 @@ public class Adoption_User_Weekly_Test extends AdoptionDataSetup {
     public void setUp() throws IOException, InterruptedException {
         basepage.login();
         dataSetup = new AdoptionDataSetup();
-        /*apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
+        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
         dataSetup.updateUtilizationCal("STANDARD");
         dataSetup.updateUsersDisplayInUsageGrids(true);
-        dataSetup.runAdoptionAggregation(15, true, isEndDate, WEEKDAY);*/
+        dataSetup.runAdoptionAggregation(15, true, isEndDate, WEEKDAY);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

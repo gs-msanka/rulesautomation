@@ -33,6 +33,7 @@ import java.util.Set;
  * 
  */
 public class BasePage extends WebPage implements Constants {
+
 	private final String READY_INDICATOR    = "//div[@id='userNavButton']";
 
     private final String LOADING_IMG            = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
@@ -54,6 +55,7 @@ public class BasePage extends WebPage implements Constants {
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
     private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
+	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
@@ -295,6 +297,11 @@ public class BasePage extends WebPage implements Constants {
         env.setTimeout(30);
     }
 
+    public void waitTillNoLoadingIcon_360(){
+          	env.setTimeout(1);
+              wait.waitTillElementNotPresent(LOADING_ICON_360, MIN_TIME, MAX_TIME);
+              env.setTimeout(30);
+    }
 	public void goBack() {
 		driver.navigate().back();
 		

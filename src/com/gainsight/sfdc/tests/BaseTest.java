@@ -207,7 +207,7 @@ public class BaseTest {
             return str;
         }
     }
-
+   
     public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd, boolean bulkFormat) {
         String date = null;
         Calendar c = Calendar.getInstance(userTimezone);
