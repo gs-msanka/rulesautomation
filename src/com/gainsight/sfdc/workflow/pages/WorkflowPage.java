@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -175,10 +176,16 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage() {
         waitForPageLoad();
     }
-
+    
+    
     public WorkflowPage(String view) {
-        waitForPageLoad();
-        wait.waitTillElementDisplayed(CALENDAR_VIEW_READY_INDICATOR, MIN_TIME, MAX_TIME);
+    	super(view);
+        if(view.equals("Calendar")) 
+        	{
+            	waitForPageLoad();
+        		wait.waitTillElementDisplayed(CALENDAR_VIEW_READY_INDICATOR, MIN_TIME, MAX_TIME);
+        	}
+        else if(view.equals("360 Page")) Report.logInfo("Landed in Customer 360 Cockpit section");
     }
 
     private void waitForPageLoad() {
@@ -218,7 +225,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private void fillAndSaveCTAForm(CTA cta) {
         Report.logInfo("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
-		selectCustomer(cta.getCustomer());
+		if(!cta.isFromCustomer360()) selectCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());

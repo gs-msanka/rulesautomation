@@ -34,8 +34,8 @@ public class WorkFlowTest extends BaseTest {
 
 
     private final String TEST_DATA_FILE         = "testdata/sfdc/workflow/tests/WorkFlow_Test.xls";
-    private final String LEADERBOARD_DATAGEN_SCRIPT =TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
     private final String CREATE_USERS_SCRIPT    = TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
+    private final String CREATE_ACCOUNTS_CUSTOMERS=TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
                                         "Delete [select id from JBCXM__CSTask__c];"+
                                         "Delete [select id from Task];"+
@@ -50,6 +50,7 @@ public class WorkFlowTest extends BaseTest {
         userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         basepage.login();
         isPackage = isPackageInstance();
+        apex.runApexCodeFromFile(CREATE_ACCOUNTS_CUSTOMERS,isPackage);
         apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
         weekDayMap.put(1, "Sun");
         weekDayMap.put(2, "Mon");
@@ -1456,12 +1457,6 @@ public class WorkFlowTest extends BaseTest {
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
 
-    @Test
-    public void reportSampleTest() throws IOException {
-    	apex.runApexCodeFromFile(LEADERBOARD_DATAGEN_SCRIPT,isPackage);
-        WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab().clickOnReportingView();
-        Assert.assertEquals(getCountOfUserCTAs("Giribabu Golla", "Risk", false), workflowPage.getCountOfUserClosedCTAs("Giribabu Golla", "Risk"));
-    }
 
     private void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));

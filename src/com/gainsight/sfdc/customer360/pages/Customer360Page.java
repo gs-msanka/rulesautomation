@@ -5,6 +5,8 @@ import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.workflow.pages.WorkflowPage;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
@@ -104,6 +106,13 @@ public class Customer360Page extends BasePage {
         waitForLoadingImagesNotPresent();
 		wait.waitTillElementDisplayed("//div[@class='scorecardsbody']", MIN_TIME, MAX_TIME);
 		return new Customer360Scorecard();
+	}
+	
+	public Workflow360Page goToCockpitSection(){
+		item.click(String.format(NAVIGATE_SECTION,"Cockpit"));
+		waitForLoadingImagesNotPresent();
+		wait.waitTillElementDisplayed("//div[@class='workflow-summary']", MIN_TIME, MAX_TIME);
+		return new Workflow360Page("360 Page");
 	}
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
     	Report.logInfo("Searching for customer : " +name);

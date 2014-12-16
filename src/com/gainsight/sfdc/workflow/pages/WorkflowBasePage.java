@@ -18,7 +18,10 @@ public class WorkflowBasePage extends BasePage {
     public WorkflowBasePage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
-
+  
+    public WorkflowBasePage(String value){
+    	Report.logInfo("landed in Cockpit "+value);
+    }
     public WorkflowPage clickOnListView() {
         item.click(LIST_VIEW_TAB);
         return new WorkflowPage();

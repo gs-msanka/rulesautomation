@@ -28,9 +28,18 @@ public class CTA  implements Cloneable {
     private String snoozeReason = "Other";
     private boolean isOverDue= false;
     private String scoreOfCustomer;
+    private boolean fromCustomer360=false;
     
     
-    public String getScoreOfCustomer() {
+    public boolean isFromCustomer360() {
+		return fromCustomer360;
+	}
+
+	public void setFromCustomer360(boolean fromCustomer360) {
+		this.fromCustomer360 = fromCustomer360;
+	}
+
+	public String getScoreOfCustomer() {
 		return scoreOfCustomer;
 	}
 
