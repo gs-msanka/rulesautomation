@@ -15,6 +15,7 @@ import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
 import com.gainsight.sfdc.retention.pages.RetentionBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import com.gainsight.sfdc.widgets.AccountWidget.pages.AccountWidgetPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
 import org.openqa.selenium.WebElement;
@@ -93,7 +94,12 @@ public class BasePage extends WebPage implements Constants {
 	public void beInMainWindow() {
 		element.switchToMainWindow();
 	}
-
+	
+	public AccountWidgetPage gotoAccountPageWithId(String Id){
+		driver.get(env.getDefaultUrl()+"/"+Id);
+		element.switchToFrame("//iframe[@title='CustomerSuccess']");
+		return new AccountWidgetPage();
+	}
 	// Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab() {
         clickOnTab(CUSTOMER_TAB);

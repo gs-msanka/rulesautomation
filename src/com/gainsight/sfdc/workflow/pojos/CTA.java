@@ -29,9 +29,17 @@ public class CTA  implements Cloneable {
     private boolean isOverDue= false;
     private String scoreOfCustomer;
     private boolean fromCustomer360=false;
+    private boolean fromWidgets=false;
     
-    
-    public boolean isFromCustomer360() {
+    public boolean isFromWidgets() {
+		return fromWidgets;
+	}
+
+	public void setFromWidgets(boolean fromWidgets) {
+		this.fromWidgets = fromWidgets;
+	}
+
+	public boolean isFromCustomer360() {
 		return fromCustomer360;
 	}
 

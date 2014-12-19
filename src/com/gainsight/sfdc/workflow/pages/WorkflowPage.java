@@ -186,6 +186,7 @@ public class WorkflowPage extends WorkflowBasePage {
         		wait.waitTillElementDisplayed(CALENDAR_VIEW_READY_INDICATOR, MIN_TIME, MAX_TIME);
         	}
         else if(view.equals("360 Page")) Report.logInfo("Landed in Customer 360 Cockpit section");
+        else if(view.equals("Account Widget")) Report.logInfo("landed from Account Widget");
     }
 
     private void waitForPageLoad() {
@@ -225,7 +226,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private void fillAndSaveCTAForm(CTA cta) {
         Report.logInfo("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
-		if(!cta.isFromCustomer360()) selectCustomer(cta.getCustomer());
+		if(!cta.isFromCustomer360()&&!cta.isFromWidgets()) selectCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
@@ -235,13 +236,13 @@ public class WorkflowPage extends WorkflowBasePage {
         }
         button.click(SAVE_CTA);
         Report.logInfo("Clicked on Save CTA");
-        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()&&!cta.isFromWidgets()) waitTillNoLoadingIcon();
         else {
         	env.setTimeout(1);
             wait.waitTillElementNotPresent("//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]", MIN_TIME, MAX_TIME);
             env.setTimeout(30);
         }
-       if(!cta.isFromCustomer360()) waitTillNoSearchIcon();
+       if(!cta.isFromCustomer360()&&!cta.isFromWidgets()) waitTillNoSearchIcon();
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
@@ -513,7 +514,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     
     public boolean isCTADisplayed(CTA cta) {
-        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()&&!cta.isFromWidgets()) waitTillNoLoadingIcon();
         env.setTimeout(2);
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
