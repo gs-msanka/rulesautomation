@@ -307,7 +307,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : tasks)
 	       Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	   }
-	   
+	   //TBD FROM HERE
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA14")
 	   public void createRiskCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
@@ -324,10 +324,11 @@ public class Workflow360Tests extends WorkflowSetup{
 	                task.setAssignee(sfinfo.getUserFullName());
 	            }
 	        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	        	task.setFromCustomer360(true);
 	        	}
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	       }
 	   }
 	   
@@ -354,7 +355,7 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	       }
 	   }
 	   
@@ -379,7 +380,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        //Applying Playbook and verifying tasks
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 	       
 	       //Replacing Playbook and verifying updated tasks
@@ -394,7 +395,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
 	       for(Task task : updatedTasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 
 	       for(Task task : tasks) {
@@ -422,7 +423,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       //workflow360.addTaskToCTA(cta, tasks);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	       }
 	   }
 	   
@@ -445,7 +446,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        //Applying Playbook and verifying tasks
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 	       
 	       //Replacing Playbook and verifying updated tasks
@@ -458,7 +459,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
 	       for(Task task : updatedTasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 
 	       for(Task task : tasks) {
@@ -484,7 +485,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	       }
 	   }
 
@@ -502,11 +503,12 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	           task.setFromCustomer360(true);
 	        	}
 	        //Applying Playbook and verifying tasks
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 	       
 	       //Replacing Playbook and verifying updated tasks
@@ -514,12 +516,13 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : updatedTasks) {
 	          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	           task.setFromCustomer360(true);
 	          	}
 	       cta.setDueDate(getHighestTaskDate(tasks));
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
 
 	       for(Task task : updatedTasks) {
-	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Risk CTA");
 	       }
 	    }
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -591,9 +594,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
-	      System.out.println("querying for:"+milestoneQuery);
 	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
-	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	      
 	      //Closing Risk CTA - to check if a RiskResolved Milestone is created.
@@ -675,4 +676,449 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflowPage = workflowPage.showSnoozeCTA();
 	       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying the CTA has been set under Snoozed CTAs");
 	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA24")
+	   public void markCTAAsImp(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		     Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);      
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	       workflow360 = workflow360.flagCTA(cta);
+	       cta.setImp(true);
+	       /*WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
+	       workflowPage = workflowPage.showFlaggedCTA();*/
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying the CTA has been set under Important CTAs");
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
+	   public void createAndCloseCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
+	         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	         Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		     Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+		     cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);     
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	       workflow360.closeCTA(cta, false);
+	       cta.setClosed(true);
+	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
+	       workflowPage = workflowBasePage.clickOnListView();
+	       workflowPage = workflowPage.showClosedCTA();
+	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+	   }
+	   
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
+	   public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);     
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	       workflow360.updateCTAStatus_toClosedLost(cta);
+	       cta.setClosed(true);
+	       cta.setStatus("Closed Lost");
+	       
+	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
+	       workflowPage = workflowPage.showClosedCTA();
+	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
+	   public void createAndCloseCTAWithTasks(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for(Task task : tasks) {
+	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	}
+	        
+	        workflow360.addTaskToCTA(cta, tasks);
+	       for(Task task : tasks)
+	    	   { 
+	    	   	Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+	    	   	task.setStatus("Closed");
+	    	   }
+	       workflow360.closeCTA(cta, true);
+	       cta.setClosed(true);
+	       cta.setStatus("Closed Won");
+	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
+	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
+	       Assert.assertFalse(workflowPage.isCTADisplayed(cta));
+	       workflowPage = workflowPage.showClosedCTA();
+	       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
+	   public void createCTA_WithTasks_AndCloseTasks(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for(Task task : tasks) {
+	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	}
+	        
+	        workflow360.addTaskToCTA(cta, tasks);
+	       for(Task task : tasks)
+	    	   { 
+	    	   	Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+	    	   	workflow360.openORCloseTask(task);
+	    	   	task.setStatus("Closed");
+	            Assert.assertTrue(workflow360.verifyTaskDetails(task), "Verified all the tasks are closed for given CTA");
+	    	   }   		
+	   }
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
+	   public void create_CloseAndRe_OpenCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
+		  CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+		  Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
+	       workflow360.closeCTA(cta, false);
+	       cta.setStatus("Closed Won");
+	       cta.setClosed(true);
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
+	       workflow360.openCTA(cta, false, null);
+	       cta.setStatus("Open");
+	       cta.setClosed(false);
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
+	       Assert.assertTrue(workflow360.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA27")
+	   public void createAndUpdateCTA(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta); 
+	      
+	      CTA updatedCta=mapper.readValue(testData.get("UpdatedCTA"), CTA.class);
+	      Workflow360Page workflow360_2=basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false).goToCockpitSection();
+	      if(updatedCta.getAssignee()==null)
+	    	  updatedCta.setAssignee(sfinfo.getUserFullName());
+	      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0, false));
+	      workflow360_2.updateCTADetails(cta, updatedCta);
+	      Assert.assertTrue(workflow360_2.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
+	   }
+	   
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
+	   public void createAndDeleteCTA(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta); 
+	      
+	       workflow360.deleteCTA(cta);
+	      Assert.assertFalse(workflow360.isCTADisplayed(cta), "Verifying if the CTA is delete successfully");
+	      
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA11")
+	   public void createCTAWithTasks_AndDeleteTasks(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+
+	       workflow360.createCTA(cta);      
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for(Task task : tasks) {
+	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	task.setFromCustomer360(true);
+	        	}
+	        
+	        workflow360.addTaskToCTA(cta, tasks);
+	       for(Task task : tasks){
+	           Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta, task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+	           workflow360.deleteTask(task);
+	           cta.setTaskCount(cta.getTaskCount()-1);
+	           Assert.assertFalse(workflow360.isTaskDisplayedUnderCTA(cta, task), "Verified that the task has been deleted");
+	       }
+	   }
+	   
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
+	   public void createAndUpdateCTATasks(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	      
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);      
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for(Task task : tasks) {
+	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	task.setFromCustomer360(true);
+	        	}
+	        
+	        workflow360.addTaskToCTA(cta, tasks);
+	       for(Task task : tasks)
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+	       
+	       Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
+	       updatedTask.setAssignee(sfinfo.getUserFullName());
+	       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0, false));
+	       workflow360.updateTaskDetails(tasks.get(0), updatedTask);  //assuming that we are taking only one task for updation
+	       Assert.assertTrue(workflow360.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
+	   }
+
+	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
+	   public void createAndEditCTATasks(HashMap<String,String> testData) throws IOException{
+	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	       cta.setAssignee(sfinfo.getUserFullName());
+	       workflow360.createCTA(cta);      
+	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for(Task task : tasks) {
+	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	}
+	        
+	        workflow360.addTaskToCTA(cta, tasks);
+	       for(Task task : tasks)
+	           Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
+	       
+	       Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
+	       updatedTask.setAssignee(sfinfo.getUserFullName());
+	       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0, false));
+	       workflow360.editTasks(cta, updatedTask,tasks.get(0));
+	       Assert.assertTrue(workflow360.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
+	   }
+	   
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void syncTaskToSF_Manual(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Manual();
+		     CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	    	 Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	        
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
+	        Assert.assertTrue(sfTask==1, "Verified that the task is created successfully in SF");
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void deSyncTaskFromSFButKeepTask_Manual(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Manual();
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	        	        
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+	        
+	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),true);
+	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
+	        Assert.assertTrue((sfTask==1 &&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
+	        Assert.assertEquals(1, sfTask);
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void deSyncTaskFromSFAndDeleteTask_Manual(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Manual();
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	        	        
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+	        
+	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),false);
+	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
+	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task desynced from SF and SF task is deleted too");
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void syncTaskToSF_AutoSync(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Auto();
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
+	        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
+	        disableSFAutoSync();
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void deSyncTaskFromSFButKeepTask_AutoSync(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Auto();
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	             
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+	        
+	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),true);
+	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
+	        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF but remains in SF");
+	        disableSFAutoSync();
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
+	    public void deSyncTaskFromSFAndDeleteTask_AutoSync(HashMap<String, String> testData) throws IOException {
+	    	enableSFDCSync_Auto();
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	     
+	        
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
+	        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+	        for (Task task : tasks) {
+	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	        }
+
+	        workflow360.addTaskToCTA(cta, tasks);
+	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
+	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
+	        
+	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),false);
+	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+
+	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
+	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
+	        disableSFAutoSync();
+	    }
+	    
+	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA30")
+	    public void createRiskCTA_Overdue(HashMap<String, String> testData) throws IOException {
+	        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+	        Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
+			 Workflow360Page workflow360 = customer360Page.goToCockpitSection();
+	     
+	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+	        cta.setAssignee(sfinfo.getUserFullName());
+	        workflow360.createCTA(cta);
+	        cta.setOverDue(true);
+	        Assert.assertTrue(workflow360.isOverDueCTADisplayed(cta), "Verifying risk CTA is created - which is overdue");
+	    }
 }

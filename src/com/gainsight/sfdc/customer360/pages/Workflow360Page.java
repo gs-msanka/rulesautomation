@@ -54,5 +54,71 @@ public class Workflow360Page extends Customer360Page{
 		cta.setFromCustomer360(true);
 		wfPage.snoozeCTA(cta);
 	}
+
+	public boolean isTaskDisplayed(Task task) {
+		return wfPage.isTaskDisplayed(task);
+	}
+
+	public Workflow360Page flagCTA(CTA cta) {
+		cta.setFromCustomer360(true);
+		wfPage.flagCTA(cta);
+		return this;
+	}
+
+	public void updateCTAStatus_toClosedLost(CTA cta) {
+		cta.setFromCustomer360(true);
+		wfPage.updateCTAStatus_toClosedLost(cta);
+		
+	}
+
+	public void openORCloseTask(Task task) {
+		wfPage.openORCloseTask(task);
+	}
+
+	public boolean verifyTaskDetails(Task task) {
+		return wfPage.verifyTaskDetails(task);
+	}
+
+	public boolean verifyCTADetails(CTA cta) {
+		return wfPage.verifyCTADetails(cta);
+	}
+	
+	public void openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
+		wfPage.openCTA(cta, hasTasks, tasks);
+	}
+
+	public void updateCTADetails(CTA cta, CTA updatedCta) {
+		cta.setFromCustomer360(true);
+		wfPage.updateCTADetails(cta,updatedCta);
+	}
+
+	public void deleteCTA(CTA cta) {
+		cta.setFromCustomer360(true);
+		wfPage.deleteCTA(cta);
+	}
+
+	public void deleteTask(Task task) {
+		wfPage.deleteTask(task);
+	}
+
+	public void updateTaskDetails(Task ExpectedTask, Task newTask) {
+		wfPage.updateTaskDetails(ExpectedTask, newTask);
+	}
+
+	public void editTasks(CTA cta, Task updatedTask, Task task) {
+		wfPage.editTasks(cta, updatedTask, task);
+	}
+
+	public void syncTasksToSF(CTA cta, Task task) {
+		wfPage.syncTasksToSF(cta, task);
+	}
+
+	public void deSyncTaskFromSF(CTA cta, Task task, boolean keepInSF) {
+		wfPage.deSyncTaskFromSF(cta, task, keepInSF);
+	}
+
+	public boolean isOverDueCTADisplayed(CTA cta) {
+		return wfPage.isOverDueCTADisplayed(cta);
+	}
 	
 }

@@ -12,8 +12,17 @@ public class Task {
     private String status = "Open";
     private String playbookName;
     private String comments;
+    private boolean isFromCustomer360=false;
+    
+    public boolean isFromCustomer360() {
+		return isFromCustomer360;
+	}
 
-    public String getAssignee() {
+	public void setFromCustomer360(boolean isFromCustomer360) {
+		this.isFromCustomer360 = isFromCustomer360;
+	}
+
+	public String getAssignee() {
         return assignee;
     }
 

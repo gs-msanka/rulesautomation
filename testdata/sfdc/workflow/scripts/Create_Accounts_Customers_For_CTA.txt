@@ -9,6 +9,9 @@ for(integer i=1; i<70 ; i++) {
    Account acc = new Account(Name ='CTA Account ' +i,Data_ExternalID__c='CTA Account ' +i);
    accList.add(acc);
 }
+Account acc360 = new Account(Name ='CTA Account 360',Data_ExternalID__c='CTA Account 360');
+   accList.add(acc360);
+   
 insert accList;
 
 //Add Accounts to Customers

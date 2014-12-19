@@ -329,7 +329,8 @@ public class WorkflowPage extends WorkflowBasePage {
 			item.click(SAVE_TASK);
 			cta.setTaskCount(cta.getTaskCount()+1);
 			wait.waitTillElementPresent(String.format(TASK_TITLE_TO_VERIFY, task.getSubject()), MIN_TIME, MAX_TIME);
-            waitTillNoLoadingIcon();
+            if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+            else waitTillNoLoadingIcon_360();
 		}
         collapseCTAView();
 		return this;
@@ -428,7 +429,8 @@ public class WorkflowPage extends WorkflowBasePage {
             field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
             field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
             driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-            waitTillNoLoadingIcon();
+            if(!ExpectedCta.isFromCustomer360()) waitTillNoLoadingIcon();
+            else waitTillNoLoadingIcon_360();
             wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
             for(WebElement ele : element.getAllElement(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()))){
                 if(ele.isDisplayed()) {
@@ -841,7 +843,8 @@ public class WorkflowPage extends WorkflowBasePage {
         String xPath = getCTAXPath(cta)+"/descendant::span[contains(@class, 'glyphicon glyphicon-bookmark cta-flag')]";
         item.click(xPath);
         amtDateUtil.stalePause();
-        waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         cta.setImp(true);
         return this;
     }
@@ -930,7 +933,8 @@ public class WorkflowPage extends WorkflowBasePage {
         wait.waitTillElementDisplayed(DELETE_ACTION, MIN_TIME, MAX_TIME);
         item.click(DELETE_ACTION);
         amtDateUtil.stalePause();
-        waitTillNoLoadingIcon();
+        if(!task.isFromCustomer360()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         return this;
     }
 
@@ -940,7 +944,8 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(String.format(EXP_VIEW_DELETE_CTA, cta.getType()));
         item.click(DELETE_ACTION);
         amtDateUtil.stalePause();
-        waitTillNoLoadingIcon();
+        if(!cta.isFromCustomer360()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         return this;
     }
 
@@ -999,7 +1004,8 @@ public class WorkflowPage extends WorkflowBasePage {
                     "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";
             field.clearAndSetText(path, task.getAssignee());
             driver.findElement(By.xpath(path)).sendKeys(Keys.ENTER);
-            waitTillNoLoadingIcon();
+            if(!task.isFromCustomer360())  waitTillNoLoadingIcon();
+            else waitTillNoLoadingIcon_360();
             //wait.waitTillElementDisplayed("//li[@class='ui-menu-item' and @role='presentation']/a[contains(text(), '"+task.getAssignee()+"')]", MIN_TIME, MAX_TIME);
             boolean selected = false;
             for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item' and @role='presentation']/a[contains(text(), '"+task.getAssignee()+"')]")) {
