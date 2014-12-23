@@ -16,17 +16,17 @@ public class Workflow360Page extends Customer360Page{
 	
 	//TBD- if any specific page objects related to 360 - cockpit section are to be modified
 	public void createCTA(CTA cta){
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.createCTA(cta);
 	}
 
 	public boolean isCTADisplayed(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		return wfPage.isCTADisplayed(cta);
 	}
 
 	public void addTaskToCTA(CTA cta, ArrayList<Task> tasks) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.addTaskToCTA(cta, tasks);
 	}
 
@@ -41,17 +41,17 @@ public class Workflow360Page extends Customer360Page{
 	}
 
 	public void createMilestoneForCTA(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.createMilestoneForCTA(cta);
 	}
 
 	public void closeCTA(CTA cta, boolean hasOpenTasks) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.closeCTA(cta, hasOpenTasks);
 	}
 
 	public void snoozeCTA(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.snoozeCTA(cta);
 	}
 
@@ -60,13 +60,13 @@ public class Workflow360Page extends Customer360Page{
 	}
 
 	public Workflow360Page flagCTA(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.flagCTA(cta);
 		return this;
 	}
 
 	public void updateCTAStatus_toClosedLost(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.updateCTAStatus_toClosedLost(cta);
 		
 	}
@@ -88,12 +88,12 @@ public class Workflow360Page extends Customer360Page{
 	}
 
 	public void updateCTADetails(CTA cta, CTA updatedCta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.updateCTADetails(cta,updatedCta);
 	}
 
 	public void deleteCTA(CTA cta) {
-		cta.setFromCustomer360(true);
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.deleteCTA(cta);
 	}
 
@@ -110,10 +110,12 @@ public class Workflow360Page extends Customer360Page{
 	}
 
 	public void syncTasksToSF(CTA cta, Task task) {
+		task.setFromCustomer360orWidgets(true);
 		wfPage.syncTasksToSF(cta, task);
 	}
 
 	public void deSyncTaskFromSF(CTA cta, Task task, boolean keepInSF) {
+		task.setFromCustomer360orWidgets(true);
 		wfPage.deSyncTaskFromSF(cta, task, keepInSF);
 	}
 

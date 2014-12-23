@@ -52,7 +52,7 @@ public class Workflow360Tests extends WorkflowSetup{
     public void clearCTAsForThisAccount(){
     	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
     public void createRiskCTA_in360(HashMap<String, String> testData) throws IOException {
 	     CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -324,7 +324,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	                task.setAssignee(sfinfo.getUserFullName());
 	            }
 	        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-	        	task.setFromCustomer360(true);
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 	       for(Task task : tasks) {
@@ -351,6 +351,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	            }
 	        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 	        	task.setAssignee(users[i]); if(++i >=5) i=0;
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -375,6 +376,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	                task.setAssignee(sfinfo.getUserFullName());
 	            }
 	            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	            task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        //Applying Playbook and verifying tasks
@@ -390,6 +392,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	                task.setAssignee(sfinfo.getUserFullName());
 	            }
 	            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	            task.setFromCustomer360orWidgets(true);
 	          	}
 	       cta.setDueDate(getHighestTaskDate(tasks));
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -418,6 +421,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	            task.setFromCustomer360orWidgets(true);
 	        	}
 
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -441,6 +445,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	            task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        //Applying Playbook and verifying tasks
@@ -454,6 +459,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : updatedTasks) {
 	          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	           task.setFromCustomer360orWidgets(true);
 	          	}
 	       cta.setDueDate(getHighestTaskDate(tasks));
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -481,6 +487,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
+	            task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -503,7 +510,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-	           task.setFromCustomer360(true);
+	           task.setFromCustomer360orWidgets(true);
 	        	}
 	        //Applying Playbook and verifying tasks
 	       workflow360  = workflow360.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -516,7 +523,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       for(Task task : updatedTasks) {
 	          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-	           task.setFromCustomer360(true);
+	           task.setFromCustomer360orWidgets(true);
 	          	}
 	       cta.setDueDate(getHighestTaskDate(tasks));
 	       workflow360 = workflow360.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -709,7 +716,6 @@ public class Workflow360Tests extends WorkflowSetup{
 	       cta.setClosed(true);
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
-	       workflowPage = workflowBasePage.clickOnListView();
 	       workflowPage = workflowPage.showClosedCTA();
 	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 	   }
@@ -749,6 +755,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -756,6 +763,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	    	   { 
 	    	   	Assert.assertTrue(workflow360.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
 	    	   	task.setStatus("Closed");
+	    	   	task.setFromCustomer360orWidgets(true);
 	    	   }
 	       workflow360.closeCTA(cta, true);
 	       cta.setClosed(true);
@@ -781,6 +789,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -864,7 +873,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
-	        	task.setFromCustomer360(true);
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -891,7 +900,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
-	        	task.setFromCustomer360(true);
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -919,6 +928,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for(Task task : tasks) {
 	        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
 	        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
+	        	task.setFromCustomer360orWidgets(true);
 	        	}
 	        
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -948,6 +958,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -974,6 +985,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -1005,6 +1017,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -1034,6 +1047,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -1061,6 +1075,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
@@ -1093,6 +1108,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        for (Task task : tasks) {
 	            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
 	            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
+	            task.setFromCustomer360orWidgets(true);
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);

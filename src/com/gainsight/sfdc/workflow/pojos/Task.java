@@ -12,14 +12,14 @@ public class Task {
     private String status = "Open";
     private String playbookName;
     private String comments;
-    private boolean isFromCustomer360=false;
+    private boolean isFromCustomer360orWidgets=false;
     
-    public boolean isFromCustomer360() {
-		return isFromCustomer360;
+    public boolean isFromCustomer360orWidgets() {
+		return isFromCustomer360orWidgets;
 	}
 
-	public void setFromCustomer360(boolean isFromCustomer360) {
-		this.isFromCustomer360 = isFromCustomer360;
+	public void setFromCustomer360orWidgets(boolean isFromCustomer360orWidgets) {
+		this.isFromCustomer360orWidgets = isFromCustomer360orWidgets;
 	}
 
 	public String getAssignee() {
