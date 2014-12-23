@@ -238,8 +238,29 @@ public class CreateObjectAndFields {
                 custField.setType(FieldType.Phone);
             } else if(isUrl) {
                 custField.setType(FieldType.Url);
+            }            
+            custField.setLabel(field);         
+            custField.setFullName(objName+"."+field.trim().replaceAll(" ", "_")+"__c");
+            custField.setDescription("This field is created from metadata api script");
+
+            metadata[i] = custField;
+            i++;
+        }
+        createAndCheckStatus(metadata);
+    }
+    
+    public void createLookupField(String objName, String[] fields, String[] Reference)  {
+        Metadata[] metadata = new Metadata[fields.length];
+        int i=0;
+        for(String field : fields) {
+            CustomField custField = new CustomField();
+          if(Reference!=null) {
+                custField.setType(FieldType.Lookup);
+                custField.setReferenceTo(Reference[0]); //Reference to which object
+                custField.setRelationshipName(Reference[1]); //What is the RelationName
             }
-            custField.setLabel(field);
+            
+            custField.setLabel(field);         
             custField.setFullName(objName+"."+field.trim().replaceAll(" ", "_")+"__c");
             custField.setDescription("This field is created from metadata api script");
 

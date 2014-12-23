@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Rules API Automation">
+	<test name="CTA">
+		<classes>
+			<class name="com.gainsight.bigdata.rulesengine.CreateCTA">
+				<methods>
+					<include name="NoAdvCriteriaNoPbNoTokenNoOwnerField" />
+					<include name="NoAdvCriteriaYesPbNoTokenNoOwnerField" />
+					<include name="NoAdvCriteriaYesPbNoTokenYesOwnerField" />
+				</methods>
+			</class>
+		</classes>
+	</test>
+</suite>
