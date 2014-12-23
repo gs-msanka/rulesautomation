@@ -21,7 +21,8 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pages.WorkFlowReportingPage;
 
-public class WorkflowReportingTests extends BaseTest {
+public class WorkflowReportingTests extends WorkflowSetup {
+	
 	private final String LEADERBOARD_DATAGEN_SCRIPT = TestEnvironment.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
 	private final String CREATE_USERS_SCRIPT = TestEnvironment.basedir
@@ -55,29 +56,7 @@ public class WorkflowReportingTests extends BaseTest {
         dataLoader.execute(loadCSTasks);
         
 	}
-	 public void createExtIdFieldOnUser(){
-	    	CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-	        String UserObj = "User";
-	        String[] user_ExtId = new String[]{"User ExternalId"};
-	        try {
-	            cObjFields.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-	        } catch (Exception e) {
-	            Report.logInfo("Failed to create fields");
-	            e.printStackTrace();
-	        }
-	    }
-	 
-	 public void createExternalIdFieldOnCTA(){
-		 CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-	        String CtaObj = "JBCXM__CTA__c";
-	        String[] Cta_ExtId = new String[]{"CTA ExternalID"};
-	        try {
-	            cObjFields.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
-	        } catch (Exception e) {
-	            Report.logInfo("Failed to create fields in CTA object");
-	            e.printStackTrace();
-	        }
-	 }
+		 
 	@Test
 	public void reportForLast7Days() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()

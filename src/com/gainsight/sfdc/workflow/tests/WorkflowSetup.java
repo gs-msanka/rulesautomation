@@ -23,6 +23,7 @@ import org.testng.annotations.AfterClass;
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.CockpitConfig;
 import com.gainsight.sfdc.workflow.pojos.PlaybookTask;
@@ -31,6 +32,30 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class WorkflowSetup extends BaseTest{
     ObjectMapper mapper                         = new ObjectMapper();
+    
+    public void createExtIdFieldOnUser(){
+    	CreateObjectAndFields cObjFields = new CreateObjectAndFields();
+        String UserObj = "User";
+        String[] user_ExtId = new String[]{"User ExternalId"};
+        try {
+            cObjFields.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
+        } catch (Exception e) {
+            Report.logInfo("Failed to create fields");
+            e.printStackTrace();
+        }
+    }
+    
+    public void createExternalIdFieldOnCTA(){
+		 CreateObjectAndFields cObjFields = new CreateObjectAndFields();
+	        String CtaObj = "JBCXM__CTA__c";
+	        String[] Cta_ExtId = new String[]{"CTA ExternalID"};
+	        try {
+	            cObjFields.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
+	        } catch (Exception e) {
+	            Report.logInfo("Failed to create fields in CTA object");
+	            e.printStackTrace();
+	        }
+	 }
     
     public void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));

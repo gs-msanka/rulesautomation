@@ -694,7 +694,7 @@ public class AccountWidget_CockpitTab_Tests extends WorkflowSetup {
 		       workflowPage = workflowPage.showFlaggedCTA();*/
 		        Assert.assertTrue(accWfPage.isCTADisplayed(cta), "Verifying the CTA has been set under Important CTAs");
 		   }
-		   /*
+		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
 		   public void createAndCloseCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
@@ -712,7 +712,7 @@ public class AccountWidget_CockpitTab_Tests extends WorkflowSetup {
 		       workflowPage = workflowPage.showClosedCTA();
 		       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 		   }
-		   */
+		   
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")

@@ -51,6 +51,7 @@ public class WorkFlowTest extends WorkflowSetup {
         basepage.login();
         isPackage = isPackageInstance();
         apex.runApexCodeFromFile(CREATE_ACCOUNTS_CUSTOMERS,isPackage);
+        createExtIdFieldOnUser();
         apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
         weekDayMap.put(1, "Sun");
         weekDayMap.put(2, "Mon");
