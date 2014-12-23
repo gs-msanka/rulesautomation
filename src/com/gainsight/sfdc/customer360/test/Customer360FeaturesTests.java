@@ -28,10 +28,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Features module Test Cases...");
         basepage.login();
-        isPackage = isPackageInstance();
-		apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackage);
-		userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+        apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackage);
 	}
 	
 	@AfterMethod

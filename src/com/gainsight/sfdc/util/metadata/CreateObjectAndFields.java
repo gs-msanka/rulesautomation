@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.util.metadata;
 
 import com.sforce.soap.metadata.*;
+import com.sforce.soap.metadata.Error;
 import com.sforce.ws.ConnectionException;
 
 import java.util.ArrayList;
@@ -10,10 +11,6 @@ import java.util.List;
 
 
 public class CreateObjectAndFields {
-
-    String MANIFEST_FILE = "./src/package.xml";
-    String ZIP_FILE = "./zipFiles/Sample.zip";
-    boolean isPackageInstance = true;
     static MetadataConnection metadataConnection=null;
 
     public CreateObjectAndFields() {
@@ -27,7 +24,6 @@ public class CreateObjectAndFields {
     public static void main(String[] args) throws Exception {
         CreateObjectAndFields objVar = new CreateObjectAndFields();
 
-        Metadata metadata = new Metadata();
         ProfileApexPageAccess  pageAccess = new ProfileApexPageAccess();
         pageAccess.setApexPage("JBCXM.SurveyEmailOpen");
         pageAccess.setEnabled(true);
@@ -146,13 +142,7 @@ public class CreateObjectAndFields {
 		objVar.createTextFields(metadataConnection, ObjName, textFields, true, false, false);
 		objVar.createTextFields(metadataConnection, ObjName, textFields, false, true, false);
 		objVar.createTextFields(metadataConnection, ObjName, textRichFields, false, false, true);
-        objVar.deletefields(metadataConnection, ObjName, checkBoxFields); */
-    }
-
-
-
-    public String removeNameSpace(String str) {
-        return str.replaceAll("JBCXM__", "");
+        objVar.deleteFields(metadataConnection, ObjName, checkBoxFields); */
     }
 
     public void createFormulaFields(String objName, List<HashMap<String, String>> formulafieldsList) {
@@ -203,27 +193,30 @@ public class CreateObjectAndFields {
      * @throws com.sforce.ws.ConnectionException
      * @throws InterruptedException
      */
-    public void deletefields(String objName, String[] fields) throws ConnectionException, InterruptedException {
-        Metadata[] metadata = new Metadata[fields.length];
-        int i=0;
-        for(String field : fields) {
-            CustomField custField = new CustomField();
-            custField.setFullName(objName+"."+field.trim().replaceAll(" ", "_")+"__c");
-            metadata[i] = custField;
-            i++;
-        }
-        AsyncResult[] ars = metadataConnection.delete(metadata);
-        long waitTimeMilliSecs = 1000;
-        for(i =0; i < ars.length; i++) {
-            while (!ars[i].isDone()) {
-                Thread.sleep(waitTimeMilliSecs);
-                // double the wait time for the next iteration
-                //waitTimeMilliSecs *= 2;
-                ars = metadataConnection.checkStatus(new String[] { (ars[i]).getId() });
-                System.out.println("Status of field : "+ars[i].getMessage()+" & Status is: " + ars[i].getState());
+    public void deleteFields(String objName, String[] fields) {
+        try {
+            String[] fieldToDelete = new String[fields.length];
+            for(int i=0; i< fields.length; i++) {
+                fieldToDelete[i]=objName+fields[i];
             }
+            DeleteResult[] results = metadataConnection.deleteMetadata(
+                    "CustomField", fieldToDelete);
+            for (DeleteResult r : results) {
+                if (r.isSuccess()) {
+                    System.out.println("Deleted component: " + r.getFullName());
+                } else {
+                    System.out
+                            .println("Errors were encountered while deleting "
+                                    + r.getFullName());
+                    for (Error e : r.getErrors()) {
+                        System.out.println("Error message: " + e.getMessage());
+                        System.out.println("Status code: " + e.getStatusCode());
+                    }
+                }
+            }
+        } catch (ConnectionException ce) {
+            ce.printStackTrace();
         }
-        System.out.println(" Job Done Boss!!!!!!!");
     }
 
     public void createFields(String objName, String[] fields, boolean isCheckBox, boolean isPhone, boolean isUrl)  {
@@ -372,43 +365,20 @@ public class CreateObjectAndFields {
     }
 
     public void createAndCheckStatus(Metadata[] metadata)  {
-        AsyncResult[] ars = null;
+        SaveResult[] results = null;
         try {
-            ars  = metadataConnection.create(metadata);
-        } catch (ConnectionException e) {
-            System.out.println("Failed to created fields On Object");
-            throw new RuntimeException("Failed to create fields : " +e.getLocalizedMessage());
-        }
-
-        String[] id = new String[ars.length];
-        int j =0;
-        boolean iserror = false;
-        for(AsyncResult ar : ars) {
-            id[j]=ar.getId();
-            ++j;
-        }
-        long waitTimeMilliSecs = 1000;
-        try {
-            Thread.sleep(waitTimeMilliSecs);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            System.out.println(e.getLocalizedMessage());
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-        try {
-            for(int i =0; i < id.length; i++) {
-                do {
-                    ars = metadataConnection.checkStatus(new String[] { id[i]});
-                }
-                while (!ars[0].isDone());
-
-                if(ars[0].getMessage() != null ) {
-                    System.out.println("Status is : " + ars[0].getStatusCode() + ", AND Message is : "+ars[0].getMessage());
-                    if(!ars[0].getStatusCode().equals(StatusCode.DUPLICATE_DEVELOPER_NAME)) {
-                        throw new RuntimeException("Failed to Created the Field - " +ars[0].getStatusCode()+ "  -   "+ars[0].getMessage());
-                    }
+            results  = metadataConnection.createMetadata(metadata);
+            for (SaveResult r : results) {
+                if (r.isSuccess()) {
+                    System.out.println("Created component: " + r.getFullName());
                 } else {
-                    System.out.println("Field Created Successfully");
+                    System.out
+                            .println("Errors were encountered while creating "
+                                    + r.getFullName());
+                    for (Error e : r.getErrors()) {
+                        System.out.println("Error message: " + e.getMessage());
+                        System.out.println("Status code: " + e.getStatusCode());
+                    }
                 }
             }
         } catch (ConnectionException e) {
@@ -438,18 +408,23 @@ public class CreateObjectAndFields {
     }
 
     public void deleteCustomObject(String name) throws ConnectionException, InterruptedException {
-        CustomObject co = new CustomObject();
-        co.setFullName(name + "__c");
-        AsyncResult[] ars = metadataConnection.delete(new Metadata[]{co});
-        AsyncResult asyncResult = ars[0];
-
-        long waitTimeMilliSecs = 1000;
-        while (!asyncResult.isDone()) {
-            Thread.sleep(waitTimeMilliSecs);
-            // double the wait time for the next iteration
-            waitTimeMilliSecs *= 2;
-            asyncResult = metadataConnection.checkStatus(new String[] {asyncResult.getId()})[0];
-            System.out.println("Status is: " + asyncResult.getState());
+        try {
+            DeleteResult[] results = metadataConnection.deleteMetadata("CustomObject", new String[]{name});
+            for (DeleteResult r : results) {
+                if (r.isSuccess()) {
+                    System.out.println("Deleted component: " + r.getFullName());
+                } else {
+                    System.out
+                            .println("Errors were encountered while deleting "
+                                    + r.getFullName());
+                    for (Error e : r.getErrors()) {
+                        System.out.println("Error message: " + e.getMessage());
+                        System.out.println("Status code: " + e.getStatusCode());
+                    }
+                }
+            }
+        } catch (ConnectionException ce) {
+            ce.printStackTrace();
         }
     }
 
@@ -466,19 +441,20 @@ public class CreateObjectAndFields {
         nf.setType(FieldType.Text);
         nf.setLabel("Name");
         co.setNameField(nf);
-
-        AsyncResult[] ars = metadataConnection.create(new Metadata[]{co});
-        AsyncResult asyncResult = ars[0];
-
-        long waitTimeMilliSecs = 1000;
-        while (!asyncResult.isDone()) {
-            Thread.sleep(waitTimeMilliSecs);
-            // double the wait time for the next iteration
-            waitTimeMilliSecs *= 2;
-            asyncResult = metadataConnection.checkStatus(new String[] {asyncResult.getId()})[0];
-            System.out.println("Status is: " + asyncResult.getState());
+        SaveResult[] results = metadataConnection.createMetadata(new Metadata[]{co});
+        for (SaveResult r : results) {
+            if (r.isSuccess()) {
+                System.out.println("Created component: " + r.getFullName());
+            } else {
+                System.out
+                        .println("Errors were encountered while creating "
+                                + r.getFullName());
+                for (Error e : r.getErrors()) {
+                    System.out.println("Error message: " + e.getMessage());
+                    System.out.println("Status code: " + e.getStatusCode());
+                }
+            }
         }
-
     }
      
     public void isRemoteSitePresent(String url){

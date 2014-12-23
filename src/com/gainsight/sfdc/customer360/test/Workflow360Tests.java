@@ -39,11 +39,7 @@ public class Workflow360Tests extends WorkflowSetup{
     
     @BeforeClass
     public void setup() {
-        sfinfo= SFDCUtil.fetchSFDCinfo();
-        userLocale = sfinfo.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         basepage.login();
-        isPackage = isPackageInstance();
         createExtIdFieldOnAccount();
         apex.runApexCodeFromFile(CREATE_ACCOUNTS_CUSTOMERS,isPackage);
         createExtIdFieldOnUser();

@@ -2,13 +2,13 @@ package com.gainsight.sfdc.tests;
 
 import com.gainsight.pageobject.core.Report;
 import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.ApexUtil;
-import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.SOQLUtil;
 import com.gainsight.utils.TestDataHolder;
 
@@ -26,19 +26,21 @@ import java.util.*;
 public class BaseTest {
     protected TestDataHolder testDataLoader = new TestDataHolder();
     String[] dirs = {"testdata", "sfdc"};
-    protected TestEnvironment env = new TestEnvironment();
+    protected static TestEnvironment env = new TestEnvironment();
+    protected static BasePage basepage;
     public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
             + generatePath(dirs);
     public static SOQLUtil soql = new SOQLUtil();
-    public ApexUtil apex = new ApexUtil();
-    //public MongoUtil mUtil =  new MongoUtil();
-    public SFDCInfo sfinfo=SFDCUtil.fetchSFDCinfo();
-    protected static BasePage basepage;
-    public static String userLocale;
-    public static TimeZone userTimezone;
-    public String userDir = TestEnvironment.basedir;
-    public Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-    Calendar c = Calendar.getInstance();
+    public static ApexUtil apex = new ApexUtil();
+    public static SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
+    public static CreateObjectAndFields fieldsCreator = new CreateObjectAndFields();
+    public static String userLocale = sfinfo.getUserLocale();
+    public static final String USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(userLocale) ?
+            DateUtil.localMapValues().get(userLocale).split(" ")[0] : "yyyy-mm-dd";
+    public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
+    public static TimeZone userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+    public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+    public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
     public static final Map<String, String> monthMap;
     static
     {
@@ -66,8 +68,6 @@ public class BaseTest {
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
             env.launchBrower();
             basepage = new BasePage();
-            userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-            userLocale = soql.getUserLocale();
             Report.logInfo("Initializing Base Page : " + basepage);
             if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
                 basepage.login();
@@ -154,31 +154,6 @@ public class BaseTest {
         return (ASV / 12) / users;
     }
 
-    public String makeRowValues(String... values) {
-        String row = "";
-        int counter = 1;
-        int size = values.length;
-        for (String value : values) {
-            if (counter == size) {
-                row = row + value;
-            } else {
-                row = row + value + "|";
-            }
-            counter++;
-        }
-        return row;
-    }
-
-    /**
-     * @return true if the execution context is packaged environment.
-     */
-    public boolean isPackageInstance() {
-        Boolean namespace = Boolean.valueOf(env
-                .getProperty("sfdc.managedPackage"));
-        //Report.logInfo("Is Managed Package :" + namespace);
-        return namespace;
-    }
-
     /**
      * This Method queries the data base with the query specified.
      *
@@ -198,14 +173,7 @@ public class BaseTest {
      * @return String - with name space removed.
      */
     public String resolveStrNameSpace(String str) {
-        String result = "";
-        if (str != null && !isPackage) {
-            result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
-            Report.logInfo(result);
-            return result;
-        } else {
-            return str;
-        }
+        return FileUtil.resolveNameSpace(str, isPackage ? NAMESPACE : null);
     }
    
     public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd, boolean bulkFormat) {
@@ -233,41 +201,14 @@ public class BaseTest {
     }
 
     public void deletePickList() {
-        String DELETE_SCRIPT_FILE = TestEnvironment.basedir + "/testdata/sfdc/Administration/Picklist_Delte_Script.txt";
-        apex.runApexCodeFromFile(DELETE_SCRIPT_FILE, isPackageInstance());
-    }
-
-    public String getFileContents(String fileName) {
-        String code = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line = null;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append("\n");
-            }
-            code = stringBuilder.toString();
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return code;
+        String script = "Delete [Select id, name from JBCXM__PickList__c];";
+        apex.runApex(resolveStrNameSpace(script));
     }
 
     public FileReader resolveNameSpace(String fileName) {
         try {
             if (!isPackage) {
-                File tempFile = new File(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
-                FileOutputStream fOut = new FileOutputStream(tempFile);
-                try {
-                    fOut.write(resolveStrNameSpace(getFileContents(fileName)).getBytes());
-                    fOut.close();
-                    fOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return new FileReader(TestEnvironment.basedir + "/resources/datagen/process/tempJob.txt");
+                return FileUtil.resolveNameSpace(new File(fileName), NAMESPACE);
             } else {
                 return new FileReader(fileName);
             }
@@ -279,25 +220,34 @@ public class BaseTest {
 
 
     public void createExtIdFieldOnAccount() {
-        CreateObjectAndFields fieldsCreator = new CreateObjectAndFields();
         fieldsCreator.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
     }
 
     public void createExtIdFieldForScoreCards() {
-        CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+        fieldsCreator.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
     }
+
+    public void createExtIdFieldOnUser(){
+        String UserObj = "User";
+        String[] user_ExtId = new String[]{"User ExternalId"};
+        try {
+            fieldsCreator.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
+        } catch (Exception e) {
+            Report.logInfo("Failed to create fields");
+            e.printStackTrace();
+        }
+    }
+
 
     //same method is used by rules engine test cases also.
     public void createFieldsOnUsageData() {
         String object = "JBCXM__Usagedata__c";
         String[] numberFields1 = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
-        CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-        cObjFields.createNumberField(resolveStrNameSpace(object), numberFields1, false);
-        cObjFields.createNumberField(resolveStrNameSpace(object), numberFields2, false);
+        fieldsCreator.createNumberField(resolveStrNameSpace(object), numberFields1, false);
+        fieldsCreator.createNumberField(resolveStrNameSpace(object), numberFields2, false);
     }
 
     /**

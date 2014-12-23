@@ -60,7 +60,9 @@
           <root url="jar://$MODULE_DIR$/lib/testdriver.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../test-driver/src" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -272,7 +274,9 @@
           <root url="jar://$MODULE_DIR$/lib/metadata.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/metadata.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -417,6 +421,32 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/lamma_2.11-2.2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/mongo-2.10.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/scala-library.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/apex.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/enterprize.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/metadata.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/partner.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/webservice-api.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/wsc-23.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

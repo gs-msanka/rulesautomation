@@ -72,10 +72,6 @@ public class Rule_Survey_Test extends BaseTest {
         metadataUtil = new MetadataUtil();
         metadataUtil.createFieldsOnAccount();
         metadataUtil.createFieldsOnContact();
-
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");

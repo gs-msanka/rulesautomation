@@ -16,8 +16,8 @@
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
-           <!-- <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
-            <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>-->
+            <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>
         </classes>
     </test>
 </suite>

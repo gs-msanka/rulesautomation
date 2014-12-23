@@ -45,11 +45,8 @@ public class WorkFlowTest extends WorkflowSetup {
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
     @BeforeClass
     public void setup() {
-        sfinfo= SFDCUtil.fetchSFDCinfo();
-        userLocale = sfinfo.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         basepage.login();
-        isPackage = isPackageInstance();
+        createExtIdFieldOnUser();
         apex.runApexCodeFromFile(CREATE_ACCOUNTS_CUSTOMERS,isPackage);
         createExtIdFieldOnUser();
         apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);

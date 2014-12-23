@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layoutSections>
+    <customLabel>true</customLabel>
+    <detailHeading>true</detailHeading>
+    <editHeading>true</editHeading>
+    <label>Gainsight Case Widget</label>
+    <layoutColumns>
+        <layoutItems>
+            <height>400</height>
+            <page>JBCXM__Summary</page>
+            <showLabel>false</showLabel>
+            <showScrollbars>true</showScrollbars>
+            <width>100%</width>
+        </layoutItems>
+    </layoutColumns>
+    <style>OneColumn</style>
+</layoutSections>

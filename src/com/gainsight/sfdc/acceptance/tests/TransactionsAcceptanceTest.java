@@ -37,9 +37,6 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	@BeforeClass
 	public void setUp() throws Exception {
 		try {
-            isPackage = isPackageInstance();
-            userLocale = soql.getUserLocale();
-            userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
             Report.logInfo("Starting Acceptance Test Case...");
 			apex.runApexCodeFromFile(TestEnvironment.basedir+TRANS_SETUP , isPackage);
             apex.runApexCodeFromFile(TestEnvironment.basedir+SUMMARY_CONFIG, isPackage);

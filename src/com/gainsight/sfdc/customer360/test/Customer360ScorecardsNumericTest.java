@@ -47,12 +47,9 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
             e.printStackTrace();
             throw new RuntimeException("Unable to create fields for scorecard section");
         }
-        isPackage = isPackageInstance();
         apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
         apex.runApexCodeFromFile(SETUP_FILE, isPackage);
         basepage.login();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 		AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();

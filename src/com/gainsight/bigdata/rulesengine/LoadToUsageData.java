@@ -9,9 +9,7 @@ import com.gainsight.bigdata.util.PropertyReader;
 import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.pojo.Header;
 import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.utils.SOQLUtil;
 import com.gainsight.webaction.WebAction;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -92,7 +90,7 @@ public class LoadToUsageData {
     public void afterClass() throws ConnectionException, InterruptedException {
         CreateObjectAndFields deleteFields = new CreateObjectAndFields();
         String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        deleteFields.deletefields(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields);
+        deleteFields.deleteFields(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields);
         GSUtil.soql = null;
     }
 }

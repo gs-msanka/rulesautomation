@@ -21,17 +21,14 @@ public class Customer360MilestonesTests extends BaseTest {
 	public void setUp() {
 		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
 		basepage.login();
-        isPackage = isPackageInstance();
         apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackage);
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 	}
 	 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
         apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
-        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackageInstance());
+        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackage);
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
 		Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));

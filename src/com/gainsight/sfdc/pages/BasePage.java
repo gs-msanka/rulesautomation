@@ -12,7 +12,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.helpers.Transactions;
 import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
-import com.gainsight.sfdc.retention.pages.RetentionBasePage;
+
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.widgets.AccountWidget.pages.AccountWidgetPage;
@@ -43,7 +43,6 @@ public class BasePage extends WebPage implements Constants {
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO  = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
 	private final String TAB_SELECT         = "//td[contains(@class,'labelCol') and contains(.,'%s')]//following-sibling::td//select";
-	//private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select"; Not working to select customer 360 as default.
 	private final String C360_TAB           = "//a[contains(@title,'Customer Success 360')]";
     private final String CUSTOMER_TAB       = "//a[contains(@title,'Customers Tab')]";
     private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
@@ -117,11 +116,6 @@ public class BasePage extends WebPage implements Constants {
 		return new AdoptionBasePage();
 	}
 
-    public RetentionBasePage clickOnRetentionTab() {
-        clickOnTab(RETENTION_TAB);
-        return new RetentionBasePage();
-    }
-    
     public WorkflowBasePage clickOnWorkflowTab(){
     	clickOnTab(WORKFLOW_TAB);
     	return new WorkflowBasePage();
@@ -332,7 +326,7 @@ public class BasePage extends WebPage implements Constants {
     }
 
     public void waitForLoadingImagesNotPresent() {
-        env.setTimeout(5);
+        env.setTimeout(2);
         wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }

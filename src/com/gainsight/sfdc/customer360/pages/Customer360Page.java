@@ -118,6 +118,7 @@ public class Customer360Page extends BasePage {
     	Report.logInfo("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
+        amtDateUtil.stalePause(); //Few times, customer selection is fails.
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
         if(isInstanceName) {
             if(isContains) {
@@ -152,18 +153,6 @@ public class Customer360Page extends BasePage {
 		String xpath = getXpathForTimeLineItem(lineItem);
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
-
-    public Retention360 clickOnRetEventsSec() {
-        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(EVENT_SECTION_TAB);
-        return new Retention360("Events Page");
-    }
-
-    public Retention360 clickOnRetAlertsSec() {
-        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(ALERT_SECTION_TAB);
-        return new Retention360("Alerts Page");
-    }
 
     public RelatedList360 clickOnRelatedListSec(String secName) {
         amtDateUtil.stalePause();

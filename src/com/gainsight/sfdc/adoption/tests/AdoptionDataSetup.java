@@ -33,11 +33,7 @@ public class AdoptionDataSetup extends BaseTest {
     DataETL dataLoader;
 
     public AdoptionDataSetup() {
-        sfinfo = SFDCUtil.fetchSFDCinfo();
         dataLoader = new DataETL();
-        isPackage = isPackageInstance();
-        userLocale = sfinfo.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
     }
 
     public void initialSetup() {

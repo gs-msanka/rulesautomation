@@ -57,7 +57,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     private Resty resty;
     private URI uri;
     private static final String SCHEME = "Score";
-    private boolean isPackageInstance = isPackageInstance();
 
     @BeforeClass
     public void setUp() throws IOException, BiffException, JSONException, InterruptedException {
@@ -66,9 +65,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackage);
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();

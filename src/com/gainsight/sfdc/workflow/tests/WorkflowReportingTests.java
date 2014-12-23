@@ -21,8 +21,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pages.WorkFlowReportingPage;
 
-public class WorkflowReportingTests extends WorkflowSetup {
-	
+public class WorkflowReportingTests extends BaseTest {
 	private final String LEADERBOARD_DATAGEN_SCRIPT = TestEnvironment.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
 	private final String CREATE_USERS_SCRIPT = TestEnvironment.basedir
@@ -37,7 +36,6 @@ public class WorkflowReportingTests extends WorkflowSetup {
 	@BeforeClass
 	public void setup() throws Exception {
 		basepage.login();
-		isPackage = isPackageInstance();
 		AccountDataSetup accSetup = new AccountDataSetup();
         DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();

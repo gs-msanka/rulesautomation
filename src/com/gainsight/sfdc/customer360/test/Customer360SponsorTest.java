@@ -31,9 +31,7 @@ public class Customer360SponsorTest extends BaseTest {
 		AdminCustomer360Section c360sec=adm.clickOnC360TabAdmin();		
 		c360sec.EditSponsorTracking();
 		c360sec.EnableSponsorTracking();
-		
-		isPackage = isPackageInstance();
-		apex.runApexCodeFromFile(SPONSOR_FILE, isPackage); 
+		apex.runApexCodeFromFile(SPONSOR_FILE, isPackage);
 		basepage.clickOnC360Tab();
 		sponsorTracking360 = SponsorTracking360.init();
 		sp_api=sponsorTracking.init();   

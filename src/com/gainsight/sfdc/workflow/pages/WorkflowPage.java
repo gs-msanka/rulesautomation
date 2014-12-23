@@ -489,20 +489,7 @@ public class WorkflowPage extends WorkflowBasePage {
         collapseCTAView();
         return this;
     }
-    public void selectValueInDropDown(String value) {
-        boolean selected = false;
-        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
-            Report.logInfo("Checking : "+ele.isDisplayed());
-            if(ele.isDisplayed()) {
-                ele.click();
-                selected = true;
-                break;
-            }
-        }
-        if(selected != true) {
-            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
-        }
-    }
+
 
     public boolean isCTADisplayed_WithScore(CTA cta,String scheme){
     	String scoredCTAXpath;

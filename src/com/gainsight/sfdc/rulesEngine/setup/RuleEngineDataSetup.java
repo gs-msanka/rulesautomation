@@ -112,7 +112,6 @@ public class RuleEngineDataSetup extends BaseTest {
     public RuleEngineDataSetup(String surveyCode) {
         Report.logInfo("Survey Rule's Engine Setup");
         mapper = new ObjectMapper();
-        isPackage  = isPackageInstance();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
         scorecardMetricMap      = getScorecardMetrics();

@@ -32,9 +32,6 @@ public class Relatedlisttests extends BaseTest {
 
     @BeforeClass
     public void setUp() {
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackage);
         apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackage);
         apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackage);

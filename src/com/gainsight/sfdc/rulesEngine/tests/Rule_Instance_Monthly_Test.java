@@ -53,7 +53,7 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
     private URI uri;
     private static final String SCHEME = "Score";
     private static final String USAGE_LEVEL = "INSTANCELEVEL";
-    private boolean isPackageInstance = isPackageInstance();
+
 
     @BeforeClass
     public void setUp() throws IOException, BiffException, JSONException, InterruptedException {
@@ -64,7 +64,7 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         basepage.login();
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackage);
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
@@ -72,10 +72,10 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         metadataUtil.createFieldsOnAccount();
         createExtIdFieldForScoreCards();
         createFieldsOnUsageData();
-        apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackageInstance);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackageInstance);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackage);
+        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackage);
         ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();

@@ -23,9 +23,6 @@ public class AccountAttributes360Test extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApexCodeFromFile(ACCOUNT_CREATE_FILE, isPackage);
     }
 

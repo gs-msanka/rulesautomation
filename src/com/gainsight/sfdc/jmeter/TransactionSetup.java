@@ -11,7 +11,7 @@ public class TransactionSetup extends BaseTest {
 			Report.logInfo("Starting Acceptance Test Case...");
 			apex.runApexCodeFromFile(env.basedir
 					+ "/apex_scripts/jmeter/transactions_setup.apex",
-					isPackageInstance());
+					isPackage);
 		} catch (Exception e) {
 			Report.logInfo(e.getMessage());
 			throw e;
