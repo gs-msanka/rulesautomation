@@ -36,14 +36,11 @@ public class AccountWidget_CockpitTab_Tests extends WorkflowSetup {
                                         "Delete [select id from Task];"+
                                         "Delete [Select id from JBCXM__StatePreservation__c];"+
                                         "Delete [Select id from JBCXM__Milestone__c];";
-	 @BeforeClass
-	    public void setup() {
-	        sfinfo= SFDCUtil.fetchSFDCinfo();
-	        userLocale = sfinfo.getUserLocale();
-	        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
-	        basepage.login();
-	        isPackage = isPackageInstance();
-	   }
+	@BeforeClass
+    public void setup() {
+        basepage.login();
+
+    }
 	 	
 	 @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
