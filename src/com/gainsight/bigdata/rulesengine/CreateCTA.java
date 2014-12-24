@@ -178,7 +178,7 @@ public class CreateCTA {
 		String LookupFieldName[]={"CSM_Automation"} , Reference[]={ReferenceTo,ReleationShipName};
 		
 		CreateObjectAndFields COAF= new CreateObjectAndFields();
-		COAF.deletefields("Account",LookupFieldName);
+		COAF.deleteFields("Account",LookupFieldName);
 		COAF.createLookupField("Account", LookupFieldName, Reference);
 		
 		GSUtil.runApexCode(CreateCTACustomer);		
