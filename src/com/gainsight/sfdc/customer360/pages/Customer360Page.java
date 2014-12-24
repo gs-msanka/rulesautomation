@@ -1,16 +1,14 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
-import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
-import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
-import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.workflow.pages.WorkflowPage;
+import java.util.HashMap;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.util.HashMap;
+import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
+import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
+import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
+import com.gainsight.sfdc.pages.BasePage;
 
 public class Customer360Page extends BasePage {
 
@@ -44,12 +42,12 @@ public class Customer360Page extends BasePage {
 
 
     public Customer360Page() {
-        Report.logInfo("360 Page Loading");
+        Log.info("360 Page Loading");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
     public Customer360Page(String val) {
-        Report.logInfo("Sample");
+        Log.info("Sample");
     }
 
     /**
@@ -65,7 +63,7 @@ public class Customer360Page extends BasePage {
 		summary.setOCD(field.getTextFieldText(String.format(summaryLeftSection,labels.getOCD())));
 		summary.setRD(field.getTextFieldText(String.format(summaryLeftSection, labels.getRD())));
 		summary.setStatus(field.getTextFieldText(String.format(summaryLeftSection, "Status")));
-        Report.logInfo("Stage : " + field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
+        Log.info("Stage : " + field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
         summary.setStage(field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
         summary.setUsers(field.getTextFieldText(String.format(summaryWidgets, labels.getUsers())));
 
@@ -115,7 +113,7 @@ public class Customer360Page extends BasePage {
 		return new Workflow360Page("360 Page");
 	}
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
-    	Report.logInfo("Searching for customer : " +name);
+    	Log.info("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
         amtDateUtil.stalePause(); //Few times, customer selection is fails.
@@ -138,7 +136,7 @@ public class Customer360Page extends BasePage {
         driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
         wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
-        Report.logInfo("Customer Search Completed. ");
+        Log.info("Customer Search Completed. ");
         waitForLoadingImagesNotPresent();
         return this;
     }

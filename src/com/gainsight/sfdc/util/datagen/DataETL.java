@@ -1,9 +1,25 @@
 package com.gainsight.sfdc.util.datagen;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
@@ -16,14 +32,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo;
 import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo.Columns;
 import com.gainsight.sfdc.util.db.H2Db;
 import com.gainsight.sfdc.util.db.QueryBuilder;
-import org.apache.commons.io.FileUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.util.*;
+import com.gainsight.testdriver.TestEnvironment;
 
 public class DataETL implements IJobExecutor {
 
@@ -323,9 +332,9 @@ public class DataETL implements IJobExecutor {
 	public void cleanUp(String objectName, int limit) throws IOException {
 		//I need to write logic considering governor limits
         String sObject =  resolveStrNameSpace(objectName);
-        Report.logInfo("Object Name Opted for Clean Up :" +sObject);
+        Log.info("Object Name Opted for Clean Up :" +sObject);
         String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
-		Report.logInfo("Pull Query : " + query);
+		Log.info("Pull Query : " + query);
 		String path = userDir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
 		System.out.println("Output File Loc : " + path);
 		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);

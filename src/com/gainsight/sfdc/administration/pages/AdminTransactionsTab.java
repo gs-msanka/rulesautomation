@@ -1,13 +1,7 @@
 package com.gainsight.sfdc.administration.pages;
 
-import java.util.List;
-
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminTransactionsTab extends BasePage {

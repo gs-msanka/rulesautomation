@@ -1,9 +1,8 @@
 package com.gainsight.sfdc.util.metadata;
 
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.sforce.soap.enterprise.EnterpriseConnection;
-import com.sforce.soap.enterprise.LoginResult;
-import com.sforce.soap.metadata.*;
+import com.gainsight.testdriver.TestEnvironment;
+import com.sforce.soap.metadata.MetadataConnection;
+import com.sforce.soap.partner.LoginResult;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 

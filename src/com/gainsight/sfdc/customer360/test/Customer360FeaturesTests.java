@@ -1,10 +1,9 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Features;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -12,10 +11,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Features;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360FeaturesTests extends BaseTest {
 
@@ -26,7 +25,7 @@ public class Customer360FeaturesTests extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Customer 360 Features module Test Cases...");
+		Log.info("Starting Customer 360 Features module Test Cases...");
         basepage.login();
         apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackage);
 	}

@@ -1,9 +1,8 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.By;
-
 import java.util.HashMap;
+
+import org.openqa.selenium.By;
 
 
 public class Customer360Milestones extends Customer360Page {
@@ -84,7 +83,7 @@ public class Customer360Milestones extends Customer360Page {
 
     public boolean isMilestonePresent(HashMap<String, String> testData) {
         String milestone = getMilestoneXpath(testData);
-        Report.logInfo("Milestone Xpath : "+milestone);
+        Log.info("Milestone Xpath : "+milestone);
         return isElementPresentAndDisplay(By.xpath(milestone));
     }
 
@@ -116,7 +115,7 @@ public class Customer360Milestones extends Customer360Page {
             xPath +="/following-sibling::td[contains(text(), '"+testData.get("Comments")+"')]";
         }
         xPath +="/parent::tr";
-        Report.logInfo("Mile Stone Xpath in table for given data : " +xPath);
+        Log.info("Mile Stone Xpath in table for given data : " +xPath);
         return xPath;
     }
 
@@ -154,11 +153,11 @@ public class Customer360Milestones extends Customer360Page {
      */
     private HashMap<String, String> getMilestoneFormData() {
         HashMap<String, String> formData =  new HashMap<String, String>();
-        Report.logInfo("Date : " +field.getTextFieldValue(DATE_FIELD));
+        Log.info("Date : " +field.getTextFieldValue(DATE_FIELD));
         formData.put("Date", item.getText(DATE_FIELD));
-        Report.logInfo("Milestone : " +item.getText(MILESTONE_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
+        Log.info("Milestone : " +item.getText(MILESTONE_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
         formData.put("Milestone", item.getText(MILESTONE_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
-        Report.logInfo("Opportunity : " +item.getText(OPPORTUNITY_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
+        Log.info("Opportunity : " +item.getText(OPPORTUNITY_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
         formData.put("Opportunity", item.getText(OPPORTUNITY_DROP_BOX+"/span[@class='ui-multiselect-selected-label']"));
         formData.put("Comments", field.getTextFieldValue(COMMENT_FIELD));
         return formData;
@@ -182,7 +181,7 @@ public class Customer360Milestones extends Customer360Page {
     }
 
     public boolean isMsTableDataPresent(){
-        Report.logInfo("xpath of table data-->"+MILESTONES_TABLE_DATA_GRID);
+        Log.info("xpath of table data-->"+MILESTONES_TABLE_DATA_GRID);
         wait.waitTillElementDisplayed(MILESTONES_TABLE_DATA_GRID, MIN_TIME, MAX_TIME);
         return true;
     }

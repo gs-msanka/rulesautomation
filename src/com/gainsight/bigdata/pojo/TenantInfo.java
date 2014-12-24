@@ -1,26 +1,28 @@
 package com.gainsight.bigdata.pojo;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TenantInfo {
 
 	String TenantId;
-	String authToken;
+	private String authToken;
 
     @JsonProperty("TenantName")
-    String TenantName;
+    private String TenantName;
 	
 	@JsonProperty("ExternalTenantID")
-	String externalTenantID;
+	private String externalTenantID;
 	
 	@JsonProperty("ExternalTenantName")
-	String externalTenantName;
+	private String externalTenantName;
 
     @JsonProperty("tenantType")
-    String tenantType;
+    private String tenantType;
 
     @JsonProperty("disabled")
-    boolean disabled;
+    private boolean disabled;
 
 
 	public String getTenantName() {

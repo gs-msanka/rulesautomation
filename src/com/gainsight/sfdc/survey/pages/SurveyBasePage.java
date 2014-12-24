@@ -1,10 +1,6 @@
 package com.gainsight.sfdc.survey.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
 import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 
 public class SurveyBasePage extends BasePage {
 

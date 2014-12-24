@@ -1,11 +1,10 @@
 package com.gainsight.sfdc.customer.pages;
 
-import com.gainsight.pageobject.core.Report;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-
-import java.util.List;
 
 
 public class CustomersPage extends CustomerBasePage {
@@ -141,7 +140,7 @@ public class CustomersPage extends CustomerBasePage {
         try{
             ele = element.getElement("//a[contains(text(), '"+customerName+"')]/parent::div/parent::div[contains(@class, 'ui-widget-content slick-row')]");
         } catch (RuntimeException e) {
-            Report.logInfo(e.getMessage());
+            Log.info(e.getMessage());
         }
         return ele;
     }
@@ -188,9 +187,9 @@ public class CustomersPage extends CustomerBasePage {
             amtDateUtil.stalePause();
             try {
                 modal.accept();
-                Report.logInfo("Modal dialog present ,Customer can't be deleted");
+                Log.info("Modal dialog present ,Customer can't be deleted");
             } catch (Exception e) { //need to change it to exact exception type
-                Report.logInfo("Modal dialog not present ,Customer can be deleted");
+                Log.info("Modal dialog not present ,Customer can be deleted");
                 status = true;
             }
         } else {
@@ -201,26 +200,26 @@ public class CustomersPage extends CustomerBasePage {
     }
 
     public boolean isDataPresentInGrid(String values) {
-        Report.logInfo("Data to Verify : " +values);
+        Log.info("Data to Verify : " +values);
         boolean result = false;
         String[] cellValues = values.split("\\|");
         setCustomerNameFilter(cellValues[0].trim());
         WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
         List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
-        Report.logInfo("Rows :" +rows.size());
+        Log.info("Rows :" +rows.size());
         int a=1;  boolean hasScroll = false;
         for(WebElement row : rows) {
-            Report.logInfo("Checking Row : " +row.getText());
+            Log.info("Checking Row : " +row.getText());
             boolean inRowData = true;
             WebElement rightRow= null;
             try {
                 element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
                 rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
                 hasScroll = true;
-                Report.logInfo("Checking Row : "+rightRow.getText());
-                Report.logInfo("Grid has scroll bar");
+                Log.info("Checking Row : "+rightRow.getText());
+                Log.info("Grid has scroll bar");
             } catch (Exception e) {
-                Report.logInfo("Grid Doesn't have scroll bar");
+                Log.info("Grid Doesn't have scroll bar");
             }
             List<WebElement> cells = null;
             if(hasScroll) {
@@ -229,7 +228,7 @@ public class CustomersPage extends CustomerBasePage {
                 cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
             }
 
-            Report.logInfo("No of Cells :" +cells.size());
+            Log.info("No of Cells :" +cells.size());
             int i=1;
             outerloop:
             for(String val : cellValues) {
@@ -239,8 +238,8 @@ public class CustomersPage extends CustomerBasePage {
                     if(i==1) {
                         ++i;
                         if(!hasScroll) {
-                            Report.logInfo(cell.getText());
-                            Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
+                            Log.info(cell.getText());
+                            Log.info(String.valueOf(cell.getText().contains(val.trim())));
                             if(cell.getText().contains(val.trim())) { valTemp=true; break;}
                             if(cell.getText().contains(val.trim())) { break outerloop;}
                         } else {
@@ -248,11 +247,11 @@ public class CustomersPage extends CustomerBasePage {
                             if(row.getText().contains(val.trim())) { break outerloop;}
                         }
                     } else {
-                        Report.logInfo(val);
-                        Report.logInfo(cell.getText());
+                        Log.info(val);
+                        Log.info(cell.getText());
                         if(cell.getText().contains(val.trim())) {
                             valTemp = true;
-                            Report.logInfo("Value is found in cell");
+                            Log.info("Value is found in cell");
                             break;
                         }
                     }

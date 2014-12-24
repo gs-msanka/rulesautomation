@@ -1,9 +1,9 @@
 package com.gainsight.sfdc.survey.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.tests.BaseTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+
+import com.gainsight.sfdc.tests.BaseTest;
 
 public class SurveyAcceptanceTests extends BaseTest{
 
@@ -12,7 +12,7 @@ public class SurveyAcceptanceTests extends BaseTest{
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Survey Creation / Clone Test Cases...");
+		Log.info("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
     }
 

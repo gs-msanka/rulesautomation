@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.workflow.pages;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 /**
@@ -103,7 +102,7 @@ public class WorkFlowReportingPage extends BasePage {
     
 
     public boolean isUserDisplayedInLeaderBoard(String assignee) {
-        Report.logInfo("Checking is user is dispalyed in leader board.");
+        Log.info("Checking is user is dispalyed in leader board.");
         return element.isElementPresent(String.format(USER, assignee));
     }
     public boolean checkforNoDataMessage(){
@@ -123,7 +122,7 @@ public class WorkFlowReportingPage extends BasePage {
             }
         } catch (Exception e)  {
             e.printStackTrace();
-            Report.logInfo("Failed to get CTA count, " +e.getLocalizedMessage());
+            Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
         return 0;
     }
@@ -142,7 +141,7 @@ public class WorkFlowReportingPage extends BasePage {
             }
         } catch (Exception e)  {
             e.printStackTrace();
-            Report.logInfo("Failed to get CTA count, " +e.getLocalizedMessage());
+            Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
         return 0;
     }
@@ -161,7 +160,7 @@ public class WorkFlowReportingPage extends BasePage {
             }
         } catch (Exception e)  {
             e.printStackTrace();
-            Report.logInfo("Failed to get CTA count, " +e.getLocalizedMessage());
+            Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
         return 0;
     }
@@ -173,7 +172,7 @@ public class WorkFlowReportingPage extends BasePage {
             asv = Integer.valueOf(temp.trim().substring(1, temp.length()).replaceAll(",", ""));
         } catch (Exception e)  {
             e.printStackTrace();
-            Report.logInfo("Failed to get Task count, " +e.getLocalizedMessage());
+            Log.info("Failed to get Task count, " +e.getLocalizedMessage());
         }
         return asv;
     }
@@ -198,7 +197,7 @@ public class WorkFlowReportingPage extends BasePage {
 
         } catch (Exception e)  {
             e.printStackTrace();
-            Report.logInfo("Failed to get Task count, " +e.getLocalizedMessage());
+            Log.info("Failed to get Task count, " +e.getLocalizedMessage());
         }
         env.setTimeout(30);
         return count;

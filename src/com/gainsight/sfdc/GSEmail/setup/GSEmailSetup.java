@@ -3,13 +3,8 @@ package com.gainsight.sfdc.GSEmail.setup;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.openqa.selenium.remote.server.handler.SwitchToWindow;
-
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.pages.BasePage;
@@ -17,8 +12,8 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.MongoUtil;
-import com.gainsight.webaction.WebAction;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.mongodb.ServerAddress;
 import com.sforce.soap.partner.sobject.SObject;

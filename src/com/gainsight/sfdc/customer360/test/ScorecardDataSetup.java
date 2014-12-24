@@ -1,17 +1,11 @@
 package com.gainsight.sfdc.customer360.test;
-import java.io.File;
-
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.SOQLUtil;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
+import com.gainsight.testdriver.TestEnvironment;
 
 public class ScorecardDataSetup {
 
@@ -100,7 +94,7 @@ public class ScorecardDataSetup {
         System.out.println("STEP 10: DONE");
                
         }catch(Exception ex){
-        	Report.logInfo(ex.getLocalizedMessage());
+        	Log.info(ex.getLocalizedMessage());
         	ex.printStackTrace();
         }
          */
@@ -135,7 +129,7 @@ public class ScorecardDataSetup {
             cObjFields.createTextFields(removeNameSpace(Scorecard_History), SCHistory, true, true, true, false, false);
             cObjFields.createTextFields(removeNameSpace(CustomerInfo_obj), CInfo_ExtId, true, true, true, false, false);
         } catch (Exception e) {       	
-            Report.logInfo("Failed to create fields");
+            Log.info("Failed to create fields");
             e.printStackTrace();
         }
 

@@ -2,15 +2,15 @@ package com.gainsight.sfdc.administration.tests;
 
 import java.io.IOException;
 import java.util.HashMap;
+
 import jxl.read.biff.BiffException;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.gainsight.pageobject.core.Report;
+
 import com.gainsight.sfdc.administration.pages.AdminRetentionTab;
-import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
@@ -22,7 +22,7 @@ public class AdminRetentionTabTest extends BaseTest {
 	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminRetentionTestdata.xls";
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		deletePickList();
 		basepage.login();
 		

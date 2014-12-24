@@ -5,13 +5,10 @@ import java.util.HashMap;
 
 import jxl.read.biff.BiffException;
 
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
 import com.gainsight.sfdc.administration.pages.AdminNotificationsSubTab;
 import com.gainsight.sfdc.tests.BaseTest;
 
@@ -23,7 +20,7 @@ public class AdminNotificationTabTest extends BaseTest {
 	
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		basepage.login();
 	}
 	

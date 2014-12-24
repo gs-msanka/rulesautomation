@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.api.c360;
 
+import static us.monoid.web.Resty.content;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,16 +12,17 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import org.testng.Assert;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import us.monoid.web.BinaryResource;
 import us.monoid.web.JSONResource;
 import us.monoid.web.Resty;
-import com.gainsight.sfdc.util.bulk.*;
-import com.gainsight.sfdc.util.CompareJSON;
+
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.DataProviderArguments;
-import static us.monoid.web.Resty.*;
 
 public class Customer360SectionsTest {
 	private SFDCInfo sfinfo;

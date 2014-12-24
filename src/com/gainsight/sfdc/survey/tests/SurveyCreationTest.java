@@ -1,25 +1,21 @@
 package com.gainsight.sfdc.survey.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.survey.pages.SurveyBasePage;
-import com.gainsight.sfdc.survey.pages.SurveyDesignPage;
-import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
-import com.gainsight.sfdc.survey.pojo.SurveyProperties;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.Utilities;
-import com.gainsight.sfdc.survey.pojo.SurveyProperties;
-import com.gainsight.utils.DataProviderArguments;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.TimeZone;
+
+import jxl.read.biff.BiffException;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.TimeZone;
-
-import jxl.read.biff.BiffException;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
+import com.gainsight.sfdc.survey.pojo.SurveyProperties;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class SurveyCreationTest extends BaseTest {
 	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";

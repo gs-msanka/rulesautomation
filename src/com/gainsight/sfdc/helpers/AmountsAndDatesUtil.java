@@ -9,9 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
+
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.tests.BaseTest;
 

@@ -1,25 +1,24 @@
 package com.gainsight.sfdc.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import com.sforce.soap.metadata.*;
-import com.sforce.soap.enterprise.EnterpriseConnection;
-import com.sforce.soap.enterprise.LoginResult;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
-import org.w3c.dom.*;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +27,28 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.sforce.soap.metadata.AsyncResult;
+import com.sforce.soap.metadata.CodeCoverageWarning;
+import com.sforce.soap.metadata.DeployMessage;
+import com.sforce.soap.metadata.DeployOptions;
+import com.sforce.soap.metadata.DeployResult;
+import com.sforce.soap.metadata.MetadataConnection;
+import com.sforce.soap.metadata.PackageTypeMembers;
+import com.sforce.soap.metadata.RetrieveMessage;
+import com.sforce.soap.metadata.RetrieveRequest;
+import com.sforce.soap.metadata.RetrieveResult;
+import com.sforce.soap.metadata.RunTestFailure;
+import com.sforce.soap.metadata.RunTestsResult;
+import com.sforce.soap.partner.LoginResult;
+import com.sforce.ws.ConnectionException;
+import com.sforce.ws.ConnectorConfig;
 
 public class PackageUtil {
 	private static MetadataConnection metadataConnection;

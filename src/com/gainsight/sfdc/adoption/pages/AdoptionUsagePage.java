@@ -1,15 +1,15 @@
 package com.gainsight.sfdc.adoption.pages;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
 
 
 public class AdoptionUsagePage extends AdoptionBasePage {
@@ -85,7 +85,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     public AdoptionUsagePage displayMonthlyUsageData() {
 
-        Report.logInfo("Displaying Monthly usage Data");
+        Log.info("Displaying Monthly usage Data");
 
         if(measure !=null && measure != "") {
             selectMeasures(measure);
@@ -94,24 +94,24 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         if(noOfMonths != null && noOfMonths != "") {
             item.click(PERIOD_SELECT_BUTTON);
             selectValueInDropDown(noOfMonths);
-            Report.logInfo("No of Months Selected : " +noOfMonths);
+            Log.info("No of Months Selected : " +noOfMonths);
         }
         if(month != null && month != "") {
 
             item.click(MONTH_SELECT_BUTTON);
             selectValueInDropDown(month);
-            Report.logInfo("Month Selected : " +month);
+            Log.info("Month Selected : " +month);
         }
 
         if(year != null && year != "") {
             item.click(YEAR_SELECT_BUTTON);
             selectValueInDropDown(year);
-            Report.logInfo("Year Selected : "+year);
+            Log.info("Year Selected : "+year);
         }
         if(dataGranularity != null && dataGranularity != "") {
           item.click(AGG_SELECT_BUTTON);
             selectValueInDropDown(dataGranularity);
-            Report.logInfo("Data Granularity Selected : " +dataGranularity);
+            Log.info("Data Granularity Selected : " +dataGranularity);
         }
         try {
             env.setTimeout(1);
@@ -120,7 +120,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 wle.click();
             }
         } catch (Exception e) {
-            Report.logInfo("Failed to unCheck/Check spark lines" +e.getLocalizedMessage());
+            Log.info("Failed to unCheck/Check spark lines" +e.getLocalizedMessage());
         }
         env.setTimeout(30);
         item.click(GO_BUTTON);
@@ -138,7 +138,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             selectValueInDropDown(noOfWeeks);
         }
         if(weekDate != null && weekDate != "") {
-            Report.logInfo("Entering "+weekDate+" in "+WEEK_DATE_INPUT);
+            Log.info("Entering "+weekDate+" in "+WEEK_DATE_INPUT);
             getFirstDisplayedElement(WEEK_DATE_INPUT).clear();
             getFirstDisplayedElement(WEEK_DATE_INPUT).sendKeys(weekDate);
 
@@ -151,7 +151,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             try {
                 env.setTimeout(1);
                 List<WebElement> eleList = element.getAllElement("//div[@class='sparks-check']/input[@type='checkbox']");
-                Report.logInfo(String.valueOf(eleList.size()));
+                Log.info(String.valueOf(eleList.size()));
                 //trying on last element
                 if(Boolean.valueOf(eleList.get(eleList.size() - 1).getAttribute("checked"))) {
                     eleList.get(eleList.size()-1).click();
@@ -159,7 +159,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Report.logInfo("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
+                Log.info("Failed to unCheck/Check spark lines -- " +e.getLocalizedMessage());
                 //clicking on Go button and trying again...in some cases this works...but needs to be fixed in product...
                 item.click(GO_BUTTON);
                 waitTillNoLoadingIcon();
@@ -174,7 +174,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
     //Files Downloaded, Page Views.
     private void selectMeasures(String measures) {
-        Report.logInfo("Selecting measures : " +measures);
+        Log.info("Selecting measures : " +measures);
         item.click(MEASURE_SELECT_BUTTON);
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
         String[] args = measures.split("\\|");
@@ -187,7 +187,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
 
 
     public AdoptionUsagePage selectUIView(String viewName) {
-        Report.logInfo("Selecting UI View : "+viewName);
+        Log.info("Selecting UI View : "+viewName);
         if(viewName != null && viewName!= "") {
             item.click(UI_VIEW_SELECT_BUTTON);
             selectValueInDropDown(viewName);
@@ -201,7 +201,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     public boolean exportGrid() {
         //Your request to export data is added to the queue and you will receive an email notification upon completion.
         boolean result = false;
-        Report.logInfo("Clicking to export the grid data");
+        Log.info("Clicking to export the grid data");
         try {
             item.click(MORE_BUTTON);
             String EXPORT_LINK = "//li[@action='export']/a[contains(text(), 'Export')]";
@@ -214,7 +214,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 result = true;
             }
         } catch (Exception e) {
-            Report.logInfo("*** Export Failed ***" +e.getMessage());
+            Log.info("*** Export Failed ***" +e.getMessage());
         }
         return result;
     }
@@ -223,9 +223,9 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         boolean hasScroll = false;
         try {
             hasScroll = element.getElement("//div[@class='slick-pane slick-pane-top slick-pane-right']").isDisplayed();
-            Report.logInfo("Grid has scroll bar");
+            Log.info("Grid has scroll bar");
         } catch (Exception e) {
-            Report.logInfo("Grid Doesn't have scroll bar");
+            Log.info("Grid Doesn't have scroll bar");
         }
         return hasScroll;
     }
@@ -237,7 +237,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         boolean result = false;
         String[] values = value.split("\\|");
         setCustomerNameFilter(values[0].trim());
-        Report.logInfo("Expected Data : " +value);
+        Log.info("Expected Data : " +value);
         env.setTimeout(2);
         if(gridHasScrollBar()) {
             List<WebElement> leftRows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div[contains(@class, 'ui-widget-content slick-row')]");
@@ -251,7 +251,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                     for(WebElement cell : cells) {
                         actualRowText.add(cell.getText().trim());
                     }
-                    Report.logInfo("Actual Data : "+actualRowText);
+                    Log.info("Actual Data : "+actualRowText);
                     if(actualRowText.containsAll(Arrays.asList(values))) {
                         result = true;
                         break;
@@ -262,13 +262,13 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             List<WebElement> rows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div[contains(@class, 'ui-widget-content slick-row')]");
             for(WebElement row : rows) {
                 String rowText = row.getText();
-                Report.logInfo("Actual Row Text : "+rowText.replaceAll("\n", ", "));
+                Log.info("Actual Row Text : "+rowText.replaceAll("\n", ", "));
                 List<WebElement> cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
                 List<String> actualRowText = new ArrayList<>();
                 for(WebElement cell : cells) {
                     actualRowText.add(cell.getText().trim());
                 }
-                Report.logInfo("Actual Data : "+actualRowText);
+                Log.info("Actual Data : "+actualRowText);
                 if(actualRowText.containsAll(Arrays.asList(values))) {
                     result = true;
                     break;
@@ -287,21 +287,21 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 success = true;
             }
         } catch (Exception e ) {
-            Report.logInfo(e.getMessage());
-            Report.logInfo("Adoption Grid is not displayed");
+            Log.info(e.getMessage());
+            Log.info("Adoption Grid is not displayed");
         }
         return success;
     }
 
     public Customer360Page navigateTo360(String cName) {
-        Report.logInfo("Clicking on Customer link to navigate to 360 Page");
+        Log.info("Clicking on Customer link to navigate to 360 Page");
         setCustomerNameFilter(cName);
         item.click("//div[@class='slick-cell l0 r0 slick-customer-format']/a[contains(text(), '"+cName+"')]");
         return new Customer360Page();
     }
 
     private void setCustomerNameFilter(String cName) {
-        Report.logInfo("Filtering By Customer : "+cName);
+        Log.info("Filtering By Customer : "+cName);
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
         if(cName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, cName);
@@ -321,7 +321,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 return true;
             }
         } catch (Exception e) {
-            Report.logInfo("Weekly data selection view is not displayed");
+            Log.info("Weekly data selection view is not displayed");
             return false;
         }
         return false;
@@ -336,7 +336,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
                 return true;
             }
         } catch (Exception e) {
-            Report.logInfo("Monthly data selection view is not displayed");
+            Log.info("Monthly data selection view is not displayed");
             return false;
         }
         return false;
@@ -356,10 +356,10 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     }
 
     public boolean isGridHeaderMapped(String value) {
-        Report.logInfo("Checking the header of the grid for values entered.");
+        Log.info("Checking the header of the grid for values entered.");
         boolean result = false;
         String[] values = value.split("\\|");
-        Report.logInfo("Expected Data : " +value);
+        Log.info("Expected Data : " +value);
         env.setTimeout(2);
         List<String> actualHeaderColumns = new ArrayList<>();
         if(gridHasScrollBar()) {
@@ -377,7 +377,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
             for(WebElement ele : header.findElements(By.tagName("div"))) {
                 actualHeaderColumns.add(ele.getText().trim());
             }
-            Report.logInfo("Actual Data : " +actualHeaderColumns);
+            Log.info("Actual Data : " +actualHeaderColumns);
             result = actualHeaderColumns.containsAll(Arrays.asList(values));
         }
         return result;

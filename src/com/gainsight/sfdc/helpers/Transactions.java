@@ -1,14 +1,15 @@
 package com.gainsight.sfdc.helpers;
 
-import com.gainsight.pageobject.core.WebPage;
-import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
-import com.gainsight.sfdc.pages.Constants;
+import java.util.HashMap;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import java.util.HashMap;
-import java.util.List;
+import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
+import com.gainsight.sfdc.pages.Constants;
 
 public class Transactions extends WebPage implements Constants {
 	private final String BOOKING_DATE_FIELD = "//input[@class= 'transactionDate transactionBookingdate gs-calendar']";

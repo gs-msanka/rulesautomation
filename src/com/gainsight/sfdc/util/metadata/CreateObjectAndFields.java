@@ -1,13 +1,25 @@
 package com.gainsight.sfdc.util.metadata;
 
-import com.sforce.soap.metadata.*;
-import com.sforce.soap.metadata.Error;
-import com.sforce.ws.ConnectionException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import com.sforce.soap.metadata.CustomField;
+import com.sforce.soap.metadata.CustomObject;
+import com.sforce.soap.metadata.DeploymentStatus;
+import com.sforce.soap.metadata.FieldType;
+import com.sforce.soap.metadata.Metadata;
+import com.sforce.soap.metadata.MetadataConnection;
+import com.sforce.soap.metadata.Picklist;
+import com.sforce.soap.metadata.PicklistValue;
+import com.sforce.soap.metadata.Profile;
+import com.sforce.soap.metadata.ProfileApexPageAccess;
+import com.sforce.soap.metadata.RemoteSiteSetting;
+import com.sforce.soap.metadata.SharingModel;
+import com.sforce.soap.partner.DeleteResult;
+import com.sforce.soap.partner.SaveResult;
+import com.sforce.ws.ConnectionException;
 
 
 public class CreateObjectAndFields {

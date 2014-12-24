@@ -1,7 +1,21 @@
 package com.gainsight.sfdc.survey.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
+import us.monoid.web.JSONResource;
+import us.monoid.web.Resty;
+
 import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
@@ -12,23 +26,9 @@ import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.MetadataUtil;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import us.monoid.json.JSONException;
-import us.monoid.json.JSONObject;
-import us.monoid.web.JSONResource;
-import us.monoid.web.Resty;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -164,9 +164,9 @@ public class Rule_Survey_Test extends BaseTest {
     private String createRule(String rule) throws IOException, JSONException {
         JSONResource res = resty.json(uri, Resty.form(rule));
         JSONObject jObj = res.toObject();
-        Report.logInfo(jObj.toString());
+        Log.info(jObj.toString());
         String ruleId = jObj.getString("id");
-        Report.logInfo("Rule Id : "+ruleId);
+        Log.info("Rule Id : "+ruleId);
         return ruleId;
     }
 

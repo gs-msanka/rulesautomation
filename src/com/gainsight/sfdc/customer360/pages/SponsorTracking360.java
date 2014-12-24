@@ -2,7 +2,6 @@ package com.gainsight.sfdc.customer360.pages;
 
 import java.util.HashMap;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.sponsorTracking.sponsorTracking;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.sforce.soap.partner.sobject.SObject;
@@ -22,7 +21,7 @@ public class SponsorTracking360 extends Customer360Page{
 	}
 	
 	public void searchSponsor(String CustomerName,String Contactname,String Email,sponsorTracking sp_api){
-		Report.logInfo(CustomerName+"  "+Contactname+"  "+Email);
+		Log.info(CustomerName+"  "+Contactname+"  "+Email);
 		
 		searchCustomer(CustomerName, false, false);
 		goToSponsorSection();

@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.accounts.tests;
 
-import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 
 

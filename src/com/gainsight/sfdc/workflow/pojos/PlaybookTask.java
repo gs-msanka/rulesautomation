@@ -1,9 +1,9 @@
 package com.gainsight.sfdc.workflow.pojos;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 import java.util.HashMap;
 import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * Created by gainsight on 19/11/14.

@@ -5,25 +5,17 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.Header;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.webaction.WebAction;
-import com.sforce.soap.metadata.CustomField;
-import com.sforce.soap.metadata.CustomObject;
-import com.sforce.soap.metadata.DeploymentStatus;
-import com.sforce.soap.metadata.MetadataConnection;
-import com.sforce.soap.metadata.ObjectUsage;
-import com.sforce.soap.metadata.SharingModel;
+import com.gainsight.testdriver.TestEnvironment;
+import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class CreateCTA {
 	
 	
-	private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/CreateCTA/";
+/*	private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/CreateCTA/";
     private static final String CreateCTACustomer = rulesDir + "CreateCTACustomer.apex";
     private static final String AAR_CreateConfig_StringFilter = rulesDir + "AAR_CreateConfig_StringFilter.apex";
     private static final String AAR_CreateConfig_StringFilter_LookupShow = rulesDir + "AAR_CreateConfig_StringFilter_LookupShow.apex";
@@ -66,7 +58,7 @@ public class CreateCTA {
             SObject[] LRR = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
         
             for (SObject obj : LRR) {
-            	//Report.logInfo(obj.getChild(LastRunResultFieldName).getValue().toString());
+            	//Log.info(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
@@ -130,7 +122,7 @@ public class CreateCTA {
             SObject[] LRR = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
         
             for (SObject obj : LRR) {
-            	//Report.logInfo(obj.getChild(LastRunResultFieldName).getValue().toString());
+            	//Log.info(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
@@ -208,7 +200,7 @@ public class CreateCTA {
             SObject[] LRR = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
         
             for (SObject obj : LRR) {
-            	//Report.logInfo(obj.getChild(LastRunResultFieldName).getValue().toString());
+            	//Log.info(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertNotNull(obj.getChild(LastRunResultFieldName).getValue().toString());
                 Assert.assertEquals("success", obj.getChild(LastRunResultFieldName).getValue().toString().toLowerCase());
             }
@@ -259,6 +251,6 @@ public class CreateCTA {
 	@AfterClass
     public void afterClass() {
         GSUtil.soql = null;
-    }
+    }*/
 	
 }

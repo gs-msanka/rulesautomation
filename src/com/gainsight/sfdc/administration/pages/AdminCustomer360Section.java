@@ -2,7 +2,6 @@ package com.gainsight.sfdc.administration.pages;
 
 import org.openqa.selenium.By;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminCustomer360Section extends BasePage{
@@ -17,12 +16,12 @@ public class AdminCustomer360Section extends BasePage{
 	private final String EDIT_SPONSOR_TRACKING_IFRAME  = "//iframe[contains(@src,'sponsortracking')]";
 	
 	public AdminCustomer360Section() {
-        Report.logInfo("Admin Customer 360 Section Page Loading");
+        Log.info("Admin Customer 360 Section Page Loading");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 	
 	public void EditSponsorTracking(){
-		Report.logInfo("Click on Edit link in Customer 360 Section");
+		Log.info("Click on Edit link in Customer 360 Section");
 		item.click(EDIT_LINK_SPONSOR);
 		amtDateUtil.stalePause();		
 	}
@@ -40,16 +39,16 @@ public class AdminCustomer360Section extends BasePage{
 					item.click(UNCHECKED_CHECKBOX);
 			}
 			catch(Exception e){
-				Report.logInfo("Element is already Checked");
+				Log.info("Element is already Checked");
 			}
 				
 			item.click(SAVE_SPONSOR_TRACKING);
 			amtDateUtil.stalePause();
 			driver=driver.switchTo().defaultContent();
-			Report.logInfo("Finished Admin Config...");
+			Log.info("Finished Admin Config...");
 		}
 		else
-			Report.logInfo("Sponsor Tracking Window to Enable is not Visible");
+			Log.info("Sponsor Tracking Window to Enable is not Visible");
 		
 	}
 	

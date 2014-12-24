@@ -1,16 +1,15 @@
 package com.gainsight.sfdc.customer.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer.pages.CustomersPage;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.HashMap;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer.pages.CustomersPage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class CustomerTest extends BaseTest {
 
@@ -21,7 +20,7 @@ public class CustomerTest extends BaseTest {
 
     @BeforeClass
     public void setUp() {
-        Report.logInfo("Started Customers Test Cases");
+        Log.info("Started Customers Test Cases");
         basepage.login();
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_QUERY));
         apex.runApexCodeFromFile(ACC_SETUP_SCRIPT, isPackage);
@@ -115,7 +114,7 @@ public class CustomerTest extends BaseTest {
             value +=s+";";
         }
         value = value.substring(0, value.length()-1);
-        Report.logInfo("Value : "+value);
+        Log.info("Value : "+value);
         return value;
     }
 

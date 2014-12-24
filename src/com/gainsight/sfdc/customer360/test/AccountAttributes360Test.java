@@ -1,14 +1,17 @@
 package com.gainsight.sfdc.customer360.test;
 
+import java.util.HashMap;
+
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import com.gainsight.sfdc.customer360.pages.Attributes;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
-import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * Created by gainsight on 08/01/14.

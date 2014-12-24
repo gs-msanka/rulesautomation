@@ -3,6 +3,7 @@ package com.gainsight.sfdc.accounts.pages;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import com.gainsight.sfdc.pages.BasePage;
 
 public class AccountsPage extends BasePage{

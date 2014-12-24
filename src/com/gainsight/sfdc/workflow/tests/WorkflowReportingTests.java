@@ -1,25 +1,18 @@
 package com.gainsight.sfdc.workflow.tests;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Random;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pages.WorkFlowReportingPage;
+import com.gainsight.testdriver.TestEnvironment;
 
 public class WorkflowReportingTests extends BaseTest {
 	private final String LEADERBOARD_DATAGEN_SCRIPT = TestEnvironment.basedir
@@ -267,7 +260,7 @@ public class WorkflowReportingTests extends BaseTest {
 				else query=query+" ) and JBCXM__Status__c='Closed'";
 			}
 		}
-		Report.logInfo("Query : " + resolveStrNameSpace(query));
+		Log.info("Query : " + resolveStrNameSpace(query));
 		count = soql.getRecordCount(resolveStrNameSpace(query));
 		return count;
 	}

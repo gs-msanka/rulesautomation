@@ -1,13 +1,12 @@
 package com.gainsight.sfdc.adoption.pages;
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 
 public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String READY_INDICATOR                    = "//div[@class=' m_ctn results-btn' and text()='Go']";
@@ -105,7 +104,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     }
 
     private void selectCustomer(String customerName) {
-        Report.logInfo("Customer : " +customerName);
+        Log.info("Customer : " +customerName);
         wait.waitTillElementDisplayed(CUSTOMER_NAME_INPUT, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).clear();
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).sendKeys(customerName);
@@ -113,7 +112,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
 
         List<WebElement> eleList = element.getAllElement("//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']/li/a[contains(text(), '"+customerName+"')]");
-        Report.logInfo(String.valueOf(eleList.size()));
+        Log.info(String.valueOf(eleList.size()));
         boolean customerSelected = false;
         for(WebElement ele : eleList) {
             if(ele.isDisplayed()) {
@@ -126,7 +125,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 
     //Files Downloaded, Page Views.
     private void selectMeasures(String measures) {
-        Report.logInfo("Measures : " +measures);
+        Log.info("Measures : " +measures);
         item.click(MEASURE_SELECT_BUTTON);
         amtDateUtil.stalePause();
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
@@ -167,7 +166,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         if (weekLabelDate != null && !weekLabelDate.isEmpty()) {
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).clear();
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).sendKeys(weekLabelDate);
-            Report.logInfo("Week Label : " +weekLabelDate);
+            Log.info("Week Label : " +weekLabelDate);
         }
         button.click(GO_BUTTON);
         amtDateUtil.stalePause();
@@ -206,38 +205,38 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     //Verifies if the usage chart is displayed or not.
     public boolean isChartDisplayed() {
         boolean success = false;
-        Report.logInfo("Checking Adoption chart is displayed");
+        Log.info("Checking Adoption chart is displayed");
         try {
             WebElement ele = element.getElement(ADOP_CHART);
             if (ele != null) {
                 success = ele.isDisplayed();
             }
         } catch (RuntimeException e) {
-            Report.logInfo("No Such Ele : " + e.getLocalizedMessage());
+            Log.info("No Such Ele : " + e.getLocalizedMessage());
         }
-        Report.logInfo("Checked Adoption chart display returning result: " + success);
+        Log.info("Checked Adoption chart display returning result: " + success);
         return success;
     }
 
     //Verifies if the adoption grid below the usage data is displayed (Not grill-down grid).
     public boolean isGridDisplayed() {
         boolean success = false;
-        Report.logInfo("Checking adoption grid is displayed in adoption analytics page.");
+        Log.info("Checking adoption grid is displayed in adoption analytics page.");
         try {
             WebElement ele = element.getElement(ADOP_GRID);
             if (ele != null) {
                 success = ele.isDisplayed();
             }
         } catch (RuntimeException e) {
-            Report.logInfo("No Such Ele : " + e.getLocalizedMessage());
+            Log.info("No Such Ele : " + e.getLocalizedMessage());
         }
-        Report.logInfo("Checked Adoption chart display returning result: " + success);
+        Log.info("Checked Adoption chart display returning result: " + success);
         return success;
     }
 
     public boolean isMissingDataInfoDisplayed(String value) {
         boolean success = false;
-        Report.logInfo("Checking Missing Data message info is displayed above the graph.");
+        Log.info("Checking Missing Data message info is displayed above the graph.");
         try {
             WebElement ele = element.getElement(MISSING_TEXT);
             if (ele != null) {
@@ -246,44 +245,44 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
                 }
             }
         } catch (RuntimeException e) {
-            Report.logInfo("No Such Ele : " + e.getLocalizedMessage());
+            Log.info("No Such Ele : " + e.getLocalizedMessage());
         }
-        Report.logInfo("Checked  Missing Data message info is displayed, returning result: " + success);
+        Log.info("Checked  Missing Data message info is displayed, returning result: " + success);
         return success;
     }
 
 
     public boolean isDataPresentInGrid(String value) {
-        Report.logInfo("Checking Weather data is displayed in the grid : " +value);
+        Log.info("Checking Weather data is displayed in the grid : " +value);
         boolean result = false;
         List<String> values = Arrays.asList(value.split("\\|"));
         WebElement table = element.getElement("dynamicAdoptionTableList");
         List<WebElement> rows = table.findElements(By.tagName("tr"));
-        Report.logInfo("The Number of actual Rows : " + rows.size());
+        Log.info("The Number of actual Rows : " + rows.size());
         for (WebElement row : rows) {
             List<String> actualValues = new ArrayList<>();
-            Report.logInfo("Actual Row text : " +row.getText());
+            Log.info("Actual Row text : " +row.getText());
             for(WebElement cell : row.findElements(By.tagName("td"))) {
                 actualValues.add(cell.getText().trim());
             }
-            Report.logInfo("Actual Values : " +actualValues);
+            Log.info("Actual Values : " +actualValues);
             if(actualValues.containsAll(values)) {
                 result = true;
                 break;
             }
         }
-        Report.logInfo("Checked the data in the grid & returning result :" + result);
+        Log.info("Checked the data in the grid & returning result :" + result);
         return result;
     }
 
     public boolean isDrillDownMsgDisplayed(String msg) {
         try {
              String actualText = element.getElement(DRILL_DOWN_MSG_DIV).getText();
-             Report.logInfo("Actual text : " +actualText +" - Expected : " +msg);
+             Log.info("Actual text : " +actualText +" - Expected : " +msg);
              return actualText.toLowerCase().contains(msg.toLowerCase());
         } catch (Exception e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             return false;
         }
     }

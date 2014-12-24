@@ -1,9 +1,9 @@
 package com.gainsight.sfdc.adoption.pages;
 
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.pages.BasePage;
 import org.openqa.selenium.WebElement;
+
+import com.gainsight.sfdc.pages.BasePage;
 
 public class AdoptionBasePage extends BasePage {
 
@@ -40,7 +40,7 @@ public class AdoptionBasePage extends BasePage {
             if(ele.isDisplayed()) {
                 ele.click();
                 selected = true;
-                Report.logInfo("Selected From Drop-down : " +value);
+                Log.info("Selected From Drop-down : " +value);
                 break;
             }
         }

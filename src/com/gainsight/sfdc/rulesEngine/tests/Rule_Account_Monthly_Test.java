@@ -1,8 +1,20 @@
 package com.gainsight.sfdc.rulesEngine.tests;
 
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+
+import junit.framework.Assert;
+import jxl.read.biff.BiffException;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import us.monoid.json.JSONException;
+import us.monoid.web.Resty;
+
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
@@ -11,20 +23,9 @@ import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.metadata.MetadataUtil;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
-import junit.framework.Assert;
-import jxl.read.biff.BiffException;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import us.monoid.json.JSONException;
-import us.monoid.web.Resty;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,9 +87,9 @@ public class Rule_Account_Monthly_Test extends BaseTest {
 
         //Run all the rules one by one, Do Assertions in test cases.
         /*
-        Report.logInfo("Total Rules : " +sheetNames.length);
+        Log.info("Total Rules : " +sheetNames.length);
         for(int i=0; i< sheetNames.length; i++) {
-            Report.logInfo("Rule Number : " +(i+1));
+            Log.info("Rule Number : " +(i+1));
             ArrayList<HashMap<String, String>> dummyList = (ArrayList)ExcelDataProvider.getDataFromExcel(TestEnvironment.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
             for(HashMap<String, String> testData : dummyList) {
                 executeRule(testData);
@@ -322,7 +323,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
             ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
         } catch (ConnectionException e) {
             e.printStackTrace();
-            Report.logInfo("Connection Failed");
+            Log.info("Connection Failed");
             Assert.assertTrue(false);
         }
 

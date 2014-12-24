@@ -1,8 +1,9 @@
 package com.gainsight.sfdc.administration.pages;
 
-import com.gainsight.sfdc.pages.BasePage;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.TimeoutException;
+
+import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminScorecardSection extends BasePage {
 

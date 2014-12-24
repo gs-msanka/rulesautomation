@@ -1,6 +1,13 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
+import java.io.IOException;
+import java.util.HashMap;
+
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
@@ -8,14 +15,6 @@ import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,14 +35,14 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
     @BeforeClass
     public void setUp() {
 
-        Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
+        Log.info("Starting Customer 360 Scorecard module Test Cases...");
 		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
         try {
             cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
         } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
+            Log.info("Failed to create fields");
             e.printStackTrace();
             throw new RuntimeException("Unable to create fields for scorecard section");
         }

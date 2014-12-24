@@ -1,74 +1,72 @@
 package com.gainsight.sfdc.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.util.DateUtil;
-import com.gainsight.sfdc.util.FileUtil;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.utils.ApexUtil;
-import com.gainsight.utils.SOQLUtil;
-import com.gainsight.utils.TestDataHolder;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.gainsight.sfdc.SalesforceConnector;
+import com.gainsight.sfdc.SalesforceMetadataClient;
+import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 
 public class BaseTest {
-    protected TestDataHolder testDataLoader = new TestDataHolder();
-    String[] dirs = {"testdata", "sfdc"};
-    protected static TestEnvironment env = new TestEnvironment();
-    protected static BasePage basepage;
-    public final String TEST_DATA_PATH_PREFIX = TestEnvironment.basedir + "/"
-            + generatePath(dirs);
-    public static SOQLUtil soql = new SOQLUtil();
-    public static ApexUtil apex = new ApexUtil();
-    public static SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-    public static CreateObjectAndFields fieldsCreator = new CreateObjectAndFields();
-    public static String userLocale = sfinfo.getUserLocale();
-    public static final String USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(userLocale) ?
-            DateUtil.localMapValues().get(userLocale).split(" ")[0] : "yyyy-mm-dd";
+    public static final Application env = new Application();
+	protected static BasePage basepage;
+	
+	public static SalesforceConnector sfdc;
+    public static SFDCInfo sfinfo;
+    public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
-    public static TimeZone userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+    public static TimeZone userTimezone;
     public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
-    public static final Map<String, String> monthMap;
-    static
-    {
-        monthMap = new HashMap<String, String>();
-        monthMap.put("0", "Jan");
-        monthMap.put("1", "Feb");
-        monthMap.put("2", "Mar");
-        monthMap.put("3", "Apr");
-        monthMap.put("4", "May");
-        monthMap.put("5", "Jun");
-        monthMap.put("6", "Jul");
-        monthMap.put("7", "Aug");
-        monthMap.put("8", "Sep");
-        monthMap.put("9", "Oct");
-        monthMap.put("10", "Nov");
-        monthMap.put("11", "Dec");
-    }
-
+    public static SalesforceMetadataClient metadataClient;
+    
     @BeforeSuite
     public void init() throws Exception {
-        Report.logInfo("Initializing Environment");
+    	Log.info("Fetching All SFDC Connections");
+    	sfdc = new SalesforceConnector(PropertyReader.userName, 
+    			PropertyReader.password + PropertyReader.stoken, 
+    			PropertyReader.partnerUrl,
+    			PropertyReader.sfdcApiVersion);
+    	
+    	sfdc.connect();
+    	
+    	//MetadataClient is initialized
+    	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+    	
+    	sfinfo = sfdc.fetchSFDCinfo();
+        USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
+        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+        
+        Log.info("Initializing Selenium Environment");
         env.start();
         try {
             String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
             String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
             env.launchBrower();
             basepage = new BasePage();
-            Report.logInfo("Initializing Base Page : " + basepage);
+            Log.info("Initializing Base Page : " + basepage);
             if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
                 basepage.login();
                 if ((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
@@ -82,7 +80,7 @@ public class BaseTest {
             }
         } catch (Exception e) {
             env.stop();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             e.printStackTrace();
             throw e;
         }
@@ -95,7 +93,7 @@ public class BaseTest {
 
     @BeforeClass
     public void failureRecovery() {
-        if (TestEnvironment.getDriver() == null) {
+        if (Application.getDriver() == null) {
             env.start();
         }
     }
@@ -105,27 +103,18 @@ public class BaseTest {
         basepage.beInMainWindow();
     }*/
 
-    public String generatePath(String[] dirs) {
-        String path = "";
-        for (String dir : dirs) {
-            path = path + dir + File.separator;
-        }
-        return path;
-    }
-
     public String currencyFormat(String amt) {
         DecimalFormat moneyFormat = new DecimalFormat("$###,###");
         return moneyFormat.format(new Long(amt)).replace("$", "$ ");
     }
 
-
     public HashMap<String, String> getMapFromData(String data) {
         HashMap<String, String> hm = new HashMap<String, String>();
-        Report.logInfo("Supplied Data :  " +data);
+        Log.info("Supplied Data :  " +data);
         String[] dataArray = data.substring(data.indexOf("{")+1, data.lastIndexOf("}")).split("\\|");
         for (String record : dataArray) {
             if (record != null) {
-                Report.logInfo("Record to split : " +record);
+                Log.info("Record to split : " +record);
                 String[] pair = record.split("\\:");
                 hm.put(pair[0], pair[1].trim());
             }
@@ -162,7 +151,7 @@ public class BaseTest {
      */
     public int getQueryRecordCount(String query) {
         int result = 0;
-        result = soql.getRecordCount(resolveStrNameSpace(query));
+        result = sfdc.getRecordCount(resolveStrNameSpace(query));
         return result;
     }
 
@@ -191,7 +180,7 @@ public class BaseTest {
 
     public void deletePickList() {
         String script = "Delete [Select id, name from JBCXM__PickList__c];";
-        apex.runApex(resolveStrNameSpace(script));
+        sfdc.runApexCode(resolveStrNameSpace(script));
     }
 
     public FileReader resolveNameSpace(String fileName) {
@@ -202,42 +191,42 @@ public class BaseTest {
                 return new FileReader(fileName);
             }
         } catch (FileNotFoundException e) {
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("File Not Found : " +fileName);
         }
     }
 
 
-    public void createExtIdFieldOnAccount() {
-        fieldsCreator.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
+    public void createExtIdFieldOnAccount() throws Exception {
+        metadataClient.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
     }
 
-    public void createExtIdFieldForScoreCards() {
+    public void createExtIdFieldForScoreCards() throws Exception {
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        fieldsCreator.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+        metadataClient.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
     }
 
-    public void createExtIdFieldOnUser(){
+    public void createExtIdFieldOnUser() throws Exception{
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
-        fieldsCreator.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
+        metadataClient.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
     }
 
-    public void createExternalIdFieldOnCTA(){
+    public void createExternalIdFieldOnCTA() throws Exception{
         String CtaObj = "JBCXM__CTA__c";
         String[] Cta_ExtId = new String[]{"CTA ExternalID"};
-        fieldsCreator.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
+        metadataClient.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
     }
 
 
     //same method is used by rules engine test cases also.
-    public void createFieldsOnUsageData() {
+    public void createFieldsOnUsageData() throws Exception {
         String object = "JBCXM__Usagedata__c";
         String[] numberFields1 = new String[]{"Page Views", "Page Visits", "No of Report Run", "Files Downloaded"};
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
-        fieldsCreator.createNumberField(resolveStrNameSpace(object), numberFields1, false);
-        fieldsCreator.createNumberField(resolveStrNameSpace(object), numberFields2, false);
+        metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
+        metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
     }
 
     /**
@@ -278,10 +267,10 @@ public class BaseTest {
         Date date = cal.getTime();
         SimpleDateFormat simpleDateFormat =null;
         if (userFormat) {
-            if (userLocale.contains("en_US")) {
+            if (sfinfo.getUserLocale().contains("en_US")) {
                 simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-            } else if (userLocale.contains("en_IN")) {
+            } else if (sfinfo.getUserLocale().contains("en_IN")) {
                 simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             }
         } else {
@@ -291,7 +280,7 @@ public class BaseTest {
         //Commented as timezone is not required to handle.{Rule, Usage Aggregation etc}
         //simpleDateFormat.setTimeZone(userTimezone);
         String sDate = simpleDateFormat.format(date);
-        Report.logInfo(sDate);
+        Log.info(sDate);
         return sDate;
     }
 
@@ -302,10 +291,10 @@ public class BaseTest {
      */
     public String[] getMonthAndYear(int numOfMonthsToAdd) {
         Calendar cal = Calendar.getInstance(userTimezone)  ;
-        Report.logInfo("The current date is : " + cal.getTime());
+        Log.info("The current date is : " + cal.getTime());
         cal.add(Calendar.MONTH, numOfMonthsToAdd);
-        Report.logInfo("Modified Date : " + cal.getTime());
-        Report.logInfo("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
+        Log.info("Modified Date : " + cal.getTime());
+        Log.info("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
         return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
     }
 
@@ -320,10 +309,10 @@ public class BaseTest {
                     "and ApexClass.Name = '"+className+"'";
             int noOfRunningJobs = getQueryRecordCount(query);
             if (noOfRunningJobs == 0) {
-                Report.logInfo("Aggregate Jobs are finished.");
+                Log.info("Aggregate Jobs are finished.");
                 break;
             } else {
-                Report.logInfo("Waiting for aggregation batch to complete");
+                Log.info("Waiting for aggregation batch to complete");
                 Thread.sleep(15000L);
             }
         }
@@ -342,7 +331,7 @@ public class BaseTest {
         }
         reader.close();
         code = String.format(stringBuilder.toString(), scheme);
-        apex.runApex(resolveStrNameSpace(code));
+        sfdc.runApexCode(resolveStrNameSpace(code));
     }
 
     public void overAllCustomerRollUp(Boolean enable) {
@@ -357,6 +346,6 @@ public class BaseTest {
             s+="\n"+"enable_sc.get(0).JBCXM__OverrideCustomer__c=true;"+"\n";
         }
         s+="update(enable_sc);"+"\n";
-        apex.runApex(resolveStrNameSpace(s));
+        sfdc.runApexCode(resolveStrNameSpace(s));
     }
 }

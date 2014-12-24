@@ -1,9 +1,12 @@
 package com.gainsight.bigdata.segmentio;
 
+import static us.monoid.web.Resty.content;
+
 import java.util.concurrent.Callable;
-import com.gainsight.pageobject.core.Report;
+
+import com.gainsight.testdriver.Log;
+
 import us.monoid.web.Resty;
-import static us.monoid.web.Resty.*;
 
 public class EventSubmitter implements Callable<Boolean> {
     private final Resty resty;
@@ -22,7 +25,7 @@ public class EventSubmitter implements Callable<Boolean> {
 			isSuccess=Boolean.parseBoolean((String)resty.json(url, content(payload)).get("status"));
 		}
 		catch (Exception e){
-			Report.logInfo("Error when sending event request " +e.getMessage());
+			Log.info("Error when sending event request " +e.getMessage());
 			isSuccess=false;
 		}
 		return isSuccess;

@@ -7,11 +7,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.pojo.NSInfo;
 import com.gainsight.bigdata.util.NSUtil;
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.sfdc.util.bulk.*;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
+import com.gainsight.util.PropertyReader;
 
 public class RestTester {
 
@@ -46,7 +47,7 @@ public class RestTester {
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", nsinfo.getAuthToken());
-		HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/preparereport", rawBody, h.getAllHeaders());
+		ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/preparereport", h.getAllHeaders(), rawBody);
 		System.out.println(result.getContent());
 		
 		ObjectMapper mapper = new ObjectMapper();

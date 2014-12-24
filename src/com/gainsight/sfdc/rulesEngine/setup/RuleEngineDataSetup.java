@@ -1,12 +1,37 @@
 package com.gainsight.sfdc.rulesEngine.setup;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.rulesEngine.pojos.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.eclipse.jetty.util.URIUtil;
+import org.testng.Assert;
+
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
+import us.monoid.web.JSONResource;
+import us.monoid.web.Resty;
+
+import com.gainsight.sfdc.rulesEngine.pojos.AutomatedRule;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleAdvancedCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
+import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.TestEnvironment;
 import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
@@ -14,22 +39,6 @@ import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.bind.XmlObject;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.seleniumhq.jetty7.util.URIUtil;
-import org.testng.Assert;
-import us.monoid.json.JSONException;
-import us.monoid.json.JSONObject;
-import us.monoid.web.JSONResource;
-import us.monoid.web.Resty;
-
-import java.io.*;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RuleEngineDataSetup extends BaseTest {
 
@@ -74,13 +83,13 @@ public class RuleEngineDataSetup extends BaseTest {
         ConnectorConfig config = new ConnectorConfig();
         config.setUsername(userName);
         config.setPassword(password + securityToken);
-        Report.logInfo("AuthEndPoint: " + EndPointURL);
+        Log.info("AuthEndPoint: " + EndPointURL);
         config.setAuthEndpoint(EndPointURL);
         try {
             connection = new PartnerConnection(config);
         } catch (ConnectionException e) {
             e.printStackTrace();
-            Report.logInfo("Failed to Get Connection");
+            Log.info("Failed to Get Connection");
         }
         return connection;
     }
@@ -97,7 +106,7 @@ public class RuleEngineDataSetup extends BaseTest {
         return props;
     }
     public RuleEngineDataSetup() {
-        Report.logInfo("In RuleEngine Setup");
+        Log.info("In RuleEngine Setup");
         mapper = new ObjectMapper();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
@@ -105,12 +114,12 @@ public class RuleEngineDataSetup extends BaseTest {
         scorecardSchemeDefMap   = getScoringSchemeDefinition();
         playbooksMap            = getPlaybooks();
         connection              = login();
-        Report.logInfo("End RuleEngine Setup Constructor");
+        Log.info("End RuleEngine Setup Constructor");
 
 	}
 
     public RuleEngineDataSetup(String surveyCode) {
-        Report.logInfo("Survey Rule's Engine Setup");
+        Log.info("Survey Rule's Engine Setup");
         mapper = new ObjectMapper();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
@@ -120,7 +129,7 @@ public class RuleEngineDataSetup extends BaseTest {
         surveyQuestionMap       = getSurveyQuestionMap(surveyCode);
         surveyAnswerMap         = getSurveyAnswerMap(surveyCode);
         connection              = login();
-        Report.logInfo("End of Survey Rule's Engine Setup");
+        Log.info("End of Survey Rule's Engine Setup");
     }
 
     /**
@@ -138,9 +147,9 @@ public class RuleEngineDataSetup extends BaseTest {
             SObject sObject = sFDCAnswers[i];
             XmlObject xmlObject = (XmlObject)sObject.getField("JBCXM__SurveyQuestion__r");
             if(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")) == null) continue;
-            Report.logInfo(xmlObject.getField("JBCXM__Title__c").toString().trim());
-            Report.logInfo(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString().trim());
-            Report.logInfo(sObject.getId());
+            Log.info(xmlObject.getField("JBCXM__Title__c").toString().trim());
+            Log.info(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString().trim());
+            Log.info(sObject.getId());
             result.put(xmlObject.getField("JBCXM__Title__c").toString().trim()+
                     sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString().trim(), sObject.getId());
         }
@@ -308,19 +317,19 @@ public class RuleEngineDataSetup extends BaseTest {
         if(isSurveyRule) {
             String triggerCriteria = testData.get("JBCXM__TriggerCriteria__c");
             ArrayList<RuleSurveyTriggerCriteria> criteriaList  = mapper.readValue(triggerCriteria, new TypeReference<ArrayList<RuleSurveyTriggerCriteria>>() {});
-            Report.logInfo(mapper.writeValueAsString(criteriaList));
+            Log.info(mapper.writeValueAsString(criteriaList));
             for(RuleSurveyTriggerCriteria criteria : criteriaList) {
                 String question  = criteria.getId();
                 if(criteria.getpId()!=null) {
-                    Report.logInfo(criteria.getId()+criteria.getpId());
-                    Report.logInfo(surveyQuestionMap.get(criteria.getId()+criteria.getpId()));
+                    Log.info(criteria.getId()+criteria.getpId());
+                    Log.info(surveyQuestionMap.get(criteria.getId()+criteria.getpId()));
                     criteria.setId(surveyQuestionMap.get(criteria.getId()+criteria.getpId()));
                     criteria.setpId(surveyQuestionMap.get(criteria.getpId()));
                 } else {
                     criteria.setId(surveyQuestionMap.get(criteria.getId()));
                 }
                 RuleSurveyTriggerCriteria.AnswerRecords answerRecords = criteria.getAnswerRecords();
-                Report.logInfo(mapper.writeValueAsString(answerRecords));
+                Log.info(mapper.writeValueAsString(answerRecords));
                 String[] ans = answerRecords.getIdList();
                 for(int i=0 ; i <ans.length; i++) {
                     ans[i] = surveyAnswerMap.get(question+ans[i]);
@@ -328,7 +337,7 @@ public class RuleEngineDataSetup extends BaseTest {
                 answerRecords.setIdList(ans);
                 criteria.setAnswerRecords(answerRecords);
             }
-            Report.logInfo("Survey Rule Trigger Criteria : " +mapper.writeValueAsString(criteriaList));
+            Log.info("Survey Rule Trigger Criteria : " +mapper.writeValueAsString(criteriaList));
             rule.setJBCXM__TriggerCriteria__c(mapper.writeValueAsString(criteriaList));
         } else {
             rule.setJBCXM__TriggerCriteria__c(testData.get("JBCXM__TriggerCriteria__c"));
@@ -367,7 +376,7 @@ public class RuleEngineDataSetup extends BaseTest {
         if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!= "") {
             RuleScorecardCriteria ruleScCriteria = mapper.readValue(testData.get("JBCXM__ScorecardCriteria__c"), (RuleScorecardCriteria.class));
             ArrayList<RuleScorecardCriteria.ActionInfo> actionInfoList = ruleScCriteria.getActionInfo();
-            Report.logInfo(String.valueOf(actionInfoList.size()));
+            Log.info(String.valueOf(actionInfoList.size()));
             //Updating all the action list & hard coded to "0" as there will be only one action list.
             for(RuleScorecardCriteria.ActionInfo actionInfo : actionInfoList) {
                 //Changing the Actions list.
@@ -407,7 +416,7 @@ public class RuleEngineDataSetup extends BaseTest {
             rule.setJBCXM__ScorecardCriteria__c(mapper.writeValueAsString(ruleScCriteria));
         }
         result = resolveStrNameSpace(mapper.writeValueAsString(rule));
-        Report.logInfo("Rule Json String : " +result);
+        Log.info("Rule Json String : " +result);
         return result;
     }
 
@@ -420,7 +429,7 @@ public class RuleEngineDataSetup extends BaseTest {
     public ArrayList<RuleScorecardCriteria.ActionList> getScorecardActions(String scorecardCriteria) throws IOException {
         RuleScorecardCriteria ruleScCriteria = mapper.readValue(scorecardCriteria, (RuleScorecardCriteria.class));
         ArrayList<RuleScorecardCriteria.ActionInfo> actionInfo = ruleScCriteria.getActionInfo();
-        Report.logInfo(String.valueOf(actionInfo.size()));
+        Log.info(String.valueOf(actionInfo.size()));
         ArrayList<RuleScorecardCriteria.ActionList> actionLists = new ArrayList<RuleScorecardCriteria.ActionList>();
         //Hard coded to "0" as there will be only one action list.
         for(int i=0; i< actionInfo.size(); i++) {
@@ -456,9 +465,9 @@ public class RuleEngineDataSetup extends BaseTest {
         } else {
             throw new RuntimeException("Account Should not be null or Empty ");
         }
-        Report.logInfo("Query : "+query);
+        Log.info("Query : "+query);
         SObject[] sObjects = soql.getRecords(query);
-        Report.logInfo("No of Records Found :" +sObjects.length);
+        Log.info("No of Records Found :" +sObjects.length);
         return sObjects;
     }
 
@@ -488,7 +497,7 @@ public class RuleEngineDataSetup extends BaseTest {
         if(sObjects != null && sObjects.length> 0) {
             return sObjects[0].getId();
         }
-        Report.logInfo("No Alert found with Criteria");
+        Log.info("No Alert found with Criteria");
         return null;
     }
 
@@ -504,7 +513,7 @@ public class RuleEngineDataSetup extends BaseTest {
         if(sObjects != null && sObjects.length> 0) {
             return sObjects[0].getId();
         }
-        Report.logInfo("No CTA found with Criteria");
+        Log.info("No CTA found with Criteria");
         return null;
     }
 
@@ -539,9 +548,9 @@ public class RuleEngineDataSetup extends BaseTest {
         } else {
             throw new RuntimeException("Account Should not be null or Empty");
         }
-        Report.logInfo("Query : "+query);
+        Log.info("Query : "+query);
         SObject[] sObjects = soql.getRecords(query);
-        Report.logInfo("No of Records Found :" +sObjects.length);
+        Log.info("No of Records Found :" +sObjects.length);
         return sObjects;
     }
 
@@ -584,16 +593,16 @@ public class RuleEngineDataSetup extends BaseTest {
         } else {
             throw new RuntimeException("Account Should not be null or Empty");
         }
-        Report.logInfo("Query : " + query);
+        Log.info("Query : " + query);
         SObject[]  recordList = soql.getRecords(query);
-        Report.logInfo("No of Records Found :" +recordList.length);
+        Log.info("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
             if(action.getComment() != null && !action.getComment().isEmpty()) {
                 if(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)) != null) {
-                    Report.logInfo(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString());
+                    Log.info(recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString());
                     String actualComments = recordList[0].getField(resolveStrNameSpace(SCORE_COMMENTS)).toString().toLowerCase();
-                    Report.logInfo("Actual Comments : " +actualComments);
-                    Report.logInfo("Expected Comments : " +action.getComment());
+                    Log.info("Actual Comments : " +actualComments);
+                    Log.info("Expected Comments : " +action.getComment());
                     if(actualComments.toLowerCase().contains(action.getComment())) {
                         return true;
                     }
@@ -602,7 +611,7 @@ public class RuleEngineDataSetup extends BaseTest {
             }
             return true;
         }
-        Report.logInfo("Account : "+account+ " is not having the score of "+action.getScore()+" on metric/measure "+action.getMetric());
+        Log.info("Account : "+account+ " is not having the score of "+action.getScore()+" on metric/measure "+action.getMetric());
         return false;
     }
 
@@ -626,19 +635,19 @@ public class RuleEngineDataSetup extends BaseTest {
         }
         query = resolveStrNameSpace(strBuilder.toString());
         SObject[]  recordList = soql.getRecords(query);
-        Report.logInfo("No of Records Found :" +recordList.length);
+        Log.info("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
             if(comments != null && !comments.isEmpty()) {
                 String actualComments = recordList[0].getField(resolveStrNameSpace("JBCXM__ScorecardComment__c")).toString().toLowerCase();
-                Report.logInfo("Actual Comments : " +actualComments);
-                Report.logInfo("Expected Comments : " +comments);
+                Log.info("Actual Comments : " +actualComments);
+                Log.info("Expected Comments : " +comments);
                 if(actualComments.toLowerCase().contains(comments)) {
                     return true;
                 }
             }
             return true;
         }
-        Report.logInfo("Account : "+account+ " is not having the score of "+score);
+        Log.info("Account : "+account+ " is not having the score of "+score);
         return false;
     }
 
@@ -674,7 +683,7 @@ public class RuleEngineDataSetup extends BaseTest {
         strBuilder.append("ruleParams.put('areaName','usageData'); \n");
         strBuilder.append("ruleParams.put('actionType','runRule'); \n");
         strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
-        Report.logInfo("Running Rule : " + strBuilder.toString());
+        Log.info("Running Rule : " + strBuilder.toString());
         apex.runApex(resolveStrNameSpace(strBuilder.toString()));
     }
 
@@ -697,7 +706,7 @@ public class RuleEngineDataSetup extends BaseTest {
         strBuilder.append("ruleParams.put('areaName','usageData'); \n");
         strBuilder.append("ruleParams.put('actionType','runRule'); \n");
         strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
-        Report.logInfo("Running Rule : " + strBuilder.toString());
+        Log.info("Running Rule : " + strBuilder.toString());
         apex.runApex(resolveStrNameSpace(strBuilder.toString()));
     }
 
@@ -711,42 +720,42 @@ public class RuleEngineDataSetup extends BaseTest {
             //runRule(ruleId, USAGE_LEVEL, 0, -1);
         } catch (Exception e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to execute rule");
         }
     }
 
     public void printSetUpData(SFDCInfo sfdcInfo, String account) throws IOException, JSONException, ConnectionException {
-        Report.logInfo("Print Test Case Set up Data");
+        Log.info("Print Test Case Set up Data");
         Resty resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
 
         URI uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject("Account")+((account != null) ? " Where Name = '"+account+"'" : "" )+ "+Limit+20"));
-        Report.logInfo("Url To Fire :" +uri.toString());
+        Log.info("Url To Fire :" +uri.toString());
         JSONResource res = resty.json(uri);
         JSONObject jObj = res.toObject();
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(jObj.toString(), Object.class);
-        Report.logInfo("Account Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        Log.info("Account Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject(resolveStrNameSpace("JBCXM__CustomerInfo__c"))+((account != null) ? " Where "+resolveStrNameSpace("JBCXM__Account__r.Name")+" = '"+account+"'" : "" )+ "+Limit+50"));
-        Report.logInfo("Url To Fire :" +uri.toString());
+        Log.info("Url To Fire :" +uri.toString());
         res = resty.json(uri);
         jObj = res.toObject();
         json = mapper.readValue(jObj.toString(), Object.class);
-        Report.logInfo("Customer Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        Log.info("Customer Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v31.0/query/?q="+ URIUtil.encodePath(buildQueryOnObject(resolveStrNameSpace("JBCXM__UsageData__c"))+((account != null) ? " Where "+resolveStrNameSpace("JBCXM__Account__r.Name")+" = '"+account+"'" : "" )+ "+Limit+50"));
-        Report.logInfo("Url To Fire :" +uri.toString());
+        Log.info("Url To Fire :" +uri.toString());
         res = resty.json(uri);
         jObj = res.toObject();
         json = mapper.readValue(jObj.toString(), Object.class);
-        Report.logInfo("Usage Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        Log.info("Usage Data : \n "+mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
     }
 
     public String buildQueryOnObject(String sObject) throws ConnectionException, IOException {
-        Report.logInfo("Started building query");
+        Log.info("Started building query");
         StringBuilder query = new StringBuilder("Select+");
         DescribeSObjectResult desSObject = connection.describeSObject(sObject);
-        Report.logInfo("Object Described :"+desSObject.getName());
+        Log.info("Object Described :"+desSObject.getName());
         Field[] fields = desSObject.getFields();
         for(Field field : fields) {
             if(field.getType().toString().equalsIgnoreCase("reference")) {
@@ -786,9 +795,9 @@ public class RuleEngineDataSetup extends BaseTest {
     private String createRule(String rule, Resty resty, URI uri) throws IOException, JSONException {
         JSONResource res = resty.json(uri, Resty.form(rule));
         JSONObject jObj = res.toObject();
-        Report.logInfo(jObj.toString());
+        Log.info(jObj.toString());
         String ruleId = jObj.getString("id");
-        Report.logInfo("Rule Id : " + ruleId);
+        Log.info("Rule Id : " + ruleId);
         return ruleId;
     }
 

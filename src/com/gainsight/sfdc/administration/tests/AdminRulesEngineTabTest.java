@@ -5,15 +5,11 @@ import java.util.HashMap;
 
 import jxl.read.biff.BiffException;
 
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminRulesEngineTab;
-import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
-import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
 import com.gainsight.sfdc.tests.BaseTest;
 
 public class AdminRulesEngineTabTest extends BaseTest {
@@ -24,7 +20,7 @@ public class AdminRulesEngineTabTest extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		basepage.login();
 	}
 	

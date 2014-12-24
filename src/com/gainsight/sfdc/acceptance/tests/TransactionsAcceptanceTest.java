@@ -1,7 +1,16 @@
 package com.gainsight.sfdc.acceptance.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
+
+import jxl.read.biff.BiffException;
+
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomersPage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
@@ -11,18 +20,9 @@ import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
 import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.transactions.pages.TransactionsPage;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
-import jxl.read.biff.BiffException;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 public class TransactionsAcceptanceTest extends BaseTest {
 	String[] dirs = { "acceptancetests" };
@@ -37,7 +37,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 	@BeforeClass
 	public void setUp() throws Exception {
 		try {
-            Report.logInfo("Starting Acceptance Test Case...");
+            Log.info("Starting Acceptance Test Case...");
 			apex.runApexCodeFromFile(TestEnvironment.basedir+TRANS_SETUP , isPackage);
             apex.runApexCodeFromFile(TestEnvironment.basedir+SUMMARY_CONFIG, isPackage);
 			/*
@@ -50,7 +50,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			currentDate=AmountsAndDatesUtil.getCurrentDate();
 			loggedIn = true;
 		} catch (Exception e) {
-			Report.logInfo(e.getMessage());
+			Log.info(e.getMessage());
 			throw e;
 		}
 	}
@@ -308,14 +308,14 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				+ currencyFormat(nbData.get("asv"));
 		TransactionsPage transactionsPage = basepage.clickOnTransactionTab()
 				.clickOnTransactionsSubTab().selectView(STANDARD_VIEW).addNewBusiness(nbData);
-		Report.logInfo("Transaction Values : " + transactionValues);
+		Log.info("Transaction Values : " + transactionValues);
 		Assert.assertTrue(transactionsPage.isTransactionPresent(customerName,
 				transactionValues),
 				"Verify that newly added transaction present in the grid");
 		Customer360Page customer360Page = transactionsPage
 				.gotoCustomer360(customerName);
 		CustomerSummary summary = customer360Page.getSummaryDetails();
-		Report.logInfo("Customer Summary:\n" + summary.toString());
+		Log.info("Customer Summary:\n" + summary.toString());
 		validateSummary(nbData, summary);
 		return customer360Page;
 	}

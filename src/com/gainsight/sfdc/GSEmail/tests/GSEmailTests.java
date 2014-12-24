@@ -2,10 +2,10 @@ package com.gainsight.sfdc.GSEmail.tests;
 
 import java.util.HashMap;
 
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 
 import com.gainsight.sfdc.GSEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.tests.BaseTest;

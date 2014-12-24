@@ -3,11 +3,12 @@ package com.gainsight.bigdata.util;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.sfdc.util.bulk.*;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 
 public class NSUtil {
 
@@ -45,7 +46,7 @@ public class NSUtil {
 		hr.addHeader("appSessionId", info.getSessionId());
 		//hr.addHeader("authToken", "initialcall");
 				
-		HttpResponseObj result = wa.doGet(PropertyReader.nsAppUrl + "/api/reports/all", 
+		ResponseObj result = wa.doGet(PropertyReader.nsAppUrl + "/api/reports/all", 
 				hr.getAllHeaders());
 		org.apache.http.Header[] resHeaders = result.getAllHeaders();
 		for (int i = 0; i < resHeaders.length; i++) {
@@ -57,7 +58,7 @@ public class NSUtil {
 		}	
 		
 		Assert.assertNotNull(ns.getAuthToken(), "authToken is not set");
-		Report.logInfo("NS Info: " + ns.toString());
+		Log.info("NS Info: " + ns.toString());
 		return ns;
 	}
 

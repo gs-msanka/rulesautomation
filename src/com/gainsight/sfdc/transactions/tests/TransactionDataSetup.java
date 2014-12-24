@@ -1,18 +1,18 @@
 package com.gainsight.sfdc.transactions.tests;
 
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+import java.io.File;
+import java.io.IOException;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
+import com.gainsight.testdriver.TestEnvironment;
 
 public class TransactionDataSetup {
 
@@ -54,7 +54,7 @@ public class TransactionDataSetup {
             cObjFields.createTextFields(transLines_Obj, transLines_ExtId, true, true, true, false, false);
             cObjFields.createTextFields(transTypes_Obj, transTypes_ExtId, true, true, true, false, false);
         } catch (Exception e) {
-            Report.logInfo("*************Failed to create fields*****************");
+            Log.info("*************Failed to create fields*****************");
             e.printStackTrace();
         }
 
@@ -74,7 +74,7 @@ public class TransactionDataSetup {
     public void LoadTransData() throws IOException {
         DataETL dataLoader = new DataETL();
 
-        Report.logInfo("**Performing Clean up operation for Transaction Module Objects**");
+        Log.info("**Performing Clean up operation for Transaction Module Objects**");
         dataLoader.cleanUp("JBCXM__TransHeader__c", null);
         dataLoader.cleanUp("JBCXM__TransLines__c", null);
         dataLoader.cleanUp("JBCXM__CustomerInfo__c", null);
@@ -83,27 +83,27 @@ public class TransactionDataSetup {
         SFDCUtil sfdcUtil = new SFDCUtil();
         sfdcUtil.runApexCodeFromFile(env.basedir+"/testdata/sfdc/transactions/scripts/TrailData_Populate_TransTypes.txt", isPackageInstance);
 
-        Report.logInfo("**Started Loading Accounts**");
+        Log.info("**Started Loading Accounts**");
         JobInfo jobInfo1 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_Accounts.txt"), JobInfo.class);
         dataLoader.execute(jobInfo1);
 
-        Report.logInfo("**Started Loading Order Transaction Map**");
+        Log.info("**Started Loading Order Transaction Map**");
         JobInfo jobInfo2 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_OrderTransMap.txt"), JobInfo.class);
         dataLoader.execute(jobInfo2);
 
-        Report.logInfo("Loading First Transaction header File");
+        Log.info("Loading First Transaction header File");
         JobInfo jobInfo3 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransHeader_Load1.txt"), JobInfo.class);
         dataLoader.execute(jobInfo3);
 
-        Report.logInfo("Loading Second Transaction header File");
+        Log.info("Loading Second Transaction header File");
         JobInfo jobInfo4 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransHeader_Load2.txt"), JobInfo.class);
         dataLoader.execute(jobInfo4);
 
-        Report.logInfo("Loading Transaction Lines");
+        Log.info("Loading Transaction Lines");
         JobInfo jobInfo5 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_TransLines.txt"), JobInfo.class);
         dataLoader.execute(jobInfo5);
 
-        Report.logInfo("Loading Customers Data");
+        Log.info("Loading Customers Data");
         JobInfo jobInfo6 = mapper.readValue(new File(resDir + "jobs/Job_Trail_Trans_Customers.txt"), JobInfo.class);
         dataLoader.execute(jobInfo6);
     }

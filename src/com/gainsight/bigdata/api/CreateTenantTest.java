@@ -8,22 +8,21 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.TestBase;
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 
-public class CreateTenantTest extends TestBase{
+public class CreateTenantTest extends NSTestBase {
 
 	String uri;
 	String tenantName = "AutTenant";
 	
 	@BeforeClass
 	public void setUp() throws Exception {
-		init();
 	}
 	
 	@Test
@@ -36,9 +35,9 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
 	}
@@ -53,9 +52,9 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
@@ -69,9 +68,9 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
@@ -85,9 +84,9 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
 	}
@@ -101,9 +100,9 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 //		Assert.assertNotEquals(result.getStatusCode(), 200, "API is not accounting for Missing ExternalTenantName in the API and the record is created in Mongo");
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());
@@ -113,8 +112,8 @@ public class CreateTenantTest extends TestBase{
 	public void createTenantWithWrongInput() throws Exception {
 		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantWithWrongInput";
 		String rawBody = "Dummy Text";
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		Assert.assertNotEquals(result.getStatusCode(), 200, "Failed to set proper error status code for this API with request having improper input");
 		/*ObjectMapper mapper = new ObjectMapper();
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
@@ -130,15 +129,15 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
+		Log.info(rawBody);
 		
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
 		h.addHeader("Origin", origin);
 		
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doPost(uri, h.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		Assert.assertTrue(result.getContent().equals("Invalid AuthToken"), "Invalid Auth Header is accepted");
 	}
 	
@@ -151,15 +150,15 @@ public class CreateTenantTest extends TestBase{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
+		Log.info(rawBody);
 		
 		Header h = new Header();
 		h.addHeader("Content-Type", "text/plain");
 		h.addHeader("authToken", nsinfo.getAuthToken());
 		h.addHeader("Origin", origin);
 		
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doPost(uri, h.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		Assert.assertNotEquals(result.getStatusCode(), 200, "Content Type verification is not done");
 /*		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertFalse(obj.isResult(), "Result Returned was true : " + result.getContent());*/

@@ -1,9 +1,10 @@
 package com.gainsight.bigdata.connectors;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import com.gainsight.bigdata.connectors.enums.ConnConstants.AggType;
 import com.gainsight.bigdata.connectors.enums.Field;
 import com.gainsight.bigdata.connectors.enums.SfdcIdentifier;
-import com.gainsight.bigdata.connectors.enums.ConnConstants.AggType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataAPITestData {

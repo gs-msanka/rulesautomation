@@ -1,21 +1,16 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.TimeZone;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.TestEnvironment;
 
 /**
  * Created by gainsight on 08/12/14.
@@ -45,7 +40,7 @@ public class AdoptionDataSetup extends BaseTest {
         try {
             dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
         } catch (IOException e) {
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to delete accounts related to adoption data");
         }
     }
@@ -58,7 +53,7 @@ public class AdoptionDataSetup extends BaseTest {
             dataLoader.execute(jobInfo);
         } catch (IOException e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to load Accounts, Customer for usage data");
         }
     }
@@ -69,7 +64,7 @@ public class AdoptionDataSetup extends BaseTest {
             dataLoader.execute(jobInfo);
         } catch (IOException e){
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to Usage Data");
         }
 
@@ -113,7 +108,7 @@ public class AdoptionDataSetup extends BaseTest {
                         day = (dateStr != null && dateStr.split("-").length > 2) ? String.valueOf(dateStr.split("-")[2]) : String.valueOf(cal.get(Calendar.DATE));
                         code = stringBuilder.toString();
                         code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                        Report.logInfo("Running Aggregation On : " + year + "-" + month + "-" + day);
+                        Log.info("Running Aggregation On : " + year + "-" + month + "-" + day);
                         apex.runApex(resolveStrNameSpace(code));
                     }
                     Thread.sleep(15000L);
@@ -126,7 +121,7 @@ public class AdoptionDataSetup extends BaseTest {
                         year = String.valueOf(cal.get(Calendar.YEAR));
                         code = stringBuilder.toString();
                         code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                        Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
+                        Log.info("Running Aggregation On : " +year+"-"+month+"-"+day);
                         apex.runApex(resolveStrNameSpace(code));
                         cal.add(Calendar.MONTH, -1);
                     }
@@ -136,7 +131,7 @@ public class AdoptionDataSetup extends BaseTest {
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to run aggregation");
         }
     }

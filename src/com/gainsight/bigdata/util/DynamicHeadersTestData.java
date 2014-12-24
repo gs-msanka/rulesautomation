@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.gainsight.pojo.Header;
+import com.gainsight.http.Header;
 
 public class DynamicHeadersTestData {
 

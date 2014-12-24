@@ -1,17 +1,16 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.HashMap;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360MilestonesTests extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
@@ -19,7 +18,7 @@ public class Customer360MilestonesTests extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
+		Log.info("Starting Customer 360 Milestones module Test Cases...");
 		basepage.login();
         apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackage);
 	}
@@ -34,9 +33,9 @@ public class Customer360MilestonesTests extends BaseTest {
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
 		// Verifying table header
 		if (cm.isHeaderPresent()) {
-			Report.logInfo("No of columns=" + MsHeaders.size());
+			Log.info("No of columns=" + MsHeaders.size());
 			for (int h = 1; h <= MsHeaders.size(); h++) {
-				Report.logInfo("Checking for---"+ MsHeaders.get("Column" + h));
+				Log.info("Checking for---"+ MsHeaders.get("Column" + h));
 				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"+ h)));
 			}
 		}

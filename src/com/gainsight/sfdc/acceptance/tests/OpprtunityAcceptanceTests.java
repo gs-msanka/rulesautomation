@@ -1,23 +1,26 @@
 package com.gainsight.sfdc.acceptance.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
-import com.gainsight.sfdc.pages.CustomerSuccessPage;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.TimeZone;
+
 import jxl.read.biff.BiffException;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
+import com.gainsight.sfdc.pages.CustomerSuccessPage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.Log;
+import com.gainsight.utils.AutTestListener;
+import com.gainsight.utils.DataProviderArguments;
 
-@Listeners({ com.gainsight.utils.GSTestListener.class })
+@Listeners({ AutTestListener.class })
 public class OpprtunityAcceptanceTests extends BaseTest {
 	String[] dirs = { "acceptancetests" };
 	final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
@@ -27,7 +30,7 @@ public class OpprtunityAcceptanceTests extends BaseTest {
 	public void setUp() {
         userLocale = soql.getUserLocale();
         userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        Report.logInfo("Starting Acceptance Test Case...");
+        Log.info("Starting Acceptance Test Case...");
 		basepage.login();
 		loggedIn = true;
 	}

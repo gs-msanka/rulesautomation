@@ -1,17 +1,9 @@
 package com.gainsight.sfdc.workflow.tests;
-import com.gainsight.pageobject.core.Report;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.gainsight.sfdc.workflow.pojos.Playbook;
-import com.gainsight.sfdc.workflow.pojos.Task;
-import com.gainsight.utils.DataProviderArguments;
-import jxl.read.biff.BiffException;
-
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -21,20 +13,20 @@ import org.testng.annotations.Test;
 
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPlaybooksPage;
-import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
+import com.gainsight.sfdc.workflow.pojos.Playbook;
+import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Log;
+import com.gainsight.utils.DataProviderArguments;
 
 
 public class WorkflowPlaybooksTest extends BaseTest {
     ObjectMapper mapper = new ObjectMapper();
-    String[] dirs = { "wfplaybooktests" };
-    private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-            + generatePath(dirs);
     String PLAYBOOK_OBJECT = "JBCXM__Playbook__c";
     private final String TEST_DATA_FILE         = "./testdata/sfdc/workflow/tests/PlaybookTests.xls";
 
     @BeforeClass
     public void setUp() {
-        Report.logInfo("Starting Playbook Test Case...");
+        Log.info("Starting Playbook Test Case...");
         apex.runApex("delete [Select id from JBCXM__playbook__c];");
         basepage.login();
     }

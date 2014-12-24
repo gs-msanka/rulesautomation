@@ -1,11 +1,13 @@
 package com.gainsight.sfdc.util;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
-import java.io.*;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -71,7 +73,7 @@ public class FileUtil {
                 return new FileReader(file);
             }
         } catch (FileNotFoundException e) {
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("File Not Found : " +file.getName());
         }
     }
@@ -80,7 +82,7 @@ public class FileUtil {
         String result = "";
         if (str != null && nameSpace!=null && !nameSpace.equalsIgnoreCase("JBCXM")) {
             result = str.replaceAll("JBCXM__", nameSpace+"__").replaceAll("JBCXM\\.", nameSpace+".");
-            Report.logInfo(result);
+            Log.info(result);
             return result;
         } else {
             return str;

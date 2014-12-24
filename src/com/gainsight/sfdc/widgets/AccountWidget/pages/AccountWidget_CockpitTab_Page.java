@@ -2,7 +2,6 @@ package com.gainsight.sfdc.widgets.AccountWidget.pages;
 
 import java.util.ArrayList;
 
-import com.gainsight.sfdc.customer360.pages.Workflow360Page;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;

@@ -1,32 +1,29 @@
 package com.gainsight.sfdc.workflow.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
-import com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest;
-import com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest;
-import com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
-import com.gainsight.sfdc.workflow.pages.WorkflowPage;
-import com.gainsight.sfdc.workflow.pojos.*;
-import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
-import io.lamma.*;
-import io.lamma.Date;
-
+import org.apache.commons.lang3.time.DateUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest;
+import com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests;
+import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
+import com.gainsight.sfdc.workflow.pages.WorkflowPage;
+import com.gainsight.sfdc.workflow.pojos.CTA;
+import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.TestEnvironment;
+import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.partner.sobject.SObject;
 
 
 public class WorkFlowTest extends WorkflowSetup {

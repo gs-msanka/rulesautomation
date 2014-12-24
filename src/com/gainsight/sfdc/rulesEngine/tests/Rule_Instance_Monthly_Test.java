@@ -1,7 +1,20 @@
 package com.gainsight.sfdc.rulesEngine.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.TimeZone;
+
+import junit.framework.Assert;
+import jxl.read.biff.BiffException;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import us.monoid.json.JSONException;
+import us.monoid.web.Resty;
+
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
@@ -10,20 +23,9 @@ import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.metadata.MetadataUtil;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
-import junit.framework.Assert;
-import jxl.read.biff.BiffException;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import us.monoid.json.JSONException;
-import us.monoid.web.Resty;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -317,7 +319,7 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
             ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
         } catch (ConnectionException e) {
             e.printStackTrace();
-            Report.logInfo("Connection Failed");
+            Log.info("Connection Failed");
             Assert.assertTrue(false);
         }
 

@@ -7,8 +7,11 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import com.gainsight.bigdata.connectors.enums.*;
-import com.gainsight.bigdata.connectors.mapping.*;
+import com.gainsight.bigdata.connectors.enums.ConnConstants;
+import com.gainsight.bigdata.connectors.enums.Field;
+import com.gainsight.bigdata.connectors.enums.SfdcIdentifier;
+import com.gainsight.bigdata.connectors.mapping.MappingInfo;
+import com.gainsight.bigdata.connectors.mapping.SysDefFieldInfo;
 import com.gainsight.bigdata.connectors.pojo.EventMeasureMapping;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)

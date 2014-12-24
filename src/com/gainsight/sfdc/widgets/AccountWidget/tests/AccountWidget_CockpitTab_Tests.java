@@ -12,9 +12,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.widgets.AccountWidget.pages.AccountWidget_CockpitTab_Page;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
@@ -22,6 +19,7 @@ import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;
 import com.gainsight.sfdc.workflow.tests.WorkflowSetup;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 

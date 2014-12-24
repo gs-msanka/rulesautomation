@@ -1,12 +1,15 @@
 package com.gainsight.sfdc.util;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
-import com.gainsight.pageobject.core.Report;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+
+import com.gainsight.testdriver.Log;
 
 /**
  * Date Utils abstraction on top Apache commons Lang 3
@@ -119,7 +122,7 @@ public class DateUtil {
         Date date = cal.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         String sDate = simpleDateFormat.format(date);
-        Report.logInfo(sDate);
+        Log.info(sDate);
         return sDate;
     }
 
@@ -272,6 +275,11 @@ public class DateUtil {
         localeMap.put("uk", "dd.MM.yyyy HH:mm");
         localeMap.put("uk_UA", "dd.MM.yyyy HH:mm");
         return localeMap;
+    }
+    
+    public static String getMonthName(Calendar cal) {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+    	return dateFormat.format(cal.getTime());
     }
 
 }

@@ -1,9 +1,7 @@
 package com.gainsight.sfdc.administration.pages;
 
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminAdoptionSubTab extends BasePage {

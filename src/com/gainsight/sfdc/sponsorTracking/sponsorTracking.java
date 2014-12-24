@@ -3,17 +3,14 @@ package com.gainsight.sfdc.sponsorTracking;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.testdriver.TestEnvironment;
 
 public class sponsorTracking extends BasePage{
 	protected TestEnvironment env = new TestEnvironment();
@@ -43,11 +40,11 @@ public class sponsorTracking extends BasePage{
 		String printapex=bt.resolveStrNameSpace("JBCXM__ApplicationSettings__c AppSett=[Select JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
 				+ "if (AppSett.JBCXM__NSURL__c == '"+NSURL+"') System.debug('Success');"
 				+ "else { AppSett.JBCXM__NSURL__c='"+NSURL+"'; update AppSett;	}");
-		Report.logInfo(printapex);
+		Log.info(printapex);
 				
 		
 		bt.apex.runApex(printapex);
-		Report.logInfo("updateNSURLInAppSettings DONE");
+		Log.info("updateNSURLInAppSettings DONE");
 			
 	}
 	
@@ -117,15 +114,15 @@ public class sponsorTracking extends BasePage{
 			System.out.println("endpoint:" + sfinfo.getEndpoint());
 			
 			String uri = endPoint + SEARCH_SPONSOR;
-			Report.logInfo("Headers Passing are : "+hdrs.toString());
+			Log.info("Headers Passing are : "+hdrs.toString());
 			String rawBody="{\"firstName\": \""+ReqParam.get("FirstName")+"\",\"lastName\": \""+ReqParam.get("LastName")+"\",\"email\": \""+ReqParam.get("Email")+"\","
 					+ "\"title\": \""+ReqParam.get("Title")+"\",\"company\":\""+ReqParam.get("Name")+"\"}";
-			Report.logInfo("Request is :"+rawBody);
+			Log.info("Request is :"+rawBody);
 			HttpResponseObj httpResp= wa.doPost(uri, rawBody, hdrs.getAllHeaders());
-			Report.logInfo("statuscode is =" + httpResp.getStatusCode());
-			Report.logInfo("Content Length:"+httpResp.getContentLength());
+			Log.info("statuscode is =" + httpResp.getStatusCode());
+			Log.info("Content Length:"+httpResp.getContentLength());
 			String result=httpResp.getContent();
-			Report.logInfo("result:"+result);
+			Log.info("result:"+result);
 			
 			
 			

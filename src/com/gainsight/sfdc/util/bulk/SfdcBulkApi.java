@@ -1,11 +1,15 @@
 package com.gainsight.sfdc.util.bulk;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.util.db.QueryBuilder;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gainsight.sfdc.util.db.QueryBuilder;
 
 /**
  * Standalone class for SFDC push/pull mechanism 
@@ -114,7 +118,7 @@ public class SfdcBulkApi {
             for(String batch_id : batchIds) {
                 async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
                 String result = op.getBatchStatus(async_batch_status_url);
-                Report.logInfo("OUTPUT:\n" + result);
+                Log.info("OUTPUT:\n" + result);
                 if(result.contains("Completed")) {
                     tempList.remove(batch_id);
                 } else if(result.equalsIgnoreCase("Records Failed")) {
@@ -149,7 +153,7 @@ public class SfdcBulkApi {
 		if(waitResult) {
 			//Fetching result from batch
 			String output = op.fetchResult(async_batch_status_url);
-			Report.logInfo("OUTPUT:\n" + output);
+			Log.info("OUTPUT:\n" + output);
 			op.setJobState(async_job_status_url, "Closed");
 		}
 		else
@@ -180,7 +184,7 @@ public class SfdcBulkApi {
 		if(waitResult) {
 			//Fetching result from batch
 			String output = op.fetchResult(async_batch_status_url);
-			Report.logInfo("OUTPUT:\n" + output);
+			Log.info("OUTPUT:\n" + output);
 			try {
 				//Save the file to the respective destination
 				FileOutputStream fos = new FileOutputStream(filePath);
@@ -328,7 +332,7 @@ public class SfdcBulkApi {
             for(String batch_id : batchIds) {
                 async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
                 String result = op.getBatchStatus(async_batch_status_url);
-                Report.logInfo("OUTPUT:\n" + result);
+                Log.info("OUTPUT:\n" + result);
                 if(result.contains("Completed")) {
                     tempList.remove(batch_id);
                 } else if(result.equalsIgnoreCase("Records Failed")) {

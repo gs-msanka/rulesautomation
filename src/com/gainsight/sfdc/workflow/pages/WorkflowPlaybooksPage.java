@@ -2,14 +2,12 @@ package com.gainsight.sfdc.workflow.pages;
 
 import java.util.List;
 
-import com.gainsight.sfdc.workflow.pojos.Playbook;
-import com.gainsight.sfdc.workflow.pojos.Task;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.interactions.Actions;
+import com.gainsight.sfdc.workflow.pojos.Playbook;
+import com.gainsight.sfdc.workflow.pojos.Task;
 
 public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
@@ -79,7 +77,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
 
     public void selectTaskOwner(String owner) {
-        Report.logInfo("Selecting Task Owner : " +owner);
+        Log.info("Selecting Task Owner : " +owner);
         amtDateUtil.stalePause();
         boolean selected = false;
         for(int i=0; i< 3; i++) {
@@ -89,7 +87,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
                 if(ele.isDisplayed()) {
                     ele.click();
                     selected = true;
-                    Report.logInfo("Selected Task Owner Successfully: " +owner);
+                    Log.info("Selected Task Owner Successfully: " +owner);
                     return;
                 }
             }
@@ -109,7 +107,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     private String getPlaybookXPath(Playbook pb) {
         String xpath =  "//div[@class='playbook-type']/h2[text()='"+pb.getType()+"']/following-sibling::ul/li[contains(text(), '"+pb.getName()+"')]";
-        Report.logInfo("Playbook Path : " +xpath);
+        Log.info("Playbook Path : " +xpath);
         return xpath;
     }
 
@@ -147,9 +145,9 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public boolean isTaskDisplayed(Task task) {
         String xPath = "//h4[contains(text(), '"+task.getSubject()+"')]/ancestor::div[contains(@class,  'playbook-tasks')]";
         List<WebElement> taskList = element.getAllElement(xPath);
-        Report.logInfo("No of tasks found with subject '"+task.getSubject()+"' :: " +taskList.size());
+        Log.info("No of tasks found with subject '"+task.getSubject()+"' :: " +taskList.size());
         if(taskList.size() ==0) {
-            Report.logInfo("No Tasks found with subject : "+task.getSubject());
+            Log.info("No Tasks found with subject : "+task.getSubject());
             return false;
         }
         String status, priority, date;
@@ -157,15 +155,15 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
             status = tEle.findElement(By.xpath(getTaskPropXpath("Status"))).getText().trim();
             priority = tEle.findElement(By.xpath(getTaskPropXpath("Priority"))).getText().trim();
             date = tEle.findElement(By.xpath(getTaskPropXpath("Date"))).getText().trim();
-            Report.logInfo("Expected Task Properties - Status : "+task.getStatus() +", -- priority : "+task.getPriority() +", -- date : "+task.getDate());
-            Report.logInfo("Actual Task Properties - Status : "+status +", -- priority : "+priority +", -- date : "+date);
+            Log.info("Expected Task Properties - Status : "+task.getStatus() +", -- priority : "+task.getPriority() +", -- date : "+task.getDate());
+            Log.info("Actual Task Properties - Status : "+status +", -- priority : "+priority +", -- date : "+date);
             if(task.getStatus().equalsIgnoreCase(status) && task.getPriority().equalsIgnoreCase(priority)
                     && date.contains(task.getDate())) {
-                Report.logInfo("Task Found");
+                Log.info("Task Found");
                 return true;
             }
         }
-        Report.logInfo("Task not found");
+        Log.info("Task not found");
         return false;
     }
 
@@ -206,7 +204,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
                 "/ancestor::ul/li/div[@class='tasks-label' and contains(text(), 'Priority')]" +
                 "/following-sibling::div[contains(@class, 'tasks-value') and contains(text(), '"+task.getPriority()+"')]" +
                 "/ancestor::div[contains(@class, 'playbook-tasks')]";
-        Report.logInfo("Task Xpath : " +s);
+        Log.info("Task Xpath : " +s);
         return s;
     }
 

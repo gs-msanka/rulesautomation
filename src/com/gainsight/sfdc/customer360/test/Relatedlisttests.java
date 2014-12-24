@@ -1,24 +1,21 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import com.gainsight.sfdc.customer360.pages.RelatedList360;
-import com.gainsight.sfdc.customer360.pages.SalesforceRecordForm;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
-
-import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pages.RelatedList360;
+import com.gainsight.sfdc.customer360.pages.SalesforceRecordForm;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class Relatedlisttests extends BaseTest {
     private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
@@ -43,7 +40,7 @@ public class Relatedlisttests extends BaseTest {
 
     public void createEventsFromScript() {
         String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-        Report.logInfo("File :" +file);
+        Log.info("File :" +file);
         apex.runApexCodeFromFile(file, isPackage);
         taskScriptCreated = true;
     }
@@ -58,7 +55,7 @@ public class Relatedlisttests extends BaseTest {
             if(testData.get("TableRow" + i) !=null) {
                 String data = testData.get("TableRow" + i);
                 dataList.add(data);
-                Report.logInfo(data);
+                Log.info(data);
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
@@ -119,9 +116,9 @@ public class Relatedlisttests extends BaseTest {
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
@@ -141,9 +138,9 @@ public class Relatedlisttests extends BaseTest {
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
@@ -175,9 +172,9 @@ public class Relatedlisttests extends BaseTest {
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
@@ -197,7 +194,7 @@ public class Relatedlisttests extends BaseTest {
             if(testData.get("TableRow" + i) !=null) {
                 String data = testData.get("Values" + i);
                 dataList.add(data);
-                Report.logInfo(data);
+                Log.info(data);
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);

@@ -1,14 +1,18 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.tests.BaseTest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import java.util.*;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.tests.BaseTest;
 
 public class Customer360Scorecard extends Customer360Page  {
 
@@ -95,7 +99,7 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard updateOverAllScore(String score, Boolean add) {
         List<WebElement> elements = element.getAllElement(OVERALL_SCORE_BG_ELEMENT);
-        Report.logInfo(String.valueOf(elements.size()));
+        Log.info(String.valueOf(elements.size()));
         for(WebElement ele : elements) {
             ele.isDisplayed();
         }
@@ -131,8 +135,8 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Boolean verifyOverallScore(String score) {
         String actScore = getOverallScore();
-        Report.logInfo("Actual Score : " +actScore);
-        Report.logInfo("Expected Score : " +score);
+        Log.info("Actual Score : " +actScore);
+        Log.info("Expected Score : " +score);
         if(actScore.trim().equalsIgnoreCase(score)) {
             return true;
         }
@@ -168,36 +172,36 @@ public class Customer360Scorecard extends Customer360Page  {
 		}
         WebElement ele = element.getElement(OVERALL_SCORE_BG_ELEMENT);
         String actualColor = ele.getAttribute("style");
-        Report.logInfo("Actual OverAll Score Color :" +actualColor);
-        Report.logInfo("Expected OverAll Score Color :" +expColor);
+        Log.info("Actual OverAll Score Color :" +actualColor);
+        Log.info("Expected OverAll Score Color :" +expColor);
         return isColorExists(actualColor, expColor);
 	}
 
     public Boolean verifyMeasureColor(String groupName, String measureName, String score) {
         WebElement ele = element.getElement(getMeasureXpath(groupName, measureName)+"/descendant::div[@class='grade-score']");
         String actualColor = ele.getAttribute("style");
-        Report.logInfo("Actual OverAll Score Color :" +actualColor);
+        Log.info("Actual OverAll Score Color :" +actualColor);
         String expColor  = score; //Default to color scheme.
         if(scheme.equals("Grade")) {
             expColor = gradeColorMap.get(expColor);
         } else if(scheme.equals("Score")) {
             expColor = getNumberColor(expColor);
         }
-        Report.logInfo("Expected OverAll Score Color :" +expColor);
+        Log.info("Expected OverAll Score Color :" +expColor);
         return isColorExists(actualColor, expColor);
     }
 
     private Boolean isColorExists(String actualColor, String expColor) {
         if(actualColor.contains("#")) {
-            Report.logInfo("Style has hexadecimal value");
+            Log.info("Style has hexadecimal value");
             if(actualColor.contains(expColor)) {
                 return true;
             }
         } else if(actualColor.contains("rgb")){
-            Report.logInfo("Style has RGB value");
+            Log.info("Style has RGB value");
             String[] rgb = actualColor.substring(actualColor.indexOf("(")+1, actualColor.lastIndexOf(")")).split(",");
             String hexadecimal = rgbToHex(Integer.valueOf(rgb[0].trim()),Integer.valueOf(rgb[1].trim()),Integer.valueOf(rgb[2].trim()));
-            Report.logInfo("Expected color Hexa : " +hexadecimal);
+            Log.info("Expected color Hexa : " +hexadecimal);
             if(hexadecimal.equalsIgnoreCase(expColor)) {
                 return true;
             }
@@ -226,7 +230,7 @@ public class Customer360Scorecard extends Customer360Page  {
             	else
             		 ele = element.getElement(OVERALL_TREND);
                 String actualTrend = ele.getAttribute("class");
-                Report.logInfo("Actual Class Name : " +actualTrend);
+                Log.info("Actual Class Name : " +actualTrend);
                 if(actualTrend == null || actualTrend=="") {
                     return false;
                 }
@@ -263,14 +267,14 @@ public class Customer360Scorecard extends Customer360Page  {
 
 	private String getOverallSummary() {
         String result = item.getText(OVERALL_SUMMARY);
-        Report.logInfo("Actual Summary : " +result);
+        Log.info("Actual Summary : " +result);
 		return result;
 	}
 
     public Boolean verifyOverAllSummary(String expResult) {
         String actResult = getOverallSummary();
-        Report.logInfo("Expected Summary : "+expResult);
-        Report.logInfo("Actual Summary : "+actResult);
+        Log.info("Expected Summary : "+expResult);
+        Log.info("Actual Summary : "+actResult);
         return actResult.trim().toLowerCase().contains(expResult.trim().toLowerCase());
     }
 
@@ -290,13 +294,13 @@ public class Customer360Scorecard extends Customer360Page  {
 	private String getCustomerGoals() {
         expandCustomerGoalsSec();
 		String customerGoals = item.getText(GOALS_VIEW);
-        Report.logInfo("Actual Customer Goals : " +customerGoals);
+        Log.info("Actual Customer Goals : " +customerGoals);
         return  customerGoals;
 	}
 
     public Boolean verifyCustomerGoals(String expGoals) {
         String actGoals = getCustomerGoals();
-        Report.logInfo("Expected Customer Goals : " +expGoals);
+        Log.info("Expected Customer Goals : " +expGoals);
         return actGoals.trim().toLowerCase().contains(expGoals.trim().toLowerCase());
     }
 
@@ -322,17 +326,17 @@ public class Customer360Scorecard extends Customer360Page  {
 
     private String getMeasureXpath(String groupName, String measureName) {
         String xPath =  String.format(SCORECARD_MEASURE_CARD, groupName, measureName);
-        Report.logInfo("Scorecard Measure XPath : " +xPath);
+        Log.info("Scorecard Measure XPath : " +xPath);
         return xPath;
     }
 
     public Boolean verifyMeasureScore(String groupName, String measureName, String expScore) {
         String measure = getMeasureXpath(groupName, measureName);
         measure += "/descendant::div[@class='score']";
-        Report.logInfo("Xpath : " +measure);
+        Log.info("Xpath : " +measure);
         String actScore = item.getText(measure);
-        Report.logInfo("Actual Score : " +actScore);
-        Report.logInfo("Expected Score : " +expScore);
+        Log.info("Actual Score : " +actScore);
+        Log.info("Expected Score : " +expScore);
         if(actScore != null && actScore != "") {
             if(actScore.trim().equalsIgnoreCase(expScore)) {
                 return true;
@@ -345,15 +349,15 @@ public class Customer360Scorecard extends Customer360Page  {
         if(trend  != null) {
             String measure = getMeasureXpath(groupName, measureName);
             measure += "/descendant::div[@class='grade-score']/div[2]";
-            Report.logInfo("Xpath : " +measure);
+            Log.info("Xpath : " +measure);
             List<WebElement> eleList = element.getAllElement(measure);
             WebElement el = null;
-            Report.logInfo(String.valueOf(eleList.size()));
+            Log.info(String.valueOf(eleList.size()));
             for(WebElement ele : eleList) {
                 if(ele.isDisplayed()) {
                     el = ele;
                     String actTrend = el.getAttribute("class");
-                    Report.logInfo("Measure Trend : " +actTrend);
+                    Log.info("Measure Trend : " +actTrend);
                     String temp = trend.equalsIgnoreCase("Up") ? "trend-up" : trend.equalsIgnoreCase("down") ? "trend-down" : "trend-none";
                     if(actTrend != null && actTrend != "") {
                         if(actTrend.contains(temp)) {
@@ -423,7 +427,7 @@ public class Customer360Scorecard extends Customer360Page  {
                     }
 				}
 				returnVal = (int) Math.floor(((((sliderEnd - sliderStart) * (Float.parseFloat(score) / 100))) + sliderStart - sliderCurrentPos));
-				Report.logInfo("Initial Position:"+sliderCurrentPos+", Offset : "+returnVal);
+				Log.info("Initial Position:"+sliderCurrentPos+", Offset : "+returnVal);
 			}
 		}
 		else if(scheme.equals("Grade")){
@@ -439,7 +443,7 @@ public class Customer360Scorecard extends Customer360Page  {
                     }
 				}
 				returnVal = (int)Math.floor((((((sliderEnd - sliderStart) / (numOfGrades - 1)) * pos) + sliderStart) - sliderCurrentPos));
-				Report.logInfo("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
+				Log.info("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 		}
 		else {   //scheme is "Color":
@@ -454,10 +458,10 @@ public class Customer360Scorecard extends Customer360Page  {
                     break;
 				}
 				returnVal = (int)Math.floor((((((sliderEnd - sliderStart) / (numOfColors - 1)) * c_pos) + sliderStart) - sliderCurrentPos));
-				Report.logInfo("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
+				Log.info("Initial Position:"+sliderCurrentPos+",,Offset:"+returnVal);
 			}
 		}
-        Report.logInfo("Offset to Move : " +returnVal);
+        Log.info("Offset to Move : " +returnVal);
 		return returnVal;
 	}
 
@@ -489,14 +493,14 @@ public class Customer360Scorecard extends Customer360Page  {
         String xPath = getMeasureXpath(groupName, measureName);
         String  viewableTextArea = xPath+"/descendant::div[@class='text-edit-area']";
         String comments = item.getText(viewableTextArea);
-        Report.logInfo("Actual Measure '"+measureName+"' comments : " +comments);
+        Log.info("Actual Measure '"+measureName+"' comments : " +comments);
 		return comments;
 	}
 
     public Boolean verifyCommentsOfMeasure(String groupName, String measureName, String expComments) {
         String actComments = getCommentsOfMeasure(groupName, measureName);
-        Report.logInfo("Expected Comments : " +expComments);
-        Report.logInfo("Actual Comments : " +actComments);
+        Log.info("Expected Comments : " +expComments);
+        Log.info("Actual Comments : " +actComments);
         return actComments.trim().toLowerCase().contains(expComments.trim().toLowerCase());
     }
 
@@ -518,7 +522,7 @@ public class Customer360Scorecard extends Customer360Page  {
         if(schemeName.equals("Color")){
             as.applyColorScheme();
         }
-        Report.logInfo("Job added... proceeding with polling");
+        Log.info("Job added... proceeding with polling");
         BaseTest bt=new BaseTest();
         int noOfRunningJobs =0;
         for(int l= 0; l < 100; l++) {
@@ -528,10 +532,10 @@ public class Customer360Scorecard extends Customer360Page  {
 
             noOfRunningJobs = bt.getQueryRecordCount(query);
             if(noOfRunningJobs==0) {
-                Report.logInfo("Scorecard schem changed to Grading...proceeding with execution of tests.....");
+                Log.info("Scorecard schem changed to Grading...proceeding with execution of tests.....");
                 break;
             } else {
-                Report.logInfo("Waiting for Scorecard scheme to be changed to Grading");
+                Log.info("Waiting for Scorecard scheme to be changed to Grading");
                 Thread.sleep(3000L);
             }
         }

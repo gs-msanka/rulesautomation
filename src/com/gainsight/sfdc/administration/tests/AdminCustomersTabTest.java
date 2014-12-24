@@ -3,16 +3,14 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import jxl.read.biff.BiffException;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import jxl.read.biff.BiffException;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
-import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
@@ -24,7 +22,7 @@ public class AdminCustomersTabTest extends BaseTest {
 	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminCustomersTestdata.xls";
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		deletePickList();
 		basepage.login();
 	}
@@ -102,7 +100,7 @@ public class AdminCustomersTabTest extends BaseTest {
 		     }
 		     soql.deleteQuery(DELETERECORDS);
 		  } catch (Exception e) {
-		      Report.logInfo(e.getLocalizedMessage());
+		      Log.info(e.getLocalizedMessage());
 		  }
 			 }*/
 	

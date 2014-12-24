@@ -1,17 +1,18 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
-import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
-import com.gainsight.utils.DataProviderArguments;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
+import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
+import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
+import com.gainsight.testdriver.TestEnvironment;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Adoption_Instance_Monthly_Test extends AdoptionDataSetup {
     private final String resDir                 = TestEnvironment.basedir + "/testdata/sfdc/UsageData/";

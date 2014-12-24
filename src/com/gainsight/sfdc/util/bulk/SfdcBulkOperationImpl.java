@@ -1,6 +1,9 @@
 package com.gainsight.sfdc.util.bulk;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,11 +17,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.Template;
-import com.gainsight.webaction.WebAction;
 
 /**
  * SFDC Operations Implementation
@@ -58,7 +58,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		HttpResponseObj resp = null;
 		
 		try {
-			Report.logInfo("Create Job URL: " + uri);
+			Log.info("Create Job URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			h.addHeader("Accept", "application/xml");
@@ -67,7 +67,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Job Response:\n" + resp.getContent());
+		Log.info("Job Response:\n" + resp.getContent());
 		return parseXMLResponse(resp.getContent(), "id");
 	}
 
@@ -98,7 +98,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
         HttpResponseObj resp = null;
 
         try {
-            Report.logInfo("Create Job URL: " + uri);
+            Log.info("Create Job URL: " + uri);
             Header h = new Header();
             h.addHeader("X-SFDC-Session", session_id);
             h.addHeader("Accept", "application/xml");
@@ -107,7 +107,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Report.logInfo("Job Response:\n" + resp.getContent());
+        Log.info("Job Response:\n" + resp.getContent());
         return parseXMLResponse(resp.getContent(), "id");
     }
 
@@ -116,7 +116,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		StringEntity entity = new StringEntity(query, ContentType.create("text/plain", "UTF-8"));
 		HttpResponseObj resp = null;
 		try {
-			Report.logInfo("Adding Batch to Job URL: " + uri);
+			Log.info("Adding Batch to Job URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			h.addHeader("Content-Type", "text/csv");
@@ -124,7 +124,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Batch Response:\n" + resp.getContent());
+		Log.info("Batch Response:\n" + resp.getContent());
 		return parseXMLResponse(resp.getContent(), "id");
 	}
 	
@@ -142,7 +142,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		FileEntity entity = new FileEntity(csvFile, ContentType.create("text/csv", "UTF-8"));
 		HttpResponseObj resp = null;
 		try {
-			Report.logInfo("Adding Batch to Job URL: " + uri);
+			Log.info("Adding Batch to Job URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			h.addHeader("Content-Type", "text/csv");
@@ -150,7 +150,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Batch Response:\n" + resp.getContent());
+		Log.info("Batch Response:\n" + resp.getContent());
 		return parseXMLResponse(resp.getContent(), "id");
 	}
 	
@@ -169,14 +169,14 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
         Calendar cal = Calendar.getInstance();
 		HttpResponseObj resp = null;
 		try {
-			Report.logInfo("Getting Batch Status URL: " + uri);
+			Log.info("Getting Batch Status URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			resp = wa.doGet(uri, h.getAllHeaders());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Batch Status Response:\n" + resp.getContent());
+		Log.info("Batch Status Response:\n" + resp.getContent());
 		String status = parseXMLResponse(resp.getContent(), "state");
 		int numberRecordsFailed = Integer.parseInt(parseXMLResponse(resp.getContent(), "numberRecordsFailed"));
 		if(status.equalsIgnoreCase("Completed") && numberRecordsFailed == 0 ) 
@@ -190,11 +190,11 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Report.logInfo("Batch Status Response:\n" + resp.getContent());
-            Report.logInfo("Batch completed with failures.");
-			Report.logInfo("Operation : " + parseXMLResponse(resp.getContent(), "operation"));
-			Report.logInfo("Number of Records Processed : " + parseXMLResponse(resp.getContent(), "numberRecordsProcessed"));
-			Report.logInfo("Number of Records Failed : " + numberRecordsFailed);
+            Log.info("Batch Status Response:\n" + resp.getContent());
+            Log.info("Batch completed with failures.");
+			Log.info("Operation : " + parseXMLResponse(resp.getContent(), "operation"));
+			Log.info("Number of Records Processed : " + parseXMLResponse(resp.getContent(), "numberRecordsProcessed"));
+			Log.info("Number of Records Failed : " + numberRecordsFailed);
 			return "Records Failed";
 		}
 		else if(status.equalsIgnoreCase("Failed")) 
@@ -219,14 +219,14 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		HttpResponseObj resp = null;
 		try {
 			uri = uri +"/result/"+ resultId;
-			Report.logInfo("Getting Batch Status URL: " + uri);
+			Log.info("Getting Batch Status URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			resp = wa.doGet(uri, h.getAllHeaders());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Fetched Result.");
+		Log.info("Fetched Result.");
 		return resp.getContent();
 	}
 
@@ -242,7 +242,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		FileEntity entity = new FileEntity(outputFile, ContentType.create("text/xml", "UTF-8"));
 		HttpResponseObj resp = null;
 		try {
-			Report.logInfo("Settting Job State URL: " + uri);
+			Log.info("Settting Job State URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			h.addHeader("Content-Type", "text/csv");
@@ -250,9 +250,9 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Job State Response:\n" + resp.getContent());
+		Log.info("Job State Response:\n" + resp.getContent());
 		String status = parseXMLResponse(resp.getContent(), "state");
-		Report.logInfo("Job Status: " + status);
+		Log.info("Job Status: " + status);
 		return status;
 	}
 	
@@ -260,16 +260,16 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		String resultId = null;
 		HttpResponseObj resp = null;
 		try {
-			Report.logInfo("Getting Batch Status URL: " + uri);
+			Log.info("Getting Batch Status URL: " + uri);
 			Header h = new Header();
 			h.addHeader("X-SFDC-Session", session_id);
 			resp = wa.doGet(uri, h.getAllHeaders());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Report.logInfo("Result ID Response:\n" + resp.getContent());
+		Log.info("Result ID Response:\n" + resp.getContent());
 		resultId = parseXMLResponse(resp.getContent(), "result");
-		Report.logInfo("Result ID: " + resultId);
+		Log.info("Result ID: " + resultId);
 		
 		return resultId;
 	}
@@ -293,15 +293,15 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 			for (int i = 0; i < list.size(); i++) {
 				Element node = list.get(i);
 				if (node.getName().equals(nodeToSearch)) {
-					Report.logInfo("Node: " + nodeToSearch + " || value: "	+ node.getText());
+					Log.info("Node: " + nodeToSearch + " || value: "	+ node.getText());
 					result = node.getText();
 					break;
 				}
 			}
 		} catch (IOException io) {
-			Report.logInfo(io.getMessage());
+			Log.info(io.getMessage());
 		} catch (JDOMException jdomex) {
-			Report.logInfo(jdomex.getMessage());
+			Log.info(jdomex.getMessage());
 		}
 		return result;
 	}

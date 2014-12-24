@@ -5,13 +5,12 @@ import java.util.HashMap;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.administration.pages.AdminCustomer360Section;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.SponsorTracking360;
 import com.gainsight.sfdc.sponsorTracking.sponsorTracking;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360SponsorTest extends BaseTest {	
@@ -22,7 +21,7 @@ public class Customer360SponsorTest extends BaseTest {
 	private sponsorTracking sp_api;
 	@BeforeClass
 	public void setup() throws InterruptedException{
-		Report.logInfo("Starting Customer 360 Sponsor Tracking module Test Cases...");
+		Log.info("Starting Customer 360 Sponsor Tracking module Test Cases...");
 		
 		basepage.login();
 		Thread.sleep(20000);		
@@ -44,7 +43,7 @@ public class Customer360SponsorTest extends BaseTest {
 	    //basepage.clickOnC360Tab();		
 	    sp_api.updateNSURLInAppSettings();
 		if(sp_api.validateOAuthEnabled())
-		 Report.logInfo("Validation success is : OAuth Enabled");
+		 Log.info("Validation success is : OAuth Enabled");
 		sponsorTracking360.searchSponsor(SponsorDetails.get("CustomerName"),SponsorDetails.get("ContactName"),SponsorDetails.get("Email"),sp_api);
 	}
 }

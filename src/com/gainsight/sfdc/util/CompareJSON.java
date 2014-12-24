@@ -1,14 +1,5 @@
 package com.gainsight.sfdc.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 public class CompareJSON {
     /*

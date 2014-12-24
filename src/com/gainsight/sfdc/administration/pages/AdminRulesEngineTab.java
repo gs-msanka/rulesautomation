@@ -1,21 +1,12 @@
 package com.gainsight.sfdc.administration.pages;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-
-import jxl.read.biff.BiffException;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
-
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
 
 public class AdminRulesEngineTab extends BasePage {
 	
@@ -157,7 +148,7 @@ public class AdminRulesEngineTab extends BasePage {
         field.setTextField(DEFAULT_TASK_OWNER, ownerName);
         amtDateUtil.sleep(4); 
         wait.waitTillElementDisplayed("//li[@class='ui-menu-item' and @role='menuitem']", MIN_TIME, MAX_TIME);
-        Report.logInfo("Started selecting the owner of event");
+        Log.info("Started selecting the owner of event");
         WebElement wEle = null;
         List<WebElement> eleList = element.getAllElement("//a[contains(@class, 'ui-corner-all')]");
         for(WebElement ele : eleList) {
@@ -178,9 +169,9 @@ public class AdminRulesEngineTab extends BasePage {
                 builder.click(wEle);
                 Action s = builder.build();
                 s.perform();
-                Report.logInfo("Finished selecting the owner for event");
+                Log.info("Finished selecting the owner for event");
         } else {
-                Report.logInfo("FAIL: Failed to select the owner for the event");
+                Log.info("FAIL: Failed to select the owner for the event");
         }
        
         

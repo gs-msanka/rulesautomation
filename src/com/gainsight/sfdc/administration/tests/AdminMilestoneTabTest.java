@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import jxl.read.biff.BiffException;
-    
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminMilestoneTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
@@ -23,7 +22,7 @@ public class AdminMilestoneTabTest extends BaseTest {
 	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminMilestoneTestdata.xls";
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		deletePickList();
 		basepage.login();
 	}
@@ -98,12 +97,12 @@ public class AdminMilestoneTabTest extends BaseTest {
 	 /*public void createMilestoneFromScript() {
 	       try {
 	           String file = env.basedir+"/testdata/sfdc/Administration/Milestone_Create_Script.txt";
-	           Report.logInfo("File :" +file);
-	           Report.logInfo("Pack :" +isPackageInstance());
+	           Log.info("File :" +file);
+	           Log.info("Pack :" +isPackageInstance());
 	           apex.runApexCodeFromFile(file, isPackageInstance());
 	          // isEventCreateScriptExecuted = true;
 	       } catch (Exception e) {
-	           Report.logInfo(e.getLocalizedMessage());
+	           Log.info(e.getLocalizedMessage());
 	       }
 	   }
 		*/

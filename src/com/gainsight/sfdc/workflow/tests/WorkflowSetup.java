@@ -20,7 +20,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.annotations.AfterClass;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
@@ -40,7 +39,7 @@ public class WorkflowSetup extends BaseTest{
         try {
             cObjFields.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
         } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
+            Log.info("Failed to create fields");
             e.printStackTrace();
         }
     }
@@ -52,7 +51,7 @@ public class WorkflowSetup extends BaseTest{
 	        try {
 	            cObjFields.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
 	        } catch (Exception e) {
-	            Report.logInfo("Failed to create fields in CTA object");
+	            Log.info("Failed to create fields in CTA object");
 	            e.printStackTrace();
 	        }
 	 }
@@ -124,7 +123,7 @@ public class WorkflowSetup extends BaseTest{
                 query = query+ " AND ( "+filter.substring(0, filter.length()-3)+" )";
             }
         }
-        Report.logInfo("Query : " +resolveStrNameSpace(query));
+        Log.info("Query : " +resolveStrNameSpace(query));
         return getQueryRecordCount(resolveStrNameSpace(query));
     }
 
@@ -314,7 +313,7 @@ public class WorkflowSetup extends BaseTest{
         } else {
             query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = false ";
         }
-        Report.logInfo("Query : " +resolveStrNameSpace(query));
+        Log.info("Query : " +resolveStrNameSpace(query));
         count = soql.getRecordCount(resolveStrNameSpace(query));
         return count;
     }
@@ -324,7 +323,7 @@ public class WorkflowSetup extends BaseTest{
         String query = "select count(JBCXM__Account__c), JBCXM__assignee__c from JBCXM__CTA__c where " +
                 "JBCXM__Stage__r.IncludeInWidget__c = true AND JBCXM__Type__r.Name='"+type+"' AND" +
                 "JBCXM__Assignee__r.name='"+assignee+"' group by JBCXM__assignee__c";
-        Report.logInfo("Query : " +resolveStrNameSpace(query));
+        Log.info("Query : " +resolveStrNameSpace(query));
         SObject[] records = soql.getRecords(resolveStrNameSpace(query));
         if(records.length >0) {
             count = Integer.valueOf(records[0].getField("expr0").toString());
