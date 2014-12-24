@@ -26,14 +26,14 @@ public class AdminUIViewsTabTest extends BaseTest {
 	@BeforeClass
 	public void setUp() {
 		Report.logInfo("Starting  Test Case...");
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Customer_Tab_ UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views", isPackageInstance());
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackageInstance());
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Customer_Tab_ UI_Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views", isPackage);
+		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackage);
 		basepage.login();
 	}
 	

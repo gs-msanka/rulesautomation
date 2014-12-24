@@ -62,6 +62,24 @@ public class DateUtil {
         return addMonths(cal.getTime(), amount, format);
     }
 
+    public static Date addMonths(TimeZone timeZone, int amount) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.MONTH, amount);
+        return cal.getTime();
+    }
+
+    public static Date addWeeks(TimeZone timeZone, int amount) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.WEEK_OF_YEAR, amount);
+        return cal.getTime();
+    }
+
+    public static Date addDays(TimeZone timeZone, int amount) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.DATE, amount*7);
+        return cal.getTime();
+    }
+
     /**
      * This parameter returns the String with comprises of yyyy|mm|dd format.
      *

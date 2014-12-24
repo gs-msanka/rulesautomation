@@ -176,27 +176,16 @@ public class BaseTest {
         return FileUtil.resolveNameSpace(str, isPackage ? NAMESPACE : null);
     }
    
-    public String getDateWithFormat(int noOfDaysToAdd, int noOfMonthsToAdd, boolean bulkFormat) {
+    public String getDateWithFormat(int days, int months, boolean bulkFormat) {
         String date = null;
-        Calendar c = Calendar.getInstance(userTimezone);
-        Report.logInfo("Time : " +c.getTime() );
-        Report.logInfo("Time Zone : " +c.getTimeZone() );
-        c.add(Calendar.DATE, noOfDaysToAdd);
-        c.add(Calendar.MONTH, noOfMonthsToAdd);
-        DateFormat dateFormat = null;
-        if(bulkFormat) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        } else if (userLocale.contains("en_US")) {
-            dateFormat = new SimpleDateFormat("M/d/yyyy");
-
-        } else if (userLocale.contains("en_IN")) {
-            dateFormat = new SimpleDateFormat("d/M/yyyy");
-
+        if(days !=0 && months == 0) {
+            date = DateUtil.addDays(userTimezone, days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
+        } else if(days ==0 && months !=0) {
+            date = DateUtil.addMonths(userTimezone, months, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
+        } else if(months !=0 && days !=0) {
+            date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
         }
-        dateFormat.setTimeZone(userTimezone);
-        date = dateFormat.format(c.getTime());
-
-        Report.logInfo("Date : " +String.valueOf(date));
+        System.out.println("Formatted Date :" +date);
         return date;
     }
 
@@ -232,12 +221,13 @@ public class BaseTest {
     public void createExtIdFieldOnUser(){
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
-        try {
-            fieldsCreator.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
-            e.printStackTrace();
-        }
+        fieldsCreator.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
+    }
+
+    public void createExternalIdFieldOnCTA(){
+        String CtaObj = "JBCXM__CTA__c";
+        String[] Cta_ExtId = new String[]{"CTA ExternalID"};
+        fieldsCreator.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
     }
 
 

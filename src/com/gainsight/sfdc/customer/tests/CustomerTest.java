@@ -23,9 +23,6 @@ public class CustomerTest extends BaseTest {
     public void setUp() {
         Report.logInfo("Started Customers Test Cases");
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_QUERY));
         apex.runApexCodeFromFile(ACC_SETUP_SCRIPT, isPackage);
         apex.runApexCodeFromFile(UIVIEW_SETUP_SCRIPT, isPackage);
