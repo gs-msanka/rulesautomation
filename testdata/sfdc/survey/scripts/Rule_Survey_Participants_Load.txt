@@ -1,0 +1,22 @@
+String surveyCode   = '%s';
+String surveyTitle  = '%s';
+String account      = 'Survey Rule Account%%';
+
+JBCXM__Survey__c survey = [SELECT Id, JBCXM__Code__c, JBCXM__Title__c  FROM JBCXM__Survey__c Where JBCXM__Code__c=:surveyCode and JBCXM__Title__c=:surveyTitle limit 1];
+List<JBCXM__SurveyParticipant__c> surParList = new List<JBCXM__SurveyParticipant__c>();
+
+List<Contact> conList = [SELECT Id, Account.Id, Name, Email, Title FROM Contact where Account.Name Like: account limit 1000];
+for(Contact con : conList) {
+	JBCXM__SurveyParticipant__c surParticipant = new JBCXM__SurveyParticipant__c(JBCXM__Account__c = con.Account.Id,
+														JBCXM__Contact__c = con.Id,
+														JBCXM__DisplayName__c = con.Name,
+														JBCXM__Role__c = con.Title,
+														JBCXM__SentEmail__c = con.Email,
+														JBCXM__SurveyMaster__c = survey.Id);
+	surParList.add(surParticipant);
+}
+insert surParList;
+for(JBCXM__SurveyParticipant__c surParticipant : surParList) {
+	surParticipant.JBCXM__Token__c = surParticipant.Id+String.ValueOf(Math.round(Math.random() * (999999 - 100000)) + 100000);
+}
+update surParList;
