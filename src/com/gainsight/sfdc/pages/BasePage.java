@@ -8,8 +8,8 @@ import java.util.Set;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.util.AmountsUtil;
-import com.gainsight.sfdc.widgets.accountWidget.pages.AccountsPage;
-import com.gainsight.sfdc.widgets.opprtunityWidget.pages.OpportunitiesPage;
+import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountsPage;
+import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunitiesPage;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -23,7 +23,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.transactions.pages.Transactions;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
-import com.gainsight.sfdc.widgets.accountWidget.pages.AccountWidgetPage;
+import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountWidgetPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
 /**
