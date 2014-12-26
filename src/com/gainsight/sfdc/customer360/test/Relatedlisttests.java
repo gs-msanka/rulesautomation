@@ -19,17 +19,15 @@ import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class Relatedlisttests extends BaseTest {
-    private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
+    private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/tests/RelatedList_360.xls";
     private final String CONTACT_SCRIPT_FILE            = env.basedir+"/testdata/sfdc/relatedlist/scripts/Contact_RelatedList_View_Setup.txt";
     private final String UI_VIEW_SCRIPT_FILE1           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup1.txt";
     private final String UI_VIEW_SCRIPT_FILE2           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup2.txt";
-    private final String USER_CREATE_UPDATE             = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     boolean taskScriptCreated = false;
 
     @BeforeClass
     public void setUp() {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CONTACT_SCRIPT_FILE));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(USER_CREATE_UPDATE));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE1));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE2));
         basepage.login();
