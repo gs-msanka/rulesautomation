@@ -1,4 +1,4 @@
-//To Create Accounts
+//To Create Accounts Samples
 DELETE [SELECT Id FROM Account WHERE Name = 'Account For Attributes Test'];
 Account acc = new Account(Name = 'Account For Attributes Test',
                             AccountSource = 'Employee Referral',
