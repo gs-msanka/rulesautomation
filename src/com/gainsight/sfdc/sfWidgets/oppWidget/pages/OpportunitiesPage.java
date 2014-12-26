@@ -1,4 +1,4 @@
-package com.gainsight.sfdc.sfWidgets.oppWidgets.pages;
+package com.gainsight.sfdc.sfWidgets.oppWidget.pages;
 
 import com.gainsight.sfdc.pages.BasePage;
 
