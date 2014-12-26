@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.gainsight.sfdc.beans.*;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.sforce.soap.apex.ExecuteAnonymousResult;
 import com.sforce.soap.apex.SoapConnection;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.GetUserInfoResult;
+import com.sforce.soap.partner.LoginResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
@@ -22,6 +22,10 @@ public class SFDCUtil {
     SoapConnection soapConnection;
     static Application env;
 
+    public static void main(String[] args) {
+    	SFDCUtil.fetchSFDCinfo();
+    }
+    
     /**
      * Fetching the Salesforce UserInfo along with session id.
      * @return
@@ -30,12 +34,15 @@ public class SFDCUtil {
         Log.info("Fetching SalesForce Data");
         try {
             env = new Application();
+            
             ConnectorConfig config = new ConnectorConfig();
+            config.setAuthEndpoint(env.getProperty("sfdc.partnerUrl"));
             config.setUsername(env.getUserName());
             config.setPassword(env.getUserPassword() + env.getProperty("sfdc.stoken"));
 
             connection = Connector.newConnection(config);
-            GetUserInfoResult userInfo = connection.getUserInfo();
+            LoginResult loginResult = connection.login(env.getUserName(), env.getUserPassword() + env.getProperty("sfdc.stoken"));
+            GetUserInfoResult userInfo = loginResult.getUserInfo();
 
             SFDCInfo info = new SFDCInfo();
             info.setOrg(userInfo.getOrganizationId());
@@ -53,6 +60,7 @@ public class SFDCUtil {
             sept = sept.substring(0, sept.indexOf(".com") + 4);
             info.setEndpoint(sept);
 
+            System.out.println(info.toString());
             Log.info("SDCF Info:\n" + info.toString());
             return info;
         } catch (ConnectionException ce) {

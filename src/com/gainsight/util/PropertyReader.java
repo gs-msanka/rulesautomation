@@ -40,7 +40,7 @@ public class PropertyReader {
 		userName = p.getProperty("sfdc.username");
 		password = p.getProperty("sfdc.password");
 		stoken = p.getProperty("sfdc.stoken");
-		partnerUrl = p.getProperty("sfdc.soapUrl");
+		partnerUrl = p.getProperty("sfdc.partnerUrl");
 		sfdcApiVersion = p.getProperty("sfdc.apiVersion");
 		nsAppUrl = p.getProperty("ns.appurl");
 	}
