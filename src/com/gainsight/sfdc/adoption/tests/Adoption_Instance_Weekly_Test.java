@@ -16,10 +16,10 @@ import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
-    private final String resDir                 = env.basedir + "/testdata/sfdc/UsageData/";
-    private final String ADV_CONFIG_FILE     = resDir+"Scripts/Instance_Level_Weekly.txt";
-    private final String JOB_UsageData          = resDir + "Jobs/Job_Adop_Inst_Weekly.txt";
-    private final String TEST_DATA_FILE         = "testdata/sfdc/UsageData/Tests/Adop_Inst_Weekly_Test.xls";
+    private final String resDir                 = env.basedir + "/testdata/sfdc/usageData/";
+    private final String ADV_CONFIG_FILE     = resDir+"scripts/Instance_Level_Weekly.txt";
+    private final String JOB_UsageData          = resDir + "jobs/Job_Adop_Inst_Weekly.txt";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/usageData/Tests/Adop_Inst_Weekly_Test.xls";
     private final String WEEKDAY                = "Wed";
     private final boolean isEndDate             = true;
     AdoptionDataSetup dataSetup;

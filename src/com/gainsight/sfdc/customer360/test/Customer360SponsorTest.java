@@ -16,7 +16,7 @@ import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360SponsorTest extends BaseTest {	
 	
-	private final String SPONSOR_FILE = Application.basedir+"/apex_scripts/SponsorTracking/SponsorTracking.apex";
+	private final String SPONSOR_FILE = Application.basedir+"/apex_scripts/sponsorTracking/SponsorTracking.apex";
 	private final String TEST_DATA_FILE = "testdata/sfdc/cs360SponsorTracking/SponsorTrackingTestData.xls";
 	private SponsorTracking360 sponsorTracking360; 
 	private SponsorTracking sp_api;

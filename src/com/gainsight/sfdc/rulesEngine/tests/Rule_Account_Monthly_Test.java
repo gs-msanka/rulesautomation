@@ -37,18 +37,18 @@ import com.sforce.ws.ConnectionException;
 public class Rule_Account_Monthly_Test extends BaseTest {
 
 
-    private static final String SET_USAGE_DATA_LEVEL_FILE = env.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
-    private static final String SET_USAGE_DATA_MEASURE_FILE = env.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
-    private static final String USAGE_DATA_FILE         = "/testdata/sfdc/RulesEngine/Data/Rules_UsageData_Account.csv";
-    private static final String TEST_DATA_FILE          = "testdata/sfdc/RulesEngine/Tests/Rule_Account_Monthly_Test.xls";
+    private static final String SET_USAGE_DATA_LEVEL_FILE = env.basedir+"/testdata/sfdc/rulesEngine/Scripts/Set_Account_Level_Monthly.apex";
+    private static final String SET_USAGE_DATA_MEASURE_FILE = env.basedir+"/testdata/sfdc/rulesEngine/Scripts/UsageData_Measures.apex";
+    private static final String USAGE_DATA_FILE         = "/testdata/sfdc/rulesEngine/Data/Rules_UsageData_Account.csv";
+    private static final String TEST_DATA_FILE          = "testdata/sfdc/rulesEngine/Tests/Rule_Account_Monthly_Test.xls";
     private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
     private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
     private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
     private static final String NUMERIC_SCHEME_FILE     = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
     private static final String METRICS_CREATE_FILE     = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
     private static final String SCORECARD_CLEAN_FILE    = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Accounts.txt";
-    private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Customers.txt";
+    private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/rulesEngine/Jobs/Job_Accounts.txt";
+    private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/rulesEngine/Jobs/Job_Customers.txt";
 
 
     private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();

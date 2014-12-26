@@ -17,10 +17,10 @@ import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Adoption_Instance_Monthly_Test extends AdoptionDataSetup {
-    private final String resDir                 = env.basedir + "/testdata/sfdc/UsageData/";
-    private final String ADV_USAGE_CONFIG     = resDir+"Scripts/Instance_Level_Monthly.txt";
-    private final String JOB_UsageData          = resDir + "Jobs/Job_Adop_Inst_Monthly.txt";
-    private final String TEST_DATA_FILE         = "testdata/sfdc/UsageData/Tests/Adop_Inst_Monthly_Test.xls";
+    private final String resDir                 = env.basedir + "/testdata/sfdc/usageData/";
+    private final String ADV_USAGE_CONFIG     = resDir+"scripts/Instance_Level_Monthly.txt";
+    private final String JOB_UsageData          = resDir + "jobs/Job_Adop_Inst_Monthly.txt";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/usageData/tests/Adop_Inst_Monthly_Test.xls";
     AdoptionDataSetup dataSetup;
 
 

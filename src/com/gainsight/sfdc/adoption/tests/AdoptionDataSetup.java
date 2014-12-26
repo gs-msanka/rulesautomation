@@ -18,12 +18,12 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
  * Created by gainsight on 08/12/14.
  */
 public class AdoptionDataSetup extends BaseTest {
-    public final String resDir                      = env.basedir + "/testdata/sfdc/UsageData/";
+    public final String resDir                      = env.basedir + "/testdata/sfdc/usageData/";
     private final String STATE_PRESERVATION_SCRIPT  = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
     private final String CUST_SET_DELETE            = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
-    private final String MEASURES_FILE                = resDir+"Scripts/Usage_Measure_Create.txt";
-    private final String JOB_Account                = resDir + "Jobs/Job_Adop_Accounts.txt";
-    private final String JOB_Customers              = resDir + "Jobs/Job_Adop_Customers.txt";
+    private final String MEASURES_FILE                = resDir+"scripts/Usage_Measure_Create.txt";
+    private final String JOB_Account                = resDir + "jobs/Job_Adop_Accounts.txt";
+    private final String JOB_Customers              = resDir + "jobs/Job_Adop_Customers.txt";
 
     ObjectMapper mapper = new ObjectMapper();
     JobInfo jobInfo;

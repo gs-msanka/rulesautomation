@@ -14,7 +14,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360MilestonesTests extends BaseTest {
-    private final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/milestones/MilestonesTests.xls";
 	private final String CURRENT_DIR = env.basedir;
 
 	@BeforeClass

@@ -18,7 +18,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
 public class SurveyCreationTest extends BaseTest {
-	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";
+	private final String TEST_DATA_FILE         = "testdata/sfdc/survey/tests/surveytestdata.xls";
 	String QUERY = "DELETE [SELECT Id FROM JBCXM__Survey__c WHERE JBCXM__Title__c  = 'Survey_01'];";
 
 

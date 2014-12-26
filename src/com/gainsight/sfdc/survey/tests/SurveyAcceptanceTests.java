@@ -8,7 +8,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 
 public class SurveyAcceptanceTests extends BaseTest{
 
-    private final String TEST_DATA_FILE = "testdata/sfdc/Survey/tests/SurveyAcceptanceTest.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/survey/tests/SurveyAcceptanceTest.xls";
     String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c WHERE JBCXM__Code__c = 'Survey Automated UI'];";
 
 	@BeforeClass

@@ -25,11 +25,11 @@ import com.gainsight.utils.DataProviderArguments;
  */
 public class Customer360ScorecardsNumericTest extends BaseTest {
 
-    private final String TEST_DATA_FILE         = "testdata/sfdc/Scorecard/Numeric_Scheme_Data.xls";
-    private final String SETUP_FILE             = env.basedir+"/apex_scripts/Scorecard/scorecard.apex";
-    private final String CLEAN_FILE             = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final String NUMERIC_SCHEME_FILE    = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
-    private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/scorecard/Numeric_Scheme_Data.xls";
+    private final String SETUP_FILE             = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
+    private final String CLEAN_FILE             = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private final String NUMERIC_SCHEME_FILE    = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_numeric.apex";
+    private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private final String SCHEME                 = "Score";
 
     @BeforeClass
