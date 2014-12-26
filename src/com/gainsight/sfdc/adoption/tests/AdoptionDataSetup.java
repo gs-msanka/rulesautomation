@@ -85,7 +85,7 @@ public class AdoptionDataSetup extends BaseTest {
         try {
             Calendar cal = Calendar.getInstance(userTimezone);
             BufferedReader reader;
-            String fileName = env.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+            String fileName = env.basedir + "/testdata/sfdc/usageData/scripts/Aggregation_Script.txt";
             String line = null;
             String code = "";
             reader = new BufferedReader(new FileReader(fileName));
