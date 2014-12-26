@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.WebAction;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 

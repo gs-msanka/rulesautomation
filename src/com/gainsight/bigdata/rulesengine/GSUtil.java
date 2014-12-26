@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.testdriver.Application;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.pojo.NSInfo;
@@ -14,19 +15,19 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.testdriver.Log;
-import com.gainsight.testdriver.TestEnvironment;
+
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class GSUtil {
-    protected static TestEnvironment env = new TestEnvironment();
+    protected static Application env = new Application();
     public static Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static SFDCUtil sfdc = new SFDCUtil();
 
     public static void sfdcLogin(Header header, WebAction wa)
             throws Exception {
         SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-        TestEnvironment env = new TestEnvironment();
+        Application env = new Application();
 
         NSInfo nsinfo = NSUtil.fetchNewStackInfo(sfinfo, new Header());
         header.addHeader("appOrgId", sfinfo.getOrg());

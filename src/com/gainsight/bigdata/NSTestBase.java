@@ -3,6 +3,7 @@ package com.gainsight.bigdata;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gainsight.sfdc.SalesforceMetadataClient;
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -28,7 +29,7 @@ public class NSTestBase {
 	protected String testDataBasePath;
 	protected String origin = "https://c.ap1.visual.force.com";
 	protected ObjectMapper mapper = new ObjectMapper();
-	
+    public static SalesforceMetadataClient metadataClient;
 	OAuthSalesforceConnector sfdc;
 	
 	public NSTestBase() {
@@ -38,17 +39,17 @@ public class NSTestBase {
 	
 	@BeforeSuite
 	public void init() {
+
 		//Initializing Headers
 		header = new Header();
 		header.addHeader("Origin", origin);
-		
 		wa = new WebAction();
-
 		//Initializing SFDC Connection
 		sfdc = new OAuthSalesforceConnector(PropertyReader.clientId, PropertyReader.clientId, 
 				PropertyReader.userName, PropertyReader.password + PropertyReader.stoken, 
 				PropertyReader.sfdcApiVersion);
 		sfdc.connect();
+        metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 		sfinfo = sfdc.fetchSFDCinfo();
 		//sfdc.getAccessToken();
 		createTenant();

@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine;
 
+import com.gainsight.testdriver.Application;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -7,7 +8,6 @@ import org.testng.annotations.Test;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.WebAction;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -19,7 +19,7 @@ public class SendEmail {
     public WebAction webAction = new WebAction();
     public Header header = new Header();
 //    public SOQLUtil soql;
-    public String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
+    public String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
     public String GSEmailAccountStrategy = rulesDir + "GSEmailAccountStrategy.apex";
     public String GSEmailAccountStrategy1 = rulesDir + "GSEmailAccountStrategy1.apex";
     public String GSEmailContactStrategy = rulesDir + "GSEmailContactStrategy.apex";

@@ -27,7 +27,7 @@ public class WorkflowPlaybooksTest extends BaseTest {
     @BeforeClass
     public void setUp() {
         Log.info("Starting Playbook Test Case...");
-        apex.runApex("delete [Select id from JBCXM__playbook__c];");
+        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
         basepage.login();
     }
 

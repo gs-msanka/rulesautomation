@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.connectors;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,9 +63,8 @@ public class AccountDetails {
 
 	public void setDefaultScheduler() {
 		scheduler = new Scheduler();
-		Date date = new Date();
-		String startDate = DateUtil.addDays(date, -10, "yyyy-MM-dd") + "T00:00:00.000";
-		String endDate = DateUtil.addDays(date, 0, "yyyy-MM-dd") + "T00:00:00.000";
+		String startDate = DateUtil.addDays(Calendar.getInstance(), -10, "yyyy-MM-dd") + "T00:00:00.000";
+		String endDate = DateUtil.addDays(Calendar.getInstance(), 0, "yyyy-MM-dd") + "T00:00:00.000";
 		scheduler.saveAndRun(startDate, endDate);
 	}
 }

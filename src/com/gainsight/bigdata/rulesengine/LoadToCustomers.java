@@ -2,6 +2,7 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.util.List;
 
+import com.gainsight.testdriver.Application;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -10,12 +11,12 @@ import org.testng.annotations.Test;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
-import com.gainsight.testdriver.TestEnvironment;
+
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class LoadToCustomers {
-    private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
+    private static final String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
     private static final String CustomerInfo = rulesDir + "CustomerInfo.apex";
     private static final String CustomerInfo1 = rulesDir + "CustomerInfo1.apex";
     private static final String LoadToCustomer = rulesDir + "LoadToCustomer.apex";
