@@ -1,0 +1,38 @@
+{
+    "jobName": "Load Tasls for reporting-leaderboard cases",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+            "inputFile" : "/testdata/sfdc/workflow/Data/Tasks_Leaderboard.csv",
+            "outputFile" : "/resources/datagen/process/Tasks_Leaderboard_Temp.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__Date__c"
+
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__OriginalDueDate__c"
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__ClosedDate__c"
+                }
+            ]
+        },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CSTask__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "cleanUp" : true,
+        "file": "/resources/datagen/process/Tasks_Leaderboard_Temp.csv"
+    }
+}
