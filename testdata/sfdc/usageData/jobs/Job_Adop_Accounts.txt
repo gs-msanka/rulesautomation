@@ -29,7 +29,7 @@
                 ]
             },
             {
-                "file": "/testdata/sfdc/UsageData/Data/Adop_Accounts.csv",
+                "file": "/testdata/sfdc/usageData/data/Adop_Accounts.csv",
                 "table": "usagedata",
                 "joinColumnName": "Name",
                 "columns": [

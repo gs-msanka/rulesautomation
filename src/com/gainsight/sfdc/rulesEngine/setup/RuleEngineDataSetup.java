@@ -47,13 +47,13 @@ public class RuleEngineDataSetup extends BaseTest {
 	// load Usage Data
 	// Create Rules as per data loaded
 
-    private final static String USAGE_MEASURES_CREATE           = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
-    private final static String ACCOUNT_MONTHLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
-    private final static String ACCOUNT_WEEKLY_USAGE_CONFIG     = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Weekly.apex";
-    private final static String INSTANCE_MONTHLY_USAGE_CONFIG   = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Monthly.apex";
-    private final static String INSTANCE_WEEKLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Weekly.apex";
-    private final static String CLEANUP_FILE                    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/RulesData_CleanUp.apex";
-    private final static String JOB_USAGE_LOAD                  = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_UsageData.txt";
+    private final static String USAGE_MEASURES_CREATE           = env.basedir + "/testdata/sfdc/rulesEngine/scripts/UsageData_Measures.apex";
+    private final static String ACCOUNT_MONTHLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Monthly.apex";
+    private final static String ACCOUNT_WEEKLY_USAGE_CONFIG     = env.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Weekly.apex";
+    private final static String INSTANCE_MONTHLY_USAGE_CONFIG   = env.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Instance_Level_Monthly.apex";
+    private final static String INSTANCE_WEEKLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/rulesEngine/scripts/Set_Instance_Level_Weekly.apex";
+    private final static String CLEANUP_FILE                    = env.basedir + "/testdata/sfdc/rulesEngine/scripts/RulesData_CleanUp.apex";
+    private final static String JOB_USAGE_LOAD                  = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_UsageData.txt";
 	private final static String USAGE_OBJECT                    = "JBCXM__UsageData__C";
     private final static String CUSTOMER_OBJECT                 = "JBCXM__CustomerInfo__c";
     private final static String PICK_LIST_QUERY                 = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";

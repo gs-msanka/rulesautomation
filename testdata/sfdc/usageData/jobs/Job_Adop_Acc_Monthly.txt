@@ -4,7 +4,7 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
     "preprocess" : {
-    	"inputFile" : "/testdata/sfdc/UsageData/Data/Adop_Acc_Monthly.csv",
+    	"inputFile" : "/testdata/sfdc/usageData/data/Adop_Acc_Monthly.csv",
     	"monthly" : true,
     	"weekly" : false,
     	"fieldName" : "JBCXM__Date__c",

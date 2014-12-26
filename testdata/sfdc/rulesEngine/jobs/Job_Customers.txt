@@ -3,7 +3,7 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
     "dateProcess" : {
-            "inputFile" : "/testdata/sfdc/RulesEngine/Data/Rules_Customers.csv",
+            "inputFile" : "/testdata/sfdc/rulesEngine/data/Rules_Customers.csv",
             "outputFile" : "/resources/datagen/process/Rules_Temp_Customers.csv",
             "fields" :[
                 {

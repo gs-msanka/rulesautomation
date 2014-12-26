@@ -8,6 +8,6 @@
         "operation": "insert",
         "contentType": "CSV",
         "cleanUp" : true,
-        "file": "/testdata/sfdc/UsageData/Data/Adop_Customers.csv"
+        "file": "/testdata/sfdc/usageData/data/Adop_Customers.csv"
     }
 }
