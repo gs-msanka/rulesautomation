@@ -18,7 +18,7 @@ import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360ScorecardsTests extends BaseTest {
 
-	private final String TEST_DATA_FILE     = "testdata/sfdc/scorecard/Grade_Scheme_Data.xls";
+	private final String TEST_DATA_FILE     = "testdata/sfdc/scorecards/tests/Grade_Scheme_Data.xls";
     private final String SETUP_FILE         = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
     private final String CLEAN_FILE         = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
     private final String GRADE_SCHEME_FILE  = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_grade.apex";
