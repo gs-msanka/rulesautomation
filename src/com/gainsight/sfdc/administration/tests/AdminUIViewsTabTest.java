@@ -3,6 +3,8 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Log;
 import jxl.read.biff.BiffException;
 
 import org.testng.annotations.AfterClass;
@@ -15,23 +17,20 @@ import com.gainsight.utils.DataProviderArguments;
 
 public class AdminUIViewsTabTest extends BaseTest {
 
-	String[] dirs = { "acceptancetests" };
-	//private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-		//	+ generatePath(dirs);
-	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminUIViewsTestdata.xls";
+	private final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminUIViewsTestdata.xls";
 	
 	@BeforeClass
 	public void setUp() {
 		Log.info("Starting  Test Case...");
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Customer_Tab_ UI_Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views", isPackage);
-		apex.runApexCodeFromFile(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views", isPackage);
-		basepage.login();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/AlertUI-Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Customer_Tab_ UI_Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Acnt_Attributes_UI_Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/NPS_UI_View"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Churn_UI_Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Transaction_UI_Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Survey_Detail_Report_UI_Views"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/UI_Views/Survey_Participants_UI_Views"));
+        basepage.login();
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
@@ -57,9 +56,6 @@ public class AdminUIViewsTabTest extends BaseTest {
 		adUIview.selectTabName(tabName,ViewName,selectffield,foperator,fvalue,sctFieldName,
 				                    selectRfield, rpOperator , rpvalue); 
 		return adUIview;
-		 
-       
-		
 	}
                  //	selectfvalue
 	public HashMap<String, String> getMapFromData1(String data) {

@@ -9,6 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
@@ -55,7 +58,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		t.export(new FileOutputStream(outputFile));
 
 		FileEntity entity = new FileEntity(outputFile, ContentType.create("text/xml", "UTF-8"));
-		HttpResponseObj resp = null;
+        ResponseObj resp = null;
 		
 		try {
 			Log.info("Create Job URL: " + uri);
@@ -95,7 +98,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
         t.export(new FileOutputStream(outputFile));
 
         FileEntity entity = new FileEntity(outputFile, ContentType.create("text/xml", "UTF-8"));
-        HttpResponseObj resp = null;
+        ResponseObj resp = null;
 
         try {
             Log.info("Create Job URL: " + uri);
@@ -114,7 +117,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	@Override
 	public String addBatchToJob(String uri, String query) throws IOException {
 		StringEntity entity = new StringEntity(query, ContentType.create("text/plain", "UTF-8"));
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			Log.info("Adding Batch to Job URL: " + uri);
 			Header h = new Header();
@@ -140,7 +143,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	@Override
 	public String addBatchToJob(String uri, File csvFile) throws IOException {
 		FileEntity entity = new FileEntity(csvFile, ContentType.create("text/csv", "UTF-8"));
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			Log.info("Adding Batch to Job URL: " + uri);
 			Header h = new Header();
@@ -167,7 +170,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	public String getBatchStatus(String uri) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar cal = Calendar.getInstance();
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			Log.info("Getting Batch Status URL: " + uri);
 			Header h = new Header();
@@ -216,7 +219,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	@Override
 	public String fetchResult(String uri) {
 		String resultId = getResultId(uri +"/result");
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			uri = uri +"/result/"+ resultId;
 			Log.info("Getting Batch Status URL: " + uri);
@@ -240,7 +243,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 		t.export(new FileOutputStream(outputFile));
 
 		FileEntity entity = new FileEntity(outputFile, ContentType.create("text/xml", "UTF-8"));
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			Log.info("Settting Job State URL: " + uri);
 			Header h = new Header();
@@ -258,7 +261,7 @@ public class SfdcBulkOperationImpl implements ISfdcBulkOperation {
 	
 	private String getResultId(String uri) {
 		String resultId = null;
-		HttpResponseObj resp = null;
+		ResponseObj resp = null;
 		try {
 			Log.info("Getting Batch Status URL: " + uri);
 			Header h = new Header();

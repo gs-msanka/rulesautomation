@@ -3,6 +3,7 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
 import jxl.read.biff.BiffException;
 
 import org.testng.annotations.AfterClass;
@@ -14,10 +15,7 @@ import com.gainsight.sfdc.tests.BaseTest;
 
 public class AdminNotificationTabTest extends BaseTest {
 
-	String[] dirs = { "acceptancetests" };
-	private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-			+ generatePath(dirs);
-	
+
 	@BeforeClass
 	public void setUp() {
 		Log.info("Starting  Test Case...");
@@ -26,9 +24,9 @@ public class AdminNotificationTabTest extends BaseTest {
 	
 	@Test(priority=1)                                   //set Notification Frequency
 	public void testsetNotificationFrequency() throws BiffException, IOException {
-		HashMap<String, String> testData = testDataLoader.getDataFromExcel(
+		/*HashMap<String, String> testData = testDataLoader.getDataFromExcel(
 				TESTDATA_DIR + "AdministrationTestdata.xls", "AdminNotificationsTab");
-		setNotificationFrequency(testData.get("setNotificationFrequency"));	
+		setNotificationFrequency(testData.get("setNotificationFrequency")); */
 	}
 	private AdminNotificationsSubTab setNotificationFrequency(String testData) {
 		HashMap<String, String> data = getMapFromData(testData);

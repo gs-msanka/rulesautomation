@@ -1,8 +1,11 @@
-package com.gainsight.sfdc.helpers;
+package com.gainsight.sfdc.transactions.pages;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.sfdc.util.AmountsUtil;
+import com.gainsight.sfdc.util.DateUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -29,7 +32,7 @@ public class Transactions extends WebPage implements Constants {
 	private final String EXISTING_RADIO = "//input[@type='radio' and @value='existing']";
 	private final String CHURN_REASON_SELECT = "//select[@class='churnReasonSelectCtrl']";
 	private final String SAVE_BUTTON = "//a[@class='buttonClass jBaraTransactionCompSaveBtn TransCrudActions btn-save']";
-	AmountsAndDatesUtil util = new AmountsAndDatesUtil();
+	AmountsUtil util = new AmountsUtil();
 
 	public void addChurnTransaction(HashMap<String, String> data) {
 		addTransactionInit(data.get("customerName"), data.get("opportunity"),
@@ -189,7 +192,8 @@ public class Transactions extends WebPage implements Constants {
 		String[] keywords = data.split(",");
 		for (String keyword : keywords) {
 			if (keyword.contains("/"))
-				keyword = AmountsAndDatesUtil.parseFixedFmtDate(keyword);
+                //Please revisit - effected due to framework changes.
+				//keyword = DateUtil.parseFixedFmtDate(keyword, );
 			if (isFirstKwd) {
 				xpath.append("contains(.,'" + keyword + "')");
 				isFirstKwd = false;

@@ -29,8 +29,8 @@ public class UsageTracker360Tests  extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
-        apex.runApexCodeFromFile(SETUP_SCRIPT_FILE, isPackage);
-        apex.runApexCodeFromFile(DATA_SCRIPT_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_SCRIPT_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(DATA_SCRIPT_FILE));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

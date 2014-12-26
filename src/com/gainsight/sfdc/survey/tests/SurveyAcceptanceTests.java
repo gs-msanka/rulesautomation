@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
+import com.gainsight.testdriver.Log;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 

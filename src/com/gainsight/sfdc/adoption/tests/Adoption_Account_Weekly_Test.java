@@ -3,6 +3,8 @@ package com.gainsight.sfdc.adoption.tests;
 import java.io.IOException;
 import java.util.Map;
 
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -10,12 +12,11 @@ import org.testng.annotations.Test;
 
 import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
 import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
-    private final String resDir                 = TestEnvironment.basedir + "/testdata/sfdc/UsageData/";
-    private final String advUsageConfigFile     = resDir+"Scripts/Account_Level_Weekly.txt";
+    private final String resDir                 = env.basedir + "/testdata/sfdc/UsageData/";
+    private final String ADV_USAGE_CONFIG     = resDir+"Scripts/Account_Level_Weekly.txt";
     private final String JOB_UsageData          = resDir + "Jobs/Job_Adop_Acc_Weekly.txt";
     private final String TEST_DATA_FILE         = "testdata/sfdc/UsageData/Tests/Adop_Acc_Weekly_Test.xls";
     private final String WEEKDAY                = "Sat";
@@ -26,7 +27,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
     public void setUp() throws IOException {
         basepage.login();
         dataSetup = new AdoptionDataSetup();
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
+        sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(ADV_USAGE_CONFIG)));
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
@@ -43,7 +44,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -60,7 +61,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -77,7 +78,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -95,7 +96,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -112,7 +113,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -129,7 +130,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -146,7 +147,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date")) * 7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -162,7 +163,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -180,7 +181,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -198,7 +199,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -216,7 +217,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -233,7 +234,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -250,7 +251,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
@@ -265,7 +266,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeWeekPeriod(testData.get("Period"));
-        usage .setWeekLabelDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -280,7 +281,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeWeekPeriod(testData.get("Period"));
-        usage .setWeekLabelDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -293,7 +294,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeWeekPeriod(testData.get("Period"));
-        usage .setWeekLabelDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -305,7 +306,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         AdoptionAnalyticsPage usage = basepage.clickOnAdoptionTab().clickOnTrendsSubTab();
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
-        usage .setWeekLabelDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -328,7 +329,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfWeeks(testData.get("Period"));
-        usage.setDate(getWeekLabelDate(WEEKDAY, Integer.valueOf(testData.get("Date"))*7, isEndDate, true));
+        usage.setDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayWeeklyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));

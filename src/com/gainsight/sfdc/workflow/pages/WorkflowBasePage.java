@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.workflow.pages;
 
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.pages.BasePage;
@@ -20,7 +21,7 @@ public class WorkflowBasePage extends BasePage {
     }
   
     public WorkflowBasePage(String value){
-    	Log.info("landed in Cockpit "+value);
+    	Log.info("landed in Cockpit " + value);
     }
     public WorkflowPage clickOnListView() {
         item.click(LIST_VIEW_TAB);

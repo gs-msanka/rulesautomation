@@ -2,6 +2,8 @@ package com.gainsight.sfdc.customer360.pages;
 
 import java.util.HashMap;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 
 
@@ -78,12 +80,12 @@ public class Customer360Milestones extends Customer360Page {
 
     private void clickOnSave(){
         item.click(SAVE_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
     }
 
     public boolean isMilestonePresent(HashMap<String, String> testData) {
         String milestone = getMilestoneXpath(testData);
-        Log.info("Milestone Xpath : "+milestone);
+        Log.info("Milestone Xpath : " + milestone);
         return isElementPresentAndDisplay(By.xpath(milestone));
     }
 
@@ -96,7 +98,7 @@ public class Customer360Milestones extends Customer360Page {
         String milestoneDelete = milestone+"/td[@class='delete-icon']";
         item.click(milestoneDelete);
         driver.switchTo().alert().accept();
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
     }
 
@@ -130,7 +132,7 @@ public class Customer360Milestones extends Customer360Page {
         milestone += "/td[@class='edit-icon']";
         item.click(milestone);
         wait.waitTillElementDisplayed(MILESTONES_EDIT_POPUP, MIN_TIME, MAX_TIME);
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
         HashMap<String, String> formData = getMilestoneFormData();
         if(!oldTestData.get("Date").equals(formData.get("Date")) && !oldTestData.get("Milestone").equals(formData.get("Milestone")) &&
                 (!oldTestData.get("Opportunity").equals(formData.get("Opportunity")) || oldTestData.get("Opportunity") == null ) &&
@@ -142,7 +144,7 @@ public class Customer360Milestones extends Customer360Page {
             selectOpportunityForMilestone(newTestData.get("Opportunity"));
             addComments(newTestData.get("Comments"));
             clickOnSave();
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             waitForLoadingImagesNotPresent();
         }
     }
@@ -164,13 +166,13 @@ public class Customer360Milestones extends Customer360Page {
     }
 
     public boolean isNoMilestoneMessagePresent() {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return isElementPresentAndDisplay(By.xpath(NO_MILESTONES_MSG));
     }
 
     public boolean isHeaderPresent(){
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         wait.waitTillElementDisplayed(MILESTONES_TABLE, MIN_TIME, MAX_TIME);
         return true;
     }

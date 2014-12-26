@@ -35,7 +35,7 @@ public class AdminNotificationsSubTab extends BasePage {
 		
 		  button.click(NOTIFI_FREQ_CONFIG);
 		  wait.waitTillElementDisplayed(NOTI_FEQ_FORM_BLOCK, MIN_TIME, MAX_TIME);
-			field.selectCheckbox(EMAIL_NOTIFICATIONS);
+			field.selectCheckBox(EMAIL_NOTIFICATIONS);
 			field.selectFromDropDown(SELECT_DAY, day);//Monday or sunday or any day
 			field.selectFromDropDown(SELECT_HOUR, hour);//01 0r 02
 			field.selectFromDropDown(SELECT_MINUTES, Minutes);//01,02...etc
@@ -48,9 +48,9 @@ public class AdminNotificationsSubTab extends BasePage {
     public AdminNotificationsSubTab setAutoSubscription() {
     	button.click(AUTOSUBSCRIPTION_CONFIG);
     	wait.waitTillElementDisplayed(AUTOSUB_FORM_BLOCK, MIN_TIME, MAX_TIME);
-			field.selectCheckbox(CREATE_BY_ID_CBOX);
-			field.selectCheckbox(OWNER_ID_CBOX);
-			field.selectCheckbox(LASTMODI_ID_CBOX);
+			field.selectCheckBox(CREATE_BY_ID_CBOX);
+			field.selectCheckBox(OWNER_ID_CBOX);
+			field.selectCheckBox(LASTMODI_ID_CBOX);
 		  button.click(AUTOSUB_SAVE);
 		wait.waitTillElementPresent(AUTOSUB_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();

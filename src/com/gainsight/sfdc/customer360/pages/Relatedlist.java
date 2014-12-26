@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -31,7 +32,7 @@ public class Relatedlist extends Customer360Page {
                 WebElement tableTr = tableRowsList.get(0);
                 List<WebElement> tableColumnsList = tableTr.findElements(By.tagName("th"));
                 if(tableColumnsList != null) {
-                    Log.info("Total Columns in table are :" +tableColumnsList.size());
+                    Log.info("Total Columns in table are :" + tableColumnsList.size());
                     tableHeaders = new String[tableColumnsList.size()+1];
                     int i =0;
                     for(WebElement wEle : tableColumnsList) {

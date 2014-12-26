@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -25,16 +26,16 @@ public class Customer360ScorecardsTests extends BaseTest {
     private String SCHEME = "Grade";
 
 	@BeforeClass
-	public void setUp() {
+	public void setUp() throws Exception {
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
         createExtIdFieldForScoreCards();
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
-        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-		apex.runApexCodeFromFile(GRADE_SCHEME_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(GRADE_SCHEME_FILE));
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         } catch (IOException e) {

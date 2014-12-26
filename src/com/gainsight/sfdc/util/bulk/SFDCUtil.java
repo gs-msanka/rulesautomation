@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.gainsight.testdriver.TestEnvironment;
+import com.gainsight.sfdc.beans.*;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import com.sforce.soap.apex.ExecuteAnonymousResult;
 import com.sforce.soap.apex.SoapConnection;
 import com.sforce.soap.partner.Connector;
@@ -18,7 +20,7 @@ public class SFDCUtil {
     private final String endPointURL = "https://login.salesforce.com/services/Soap/u/29.0";
     static PartnerConnection connection;
     SoapConnection soapConnection;
-    static TestEnvironment env;
+    static Application env;
 
     /**
      * Fetching the Salesforce UserInfo along with session id.
@@ -27,7 +29,7 @@ public class SFDCUtil {
     public static SFDCInfo fetchSFDCinfo() {
         Log.info("Fetching SalesForce Data");
         try {
-            env = new TestEnvironment();
+            env = new Application();
             ConnectorConfig config = new ConnectorConfig();
             config.setUsername(env.getUserName());
             config.setPassword(env.getUserPassword() + env.getProperty("sfdc.stoken"));
@@ -111,7 +113,7 @@ public class SFDCUtil {
     private boolean login() {
         if (soapConnection != null) return true;
         else {
-            TestEnvironment env = new TestEnvironment();
+            Application env = new Application();
             String username = env.getUserName();
             String password = env.getUserPassword();
             String securityToken = env.getProperty("sfdc.stoken");

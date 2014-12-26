@@ -1,53 +1,26 @@
-package com.gainsight.sfdc.acceptance.tests;
+package com.gainsight.sfdc.transactions.tests;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.HashMap;
-
-import jxl.read.biff.BiffException;
-
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import com.gainsight.sfdc.churn.pages.ChurnPage;
-import com.gainsight.sfdc.customer.pages.CustomersPage;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
-import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
-import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
-import com.gainsight.sfdc.pages.CustomerSuccessPage;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.transactions.pages.TransactionsPage;
-import com.gainsight.testdriver.TestEnvironment;
-import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
 
-public class TransactionsAcceptanceTest extends BaseTest {
-	String[] dirs = { "acceptancetests" };
-	final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
+public class TransactionsTest extends BaseTest {
+
+    /*
+	private final String TEST_DATA_FILE = "testdata/sfdc/acceptancetests/AcceptanceTests.xls";
 	private String accQuery = "Select id from Account where name='%s'";
 	private boolean loggedIn = false;
 	private String currentDate;
 	private final String STANDARD_VIEW="Standard View";
-    private final String TRANS_SETUP = "/apex_scripts/acceptance_tests/transactions.apex";
-    private final String SUMMARY_CONFIG = "/testdata/sfdc/c360Summary/C360SummaryUpdate.txt";
+    private final String TRANS_SETUP = env.basedir+"/apex_scripts/acceptance_tests/transactions.apex";
+    private final String SUMMARY_CONFIG = env.basedir+"/testdata/sfdc/c360Summary/C360SummaryUpdate.txt";
 	
 	@BeforeClass
 	public void setUp() throws Exception {
 		try {
             Log.info("Starting Acceptance Test Case...");
-			apex.runApexCodeFromFile(TestEnvironment.basedir+TRANS_SETUP , isPackage);
-            apex.runApexCodeFromFile(TestEnvironment.basedir+SUMMARY_CONFIG, isPackage);
-			/*
-			 * PackageUtil.updateAccountLayout(
-			 * "unpackaged/layouts/Account-Account Layout.layout",
-			 * "CustomerSuccess",
-			 * "resources/package/account360widget.txt",isPackageInstance());
-			 */
-			basepage.login();			
-			currentDate=AmountsAndDatesUtil.getCurrentDate();
+			sfdc.runApexCode(getNameSpaceResolvedFileContents(TRANS_SETUP));
+            sfdc.runApexCode(getNameSpaceResolvedFileContents(SUMMARY_CONFIG));
+			basepage.login();
+			currentDate= AmountsUtil.getCurrentDate();
 			loggedIn = true;
 		} catch (Exception e) {
 			Log.info(e.getMessage());
@@ -79,7 +52,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		HashMap<String, String> nbData = getMapFromData(testData
 				.get("NewBusinessTRN"));
 		Customer360Page customer360Page = addNewBusinessTransaction(testData);
-		/* Renewal Transaction */
+		// Renewal Transaction
 		HashMap<String, String> rnlData = getMapFromData(testData
 				.get("RenewalTRN"));
 		
@@ -105,7 +78,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		// Integer.parseInt(summary.getARPU().trim()));
 		Assert.assertTrue(summary.getOCD().contains(currentDate));
 		Assert.assertTrue(summary.getRD().contains(
-				AmountsAndDatesUtil.getFormattedDate(rnlData.get("endDate"), 1)));
+				AmountsUtil.getFormattedDate(rnlData.get("endDate"), 1)));
 		Assert.assertTrue(fnPosition > rtPosition,
 				"Verify the timeline position of renewal transaction");
 	}
@@ -140,7 +113,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 				.gotoCustomer360(customerName);
 		CustomerSummary cSummary = c360Page.getSummaryDetails();
 		Assert.assertTrue(cSummary.getRD().contains(
-				AmountsAndDatesUtil.getFormattedDate(snbData.get("endDate"), 1)));
+				AmountsUtil.getFormattedDate(snbData.get("endDate"), 1)));
 		c360Page = c360Page.addDebookTransaction(dbData);
 		c360Page.refreshPage();
 		cSummary = c360Page.getSummaryDetails();
@@ -282,6 +255,7 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		testCustomBookingType(testData);
 	}
     */
+    /*
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT34")
 	public void testAddBookingTypeDownsell(HashMap<String, String> testData)
@@ -342,11 +316,11 @@ public class TransactionsAcceptanceTest extends BaseTest {
 			Assert.assertTrue(summary.getOCD().contains(currentDate));
 		} else {
 			Assert.assertTrue(summary.getOCD().contains(
-					AmountsAndDatesUtil.getFormattedDate(bookingDate,0)));
+					AmountsUtil.getFormattedDate(bookingDate, 0)));
 		}
 	
 		Assert.assertTrue(summary.getRD().contains(
-				AmountsAndDatesUtil.getFormattedDate(data.get("endDate"), 1)));
+				AmountsUtil.getFormattedDate(data.get("endDate"), 1)));
 	}
 
 	private void testCustomBookingType(HashMap<String, String> testData)
@@ -385,16 +359,45 @@ public class TransactionsAcceptanceTest extends BaseTest {
 		} else {
 			
 			Assert.assertTrue(c360Summary.getOCD().contains(
-					AmountsAndDatesUtil.getFormattedDate(ocDate,0)));
+					AmountsUtil.getFormattedDate(ocDate, 0)));
 		}
 		Assert.assertTrue(c360Summary.getRD().contains(
 				eSummary.get("renewalDate")));
 	}
 
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AT15")
+    public void testOpportunityWithoutSettings(HashMap<String, String> testData)
+            throws BiffException, IOException, ParseException {
+        HashMap<String, String> nbData = getMapFromData(testData
+                .get("NewBusinessTRN"));
+        HashMap<String, String> snbData = getMapFromData(testData
+                .get("SecondNewBusinessTRN"));
+        String oppName = testData.get("OppName");
+        CustomerSuccessPage csPage = basepage.clickOnOpportunitiesTab()
+                .selectRecentOpportunity(oppName).getCustomerSuccessSection();
+        csPage.verifyTextPresent(testData.get("AddCustomerMessage"));
+        csPage.clickOnAddCustomer();
+        csPage.verifyTextPresent(testData.get("NewBusinessMessage"));
+        csPage.clickOn360View().addNewBusinessTransaction(nbData);
+        basepage.goBack();
+        csPage.verifyTextPresent(testData.get("NoSettingsMessage"));
+        CustomerSummary cSummary = csPage.clickHere().addNewBusiness(snbData)
+                .clickOn360View().getSummaryDetails();
+        HashMap<String, String> expData = getMapFromData(testData
+                .get("ExpectedSummary"));
+        Assert.assertEquals(expData.get("asv").trim(), cSummary.getASV().trim());
+        Assert.assertEquals(expData.get("mrr"), cSummary.getMRR().trim());
+        Assert.assertEquals(expData.get("users"), cSummary.getUsers().trim());
+        Assert.assertEquals(expData.get("otr"), cSummary.getOTR().trim());
+        Assert.assertEquals(expData.get("arpu"), cSummary.getARPU().trim());
+        Assert.assertTrue(cSummary.getRD().contains(expData.get("renewalDate")));
+    }
+
 	private String getAccID(String name) {
-		SObject[] records = soql.getRecords(String.format(accQuery, name));
+		SObject[] records = sfdc.getRecords(String.format(accQuery, name));
 		return records[0].getId();
 	}
-
+  */
 	
 }

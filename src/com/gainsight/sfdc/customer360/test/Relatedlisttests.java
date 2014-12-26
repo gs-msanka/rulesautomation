@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -29,19 +30,19 @@ public class Relatedlisttests extends BaseTest {
 
     @BeforeClass
     public void setUp() {
-        apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackage);
-        apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackage);
-        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackage);
-        apex.runApexCodeFromFile(EVENT_TASKS_CREATE_FILE, isPackage);
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE1, isPackage);
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE2, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CONTACT_SCRIPT_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(USER_CREATE_UPDATE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(EVENT_PICKLIST_SETUP_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(EVENT_TASKS_CREATE_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE1));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE2));
         basepage.login();
     }
 
     public void createEventsFromScript() {
         String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-        Log.info("File :" +file);
-        apex.runApexCodeFromFile(file, isPackage);
+        Log.info("File :" + file);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(file));
         taskScriptCreated = true;
     }
 
@@ -112,7 +113,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
@@ -134,7 +135,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
@@ -168,7 +169,7 @@ public class Relatedlisttests extends BaseTest {
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);

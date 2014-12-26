@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 
+import com.gainsight.testdriver.Log;
 import org.apache.commons.io.FilenameUtils;
 
 /**

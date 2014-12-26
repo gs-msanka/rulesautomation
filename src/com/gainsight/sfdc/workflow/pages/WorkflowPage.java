@@ -4,6 +4,7 @@ package com.gainsight.sfdc.workflow.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -245,7 +246,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
         Log.info("Starting to fill recurring event part");
-    	field.selectCheckbox(CREATE_RECURRING_EVENT);
+    	field.selectCheckBox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
 			if(recurProperties.getRecurringType().equals("Daily")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
@@ -307,7 +308,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 item.click(RECUR_YEARLY_ENDDATE_SELECT);
                 selectValueInDropDown(recurProperties.getRecurEndDate());
 				}
-		    amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
+		    Timer.sleep(2); //In - Case, Should add wait logic here.
         Log.info("Completed Recurring event form");
     }
 
@@ -349,7 +350,7 @@ public class WorkflowPage extends WorkflowBasePage {
                     return;
                 }
             }
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select owner");
@@ -393,7 +394,7 @@ public class WorkflowPage extends WorkflowBasePage {
                     return;
                 }
             }
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select owner");
@@ -405,7 +406,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public void createMilestoneForCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_MILESTONE);
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
     }
     
     public WorkflowPage snoozeCTA(CTA cta){
@@ -415,7 +416,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
         return this;
     }
 
@@ -474,7 +475,7 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(EXP_VIEW_REASON_BUTTON);
             selectValueInDropDown(newCta.getReason());
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         collapseCTAView();
         return this;
     }
@@ -483,7 +484,7 @@ public class WorkflowPage extends WorkflowBasePage {
         expandCTAView(cta);
         item.click(EXP_VIEW_STATUS_BUTTON);
        selectValueInDropDown("Closed Lost");
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         collapseCTAView();
         return this;
     }
@@ -526,7 +527,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage collapseCTAView() {
         Log.info("Collapsing CTA View");
         item.click(CTA_EXP_SLIDE_ICON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         Log.info("CTA View Collapsed");
         return this;
     }
@@ -553,7 +554,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage collapseTaskView() {
         item.click(TASK_EXP_SLIDE_ICON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -625,7 +626,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 return true;
             }  else {
                 Log.info("Waiting for Task Details to Load");
-                amtDateUtil.stalePause();
+                Timer.sleep(2);
             }
         }
         Log.info("Task expand mode is not loaded properly.");
@@ -687,7 +688,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 }
                 else {
                     Log.info("Waiting for Event Details to Load");
-                    amtDateUtil.stalePause();
+                    Timer.sleep(2);
                 }
             } catch (Exception e) {
                 Log.info("Trying Again to check card loaded successfully.");
@@ -803,14 +804,14 @@ public class WorkflowPage extends WorkflowBasePage {
             wait.waitTillElementDisplayed(SAVE_ACTION, MIN_TIME, MAX_TIME);
             item.click(SAVE_ACTION);
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public WorkflowPage openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks) {
         String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip active']";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(hasTasks){
         	for(Task task : tasks){
         		openORCloseTask(task);
@@ -822,14 +823,14 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage openORCloseTask(Task task) {
         String xPath = getTaskXPath(task)+"/descendant::span[contains(@class, 'check-data taskCheckBox')]";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public WorkflowPage flagCTA(CTA cta) {
         String xPath = getCTAXPath(cta)+"/descendant::span[contains(@class, 'glyphicon glyphicon-bookmark cta-flag')]";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         cta.setImp(true);
@@ -907,7 +908,7 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(TASK_EXP_STATUS);
             selectValueInDropDown(newTask.getStatus());
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
     
@@ -919,7 +920,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(TASK_EXP_DELETE_OPTION);
         wait.waitTillElementDisplayed(DELETE_ACTION, MIN_TIME, MAX_TIME);
         item.click(DELETE_ACTION);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!task.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         return this;
@@ -930,7 +931,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         item.click(String.format(EXP_VIEW_DELETE_CTA, cta.getType()));
         item.click(DELETE_ACTION);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         return this;
@@ -938,7 +939,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage changeAssigneeView(String assignee) {
         item.click(OWNER);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         wait.waitTillElementDisplayed(OWNER_SEARCH, MIN_TIME, MAX_TIME);
         if(assignee != null) {
             boolean status = false;
@@ -967,7 +968,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         if(isApply) item.click(EXP_VIEW_APPLY_PLAYBOOK);
         else item.click(EXP_VIEW_REPLACE_PLAYBOOK);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         item.click(PLAYBOOK_SELECT);
@@ -981,7 +982,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             item.click(PLAYBOOK_REPLACE);
         }
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
         return this;
     }
 
@@ -1263,7 +1264,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             item.click(CALENDER_DIR_LEFT);
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 

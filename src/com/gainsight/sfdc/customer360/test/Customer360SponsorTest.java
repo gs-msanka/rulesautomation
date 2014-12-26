@@ -2,38 +2,37 @@ package com.gainsight.sfdc.customer360.test;
 
 import java.util.HashMap;
 
+import com.gainsight.sfdc.sponsorTracking.SponsorTracking;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.sfdc.administration.pages.AdminCustomer360Section;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.SponsorTracking360;
-import com.gainsight.sfdc.sponsorTracking.sponsorTracking;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360SponsorTest extends BaseTest {	
 	
-	private final String SPONSOR_FILE = TestEnvironment.basedir+"/apex_scripts/SponsorTracking/SponsorTracking.apex";
+	private final String SPONSOR_FILE = Application.basedir+"/apex_scripts/SponsorTracking/SponsorTracking.apex";
 	private final String TEST_DATA_FILE = "testdata/sfdc/cs360SponsorTracking/SponsorTrackingTestData.xls";
 	private SponsorTracking360 sponsorTracking360; 
-	private sponsorTracking sp_api;
+	private SponsorTracking sp_api;
 	@BeforeClass
 	public void setup() throws InterruptedException{
 		Log.info("Starting Customer 360 Sponsor Tracking module Test Cases...");
-		
 		basepage.login();
-		Thread.sleep(20000);		
-		
+		Thread.sleep(20000);
 		AdministrationBasePage adm=basepage.clickOnAdminTab();
 		AdminCustomer360Section c360sec=adm.clickOnC360TabAdmin();		
 		c360sec.EditSponsorTracking();
 		c360sec.EnableSponsorTracking();
-		apex.runApexCodeFromFile(SPONSOR_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SPONSOR_FILE));
 		basepage.clickOnC360Tab();
 		sponsorTracking360 = SponsorTracking360.init();
-		sp_api=sponsorTracking.init();   
+		sp_api= SponsorTracking.initialize();
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

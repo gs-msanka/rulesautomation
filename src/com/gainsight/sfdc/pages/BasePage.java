@@ -6,24 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.util.AmountsUtil;
+import com.gainsight.sfdc.widgets.accountWidget.pages.AccountsPage;
+import com.gainsight.sfdc.widgets.opprtunityWidget.pages.OpportunitiesPage;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.gainsight.pageobject.core.WebPage;
-import com.gainsight.sfdc.accounts.pages.AccountsPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
-import com.gainsight.sfdc.helpers.Transactions;
-import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
+import com.gainsight.sfdc.transactions.pages.Transactions;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
-import com.gainsight.sfdc.widgets.AccountWidget.pages.AccountWidgetPage;
+import com.gainsight.sfdc.widgets.accountWidget.pages.AccountWidgetPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
-import com.gainsight.testdriver.TestEnvironment;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -56,15 +57,15 @@ public class BasePage extends WebPage implements Constants {
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
-	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
+	public AmountsUtil amtUtil  = new AmountsUtil();
 
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
 			driver.get(env.getDefaultUrl());
 		}
-		field.setTextField("username", TestEnvironment.get().getUserName());
-		field.setTextField("password", TestEnvironment.get().getUserPassword());
+		field.setTextField("username", env.get().getUserName());
+		field.setTextField("password", env.get().getUserPassword());
 		button.click("Login");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 		return this;
@@ -110,7 +111,7 @@ public class BasePage extends WebPage implements Constants {
 
 	public AdoptionBasePage clickOnAdoptionTab() {
         clickOnTab(ADOPTION_TAB);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
 		return new AdoptionBasePage();
 	}
 
@@ -265,7 +266,7 @@ public class BasePage extends WebPage implements Constants {
             wait.waitTillElementDisplayed(DELETE_BUTTON, MIN_TIME,MAX_TIME);
             item.click(DELETE_BUTTON);
             Log.info("Deleting the sample data");
-            amtDateUtil.sleep(15);
+            Timer.sleep(15);
             wait.waitTillElementDisplayed(loadButton, MIN_TIME, 2*MAX_TIME);
             Log.info("Sample data delete completed.");
         } catch(Exception e) {

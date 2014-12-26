@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.testdriver.Log;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +25,7 @@ public class SalesforceRecordForm extends BasePage {
     public boolean verifyRecordViewIsDisplayed(String objectId) {
         wait.waitTillElementDisplayed(EDIT_BUTTON, MIN_TIME, MAX_TIME);
         String s = driver.getCurrentUrl();
-        Log.info("Window URL :" +s);
+        Log.info("Window URL :" + s);
         Log.info("Object Id :" +objectId);
         Pattern p = Pattern.compile("(.salesforce.com/"+objectId+"...............)");
         Matcher m = p.matcher(s);

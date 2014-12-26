@@ -28,24 +28,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.sforce.soap.metadata.*;
+import com.sforce.soap.partner.PartnerConnection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.sforce.soap.metadata.AsyncResult;
-import com.sforce.soap.metadata.CodeCoverageWarning;
-import com.sforce.soap.metadata.DeployMessage;
-import com.sforce.soap.metadata.DeployOptions;
-import com.sforce.soap.metadata.DeployResult;
-import com.sforce.soap.metadata.MetadataConnection;
-import com.sforce.soap.metadata.PackageTypeMembers;
-import com.sforce.soap.metadata.RetrieveMessage;
-import com.sforce.soap.metadata.RetrieveRequest;
-import com.sforce.soap.metadata.RetrieveResult;
-import com.sforce.soap.metadata.RunTestFailure;
-import com.sforce.soap.metadata.RunTestsResult;
 import com.sforce.soap.partner.LoginResult;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
@@ -58,21 +48,6 @@ public class PackageUtil {
 	private static final long ONE_SECOND = 1000;
 	// maximum number of attempts to deploy the zip file
 	private static final int MAX_NUM_POLL_REQUESTS = 50;
-
-    public static void main(String args[]) throws Exception {
-        metadataConnection = login();
-        PackageUtil packageUtil = new PackageUtil();
-        //packageUtil.retrieveZip();
-        //packageUtil.unzip("./resources/sfdcmetadatapackage/temp/retrieveResults.zip", "./resources/sfdcmetadata/temp");
-        //packageUtil.createZipFile("./resources/sfdcmetadatapackage/code", "./resources/sfdcmetadatapackage/temp");
-        //deployZip("./resources/sfdcmetadatapackage/temp/code.zip");
-        //packageUtil.installApplication("4.19.1", "JBCXM__Install4.19");
-        //packageUtil.unInstallApplication();
-        //packageUtil.installApplication("4.19.3", "JBCXM__Install4.19");
-        //packageUtil.updateWidgetLayouts();
-
-    }
-
 
 	public PackageUtil(MetadataConnection metadataConnection, Double version) {
         this.metadataConnection = metadataConnection;
@@ -559,34 +534,4 @@ public class PackageUtil {
 		}
 		return deployResult;
 	}
-
-    public static MetadataConnection login() throws ConnectionException {
-        final String USERNAME = "ggolla@11demo.com";//TestEnvironment.get().getUserName();
-        // This is only a sample. Hard coding passwords in source files is a bad
-        // practice.
-        final String PASSWORD = "1234567gos2Vsyw95cuKpG1KjAXKZibXp";//TestEnvironment.get().getUserPassword()+ TestEnvironment.get().getProperty("sfdc.stoken");
-        final String URL = "https://login.salesforce.com/services/Soap/c/32.0";
-        final LoginResult loginResult = loginToSalesforce(USERNAME, PASSWORD,
-                URL);
-        return createMetadataConnection(loginResult);
-    }
-
-    private static MetadataConnection createMetadataConnection(
-            final LoginResult loginResult) throws ConnectionException {
-        final ConnectorConfig config = new ConnectorConfig();
-        config.setServiceEndpoint(loginResult.getMetadataServerUrl());
-        config.setSessionId(loginResult.getSessionId());
-        return new MetadataConnection(config);
-    }
-
-    private static LoginResult loginToSalesforce(final String username,
-                                                 final String password, final String loginUrl)
-            throws ConnectionException {
-        final ConnectorConfig config = new ConnectorConfig();
-        config.setAuthEndpoint(loginUrl);
-        config.setServiceEndpoint(loginUrl);
-        config.setManualLogin(true);
-        return (new EnterpriseConnection(config)).login(username, password);
-    }
-
 }

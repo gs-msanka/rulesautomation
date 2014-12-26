@@ -2,6 +2,7 @@ package com.gainsight.sfdc.pages;
 
 import java.util.HashMap;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 
@@ -83,8 +84,8 @@ public class CustomerSuccessPage extends BasePage {
 	public CustomerSuccessPage clickOnAddCustomer() {
 		field.switchToFrame(IFRAME);
 		item.click(CUSTOMER_ADD_BUTTON);
-		amtDateUtil.stalePause();
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
+		Timer.sleep(2);
 		field.switchToMainWindow();
 		return this;		
 	}

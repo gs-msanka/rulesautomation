@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -32,7 +34,6 @@ import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo;
 import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo.Columns;
 import com.gainsight.sfdc.util.db.H2Db;
 import com.gainsight.sfdc.util.db.QueryBuilder;
-import com.gainsight.testdriver.TestEnvironment;
 
 public class DataETL implements IJobExecutor {
 
@@ -50,7 +51,7 @@ public class DataETL implements IJobExecutor {
 	static JobInfo jobInfo;
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
-    TestEnvironment env =new TestEnvironment();
+    Application env =new Application();
 	static {
 		info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());
@@ -332,7 +333,7 @@ public class DataETL implements IJobExecutor {
 	public void cleanUp(String objectName, int limit) throws IOException {
 		//I need to write logic considering governor limits
         String sObject =  resolveStrNameSpace(objectName);
-        Log.info("Object Name Opted for Clean Up :" +sObject);
+        Log.info("Object Name Opted for Clean Up :" + sObject);
         String query = QueryBuilder.buildSOQLQuery(sObject, limit, "Id");
 		Log.info("Pull Query : " + query);
 		String path = userDir+"/resources/datagen/process/" + sObject + "_cleanup.csv";

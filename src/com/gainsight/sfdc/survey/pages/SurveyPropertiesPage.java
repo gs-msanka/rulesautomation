@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;

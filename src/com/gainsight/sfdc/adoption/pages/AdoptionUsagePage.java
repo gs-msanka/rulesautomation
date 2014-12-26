@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -306,7 +308,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
         if(cName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, cName);
             driver.findElement(By.xpath(CUSTOMER_NAME_GIRD_FILTER_INPUT)).sendKeys(Keys.ENTER);
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             waitTillNoLoadingIcon();
         } else {
             throw new RuntimeException("Customer name is mandatory");

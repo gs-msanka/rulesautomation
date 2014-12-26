@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import com.gainsight.testdriver.Log;
+
 import java.util.HashMap;
 
 /**

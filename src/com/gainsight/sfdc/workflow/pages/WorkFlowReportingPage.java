@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.workflow.pages;
 
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.testdriver.Log;
 
 /**
  * Created by gainsight on 21/11/14.

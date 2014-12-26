@@ -2,8 +2,9 @@ package com.gainsight.sfdc.customer360.pages;
 
 import java.util.HashMap;
 
-import com.gainsight.sfdc.sponsorTracking.sponsorTracking;
+import com.gainsight.sfdc.sponsorTracking.SponsorTracking;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.Log;
 import com.sforce.soap.partner.sobject.SObject;
 
 
@@ -20,8 +21,8 @@ public class SponsorTracking360 extends Customer360Page{
 		return new SponsorTracking360();
 	}
 	
-	public void searchSponsor(String CustomerName,String Contactname,String Email,sponsorTracking sp_api){
-		Log.info(CustomerName+"  "+Contactname+"  "+Email);
+	public void searchSponsor(String CustomerName,String Contactname,String Email,SponsorTracking sp_api){
+		Log.info(CustomerName + "  " + Contactname + "  " + Email);
 		
 		searchCustomer(CustomerName, false, false);
 		goToSponsorSection();
@@ -32,7 +33,7 @@ public class SponsorTracking360 extends Customer360Page{
 		
 		BaseTest bt = new BaseTest();
 		//bt.apex.runApex("List<Contact> Con= [Select Contact.FirstName,Contact.LastName,Contact.Title from Contact where Contact.AccountId in (Select Id from Account where Account.Name='IVY Comptech')];");
-		SObject[] Query= bt.soql.getRecords("SELECT FirstName, LastName, Title, Email, Name FROM Contact where AccountId in(Select Id from Account where Name='"+CustomerName+"')");
+		SObject[] Query= bt.sfdc.getRecords("SELECT FirstName, LastName, Title, Email, Name FROM Contact where AccountId in(Select Id from Account where Name='"+CustomerName+"')");
 		int i=(Query.length)-1;
 		while(i>=0){
 			if((Query[i].getField("Name").toString().equals(Contactname)) && (Query[i].getField("Email").toString().equals(Email)))

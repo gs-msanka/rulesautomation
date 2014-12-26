@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -55,7 +57,7 @@ public class RelatedList360 extends Customer360Page {
                 WebElement tableTr = tableRowsList.get(0);
                 List<WebElement> tableColumnsList = tableTr.findElements(By.tagName("th"));
                 if(tableColumnsList != null) {
-                    Log.info("Total Columns in table are :" +tableColumnsList.size());
+                    Log.info("Total Columns in table are :" + tableColumnsList.size());
                     for(WebElement wEle : tableColumnsList) {
                         String hText = wEle.getText().replaceAll(" ", "").trim();
                         tableHeaders.add(hText);
@@ -137,13 +139,13 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public RelatedList360 selectUIView(String secName, String viewName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[contains(@class,'case_uiviews')]"+
                             "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
         item.click(xPath);
         wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]", MIN_TIME, MAX_TIME);
         item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]");
-        amtDateUtil.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
+        Timer.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
         return new RelatedList360(secName);
     }
 

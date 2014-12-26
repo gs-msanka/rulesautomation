@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import com.gainsight.sfdc.tests.BaseTest;
 import org.apache.commons.lang3.time.DateUtils;
 
 import com.gainsight.testdriver.Log;
@@ -20,67 +22,94 @@ public class DateUtil {
 
 	/**
 	 * Increment or decrement months and also fetch the date in the required format.
-	 * @param date Date Object
+	 * @param cal Calendar Object
 	 * @param amount Can take +ve and -ve integers for increase/decrease
 	 * @param format Sample format yyyy-MM-dd
 	 * @return
 	 */
-	public static String addMonths(Date date, int amount, String format) {
-		date = DateUtils.addMonths(date, amount);
-		SimpleDateFormat fmt = new SimpleDateFormat(format);
-		return fmt.format(date);
+	public static String addMonths(Calendar cal, int amount, String format) {
+        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        cal.add(Calendar.MONTH, amount);
+		return fmt.format(cal.getTime());
 	}
-	
-	/**
-	 * Increment or decrement days and also fetch the date in the required format
-	 * @param date Date Object
-	 * @param amount Can take +ve and -ve integers for increase/decrease
-	 * @param format Sample format yyyy-MM-dd
-	 * @return
-	 */
-	public static String addWeeks(Date date, int amount, String format) {
-		date = DateUtils.addWeeks(date, amount);
-		SimpleDateFormat fmt = new SimpleDateFormat(format);
-		return fmt.format(date);
-	}
-	
-	public static String addDays(Date date, int amount, String format) {
-		date = DateUtils.addDays(date, amount);
-		SimpleDateFormat fmt = new SimpleDateFormat(format);
-		return fmt.format(date);
-	}
+
+    public static String addMonths(TimeZone timeZone, int amount, String format) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        return addMonths(cal, amount, format);
+    }
+
+    public static Calendar addMonths(TimeZone timeZone, int amount) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.MONTH, amount);
+        return cal;
+    }
+
+    public static Calendar addMonths(Calendar cal, int amount) {
+        cal.add(Calendar.MONTH, amount);
+        return cal;
+    }
+
+    /**
+     * Date string with specified form will be return.
+     * @param cal
+     * @param amount
+     * @param format
+     * @return
+     */
+    public static String addDays(Calendar cal, int amount, String format) {
+        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        cal.add(Calendar.DATE, amount);
+        return fmt.format(cal.getTime());
+    }
+
+    public static String addDays(Date date, int amount, String format) {
+        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        return fmt.format(DateUtils.addDays(date, amount));
+    }
 
     public static String addDays(TimeZone timeZone, int amount, String format) {
         Calendar cal = Calendar.getInstance(timeZone);
-        return addDays(cal.getTime(), amount, format);
+        return addDays(cal, amount, format);
+    }
+
+    public static Calendar addDays(TimeZone timeZone, int amount) {
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.DATE, amount);
+        return cal;
+    }
+
+    public static Calendar addDays(Calendar cal, int amount) {
+        cal.add(Calendar.DATE, amount);
+        return cal;
+    }
+
+    /**
+     * Date by adding weeks with format.
+     * @param cal
+     * @param amount
+     * @param format
+     * @return
+     */
+    public static String addWeeks(Calendar cal, int amount, String format) {
+        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        cal.add(Calendar.WEEK_OF_YEAR, amount);
+        return fmt.format(cal.getTime());
     }
 
     public static String addWeeks(TimeZone timeZone, int amount, String format) {
         Calendar cal = Calendar.getInstance(timeZone);
-        return addWeeks(cal.getTime(), amount, format);
+        return addWeeks(cal, amount, format);
     }
 
-    public static String addMonths(TimeZone timeZone, int amount, String format) {
-        Calendar cal = Calendar.getInstance(timeZone);
-        return addMonths(cal.getTime(), amount, format);
-    }
-
-    public static Date addMonths(TimeZone timeZone, int amount) {
-        Calendar cal = Calendar.getInstance(timeZone);
-        cal.add(Calendar.MONTH, amount);
-        return cal.getTime();
-    }
-
-    public static Date addWeeks(TimeZone timeZone, int amount) {
+    public static Calendar addWeeks(TimeZone timeZone, int amount) {
         Calendar cal = Calendar.getInstance(timeZone);
         cal.add(Calendar.WEEK_OF_YEAR, amount);
-        return cal.getTime();
+        return cal;
     }
 
-    public static Date addDays(TimeZone timeZone, int amount) {
-        Calendar cal = Calendar.getInstance(timeZone);
-        cal.add(Calendar.DATE, amount*7);
-        return cal.getTime();
+    public static Calendar addWeeks(Calendar cal, int amount) {
+        cal.add(Calendar.WEEK_OF_YEAR, amount);
+        return cal;
     }
 
     /**
@@ -91,8 +120,15 @@ public class DateUtil {
      * @param amount - no of days to add/subtract.
      * @return String - Date.
      */
-    public static String getWeekLabelDate(String weekDay, String format, int amount, boolean usesEndDate) {
-        Calendar cal = Calendar.getInstance();
+    public static String getWeekLabelDate(String weekDay, String format, TimeZone timeZone, int amount, boolean usesEndDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone, amount, usesEndDate));
+        Log.info("Formatted Date : " +sDate);
+        return sDate;
+    }
+
+    public static Calendar getWeekLabelDate(String weekDay, TimeZone timeZone, int amount, boolean usesEndDate) {
+        Calendar cal = Calendar.getInstance(timeZone);
         Map<String, Integer> days = new HashMap<String, Integer>();
         days.put("Sun", 1);
         days.put("Mon", 2);
@@ -119,18 +155,8 @@ public class DateUtil {
             }
         }
         cal.add(Calendar.DATE, amount);
-        Date date = cal.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        String sDate = simpleDateFormat.format(date);
-        Log.info(sDate);
-        return sDate;
-    }
-
-    public static String[] getMonthAndYear(int amount, TimeZone timeZone) {
-        Calendar cal = Calendar.getInstance(timeZone);
-        cal.add(Calendar.MONTH, amount);
-        System.out.println("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
-        return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
+        Log.info("Final Week Label Date : "+cal.getTime());
+        return cal;
     }
 
     public static Map<String, String> localMapValues() {
@@ -280,6 +306,22 @@ public class DateUtil {
     public static String getMonthName(Calendar cal) {
     	SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
     	return dateFormat.format(cal.getTime());
+    }
+
+    public static String parseFixedFmtDate(String dateStr, TimeZone userTimeZone, String USER_DATE_FORMAT) {
+        SimpleDateFormat dateFmt =  new SimpleDateFormat("MM/dd/yyyy");
+        dateFmt.setTimeZone(userTimeZone);
+        Date formattedDate = null;
+        try {
+            formattedDate = dateFmt.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(formattedDate);
+        dateFmt = new SimpleDateFormat(USER_DATE_FORMAT);
+        dateFmt.setTimeZone(BaseTest.userTimezone);
+        return dateFmt.format(c.getTime());
     }
 
 }

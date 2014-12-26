@@ -2,6 +2,8 @@ package com.gainsight.sfdc.workflow.pages;
 
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -45,12 +47,12 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         item.click(ADD_PLAYBOOK_BUTTON);
         fillPlaybookDetails(pb);
         item.click(SAVE_PLAYBOOK_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public void fillPlaybookDetails(Playbook pb) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
         item.click("//input[@type='radio' and @value='"+pb.getType()+"']");
         field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
@@ -77,8 +79,8 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
 
     public void selectTaskOwner(String owner) {
-        Log.info("Selecting Task Owner : " +owner);
-        amtDateUtil.stalePause();
+        Log.info("Selecting Task Owner : " + owner);
+        Timer.sleep(2);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(TASK_OWNER_INPUT, owner);
@@ -91,7 +93,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
                     return;
                 }
             }
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select owner");
@@ -114,7 +116,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage expandPlaybookView(Playbook pb) {
         item.click(getPlaybookXPath(pb));
         wait.waitTillElementDisplayed("//div[@class='playbooks-data']/h3[contains(text(), '"+pb.getName()+"')]", MIN_TIME, MAX_TIME);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -123,10 +125,10 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
             expandPlaybookView(pb);
             item.click(PLAYBOOK_EDIT);
             wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             fillPlaybookDetails(newPB);
             item.click(SAVE_PLAYBOOK_BUTTON);
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         } catch (Exception e) {
             System.out.println("safdas");
         }
@@ -138,7 +140,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         wait.waitTillElementDisplayed(PLAYBOOK_DUPLICATE_NAME, MIN_TIME, MAX_TIME);
         field.clearAndSetText(PLAYBOOK_DUPLICATE_NAME, pName);
         item.click(POPUP_SAVE_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -184,7 +186,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         item.click(s);
         fillTaskDetails(newTask);
         item.click(TASK_SAVE_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -192,7 +194,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         String s = getTaskXpath(task)+"/descendant::a[contains(@class, 'delete') and @title='Delete task']";
         item.click(s);
         item.click(POPUP_YES_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -211,14 +213,14 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage searchPlaybooks(String name) {
         field.clearAndSetText(PLAYBOOK_SEARCH_INPUT, name);
         driver.findElement(By.xpath(PLAYBOOK_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public WorkflowPlaybooksPage searchTasks(String task) {
         field.clearAndSetText(TASK_SEARCH_INPUT, task);
         driver.findElement(By.xpath(TASK_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 }

@@ -3,6 +3,7 @@ package com.gainsight.sfdc.churn.pages;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -16,12 +17,10 @@ public class ChurnPage extends BasePage {
 	private final String READY_INDICATOR = "//div[@class='dummyChurnAnalyticsDetail']";
 	private final String NEW_BUTTON = "//a[contains(text(), 'New Transaction')]";
 	private final String CUSTOMER_NAME_FIELD = "//div[@class='requiredInput']/input[contains(@class,'customer-name-text')]";
-	//private final String NAME_LOOPUP_IMG = "//img[@title='Customer Name Lookup']";
 	private final String BOOKING_DATE_FIELD = "//input[@class='transactionDate transactionBookingdate gs-calendar']";
 	private final String START_DATE_FIELD = "//input[@class='transactionDate transSubStartDate gs-calendar']";
 	private final String CHURN_REASON_SELECT = "//button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[contains(text(),'Select Reason')]";
 	private final String CHURN_REASON_SELECT_OPTION = "//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[contains(text(),'%s')]";
-	//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/li/label/span[contains(text(),'Other')]
 	private final String COMMENTS_FIELD = "//textarea[@class='jbaraDummyCommentInputCtrl transactionComments']";
 	private final String CHURN_GRID = "//div[@class='mainPanelDiv churnGridGaphsDisplayDiv']";
 	private final String SAVE_BUTTON = "//a[text()='Save']";
@@ -39,8 +38,6 @@ public class ChurnPage extends BasePage {
 		element.click(NEW_BUTTON);
 		element.switchToFrame("//iframe[contains(@src,'apex/TransactionForm')]");
 		field.setTextField(CUSTOMER_NAME_FIELD, data.get("customerName"));
-		/*button.click(NAME_LOOPUP_IMG);
-		element.click("//a[text()='" + data.get("customerName") + "']");*/
 		driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ENTER);
 		wait.waitTillElementDisplayed(AUTO_SELECT_LIST, MIN_TIME, MAX_TIME);
 		driver.findElement(By.xpath(CUSTOMER_NAME_FIELD)).sendKeys(Keys.ARROW_DOWN);
@@ -56,7 +53,7 @@ public class ChurnPage extends BasePage {
             }
         }
         if(!customerSelected) throw new RuntimeException("Unable to select customer (or) customer not found" );
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		String bookingDate = data.get("bookingDate");
 		if (bookingDate != null)
 			enterDate(BOOKING_DATE_FIELD, bookingDate);
@@ -86,7 +83,7 @@ public class ChurnPage extends BasePage {
 
 	public Customer360Page gotoCustomer360(String customerName) {
 		setFilter(CUSTOMER_FILTER, customerName);
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		item.click("//a[text()='" + customerName + "']");
 		return new Customer360Page();
 	}

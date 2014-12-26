@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -27,12 +28,12 @@ public class Customer360FeaturesTests extends BaseTest {
 	public void setUp() {
 		Log.info("Starting Customer 360 Features module Test Cases...");
         basepage.login();
-        apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Features/features.apex"));
 	}
 	
 	@AfterMethod
 	private void refresh() {
-	        basepage.refreshPage();
+	    basepage.refreshPage();
 	}
 	 
 	

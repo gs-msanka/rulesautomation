@@ -45,17 +45,15 @@ public class BaseTest {
     @BeforeSuite
     public void init() throws Exception {
     	Log.info("Fetching All SFDC Connections");
-    	sfdc = new SalesforceConnector(PropertyReader.userName, 
-    			PropertyReader.password + PropertyReader.stoken, 
-    			PropertyReader.partnerUrl,
-    			PropertyReader.sfdcApiVersion);
+    	sfdc = new SalesforceConnector(PropertyReader.userName, PropertyReader.password + PropertyReader.stoken,
+    			PropertyReader.partnerUrl, PropertyReader.sfdcApiVersion);
     	
     	sfdc.connect();
-    	
     	//MetadataClient is initialized
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
     	
     	sfinfo = sfdc.fetchSFDCinfo();
+        System.out.println("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         
@@ -110,11 +108,11 @@ public class BaseTest {
 
     public HashMap<String, String> getMapFromData(String data) {
         HashMap<String, String> hm = new HashMap<String, String>();
-        Log.info("Supplied Data :  " +data);
+        Log.info("Supplied Data :  " + data);
         String[] dataArray = data.substring(data.indexOf("{")+1, data.lastIndexOf("}")).split("\\|");
         for (String record : dataArray) {
             if (record != null) {
-                Log.info("Record to split : " +record);
+                Log.info("Record to split : " + record);
                 String[] pair = record.split("\\:");
                 hm.put(pair[0], pair[1].trim());
             }
@@ -183,6 +181,10 @@ public class BaseTest {
         sfdc.runApexCode(resolveStrNameSpace(script));
     }
 
+    public String getNameSpaceResolvedFileContents(String filePath) {
+        return resolveStrNameSpace(FileUtil.getFileContents(filePath));
+    }
+
     public FileReader resolveNameSpace(String fileName) {
         try {
             if (!isPackage) {
@@ -196,10 +198,90 @@ public class BaseTest {
         }
     }
 
+    public void addNSURLToRemoteSiteSettings() throws Exception {
+        System.out.println("creating remote site!");
+        metadataClient.createRemoteSiteSetting("GSRemoteSite", env.getProperty("ns.appurl"));
+    }
 
     public void createExtIdFieldOnAccount() throws Exception {
         metadataClient.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
     }
+
+    public void createFieldsOnContact() throws Exception {
+        metadataClient.createTextFields("Contact", new String[]{"Contact ExternalID"}, true, true, true, false, false);
+        metadataClient.createNumberField("Contact", new String[]{"NoOfReferrals", "NumForDate", "NumberField"},false);
+        metadataClient.createFields("Contact", new String[]{"Active"}, true, false, false);
+        HashMap<String, String[]> fields = new HashMap<String, String[]>();
+        fields.put("InvolvedIn", new String[]{"Marketing", "Sales", "Forecast", "Finance", "Budget"});
+        metadataClient.createPickListField("Contact", fields, true);
+        metadataClient.createNumberField("Contact", new String[]{"DealCloseRate"}, true);
+    }
+
+    public void createFieldsOnAccount() throws Exception {
+        metadataClient.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
+        metadataClient.createFields("Account", new String[]{"IsActive"}, true, false, false);
+        metadataClient.createDateField("Account", new String[]{"InputDate"}, false);
+        metadataClient.createDateField("Account", new String[]{"InputDateTime"}, true);
+        metadataClient.createNumberField("Account", new String[]{"AccPercentage"}, true);
+        metadataClient.createNumberField("Account", new String[]{"ActiveUsers"}, false);
+        HashMap<String, String[]> fields = new HashMap<String, String[]>();
+        fields.put("InRegions", new String[]{"India", "America", "England", "France", "Italy", "Germany", "Japan" , "China", "Australia", "Russia", "Africa", "Arab "});
+        metadataClient.createPickListField("Account", fields, true);
+        ArrayList<HashMap<String, String>> fFields = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> fField1 = new HashMap<String, String>();
+        fField1.put("Type", "CheckBox");
+        fField1.put("Formula", "IsActive__c");
+        fField1.put("FieldName", "FIsActive");
+        fField1.put("Description", "Is Active Field");
+        fField1.put("HelpText", "Is Active Field");
+        fFields.add(fField1);
+        HashMap<String, String> fField2 = new HashMap<String, String>();
+        fField2.put("Type", "Currency");
+        fField2.put("Formula", "AnnualRevenue");
+        fField2.put("FieldName", "FCurrency");
+        fField2.put("Description", "AnnualRevenue");
+        fField2.put("HelpText", "Formula AnnualRevenue");
+        fFields.add(fField2);
+        HashMap<String, String> fField3 = new HashMap<String, String>();
+        fField3.put("Type", "Date");
+        fField3.put("Formula", "InputDate__c");
+        fField3.put("FieldName", "FDate");
+        fField3.put("Description", "Formula InputDate__c");
+        fField3.put("HelpText", "Formula InputDate__c");
+        fFields.add(fField3);
+        HashMap<String, String> fField4 = new HashMap<String, String>();
+        fField4.put("Type", "DateTime");
+        fField4.put("Formula", "InputDateTime__c");
+        fField4.put("FieldName", "FDateTime");
+        fField4.put("Description", "Formula InputDateTime__c");
+        fField4.put("HelpText", "Formula InputDateTime__c");
+        fFields.add(fField4);
+        metadataClient.createFormulaFields("Account", fFields);
+        fFields.clear();
+        HashMap<String, String> fField5 = new HashMap<String, String>();
+        fField5.put("Type", "Number");
+        fField5.put("Formula", "ActiveUsers__c");
+        fField5.put("FieldName", "FNumber");
+        fField5.put("Description", "Formula ActiveUsers__c");
+        fField5.put("HelpText", " Formula ActiveUsers__c");
+        fFields.add(fField5);
+        HashMap<String, String> fField6 = new HashMap<String, String>();
+        fField6.put("Type", "Percent");
+        fField6.put("Formula", "AccPercentage__c");
+        fField6.put("FieldName", "FPercent");
+        fField6.put("Description", "Field AccPercentage__c");
+        fField6.put("HelpText", "Field AccPercentage__c");
+        fFields.add(fField6);
+        HashMap<String, String> fField7 = new HashMap<String, String>();
+        fField7.put("Type", "Text");
+        fField7.put("Formula", "Name");
+        fField7.put("FieldName", "FText");
+        fField7.put("Description", "Formula Name");
+        fField7.put("HelpText", "Formula Name");
+        fFields.add(fField7);
+        metadataClient.createFormulaFields("Account", fFields);
+    }
+
 
     public void createExtIdFieldForScoreCards() throws Exception {
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
@@ -219,7 +301,6 @@ public class BaseTest {
         metadataClient.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
     }
 
-
     //same method is used by rules engine test cases also.
     public void createFieldsOnUsageData() throws Exception {
         String object = "JBCXM__Usagedata__c";
@@ -229,79 +310,6 @@ public class BaseTest {
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
     }
 
-    /**
-     * This parameter returns the String with comprises of yyyy|mm|dd format.
-     *
-     * @param weekDay   - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-     * @param daysToAdd - number of days to add for current day.
-     * @return String of format "yyyy|mm|dd".
-     */
-    public String getWeekLabelDate(String weekDay, int daysToAdd, boolean usesEndDate, boolean userFormat) {
-        Calendar cal = Calendar.getInstance();
-        Map<String, Integer> days = new HashMap<String, Integer>();
-        days.put("Sun", 1);
-        days.put("Mon", 2);
-        days.put("Tue", 3);
-        days.put("Wed", 4);
-        days.put("Thu", 5);
-        days.put("Fri", 6);
-        days.put("Sat", 7);
-        System.out.println(cal.getTime());
-        if(usesEndDate) {
-            int weekDate = days.get(weekDay);
-            int calLabel = cal.get(Calendar.DAY_OF_WEEK);
-            weekDate = (weekDate == 1) ? 7 : weekDate - 1;
-            cal.set(Calendar.DAY_OF_WEEK, weekDate);
-            if(weekDate < calLabel) {
-                cal.add(Calendar.DATE, 7);
-            }
-        }
-        else {
-            int a = cal.get(Calendar.DAY_OF_WEEK);
-            cal.set(Calendar.DAY_OF_WEEK, days.get(weekDay));
-            if(a <  days.get(weekDay)) {
-                cal.add(Calendar.DATE, -7);
-            }
-        }
-        cal.add(Calendar.DATE, daysToAdd);
-        Date date = cal.getTime();
-        SimpleDateFormat simpleDateFormat =null;
-        if (userFormat) {
-            if (sfinfo.getUserLocale().contains("en_US")) {
-                simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-            } else if (sfinfo.getUserLocale().contains("en_IN")) {
-                simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            }
-        } else {
-            //Default format used for bulk data load.
-            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        }
-        //Commented as timezone is not required to handle.{Rule, Usage Aggregation etc}
-        //simpleDateFormat.setTimeZone(userTimezone);
-        String sDate = simpleDateFormat.format(date);
-        Log.info(sDate);
-        return sDate;
-    }
-
-    /*
-    Returns month & year adding/subtracting.
-    Jan = 0
-    Dec = 11
-     */
-    public String[] getMonthAndYear(int numOfMonthsToAdd) {
-        Calendar cal = Calendar.getInstance(userTimezone)  ;
-        Log.info("The current date is : " + cal.getTime());
-        cal.add(Calendar.MONTH, numOfMonthsToAdd);
-        Log.info("Modified Date : " + cal.getTime());
-        Log.info("Month : " +String.valueOf(cal.get(Calendar.MONTH))  + " -- Year : " +String.valueOf(cal.get(Calendar.YEAR)));
-        return new String[]{String.valueOf(cal.get(Calendar.MONTH)), String.valueOf(cal.get(Calendar.YEAR))};
-    }
-
-    /**
-     *
-     * @param className
-     */
     public void waitForBatchExecutionToComplete(String className) throws InterruptedException {
         for (int l = 0; l < 200; l++) {
             String query = "SELECT Id, JobType, ApexClass.Name, Status FROM AsyncApexJob " +

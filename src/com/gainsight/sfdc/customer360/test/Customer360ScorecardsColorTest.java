@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -13,7 +14,6 @@ import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.utils.DataProviderArguments;
 
 /**
@@ -25,7 +25,7 @@ import com.gainsight.utils.DataProviderArguments;
  */
 public class Customer360ScorecardsColorTest extends BaseTest {
 
-    private final String TEST_DATA_FILE         = "testdata/sfdc/Scorecard/Color_Scheme_Data.xls";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/scorecard/tests/Color_Scheme_Data.xls";
     private final String SETUP_FILE             = env.basedir+"/apex_scripts/Scorecard/scorecard.apex";
     private final String CLEAN_FILE             = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
     private final String SCHEME_DEFINITION_FILE = env.basedir+"/apex_scripts/Scorecard/Scorecard_Color_SchemeDefinition_Update.txt";
@@ -34,27 +34,17 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     private final String SCHEME                 = "Color";
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws Exception {
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
-		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
-        String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
-        String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        try {
-            cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Log.info("Failed to create fields");
-            e.printStackTrace();
-            throw new RuntimeException("Unable to create fields for scorecard section");
-        }
-
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
-        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
+	    createExtIdFieldForScoreCards();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();
 		AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        apex.runApexCodeFromFile(SCHEME_DEFINITION_FILE, isPackage);
-		apex.runApexCodeFromFile(COLOR_SCHEME_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCHEME_DEFINITION_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(COLOR_SCHEME_FILE));
 
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);
@@ -67,7 +57,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-1")
     public void addScoreToMeasureWithOutWeight(HashMap<String, String> testData) {
-        apex.runApex("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
+        sfdc.runApexCode("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
         overAllCustomerRollUp(true);
         Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         Customer360Scorecard customer360Scorecard = customer360Page.goToScorecardSection();
@@ -83,7 +73,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-2")
     public void addScoreToMeasureWithWeight(HashMap<String, String> testData) {
-        apex.runApex("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
+        sfdc.runApexCode("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
         overAllCustomerRollUp(true);
         Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         Customer360Scorecard customer360Scorecard = customer360Page.goToScorecardSection();
@@ -99,7 +89,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-3")
     public void removeScoreForMeasures(HashMap<String, String> testData) {
         overAllCustomerRollUp(true);
-        apex.runApex("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
+        sfdc.runApexCode("DELETE [SELECT ID FROM JBCXM__ScorecardFact__c];");
         Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         Customer360Scorecard customer360Scorecard = customer360Page.goToScorecardSection();
         customer360Scorecard.setScheme(testData.get("Scheme"));

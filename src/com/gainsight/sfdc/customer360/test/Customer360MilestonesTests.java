@@ -2,6 +2,7 @@ package com.gainsight.sfdc.customer360.test;
 
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -20,14 +21,14 @@ public class Customer360MilestonesTests extends BaseTest {
 	public void setUp() {
 		Log.info("Starting Customer 360 Milestones module Test Cases...");
 		basepage.login();
-        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Milestones/Milestones.apex"));
 	}
 	 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
-        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackage);
+        sfdc.runApexCode(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '" + testData.get("Account") + "'];"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Milestones/MilestonesForACustomer.apex"));
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
 		Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
@@ -97,7 +98,7 @@ public class Customer360MilestonesTests extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M5")
     public void verifyNoMilestonesMessage(HashMap<String, String> testData) {
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
+        sfdc.runApexCode(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));

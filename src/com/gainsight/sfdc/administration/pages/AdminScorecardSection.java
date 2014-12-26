@@ -1,9 +1,12 @@
 package com.gainsight.sfdc.administration.pages;
 
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.TimeoutException;
 
 import com.gainsight.sfdc.pages.BasePage;
+
+import java.sql.Time;
 
 public class AdminScorecardSection extends BasePage {
 
@@ -32,8 +35,8 @@ public class AdminScorecardSection extends BasePage {
 		
 		public void enableScorecard(){
 			item.click(GLOBAL_SETTINGS);
-			amtDateUtil.stalePause();
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
+			Timer.sleep(2);
 			item.selectCheckBox(ENABLE_SCORECARD);
 			item.selectCheckBox(CUST_ROLLUP);
 			item.click(APPLY_GLOBAL_SETTINGS);
@@ -42,11 +45,11 @@ public class AdminScorecardSection extends BasePage {
 		
 		public void applyNumericScheme(){
 			item.click(GRADING_SCHEME);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			item.click(SCORING_NUMERIC);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			item.click(APPLY_NUMERIC);
-			amtDateUtil.stalePause();	
+			Timer.sleep(2);
 			try{
 				driver.switchTo().alert().accept();
 				waitTillNoLoadingIcon();
@@ -58,11 +61,11 @@ public class AdminScorecardSection extends BasePage {
 		
 		public void applyGradeScheme(){
 			item.click(GRADING_SCHEME);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			item.click(SCORING_GRADING_AtoF);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			item.click(APPLY_GRADING);
-			amtDateUtil.stalePause();	
+			Timer.sleep(2);
 			try{
 				driver.switchTo().alert().accept();
 				waitTillNoLoadingIcon();
@@ -74,10 +77,10 @@ public class AdminScorecardSection extends BasePage {
 		
 		public void applyColorScheme(){
 			item.click(GRADING_SCHEME);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			item.click(SCORING_COLO_RYG);
 			item.click(APPLY_COLOR);
-			amtDateUtil.stalePause();	
+			Timer.sleep(2);
 			try{
 				driver.switchTo().alert().accept();
 				waitTillNoLoadingIcon();

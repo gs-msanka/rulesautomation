@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gainsight.sfdc.util.db.QueryBuilder;
+import com.gainsight.testdriver.Log;
 
 /**
  * Standalone class for SFDC push/pull mechanism 

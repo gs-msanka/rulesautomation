@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -83,13 +85,13 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard openDetailView() {
         item.click(SCORECARD_DETAIL_VIEW);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public Customer360Scorecard removeOverAllCustomerScore() {
         item.click(OVERALL_SCORE_BG_ELEMENT);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         item.click(REMOVE_OVERALL_SCORE);
         wait.waitTillElementDisplayed(REMOVE_SCORE_DIALOG, MIN_TIME, MAX_TIME);
         item.click(REMOVE_SCORE_DIALOG_YES);
@@ -104,7 +106,7 @@ public class Customer360Scorecard extends Customer360Page  {
             ele.isDisplayed();
         }
         item.click(OVERALL_SCORE_BG_ELEMENT);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         driver.switchTo().activeElement();
         Actions builder = new Actions(driver);
         List<WebElement> svgObject = driver.findElements(By
@@ -116,7 +118,7 @@ public class Customer360Scorecard extends Customer360Page  {
                         .build().perform();
             }
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         item.click(SAVE_OVERALL_SCORE);
         waitForLoadingImagesNotPresent();
         return this;
@@ -124,7 +126,7 @@ public class Customer360Scorecard extends Customer360Page  {
 
     public Customer360Scorecard openCompactView() {
         item.click(SCORECARD_COMPACT_VIEW);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -387,7 +389,7 @@ public class Customer360Scorecard extends Customer360Page  {
         String xpath = getMeasureXpath(groupName, measureName);
         xpath += "/descendant::div[@class='grade-score']";
 		item.click(xpath);
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		driver.switchTo().activeElement();
 		Actions builder = new Actions(driver);
 		List<WebElement> svgObject = driver.findElements(By
@@ -400,9 +402,9 @@ public class Customer360Scorecard extends Customer360Page  {
                         .build().perform();
 			}
 		}
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		item.click(String.format(MEASURE_SCORE_SAVE, measureName));
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
 	}

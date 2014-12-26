@@ -2,6 +2,9 @@ package com.gainsight.sfdc.util.bulk;
 
 import java.net.URLEncoder;
 
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -29,7 +32,7 @@ public class SfdcRestApi {
 	}
 	
 	/**
-	 * @param args
+	 * @param sObject
 	 * @throws Exception
 	 */
 	public static int countOfRecordsForASObject(String sObject) throws Exception {
@@ -42,7 +45,7 @@ public class SfdcRestApi {
 		
 		Header h = new Header();
 		h.addHeader("Authorization", "Bearer " + info.getSessionId());
-		HttpResponseObj resp = wa.doGet(query_url, h.getAllHeaders());
+		ResponseObj resp = wa.doGet(query_url, h.getAllHeaders());
 		String json = resp.getContent();
 		Log.info("Count of Records of Query : " + json);
 		ObjectMapper mapper = new ObjectMapper();

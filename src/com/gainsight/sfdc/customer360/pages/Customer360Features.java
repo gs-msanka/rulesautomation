@@ -1,4 +1,5 @@
 package com.gainsight.sfdc.customer360.pages;
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.By;
 
 public class Customer360Features extends Customer360Page{
@@ -25,29 +26,29 @@ public class Customer360Features extends Customer360Page{
 	public void clickOnEditFeatures()
 	{
 		item.click(EDIT_FEATURES_ICON);
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 	}
 	
 	public void selectLicensed(String product,String feature){
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		//table[@class='gs_features_grid gs_features_grid_dialog gs_features_edit']/tbody/tr[contains(.,'P1')]/td[contains(.,'Feature1')]/following-sibling::td[1]
 		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[1]/input[@class='licensed']")).click();
 	}
 	
 	public void selectEnabled(String product,String feature){
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[2]/input[@class='enabled']")).click();
 	}
 
 	public void addComments(String product,String feature,String comment){
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[3]/input[@class='comments']")).sendKeys(comment);
 		//field.clearAndSetText(,comment);
 	}
 	
 	public void clickOnSave(){
-		amtDateUtil.stalePause();
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
+		Timer.sleep(2);
 		item.click(SAVE_BUTTON);
 	}
 	

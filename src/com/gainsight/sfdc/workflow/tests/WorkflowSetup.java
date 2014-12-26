@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.workflow.tests;
 
+import com.gainsight.testdriver.Log;
 import io.lamma.Date;
 import io.lamma.Dates;
 import io.lamma.DayOfWeek;
@@ -22,7 +23,6 @@ import org.testng.annotations.AfterClass;
 
 import com.gainsight.sfdc.administration.pages.AdminCockpitConfigPage;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.CockpitConfig;
 import com.gainsight.sfdc.workflow.pojos.PlaybookTask;
@@ -32,32 +32,8 @@ import com.sforce.soap.partner.sobject.SObject;
 public class WorkflowSetup extends BaseTest{
     ObjectMapper mapper                         = new ObjectMapper();
     
-    public void createExtIdFieldOnUser(){
-    	CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-        String UserObj = "User";
-        String[] user_ExtId = new String[]{"User ExternalId"};
-        try {
-            cObjFields.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Log.info("Failed to create fields");
-            e.printStackTrace();
-        }
-    }
-    
-    public void createExternalIdFieldOnCTA(){
-		 CreateObjectAndFields cObjFields = new CreateObjectAndFields();
-	        String CtaObj = "JBCXM__CTA__c";
-	        String[] Cta_ExtId = new String[]{"CTA ExternalID"};
-	        try {
-	            cObjFields.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
-	        } catch (Exception e) {
-	            Log.info("Failed to create fields in CTA object");
-	            e.printStackTrace();
-	        }
-	 }
-    
     public void enableSFDCSync_Manual() throws IOException {
-         SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+         SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
         if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
         String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
         CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
@@ -78,7 +54,7 @@ public class WorkflowSetup extends BaseTest{
     }
     
     public void enableSFDCSync_Auto() throws IOException {
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
         if(appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=null && appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c"))!=""){
        String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
        CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
@@ -98,7 +74,7 @@ public class WorkflowSetup extends BaseTest{
         
    }
     public void disableSFAutoSync() throws IOException {
-        SObject[] appSettings=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
+        SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
         String JBCXM__CockpitConfig__c = appSettings[0].getField(resolveStrNameSpace("JBCXM__CockpitConfig__c")).toString();
         CockpitConfig config = mapper.readValue(JBCXM__CockpitConfig__c, CockpitConfig.class);
         if(Boolean.valueOf(config.getAutoSync()))  { //If auto sync is already disabled..nothing to do
@@ -233,19 +209,13 @@ public class WorkflowSetup extends BaseTest{
             }
             sDate.add(Calendar.DATE, 1);
         }
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (userLocale.contains("en_US")) {
-            dateFormat = new SimpleDateFormat("M/d/yyyy");
-
-        } else if (userLocale.contains("en_IN")) {
-            dateFormat = new SimpleDateFormat("d/M/yyyy");
-        }
+        DateFormat dateFormat = new SimpleDateFormat(USER_DATE_FORMAT);
         return dateFormat.format(eDate.getTime());
     }
 
     public ArrayList<Task> getTaskFromSFDC(String playbookName) {
         ArrayList<Task> tasks = new ArrayList<>();
-        SObject[] records = soql.getRecords("Select name, JBCXM__TaskJSON__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
+        SObject[] records = sfdc.getRecords("Select name, JBCXM__TaskJSON__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
         if(!(records.length > 0)) {
             throw new RuntimeException("No tasks where found for the playbook");
         }
@@ -277,13 +247,7 @@ public class WorkflowSetup extends BaseTest{
 
     public String getHighestTaskDate(List<Task> tasks) {
         java.util.Date date = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (userLocale.contains("en_US")) {
-            dateFormat = new SimpleDateFormat("M/d/yyyy");
-
-        } else if (userLocale.contains("en_IN")) {
-            dateFormat = new SimpleDateFormat("d/M/yyyy");
-        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(USER_DATE_FORMAT);
         try {
             date = dateFormat.parse(tasks.get(0).getDate());
         } catch (ParseException e) {
@@ -314,7 +278,7 @@ public class WorkflowSetup extends BaseTest{
             query = query+" AND JBCXM__Stage__r.JBCXM__IncludeInWidget__c = false ";
         }
         Log.info("Query : " +resolveStrNameSpace(query));
-        count = soql.getRecordCount(resolveStrNameSpace(query));
+        count = sfdc.getRecordCount(resolveStrNameSpace(query));
         return count;
     }
 
@@ -324,7 +288,7 @@ public class WorkflowSetup extends BaseTest{
                 "JBCXM__Stage__r.IncludeInWidget__c = true AND JBCXM__Type__r.Name='"+type+"' AND" +
                 "JBCXM__Assignee__r.name='"+assignee+"' group by JBCXM__assignee__c";
         Log.info("Query : " +resolveStrNameSpace(query));
-        SObject[] records = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] records = sfdc.getRecords(resolveStrNameSpace(query));
         if(records.length >0) {
             count = Integer.valueOf(records[0].getField("expr0").toString());
         }

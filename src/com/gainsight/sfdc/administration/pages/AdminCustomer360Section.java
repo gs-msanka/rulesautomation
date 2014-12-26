@@ -1,10 +1,12 @@
 package com.gainsight.sfdc.administration.pages;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 
 import com.gainsight.sfdc.pages.BasePage;
 
-public class AdminCustomer360Section extends BasePage{
+public class AdminCustomer360Section extends BasePage {
 	
 	private final String READY_INDICATOR        = "//div[@class='apexp']//table[contains(@id,'CS360Section')]";
 	private final String EDIT_LINK_SPONSOR	    = "//a[contains(@onclick,'SponsorTracking')]";
@@ -23,7 +25,7 @@ public class AdminCustomer360Section extends BasePage{
 	public void EditSponsorTracking(){
 		Log.info("Click on Edit link in Customer 360 Section");
 		item.click(EDIT_LINK_SPONSOR);
-		amtDateUtil.stalePause();		
+		Timer.sleep(2);
 	}
 	
 	public void EnableSponsorTracking(){
@@ -43,7 +45,7 @@ public class AdminCustomer360Section extends BasePage{
 			}
 				
 			item.click(SAVE_SPONSOR_TRACKING);
-			amtDateUtil.stalePause();
+			Timer.sleep(2);
 			driver=driver.switchTo().defaultContent();
 			Log.info("Finished Admin Config...");
 		}

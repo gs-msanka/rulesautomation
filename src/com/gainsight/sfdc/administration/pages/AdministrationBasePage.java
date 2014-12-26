@@ -1,8 +1,6 @@
 package com.gainsight.sfdc.administration.pages;
 
 import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.salesforce.pages.CreateSalesforceUsers;
-
 /**
  * Created with IntelliJ IDEA.
  * User: gainsight
@@ -33,21 +31,6 @@ public class AdministrationBasePage extends BasePage {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
-    public CreateSalesforceUsers clickOnSetup(){
-        item.click(SETUP);
-        return new CreateSalesforceUsers();
-    }
-
-    public AdminRetentionTab clickOnRetentionSubTab(){
-        item.click(ADMIN_RETENTION);
-        return new AdminRetentionTab();
-    }
-
-    public AdminNPSTab clickOnNpsSubTab(){
-        item.click(ADMIN_NPS);
-        return new AdminNPSTab();
-    }
-
     public AdminCustomersTab clickOnCustomersSubTab(){
         item.click(ADMIN_CUSTOMERS);
         return new AdminCustomersTab();
@@ -56,11 +39,6 @@ public class AdministrationBasePage extends BasePage {
     public AdminTransactionsTab clickOnTransactionsTab() {
         item.click(ADMIN_TRANSACTIONS);
         return new AdminTransactionsTab();
-    }
-
-    public AdminAdoptionSubTab clickOnAdoptionSubTab(){
-        item.click(ADMIN_ADOPTION);
-        return new AdminAdoptionSubTab();
     }
 
     public AdminMilestoneTab clickOnMilestoneTab() {
@@ -81,11 +59,6 @@ public class AdministrationBasePage extends BasePage {
     public AdminUIViewssSubTab clickOnUIViewsSettingsSubTab() {
         item.click(ADMIN_UI_SETTINGS);
         return new AdminUIViewssSubTab();
-    }
-
-    public AdminRulesEngineTab clickOnRulesEngineSubTab() {
-        item.click(ADMIN_RULES_ENGINE);
-        return new AdminRulesEngineTab();
     }
 
     public AdminScorecardSection clickOnScorecardSection(){

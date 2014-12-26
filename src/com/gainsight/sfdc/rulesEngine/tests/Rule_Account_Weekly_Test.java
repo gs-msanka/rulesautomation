@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
-import junit.framework.Assert;
+import com.gainsight.testdriver.Log;
 import jxl.read.biff.BiffException;
 
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -21,8 +22,6 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.metadata.MetadataUtil;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
 
@@ -36,16 +35,16 @@ import com.sforce.ws.ConnectionException;
 public class Rule_Account_Weekly_Test extends BaseTest {
 
 
-    private static final String SET_USAGE_DATA_LEVEL_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Weekly.apex";
-    private static final String SET_USAGE_DATA_MEASURE_FILE = TestEnvironment.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
+    private static final String SET_USAGE_DATA_LEVEL_FILE = env.basedir+"/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Weekly.apex";
+    private static final String SET_USAGE_DATA_MEASURE_FILE = env.basedir+"/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
     private static final String USAGE_DATA_FILE         = "/testdata/sfdc/RulesEngine/Data/Rules_UsageData_Account.csv";
     private static final String TEST_DATA_FILE          = "testdata/sfdc/RulesEngine/Tests/Rule_Account_Weekly_Test.xls";
     private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
-    private static final String NUMERIC_SCHEME_FILE     = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
-    private static final String METRICS_CREATE_FILE     = TestEnvironment.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
-    private static final String SCORECARD_CLEAN_FILE    = TestEnvironment.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final static String JOB_ACCOUNT_LOAD        = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Accounts.txt";
-    private final static String JOB_CUSTOMER_LOAD       = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Customers.txt";
+    private static final String NUMERIC_SCHEME_FILE     = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
+    private static final String METRICS_CREATE_FILE     = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
+    private static final String SCORECARD_CLEAN_FILE    = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
+    private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Accounts.txt";
+    private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_Customers.txt";
 
 
     public static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
@@ -58,24 +57,23 @@ public class Rule_Account_Weekly_Test extends BaseTest {
 
 
     @BeforeClass
-    public void setUp() throws IOException, BiffException, JSONException, InterruptedException {
+    public void setUp() throws Exception {
         resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-        apex.runApexCodeFromFile(SCORECARD_CLEAN_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        MetadataUtil metadataUtil =  new MetadataUtil();
-        metadataUtil.createFieldsOnAccount();
+        createFieldsOnAccount();
         createExtIdFieldForScoreCards();
         createFieldsOnUsageData();
-        apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_LEVEL_FILE, isPackage);
-        apex.runApexCodeFromFile(SET_USAGE_DATA_MEASURE_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
         ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();
@@ -85,7 +83,7 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         //Run all the rules one by one, Do Assertions in test cases.
         //ExcelDataProvider.getDataFromExcel("", "");
         /*for(int i=0; i< sheetNames.length; i++) {
-            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(TestEnvironment.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
+            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(Application.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
             for(HashMap<String, String> testData : dummyList) {
                 executeRule(testData);
                 if((i+1)%5 ==0) {

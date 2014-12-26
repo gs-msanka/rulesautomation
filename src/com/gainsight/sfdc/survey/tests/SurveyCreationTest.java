@@ -24,19 +24,13 @@ public class SurveyCreationTest extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         basepage.login();
-        //apex.runApex(resolveStrNameSpace(QUERY));
-		//sdata.setStartDate(getDateWithFormat(0, 0, false));
-	//	sdata.setEndDate(getDateWithFormat(30, 0, false));
-	//	sdata.setTUOption("Message");
 
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
-	public void createNonanonymousSurvey(HashMap<String, String> testData)
+	public void createNonAnonymousSurvey(HashMap<String, String> testData)
 			throws BiffException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		SurveyProperties sdata = mapper.readValue(testData.get("Survey"), SurveyProperties.class);	

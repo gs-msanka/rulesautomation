@@ -2,6 +2,8 @@ package com.gainsight.sfdc.customer.pages;
 
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -39,7 +41,7 @@ public class CustomersPage extends CustomerBasePage {
         selectAccount(customerName);
         fillFields(status, stage, comments);
         item.click(CUSTOMER_SAVE);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -56,7 +58,7 @@ public class CustomersPage extends CustomerBasePage {
         }
         setCustomerNameFilterOnTag(customer);
         item.click(TAG_APPLY_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -68,7 +70,7 @@ public class CustomersPage extends CustomerBasePage {
 
     private void setCustomerNameFilterOnTag(String customer) {
         field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']", customer);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         item.click("//a[contains(text(), '"+customer+"')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
     }
 
@@ -116,18 +118,18 @@ public class CustomersPage extends CustomerBasePage {
 
     private void setCustomerFilter(String custName) {
         field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l1 r1']/input[@class='filter_input']", custName);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
     }
 
     private int getNoOfCustomersRecords(String custName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         setCustomerFilter(custName);
         int recordCount = element.getElementCount("//div[@class='slick-cell l1 r1 slick-customer-format']/a[contains(text(), '"+custName+"')]");
         return recordCount;
     }
 
     public boolean isCustomerPresent(String customerName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(getNoOfCustomersRecords(customerName)>0) {
             return true;
         }
@@ -182,9 +184,9 @@ public class CustomersPage extends CustomerBasePage {
         WebElement ele = getCustomerRow(customerName, null);
         if(ele!=null) {
             ele.findElement(By.cssSelector("div>a[data-action='DELETE']")).click();
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             modal.accept();
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             try {
                 modal.accept();
                 Log.info("Modal dialog present ,Customer can't be deleted");
@@ -276,7 +278,7 @@ public class CustomersPage extends CustomerBasePage {
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
         if(customerName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, customerName);
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
     }
 

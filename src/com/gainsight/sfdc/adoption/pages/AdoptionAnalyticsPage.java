@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -104,7 +106,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     }
 
     private void selectCustomer(String customerName) {
-        Log.info("Customer : " +customerName);
+        Log.info("Customer : " + customerName);
         wait.waitTillElementDisplayed(CUSTOMER_NAME_INPUT, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).clear();
         driver.findElement(By.xpath(CUSTOMER_NAME_INPUT)).sendKeys(customerName);
@@ -127,7 +129,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private void selectMeasures(String measures) {
         Log.info("Measures : " +measures);
         item.click(MEASURE_SELECT_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
         String[] args = measures.split("\\|");
         for(String str : args) {
@@ -144,7 +146,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
             selectValueInDropDown(inst.trim());
         }
         button.click(GO_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitTillNoLoadingIcon();
         return this;
     }
@@ -169,7 +171,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
             Log.info("Week Label : " +weekLabelDate);
         }
         button.click(GO_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitTillNoLoadingIcon();
         return this;
 
@@ -196,7 +198,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
             selectValueInDropDown(year);
         }
         button.click(GO_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitTillNoLoadingIcon();
         return this;
     }

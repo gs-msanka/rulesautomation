@@ -2,6 +2,8 @@ package com.gainsight.sfdc.customer360.pages;
 
 import java.util.HashMap;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
@@ -116,7 +118,7 @@ public class Customer360Page extends BasePage {
     	Log.info("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
-        amtDateUtil.stalePause(); //Few times, customer selection is fails.
+        Timer.sleep(2); //Few times, customer selection is fails.
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
         if(isInstanceName) {
             if(isContains) {
@@ -153,7 +155,7 @@ public class Customer360Page extends BasePage {
 	}
 
     public RelatedList360 clickOnRelatedListSec(String secName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         String xPath = "//ul[@class='nav']/li[contains(@class,'related_list')]/a[contains(text(),'"+secName+"')]";
         wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
         item.click(xPath);
@@ -231,17 +233,17 @@ public class Customer360Page extends BasePage {
 		xpath.append(sContains + transaction.getType() + cContains);
 		if (transaction.getMRR() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getMRR())
+					+ amtUtil.formatNumber(transaction.getMRR())
 					+ cContains);
 		if (transaction.getASV() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getASV())
+					+ amtUtil.formatNumber(transaction.getASV())
 					+ cContains);
 		if (transaction.getUsers() != null)
 			xpath.append(sContains + transaction.getUsers() + cContains);
 		if (transaction.getOTR() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getOTR())
+					+ amtUtil.formatNumber(transaction.getOTR())
 					+ cContains);
 		if (transaction.getTerm() != null)
 			xpath.append(sContains + transaction.getTerm() + cContains);

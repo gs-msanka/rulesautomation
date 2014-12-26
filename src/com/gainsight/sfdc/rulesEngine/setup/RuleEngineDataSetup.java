@@ -12,6 +12,9 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Log;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.eclipse.jetty.util.URIUtil;
@@ -31,7 +34,6 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.testdriver.TestEnvironment;
 import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
@@ -45,13 +47,13 @@ public class RuleEngineDataSetup extends BaseTest {
 	// load Usage Data
 	// Create Rules as per data loaded
 
-    private final static String USAGE_MEASURES_CREATE           = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
-    private final static String ACCOUNT_MONTHLY_USAGE_CONFIG    = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
-    private final static String ACCOUNT_WEEKLY_USAGE_CONFIG     = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Weekly.apex";
-    private final static String INSTANCE_MONTHLY_USAGE_CONFIG   = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Monthly.apex";
-    private final static String INSTANCE_WEEKLY_USAGE_CONFIG    = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Weekly.apex";
-    private final static String CLEANUP_FILE                    = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Scripts/RulesData_CleanUp.apex";
-    private final static String JOB_USAGE_LOAD                  = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_UsageData.txt";
+    private final static String USAGE_MEASURES_CREATE           = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/UsageData_Measures.apex";
+    private final static String ACCOUNT_MONTHLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Monthly.apex";
+    private final static String ACCOUNT_WEEKLY_USAGE_CONFIG     = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Account_Level_Weekly.apex";
+    private final static String INSTANCE_MONTHLY_USAGE_CONFIG   = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Monthly.apex";
+    private final static String INSTANCE_WEEKLY_USAGE_CONFIG    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/Set_Instance_Level_Weekly.apex";
+    private final static String CLEANUP_FILE                    = env.basedir + "/testdata/sfdc/RulesEngine/Scripts/RulesData_CleanUp.apex";
+    private final static String JOB_USAGE_LOAD                  = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Job_UsageData.txt";
 	private final static String USAGE_OBJECT                    = "JBCXM__UsageData__C";
     private final static String CUSTOMER_OBJECT                 = "JBCXM__CustomerInfo__c";
     private final static String PICK_LIST_QUERY                 = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
@@ -142,7 +144,7 @@ public class RuleEngineDataSetup extends BaseTest {
                             " JBCXM__SurveyQuestion__r.JBCXM__Title__c, JBCXM__Title__c FROM JBCXM__SurveyAllowedAnswers__c" +
                             " where JBCXM__SurveyMaster__r.JBCXM__Code__c = '"+surveyCode+"'";
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] sFDCAnswers = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] sFDCAnswers = sfdc.getRecords(resolveStrNameSpace(query));
         for(int i=0; i < sFDCAnswers.length; i++) {
             SObject sObject = sFDCAnswers[i];
             XmlObject xmlObject = (XmlObject)sObject.getField("JBCXM__SurveyQuestion__r");
@@ -167,7 +169,7 @@ public class RuleEngineDataSetup extends BaseTest {
                     " JBCXM__SurveyMaster__r.JBCXM__Code__c, JBCXM__Title__c, " +
                     " JBCXM__Type__c, JBCXM__IsActive__c FROM JBCXM__SurveyQuestion__c where JBCXM__IsActive__c= true AND" +
                     " JBCXM__SurveyMaster__r.JBCXM__Code__c='"+surveyCode+"'";
-        SObject[] sFDCSurveyQuestions = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] sFDCSurveyQuestions = sfdc.getRecords(resolveStrNameSpace(query));
         HashMap<String, String> result = new HashMap<String, String>();
         SObject sObject;
         for(int i=0; i<sFDCSurveyQuestions.length; i++) {
@@ -195,7 +197,7 @@ public class RuleEngineDataSetup extends BaseTest {
             dataETL.execute(jobInfo);
         }
         if(customerJobName != null && customerJobName != "") {
-            apex.runApex(resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
+            sfdc.runApexCode(resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
             //dataETL.cleanUp(CUSTOMER_OBJECT, resolveStrNameSpace(CUSTOMER_DELETE_QUERY));
             JobInfo jobInfo = mapper.readValue((new FileReader(customerJobName)), JobInfo.class);
             dataETL.execute(jobInfo);
@@ -217,7 +219,7 @@ public class RuleEngineDataSetup extends BaseTest {
         String code         = "";
         BufferedReader reader;
         BufferedWriter writer;
-        String outFile = TestEnvironment.basedir + "/testdata/sfdc/RulesEngine/Jobs/Temp_job.txt";
+        String outFile = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Temp_job.txt";
         reader = new BufferedReader(new FileReader(JOB_USAGE_LOAD));
         writer = new BufferedWriter(new FileWriter(outFile));
         StringBuilder stringBuilder = new StringBuilder();
@@ -238,12 +240,12 @@ public class RuleEngineDataSetup extends BaseTest {
      * Delete all the Rules, Alerts, CTAs that are setup in the org.
      */
     public void cleanDataSetup() {
-        apex.runApexCodeFromFile(CLEANUP_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FILE));
     }
 
     private HashMap<String, String> getPickListSetupData() {
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] pickList = soql.getRecords(resolveStrNameSpace(PICK_LIST_QUERY));
+        SObject[] pickList = sfdc.getRecords(resolveStrNameSpace(PICK_LIST_QUERY));
         for(SObject pk : pickList) {
             result.put(pk.getField(resolveStrNameSpace("JBCXM__SystemName__c")).toString(), pk.getId());
         }
@@ -252,7 +254,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     private HashMap<String, String> getCTATypes() {
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] pickList = soql.getRecords(resolveStrNameSpace(CTA_TYPES_QUERY));
+        SObject[] pickList = sfdc.getRecords(resolveStrNameSpace(CTA_TYPES_QUERY));
         for(SObject pk : pickList) {
             result.put(pk.getField("Name").toString(), pk.getId());
         }
@@ -261,7 +263,7 @@ public class RuleEngineDataSetup extends BaseTest {
 
     private HashMap<String, String> getScorecardMetrics() {
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] pickList = soql.getRecords(resolveStrNameSpace(SCORECARD_METRIC_QUERY));
+        SObject[] pickList = sfdc.getRecords(resolveStrNameSpace(SCORECARD_METRIC_QUERY));
         for(SObject pk : pickList) {
             result.put(pk.getField("Name").toString(), pk.getId());
         }
@@ -274,7 +276,7 @@ public class RuleEngineDataSetup extends BaseTest {
      */
     private HashMap<String, String> getScoringSchemeDefinition() {
         HashMap<String, String> result = new HashMap<String, String>();
-        SObject[] pickList = soql.getRecords(resolveStrNameSpace(SCORECARD_SCHEME_DEF_QUERY));
+        SObject[] pickList = sfdc.getRecords(resolveStrNameSpace(SCORECARD_SCHEME_DEF_QUERY));
         for(SObject pk : pickList) {
             result.put(pk.getField("Name").toString(), pk.getId());
         }
@@ -466,7 +468,7 @@ public class RuleEngineDataSetup extends BaseTest {
             throw new RuntimeException("Account Should not be null or Empty ");
         }
         Log.info("Query : "+query);
-        SObject[] sObjects = soql.getRecords(query);
+        SObject[] sObjects = sfdc.getRecords(query);
         Log.info("No of Records Found :" +sObjects.length);
         return sObjects;
     }
@@ -549,7 +551,7 @@ public class RuleEngineDataSetup extends BaseTest {
             throw new RuntimeException("Account Should not be null or Empty");
         }
         Log.info("Query : "+query);
-        SObject[] sObjects = soql.getRecords(query);
+        SObject[] sObjects = sfdc.getRecords(query);
         Log.info("No of Records Found :" +sObjects.length);
         return sObjects;
     }
@@ -594,7 +596,7 @@ public class RuleEngineDataSetup extends BaseTest {
             throw new RuntimeException("Account Should not be null or Empty");
         }
         Log.info("Query : " + query);
-        SObject[]  recordList = soql.getRecords(query);
+        SObject[]  recordList = sfdc.getRecords(query);
         Log.info("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
             if(action.getComment() != null && !action.getComment().isEmpty()) {
@@ -634,7 +636,7 @@ public class RuleEngineDataSetup extends BaseTest {
             throw new RuntimeException("Account should not be null or empty");
         }
         query = resolveStrNameSpace(strBuilder.toString());
-        SObject[]  recordList = soql.getRecords(query);
+        SObject[]  recordList = sfdc.getRecords(query);
         Log.info("No of Records Found :" +recordList.length);
         if(recordList.length > 0) {
             if(comments != null && !comments.isEmpty()) {
@@ -658,7 +660,7 @@ public class RuleEngineDataSetup extends BaseTest {
     public HashMap<String, String> getPlaybooks() {
         HashMap<String, String> playbooks = new HashMap<String, String>();
         String query = "select id, Name, JBCXM__PlayBookType__c from JBCXM__Playbook__c";
-        SObject[] sObjects = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(query));
         for(int i=0; i < sObjects.length; i++){
             playbooks.put(sObjects[i].getField("Name").toString(),sObjects[i].getId());
         }
@@ -684,7 +686,7 @@ public class RuleEngineDataSetup extends BaseTest {
         strBuilder.append("ruleParams.put('actionType','runRule'); \n");
         strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
         Log.info("Running Rule : " + strBuilder.toString());
-        apex.runApex(resolveStrNameSpace(strBuilder.toString()));
+        sfdc.runApexCode(resolveStrNameSpace(strBuilder.toString()));
     }
 
     /**
@@ -699,7 +701,7 @@ public class RuleEngineDataSetup extends BaseTest {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Map<String,Object>  ruleParams=new Map<String,Object>(); \n");
         strBuilder.append("ruleParams.put('ruleId','"+ruleId+"'); \n");
-        strBuilder.append("ruleParams.put('ruleRunDate', '"+getWeekLabelDate(weekDay, daysToAdd, usesEndDate, true)+"'); \n");
+        strBuilder.append("ruleParams.put('ruleRunDate', '"+ DateUtil.getWeekLabelDate(weekDay, USER_DATE_FORMAT, userTimezone, daysToAdd, usesEndDate)+"'); \n");
         strBuilder.append("ruleParams.put('isAlertCreate',true); \n");
         strBuilder.append("ruleParams.put('usageLevel','"+usageLevel+"'); \n");
         strBuilder.append("ruleParams.put('criteriaList',new List<Object>()); \n");
@@ -707,7 +709,7 @@ public class RuleEngineDataSetup extends BaseTest {
         strBuilder.append("ruleParams.put('actionType','runRule'); \n");
         strBuilder.append("JBCXM.CEHandler.handleCall(ruleParams); \n");
         Log.info("Running Rule : " + strBuilder.toString());
-        apex.runApex(resolveStrNameSpace(strBuilder.toString()));
+        sfdc.runApexCode(resolveStrNameSpace(strBuilder.toString()));
     }
 
     public void executeRule(HashMap<String, String> testData, SFDCInfo sfdcInfo, Resty resty, URI uri)  {
@@ -806,7 +808,7 @@ public class RuleEngineDataSetup extends BaseTest {
                 "where JBCXM__Account__r.Name='%s' Order by JBCXM__Date__c Desc Limit 1];\n" +
                 "usagedata.JBCXM__Processed__c = true;\n" +
                 "update usagedata;";
-        apex.runApex(resolveStrNameSpace(String.format(s, accName)));
+        sfdc.runApexCode(resolveStrNameSpace(String.format(s, accName)));
     }
 
     //Pending

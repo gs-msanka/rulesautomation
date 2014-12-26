@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,8 +27,6 @@ import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.MetadataUtil;
-import com.gainsight.testdriver.TestEnvironment;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -47,12 +47,12 @@ public class Rule_Survey_Test extends BaseTest {
     private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
     private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
     private static final String TEST_DATA_FILE          = "testdata/sfdc/survey/tests/Survey_Rule_Test.xls";
-    private final static String JOB_ACCOUNT_FILE        = TestEnvironment.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Accounts.txt";
-    private final static String JOB_CUSTOMER_FILE       = TestEnvironment.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Customers.txt";
-    private final static String JOB_CONTACT_FILE        = TestEnvironment.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Contacts.txt";
-    private final static String SURVEY_DESIGN_FILE      = TestEnvironment.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Create_Design.txt";
-    private final static String SURVEY_PUBLISH_FILE     = TestEnvironment.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Publish.txt";
-    private final static String SURVEY_PARTICIPANT_FILE = TestEnvironment.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Participants_Load.txt";
+    private final static String JOB_ACCOUNT_FILE        = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Accounts.txt";
+    private final static String JOB_CUSTOMER_FILE       = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Customers.txt";
+    private final static String JOB_CONTACT_FILE        = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Contacts.txt";
+    private final static String SURVEY_DESIGN_FILE      = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Create_Design.txt";
+    private final static String SURVEY_PUBLISH_FILE     = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Publish.txt";
+    private final static String SURVEY_PARTICIPANT_FILE = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Participants_Load.txt";
 
 
     private static final String SURVEY_MASTER_QUERY = "Select id, JBCXM__Code__c, JBCXM__Title__c From JBCXM__Survey__c Where JBCXM__Code__c = '%s' AND JBCXM__Title__c = '%s'";
@@ -62,23 +62,20 @@ public class Rule_Survey_Test extends BaseTest {
     private String SURVEY_ID = null;
     private DataETL dataETL = new DataETL();
     private ObjectMapper mapper = new ObjectMapper();
-    MetadataUtil metadataUtil;
-
-
 
     @BeforeClass
-    public void setup() throws IOException {
+    public void setup() throws Exception {
         publishURL = env.getProperty("sfdc.siteCustomURL");
-        metadataUtil = new MetadataUtil();
-        metadataUtil.createFieldsOnAccount();
-        metadataUtil.createFieldsOnContact();
+
+        createFieldsOnAccount();
+        createFieldsOnContact();
         resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint() + "/services/data/v29.0/sobjects/" + resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
 
         //Creates the survey with provided survey Code & Title & Keeps the survey in design mode - Same as UI behaviour.
-        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_DESIGN_FILE), surveyCode, surveyTitle)));
+        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_DESIGN_FILE), surveyCode, surveyTitle)));
 
         ruleEngineDataSetup = new RuleEngineDataSetup(surveyCode);
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_FILE, JOB_CUSTOMER_FILE);
@@ -86,12 +83,12 @@ public class Rule_Survey_Test extends BaseTest {
         dataETL.execute(jobInfo);
 
         //Publishes the survey with site URL provided at Application Properties,
-        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), surveyCode, surveyTitle, publishURL)));
+        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), surveyCode, surveyTitle, publishURL)));
         //Adds participants to the survey, Running using script provides the advantage of token population dynamically.
         //And also there's no need to populate to many fields for a survey participant.
-        apex.runApex(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PARTICIPANT_FILE), surveyCode, surveyTitle)));
+        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PARTICIPANT_FILE), surveyCode, surveyTitle)));
 
-        SObject[] surveys =  soql.getRecords(resolveStrNameSpace(String.format(SURVEY_MASTER_QUERY, surveyCode, surveyTitle)));
+        SObject[] surveys =  sfdc.getRecords(resolveStrNameSpace(String.format(SURVEY_MASTER_QUERY, surveyCode, surveyTitle)));
         if(surveys.length ==1) {
             SURVEY_ID = surveys[0].getId();
         } else {
