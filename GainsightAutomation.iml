@@ -62,6 +62,8 @@
         <JAVADOC />
         <SOURCES>
           <root url="file://$MODULE_DIR$/../../test-driver/src" />
+          <root url="file://$MODULE_DIR$/../test-driver/src" />
+          <root url="file://$MODULE_DIR$/../test-driver/src/main/java" />
         </SOURCES>
       </library>
     </orderEntry>
