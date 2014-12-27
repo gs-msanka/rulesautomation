@@ -3,28 +3,23 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
+import jxl.read.biff.BiffException;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import jxl.read.biff.BiffException;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminAdoptionSubTab;
 import com.gainsight.sfdc.administration.pages.AdminCustomersTab;
-import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
 public class AdminCustomersTabTest extends BaseTest {
-	
-	String[] dirs = { "acceptancetests" };
-	//private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-		//	+ generatePath(dirs);
-	final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminCustomersTestdata.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminCustomersTestdata.xls";
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting  Test Case...");
+		Log.info("Starting  Test Case...");
 		deletePickList();
 		basepage.login();
 	}
@@ -92,21 +87,7 @@ public class AdminCustomersTabTest extends BaseTest {
 				"Verifying Stage is deleted to the grid");
 		return adCustPage;
 	}
-	
-	/*//script to delete
-	 public void deleteCustomersStagesThorughScript() {
-		  try {
-		     String DELETERECORDS = "select id, JBCXM__DisplayOrder__c ,name from JBCXM__Picklist__c where (JBCXM__Category__c like 'Customer Stage' OR JBCXM__Category__c = null) and JBCXM__DisplayOrder__c >10 ";
-		     if(!isPackageInstance()) {
-		         DELETERECORDS = removeNameSpace(DELETERECORDS);
-		     }
-		     soql.deleteQuery(DELETERECORDS);
-		  } catch (Exception e) {
-		      Report.logInfo(e.getLocalizedMessage());
-		  }
-			 }*/
-	
-	
+
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();

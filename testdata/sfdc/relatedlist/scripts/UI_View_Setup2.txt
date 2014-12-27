@@ -34,3 +34,4 @@ JBCXM__UIViews__c uView5 = new JBCXM__UIViews__c(JBCXM__ColumnList__c='[{"name":
                                                     JBCXM__UITabName__c = String.valueOf(c360Sec1.Id).subString(0,15));
 insert uView4;
 insert uView5;
+//This is end Line.

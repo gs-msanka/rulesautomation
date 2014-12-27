@@ -1,21 +1,20 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
-import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.utils.DataProviderArguments;
+import java.io.IOException;
+import java.util.HashMap;
+
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,37 +25,24 @@ import java.util.TimeZone;
  */
 public class Customer360ScorecardsNumericTest extends BaseTest {
 
-    private final String TEST_DATA_FILE         = "testdata/sfdc/Scorecard/Numeric_Scheme_Data.xls";
-    private final String SETUP_FILE             = env.basedir+"/apex_scripts/Scorecard/scorecard.apex";
-    private final String CLEAN_FILE             = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final String NUMERIC_SCHEME_FILE    = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_numeric.apex";
-    private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/scorecards/tests/Numeric_Scheme_Data.xls";
+    private final String SETUP_FILE             = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
+    private final String CLEAN_FILE             = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private final String NUMERIC_SCHEME_FILE    = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_numeric.apex";
+    private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private final String SCHEME                 = "Score";
 
     @BeforeClass
-    public void setUp() {
-
-        Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
-		CreateObjectAndFields cObjFields    = new CreateObjectAndFields();
-        String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
-        String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
-        try {
-            cObjFields.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-        } catch (Exception e) {
-            Report.logInfo("Failed to create fields");
-            e.printStackTrace();
-            throw new RuntimeException("Unable to create fields for scorecard section");
-        }
-        isPackage = isPackageInstance();
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
-        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
+    public void setUp() throws Exception {
+        Log.info("Starting Customer 360 Scorecard module Test Cases...");
+        createExtIdFieldForScoreCards();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
 		AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-		apex.runApexCodeFromFile(NUMERIC_SCHEME_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         } catch (IOException e) {

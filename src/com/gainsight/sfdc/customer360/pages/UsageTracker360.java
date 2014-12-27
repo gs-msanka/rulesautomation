@@ -1,6 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
+import com.gainsight.testdriver.Log;
 
 import java.util.HashMap;
 
@@ -72,7 +72,7 @@ public class UsageTracker360 extends Customer360Page {
                         "/following-sibling::span[contains(text(), '"+testData.get("user")+"')]" +
                         "/following-sibling::span[contains(text(), ' on:')]" +
                         "/following-sibling::span[contains(text(), '"+testData.get("date")+"')]";
-        Report.logInfo(xPath);
+        Log.info(xPath);
         return xPath;
         //div[@class='usagetracker-discription']/span[contains(text(),'Action performed')]/following-sibling::span[contains(text(), 'Emails Sent Count')]/following-sibling::span[contains(text(), 'in Module:')]/following-sibling::span[contains(text(), 'Customers')]/following-sibling::span[contains(text(), 'by user:')]/following-sibling::span[contains(text(), 'Giribabu')]/following-sibling::span[contains(text(), ' on:')]/following-sibling::span[contains(text(), '2')]
     }

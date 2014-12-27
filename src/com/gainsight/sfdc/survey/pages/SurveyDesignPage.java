@@ -1,12 +1,5 @@
 package com.gainsight.sfdc.survey.pages;
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class SurveyDesignPage extends SurveyBasePage {
 	

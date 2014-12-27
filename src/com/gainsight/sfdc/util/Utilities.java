@@ -31,19 +31,7 @@ public class Utilities {
 		return "test"+RandomString;
 	}
 
-	public static String generateDate(int day) {
-
-		Format formatter;
-		Calendar cal = Calendar.getInstance();
-
-		cal.add(Calendar.DAY_OF_YEAR, day);
-
-		Date date = cal.getTime();
-		formatter = new SimpleDateFormat("M/dd/yyyy");
-		String dateStr = formatter.format(date);
-		System.out.println(dateStr);
-
-		return dateStr;
-
-	}
+    public static int getRandomNumber(int low,int high){
+        return (int) ((Math.random() * (high - low)) + low);
+    }
 }

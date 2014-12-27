@@ -1,15 +1,17 @@
 package com.gainsight.sfdc.util.datagen;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-import com.gainsight.sfdc.util.DateUtil;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
+
+import com.gainsight.sfdc.util.DateUtil;
 
 public class FileProcessor {
 
@@ -53,7 +55,7 @@ public class FileProcessor {
 		
 			while(cols != null) {
 				int monthDiff = Integer.parseInt(cols[fieldIndex]);
-				cols[fieldIndex] = DateUtil.addMonths(new Date(), monthDiff, "yyyy-MM-dd");
+				cols[fieldIndex] = DateUtil.addMonths(Calendar.getInstance(), monthDiff, "yyyy-MM-dd");
 				writer.writeNext(cols);
 				writer.flush();
 				cols = reader.readNext();
@@ -91,7 +93,7 @@ public class FileProcessor {
 		
 			while(cols != null) {
 				int weekDiff = Integer.parseInt(cols[fieldIndex]);
-				cols[fieldIndex] = DateUtil.addWeeks(new Date(), weekDiff, "yyyy-MM-dd");
+				cols[fieldIndex] = DateUtil.addWeeks(Calendar.getInstance(), weekDiff, "yyyy-MM-dd");
 				writer.writeNext(cols);
 				writer.flush();
 				cols = reader.readNext();
@@ -129,7 +131,7 @@ public class FileProcessor {
 		
 			while(cols != null) {
 				int daysDiff = Integer.parseInt(cols[fieldIndex]);
-				cols[fieldIndex] = DateUtil.addDays(new Date(),daysDiff, "yyyy-MM-dd'T'HH:mm:ss");
+				cols[fieldIndex] = DateUtil.addDays(Calendar.getInstance(),daysDiff, "yyyy-MM-dd'T'HH:mm:ss");
 				writer.writeNext(cols);
 				writer.flush();
 				cols = reader.readNext();
@@ -186,19 +188,19 @@ public class FileProcessor {
     private static String getDate(JobInfo.DateProcess.Fields field, int value) {
         if(field.isDateTime())  {
             if(field.isDaily()) {
-               return DateUtil.addDays(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+               return DateUtil.addDays(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
             } else if (field.isWeekly()){
-                return DateUtil.addWeeks(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+                return DateUtil.addWeeks(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
             } else {
-                return DateUtil.addMonths(new Date(), value, "yyyy-MM-dd'T'HH:mm:ss");
+                return DateUtil.addMonths(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
             }
         } else {
             if(field.isDaily()) {
-                return DateUtil.addDays(new Date(), value, "yyyy-MM-dd");
+                return DateUtil.addDays(Calendar.getInstance(), value, "yyyy-MM-dd");
             } else if (field.isWeekly()){
-                return DateUtil.addWeeks(new Date(), value, "yyyy-MM-dd");
+                return DateUtil.addWeeks(Calendar.getInstance(), value, "yyyy-MM-dd");
             } else {
-                return DateUtil.addMonths(new Date(), value, "yyyy-MM-dd");
+                return DateUtil.addMonths(Calendar.getInstance(), value, "yyyy-MM-dd");
             }
         }
     }

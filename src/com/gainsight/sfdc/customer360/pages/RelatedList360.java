@@ -1,10 +1,14 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.util.*;
 
 public class RelatedList360 extends Customer360Page {
     private final String READT_INDICATOR = "//div[@class='gs_section_title']/h1[text()='']";
@@ -53,11 +57,11 @@ public class RelatedList360 extends Customer360Page {
                 WebElement tableTr = tableRowsList.get(0);
                 List<WebElement> tableColumnsList = tableTr.findElements(By.tagName("th"));
                 if(tableColumnsList != null) {
-                    Report.logInfo("Total Columns in table are :" +tableColumnsList.size());
+                    Log.info("Total Columns in table are :" + tableColumnsList.size());
                     for(WebElement wEle : tableColumnsList) {
                         String hText = wEle.getText().replaceAll(" ", "").trim();
                         tableHeaders.add(hText);
-                        Report.logInfo(hText);
+                        Log.info(hText);
                     }
                 }
             }
@@ -82,7 +86,7 @@ public class RelatedList360 extends Customer360Page {
                 for(WebElement cell : columnsList) {
                     String cellValue = cell.getText().trim();
                     temp.put("col"+i+1, cellValue);
-                    Report.logInfo(headerData.get(i)+" : " +cellValue);
+                    Log.info(headerData.get(i)+" : " +cellValue);
                     i++;
                 }
                 tableDataList.add(temp);
@@ -103,7 +107,7 @@ public class RelatedList360 extends Customer360Page {
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Report.logInfo("clickOnAdd Count : " +windows.size());
+        Log.info("clickOnAdd Count : " +windows.size());
         driver.switchTo().window(aa.get(windows.size()-1));
         return new SalesforceRecordForm();
     }
@@ -112,7 +116,7 @@ public class RelatedList360 extends Customer360Page {
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Report.logInfo("clickOnAdd Count : " +windows.size());
+        Log.info("clickOnAdd Count : " +windows.size());
         if(aa != null && aa.size() == 2) {
             driver.switchTo().window(aa.get(1));
             driver.close();
@@ -130,18 +134,18 @@ public class RelatedList360 extends Customer360Page {
 
     public boolean isNoDataMsgDisplayed(String secName) {
         String a = "//h1[contains(text(), '"+secName+"')]/ancestor::div[@class='gs_section']/descendant::div[@class='noDataFound' and contains(text(), 'No Data Found.')]";
-        Report.logInfo("Xpath of No Info Msg :" +a);
+        Log.info("Xpath of No Info Msg :" +a);
         return element.getElement(a).isDisplayed();
     }
 
     public RelatedList360 selectUIView(String secName, String viewName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[contains(@class,'case_uiviews')]"+
                             "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
         item.click(xPath);
         wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]", MIN_TIME, MAX_TIME);
         item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]");
-        amtDateUtil.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
+        Timer.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
         return new RelatedList360(secName);
     }
 
@@ -164,12 +168,12 @@ public class RelatedList360 extends Customer360Page {
             xPath += "td[contains(text(), '"+s+"')]"+ "/following-sibling::";
         }
         xPath += "td/a[@class='preview-icon']";
-        Report.logInfo("Xpath : " +xPath);
+        Log.info("Xpath : " +xPath);
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Report.logInfo("viewRecord Count : " +windows.size());
+        Log.info("viewRecord Count : " +windows.size());
         driver.switchTo().window(aa.get(windows.size()-1));
         return new SalesforceRecordForm();
     }
@@ -181,12 +185,12 @@ public class RelatedList360 extends Customer360Page {
             xPath += "td[contains(text(), '"+s+"')]"+ "/following-sibling::";
         }
         xPath += "td/a[@class='edit-icon']";
-        Report.logInfo("Xpath : " +xPath);
+        Log.info("Xpath : " +xPath);
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Report.logInfo("editRecord Count : " +windows.size());
+        Log.info("editRecord Count : " +windows.size());
         driver.switchTo().window(aa.get(windows.size()-1));
         return new SalesforceRecordForm();
     }

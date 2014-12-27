@@ -1,18 +1,18 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.customer360.pages.UsageTracker360;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pages.UsageTracker360;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,11 +29,8 @@ public class UsageTracker360Tests  extends BaseTest {
     @BeforeClass
     public void setUp() {
         basepage.login();
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        apex.runApexCodeFromFile(SETUP_SCRIPT_FILE, isPackage);
-        apex.runApexCodeFromFile(DATA_SCRIPT_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_SCRIPT_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(DATA_SCRIPT_FILE));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

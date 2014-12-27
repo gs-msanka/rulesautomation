@@ -1,8 +1,9 @@
 package com.gainsight.sfdc.workflow.pages;
 
-import com.gainsight.pageobject.core.Report;
+import com.gainsight.testdriver.Log;
+import org.openqa.selenium.WebElement;
+
 import com.gainsight.sfdc.pages.BasePage;
-import com.sforce.soap.metadata.Workflow;
 
 public class WorkflowBasePage extends BasePage {
 	
@@ -20,7 +21,7 @@ public class WorkflowBasePage extends BasePage {
     }
   
     public WorkflowBasePage(String value){
-    	Report.logInfo("landed in Cockpit "+value);
+    	Log.info("landed in Cockpit " + value);
     }
     public WorkflowPage clickOnListView() {
         item.click(LIST_VIEW_TAB);
@@ -51,11 +52,26 @@ public class WorkflowBasePage extends BasePage {
      * @return
      */
     public void showSalesForceHeader(){
-    	Report.logInfo("Started Method - showSalesForceHeader.");
+    	Log.info("Started Method - showSalesForceHeader.");
     	item.click(SHOW_SALESFORCE_HEADER_ICON);
     	wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
-    	Report.logInfo("Ended Method - showSalesForceHeader.");
+    	Log.info("Ended Method - showSalesForceHeader.");
     }
-    
-   
+
+    public void selectValueInDropDown(String value) {
+        boolean selected = false;
+        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+            Log.info("Checking : "+ele.isDisplayed());
+            if(ele.isDisplayed()) {
+                ele.click();
+                selected = true;
+                break;
+            }
+        }
+        if(selected != true) {
+            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
+        }
+    }
+
+
 }

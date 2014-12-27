@@ -1,31 +1,30 @@
 package com.gainsight.sfdc.pages;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pageobject.core.WebPage;
-import com.gainsight.sfdc.accounts.pages.AccountsPage;
-import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
-import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
-import com.gainsight.sfdc.churn.pages.ChurnPage;
-import com.gainsight.sfdc.customer.pages.CustomerBasePage;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.helpers.AmountsAndDatesUtil;
-import com.gainsight.sfdc.helpers.Transactions;
-import com.gainsight.sfdc.opportunities.pages.OpportunitiesPage;
-import com.gainsight.sfdc.retention.pages.RetentionBasePage;
-import com.gainsight.sfdc.survey.pages.SurveyBasePage;
-import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
-import com.gainsight.sfdc.widgets.AccountWidget.pages.AccountWidgetPage;
-import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
-
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.util.AmountsUtil;
+import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountsPage;
+import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunitiesPage;
+import com.gainsight.testdriver.Log;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
+import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
+import com.gainsight.sfdc.churn.pages.ChurnPage;
+import com.gainsight.sfdc.customer.pages.CustomerBasePage;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.transactions.pages.Transactions;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
+import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountWidgetPage;
+import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
 /**
  * Base Class to hold all the Top Level Navigations
@@ -43,7 +42,6 @@ public class BasePage extends WebPage implements Constants {
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
 	private final String DEFAULT_APP_RADIO  = "//td[text()='%s']/following-sibling::td//input[@type='radio']";
 	private final String TAB_SELECT         = "//td[contains(@class,'labelCol') and contains(.,'%s')]//following-sibling::td//select";
-	//private final String TAB_SELECT         = "//td[contains(@class,'labelCol requiredInput') and contains(.,'%s')]//following-sibling::td//select"; Not working to select customer 360 as default.
 	private final String C360_TAB           = "//a[contains(@title,'Customer Success 360')]";
     private final String CUSTOMER_TAB       = "//a[contains(@title,'Customers Tab')]";
     private final String TRANSACTIONS_TAB   = "//a[contains(@title,'Transactions Tab')]";
@@ -59,15 +57,15 @@ public class BasePage extends WebPage implements Constants {
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
-	public AmountsAndDatesUtil amtDateUtil  = new AmountsAndDatesUtil();
+	public AmountsUtil amtUtil  = new AmountsUtil();
 
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
 			driver.get(env.getDefaultUrl());
 		}
-		field.setTextField("username", TestEnvironment.get().getUserName());
-		field.setTextField("password", TestEnvironment.get().getUserPassword());
+		field.setTextField("username", env.get().getUserName());
+		field.setTextField("password", env.get().getUserPassword());
 		button.click("Login");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 		return this;
@@ -113,15 +111,10 @@ public class BasePage extends WebPage implements Constants {
 
 	public AdoptionBasePage clickOnAdoptionTab() {
         clickOnTab(ADOPTION_TAB);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
 		return new AdoptionBasePage();
 	}
 
-    public RetentionBasePage clickOnRetentionTab() {
-        clickOnTab(RETENTION_TAB);
-        return new RetentionBasePage();
-    }
-    
     public WorkflowBasePage clickOnWorkflowTab(){
     	clickOnTab(WORKFLOW_TAB);
     	return new WorkflowBasePage();
@@ -179,7 +172,7 @@ public class BasePage extends WebPage implements Constants {
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Report.logInfo("Moving to Main window : " + windows.size());
+        Log.info("Moving to Main window : " + windows.size());
         driver.switchTo().window(aa.get(0));
     }
 
@@ -231,7 +224,7 @@ public class BasePage extends WebPage implements Constants {
                 multiDropDown.selectByVisibleText(tabName.trim());
                 item.click("//img[@class='rightArrowIcon' and @title='Add']");
             } catch (Exception e) {
-                Report.logInfo("The Following tab is not available : " +tabName + " (or) added to application already");
+                Log.info("The Following tab is not available : " +tabName + " (or) added to application already");
             }
         }
         env.setTimeout(30);
@@ -253,7 +246,7 @@ public class BasePage extends WebPage implements Constants {
         } catch (Exception e) {
             String a1 = "//span[@id='tsidLabel' and contains(text(), 'Gainsight')]";
             if(element.isElementPresent(a1)) {
-                Report.logInfo("Gainsight application is not available to select");
+                Log.info("Gainsight application is not available to select");
             }
         }
         clickOnCustomersTab();
@@ -272,12 +265,12 @@ public class BasePage extends WebPage implements Constants {
             String DELETE_BUTTON = "//input[@class='btn' and contains(@value, 'Go')]";
             wait.waitTillElementDisplayed(DELETE_BUTTON, MIN_TIME,MAX_TIME);
             item.click(DELETE_BUTTON);
-            Report.logInfo("Deleting the sample data");
-            amtDateUtil.sleep(15);
+            Log.info("Deleting the sample data");
+            Timer.sleep(15);
             wait.waitTillElementDisplayed(loadButton, MIN_TIME, 2*MAX_TIME);
-            Report.logInfo("Sample data delete completed.");
+            Log.info("Sample data delete completed.");
         } catch(Exception e) {
-            Report.logInfo("Sample data is not loaded in to org.");
+            Log.info("Sample data is not loaded in to org.");
         }
 		if(element.isElementPresent(loadButton)){
 			item.click(loadButton);
@@ -319,11 +312,11 @@ public class BasePage extends WebPage implements Constants {
 	}
 
     public WebElement getFirstDisplayedElement(String identifier) {
-        Report.logInfo("Element Identifier : " +identifier);
+        Log.info("Element Identifier : " +identifier);
         List<WebElement> elements = element.getAllElement(identifier);
-        //Report.logInfo("Total Number of Elements :" +elements.size());
+        //Log.info("Total Number of Elements :" +elements.size());
         for(WebElement ele : elements) {
-            //Report.logInfo("Element displayed : "+ele.isDisplayed() );
+            //Log.info("Element displayed : "+ele.isDisplayed() );
             if(ele.isDisplayed()) {
                 return ele;
             }
@@ -332,7 +325,7 @@ public class BasePage extends WebPage implements Constants {
     }
 
     public void waitForLoadingImagesNotPresent() {
-        env.setTimeout(5);
+        env.setTimeout(2);
         wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }

@@ -1,19 +1,19 @@
 package com.gainsight.sfdc.jmeter;
 
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import org.testng.annotations.Test;
-import com.gainsight.pageobject.core.Report;
+
 import com.gainsight.sfdc.tests.BaseTest;
 
 public class TransactionSetup extends BaseTest {
 	@Test
 	public void setup() throws Exception {
 		try {
-			Report.logInfo("Starting Acceptance Test Case...");
-			apex.runApexCodeFromFile(env.basedir
-					+ "/apex_scripts/jmeter/transactions_setup.apex",
-					isPackageInstance());
+			Log.info("Starting Acceptance Test Case...");
+            sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir+ "/apex_scripts/jmeter/transactions_setup.apex"));
 		} catch (Exception e) {
-			Report.logInfo(e.getMessage());
+			Log.info(e.getMessage());
 			throw e;
 		}
 	}

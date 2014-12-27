@@ -1,23 +1,22 @@
 package com.gainsight.bigdata.rulesengine;
 
+import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.sfdc.SalesforceMetadataClient;
+import com.gainsight.testdriver.Application;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import com.gainsight.utils.SOQLUtil;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
+import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 
-public class LoadToUsageData {
-    private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/LoadToUsageData/";
+public class LoadToUsageData extends NSTestBase {
+    private static final String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/LoadToUsageData/";
     private static final String UsageDataSync = rulesDir + "/UsageDataSync.apex";
     private static final String UsageDataSync1 = rulesDir + "/UsageDataSync1.apex";
     private static final String UsageDateSync = rulesDir + "/UsageDateSync.apex";
@@ -30,13 +29,9 @@ public class LoadToUsageData {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-
         GSUtil.sfdcLogin(header, wa);
-        CreateObjectAndFields creatFields = new CreateObjectAndFields();
-
         String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        creatFields.createNumberField(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields, false);
-
+        metadataClient.createNumberField(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields, false);
     }
 
     @Test
@@ -47,8 +42,8 @@ public class LoadToUsageData {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDataSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -71,8 +66,8 @@ public class LoadToUsageData {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDateSync'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -89,10 +84,7 @@ public class LoadToUsageData {
     }
 
     @AfterClass
-    public void afterClass() throws ConnectionException, InterruptedException {
-        CreateObjectAndFields deleteFields = new CreateObjectAndFields();
-        String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        deleteFields.deletefields(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields);
-        GSUtil.soql = null;
+    public void afterClass() {
+
     }
 }

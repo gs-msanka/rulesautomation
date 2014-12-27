@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.connectors.test;
 
 import java.util.HashMap;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -10,21 +11,21 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.TestBase;
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.connectors.AccountDetails;
 import com.gainsight.bigdata.connectors.ResponseValidator;
 import com.gainsight.bigdata.connectors.SegmentIOTestData;
 import com.gainsight.bigdata.connectors.TestDataUtils;
 import com.gainsight.bigdata.connectors.pojo.AccountProperties;
 import com.gainsight.bigdata.util.ApiUrl;
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.ExcelDataProvider;
 
-public class SegmentIORunAggTest extends TestBase {
+public class SegmentIORunAggTest extends NSTestBase {
 
 	final String TEST_DATA_FILE = "testdata/newstack/connectors/SIOExpectedOutput.xls";
 	String dataSyncUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_SYNC;
@@ -47,33 +48,32 @@ public class SegmentIORunAggTest extends TestBase {
 	@Parameters("version")
 	@BeforeClass
 	public void setUp() throws Exception {
-		init();
 		testData = ExcelDataProvider.getDataFromExcel(TEST_DATA_FILE, "Sheet1").get(0);
 		// new TestDataUtils().loadTestData();
-		h.addHeader("actionType", "SAVE_AND_RUN");
+		header.addHeader("actionType", "SAVE_AND_RUN");
 		dataSyncUrl = ApiUrl.setURLParam(dataSyncUrl, "new");
 
 	}
 
 	@BeforeTest
 	public void beforeTest() {
-		Report.logInfo("--- START SEGMENT AGGREGATION TEST ---");
+		Log.info("--- START SEGMENT AGGREGATION TEST ---");
 	}
 
 	@AfterTest
 	public void afterTest() {
-		Report.logInfo("--- END SEGMENT AGGREGATION TEST ---");
+		Log.info("--- END SEGMENT AGGREGATION TEST ---");
 	}
 
 	@AfterTest
 	public void cleanProject() throws Exception {
 		if (AccountDetailsID != null) {
 			String url = ApiUrl.setURLParam(accDeleteUrl, AccountDetailsID);
-			HttpResponseObj result = wa.doDelete(url, h.getAllHeaders());
+			ResponseObj result = wa.doDelete(url, header.getAllHeaders());
 			if (result.getStatusCode() == 200) {
-				Report.logInfo("Account:" + AccountDetailsID + " Deleted successfully");
+				Log.info("Account:" + AccountDetailsID + " Deleted successfully");
 			} else {
-				Report.logInfo("Account:" + AccountDetailsID + " Deleted Failed");
+				Log.info("Account:" + AccountDetailsID + " Deleted Failed");
 			}
 			AccountDetailsID = null;
 		}
@@ -84,17 +84,17 @@ public class SegmentIORunAggTest extends TestBase {
 	public void testAUED_DL(HashMap<String, String> testData) throws Exception {
 		SegmentIOTestData data = new SegmentIOTestData();
 		AccountDetails info = data.getMapping_AUED_DL();
-		runAggregation(dataSyncUrl, h, info);
+		runAggregation(dataSyncUrl, header, info);
 		AccountProperties properties = testDataUtils.getAccountProperties(info.getDisplayName(), false);
 		AccountDetailsID = properties.getAccountDetailsID();
 		reportRequest = data.getDayAggColReportRequest(properties.getDayAggCollection());
 		String expectedResponse = testData.get(ACC_USER_EVENT_DATE_AGG_RES);
-		responseValidator.validateReport(reportRunUrl, h, reportRequest, expectedResponse);
+		responseValidator.validateReport(reportRunUrl, header, reportRequest, expectedResponse);
 		String url = ApiUrl.setURLParam(usageTrackerGetDataUrl, properties.getAccountDetailsID());
-		responseValidator.validateUsageTrackerData(url, h, ACCOUNT_ID, testData);
+		responseValidator.validateUsageTrackerData(url, header, ACCOUNT_ID, testData);
 		reportRequest = data.getFlippedColReportRequest(properties.getFlippedColleciton());
 		expectedResponse = testData.get(ACC_USER_EVENT_DATE_AGG_RES);
-		responseValidator.validateReport(reportRunUrl, h, reportRequest, expectedResponse);
+		responseValidator.validateReport(reportRunUrl, header, reportRequest, expectedResponse);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -102,14 +102,14 @@ public class SegmentIORunAggTest extends TestBase {
 	public void testAUED_IDL(HashMap<String, String> testData) throws Exception {
 		SegmentIOTestData data = new SegmentIOTestData();
 		AccountDetails info = data.getMapping_AUED_IDL();
-		runAggregation(dataSyncUrl, h, info);
+		runAggregation(dataSyncUrl, header, info);
 		AccountProperties properties = testDataUtils.getAccountProperties(info.getDisplayName(), false);
 		AccountDetailsID = properties.getAccountDetailsID();
 		reportRequest = data.getDayAggColReportRequest(properties.getDayAggCollection());
 		String expectedResponse = testData.get(ACC_USER_EVENT_DATE_AGG_RES);
-		responseValidator.validateReport(reportRunUrl, h, reportRequest, expectedResponse);
+		responseValidator.validateReport(reportRunUrl, header, reportRequest, expectedResponse);
 		String url = ApiUrl.setURLParam(usageTrackerGetDataUrl, properties.getAccountDetailsID());
-		responseValidator.validateUsageTrackerData(url, h, ACCOUNT_ID, testData);
+		responseValidator.validateUsageTrackerData(url, header, ACCOUNT_ID, testData);
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -117,17 +117,17 @@ public class SegmentIORunAggTest extends TestBase {
 	public void testAUED_DL_SIOUserNameAndEmail(HashMap<String, String> testData) throws Exception {
 		SegmentIOTestData data = new SegmentIOTestData();
 		AccountDetails info = data.getMapping_AUED_DL_SIOUserNameAndEmail();
-		runAggregation(dataSyncUrl, h, info);
+		runAggregation(dataSyncUrl, header, info);
 		AccountProperties properties = testDataUtils.getAccountProperties(info.getDisplayName(), false);
 		AccountDetailsID = properties.getAccountDetailsID();
 		reportRequest = data.getDayAggColReportRequest(properties.getDayAggCollection());
 		String expectedResponse = testData.get(ACC_USER_EVENT_DATE_AGG_RES);
-		Report.logInfo("Validating Day Aggregation Subject Area");
-		responseValidator.validateReport(reportRunUrl, h, reportRequest, expectedResponse);
-		Report.logInfo("Validating Usage Tracker And Summary");
+		Log.info("Validating Day Aggregation Subject Area");
+		responseValidator.validateReport(reportRunUrl, header, reportRequest, expectedResponse);
+		Log.info("Validating Usage Tracker And Summary");
 		String url = ApiUrl.setURLParam(usageTrackerGetDataUrl, properties.getAccountDetailsID());
-		responseValidator.validateUsageTrackerData(url, h, ACCOUNT_ID, testData);
-		Report.logInfo("--------- DONE VALIDATION OF ALL SECTIONS ----------");
+		responseValidator.validateUsageTrackerData(url, header, ACCOUNT_ID, testData);
+		Log.info("--------- DONE VALIDATION OF ALL SECTIONS ----------");
 	}
 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -135,29 +135,29 @@ public class SegmentIORunAggTest extends TestBase {
 	public void testAUED_IDL_SIOUserNameAndEmail(HashMap<String, String> testData) throws Exception {
 		SegmentIOTestData data = new SegmentIOTestData();
 		AccountDetails info = data.getMapping_AUED_IDL_SIOUserNameAndEmail();
-		runAggregation(dataSyncUrl, h, info);
+		runAggregation(dataSyncUrl, header, info);
 		AccountProperties properties = testDataUtils.getAccountProperties(info.getDisplayName(), false);
 		AccountDetailsID = properties.getAccountDetailsID();
 		reportRequest = data.getDayAggColReportRequest(properties.getDayAggCollection());
 		String expectedResponse = testData.get(ACC_USER_EVENT_DATE_AGG_RES);
-		Report.logInfo("Validating Day Aggregation Subject Area");
-		responseValidator.validateReport(reportRunUrl, h, reportRequest, expectedResponse);
-		Report.logInfo("Validating Usage Tracker And Summary");
+		Log.info("Validating Day Aggregation Subject Area");
+		responseValidator.validateReport(reportRunUrl, header, reportRequest, expectedResponse);
+		Log.info("Validating Usage Tracker And Summary");
 		String url = ApiUrl.setURLParam(usageTrackerGetDataUrl, properties.getAccountDetailsID());
-		responseValidator.validateUsageTrackerData(url, h, ACCOUNT_ID, testData);
-		Report.logInfo("--------- DONE VALIDATION OF ALL SECTIONS ----------");
+		responseValidator.validateUsageTrackerData(url, header, ACCOUNT_ID, testData);
+		Log.info("--------- DONE VALIDATION OF ALL SECTIONS ----------");
 	}
 
-	public void runAggregation(String url, Header h, AccountDetails info) throws Exception {
+	public void runAggregation(String url, Header header, AccountDetails info) throws Exception {
 		int count = 0;
 		String rawBody = mapper.writeValueAsString(info);
-		HttpResponseObj result = wa.doPut(url, rawBody, h.getAllHeaders());
-		Report.logInfo("AGG Request::PUT:" + url + "\n Payload:" + rawBody + "\n Response:" + result.toString());
+		ResponseObj result = wa.doPut(url, rawBody, header.getAllHeaders());
+		Log.info("AGG Request::PUT:" + url + "\n Payload:" + rawBody + "\n Response:" + result.toString());
 		JsonNode resContent = mapper.readTree(result.getContent());
 		String statusID = resContent.get("data").get("statusId").toString();
 		Assert.assertNotNull(statusID, "********AGGREGATION REQUEST FAILED*********");
 		syncStatusUrl = ApiUrl.setURLParam(syncStatusUrl, statusID.replace("\"", ""));
-		result = wa.doGet(syncStatusUrl, h.getAllHeaders());
+		result = wa.doGet(syncStatusUrl, header.getAllHeaders());
 		resContent = mapper.readTree(result.getContent());
 		while (resContent.get("data") == null
 				|| !resContent.get("data").get("status").toString().equalsIgnoreCase("\"COMPLETED\"")) {
@@ -165,8 +165,8 @@ public class SegmentIORunAggTest extends TestBase {
 			if (count++ >= 20) {
 				Assert.fail("Unable to get the Aggregation Request Status");
 			}
-			Report.logInfo("Polling Requestid: " + statusID);
-			result = wa.doGet(syncStatusUrl, h.getAllHeaders());
+			Log.info("Polling Requestid: " + statusID);
+			result = wa.doGet(syncStatusUrl, header.getAllHeaders());
 			resContent = mapper.readTree(result.getContent());
 		}
 	}

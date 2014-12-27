@@ -1,53 +1,42 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import com.gainsight.sfdc.customer360.pages.RelatedList360;
-import com.gainsight.sfdc.customer360.pages.SalesforceRecordForm;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
-
-import com.sforce.soap.partner.sobject.SObject;
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.customer360.pages.RelatedList360;
+import com.gainsight.sfdc.customer360.pages.SalesforceRecordForm;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class Relatedlisttests extends BaseTest {
-    private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/data/RelatedList_360.xls";
+    private final String TEST_DATA_FILE                 = "testdata/sfdc/relatedlist/tests/RelatedList_360.xls";
     private final String CONTACT_SCRIPT_FILE            = env.basedir+"/testdata/sfdc/relatedlist/scripts/Contact_RelatedList_View_Setup.txt";
-    private final String EVENT_TASKS_CREATE_FILE        = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-    private final String EVENT_PICKLIST_SETUP_FILE      = env.basedir+"/testdata/sfdc/eventtests/Event_PickList_Setup_Script.txt";
     private final String UI_VIEW_SCRIPT_FILE1           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup1.txt";
     private final String UI_VIEW_SCRIPT_FILE2           = env.basedir+"/testdata/sfdc/relatedlist/scripts/UI_View_Setup2.txt";
-    private final String USER_CREATE_UPDATE             = env.basedir+"/testdata/sfdc/eventtests/User_Update_Create_Script.txt";
     boolean taskScriptCreated = false;
 
     @BeforeClass
     public void setUp() {
-        isPackage = isPackageInstance();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-        apex.runApexCodeFromFile(CONTACT_SCRIPT_FILE, isPackage);
-        apex.runApexCodeFromFile(USER_CREATE_UPDATE,isPackage);
-        apex.runApexCodeFromFile(EVENT_PICKLIST_SETUP_FILE, isPackage);
-        apex.runApexCodeFromFile(EVENT_TASKS_CREATE_FILE, isPackage);
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE1, isPackage);
-        apex.runApexCodeFromFile(UI_VIEW_SCRIPT_FILE2, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CONTACT_SCRIPT_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE1));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SCRIPT_FILE2));
         basepage.login();
     }
 
     public void createEventsFromScript() {
         String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
-        Report.logInfo("File :" +file);
-        apex.runApexCodeFromFile(file, isPackage);
+        Log.info("File :" + file);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(file));
         taskScriptCreated = true;
     }
 
@@ -61,7 +50,7 @@ public class Relatedlisttests extends BaseTest {
             if(testData.get("TableRow" + i) !=null) {
                 String data = testData.get("TableRow" + i);
                 dataList.add(data);
-                Report.logInfo(data);
+                Log.info(data);
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
@@ -118,13 +107,13 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.editRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordEditViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
@@ -140,13 +129,13 @@ public class Relatedlisttests extends BaseTest {
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
         SalesforceRecordForm salesPage = rLPage.viewRecord(relatedListName, testData.get("Values1"));
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
@@ -174,13 +163,13 @@ public class Relatedlisttests extends BaseTest {
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
         String query = "SELECT ID FROM "+testData.get("ObjectId")+"";
-        SObject[] a = soql.getRecords(resolveStrNameSpace(query));
+        SObject[] a = sfdc.getRecords(resolveStrNameSpace(query));
         String objectId = "";
         if(a != null && a.length >0) {
             objectId = String.valueOf(a[0].getId()).substring(0,3);
-            Report.logInfo("Object ID : " +objectId);
+            Log.info("Object ID : " +objectId);
         } else {
-            Report.logInfo("Failed to query data record");
+            Log.info("Failed to query data record");
             Assert.assertTrue(false, "Error With Data Configuration.");
         }
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
@@ -200,7 +189,7 @@ public class Relatedlisttests extends BaseTest {
             if(testData.get("TableRow" + i) !=null) {
                 String data = testData.get("Values" + i);
                 dataList.add(data);
-                Report.logInfo(data);
+                Log.info(data);
             }
         }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);

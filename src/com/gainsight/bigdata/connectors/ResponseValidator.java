@@ -10,10 +10,10 @@ import org.testng.Assert;
 
 import com.gainsight.bigdata.connectors.enums.ConnConstants;
 import com.gainsight.bigdata.connectors.pojo.UsageTracker;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
+import com.gainsight.testdriver.Log;
 
 public class ResponseValidator {
 	WebAction wa = new WebAction();
@@ -26,7 +26,7 @@ public class ResponseValidator {
 		JsonNode tree2 = mapper.readTree(expected);
 
 		if (tree1.equals(tree2)) {
-			Report.logInfo("Report output Matched");
+			Log.info("Report output Matched");
 		} else {
 			System.out.println("Report output Did Not Match. Expected JSON:\n"
 					+ expected + "\n Actual JSON:" + actual);
@@ -41,16 +41,16 @@ public class ResponseValidator {
 			throws Exception {
 		int counter = 1;
 		this.h = header;
-		HttpResponseObj result = wa.doPost(reportRunUrl, reportRequest, h.getAllHeaders());
+		ResponseObj result = wa.doPost(reportRunUrl, h.getAllHeaders(), reportRequest);
 		while (result.getStatusCode() == 503) {
 			if (counter++ > 3) {
-				Report.logInfo("Max trails for runnning report exceeded.");
+				Log.info("Max trails for runnning report exceeded.");
 				break;
 			}
-			result = wa.doPost(reportRunUrl, reportRequest, h.getAllHeaders());
+			result = wa.doPost(reportRunUrl, h.getAllHeaders(), reportRequest);
 		}
 		if (result.getStatusCode() != 200) {
-			Report.logInfo("Request:" + reportRequest + "\n Response:" + result.getContent());
+			Log.info("Request:" + reportRequest + "\n Response:" + result.getContent());
 			Assert.fail("Something gone wrong while running report");
 		}
 		jsonOutputCompare(result.getContent(), expectedResponse);
@@ -84,7 +84,7 @@ public class ResponseValidator {
 			throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		UsageTracker ut = new UsageTracker(tracker, accountID);
-		HttpResponseObj result = wa.doPost(usageTrakcerUrl, mapper.writeValueAsString(ut), h.getAllHeaders());
+		ResponseObj result = wa.doPost(usageTrakcerUrl, h.getAllHeaders(), mapper.writeValueAsString(ut));
 		JsonNode resContent = mapper.readTree(result.getContent());
 		return resContent.get("data").toString();
 	}

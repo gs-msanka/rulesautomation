@@ -1,7 +1,5 @@
 package com.gainsight.bigdata.rulesengine;
 
-import java.util.List;
-import java.util.Map;
 
 public class ResponseObject {
 	String result;

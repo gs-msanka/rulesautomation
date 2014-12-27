@@ -1,11 +1,9 @@
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
-import com.gainsight.sfdc.workflow.pages.WorkflowPage;
-import com.gainsight.sfdc.workflow.pojos.CTA;
 
 /**
  * Created by gainsight on 05/12/14.
@@ -42,7 +40,7 @@ public class SurveyPropertiesPage extends SurveyDesignPage {
     
    
     public void fillAndSaveSurveyProperties (SurveyProperties surveyproperties) {
-    	Report.logInfo("Started Filling Survey Form");
+    	Log.info("Started Filling Survey Form");
     	//field.clearAndSetText(EMAIL_SERVICE, surveyproperties.getEmailService());
     //	field.selectFromDropDown(EMAIL_SERVICE, surveyproperties.getEmailService());
     	item.click(EMAIL_SERVICE);
@@ -76,7 +74,7 @@ public class SurveyPropertiesPage extends SurveyDesignPage {
 		// TODO Auto-generated method stub
 		boolean selected = false;
         for(WebElement ele : element.getAllElement("//input[contains(@title, '"+emailService+"')]/following-sibling::span[contains(text(), '"+emailService+"')]")) {
-            Report.logInfo("Checking : "+ele.isDisplayed());
+            Log.info("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
                 ele.click();
                 selected = true;
@@ -92,7 +90,7 @@ public class SurveyPropertiesPage extends SurveyDesignPage {
     		// TODO Auto-generated method stub
     		boolean selected = false;
             for(WebElement ele : element.getAllElement("//input[contains(@title, '"+thankYou+"')]/following-sibling::span[contains(text(), '"+thankYou+"')]")) {
-                Report.logInfo("Checking : "+ele.isDisplayed());
+                Log.info("Checking : "+ele.isDisplayed());
                 if(ele.isDisplayed()) {
                     ele.click();
                     selected = true;

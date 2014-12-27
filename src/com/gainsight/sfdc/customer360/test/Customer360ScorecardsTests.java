@@ -1,44 +1,41 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
+import java.io.IOException;
+import java.util.HashMap;
+
+import com.gainsight.testdriver.Log;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.TimeZone;
 
 public class Customer360ScorecardsTests extends BaseTest {
 
-	private final String TEST_DATA_FILE     = "testdata/sfdc/Scorecard/Grade_Scheme_Data.xls";
-    private final String SETUP_FILE         = env.basedir+"/apex_scripts/Scorecard/scorecard.apex";
-    private final String CLEAN_FILE         = env.basedir+"/apex_scripts/Scorecard/Scorecard_CleanUp.txt";
-    private final String GRADE_SCHEME_FILE  = env.basedir+"/apex_scripts/Scorecard/Scorecard_enable_grade.apex";
-    private final String METRICS_CREATE_FILE = env.basedir+"/apex_scripts/Scorecard/Create_ScorecardMetrics.apex";
+	private final String TEST_DATA_FILE     = "testdata/sfdc/scorecards/tests/Grade_Scheme_Data.xls";
+    private final String SETUP_FILE         = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
+    private final String CLEAN_FILE         = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private final String GRADE_SCHEME_FILE  = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_grade.apex";
+    private final String METRICS_CREATE_FILE = env.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private String SCHEME = "Grade";
 
 	@BeforeClass
-	public void setUp() {
-        Report.logInfo("Starting Customer 360 Scorecard module Test Cases...");
-        isPackage = isPackageInstance();
+	public void setUp() throws Exception {
+        Log.info("Starting Customer 360 Scorecard module Test Cases...");
         createExtIdFieldForScoreCards();
-        apex.runApexCodeFromFile(CLEAN_FILE, isPackage);
-        apex.runApexCodeFromFile(SETUP_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-		apex.runApexCodeFromFile(GRADE_SCHEME_FILE, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(GRADE_SCHEME_FILE));
         try {
             runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         } catch (IOException e) {

@@ -1,19 +1,16 @@
 package com.gainsight.bigdata.rulesengine;
 
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.utils.SOQLUtil;
-import com.gainsight.webaction.WebAction;
-import com.sforce.soap.partner.sobject.SObject;
-import com.sforce.ws.ConnectionException;
-
+import com.gainsight.testdriver.Application;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.gainsight.http.Header;
+import com.gainsight.http.WebAction;
+import com.gainsight.util.PropertyReader;
+import com.sforce.soap.partner.sobject.SObject;
+import com.sforce.ws.ConnectionException;
 
 /**
  * Created by sparava on 11/17/14.
@@ -21,8 +18,8 @@ import org.testng.annotations.Test;
 public class SendEmail {
     public WebAction webAction = new WebAction();
     public Header header = new Header();
-    public SOQLUtil soql;
-    public String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
+//    public SOQLUtil soql;
+    public String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/SendEmail/";
     public String GSEmailAccountStrategy = rulesDir + "GSEmailAccountStrategy.apex";
     public String GSEmailAccountStrategy1 = rulesDir + "GSEmailAccountStrategy1.apex";
     public String GSEmailContactStrategy = rulesDir + "GSEmailContactStrategy.apex";
@@ -34,15 +31,15 @@ public class SendEmail {
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
     public String templateId = "";
 
-    @BeforeClass
+/*    @BeforeClass
     public void beforeClass() throws Exception {
         GSUtil.runApexCode(Contacts);
         GSUtil.sfdcLogin(header, webAction);
-        soql = GSUtil.soql;
+//        soql = GSUtil.soql;
         AutomatedAlertRulesObjectName = GSUtil.resolveStrNameSpace(AutomatedAlertRulesObjectName);
         LastRunResultFieldName = GSUtil.resolveStrNameSpace(LastRunResultFieldName);
-        SObject[] templates = soql.getRecords("SELECT Id FROM EmailTemplate where Name='Gainsight sample template - measure below threshold'");
-        templateId = (String) templates[0].getChild("Id").getValue();
+//        SObject[] templates = soql.getRecords("SELECT Id FROM EmailTemplate where Name='Gainsight sample template - measure below threshold'");
+//        templateId = (String) templates[0].getChild("Id").getValue();
     }
 
     @Test
@@ -130,5 +127,5 @@ public class SendEmail {
     public void afterClass() throws ConnectionException, InterruptedException {
         soql = null;
     }
-
+*/
 }

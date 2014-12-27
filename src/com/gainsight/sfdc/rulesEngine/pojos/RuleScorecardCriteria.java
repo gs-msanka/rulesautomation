@@ -8,9 +8,9 @@ package com.gainsight.sfdc.rulesEngine.pojos;
  * To change this template use File | Settings | File Templates.
  */
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import java.util.ArrayList;
+
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * {"actionInfo":[{"conditionList":[{"name":"Name","value":"sdfgsdfg","objectName":"Account",

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import com.gainsight.bigdata.connectors.enums.ConnConstants;
 import com.gainsight.bigdata.connectors.enums.ConnConstants.AggType;
 import com.gainsight.bigdata.connectors.enums.Field;
 

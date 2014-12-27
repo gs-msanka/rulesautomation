@@ -7,5 +7,5 @@ package com.gainsight.sfdc.adoption.pages;
  * Time: 11:44 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AdoptionExplorerPage {
+public class AdoptionExplorerPage extends AdoptionBasePage {
 }

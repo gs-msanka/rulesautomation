@@ -1,31 +1,35 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
-import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.Map;
+import com.gainsight.sfdc.adoption.pages.AdoptionAnalyticsPage;
+import com.gainsight.sfdc.adoption.pages.AdoptionUsagePage;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Adoption_Account_Monthly_Test extends BaseTest {
 
-    public final String resDir                      = TestEnvironment.basedir + "/testdata/sfdc/UsageData/";
-    private final String advUsageConfigFile     = resDir+"Scripts/Account_Level_Monthly.txt";
-    private final String JOB_UsageData          = resDir + "Jobs/Job_Adop_Acc_Monthly.txt";
-    private final String TEST_DATA_FILE         = "testdata/sfdc/UsageData/Tests/Adop_Acc_Monthly_Test.xls";
+    public final String resDir                      = env.basedir + "/testdata/sfdc/usageData/";
+    private final String ADV_USAGE_CONFIG     = resDir+"scripts/Account_Level_Monthly.txt";
+    private final String JOB_UsageData          = resDir + "jobs/Job_Adop_Acc_Monthly.txt";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/usageData/tests/Adop_Acc_Monthly_Test.xls";
     AdoptionDataSetup dataSetup;
 
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
         dataSetup = new AdoptionDataSetup();
-        apex.runApexCodeFromFile(advUsageConfigFile, isPackage);
+        sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(ADV_USAGE_CONFIG)));
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
@@ -42,9 +46,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -61,9 +65,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -80,9 +84,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -99,9 +103,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -118,9 +122,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -137,9 +141,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -156,9 +160,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -174,9 +178,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -194,9 +198,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -214,9 +218,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -234,9 +238,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -253,9 +257,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
@@ -272,9 +276,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
@@ -289,9 +293,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeMonthPeriod(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -305,9 +309,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeMonthPeriod(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -320,9 +324,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeMonthPeriod(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -335,9 +339,9 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.setCustomerName(testData.get("Customer"));
         usage.setMeasureNames(testData.get("Measures"));
         usage.setForTimeMonthPeriod(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
@@ -360,17 +364,15 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         usage.selectUIView(testData.get("UI_View"));
         usage.setMeasure(testData.get("Measures"));
         usage.setNoOfMonths(testData.get("Period"));
-        String[] monthAndYear = getMonthAndYear(Integer.valueOf(testData.get("Date")));
-        usage.setMonth(monthMap.get(monthAndYear[0]));
-        usage.setYear(String.valueOf(monthAndYear[1]));
+        Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
+        usage.setMonth(DateUtil.getMonthName(cal));
+        usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Header")));
         Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header1")));
         Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header2")));
     }
-
-
 
     @AfterClass
     public void tearDown() {

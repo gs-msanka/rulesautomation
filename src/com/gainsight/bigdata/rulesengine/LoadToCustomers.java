@@ -2,23 +2,21 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.util.List;
 
-import com.gainsight.pageobject.core.Report;
+import com.gainsight.testdriver.Application;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.utils.SOQLUtil;
-import com.gainsight.webaction.WebAction;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
+
+import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class LoadToCustomers {
-    private static final String rulesDir = TestEnvironment.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
+    private static final String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
     private static final String CustomerInfo = rulesDir + "CustomerInfo.apex";
     private static final String CustomerInfo1 = rulesDir + "CustomerInfo1.apex";
     private static final String LoadToCustomer = rulesDir + "LoadToCustomer.apex";
@@ -54,8 +52,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CusotomerSync_Initially no customers'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId(), rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId(), header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -87,8 +85,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadToCustomer'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -114,8 +112,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='LoadtoCust_Picklist'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -142,8 +140,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='WithAndOrConditionFilters'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -170,8 +168,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='OCD_Today'");
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -199,8 +197,8 @@ public class LoadToCustomers {
         SObject[] rules = GSUtil.execute(GSUtil.resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='CountCust'"));
         for (SObject r : rules) {
             String rawBody = ("{}");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -226,9 +224,9 @@ public class LoadToCustomers {
         for (SObject r : rules) {
             String rawBody = "{\"numberOfRecords\": \"10\"}";
             System.out.println(PropertyReader.nsAppUrl + "/api" + "/eventrule/" + r.getId() + "/result");
-            HttpResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
-                            + "/eventrule" + "/" + r.getId() + "/result", rawBody,
-                    header.getAllHeaders());
+            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api"
+                            + "/eventrule" + "/" + r.getId() + "/result", header.getAllHeaders(),
+                    rawBody);
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             // Assert.assertEquals(ro.getData().size(), 10);
@@ -242,6 +240,6 @@ public class LoadToCustomers {
 
     @AfterClass
     public void afterClass() {
-        GSUtil.soql = null;
+        //GSUtil.soql = null;
     }
 }

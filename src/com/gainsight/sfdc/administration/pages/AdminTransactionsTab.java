@@ -1,13 +1,8 @@
 package com.gainsight.sfdc.administration.pages;
 
-import java.util.List;
-
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.pages.BasePage;
 
 public class AdminTransactionsTab extends BasePage {
@@ -136,7 +131,7 @@ public class AdminTransactionsTab extends BasePage {
 		   wait.waitTillElementPresent(TRANS_FORM_NONE, MIN_TIME, MAX_TIME);
 		   refreshPage();
 		   wait.waitTillElementPresent("//label[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-		   amtDateUtil.stalePause();
+		   Timer.sleep(2);
 		return this;
 	}                
 	/**
@@ -163,7 +158,7 @@ public class AdminTransactionsTab extends BasePage {
 			wait.waitTillElementPresent(TRANS_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
 			wait.waitTillElementPresent("//label[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-			 amtDateUtil.stalePause();
+			 Timer.sleep(2);
 			return this;
 	}
 	
@@ -189,7 +184,7 @@ public class AdminTransactionsTab extends BasePage {
 	wait.waitTillElementPresent(BOOKING_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
     wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-    amtDateUtil.stalePause();
+    Timer.sleep(2);
 		return this;
 	}	
 		public boolean isChurnPresent(String values){
@@ -214,7 +209,7 @@ public class AdminTransactionsTab extends BasePage {
 			wait.waitTillElementPresent(BOOKING_FORM_NONE, MIN_TIME, MAX_TIME);
 			refreshPage();
 			wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-			 amtDateUtil.stalePause();
+			 Timer.sleep(2);
 	return this;
 	}
                                           //Delete Churn Reason
@@ -245,7 +240,7 @@ public class AdminTransactionsTab extends BasePage {
 		refreshPage();
 	   wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
 	    item.isElementPresent("//span[contains(text(),'"+name+"')]");
-	   amtDateUtil.stalePause();
+	   Timer.sleep(2);
 		return this;
 	}
 	
@@ -259,7 +254,7 @@ public class AdminTransactionsTab extends BasePage {
 		wait.waitTillElementPresent(BOOKING_FORM_NONE, MIN_TIME, MAX_TIME);
 		refreshPage();
 	    wait.waitTillElementPresent("//span[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
-	    amtDateUtil.stalePause();
+	    Timer.sleep(2);
  return this;
 }
 	}

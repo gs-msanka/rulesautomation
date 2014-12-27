@@ -1,33 +1,24 @@
 package com.gainsight.sfdc.workflow.tests;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Random;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
+import com.gainsight.testdriver.Log;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.accounts.tests.AccountDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.sfdc.workflow.pages.WorkFlowReportingPage;
 
-public class WorkflowReportingTests extends WorkflowSetup {
-	
-	private final String LEADERBOARD_DATAGEN_SCRIPT = TestEnvironment.basedir
+public class WorkflowReportingTests extends BaseTest {
+	private final String LEADERBOARD_DATAGEN_SCRIPT = env.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateCTAs_ForLeaderBoard.txt";
-	private final String CREATE_USERS_SCRIPT = TestEnvironment.basedir
+	private final String CREATE_USERS_SCRIPT = env.basedir
 			+ "/testdata/sfdc/workflow/scripts/CreateUsers.txt";
-	private final String CREATE_ACCs=TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
+	private final String CREATE_ACCS=env.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
 	private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"
 			+ "Delete [select id from JBCXM__CSTask__c];"
 			+ "Delete [select id from Task];"
@@ -37,21 +28,16 @@ public class WorkflowReportingTests extends WorkflowSetup {
 	@BeforeClass
 	public void setup() throws Exception {
 		basepage.login();
-		isPackage = isPackageInstance();
-		AccountDataSetup accSetup = new AccountDataSetup();
-        DataETL dataLoader = new DataETL();
+		DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();
-        accSetup.createExtIdFieldOnAccount();
-		apex.runApexCodeFromFile(CREATE_ACCs,isPackage);
-		
+        createExtIdFieldOnAccount();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         createExtIdFieldOnUser();
-		apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
-		apex.runApex(CLEANUP_SCRIPT, isPackage);
-		
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
 		createExternalIdFieldOnCTA();
         JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadCTAs);
-        
         JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
         dataLoader.execute(loadCSTasks);
         
@@ -269,8 +255,8 @@ public class WorkflowReportingTests extends WorkflowSetup {
 				else query=query+" ) and JBCXM__Status__c='Closed'";
 			}
 		}
-		Report.logInfo("Query : " + resolveStrNameSpace(query));
-		count = soql.getRecordCount(resolveStrNameSpace(query));
+		Log.info("Query : " + resolveStrNameSpace(query));
+		count = sfdc.getRecordCount(resolveStrNameSpace(query));
 		return count;
 	}
 

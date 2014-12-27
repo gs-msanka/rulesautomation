@@ -1,13 +1,12 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import com.gainsight.testdriver.Log;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class Relatedlist extends Customer360Page {
     private final String READT_INDICATOR = "//div[@class='gs_section_title']/h1[text()='']";
@@ -33,13 +32,13 @@ public class Relatedlist extends Customer360Page {
                 WebElement tableTr = tableRowsList.get(0);
                 List<WebElement> tableColumnsList = tableTr.findElements(By.tagName("th"));
                 if(tableColumnsList != null) {
-                    Report.logInfo("Total Columns in table are :" +tableColumnsList.size());
+                    Log.info("Total Columns in table are :" + tableColumnsList.size());
                     tableHeaders = new String[tableColumnsList.size()+1];
                     int i =0;
                     for(WebElement wEle : tableColumnsList) {
                         String hText = wEle.getText().trim();
                         tableHeaders[i] = hText;
-                        Report.logInfo(hText);
+                        Log.info(hText);
                         ++i;
                     }
                 }
@@ -64,7 +63,7 @@ public class Relatedlist extends Customer360Page {
                 for(WebElement cell : columnsList) {
                     String cellValue = cell.getText();
                     temp.put(headerData[i], cellValue);
-                    Report.logInfo(headerData[i]+"," +cellValue);
+                    Log.info(headerData[i]+"," +cellValue);
                     i++;
                 }
             }

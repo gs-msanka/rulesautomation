@@ -1,45 +1,42 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.HashMap;
+
+import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360MilestonesTests extends BaseTest {
-    private final String TEST_DATA_FILE = "testdata/sfdc/Milestones/MilestonesTests.xls";
+    private final String TEST_DATA_FILE = "testdata/sfdc/milestones/MilestonesTests.xls";
 	private final String CURRENT_DIR = env.basedir;
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Customer 360 Milestones module Test Cases...");
+		Log.info("Starting Customer 360 Milestones module Test Cases...");
 		basepage.login();
-        isPackage = isPackageInstance();
-        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/Milestones.apex", isPackage);
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Milestones/Milestones.apex"));
 	}
 	 
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
-        apex.runApexCodeFromFile(CURRENT_DIR+ "/apex_scripts/Milestones/MilestonesForACustomer.apex",isPackageInstance());
+        sfdc.runApexCode(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '" + testData.get("Account") + "'];"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Milestones/MilestonesForACustomer.apex"));
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
 		Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
 		HashMap<String, String> MsHeaders = getMapFromData(testData.get("Headers"));
 		// Verifying table header
 		if (cm.isHeaderPresent()) {
-			Report.logInfo("No of columns=" + MsHeaders.size());
+			Log.info("No of columns=" + MsHeaders.size());
 			for (int h = 1; h <= MsHeaders.size(); h++) {
-				Report.logInfo("Checking for---"+ MsHeaders.get("Column" + h));
+				Log.info("Checking for---"+ MsHeaders.get("Column" + h));
 				Assert.assertTrue(cm.isHeaderItemPresent(MsHeaders.get("Column"+ h)));
 			}
 		}
@@ -101,7 +98,7 @@ public class Customer360MilestonesTests extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M5")
     public void verifyNoMilestonesMessage(HashMap<String, String> testData) {
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
+        sfdc.runApexCode(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Milestone__c Where JBCXM__Account__r.Name Like '"+testData.get("Account")+"'];"));
         Customer360Page cp = basepage.clickOnC360Tab().searchCustomer(testData.get("Account"), false, false);
         Customer360Milestones cm = cp.goToUsageSection().gotoMilestonesSubTab();
         HashMap<String, String> milestoneData = getMapFromData(testData.get("Milestone"));

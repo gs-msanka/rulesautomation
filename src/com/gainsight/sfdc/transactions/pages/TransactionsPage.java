@@ -1,6 +1,8 @@
 package com.gainsight.sfdc.transactions.pages;
 
 import java.util.HashMap;
+
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.pages.BasePage;
 
@@ -79,7 +81,7 @@ public class TransactionsPage extends BasePage {
 		int rowNo = getRowNumberOfTran(customerName, values);
 		if (rowNo>=0){
 		element.click(String.format(TRANS_DLT_LINK, rowNo));
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		modal.accept();
 		return this;
 		}
@@ -157,7 +159,7 @@ public class TransactionsPage extends BasePage {
 
 	private int getRowNumberOfTran(String customerName, String values) {
 		setFilter(CUSTOMER_FILTER, customerName);
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		return table.getValueInListRow(TRANS_TABLE, values);
 	}
 
@@ -171,7 +173,7 @@ public class TransactionsPage extends BasePage {
 
 	public Customer360Page gotoCustomer360(String customerName) {
 		setFilter(CUSTOMER_FILTER, customerName);
-		amtDateUtil.stalePause();
+		Timer.sleep(2);
 		item.click("//a[text()='" + customerName + "']");
 		return new Customer360Page();
 	}

@@ -13,17 +13,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.TestBase;
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
 import com.gainsight.bigdata.pojo.DimensionBrowserInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 
-public class BurpSuiteTest extends TestBase {
+public class BurpSuiteTest extends NSTestBase {
 	
 	String tenantName = "AutTenant";
 	CollectionInfo cinfo;
@@ -58,9 +58,9 @@ public class BurpSuiteTest extends TestBase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
 	}
@@ -71,11 +71,11 @@ public class BurpSuiteTest extends TestBase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		JsonNode collectionId = mapper.readTree(result.getContent());
-		Report.logInfo(collectionId.get("CollectionID").toString());
+		Log.info(collectionId.get("CollectionID").toString());
 		Assert.assertNotNull(collectionId, "Collection ID not found.");
 	}
 
@@ -85,13 +85,13 @@ public class BurpSuiteTest extends TestBase {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(colList));
 		
-		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doGet(uri, header.getAllHeaders());
+		Log.info(result.toString());
 		
 		JsonNode node = mapper.readTree(result.getContent());
 		JsonNode outputNode  = node.findValue("Columns");
 		
-		Report.logInfo("PRINTING OUTPUT: "  + outputNode.toString());
+		Log.info("PRINTING OUTPUT: "  + outputNode.toString());
 		Assert.assertTrue(outputNode.equals(inputNode), "The Collection Response didn't Match");
 	}
 	
@@ -100,13 +100,13 @@ public class BurpSuiteTest extends TestBase {
 		String uri = PropertyReader.nsAppUrl + "/preparereport";
 		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
 				+ "1col_1measure_input.txt"));
-		Report.logInfo("Request:\n"+rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo("Actual JSON:\n" + result.getContent());
+		Log.info("Request:\n"+rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info("Actual JSON:\n" + result.getContent());
 		
 		String expectedJson = FileUtils.readFileToString(new File(
 				testDataBasePath + "1col_1measure_output.txt"));
-		Report.logInfo("Expected JSON:\n" + expectedJson);
+		Log.info("Expected JSON:\n" + expectedJson);
 		
 		Assert.assertTrue(jsonOutputCompare(result.getContent(), expectedJson),
 				"Json Output did not match the expected report. " +
@@ -118,20 +118,20 @@ public class BurpSuiteTest extends TestBase {
 		String uri = PropertyReader.nsAppUrl + "/upsertreport";
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput1.txt")).toString();
-		Report.logInfo(rawBody);
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		Log.info(rawBody);
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		JsonNode reportId = mapper.readTree(result.getContent());
 		String rid = reportId.get("ReportId").toString();
-		Report.logInfo(rid);
+		Log.info(rid);
 		Assert.assertNotNull(reportId, "Report ID not found.");
 	}
 	
 	@Test
 	public void getSavedReports() throws Exception {
 		String uri = PropertyReader.nsAppUrl + "/savedreports/"+ nsinfo.getTenantID();
-		HttpResponseObj result = wa.doGet(uri, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doGet(uri, header.getAllHeaders());
+		Log.info(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
@@ -147,10 +147,10 @@ public class BurpSuiteTest extends TestBase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(info);
-		Report.logInfo(rawBody);
+		Log.info(rawBody);
 		
-		HttpResponseObj result = wa.doPost(uri, rawBody, h.getAllHeaders());
-		Report.logInfo(result.toString());
+		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
+		Log.info(result.toString());
 		NsResponseObj obj = mapper.readValue(result.getContent(), NsResponseObj.class);
 		Assert.assertTrue(obj.isResult(), "Result Returned was false : " + result.getContent());
 	}
@@ -161,11 +161,11 @@ public class BurpSuiteTest extends TestBase {
 		JsonNode tree2 = mapper.readTree(expected);
 		
 		if(tree1.equals(tree2)) {
-			Report.logInfo("Report output Matched");
+			Log.info("Report output Matched");
 			return true;
 		}
 		else {
-			Report.logInfo("Report output Did Not Match");
+			Log.info("Report output Did Not Match");
 			return false;
 		}
 	}

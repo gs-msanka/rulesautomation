@@ -1,11 +1,11 @@
 package com.gainsight.sfdc.workflow.tests;
-import com.gainsight.pageobject.core.Report;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import jxl.read.biff.BiffException;
-
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -13,257 +13,90 @@ import org.testng.annotations.Test;
 
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pages.WorkflowPlaybooksPage;
-import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
+import com.gainsight.sfdc.workflow.pojos.Playbook;
+import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Log;
+import com.gainsight.utils.DataProviderArguments;
 
 
 public class WorkflowPlaybooksTest extends BaseTest {
-	String[] dirs = { "wfplaybooktests" };
-    private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-            + generatePath(dirs);
+    ObjectMapper mapper = new ObjectMapper();
     String PLAYBOOK_OBJECT = "JBCXM__Playbook__c";
-    
+    private final String TEST_DATA_FILE         = "./testdata/sfdc/workflow/tests/PlaybookTests.xls";
+
     @BeforeClass
     public void setUp() {
-        Report.logInfo("Starting Playbook Test Case...");
-        apex.runApex(resolveStrNameSpace("DELETE [SELECT ID FROM JBCXM__Playbook__c LIMIT 8000];"));
+        Log.info("Starting Playbook Test Case...");
+        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
         basepage.login();
-        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        
     }
-    
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void addPlaybooks(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        pb = mapper.readValue(testData.get("Opportunity-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Opportunity Playbook");
+        pb = mapper.readValue(testData.get("Event-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Event Playbook");
+        pb = mapper.readValue(testData.get("All-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying All Playbook");
+    }
+
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void addUpdateRiskPlaybook(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Playbook pb1 = mapper.readValue(testData.get("UpdatedPB1"), Playbook.class);
+        pbPage = pbPage.editPlaybook(pb, pb1);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb1), "Verifying Playbook Updated details");
+        Playbook pb2 = mapper.readValue(testData.get("UpdatedPB2"), Playbook.class);
+        pbPage = pbPage.editPlaybook(pb1, pb2);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb2), "Verifying Playbook Updated details");
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
+    public void addAndDeletePlaybooks(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        List<Playbook> pbList = mapper.readValue(testData.get("Playbooks"), new TypeReference<ArrayList<Playbook>>() {});
+        for(Playbook pb : pbList) {
+            pbPage = pbPage.addPlaybook(pb);
+            Assert.assertTrue(pbPage.isPlaybookDisplayed(pb));
+        }
+        for(Playbook pb : pbList) {
+            pbPage.deletePlaybook(pb);
+            Assert.assertFalse(pbPage.isPlaybookDisplayed(pb));
+        }
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
+    public void addPlaybookAndTasks(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb));
+        List<Task> taskList = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
+        for(Task task :taskList) {
+            pbPage = pbPage.addTask(task);
+            Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        }
+    }
+
     @AfterClass
     public void tearDown(){
-		WorkflowBasePage wfb = new WorkflowBasePage();
-		wfb.showSalesForceHeader();
-	    basepage.logout();
+        basepage.logout();
     }
-    
-    @Test
-    public void addPlaybookTypeRisk() throws BiffException, IOException {
-    	System.out.println("IN addPlaybookTypeRisk method");
-    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                 TESTDATA_DIR + "PlaybookTests.xls", "Risk");
-//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-         WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
-         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-         pbPage.addplaybook(pbData, taskData);
-         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
-         Assert.assertTrue(pbPage.isTaskPresent(taskData));
-         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),pbData.get("pbType")));
-    }
-        
-    @Test
-    public void editPlaybookTypeRisk() throws BiffException, IOException {
-    	System.out.println("IN editPlaybookTypeRisk method");
-//    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-    	WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Risk");
-        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
-        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
-        Assert.assertTrue(pbPage.isPlaybookType(updatedpbdata.get("playbookname"),updatedpbdata.get("pbType")));
-//        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
-    }
-    
-    @Test
-    public void deletePlaybookTypeRisk() throws BiffException, IOException {
-    	System.out.println("IN deletePlaybookTypeRisk method1");
-//    	try{
-//    		WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-    	WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-    		HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                    TESTDATA_DIR + "PlaybookTests.xls", "Risk");
-            System.out.println("IN deletePlaybookTypeRisk method2");
-            HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
-            HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-            String playbookname = pbData.get("playbookname");
-            
-            System.out.println("IN deletePlaybookTypeRisk method3"); 
-//            WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-            pbPage.addplaybook(pbData, taskData);
-            pbPage.deletePlaybook(playbookname);
-            Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
-//    	}
-    	/*catch (Exception e) {
-    		System.out.println("IN catch deletePlaybookTypeRisk block");
-            e.printStackTrace();
-            throw e;
-        }*/
-    }
-    
-    @Test
-    public void addPlaybookTypeEvent() throws BiffException, IOException {
-    	System.out.println("IN addPlaybookTypeEvent method");
-    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                 TESTDATA_DIR + "PlaybookTests.xls", "Event");
-//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-    	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
-         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-         pbPage.addplaybook(pbData, taskData);
-         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
-         Assert.assertTrue(pbPage.isTaskPresent(taskData));
-         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),pbData.get("pbType")));
-    }
-    
-    @Test
-    public void editPlaybookTypeEvent() throws BiffException, IOException {
-    	System.out.println("IN editPlaybookTypeEvent method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Event");
-        
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
-        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
-        Assert.assertTrue(pbPage.isPlaybookType(updatedpbdata.get("playbookname"),updatedpbdata.get("pbType")));
-//        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
-    }
-    
-    @Test
-    public void deletePlaybookTypeEvent() throws BiffException, IOException {
-    	System.out.println("IN deletePlaybookTypeEvent method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Event");
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
-        String playbookname = pbData.get("playbookname");
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.deletePlaybook(playbookname);
-        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
-    }
-    
-    @Test
-    public void addPlaybookTypeOpportunity() throws BiffException, IOException {
-    	System.out.println("IN addPlaybookTypeOpportunity method");
-    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                 TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
-//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-    	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
-         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-         pbPage.addplaybook(pbData, taskData);
-         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
-         Assert.assertTrue(pbPage.isTaskPresent(taskData));
-         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),pbData.get("pbType")));
-    }
-    
-    @Test
-    public void editPlaybookTypeOpportunity() throws BiffException, IOException {
-    	System.out.println("IN editPlaybookTypeOpportunity method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
-        
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
-        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
-        Assert.assertTrue(pbPage.isPlaybookType(updatedpbdata.get("playbookname"),updatedpbdata.get("pbType")));
-//        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
-    }
-    
-    @Test
-    public void deletePlaybookTypeOpportunity() throws BiffException, IOException {
-    	System.out.println("IN deletePlaybookTypeOpportunity method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Opportunity");
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
-        String playbookname = pbData.get("playbookname");
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.deletePlaybook(playbookname);
-        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
-    }
-    
-    @Test
-    public void addPlaybookTypeAll() throws BiffException, IOException {
-    	System.out.println("IN addPlaybookTypeAll method");
-    	 HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                 TESTDATA_DIR + "PlaybookTests.xls", "All");
-//         WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-    	 WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-         HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
-         HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-         pbPage.addplaybook(pbData, taskData);
-         Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
-         Assert.assertTrue(pbPage.isTaskPresent(taskData));
-         Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),pbData.get("pbType")));
-    }
-    
-    @Test
-    public void editPlaybookTypeAll() throws BiffException, IOException {
-    	System.out.println("IN editPlaybookTypeAll method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "All");
-        
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("EditPb"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> updatedpbdata = getMapFromData(testdata.get("UpdatedPb"));
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.editPlaybook(pbData.get("playbookname"), updatedpbdata);
-        Assert.assertTrue(pbPage.isplaybookpresent(updatedpbdata.get("playbookname")));
-        Assert.assertTrue(pbPage.isPlaybookType(updatedpbdata.get("playbookname"),updatedpbdata.get("pbType")));
-//        Assert.assertTrue(pbPage.isAllPlaybook(updatedpbdata.get("playbookname")));
-    }
-    
-    @Test
-    public void deletePlaybookTypeAll() throws BiffException, IOException {
-    	System.out.println("IN deletePlaybookTypeAll method");
-        HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "All");
-//        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        WorkflowPlaybooksPage pbPage = new WorkflowPlaybooksPage();
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        HashMap<String, String> pbData = getMapFromData(testdata.get("DeletePb"));
-        String playbookname = pbData.get("playbookname");
-        pbPage.addplaybook(pbData, taskData);
-        pbPage.deletePlaybook(playbookname);
-        Assert.assertFalse(pbPage.isplaybookpresent(playbookname));
-    }
-    
-   /* @Test
-    public void addTasksforPbTypeRisk() throws BiffException, IOException {
-//    	System.out.println("IN addTasksforPbTypeRisk method");
-    	List<HashMap<String, String>> taskDataList = new ArrayList<HashMap<String, String>>();
-    	HashMap<String, String> testdata =  testDataLoader.getDataFromExcel(
-                TESTDATA_DIR + "PlaybookTests.xls", "Tasks");
-        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
-        HashMap<String, String> pbData = getMapFromData(testdata.get("AddPb"));
-        HashMap<String, String> taskData = getMapFromData(testdata.get("AddTask"));
-        taskDataList.add(getMapFromData(testdata.get("task1")));
-        taskDataList.add(getMapFromData(testdata.get("task2")));
-        taskDataList.add(getMapFromData(testdata.get("task3")));
-        taskDataList.add(getMapFromData(testdata.get("task4")));
-        pbPage.addplaybook(pbData, taskData);
-        Assert.assertTrue(pbPage.isplaybookpresent(pbData.get("playbookname")));
-        Assert.assertTrue(pbPage.isTaskPresent(taskData));
-        Assert.assertTrue(pbPage.isPlaybookType(pbData.get("playbookname"),testdata.get("pbType")));
-        for(HashMap<String, String> tData : taskDataList) {
-            pbPage.addTask(tData);
-            Assert.assertTrue(pbPage.isTaskPresent(taskData));
-        }
-    }*/
-    
-    //Test to edit Tasks
-    //Test to delete Tasks
-    //Test to create duplicate playbooks
 }

@@ -1,55 +1,48 @@
 package com.gainsight.sfdc.adoption.tests;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pageobject.core.TestEnvironment;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.TimeZone;
+
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Log;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
 
 /**
  * Created by gainsight on 08/12/14.
  */
 public class AdoptionDataSetup extends BaseTest {
-    public final String resDir                      = TestEnvironment.basedir + "/testdata/sfdc/UsageData/";
+    public final String resDir                      = env.basedir + "/testdata/sfdc/usageData/";
     private final String STATE_PRESERVATION_SCRIPT  = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
     private final String CUST_SET_DELETE            = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
-    private final String measureFile                = resDir+"Scripts/Usage_Measure_Create.txt";
-    private final String JOB_Account                = resDir + "Jobs/Job_Adop_Accounts.txt";
-    private final String JOB_Customers              = resDir + "Jobs/Job_Adop_Customers.txt";
+    private final String MEASURES_FILE                = resDir+"scripts/Usage_Measure_Create.txt";
+    private final String JOB_Account                = resDir + "jobs/Job_Adop_Accounts.txt";
+    private final String JOB_Customers              = resDir + "jobs/Job_Adop_Customers.txt";
 
     ObjectMapper mapper = new ObjectMapper();
     JobInfo jobInfo;
     DataETL dataLoader;
 
     public AdoptionDataSetup() {
-        sfinfo = SFDCUtil.fetchSFDCinfo();
         dataLoader = new DataETL();
-        isPackage = isPackageInstance();
-        userLocale = sfinfo.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
     }
 
     public void initialSetup() {
-        apex.runApex(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        apex.runApex(resolveStrNameSpace(CUST_SET_DELETE));
-        createExtIdFieldOnAccount();
-        createFieldsOnUsageData();
-        apex.runApexCodeFromFile(measureFile, isPackage);
+        sfdc.runApexCode(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
+        sfdc.runApexCode(resolveStrNameSpace(CUST_SET_DELETE));
         try {
+            createExtIdFieldOnAccount();
+            createFieldsOnUsageData();
+            sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(MEASURES_FILE)));
             dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
-        } catch (IOException e) {
-            Report.logInfo(e.getLocalizedMessage());
+        } catch (Exception e) {
+            Log.error(e.getLocalizedMessage(), e);
             throw new RuntimeException("Failed to delete accounts related to adoption data");
         }
     }
@@ -62,7 +55,7 @@ public class AdoptionDataSetup extends BaseTest {
             dataLoader.execute(jobInfo);
         } catch (IOException e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to load Accounts, Customer for usage data");
         }
     }
@@ -73,7 +66,7 @@ public class AdoptionDataSetup extends BaseTest {
             dataLoader.execute(jobInfo);
         } catch (IOException e){
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to Usage Data");
         }
 
@@ -92,7 +85,7 @@ public class AdoptionDataSetup extends BaseTest {
         try {
             Calendar cal = Calendar.getInstance(userTimezone);
             BufferedReader reader;
-            String fileName = TestEnvironment.basedir + "/testdata/sfdc/UsageData/Scripts/Aggregation_Script.txt";
+            String fileName = env.basedir + "/testdata/sfdc/usageData/scripts/Aggregation_Script.txt";
             String line = null;
             String code = "";
             reader = new BufferedReader(new FileReader(fileName));
@@ -102,7 +95,6 @@ public class AdoptionDataSetup extends BaseTest {
             }
             reader.close();
             String year = "", month = "", day = "15";
-            String dateStr;
             int noOfTimesToLoop = (Integer.valueOf(noOfPeriods%5) ==0)  ? noOfPeriods/5 : noOfPeriods/5+1;
 
             if(isWeekly) {
@@ -111,14 +103,14 @@ public class AdoptionDataSetup extends BaseTest {
                     for (int m = 0; m < 5; m++, i = i - 7) {
                         //if the start day of the week configuration is changed then method parameter should be changed appropriately..
                         // Sun, Mon, Tue, Wed, Thu, Fri, Sat.
-                        dateStr = getWeekLabelDate(weekStartsOn, i, usesEndDate, false);
-                        year = (dateStr != null && dateStr.split("-").length > 0) ? String.valueOf(dateStr.split("-")[0]) : String.valueOf(cal.get(Calendar.YEAR));
-                        month = (dateStr != null && dateStr.split("-").length > 1) ? String.valueOf(dateStr.split("-")[1]) : String.valueOf(cal.get(Calendar.MONTH));
-                        day = (dateStr != null && dateStr.split("-").length > 2) ? String.valueOf(dateStr.split("-")[2]) : String.valueOf(cal.get(Calendar.DATE));
+                        Calendar ca = DateUtil.getWeekLabelDate(weekStartsOn, userTimezone, i, usesEndDate);
+                        year = String.valueOf(ca.get(Calendar.YEAR));
+                        month = String.valueOf((ca.get(Calendar.MONTH)+1));
+                        day = String.valueOf(ca.get(Calendar.DATE));
                         code = stringBuilder.toString();
                         code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                        Report.logInfo("Running Aggregation On : " + year + "-" + month + "-" + day);
-                        apex.runApex(resolveStrNameSpace(code));
+                        Log.info("Running Aggregation On : " + year + "-" + month + "-" + day);
+                        sfdc.runApexCode(resolveStrNameSpace(code));
                     }
                     Thread.sleep(15000L);
                     waitForBatchExecutionToComplete("AdoptionAggregation");
@@ -130,8 +122,8 @@ public class AdoptionDataSetup extends BaseTest {
                         year = String.valueOf(cal.get(Calendar.YEAR));
                         code = stringBuilder.toString();
                         code = code.replaceAll("THEMONTHCHANGE", month).replaceAll("THEYEARCHANGE", year).replace("THEDAYCHANGE", day);
-                        Report.logInfo("Running Aggregation On : " +year+"-"+month+"-"+day);
-                        apex.runApex(resolveStrNameSpace(code));
+                        Log.info("Running Aggregation On : " +year+"-"+month+"-"+day);
+                        sfdc.runApexCode(resolveStrNameSpace(code));
                         cal.add(Calendar.MONTH, -1);
                     }
                     Thread.sleep(15000L);
@@ -140,7 +132,7 @@ public class AdoptionDataSetup extends BaseTest {
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to run aggregation");
         }
     }
@@ -151,7 +143,7 @@ public class AdoptionDataSetup extends BaseTest {
                 "JBCXM__UsesEndDateAsWeekName__c from JBCXM__ApplicationSettings__c LIMIT 1];\n";
         apexCode += (val != null) ? "appSettings.JBCXM__UsageUtilizationCalc__c = '"+val+"';" : "appSettings.JBCXM__UsageUtilizationCalc__c = null;";
         apexCode += "update appSettings;";
-        apex.runApex(resolveStrNameSpace(apexCode));
+        sfdc.runApexCode(resolveStrNameSpace(apexCode));
     }
 
     public void updateUsersDisplayInUsageGrids(boolean display) {
@@ -160,6 +152,6 @@ public class AdoptionDataSetup extends BaseTest {
                 "JBCXM__UsesEndDateAsWeekName__c, JBCXM__LicensedUserNotInAdoptionGrid__c from JBCXM__ApplicationSettings__c LIMIT 1];\n" +
                 "appSettings.JBCXM__LicensedUserNotInAdoptionGrid__c = "+!(display)+"\n;" +
                 "update appSettings;";
-        apex.runApex(resolveStrNameSpace(apexCode));
+        sfdc.runApexCode(resolveStrNameSpace(apexCode));
     }
 }

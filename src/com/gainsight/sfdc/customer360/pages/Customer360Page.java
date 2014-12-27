@@ -1,16 +1,16 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import com.gainsight.pageobject.core.Report;
+import java.util.HashMap;
+
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+
 import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.workflow.pages.WorkflowPage;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-
-import java.util.HashMap;
 
 public class Customer360Page extends BasePage {
 
@@ -44,12 +44,12 @@ public class Customer360Page extends BasePage {
 
 
     public Customer360Page() {
-        Report.logInfo("360 Page Loading");
+        Log.info("360 Page Loading");
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 	}
 
     public Customer360Page(String val) {
-        Report.logInfo("Sample");
+        Log.info("Sample");
     }
 
     /**
@@ -65,7 +65,7 @@ public class Customer360Page extends BasePage {
 		summary.setOCD(field.getTextFieldText(String.format(summaryLeftSection,labels.getOCD())));
 		summary.setRD(field.getTextFieldText(String.format(summaryLeftSection, labels.getRD())));
 		summary.setStatus(field.getTextFieldText(String.format(summaryLeftSection, "Status")));
-        Report.logInfo("Stage : " + field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
+        Log.info("Stage : " + field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
         summary.setStage(field.getTextFieldText(String.format(summaryWidgets, labels.getStage())));
         summary.setUsers(field.getTextFieldText(String.format(summaryWidgets, labels.getUsers())));
 
@@ -115,9 +115,10 @@ public class Customer360Page extends BasePage {
 		return new Workflow360Page("360 Page");
 	}
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
-    	Report.logInfo("Searching for customer : " +name);
+    	Log.info("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
         button.click(CUST_SERCHBY_SELECT);
+        Timer.sleep(2); //Few times, customer selection is fails.
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
         if(isInstanceName) {
             if(isContains) {
@@ -137,7 +138,7 @@ public class Customer360Page extends BasePage {
         driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
         wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
         driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
-        Report.logInfo("Customer Search Completed. ");
+        Log.info("Customer Search Completed. ");
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -153,20 +154,8 @@ public class Customer360Page extends BasePage {
 		return isElementPresentBy(element.getElementBy(xpath), MAX_TIME);
 	}
 
-    public Retention360 clickOnRetEventsSec() {
-        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(EVENT_SECTION_TAB);
-        return new Retention360("Events Page");
-    }
-
-    public Retention360 clickOnRetAlertsSec() {
-        wait.waitTillElementDisplayed(RETENTION_SECTION_TAB, MIN_TIME, MAX_TIME);
-        item.click(ALERT_SECTION_TAB);
-        return new Retention360("Alerts Page");
-    }
-
     public RelatedList360 clickOnRelatedListSec(String secName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         String xPath = "//ul[@class='nav']/li[contains(@class,'related_list')]/a[contains(text(),'"+secName+"')]";
         wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
         item.click(xPath);
@@ -244,17 +233,17 @@ public class Customer360Page extends BasePage {
 		xpath.append(sContains + transaction.getType() + cContains);
 		if (transaction.getMRR() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getMRR())
+					+ amtUtil.formatNumber(transaction.getMRR())
 					+ cContains);
 		if (transaction.getASV() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getASV())
+					+ amtUtil.formatNumber(transaction.getASV())
 					+ cContains);
 		if (transaction.getUsers() != null)
 			xpath.append(sContains + transaction.getUsers() + cContains);
 		if (transaction.getOTR() != null)
 			xpath.append(sContains
-					+ amtDateUtil.formatNumber(transaction.getOTR())
+					+ amtUtil.formatNumber(transaction.getOTR())
 					+ cContains);
 		if (transaction.getTerm() != null)
 			xpath.append(sContains + transaction.getTerm() + cContains);

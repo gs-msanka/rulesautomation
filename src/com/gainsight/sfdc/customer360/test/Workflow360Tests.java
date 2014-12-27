@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
+import com.gainsight.testdriver.Application;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -13,15 +13,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.TestEnvironment;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Workflow360Page;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;
-import com.gainsight.sfdc.workflow.tests.WorkFlowTest;
 import com.gainsight.sfdc.workflow.tests.WorkflowSetup;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
@@ -29,30 +26,26 @@ import com.sforce.soap.partner.sobject.SObject;
 public class Workflow360Tests extends WorkflowSetup{
 	
 	private final String TEST_DATA_FILE         = "testdata/sfdc/workflow/tests/WorkFlow_Test_360.xls";
-    private final String CREATE_USERS_SCRIPT    = TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
+    private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c where JBCXM__Account__c in (select id from Account where Name='CTA Account 360')];"+
                                         "Delete [select id from JBCXM__CSTask__c where JBCXM__Account__c in (select id from Account where Name='CTA Account 360')];";
-    private final String CREATE_ACCOUNTS_CUSTOMERS=TestEnvironment.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
+    private final String CREATE_ACCOUNTS_CUSTOMERS=Application.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
     
     ObjectMapper mapper                         = new ObjectMapper();
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
     
     @BeforeClass
-    public void setup() {
-        sfinfo= SFDCUtil.fetchSFDCinfo();
-        userLocale = sfinfo.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+    public void setup() throws Exception {
         basepage.login();
-        isPackage = isPackageInstance();
         createExtIdFieldOnAccount();
-        apex.runApexCodeFromFile(CREATE_ACCOUNTS_CUSTOMERS,isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         createExtIdFieldOnUser();
-        apex.runApexCodeFromFile(CREATE_USERS_SCRIPT, isPackage);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
     }
     
     @BeforeMethod
     public void clearCTAsForThisAccount(){
-    	apex.runApex(resolveStrNameSpace(CLEANUP_SCRIPT));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
@@ -548,7 +541,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
 	      System.out.println("querying for:"+milestoneQuery);
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
@@ -567,7 +560,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
 	      System.out.println("querying for:"+milestoneQuery);
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
@@ -585,7 +578,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
 	      System.out.println("querying for:"+milestoneQuery);
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
@@ -603,14 +596,14 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	      
 	      //Closing Risk CTA - to check if a RiskResolved Milestone is created.
 	      workflow360.closeCTA(cta,false);
 	      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Resolved'";
 	      System.out.println("querying for:"+milestoneQuery_afterClose);
-	      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestonesAfterClose=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	     
@@ -629,7 +622,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Identified'";
 	      System.out.println("querying for:"+milestoneQuery);
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	      
@@ -637,7 +630,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.closeCTA(cta,false);
 	      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Won'";
 	      System.out.println("querying for:"+milestoneQuery_afterClose);
-	      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestonesAfterClose=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
@@ -655,7 +648,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.createMilestoneForCTA(cta);
 	      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
 	      System.out.println("querying for:"+milestoneQuery);
-	      SObject[] milestones=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestones=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	      
@@ -663,7 +656,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      workflow360.closeCTA(cta,false);
 	      String milestoneQuery_afterClose="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Completed'";
 	      System.out.println("querying for:"+milestoneQuery_afterClose);
-	      SObject[] milestonesAfterClose=soql.getRecords(resolveStrNameSpace(milestoneQuery));
+	      SObject[] milestonesAfterClose=sfdc.getRecords(resolveStrNameSpace(milestoneQuery));
 	      System.out.println(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")));
 	      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
@@ -966,8 +959,8 @@ public class Workflow360Tests extends WorkflowSetup{
 	        workflow360.addTaskToCTA(cta, tasks);
 	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 	        
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 	        Assert.assertTrue(sfTask==1, "Verified that the task is created successfully in SF");
 	    }
 	    
@@ -992,13 +985,13 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	        workflow360.addTaskToCTA(cta, tasks);
 	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
 	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),true);
-	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] desyncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"'");
 	        Assert.assertTrue((sfTask==1 &&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
 	        Assert.assertEquals(1, sfTask);
 	    }
@@ -1024,13 +1017,13 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	        workflow360.addTaskToCTA(cta, tasks);
 	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
 	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),false);
-	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] desyncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
 	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task desynced from SF and SF task is deleted too");
 	    }
 	    
@@ -1055,8 +1048,8 @@ public class Workflow360Tests extends WorkflowSetup{
 	        workflow360.addTaskToCTA(cta, tasks);
 	        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 	        
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 	        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
 	        disableSFAutoSync();
 	    }
@@ -1082,13 +1075,13 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	        workflow360.addTaskToCTA(cta, tasks);
 	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
 	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),true);
-	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] desyncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"'");
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"'");
 	        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF but remains in SF");
 	        disableSFAutoSync();
 	    }
@@ -1115,13 +1108,13 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	        workflow360.addTaskToCTA(cta, tasks);
 	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        SObject[] syncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
 	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),false);
-	        SObject[] desyncedTasks=soql.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+	        SObject[] desyncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 
-	        int sfTask=soql.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
+	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
 	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
 	        disableSFAutoSync();
 	    }

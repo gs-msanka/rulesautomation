@@ -1,7 +1,5 @@
 package com.gainsight.sfdc.workflow.pojos;
 
-import com.google.inject.internal.asm.$Attribute;
-
 import java.util.ArrayList;
 import java.util.List;
 

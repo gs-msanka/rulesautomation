@@ -1,5 +1,5 @@
 package com.gainsight.sfdc.customer.pages;
 
-public class AnalyticsPage extends CustomerBasePage{
+public class AnalyticsPage extends CustomerBasePage {
 
 }

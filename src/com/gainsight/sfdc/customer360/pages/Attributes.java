@@ -1,14 +1,14 @@
 package com.gainsight.sfdc.customer360.pages;
 
 
-import com.gainsight.pageobject.core.Report;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import com.gainsight.testdriver.Log;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 public class Attributes extends Customer360Page {
 
     private static final String READY_INDICATOR = "";
@@ -18,7 +18,7 @@ public class Attributes extends Customer360Page {
 
 
     public Attributes() {
-        Report.logInfo("Account Attributes Page Loading");
+        Log.info("Account Attributes Page Loading");
         wait.waitTillElementDisplayed(ACCOUNT_ATTRIBUTES_SECTION_TAB, MIN_TIME,MAX_TIME);
     }
 
@@ -37,13 +37,13 @@ public class Attributes extends Customer360Page {
             String[] actValues = getAllFieldsDisplayed();
             if(actValues!= null && actValues.length >0 && actValues.length >=expValues.length) {
                 for(int i=0; i< expValues.length;i++) {
-                    Report.logInfo("Acc Value : " +actValues[i]);
-                    Report.logInfo("Exp Value : " +expValues[i]);
+                    Log.info("Acc Value : " +actValues[i]);
+                    Log.info("Exp Value : " +expValues[i]);
                     if(actValues[i].contains(expValues[i])) {
                         result = true;
                     } else {
                         result = false;
-                        Report.logInfo("Field label failed at : " +i+ "on field " +actValues[i]);
+                        Log.info("Field label failed at : " +i+ "on field " +actValues[i]);
                     }
                 }
             }
@@ -63,7 +63,7 @@ public class Attributes extends Customer360Page {
             tableCols = row.findElements(By.cssSelector("td.attribute-head"));
             for(WebElement col : tableCols) {
                 attLabel = col.getText().trim();
-                Report.logInfo("The Attribute Name :" +attLabel);
+                Log.info("The Attribute Name :" +attLabel);
                 accountFields[i] = attLabel;
                 i++;
             }
@@ -91,7 +91,7 @@ public class Attributes extends Customer360Page {
                 }
                 ++i;
                 if(i==2 && attLabel != null && attValue != null) {
-                    Report.logInfo("Attribute - " +attLabel+ " - " +attValue);
+                    Log.info("Attribute - " +attLabel+ " - " +attValue);
                     tempMap.put(attLabel, attValue);
                     i=0;
                 }
@@ -106,14 +106,14 @@ public class Attributes extends Customer360Page {
         HashMap<String, String> actualValues = getAllFieldsAndValues();
         while(itr.hasNext()) {
             String key = String.valueOf(itr.next());
-            Report.logInfo("Key-" +key);
-            Report.logInfo("Exp Data-" +testData.get(key));
-            Report.logInfo("Actual Data-" +actualValues.get(key));
+            Log.info("Key-" +key);
+            Log.info("Exp Data-" +testData.get(key));
+            Log.info("Actual Data-" +actualValues.get(key));
             if(testData.get(key) != null && testData.get(key).contains(actualValues.get(key))) {
                 result = true;
             } else {
                 result = false;
-                Report.logInfo("Failed While Comparing :" +key);
+                Log.info("Failed While Comparing :" +key);
                 break;
             }
         }

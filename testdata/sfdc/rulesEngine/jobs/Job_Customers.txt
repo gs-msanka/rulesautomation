@@ -1,0 +1,33 @@
+{
+    "jobName": "Load Customers For Rules Engine",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+            "inputFile" : "/testdata/sfdc/rulesEngine/data/Rules_Customers.csv",
+            "outputFile" : "/resources/datagen/process/Rules_Temp_Customers.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : false,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__OriginalContractDate__c"
+
+                },
+                {
+                    "weekly" : true,
+                    "daily"  : false,
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__NextRenewalDate__c"
+
+                }
+            ]
+        },
+    "load": {
+        "target": "sfdc",
+        "sObject": "JBCXM__CustomerInfo__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "cleanUp" : true,
+        "file": "/resources/datagen/process/Rules_Temp_Customers.csv"
+    }
+}

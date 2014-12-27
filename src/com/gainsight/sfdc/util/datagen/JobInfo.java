@@ -1,11 +1,11 @@
 package com.gainsight.sfdc.util.datagen;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class JobInfo {
 

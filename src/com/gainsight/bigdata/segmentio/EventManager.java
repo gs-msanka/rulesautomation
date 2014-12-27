@@ -8,7 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import com.gainsight.pageobject.core.Report;
+
+import com.gainsight.testdriver.Log;
+
 import us.monoid.web.Resty;
 
 public class EventManager {
@@ -37,7 +39,7 @@ public class EventManager {
 		try {
 			executor.awaitTermination(180L, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			Report.logInfo("Error while waiting for threads to complete event submissions (timeout is 180 seconds)");
+			Log.info("Error while waiting for threads to complete event submissions (timeout is 180 seconds)");
 			e.printStackTrace();
 		}
 		return successfulEvents;

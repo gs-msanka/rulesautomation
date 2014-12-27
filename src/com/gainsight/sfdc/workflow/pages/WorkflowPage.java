@@ -1,21 +1,20 @@
 package com.gainsight.sfdc.workflow.pages;
 
 
-import com.gainsight.sfdc.workflow.pojos.Task;
-import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.gainsight.pageobject.util.Timer;
 import org.openqa.selenium.By;
-
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.workflow.pojos.CTA;
-
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.gainsight.sfdc.workflow.pojos.CTA;
+import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Log;
+import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
 /**
  * Created by gainsight on 07/11/14.
@@ -185,15 +184,15 @@ public class WorkflowPage extends WorkflowBasePage {
             	waitForPageLoad();
         		wait.waitTillElementDisplayed(CALENDAR_VIEW_READY_INDICATOR, MIN_TIME, MAX_TIME);
         	}
-        else if(view.equals("360 Page")) Report.logInfo("Landed in Customer 360 Cockpit section");
-        else if(view.equals("Account Widget")) Report.logInfo("landed from Account Widget");
+        else if(view.equals("360 Page")) Log.info("Landed in Customer 360 Cockpit section");
+        else if(view.equals("Account Widget")) Log.info("landed from Account Widget");
     }
 
     private void waitForPageLoad() {
-        Report.logInfo("Loading Cockpit Page");
+        Log.info("Loading Cockpit Page");
         waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
-        Report.logInfo("Cockpit Page Loaded Successfully");
+        Log.info("Cockpit Page Loaded Successfully");
     }
 
 
@@ -201,21 +200,21 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(CREATE_CTA_ICON);
     	if(cta.getType().equals("Risk"))
     	{
-            Report.logInfo("Adding CTA of Type - RISK");
+            Log.info("Adding CTA of Type - RISK");
     		item.click(CREATE_RISK_LINK);
     		wait.waitTillElementDisplayed(RISK_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
     	}
     	if(cta.getType().equals("Opportunity")){
-            Report.logInfo("Adding CTA of Type - Opportunity");
+            Log.info("Adding CTA of Type - Opportunity");
     		item.click(CREATE_OPPOR_LINK);
     		wait.waitTillElementDisplayed(OPPO_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
     	}
     	if(cta.getType().equals("Event")){
-            Report.logInfo("Adding CTA of Type - Event");
+            Log.info("Adding CTA of Type - Event");
     		item.click(CREATE_EVENT_LINK);
     		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
@@ -224,7 +223,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
     
     private void fillAndSaveCTAForm(CTA cta) {
-        Report.logInfo("Started Filling CTA Form");
+        Log.info("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
 		if(!cta.isFromCustomer360orWidgets()) selectCustomer(cta.getCustomer());
 		item.click(CREATE_FORM_REASON);
@@ -235,7 +234,7 @@ public class WorkflowPage extends WorkflowBasePage {
             fillAndSaveRecurringEventCTAForm(cta);
         }
         button.click(SAVE_CTA);
-        Report.logInfo("Clicked on Save CTA");
+        Log.info("Clicked on Save CTA");
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else {
         	env.setTimeout(1);
@@ -246,8 +245,8 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
-        Report.logInfo("Starting to fill recurring event part");
-    	field.selectCheckbox(CREATE_RECURRING_EVENT);
+        Log.info("Starting to fill recurring event part");
+    	field.selectCheckBox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
 			if(recurProperties.getRecurringType().equals("Daily")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
@@ -309,8 +308,8 @@ public class WorkflowPage extends WorkflowBasePage {
                 item.click(RECUR_YEARLY_ENDDATE_SELECT);
                 selectValueInDropDown(recurProperties.getRecurEndDate());
 				}
-		    amtDateUtil.stalePause(); //In - Case, Should add wait logic here.
-        Report.logInfo("Completed Recurring event form");
+		    Timer.sleep(2); //In - Case, Should add wait logic here.
+        Log.info("Completed Recurring event form");
     }
 
 	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
@@ -339,7 +338,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
 
     private void selectTaskOwner(String owner) {
-        Report.logInfo("Selecting Task Owner : " +owner);
+        Log.info("Selecting Task Owner : " +owner);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(ADD_ASSIGNEE_TO_TASK, owner);
@@ -351,12 +350,12 @@ public class WorkflowPage extends WorkflowBasePage {
                     return;
                 }
             }
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select owner");
         }
-        Report.logInfo("Selected Task Owner Successfully: " +owner);
+        Log.info("Selected Task Owner Successfully: " +owner);
     }
 	
 	public WorkflowPage editTasks(CTA cta,Task newTask,Task oldTask){
@@ -383,7 +382,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
 	
     private void selectCustomer(String cName) {
-        Report.logInfo("Selecting Customer : " +cName);
+        Log.info("Selecting Customer : " +cName);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(CREATE_FORM_CUSTOMER, cName);
@@ -395,19 +394,19 @@ public class WorkflowPage extends WorkflowBasePage {
                     return;
                 }
             }
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select owner");
         }
-        Report.logInfo("Selected Customer Successfully: " +cName);
+        Log.info("Selected Customer Successfully: " +cName);
     }
 
     
     public void createMilestoneForCTA(CTA cta){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_MILESTONE);
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
     }
     
     public WorkflowPage snoozeCTA(CTA cta){
@@ -417,7 +416,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
         return this;
     }
 
@@ -476,7 +475,7 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(EXP_VIEW_REASON_BUTTON);
             selectValueInDropDown(newCta.getReason());
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         collapseCTAView();
         return this;
     }
@@ -485,24 +484,11 @@ public class WorkflowPage extends WorkflowBasePage {
         expandCTAView(cta);
         item.click(EXP_VIEW_STATUS_BUTTON);
        selectValueInDropDown("Closed Lost");
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         collapseCTAView();
         return this;
     }
-    public void selectValueInDropDown(String value) {
-        boolean selected = false;
-        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
-            Report.logInfo("Checking : "+ele.isDisplayed());
-            if(ele.isDisplayed()) {
-                ele.click();
-                selected = true;
-                break;
-            }
-        }
-        if(selected != true) {
-            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
-        }
-    }
+
 
     public boolean isCTADisplayed_WithScore(CTA cta,String scheme){
     	String scoredCTAXpath;
@@ -519,7 +505,7 @@ public class WorkflowPage extends WorkflowBasePage {
         env.setTimeout(2);
         try {
             List<WebElement> webElements = driver.findElements(By.xpath(getCTAXPath(cta)));
-            Report.logInfo("NUmber of elements :" +webElements.size());
+            Log.info("NUmber of elements :" +webElements.size());
             System.out.println();
             for(WebElement ele : webElements) {
                 if(ele.isDisplayed()) {
@@ -528,47 +514,47 @@ public class WorkflowPage extends WorkflowBasePage {
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
-            Report.logInfo("CTA is not displayed / Present, Please check your XPath (or) CTA Data");
-            Report.logInfo(e.getLocalizedMessage());
+            Log.info("CTA is not displayed / Present, Please check your XPath (or) CTA Data");
+            Log.info(e.getLocalizedMessage());
             return false;
         }
-        Report.logInfo("CTA is not displayed");
+        Log.info("CTA is not displayed");
         env.setTimeout(30);
         return false;
 
     }
 
     public WorkflowPage collapseCTAView() {
-        Report.logInfo("Collapsing CTA View");
+        Log.info("Collapsing CTA View");
         item.click(CTA_EXP_SLIDE_ICON);
-        amtDateUtil.stalePause();
-        Report.logInfo("CTA View Collapsed");
+        Timer.sleep(2);
+        Log.info("CTA View Collapsed");
         return this;
     }
     public WorkflowPage expandCTAView(CTA cta) {
-        Report.logInfo("Expanding CTA");
+        Log.info("Expanding CTA");
         String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         item.click(xPath);
         if(!isCTAExpandedViewLoaded(cta)) {
             throw new RuntimeException("CTA expand view failed to load");
         }
-        Report.logInfo("CTA expanded view loaded successfully");
+        Log.info("CTA expanded view loaded successfully");
         return this;
     }
     public WorkflowPage expandTaskView(Task task) {
-        Report.logInfo("Expanding Task View");
+        Log.info("Expanding Task View");
         String xPath = getTaskXPath(task)+"/div[@class='gs-cta-head child-task workflow-ctataskitem']";
         item.click(xPath);
         if(!isTaskExpandedViewLoaded(task)) {
             throw new RuntimeException("Task expand view failed to load");
         }
-        Report.logInfo("Task View Expanded Successfully");
+        Log.info("Task View Expanded Successfully");
         return this;
     }
 
     public WorkflowPage collapseTaskView() {
         item.click(TASK_EXP_SLIDE_ICON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
@@ -576,12 +562,12 @@ public class WorkflowPage extends WorkflowBasePage {
         expandTaskView(task);
         String xpath = TASK_EXP_ASSIGNEE;
         if(!element.getText(xpath).trim().equalsIgnoreCase(task.getAssignee())) {
-            Report.logInfo("CTA is not assigned to right user.");
+            Log.info("CTA is not assigned to right user.");
             return false;
         }
         String dueDate = element.getElement(TASK_DUE_DATE).getAttribute("value");
         if(dueDate == null || !dueDate.trim().equalsIgnoreCase(task.getDate())) {
-            Report.logInfo("CTA due data is not correct");
+            Log.info("CTA due data is not correct");
             return false;
         }
         collapseTaskView();
@@ -589,16 +575,16 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
    public boolean verifyCTADetails(CTA cta) {
-       Report.logInfo("Verifying CTA Details in expanded view");
+       Log.info("Verifying CTA Details in expanded view");
         expandCTAView(cta);
         String xpath = EXP_VIEW_ASSIGNEE;
         if(!element.getText(xpath).trim().equalsIgnoreCase(cta.getAssignee())) {
-            Report.logInfo("CTA is not assigned to right user.");
+            Log.info("CTA is not assigned to right user.");
             return false;
         }
         String dueDate = element.getElement(EXP_VIEW_DUE_DATE_INPUT).getAttribute("value");
         if(dueDate == null || !dueDate.trim().equalsIgnoreCase(cta.getDueDate())) {
-            Report.logInfo("CTA due data is not correct");
+            Log.info("CTA due data is not correct");
             return false;
         }
 
@@ -611,7 +597,7 @@ public class WorkflowPage extends WorkflowBasePage {
             if(!element.getElement("//table[@class='wf-score-table cta-dynamic-fields-table']/tbody/tr" +
                     "/th[contains(text(), '"+attributes.get(i-1).getAttLabel()+"')]" +
                     "/following-sibling::td[contains(text(), '"+attributes.get(i-1).getAttValue()+"')]").isDisplayed()) {
-                Report.logInfo("Data in the table didn't match");
+                Log.info("Data in the table didn't match");
                 return false;
             }
         }
@@ -619,7 +605,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public boolean isTaskExpandedViewLoaded(Task task) {
-        Report.logInfo("Verifying task expanded view is loaded");
+        Log.info("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
         for(int i=0; i<5; i++) {
@@ -628,27 +614,27 @@ public class WorkflowPage extends WorkflowBasePage {
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
 
             if(!task.getPriority().equalsIgnoreCase(expViewTask.getPriority()))
-                Report.logInfo("Priority not matched");
+                Log.info("Priority not matched");
             if(!task.getStatus().equalsIgnoreCase(expViewTask.getStatus()))
-                Report.logInfo("Status not matched");
+                Log.info("Status not matched");
             if(task.getSubject().equalsIgnoreCase(expViewTask.getSubject()))
-                Report.logInfo("Subject not matched");
+                Log.info("Subject not matched");
 
             if(task.getPriority().equalsIgnoreCase(expViewTask.getPriority()) &&
                     task.getStatus().equalsIgnoreCase(expViewTask.getStatus()) &&
                     task.getSubject().equalsIgnoreCase(expViewTask.getSubject())) {
                 return true;
             }  else {
-                Report.logInfo("Waiting for Task Details to Load");
-                amtDateUtil.stalePause();
+                Log.info("Waiting for Task Details to Load");
+                Timer.sleep(2);
             }
         }
-        Report.logInfo("Task expand mode is not loaded properly.");
+        Log.info("Task expand mode is not loaded properly.");
         return false;
     }
 
     public boolean isCTAExpandedViewLoaded(CTA cta) {
-        Report.logInfo("Verify CTA expanded view loaded successfully.");
+        Log.info("Verify CTA expanded view loaded successfully.");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         CTA expViewCta = new CTA();
         for(int i=0; i< 5; i++) {
@@ -665,25 +651,25 @@ public class WorkflowPage extends WorkflowBasePage {
                 expViewCta.setSubject(element.getElement(EXP_VIEW_SUBJECT_INPUT).getAttribute("value").trim());
                 
                 if(!cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())&&!cta.isFromCustomer360orWidgets()) {
-                    Report.logInfo("Expected Value : " +cta.getCustomer());
-                    Report.logInfo("Actual Value : " +expViewCta.getCustomer());
-                    Report.logInfo("Customer Name not matched.");
+                    Log.info("Expected Value : " +cta.getCustomer());
+                    Log.info("Actual Value : " +expViewCta.getCustomer());
+                    Log.info("Customer Name not matched.");
                 } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
-                    Report.logInfo("Expected Value :" +cta.getType()+"a");
-                    Report.logInfo("Actual Value :" +expViewCta.getType()+"a");
-                    Report.logInfo("Type not matched.");
+                    Log.info("Expected Value :" +cta.getType()+"a");
+                    Log.info("Actual Value :" +expViewCta.getType()+"a");
+                    Log.info("Type not matched.");
                 } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
-                    Report.logInfo("Expected Value : " +cta.getPriority());
-                    Report.logInfo("Actual Value : " +expViewCta.getPriority());
-                    Report.logInfo("Priority not matched.");
+                    Log.info("Expected Value : " +cta.getPriority());
+                    Log.info("Actual Value : " +expViewCta.getPriority());
+                    Log.info("Priority not matched.");
                 } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
-                    Report.logInfo("Expected Value : " +cta.getStatus());
-                    Report.logInfo("Actual Value : " +expViewCta.getStatus());
-                    Report.logInfo("Status not matched.");
+                    Log.info("Expected Value : " +cta.getStatus());
+                    Log.info("Actual Value : " +expViewCta.getStatus());
+                    Log.info("Status not matched.");
                 } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
-                    Report.logInfo("Expected Value : " +cta.getReason());
-                    Report.logInfo("Actual Value : " +expViewCta.getReason());
-                    Report.logInfo("Reason not matched.");
+                    Log.info("Expected Value : " +cta.getReason());
+                    Log.info("Actual Value : " +expViewCta.getReason());
+                    Log.info("Reason not matched.");
                 }
                 if(!cta.isFromCustomer360orWidgets()){
                 	if(cta.getCustomer().trim().equalsIgnoreCase(expViewCta.getCustomer())  &&
@@ -701,19 +687,19 @@ public class WorkflowPage extends WorkflowBasePage {
                     		return true;               	
                 }
                 else {
-                    Report.logInfo("Waiting for Event Details to Load");
-                    amtDateUtil.stalePause();
+                    Log.info("Waiting for Event Details to Load");
+                    Timer.sleep(2);
                 }
             } catch (Exception e) {
-                Report.logInfo("Trying Again to check card loaded successfully.");
+                Log.info("Trying Again to check card loaded successfully.");
             }
         }
-        Report.logInfo("CTA expand mode is not loaded properly.");
+        Log.info("CTA expand mode is not loaded properly.");
         return false;
     }
 
     private String getCTAXPath(CTA cta) {
-        Report.logInfo("Generating CTA XPath");
+        Log.info("Generating CTA XPath");
         String xPath = "//div[@class='gs-cta']";
         xPath = xPath+"/descendant::div[@class='title-ctn pull-left']";
         xPath =(cta.isClosed() && !cta.getStatus().equals("Closed Lost")) ? xPath+"/span[@class='check-data ctaCheckBox require-tooltip active']" :
@@ -760,12 +746,12 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             throw new RuntimeException("Assignee should be specified.");
         }
-        Report.logInfo("CTA Path : " + xPath);
+        Log.info("CTA Path : " + xPath);
         return xPath;
     }
 
     private static String getTaskXPath(Task task) {
-        Report.logInfo("Generating Task XPath");
+        Log.info("Generating Task XPath");
         String xPath = "//div[@class='gs-cta-item']";
         if(task.getStatus().equalsIgnoreCase("Open")) {
             xPath = xPath+"/descendant::div[@class='title-ctn pull-left']/span[@class='check-data taskCheckBox require-tooltip']" +
@@ -798,7 +784,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 }
             }
         }
-        Report.logInfo("Task is not displayed");
+        Log.info("Task is not displayed");
         env.setTimeout(30);
         return false;
     }
@@ -818,14 +804,14 @@ public class WorkflowPage extends WorkflowBasePage {
             wait.waitTillElementDisplayed(SAVE_ACTION, MIN_TIME, MAX_TIME);
             item.click(SAVE_ACTION);
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public WorkflowPage openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks) {
         String xPath = getCTAXPath(cta)+"/descendant::span[@class='check-data ctaCheckBox require-tooltip active']";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(hasTasks){
         	for(Task task : tasks){
         		openORCloseTask(task);
@@ -837,14 +823,14 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage openORCloseTask(Task task) {
         String xPath = getTaskXPath(task)+"/descendant::span[contains(@class, 'check-data taskCheckBox')]";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 
     public WorkflowPage flagCTA(CTA cta) {
         String xPath = getCTAXPath(cta)+"/descendant::span[contains(@class, 'glyphicon glyphicon-bookmark cta-flag')]";
         item.click(xPath);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         cta.setImp(true);
@@ -922,7 +908,7 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(TASK_EXP_STATUS);
             selectValueInDropDown(newTask.getStatus());
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
     
@@ -934,7 +920,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(TASK_EXP_DELETE_OPTION);
         wait.waitTillElementDisplayed(DELETE_ACTION, MIN_TIME, MAX_TIME);
         item.click(DELETE_ACTION);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!task.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         return this;
@@ -945,7 +931,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         item.click(String.format(EXP_VIEW_DELETE_CTA, cta.getType()));
         item.click(DELETE_ACTION);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         return this;
@@ -953,7 +939,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage changeAssigneeView(String assignee) {
         item.click(OWNER);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         wait.waitTillElementDisplayed(OWNER_SEARCH, MIN_TIME, MAX_TIME);
         if(assignee != null) {
             boolean status = false;
@@ -982,7 +968,7 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(EXP_VIEW_CTA_MORE_OPTIONS);
         if(isApply) item.click(EXP_VIEW_APPLY_PLAYBOOK);
         else item.click(EXP_VIEW_REPLACE_PLAYBOOK);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         item.click(PLAYBOOK_SELECT);
@@ -996,7 +982,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             item.click(PLAYBOOK_REPLACE);
         }
-        amtDateUtil.sleep(5);
+        Timer.sleep(5);
         return this;
     }
 
@@ -1141,22 +1127,22 @@ public class WorkflowPage extends WorkflowBasePage {
         if(cta != null && groupName != null) {
             String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
                     "/a[contains(text(), '"+groupName+"')]/span[contains(@class, 'grouped-ctas-count')]";
-            Report.logInfo("Group Xpath :" +xPath);
+            Log.info("Group Xpath :" +xPath);
             count = Integer.valueOf(element.getText(xPath).trim());
-            Report.logInfo("No of CTA's in Group :" +count);
+            Log.info("No of CTA's in Group :" +count);
             return count;
         } else if(groupName != null){
             String xPath = "//div[@class='gs-wf-group-head']/a[contains(text(), '"+groupName+"')]/span[contains(@class, 'grouped-ctas-count')]" ;
-            Report.logInfo("Group Xpath :" +xPath);
+            Log.info("Group Xpath :" +xPath);
             count = Integer.valueOf(element.getText(xPath).trim());
-            Report.logInfo("No of CTA's in Group :" +count);
+            Log.info("No of CTA's in Group :" +count);
             return count;
         } else {
             String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
                     "/a/span[contains(@class, 'grouped-ctas-count')]";
-            Report.logInfo("Group Xpath :" +xPath);
+            Log.info("Group Xpath :" +xPath);
             count = Integer.valueOf(element.getText(xPath).trim());
-            Report.logInfo("No of CTA in Group :" +count);
+            Log.info("No of CTA in Group :" +count);
             return count;
         }
     }
@@ -1170,16 +1156,16 @@ public class WorkflowPage extends WorkflowBasePage {
                 }
                 String xPath = getCTAXPath(cta)+"/ancestor::div[@class='gs-wf-group']/div[@class='gs-wf-group-head']" +
                         "/a[contains(text(), '"+groupName+"')]";
-                Report.logInfo("Group Xpath :" +xPath);
+                Log.info("Group Xpath :" +xPath);
                 status = element.getElement(xPath).isDisplayed();
-                Report.logInfo("CTA Display Status " +status);
+                Log.info("CTA Display Status " +status);
                 return status;
             } else {
                 throw new RuntimeException("Both CTA, GroupName are mandatory");
             }
         } catch (Exception e) {
-            Report.logInfo(e.getLocalizedMessage());
-            Report.logInfo("CTA is not displayed");
+            Log.info(e.getLocalizedMessage());
+            Log.info("CTA is not displayed");
             e.printStackTrace();
         }
         return status;
@@ -1197,15 +1183,15 @@ public class WorkflowPage extends WorkflowBasePage {
         String ctaXpath = getCTAXPath(cta);
         String taskXpath = getTaskXPath(task);
         String xpath = ctaXpath+"/div[@class='gs-cta-body']"+getTaskXPath(task);
-        Report.logInfo("Xpath of CTA, TASK : " +cta);
+        Log.info("Xpath of CTA, TASK : " +cta);
         try {
             if(element.getElement(ctaXpath).isDisplayed()) {
                 status = element.getElement(xpath).isDisplayed();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Report.logInfo(e.getLocalizedMessage());
-            Report.logInfo("CTA (Or) Task is not displayed");
+            Log.info(e.getLocalizedMessage());
+            Log.info("CTA (Or) Task is not displayed");
         }
         return status;
     }
@@ -1230,7 +1216,7 @@ public class WorkflowPage extends WorkflowBasePage {
      */
     public WorkflowPage selectCalendarMonth(String month, int year) {
         String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='month' and starts-with(text(), '"+month+"') and contains(text(), '"+year+"')]";
-        Report.logInfo("Selecting month : " +xPath);
+        Log.info("Selecting month : " +xPath);
         item.click(xPath);
         waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
@@ -1248,7 +1234,7 @@ public class WorkflowPage extends WorkflowBasePage {
         String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='cell-lbl wf-date' and contains(text(), '"+day+"')]" +
                 "/following-sibling::div[@class='wf-week-month']/span[contains(text(), '"+month.toUpperCase()+"')]" +
                 "/following-sibling::span[contains(text(), '"+weekDay.toUpperCase()+"')]";
-        Report.logInfo("Selecting day : " +xPath);
+        Log.info("Selecting day : " +xPath);
         item.click(xPath);
         waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
@@ -1265,7 +1251,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage selectCalendarWeek(int day, int week, String month) {
         String xPath = "//div[@class='calendar-content cal-row']/descendant::div[@class='wk' and contains(text(), 'Week "+week+"')]" +
                 "/following-sibling::div[@class='wk-month']/span[contains(text(), '"+month+"') and contains(text(), '"+day+"')]";
-        Report.logInfo("Selecting week : " +xPath);
+        Log.info("Selecting week : " +xPath);
         item.click(xPath);
         waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
@@ -1278,7 +1264,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             item.click(CALENDER_DIR_LEFT);
         }
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         return this;
     }
 

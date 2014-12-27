@@ -3,6 +3,7 @@ package com.gainsight.sfdc.administration.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Log;
 import jxl.read.biff.BiffException;
 
 import org.testng.Assert;
@@ -10,21 +11,17 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.administration.pages.AdminTransactionsTab;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
 
 public class AdminTransactionsTabTest extends BaseTest {
-	// private static final String String = null;
-		String[] dirs = { "acceptancetests" };
-		private final String TESTDATA_DIR = TEST_DATA_PATH_PREFIX
-				+ generatePath(dirs);
+
 		final String TEST_DATA_FILE = "testdata/sfdc/Administration/AdminTransactionTestdata.xls";
 
 		@BeforeClass
 		public void setUp() {
-			Report.logInfo("Starting  Test Case...");
+			Log.info("Starting  Test Case...");
 			deletePickList();
 			basepage.login();
 			

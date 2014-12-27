@@ -1,11 +1,12 @@
 package com.gainsight.sfdc.customer.pages;
 
-import com.gainsight.pageobject.core.Report;
+import java.util.List;
+
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-
-import java.util.List;
 
 
 public class CustomersPage extends CustomerBasePage {
@@ -40,7 +41,7 @@ public class CustomersPage extends CustomerBasePage {
         selectAccount(customerName);
         fillFields(status, stage, comments);
         item.click(CUSTOMER_SAVE);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -57,7 +58,7 @@ public class CustomersPage extends CustomerBasePage {
         }
         setCustomerNameFilterOnTag(customer);
         item.click(TAG_APPLY_BUTTON);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -69,7 +70,7 @@ public class CustomersPage extends CustomerBasePage {
 
     private void setCustomerNameFilterOnTag(String customer) {
         field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']", customer);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         item.click("//a[contains(text(), '"+customer+"')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
     }
 
@@ -117,18 +118,18 @@ public class CustomersPage extends CustomerBasePage {
 
     private void setCustomerFilter(String custName) {
         field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l1 r1']/input[@class='filter_input']", custName);
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
     }
 
     private int getNoOfCustomersRecords(String custName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         setCustomerFilter(custName);
         int recordCount = element.getElementCount("//div[@class='slick-cell l1 r1 slick-customer-format']/a[contains(text(), '"+custName+"')]");
         return recordCount;
     }
 
     public boolean isCustomerPresent(String customerName) {
-        amtDateUtil.stalePause();
+        Timer.sleep(2);
         if(getNoOfCustomersRecords(customerName)>0) {
             return true;
         }
@@ -141,7 +142,7 @@ public class CustomersPage extends CustomerBasePage {
         try{
             ele = element.getElement("//a[contains(text(), '"+customerName+"')]/parent::div/parent::div[contains(@class, 'ui-widget-content slick-row')]");
         } catch (RuntimeException e) {
-            Report.logInfo(e.getMessage());
+            Log.info(e.getMessage());
         }
         return ele;
     }
@@ -183,14 +184,14 @@ public class CustomersPage extends CustomerBasePage {
         WebElement ele = getCustomerRow(customerName, null);
         if(ele!=null) {
             ele.findElement(By.cssSelector("div>a[data-action='DELETE']")).click();
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             modal.accept();
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
             try {
                 modal.accept();
-                Report.logInfo("Modal dialog present ,Customer can't be deleted");
+                Log.info("Modal dialog present ,Customer can't be deleted");
             } catch (Exception e) { //need to change it to exact exception type
-                Report.logInfo("Modal dialog not present ,Customer can be deleted");
+                Log.info("Modal dialog not present ,Customer can be deleted");
                 status = true;
             }
         } else {
@@ -201,26 +202,26 @@ public class CustomersPage extends CustomerBasePage {
     }
 
     public boolean isDataPresentInGrid(String values) {
-        Report.logInfo("Data to Verify : " +values);
+        Log.info("Data to Verify : " +values);
         boolean result = false;
         String[] cellValues = values.split("\\|");
         setCustomerNameFilter(cellValues[0].trim());
         WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
         List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
-        Report.logInfo("Rows :" +rows.size());
+        Log.info("Rows :" +rows.size());
         int a=1;  boolean hasScroll = false;
         for(WebElement row : rows) {
-            Report.logInfo("Checking Row : " +row.getText());
+            Log.info("Checking Row : " +row.getText());
             boolean inRowData = true;
             WebElement rightRow= null;
             try {
                 element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
                 rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
                 hasScroll = true;
-                Report.logInfo("Checking Row : "+rightRow.getText());
-                Report.logInfo("Grid has scroll bar");
+                Log.info("Checking Row : "+rightRow.getText());
+                Log.info("Grid has scroll bar");
             } catch (Exception e) {
-                Report.logInfo("Grid Doesn't have scroll bar");
+                Log.info("Grid Doesn't have scroll bar");
             }
             List<WebElement> cells = null;
             if(hasScroll) {
@@ -229,7 +230,7 @@ public class CustomersPage extends CustomerBasePage {
                 cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
             }
 
-            Report.logInfo("No of Cells :" +cells.size());
+            Log.info("No of Cells :" +cells.size());
             int i=1;
             outerloop:
             for(String val : cellValues) {
@@ -239,8 +240,8 @@ public class CustomersPage extends CustomerBasePage {
                     if(i==1) {
                         ++i;
                         if(!hasScroll) {
-                            Report.logInfo(cell.getText());
-                            Report.logInfo(String.valueOf(cell.getText().contains(val.trim())));
+                            Log.info(cell.getText());
+                            Log.info(String.valueOf(cell.getText().contains(val.trim())));
                             if(cell.getText().contains(val.trim())) { valTemp=true; break;}
                             if(cell.getText().contains(val.trim())) { break outerloop;}
                         } else {
@@ -248,11 +249,11 @@ public class CustomersPage extends CustomerBasePage {
                             if(row.getText().contains(val.trim())) { break outerloop;}
                         }
                     } else {
-                        Report.logInfo(val);
-                        Report.logInfo(cell.getText());
+                        Log.info(val);
+                        Log.info(cell.getText());
                         if(cell.getText().contains(val.trim())) {
                             valTemp = true;
-                            Report.logInfo("Value is found in cell");
+                            Log.info("Value is found in cell");
                             break;
                         }
                     }
@@ -277,7 +278,7 @@ public class CustomersPage extends CustomerBasePage {
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
         if(customerName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, customerName);
-            amtDateUtil.stalePause();
+            Timer.sleep(2);
         }
     }
 

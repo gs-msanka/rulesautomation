@@ -1,10 +1,10 @@
 package com.gainsight.sfdc.customer360.test;
 
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.sfdc.customer360.pages.Customer360Features;
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.utils.DataProviderArguments;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -12,31 +12,28 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
+import com.gainsight.sfdc.customer360.pages.Customer360Features;
+import com.gainsight.sfdc.customer360.pages.Customer360Page;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.utils.DataProviderArguments;
 
 public class Customer360FeaturesTests extends BaseTest {
 
 	Customer360Page cp;
 	Customer360Features cf;
-	final String TEST_DATA_FILE = "testdata/sfdc/Features/FeaturesTests.xls";
+	final String TEST_DATA_FILE = "testdata/sfdc/features/FeaturesTests.xls";
 	final String CURRENT_DIR=env.basedir;
 
 	@BeforeClass
 	public void setUp() {
-		Report.logInfo("Starting Customer 360 Features module Test Cases...");
+		Log.info("Starting Customer 360 Features module Test Cases...");
         basepage.login();
-        isPackage = isPackageInstance();
-		apex.runApexCodeFromFile(CURRENT_DIR +"/apex_scripts/Features/features.apex", isPackage);
-		userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Features/features.apex"));
 	}
 	
 	@AfterMethod
 	private void refresh() {
-	        basepage.refreshPage();
+	    basepage.refreshPage();
 	}
 	 
 	

@@ -10,15 +10,15 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.TestBase;
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.util.AdminUrl;
 import com.gainsight.bigdata.util.DynamicHeadersTestData;
-import com.gainsight.bigdata.util.PropertyReader;
-import com.gainsight.pageobject.core.Report;
-import com.gainsight.pojo.Header;
-import com.gainsight.pojo.HttpResponseObj;
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.PropertyReader;
 
-public class AdminAuthTest extends TestBase {
+public class AdminAuthTest extends NSTestBase {
 
 	String host;
 	String version;
@@ -31,10 +31,9 @@ public class AdminAuthTest extends TestBase {
 	public void setUp(@Optional("") String version) throws Exception {
 		this.version = version;
 		host = PropertyReader.nsAppUrl;
-		init();
 		AdminUrl.loadAdminUrls();
-		invalidHeadersList = headerTestData.getHeadersInvalid(h);
-		validHeadersList = headerTestData.getHeadersValid(h);
+		invalidHeadersList = headerTestData.getHeadersInvalid(header);
+		validHeadersList = headerTestData.getHeadersValid(header);
 		headerTestData.addContextTenantID();
 	}
 
@@ -45,8 +44,8 @@ public class AdminAuthTest extends TestBase {
 			String url = host + version + ((String) uris.next());
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("GET:" + url);
-				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
+				Log.info("GET:" + url);
+				ResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
 					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
@@ -63,8 +62,8 @@ public class AdminAuthTest extends TestBase {
 			String url = host + version + ((String) iterator.next());
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("POST:" + url);
-				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
+				Log.info("POST:" + url);
+				ResponseObj result = wa.doPost(url, header.getAllHeaders(), "{}");
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
 					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
@@ -81,8 +80,8 @@ public class AdminAuthTest extends TestBase {
 			String url = host + version + ((String) iterator.next());
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("PUT:" + url);
-				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
+				Log.info("PUT:" + url);
+				ResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
 					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
@@ -99,8 +98,8 @@ public class AdminAuthTest extends TestBase {
 			String url = host + version + ((String) iterator.next());
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("DELETE:" + url);
-				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
+				Log.info("DELETE:" + url);
+				ResponseObj result = wa.doDelete(url, header.getAllHeaders());
 				if (result.getStatusCode() == 403 || result.getStatusCode() == 401) {
 					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$Headers:"
 							+ header.toString() + "\n");
@@ -118,8 +117,8 @@ public class AdminAuthTest extends TestBase {
 			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("GET:" + url + "\t" + header.toString());
-				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
+				Log.info("GET:" + url + "\t" + header.toString());
+				ResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
 					failList.add("\tGET:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
 							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
@@ -137,8 +136,8 @@ public class AdminAuthTest extends TestBase {
 			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("POST:" + url);
-				HttpResponseObj result = wa.doPost(url, "{}", header.getAllHeaders());
+				Log.info("POST:" + url);
+				ResponseObj result = wa.doPost(url, header.getAllHeaders(), "{}");
 				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
 					failList.add("\tPOST:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
 							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
@@ -156,8 +155,8 @@ public class AdminAuthTest extends TestBase {
 			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("PUT:" + url);
-				HttpResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
+				Log.info("PUT:" + url);
+				ResponseObj result = wa.doPut(url, "{}", header.getAllHeaders());
 				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
 					failList.add("\tPUT:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
 							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
@@ -175,8 +174,8 @@ public class AdminAuthTest extends TestBase {
 			int i = 0;
 			for (Iterator<Header> headers = invalidHeadersList.iterator(); headers.hasNext();) {
 				Header header = (Header) headers.next();
-				Report.logInfo("DELETE:" + url);
-				HttpResponseObj result = wa.doDelete(url, header.getAllHeaders());
+				Log.info("DELETE:" + url);
+				ResponseObj result = wa.doDelete(url, header.getAllHeaders());
 				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
 					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
 							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
@@ -195,8 +194,8 @@ public class AdminAuthTest extends TestBase {
 			for (Iterator<Header> headers = validHeadersList.iterator(); headers.hasNext();) {
 				Header header = ((Header) headers.next()).deepClone();
 				header.removeHeader("contextTenantId");
-				Report.logInfo("Col:" + url);
-				HttpResponseObj result = wa.doGet(url, header.getAllHeaders());
+				Log.info("Col:" + url);
+				ResponseObj result = wa.doGet(url, header.getAllHeaders());
 				if (result.getStatusCode() != 403 && result.getStatusCode() != 401) {
 					failList.add("\tDELETE:" + url + "$$ResCode:" + result.getStatusCode() + "$$MissingParam:"
 							+ headerTestData.invalidHeaderType[i++] + "$$Headers:" + header.toString() + "\n");
@@ -211,11 +210,11 @@ public class AdminAuthTest extends TestBase {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> iterator = AdminUrl.postApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
-			Report.logInfo("POST:" + url);
-			HttpResponseObj result = wa.doPost(url, "{a}", h.getAllHeaders());
+			Log.info("POST:" + url);
+			ResponseObj result = wa.doPost(url, header.getAllHeaders(), "{a}");
 			if (result.getStatusCode() != 400) {
 				failList.add("POST:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
-						+ h.toString() + "\n");
+						+ header.toString() + "\n");
 			}
 		}
 		Assert.assertEquals(failList.size(), 0, failList.toString());
@@ -226,11 +225,11 @@ public class AdminAuthTest extends TestBase {
 		List<String> failList = new ArrayList<>();
 		for (Iterator<String> iterator = AdminUrl.putApiList.iterator(); iterator.hasNext();) {
 			String url = host + version + ((String) iterator.next());
-			Report.logInfo("PUT:" + url);
-			HttpResponseObj result = wa.doPut(url, "{a}", h.getAllHeaders());
+			Log.info("PUT:" + url);
+			ResponseObj result = wa.doPut(url, "{a}", header.getAllHeaders());
 			if (result.getStatusCode() != 400) {
 				failList.add("PUT:" + url + "$$Payload:\"{a}\"$$ResCode:" + result.getStatusCode() + "$$Headers:"
-						+ h.toString() + "\n");
+						+ header.toString() + "\n");
 			}
 		}
 		Assert.assertEquals(failList.size(), 0, failList.toString());
