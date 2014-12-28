@@ -8,9 +8,10 @@ import java.util.Set;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.util.AmountsUtil;
-import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountsPage;
-import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunitiesPage;
+import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountPage;
+import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunityPage;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -93,10 +94,10 @@ public class BasePage extends WebPage implements Constants {
 		element.switchToMainWindow();
 	}
 	
-	public AccountWidgetPage gotoAccountPageWithId(String Id){
+
+	public OpportunityPage gotoOpportunityPageWithId(String Id){
 		driver.get(env.getDefaultUrl()+"/"+Id);
-		element.switchToFrame("//iframe[@title='CustomerSuccess']");
-		return new AccountWidgetPage();
+		return new OpportunityPage();
 	}
 	// Start of Top Level Navigation
 	public CustomerBasePage clickOnCustomersTab() {
@@ -133,18 +134,11 @@ public class BasePage extends WebPage implements Constants {
 		clickOnTab(C360_TAB);
         return new Customer360Page();
 	}
-	public OpportunitiesPage clickOnOpportunitiesTab() {
-		if (!field.isElementPresent(OPPORTUNITIES_TAB)) {
-			item.click(ALL_TABS);
-		}
-		item.click(OPPORTUNITIES_TAB);
-		return new OpportunitiesPage();
-	}
 
-	public AccountsPage clickOnAccountsTab() {
-		clickOnTab(ACCOUNTS_TAB);
-		return new AccountsPage();
-	}
+	 public AccountPage gotoAccountPageWithId(String accID){
+	        driver.get(env.getDefaultUrl()+"/"+accID);
+	        return new AccountPage();
+	    }
 
     private void clickOnTab(String xpath) {
         try {

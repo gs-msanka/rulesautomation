@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class AccountWidgetPage extends BasePage {
 
     private final String IFRAME = "//iframe[contains(@title,'CustomerSuccess')]";
+    private final String READY_INDICATOR="//h3[contains(text(),'Customer Success')]";
     private final String TRANSACTIONS_TAB = "//a[@id='Transactions']";
     private final String ADOPTION_TAB = "//a[@id='UserAdoption']";
     private final String C360_LINK = "//a[@id='cust360']";
@@ -24,9 +25,11 @@ public class AccountWidgetPage extends BasePage {
     private final String WIDGET_TEXT="//body[contains(.,'%s')]";
     private final String NEW_BUTTON="//a/span[text()='New']";
     private final String OVERLAY_BLOCK="//div[@class='overlayBackground jbaraDummyOverLayFormForOpp']";
-
+    private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
+  	private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
+  	
     public AccountWidgetPage() {
-        wait.waitTillElementPresent(IFRAME, MIN_TIME, MAX_TIME);
+        //wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 
     public void verifyTextPresent(String text) {
@@ -50,10 +53,7 @@ public class AccountWidgetPage extends BasePage {
     }
 
 
-    private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
-    private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
-
-    public AccWidget_CockpitPage gotoCockpitSubTab(){
+     public AccWidget_CockpitPage gotoCockpitSubTab(){
         item.click(COCKPIT_SUBTAB);
         wait.waitTillElementDisplayed(COCKPIT_INDICATOR, MIN_TIME,MAX_TIME);
         return new AccWidget_CockpitPage();
