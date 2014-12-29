@@ -50,7 +50,10 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         Timer.sleep(2);
         return this;
     }
-
+    
+    public WorkflowPlaybooksPage clickOnSearchOutput(Playbook pb){
+    	return this;
+    }
     public void fillPlaybookDetails(Playbook pb) {
         Timer.sleep(2);
         wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);

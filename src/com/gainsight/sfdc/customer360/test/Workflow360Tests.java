@@ -45,7 +45,7 @@ public class Workflow360Tests extends WorkflowSetup{
     
     @BeforeMethod
     public void clearCTAsForThisAccount(){
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
+        sfdc.runApexCode(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
