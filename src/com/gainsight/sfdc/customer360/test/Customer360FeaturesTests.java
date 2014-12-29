@@ -21,7 +21,7 @@ public class Customer360FeaturesTests extends BaseTest {
 
 	Customer360Page cp;
 	Customer360Features cf;
-	final String TEST_DATA_FILE = "testdata/sfdc/features/FeaturesTests.xls";
+	final String TEST_DATA_FILE = "testdata/sfdc/feature/tests/FeaturesTests.xls";
 	final String CURRENT_DIR=env.basedir;
 
 	@BeforeClass

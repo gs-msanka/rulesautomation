@@ -18,7 +18,7 @@ import com.gainsight.utils.DataProviderArguments;
  */
 public class AccountAttributes360Test extends BaseTest {
 
-    private final String TEST_DATA_FILE                 = "testdata/sfdc/accountattributes/data/AccAtt_360_Tests.xls";
+    private final String TEST_DATA_FILE                 = "testdata/sfdc/accountattributes/tests/AccAtt_360_Tests.xls";
     private final String ATTRIBUTES_UIVIEW_CREATE_FILE  = env.basedir+"/testdata/sfdc/accountattributes/scripts/Attributes_UIView_Create.txt";
     private final String ACCOUNT_CREATE_FILE            = env.basedir+"/testdata/sfdc/accountattributes/scripts/Account_Create.txt";
     private final String ATTRIBUTES_360_SEC_ENABLE_FILE = env.basedir+"/testdata/sfdc/accountattributes/scripts/Attributes_360Sec_Enable.txt";
