@@ -30,26 +30,75 @@ public class WorkflowPlaybooksTest extends BaseTest {
         sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
         basepage.login();
     }
-
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
-    public void addPlaybooks(HashMap<String, String> testData) throws IOException {
-        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    public void addPlaybooks_ForRiskCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
         Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
         pbPage = pbPage.addPlaybook(pb);
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
-        pb = mapper.readValue(testData.get("Opportunity-Playbook"), Playbook.class);
-        pbPage = pbPage.addPlaybook(pb);
-        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Opportunity Playbook");
-        pb = mapper.readValue(testData.get("Event-Playbook"), Playbook.class);
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void addPlaybooks_ForEventCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook pb = mapper.readValue(testData.get("Opportunity-Playbook"), Playbook.class);
+         pbPage = pbPage.addPlaybook(pb);
+         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Opportunity Playbook");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void addPlaybooks_ForOppCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook  pb = mapper.readValue(testData.get("Event-Playbook"), Playbook.class);
         pbPage = pbPage.addPlaybook(pb);
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Event Playbook");
-        pb = mapper.readValue(testData.get("All-Playbook"), Playbook.class);
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void addPlaybooks_ForAllCTAs(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook  pb = mapper.readValue(testData.get("All-Playbook"), Playbook.class);
         pbPage = pbPage.addPlaybook(pb);
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying All Playbook");
     }
 
-
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void updateExistingPB_ForRiskCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook  pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+    	Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");    	
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void updateExistingPB_ForEventCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook  pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+    	Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void updateExistingPB_ForOppCTA(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+    	Playbook  pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+    	Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+    }
+    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
     public void addUpdateRiskPlaybook(HashMap<String, String> testData) throws IOException {
@@ -64,7 +113,72 @@ public class WorkflowPlaybooksTest extends BaseTest {
         pbPage = pbPage.editPlaybook(pb1, pb2);
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb2), "Verifying Playbook Updated details");
     }
-
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void addUpdate_RiskPB(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+        
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void addUpdate_EventPB(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void addUpdate_OppPB(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void addUpdate_AllPB(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Playbook updated_pb=mapper.readValue(testData.get("updatedPB"),Playbook.class);
+    	pbPage = pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb);
+    	pbPage.editPlaybook(pb, updated_pb);     
+    	Assert.assertTrue(pbPage.isPlaybookDisplayed(updated_pb), "Existing PB updated successfully");
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
+    public void duplicatePB(HashMap<String, String> testData) throws IOException {
+    	WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Risk-Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        pbPage.searchPlaybooks(pb.getName()).clickOnSearchOutput(pb).duplicatePlaybook(pb.getName());
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Duplicate playbook created successfully");
+        
+    }
+    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
     public void addAndDeletePlaybooks(HashMap<String, String> testData) throws IOException {
