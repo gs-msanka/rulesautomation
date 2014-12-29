@@ -36,9 +36,9 @@ public class WorkflowReportingTests extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
 		createExternalIdFieldOnCTA();
-        JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad.txt"), JobInfo.class);
+        JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadCTAs);
-        JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
+        JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
         dataLoader.execute(loadCSTasks);
         
 	}

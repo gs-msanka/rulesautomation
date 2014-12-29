@@ -35,6 +35,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
 
     @BeforeClass
     public void setUp() throws Exception {
+        sfdc.connect();
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
 	    createExtIdFieldForScoreCards();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
