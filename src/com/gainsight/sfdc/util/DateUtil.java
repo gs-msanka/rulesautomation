@@ -122,7 +122,7 @@ public class DateUtil {
      */
     public static String getWeekLabelDate(String weekDay, String format, TimeZone timeZone, int amount, boolean usesEndDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone, amount, usesEndDate));
+        String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone, amount, usesEndDate).getTime());
         Log.info("Formatted Date : " +sDate);
         return sDate;
     }
