@@ -219,7 +219,7 @@ public class RuleEngineDataSetup extends BaseTest {
         String code         = "";
         BufferedReader reader;
         BufferedWriter writer;
-        String outFile = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Temp_job.txt";
+        String outFile = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Temp_job.txt";
         reader = new BufferedReader(new FileReader(JOB_USAGE_LOAD));
         writer = new BufferedWriter(new FileWriter(outFile));
         StringBuilder stringBuilder = new StringBuilder();
