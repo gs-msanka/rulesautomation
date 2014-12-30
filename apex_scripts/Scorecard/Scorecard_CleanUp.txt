@@ -1,6 +1,0 @@
-
-DELETE [SELECT Id from JBCXM__ScorecardFact__c lIMIT 8000];
-DELETE [SELECT Id from JBCXM__ScorecardMetric__c];
-DELETE [SELECT Id from JBCXM__ScoringSchemeDefinition__c];
-DELETE [SELECT Id from JBCXM__ScoringScheme__c];
-DELETE [SELECT Id from JBCXM__ScorecardConfig__c];
