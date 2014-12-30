@@ -37,6 +37,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__Milestone__c];";
 	 @BeforeClass
 	    public void setup() {
+		 	sfdc.connect();
 	        basepage.login();
 	   }
 	 	

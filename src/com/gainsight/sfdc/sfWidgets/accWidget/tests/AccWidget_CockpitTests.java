@@ -39,6 +39,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__Milestone__c];";
 	 @BeforeClass
 	    public void setup() throws Exception {
+		 sfdc.connect();
 	        basepage.login();
 	        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 	        createExtIdFieldOnUser();

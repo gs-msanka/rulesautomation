@@ -27,6 +27,7 @@ public class WorkflowReportingTests extends BaseTest {
 	public String[] users={"GiribabuG","SrividyaR","HiteshS"};
 	@BeforeClass
 	public void setup() throws Exception {
+		sfdc.connect();
 		basepage.login();
 		DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();

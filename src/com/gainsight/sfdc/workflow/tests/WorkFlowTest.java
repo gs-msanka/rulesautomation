@@ -42,6 +42,7 @@ public class WorkFlowTest extends WorkflowSetup {
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
     @BeforeClass
     public void setup() throws Exception {
+    	sfdc.connect();
         basepage.login();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         createExtIdFieldOnUser();

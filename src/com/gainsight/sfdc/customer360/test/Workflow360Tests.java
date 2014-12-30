@@ -36,6 +36,7 @@ public class Workflow360Tests extends WorkflowSetup{
     
     @BeforeClass
     public void setup() throws Exception {
+    	sfdc.connect();
         basepage.login();
         createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
