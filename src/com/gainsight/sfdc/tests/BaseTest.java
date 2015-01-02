@@ -176,13 +176,7 @@ public class BaseTest {
    
     public String getDateWithFormat(int days, int months, boolean bulkFormat) {
         String date = null;
-        if(days !=0 && months == 0) {
-            date = DateUtil.addDays(userTimezone, days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        } else if(days ==0 && months !=0) {
-            date = DateUtil.addMonths(userTimezone, months, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        } else if(months !=0 && days !=0) {
-            date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        }
+         date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
         System.out.println("Formatted Date :" +date);
         return date;
     }

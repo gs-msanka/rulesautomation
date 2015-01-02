@@ -248,25 +248,25 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Starting to fill recurring event part");
     	field.selectCheckBox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
-		item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
-		item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 			if(recurProperties.getRecurringType().equals("Daily")){
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
 				if(!recurProperties.getDailyRecurringInterval().equals("EveryWeekday")){
 					item.click(CREATE_RECUR_EVERYnDAYS);
 					field.clearAndSetText(CREATE_RECUR_DAILY_INTERVAL,recurProperties.getDailyRecurringInterval());
-				}
-				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
-				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
+				}				
 			}
 			else if (recurProperties.getRecurringType().equals("Weekly")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
-				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[0]);
-				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[1]).ordinal()+1));
 				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
 				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[0]);
+				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[1]).ordinal()+1));			
 			}
 			else if(recurProperties.getRecurringType().equals("Monthly")){
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
 				if(recurProperties.getMonthlyRecurringInterval().startsWith("Day")){
 				item.click(TO_SELECT_RECUR_DAY_OF_MONTH);
@@ -281,8 +281,7 @@ public class WorkflowPage extends WorkflowBasePage {
 					item.click(TO_SELECT_RECUR_WEEK_OF_MONTH);
 					item.click(String.format(RECUR_WEEK_OF_MONTH,recurProperties.getMonthlyRecurringInterval().split("_")[2]));
 					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[3]);
-				}
-						
+				}					
 			}
 			else if(recurProperties.getRecurringType().equals("Yearly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
