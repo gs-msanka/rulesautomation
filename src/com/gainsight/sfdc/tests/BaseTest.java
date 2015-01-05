@@ -16,9 +16,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import com.gainsight.sfdc.util.PackageUtil;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.*;
 
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.SalesforceMetadataClient;
