@@ -66,6 +66,8 @@ public class WorkflowPage extends WorkflowBasePage {
 	private final String CREATE_FORM_SELECT_REASON  = "//ul/li/label/span[text()='%s']";
 	private final String CREATE_FORM_DUE_DATE       = "//input[@class='form-control cta-dateCtrl']";
 	private final String CREATE_FORM_COMMENTS       = "//div[@class='form-control strdescription']";
+	private final String ASSIGN_TO_ME		="//a[@class='owner-assign-tome']";
+	private final String TASK_ASSIGN_TO_ME="//div[@class='taskForm']//a[@class='owner-assign-tome']";
 	private final String SAVE_CTA                   = "//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT     = "//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
     private final String CREATE_FORM_RECUR_TYPE     = "//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
@@ -226,6 +228,7 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
 		if(!cta.isFromCustomer360orWidgets()) selectCustomer(cta.getCustomer());
+		item.click(ASSIGN_TO_ME);
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());

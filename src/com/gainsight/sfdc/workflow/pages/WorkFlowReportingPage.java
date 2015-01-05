@@ -110,6 +110,7 @@ public class WorkFlowReportingPage extends BasePage {
     	return element.isElementPresent(NO_DATA_MSG);
     }
     public int getCountOfUserOpenCTAs(String assignee, String type) {
+    	env.setTimeout(2);
         try {
             if(type.equalsIgnoreCase("Risk")) {
                 String tmp = field.getText(LEADER_TABLE_OPEN_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Risk')]");
@@ -125,10 +126,12 @@ public class WorkFlowReportingPage extends BasePage {
             e.printStackTrace();
             Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
+        env.setTimeout(30);
         return 0;
     }
 
     public int getCountOfUserClosedCTAs(String assignee, String type) {
+    	env.setTimeout(2);
         try {
             if(type.equalsIgnoreCase("Risk")) {
                 String tmp = field.getText(LEADER_TABLE_CLOSED_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Risk')]");
@@ -144,10 +147,12 @@ public class WorkFlowReportingPage extends BasePage {
             e.printStackTrace();
             Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
+        env.setTimeout(30);
         return 0;
     }
 
     public int getCountOfUserCustomerCTAs(String assignee, String type) {
+    	env.setTimeout(2);
         try {
             if(type.equalsIgnoreCase("Risk")) {
                 String tmp = field.getText(LEADER_TABLE_CUSTOMER_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Risk')]");
@@ -163,6 +168,7 @@ public class WorkFlowReportingPage extends BasePage {
             e.printStackTrace();
             Log.info("Failed to get CTA count, " +e.getLocalizedMessage());
         }
+        env.setTimeout(30);
         return 0;
     }
 

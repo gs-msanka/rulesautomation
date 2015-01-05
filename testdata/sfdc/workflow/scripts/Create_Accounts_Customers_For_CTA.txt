@@ -1,8 +1,9 @@
 Delete [Select id from JBCXM__CTA__c];
 Delete [select id from JBCXM__CSTask__c];
 Delete [select id from Task];
-delete [select id from Account where name like 'CTA Account%'];
 delete [select id from Opportunity where AccountId in (select Id from Account where name like 'CTA Account%')];
+delete [select id from Account where name like 'CTA Account%'];
+
 //Create Accounts
 List<Account> accList = new List<Account>();
 for(integer i=1; i<70 ; i++) {

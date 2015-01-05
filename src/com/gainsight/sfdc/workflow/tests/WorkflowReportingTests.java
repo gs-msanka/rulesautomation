@@ -29,18 +29,18 @@ public class WorkflowReportingTests extends BaseTest {
 	public void setup() throws Exception {
 		sfdc.connect();
 		basepage.login();
-		DataETL dataLoader = new DataETL();
+		/*DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();
         createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
+        sfdc.runApexCode(resolveStrNameSpace(CLEANUP_SCRIPT));
 		createExternalIdFieldOnCTA();
         JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadCTAs);
         JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
-        dataLoader.execute(loadCSTasks);
+        dataLoader.execute(loadCSTasks);*/
         
 	}
 		 
@@ -70,7 +70,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForLast30Days() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectLast30Days();
 		//For all the users in the test data - assert the counts
 		
@@ -93,7 +93,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForCurrentMonth() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectCurrentMonth();
 		//For all the users in the test data - assert the counts
 		
@@ -116,7 +116,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForLastMonth() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectLastMonth();
 		//For all the users in the test data - assert the counts
 		
@@ -139,7 +139,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForCurrentQuarter() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectCurrentQuarter();
 		//For all the users in the test data - assert the counts
 		
@@ -162,7 +162,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForLastQuarter() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectLastQuarter();
 		//For all the users in the test data - assert the counts
 		
@@ -185,7 +185,7 @@ public class WorkflowReportingTests extends BaseTest {
 	@Test
 	public void reportForCustomDateRange() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
-				.clickOnReportingView();
+				.clickOnReportingView().clickOnLeaderBoard();
 		workflowPage.selectCustomDate(getDateWithFormat(-120,0,false),getDateWithFormat(-90, 0,false));
 		//For all the users in the test data - assert the counts
 		
