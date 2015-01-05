@@ -452,6 +452,8 @@ public class WorkflowPage extends WorkflowBasePage {
             String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
         }
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getSubject() !=null) {
             item.click(EXP_VIEW_SUBJECT_INPUT);
             field.clearText(EXP_VIEW_SUBJECT_INPUT);
@@ -463,17 +465,20 @@ public class WorkflowPage extends WorkflowBasePage {
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getPriority() != null) {
             item.click(EXP_VIEW_PRIORITY_BUTTON);
             selectValueInDropDown(newCta.getPriority());
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getStatus() != null) {
             item.click(EXP_VIEW_STATUS_BUTTON);
             selectValueInDropDown(newCta.getStatus());
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getReason() != null) {
             item.click(EXP_VIEW_REASON_BUTTON);
             selectValueInDropDown(newCta.getReason());

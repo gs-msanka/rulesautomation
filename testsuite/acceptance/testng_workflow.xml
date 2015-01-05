@@ -7,11 +7,11 @@
 	
 	<test verbose="3" name="Workflow Tests" preserve-order="true">
 		<classes>
-			<!--<class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
-			<class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests" />-->
-			<!--<class name="com.gainsight.sfdc.customer360.test.Workflow360Tests" />-->
+			<class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
+			<class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests" />
+			<class name="com.gainsight.sfdc.customer360.test.Workflow360Tests" />
 			<class name="com.gainsight.sfdc.sfWidgets.accWidget.tests.AccWidget_CockpitTests"/>
-			<!--<class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests"/>-->
+			<class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests"/>
 		</classes>
 	</test>
 </suite>
