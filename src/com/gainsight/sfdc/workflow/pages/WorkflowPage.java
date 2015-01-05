@@ -512,6 +512,7 @@ public class WorkflowPage extends WorkflowBasePage {
             System.out.println();
             for(WebElement ele : webElements) {
                 if(ele.isDisplayed()) {
+                	env.setTimeout(30);
                     return true;
                 }
             }
@@ -519,6 +520,7 @@ public class WorkflowPage extends WorkflowBasePage {
             e.printStackTrace();
             Log.info("CTA is not displayed / Present, Please check your XPath (or) CTA Data");
             Log.info(e.getLocalizedMessage());
+            env.setTimeout(30);
             return false;
         }
         Log.info("CTA is not displayed");
@@ -783,6 +785,7 @@ public class WorkflowPage extends WorkflowBasePage {
         if(elements.size() > 0) {
             for(WebElement ele : elements) {
                 if(ele.isDisplayed()) {
+                	env.setTimeout(30);
                     return true;
                 }
             }
