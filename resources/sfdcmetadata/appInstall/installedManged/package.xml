@@ -4,5 +4,5 @@
         <members>*</members>
         <name>InstalledPackage</name>
     </types>
-    <version>30.0</version>
+    <version>32.0</version>
 </Package>

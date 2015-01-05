@@ -54,11 +54,11 @@ public class BaseTest {
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(PropertyReader.sfdcApiVersion));
         //Uninstall Application.
         if(Boolean.valueOf(env.getProperty("sfdc.unIntallApp"))) {
-            //packageUtil.unInstallApplication();
+            packageUtil.unInstallApplication();
         }
         //Install Application.
         if(Boolean.valueOf(env.getProperty("sfdc.installApp"))) {
-            //packageUtil.installApplication(env.getProperty("packageVersionNumber"), null);
+            packageUtil.installApplication(env.getProperty("packageVersionNumber"), null);
         }
     	
     	sfinfo = sfdc.fetchSFDCinfo();

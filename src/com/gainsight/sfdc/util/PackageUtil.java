@@ -362,6 +362,10 @@ public class PackageUtil {
 
     public static void writeZipFile(File directoryToZip, List<File> fileList, String destDir, String fileName) {
         try {
+            File tempDir = new File(destDir);
+            if(!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
             System.out.println(destDir+"/"+ fileName+ ".zip");
             FileOutputStream fos = new FileOutputStream(destDir+"/"+fileName + ".zip");
             ZipOutputStream zos = new ZipOutputStream(fos);
