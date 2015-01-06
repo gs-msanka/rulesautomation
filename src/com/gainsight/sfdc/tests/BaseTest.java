@@ -53,12 +53,12 @@ public class BaseTest {
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(PropertyReader.sfdcApiVersion));
         //Uninstall Application.
-        if(Boolean.valueOf(env.getProperty("sfdc.unIntallApp"))) {
+        if(Boolean.valueOf(env.getProperty("sfdc.unInstallApp"))) {
             packageUtil.unInstallApplication();
         }
         //Install Application.
         if(Boolean.valueOf(env.getProperty("sfdc.installApp"))) {
-            packageUtil.installApplication(env.getProperty("packageVersionNumber"), null);
+            packageUtil.installApplication(env.getProperty("sfdc.packageVersionNumber"), env.getProperty("sfdc.packagePassword"));
         }
     	
     	sfinfo = sfdc.fetchSFDCinfo();

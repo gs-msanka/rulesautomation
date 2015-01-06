@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.testdriver.Application;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -23,11 +24,13 @@ public class WorkflowPlaybooksTest extends BaseTest {
     ObjectMapper mapper = new ObjectMapper();
     String PLAYBOOK_OBJECT = "JBCXM__Playbook__c";
     private final String TEST_DATA_FILE         = "./testdata/sfdc/workflow/tests/PlaybookTests.xls";
+    private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
 
     @BeforeClass
     public void setUp() {
         Log.info("Starting Playbook Test Case...");
         sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         basepage.login();
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -109,6 +112,78 @@ public class WorkflowPlaybooksTest extends BaseTest {
         //Delete Risk Playbook
         pbPage=pbPage.deletePlaybook(updatedPb);
         Assert.assertFalse(pbPage.isPlaybookDisplayed(pb), "Verifying All Type Playbook - deleted");
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
+    public void duplicate_RiskPlaybook(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Task task = mapper.readValue(testData.get("Task1"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task2"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task3"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
+    public void duplicate_OpportunityPlaybook(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Task task = mapper.readValue(testData.get("Task1"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task2"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task3"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
+    public void duplicate_EventPlaybook(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Task task = mapper.readValue(testData.get("Task1"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task2"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task3"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
+    public void duplicate_AllPlaybook(HashMap<String, String> testData) throws IOException {
+        WorkflowPlaybooksPage pbPage = basepage.clickOnWorkflowTab().clickOnPlaybooksTab();
+        Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
+        pbPage = pbPage.addPlaybook(pb);
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
+        Task task = mapper.readValue(testData.get("Task1"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task2"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        task = mapper.readValue(testData.get("Task3"), Task.class);
+        pbPage = pbPage.addTask(task);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task));
     }
  
     @AfterClass

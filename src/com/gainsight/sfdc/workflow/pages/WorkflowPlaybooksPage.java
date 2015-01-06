@@ -19,9 +19,9 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     private final String PLAYBOOK_NAME_INPUT		= "//input[@class='form-control pb-subject']";
     private final String PLAYBOOK_COMMENTS_INPUT	= "//textarea[@class='form-control  pb-description']";
     private final String PB_ADD_TASK_BUTTON			= "//input[contains(@class,'btn-add-task') and @type='button']";
-    private final String TASK_OWNER_INPUT           = "//div[@class='gs_search_section']/input[@type='text' and @placeholder='User name']";
-    private final String TASK_SUBJECT_INPUT		    = "//input[@class='form-control Subject__cInputCls taskParamControlDataInput']";
-    private final String TASK_DATE_INPUT	        = "//input[contains(@class, 'taskParamControlDataInput')]";
+    private final String TASK_OWNER_INPUT           = "//div[contains(@class, 'task-owner')]/descendant::input[@class='search_input ui-autocomplete-input']";
+    private final String TASK_SUBJECT_INPUT		    = "//input[contains(@class, 'Subject__cInputCls taskParamControlDataInput')]";
+    private final String TASK_DATE_INPUT	        = "//input[contains(@class, 'Date__cInputCls taskParamControlDataInput')]";
     private final String TASK_PRIORITY_INPUT        = "//select[contains(@class, 'Priority__cInputCls')]/following-sibling::button";
     private final String TASK_STATUS_INPUT          = "//select[contains(@class, 'Status__cInputCls')]/following-sibling::button";
     private final String TASK_SAVE_BUTTON           = "//input[contains(@class, 'btn-save-task') and @value='Save']";
@@ -37,6 +37,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     private final String PLAYBOOK_SEARCH_INPUT      = "//div[@class='playbook-search-ctn']/input[contains(@class, 'global-search')]";
     private final String TASK_SEARCH_INPUT          = "//input[contains(@class, 'search-playbooks-tasks')]";
+    private final String ALL_BLOCK = "//div[@class='playbook-type']/h2[text()='All']";
 
     public WorkflowPlaybooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -47,7 +48,8 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         item.click(ADD_PLAYBOOK_BUTTON);
         fillPlaybookDetails(pb);
         item.click(SAVE_PLAYBOOK_BUTTON);
-        Timer.sleep(2);
+        Timer.sleep(3);
+        wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
         return this;
     }
     
@@ -55,10 +57,13 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     	return this;
     }
     public void fillPlaybookDetails(Playbook pb) {
-        Timer.sleep(2);
-        wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
-        item.click("//input[@type='radio' and @value='"+pb.getType()+"']");
-        field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
+        wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
+        if(pb.getType() != null && pb.getType() != "") {
+            item.click("//input[@type='radio' and @value='"+pb.getType()+"']");
+        }
+        if(pb.getName() != null) {
+            field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
+        }
         field.clearAndSetText(PLAYBOOK_COMMENTS_INPUT, pb.getComments());
     }
 
@@ -66,14 +71,21 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         item.click(PB_ADD_TASK_BUTTON);
         fillTaskDetails(task);
         item.click(TASK_SAVE_BUTTON);
+        Timer.sleep(4);
         return this;
     }
 
     private void fillTaskDetails(Task task) {
         wait.waitTillElementDisplayed(TASK_SAVE_BUTTON, MIN_TIME, MAX_TIME);
-        selectTaskOwner(task.getAssignee());
-        field.clearAndSetText(TASK_SUBJECT_INPUT, task.getSubject());
-        field.clearAndSetText(TASK_DATE_INPUT, task.getDate());
+        if(task.getAssignee() != null && task.getAssignee() != "") {
+            selectTaskOwner(task.getAssignee());
+        }
+        if(task.getSubject() != null) {
+            field.clearAndSetText(TASK_SUBJECT_INPUT, task.getSubject());
+        }
+        if(task.getDate() != null) {
+            field.clearAndSetText(TASK_DATE_INPUT, task.getDate());
+        }
         item.click(TASK_PRIORITY_INPUT);
         selectValueInDropDown(task.getPriority());
         item.click(TASK_STATUS_INPUT);
@@ -83,7 +95,6 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     public void selectTaskOwner(String owner) {
         Log.info("Selecting Task Owner : " + owner);
-        Timer.sleep(2);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(TASK_OWNER_INPUT, owner);
@@ -104,7 +115,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     public boolean isPlaybookDisplayed(Playbook pb) {
-        env.setTimeout(5);
+        env.setTimeout(2);
         boolean result = isElementPresentAndDisplay(By.xpath(getPlaybookXPath(pb)));
         env.setTimeout(30);
         return result;
@@ -124,17 +135,12 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     public WorkflowPlaybooksPage editPlaybook(Playbook pb, Playbook newPB) {
-        try{
-            expandPlaybookView(pb);
-            item.click(PLAYBOOK_EDIT);
-            wait.waitTillElementDisplayed(SAVE_PLAYBOOK_BUTTON, MIN_TIME, MAX_TIME);
-            Timer.sleep(2);
-            fillPlaybookDetails(newPB);
-            item.click(SAVE_PLAYBOOK_BUTTON);
-            Timer.sleep(2);
-        } catch (Exception e) {
-            System.out.println("safdas");
-        }
+        expandPlaybookView(pb);
+        item.click(PLAYBOOK_EDIT);
+        fillPlaybookDetails(newPB);
+        item.click(SAVE_PLAYBOOK_BUTTON);
+        Timer.sleep(4);
+        wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
         return this;
     }
 
@@ -148,9 +154,8 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     public boolean isTaskDisplayed(Task task) {
-        String xPath = "//h4[contains(text(), '"+task.getSubject()+"')]/ancestor::div[contains(@class,  'playbook-tasks')]";
+        String xPath = "//h4[contains(text(), '"+task.getSubject()+"')]/ancestor::li[contains(@class,  'ga-badge ga-typeSupport playbook-tasks')]";
         List<WebElement> taskList = element.getAllElement(xPath);
-        Log.info("No of tasks found with subject '"+task.getSubject()+"' :: " +taskList.size());
         if(taskList.size() ==0) {
             Log.info("No Tasks found with subject : "+task.getSubject());
             return false;

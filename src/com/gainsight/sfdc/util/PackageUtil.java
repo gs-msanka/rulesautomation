@@ -29,16 +29,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.sforce.soap.metadata.*;
-import com.sforce.soap.partner.PartnerConnection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.sforce.soap.partner.LoginResult;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.ConnectorConfig;
 
 public class PackageUtil {
 	private static MetadataConnection metadataConnection;
