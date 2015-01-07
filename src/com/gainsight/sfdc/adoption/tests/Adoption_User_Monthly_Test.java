@@ -19,7 +19,7 @@ public class Adoption_User_Monthly_Test extends AdoptionDataSetup {
     private final String resDir                 = env.basedir + "/testdata/sfdc/usageData/";
     private final String ADV_CONFIG_FILE     = resDir+"scripts/User_Level_Monthly.txt";
     private final String JOB_UsageData          = resDir + "jobs/Job_Adop_User_Monthly.txt";
-    private final String TEST_DATA_FILE         = "testdata/sfdc/usageData/Tests/Adop_User_Monthly_Test.xls";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/usageData/tests/Adop_User_Monthly_Test.xls";
     AdoptionDataSetup dataSetup;
 
 

@@ -1,6 +1,7 @@
 Delete [Select id from JBCXM__CTA__c];
 Delete [select id from JBCXM__CSTask__c];
 Delete [select id from Task];
+delete [select id from Opportunity where AccountId in (select Id from Account where name like 'CTA Account%')];
 delete [select id from Account where name like 'CTA Account%'];
 
 //Create Accounts
@@ -13,6 +14,16 @@ Account acc360 = new Account(Name ='CTA Account 360',Data_ExternalID__c='CTA Acc
    accList.add(acc360);
    
 insert accList;
+
+//Creating a Opportunity for CTA Account 360 - for Opp widget cases
+List<Account> accForOpp=[SELECT Id FROM Account where name like 'CTA Account 360'];
+Opportunity opp = new Opportunity(name ='CTA Account - Opportunity',
+									StageName = 'Closed Won',
+									Type = 'New Business',
+									Amount = 2000,
+									CloseDate = date.today(),
+									AccountId = accForOpp.get(0).Id);
+insert opp;
 
 //Add Accounts to Customers
 List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND

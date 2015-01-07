@@ -36,6 +36,7 @@ public class Workflow360Tests extends WorkflowSetup{
     
     @BeforeClass
     public void setup() throws Exception {
+    	sfdc.connect();
         basepage.login();
         createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
@@ -45,7 +46,7 @@ public class Workflow360Tests extends WorkflowSetup{
     
     @BeforeMethod
     public void clearCTAsForThisAccount(){
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
+        sfdc.runApexCode(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
@@ -1051,6 +1052,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 	        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
+	        basepage.switchToMainWindow();
 	        disableSFAutoSync();
 	    }
 	    
@@ -1083,6 +1085,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        System.out.println("desynced taks...."+desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")));
 	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"'");
 	        Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF but remains in SF");
+	        basepage.switchToMainWindow();
 	        disableSFAutoSync();
 	    }
 	    
@@ -1116,6 +1119,7 @@ public class Workflow360Tests extends WorkflowSetup{
 
 	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
 	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
+	        basepage.switchToMainWindow();
 	        disableSFAutoSync();
 	    }
 	    

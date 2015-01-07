@@ -66,6 +66,8 @@ public class WorkflowPage extends WorkflowBasePage {
 	private final String CREATE_FORM_SELECT_REASON  = "//ul/li/label/span[text()='%s']";
 	private final String CREATE_FORM_DUE_DATE       = "//input[@class='form-control cta-dateCtrl']";
 	private final String CREATE_FORM_COMMENTS       = "//div[@class='form-control strdescription']";
+	private final String ASSIGN_TO_ME		="//a[@class='owner-assign-tome']";
+	private final String TASK_ASSIGN_TO_ME="//div[@class='taskForm']//a[@class='owner-assign-tome']";
 	private final String SAVE_CTA                   = "//div[@class='modal-footer text-center']/button[@class='gs-btn btn-save']";
 	private final String CREATE_RECURRING_EVENT     = "//div[@class='form-group clearfix cta-recurring-event']/input[@id='chkRecurring']";
     private final String CREATE_FORM_RECUR_TYPE     = "//div[@class='row']/label[@class='radio-inline']/input[@value='%s']";
@@ -226,6 +228,7 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Started Filling CTA Form");
 		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
 		if(!cta.isFromCustomer360orWidgets()) selectCustomer(cta.getCustomer());
+		item.click(ASSIGN_TO_ME);
 		item.click(CREATE_FORM_REASON);
 		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
 		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
@@ -249,22 +252,24 @@ public class WorkflowPage extends WorkflowBasePage {
     	field.selectCheckBox(CREATE_RECURRING_EVENT);
 		CTA.EventRecurring recurProperties=cta.getEventRecurring();
 			if(recurProperties.getRecurringType().equals("Daily")){
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
 				if(!recurProperties.getDailyRecurringInterval().equals("EveryWeekday")){
 					item.click(CREATE_RECUR_EVERYnDAYS);
 					field.clearAndSetText(CREATE_RECUR_DAILY_INTERVAL,recurProperties.getDailyRecurringInterval());
-				}
-				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
-				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
+				}				
 			}
 			else if (recurProperties.getRecurringType().equals("Weekly")){
-				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
-				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[0]);
-				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[1]).ordinal()+1));
 				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
 				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
+				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
+				field.clearAndSetText(RECUR_WEEK_COUNT, recurProperties.getWeeklyRecurringInterval().split("_")[0]);
+				field.selectCheckBox(String.format(RECUR_WEEKDAY,WEEKDAY.valueOf(recurProperties.getWeeklyRecurringInterval().split("_")[1]).ordinal()+1));			
 			}
 			else if(recurProperties.getRecurringType().equals("Monthly")){
+				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
+				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
 				if(recurProperties.getMonthlyRecurringInterval().startsWith("Day")){
 				item.click(TO_SELECT_RECUR_DAY_OF_MONTH);
@@ -274,14 +279,12 @@ public class WorkflowPage extends WorkflowBasePage {
 				else if(recurProperties.getMonthlyRecurringInterval().startsWith("Week")){
 					item.click(RECUR_MONTHLY_BY_WEEKDAY);
 					item.click(TO_SELECT_WEEK_NUMBER);
+					System.out.println("dummy");
                     selectValueInDropDown(recurProperties.getMonthlyRecurringInterval().split("_")[1]);
 					item.click(TO_SELECT_RECUR_WEEK_OF_MONTH);
 					item.click(String.format(RECUR_WEEK_OF_MONTH,recurProperties.getMonthlyRecurringInterval().split("_")[2]));
 					item.clearAndSetText(RECUR_MONTHLY_INTERVAL_BYWEEK,recurProperties.getMonthlyRecurringInterval().split("_")[3]);
-				}
-				item.setText(RECUR_EVENT_START_DATE, recurProperties.getRecurStartDate());
-				item.setText(RECUR_EVENT_END_DATE, recurProperties.getRecurEndDate());
-				
+				}					
 			}
 			else if(recurProperties.getRecurringType().equals("Yearly")){
 				item.click(String.format(CREATE_FORM_RECUR_TYPE,recurProperties.getRecurringType()));
@@ -449,6 +452,8 @@ public class WorkflowPage extends WorkflowBasePage {
             String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
         }
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getSubject() !=null) {
             item.click(EXP_VIEW_SUBJECT_INPUT);
             field.clearText(EXP_VIEW_SUBJECT_INPUT);
@@ -460,17 +465,20 @@ public class WorkflowPage extends WorkflowBasePage {
             JavascriptLibrary javascript = new JavascriptLibrary();
             javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getPriority() != null) {
             item.click(EXP_VIEW_PRIORITY_BUTTON);
             selectValueInDropDown(newCta.getPriority());
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getStatus() != null) {
             item.click(EXP_VIEW_STATUS_BUTTON);
             selectValueInDropDown(newCta.getStatus());
         }
-
+        if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+        else waitTillNoLoadingIcon_360();
         if(newCta.getReason() != null) {
             item.click(EXP_VIEW_REASON_BUTTON);
             selectValueInDropDown(newCta.getReason());
@@ -509,6 +517,7 @@ public class WorkflowPage extends WorkflowBasePage {
             System.out.println();
             for(WebElement ele : webElements) {
                 if(ele.isDisplayed()) {
+                	env.setTimeout(30);
                     return true;
                 }
             }
@@ -516,6 +525,7 @@ public class WorkflowPage extends WorkflowBasePage {
             e.printStackTrace();
             Log.info("CTA is not displayed / Present, Please check your XPath (or) CTA Data");
             Log.info(e.getLocalizedMessage());
+            env.setTimeout(30);
             return false;
         }
         Log.info("CTA is not displayed");
@@ -780,6 +790,7 @@ public class WorkflowPage extends WorkflowBasePage {
         if(elements.size() > 0) {
             for(WebElement ele : elements) {
                 if(ele.isDisplayed()) {
+                	env.setTimeout(30);
                     return true;
                 }
             }

@@ -42,8 +42,9 @@ public class WorkFlowTest extends WorkflowSetup {
     private HashMap<Integer, String> weekDayMap = new HashMap<>();
     @BeforeClass
     public void setup() throws Exception {
+    	sfdc.connect();
         basepage.login();
-        createExtIdFieldOnUser();
+        createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
@@ -1432,6 +1433,7 @@ public class WorkFlowTest extends WorkflowSetup {
         //verify if cta is displayed along with the score
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
+    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA39")
     public void createRiskCTA_WithColorScore(HashMap<String, String> testData) throws Exception {

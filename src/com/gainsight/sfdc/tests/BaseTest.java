@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
+import com.gainsight.sfdc.util.PackageUtil;
+import org.testng.annotations.*;
 
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.SalesforceMetadataClient;
@@ -41,6 +40,7 @@ public class BaseTest {
     public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
     public static SalesforceMetadataClient metadataClient;
+    public static PackageUtil packageUtil;
     
     @BeforeSuite
     public void init() throws Exception {
@@ -51,6 +51,15 @@ public class BaseTest {
     	sfdc.connect();
     	//MetadataClient is initialized
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+        packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(PropertyReader.sfdcApiVersion));
+        //Uninstall Application.
+        if(Boolean.valueOf(env.getProperty("sfdc.unInstallApp"))) {
+            packageUtil.unInstallApplication();
+        }
+        //Install Application.
+        if(Boolean.valueOf(env.getProperty("sfdc.installApp"))) {
+            packageUtil.installApplication(env.getProperty("sfdc.packageVersionNumber"), env.getProperty("sfdc.packagePassword"));
+        }
     	
     	sfinfo = sfdc.fetchSFDCinfo();
         System.out.println("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
@@ -165,13 +174,7 @@ public class BaseTest {
    
     public String getDateWithFormat(int days, int months, boolean bulkFormat) {
         String date = null;
-        if(days !=0 && months == 0) {
-            date = DateUtil.addDays(userTimezone, days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        } else if(days ==0 && months !=0) {
-            date = DateUtil.addMonths(userTimezone, months, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        } else if(months !=0 && days !=0) {
-            date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        }
+         date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
         System.out.println("Formatted Date :" +date);
         return date;
     }
@@ -339,6 +342,7 @@ public class BaseTest {
         }
         reader.close();
         code = String.format(stringBuilder.toString(), scheme);
+        Log.info("Running Metric Code:" +code);
         sfdc.runApexCode(resolveStrNameSpace(code));
     }
 

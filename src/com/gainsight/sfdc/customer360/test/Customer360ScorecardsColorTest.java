@@ -25,7 +25,7 @@ import com.gainsight.utils.DataProviderArguments;
  */
 public class Customer360ScorecardsColorTest extends BaseTest {
 
-    private final String TEST_DATA_FILE         = "testdata/sfdc/scorecard/tests/Color_Scheme_Data.xls";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/scorecards/tests/Color_Scheme_Data.xls";
     private final String SETUP_FILE             = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
     private final String CLEAN_FILE             = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
     private final String SCHEME_DEFINITION_FILE = env.basedir+"/apex_scripts/scorecard/Scorecard_Color_SchemeDefinition_Update.txt";
@@ -35,6 +35,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
 
     @BeforeClass
     public void setUp() throws Exception {
+        sfdc.connect();
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
 	    createExtIdFieldForScoreCards();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));

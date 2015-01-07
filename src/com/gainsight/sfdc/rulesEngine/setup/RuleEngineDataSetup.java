@@ -75,27 +75,6 @@ public class RuleEngineDataSetup extends BaseTest {
     public HashMap<String, String> surveyAnswerMap;
 
 
-    private PartnerConnection login() {
-        PartnerConnection connection= null;
-        Properties p = loadProperties(userDir+"/conf/application.properties");
-        String userName  =  p.getProperty("sfdc.username");
-        String password = p.getProperty("sfdc.password");
-        String securityToken = p.getProperty("sfdc.stoken");
-        String EndPointURL = p.getProperty("sfdc.appurl")+"/services/Soap/u/28.0";
-        ConnectorConfig config = new ConnectorConfig();
-        config.setUsername(userName);
-        config.setPassword(password + securityToken);
-        Log.info("AuthEndPoint: " + EndPointURL);
-        config.setAuthEndpoint(EndPointURL);
-        try {
-            connection = new PartnerConnection(config);
-        } catch (ConnectionException e) {
-            e.printStackTrace();
-            Log.info("Failed to Get Connection");
-        }
-        return connection;
-    }
-
     private static Properties loadProperties(String propFile) {
         Properties props = new Properties();
         // Optional properties file to override everything
@@ -110,12 +89,12 @@ public class RuleEngineDataSetup extends BaseTest {
     public RuleEngineDataSetup() {
         Log.info("In RuleEngine Setup");
         mapper = new ObjectMapper();
+        connection = sfdc.getPartnerConnection();
         pkListMap               = getPickListSetupData();
         ctaTypeMap              = getCTATypes();
         scorecardMetricMap      = getScorecardMetrics();
         scorecardSchemeDefMap   = getScoringSchemeDefinition();
         playbooksMap            = getPlaybooks();
-        connection              = login();
         Log.info("End RuleEngine Setup Constructor");
 
 	}
@@ -130,7 +109,7 @@ public class RuleEngineDataSetup extends BaseTest {
         playbooksMap            = getPlaybooks();
         surveyQuestionMap       = getSurveyQuestionMap(surveyCode);
         surveyAnswerMap         = getSurveyAnswerMap(surveyCode);
-        connection              = login();
+        connection = sfdc.getPartnerConnection();
         Log.info("End of Survey Rule's Engine Setup");
     }
 
@@ -219,7 +198,7 @@ public class RuleEngineDataSetup extends BaseTest {
         String code         = "";
         BufferedReader reader;
         BufferedWriter writer;
-        String outFile = env.basedir + "/testdata/sfdc/RulesEngine/Jobs/Temp_job.txt";
+        String outFile = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Temp_job.txt";
         reader = new BufferedReader(new FileReader(JOB_USAGE_LOAD));
         writer = new BufferedWriter(new FileWriter(outFile));
         StringBuilder stringBuilder = new StringBuilder();

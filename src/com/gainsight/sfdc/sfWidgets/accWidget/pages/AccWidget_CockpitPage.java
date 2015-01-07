@@ -16,10 +16,12 @@ public class AccWidget_CockpitPage extends AccountWidgetPage{
         wfPage=new WorkflowPage("Account Widget");
     }
     public void createCTA(CTA cta) {
+    	cta.setFromCustomer360orWidgets(true);
         wfPage.createCTA(cta);
     }
 
     public boolean isCTADisplayed(CTA cta) {
+    	cta.setFromCustomer360orWidgets(true);
         return wfPage.isCTADisplayed(cta);
     }
 
@@ -29,11 +31,14 @@ public class AccWidget_CockpitPage extends AccountWidgetPage{
     }
 
     public boolean isTaskDisplayedUnderCTA(CTA cta, Task task) {
+    	cta.setFromCustomer360orWidgets(true);
+    	task.setFromCustomer360orWidgets(true);
         return wfPage.isTaskDisplayedUnderCTA(cta, task);
     }
 
     public AccWidget_CockpitPage applyPlayBook(CTA cta, String playBookName,
                                                        ArrayList<Task> tasks, boolean isApply) {
+    	cta.setFromCustomer360orWidgets(true);
         wfPage.applyPlayBook(cta, playBookName, tasks, isApply);
         return this;
     }
