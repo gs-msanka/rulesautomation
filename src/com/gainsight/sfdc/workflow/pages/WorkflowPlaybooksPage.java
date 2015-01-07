@@ -38,6 +38,9 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     private final String PLAYBOOK_SEARCH_INPUT      = "//div[@class='playbook-search-ctn']/input[contains(@class, 'global-search')]";
     private final String TASK_SEARCH_INPUT          = "//input[contains(@class, 'search-playbooks-tasks')]";
     private final String ALL_BLOCK = "//div[@class='playbook-type']/h2[text()='All']";
+    private final String PLAYBOOK_ERROR_MSG_BLOCK = "//div[contains(@class, 'playbook-error-message')]";
+    private final String TASK_ERROR_MSG_BLOCK = "//div[contains(@class, 'task-error-message')]";
+    private final String NO_PLAYBOOK_MSG = "//div[@class='no-playbooxs-ctn']/p";
 
     public WorkflowPlaybooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -86,10 +89,14 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         if(task.getDate() != null) {
             field.clearAndSetText(TASK_DATE_INPUT, task.getDate());
         }
-        item.click(TASK_PRIORITY_INPUT);
-        selectValueInDropDown(task.getPriority());
-        item.click(TASK_STATUS_INPUT);
-        selectValueInDropDown(task.getStatus());
+        if(task.getPriority() != null) {
+            item.click(TASK_PRIORITY_INPUT);
+            selectValueInDropDown(task.getPriority());
+        }
+        if(task.getStatus() != null) {
+            item.click(TASK_STATUS_INPUT);
+            selectValueInDropDown(task.getStatus());
+        }
     }
 
 
@@ -161,15 +168,17 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
             Log.info("No Tasks found with subject : "+task.getSubject());
             return false;
         }
-        String status, priority, date;
+        String status, priority, date = null;
         for(WebElement tEle : taskList) {
             status = tEle.findElement(By.xpath(getTaskPropXpath("Status"))).getText().trim();
             priority = tEle.findElement(By.xpath(getTaskPropXpath("Priority"))).getText().trim();
-            date = tEle.findElement(By.xpath(getTaskPropXpath("Date"))).getText().trim();
+            if(task.getDate()!=null) {
+                date = tEle.findElement(By.xpath(getTaskPropXpath("Date"))).getText().trim();
+            }
             Log.info("Expected Task Properties - Status : "+task.getStatus() +", -- priority : "+task.getPriority() +", -- date : "+task.getDate());
             Log.info("Actual Task Properties - Status : "+status +", -- priority : "+priority +", -- date : "+date);
             if(task.getStatus().equalsIgnoreCase(status) && task.getPriority().equalsIgnoreCase(priority)
-                    && date.contains(task.getDate())) {
+                    && (task.getDate() != null ? date.contains(task.getDate()) :  true )) {
                 Log.info("Task Found");
                 return true;
             }
@@ -231,6 +240,26 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         driver.findElement(By.xpath(TASK_SEARCH_INPUT)).sendKeys(Keys.ENTER);
         Timer.sleep(2);
         return this;
+    }
+
+    public boolean noPlaybooksMessage() {
+        String actualText = element.getText(NO_PLAYBOOK_MSG).trim();
+        String expectedText = "No Playbooks are defined. Create your first one now.";
+        Log.info("Actual : " +actualText);
+        Log.info("Expected : " +expectedText);
+        return expectedText.equalsIgnoreCase(actualText);
+    }
+
+    public boolean isPlaybookErrorMsgDisplayed(String message) {
+        Log.info("Checking playbook error messages are displayed.");
+        String xPath = PLAYBOOK_ERROR_MSG_BLOCK+"/div[text()='"+message+"']";
+        return isElementPresentAndDisplay(By.xpath(xPath));
+    }
+
+    public boolean isTaskErrorMsgDisplayed(String message) {
+        Log.info("Checking playbook error messages are displayed.");
+        String xPath = TASK_ERROR_MSG_BLOCK+"/div[text()='"+message+"']";
+        return isElementPresentAndDisplay(By.xpath(xPath));
     }
 }
 
