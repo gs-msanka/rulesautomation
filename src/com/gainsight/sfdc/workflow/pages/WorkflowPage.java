@@ -906,6 +906,8 @@ public class WorkflowPage extends WorkflowBasePage {
                 WebElement elements = element.getElement(TASK_EXP_SUBJECT);
                 JavascriptLibrary javascript = new JavascriptLibrary();
                 javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
+                if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+                else waitTillNoLoadingIcon();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -914,10 +916,14 @@ public class WorkflowPage extends WorkflowBasePage {
         if(newTask.getPriority() != null) {
             item.click(TASK_EXP_PRIORITY);
             selectValueInDropDown(newTask.getPriority());
+            if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+            else waitTillNoLoadingIcon();
         }
         if(newTask.getStatus() !=null) {
             item.click(TASK_EXP_STATUS);
             selectValueInDropDown(newTask.getStatus());
+            if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+            else waitTillNoLoadingIcon();
         }
         Timer.sleep(2);
         return this;
@@ -1039,6 +1045,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	if(element.isElementPresent(HIDE_CLOSED_CTA)) return this;
     	else{
         item.click(SHOW_CLOSED_CTA);
+        waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(HIDE_CLOSED_CTA, MIN_TIME, MAX_TIME );
         return this;

@@ -189,7 +189,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA9")
 		   public void createRecurringEventCTA_Yearly_ByMonth_in360(HashMap<String, String> testData) throws IOException {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
+		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer().trim()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        int temp = Integer.valueOf(cta.getDueDate());
 		        cta.setDueDate(getDateWithFormat(temp, 0, false));
