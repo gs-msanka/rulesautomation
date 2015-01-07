@@ -1045,6 +1045,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	if(element.isElementPresent(HIDE_CLOSED_CTA)) return this;
     	else{
         item.click(SHOW_CLOSED_CTA);
+        waitTillNoLoadingIcon();
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(HIDE_CLOSED_CTA, MIN_TIME, MAX_TIME );
         return this;
