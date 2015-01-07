@@ -39,7 +39,6 @@ public class WorkFlowTest extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__Milestone__c];";
     ObjectMapper mapper                         = new ObjectMapper();
 
-    private HashMap<Integer, String> weekDayMap = new HashMap<>();
     @BeforeClass
     public void setup() throws Exception {
     	sfdc.connect();
@@ -50,14 +49,6 @@ public class WorkFlowTest extends WorkflowSetup {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         cleanPlaybooksData();
         loadDefaultPlaybooks();
-        weekDayMap.put(1, "Sun");
-        weekDayMap.put(2, "Mon");
-        weekDayMap.put(3, "Tue");
-        weekDayMap.put(4, "Wed");
-        weekDayMap.put(5, "Thu");
-        weekDayMap.put(6, "Fri");
-        weekDayMap.put(7, "Sat");
-
     }
     
     @BeforeMethod
@@ -1366,7 +1357,7 @@ public class WorkFlowTest extends WorkflowSetup {
         int week = cal.get(Calendar.WEEK_OF_YEAR);
         workflowPage = workflowPage.selectCalendarView("DAILY");
         cal.add(Calendar.DATE, 5); // Added 5 Days
-        workflowPage = workflowPage.selectCalendarDay(cal.get(Calendar.DATE), DateUtil.getMonthName(cal), weekDayMap.get(cal.get(Calendar.DAY_OF_WEEK)));
+        workflowPage = workflowPage.selectCalendarDay(cal.get(Calendar.DATE), DateUtil.getMonthName(cal), DateUtil.getShortWeekDayName(cal));
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }

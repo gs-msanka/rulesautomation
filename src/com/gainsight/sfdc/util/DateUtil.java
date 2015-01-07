@@ -1,12 +1,9 @@
 package com.gainsight.sfdc.util;
 
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 import com.gainsight.sfdc.tests.BaseTest;
 import org.apache.commons.lang3.time.DateUtils;
@@ -322,6 +319,14 @@ public class DateUtil {
         dateFmt = new SimpleDateFormat(USER_DATE_FORMAT);
         dateFmt.setTimeZone(BaseTest.userTimezone);
         return dateFmt.format(c.getTime());
+    }
+
+    public static String getShortWeekDayName(Calendar cal) {
+        DateFormatSymbols symbols = new DateFormatSymbols(new Locale("en"));
+        String[] dayNames = symbols.getShortWeekdays();
+        String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)]+1;
+        Log.info("Day Name : " +dayName);
+        return dayName;
     }
 
 }
