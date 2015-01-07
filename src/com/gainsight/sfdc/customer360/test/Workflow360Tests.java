@@ -32,8 +32,7 @@ public class Workflow360Tests extends WorkflowSetup{
     private final String CREATE_ACCOUNTS_CUSTOMERS=Application.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
     
     ObjectMapper mapper                         = new ObjectMapper();
-    private HashMap<Integer, String> weekDayMap = new HashMap<>();
-    
+
     @BeforeClass
     public void setup() throws Exception {
     	sfdc.connect();

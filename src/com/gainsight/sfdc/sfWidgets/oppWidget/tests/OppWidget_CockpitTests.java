@@ -45,8 +45,6 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
          sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
          cleanPlaybooksData();
          loadDefaultPlaybooks();
-         cleanPlaybooksData();
-         loadDefaultPlaybooks();
 	   }
 	 	
 	  @BeforeMethod

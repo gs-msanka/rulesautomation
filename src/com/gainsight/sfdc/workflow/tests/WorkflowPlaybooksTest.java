@@ -21,7 +21,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 
 
-public class WorkflowPlaybooksTest extends BaseTest {
+public class WorkflowPlaybooksTest extends WorkflowSetup {
 	 ObjectMapper mapper = new ObjectMapper();
 	    String PLAYBOOK_OBJECT = "JBCXM__Playbook__c";
 	    private final String TEST_DATA_FILE         = "./testdata/sfdc/workflow/tests/PlaybookTests.xls";
@@ -31,13 +31,11 @@ public class WorkflowPlaybooksTest extends BaseTest {
 	    public void setUp() {
 	        Log.info("Starting Playbook Test Case...");
 	        cleanPlaybooksData();
+            loadDefaultPlaybooks();
 	        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
 	        basepage.login();
 	    }
 
-	    private void cleanPlaybooksData() {
-	        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
-	    }
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
     public void crud_RiskPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
