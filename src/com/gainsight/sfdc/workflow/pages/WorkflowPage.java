@@ -906,6 +906,8 @@ public class WorkflowPage extends WorkflowBasePage {
                 WebElement elements = element.getElement(TASK_EXP_SUBJECT);
                 JavascriptLibrary javascript = new JavascriptLibrary();
                 javascript.callEmbeddedSelenium(driver, "triggerEvent", elements, "blur");
+                if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+                else waitTillNoLoadingIcon();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -914,10 +916,14 @@ public class WorkflowPage extends WorkflowBasePage {
         if(newTask.getPriority() != null) {
             item.click(TASK_EXP_PRIORITY);
             selectValueInDropDown(newTask.getPriority());
+            if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+            else waitTillNoLoadingIcon();
         }
         if(newTask.getStatus() !=null) {
             item.click(TASK_EXP_STATUS);
             selectValueInDropDown(newTask.getStatus());
+            if(newTask.isFromCustomer360orWidgets()) waitTillNoLoadingIcon_360();
+            else waitTillNoLoadingIcon();
         }
         Timer.sleep(2);
         return this;
