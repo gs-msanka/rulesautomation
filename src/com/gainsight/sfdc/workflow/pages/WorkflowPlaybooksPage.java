@@ -149,7 +149,8 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         wait.waitTillElementDisplayed(PLAYBOOK_DUPLICATE_NAME, MIN_TIME, MAX_TIME);
         field.clearAndSetText(PLAYBOOK_DUPLICATE_NAME, pName);
         item.click(POPUP_SAVE_BUTTON);
-        Timer.sleep(2);
+        Timer.sleep(5);
+        wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
         return this;
     }
 
@@ -178,7 +179,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     private String getTaskPropXpath(String prop) {
-        String s = ".//div[@class='tasks-label' and contains(text(), '"+prop+"')]/following-sibling::div[@class='tasks-value']";
+        String s = ".//div[@class='tasks-label' and contains(text(), '"+prop+"')]/following-sibling::div[contains(@class, 'tasks-value')]";
         return s;
     }
 

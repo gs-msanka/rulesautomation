@@ -33,7 +33,8 @@ public class WorkflowPlaybooksTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         basepage.login();
     }
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+
+   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
     public void crud_RiskPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
     	//Create Risk Playbook
@@ -121,15 +122,21 @@ public class WorkflowPlaybooksTest extends BaseTest {
         Playbook pb = mapper.readValue(testData.get("Playbook"), Playbook.class);
         pbPage = pbPage.addPlaybook(pb);
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook");
-        Task task = mapper.readValue(testData.get("Task1"), Task.class);
-        pbPage = pbPage.addTask(task);
-        Assert.assertTrue(pbPage.isTaskDisplayed(task));
-        task = mapper.readValue(testData.get("Task2"), Task.class);
-        pbPage = pbPage.addTask(task);
-        Assert.assertTrue(pbPage.isTaskDisplayed(task));
-        task = mapper.readValue(testData.get("Task3"), Task.class);
-        pbPage = pbPage.addTask(task);
-        Assert.assertTrue(pbPage.isTaskDisplayed(task));
+        Task task1 = mapper.readValue(testData.get("Task1"), Task.class);
+        pbPage = pbPage.addTask(task1);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task1));
+        Task task2 = mapper.readValue(testData.get("Task2"), Task.class);
+        pbPage = pbPage.addTask(task2);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task2));
+        Task task3 = mapper.readValue(testData.get("Task3"), Task.class);
+        pbPage = pbPage.addTask(task3);
+        Assert.assertTrue(pbPage.isTaskDisplayed(task3));
+        pb.setName(testData.get("Clone_PBName"));
+        pbPage.duplicatePlaybook(pb.getName());
+        Assert.assertTrue(pbPage.isPlaybookDisplayed(pb));
+        Assert.assertTrue(pbPage.isTaskDisplayed(task1));
+        Assert.assertTrue(pbPage.isTaskDisplayed(task2));
+        Assert.assertTrue(pbPage.isTaskDisplayed(task3));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

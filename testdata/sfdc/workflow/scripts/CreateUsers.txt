@@ -1,4 +1,4 @@
-List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'Standard User'];
+List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'Automation Standard User'];
 System.debug(profileList);
 
 Map<String, String> userNamesMap = new Map<String, String>{'GiribabuG' => 'ggolla@gainsight.com',
@@ -13,7 +13,7 @@ List<User> extuser= [SELECT id, isActive, Username, Lastname, Alias,
                      ProfileId FROM User WHERE Lastname In : userNamesMap.keySet() AND Alias = 'Auto' AND
                        ProfileId =: profileList.get(0).Id];
 List<User> newUsers = new List<User>();
-if(extuser != null && extuser.size() == 0) {
+if(extuser != null && !(extuser.size() == userNamesMap.size())) {
 
     for(String s : userNamesMap.keySet()) {
         Integer a = (Integer) (Math.random() * 1000);
@@ -29,11 +29,11 @@ if(extuser != null && extuser.size() == 0) {
         sampleUser.EmailEncodingKey = 'ISO-8859-1';
         sampleUser.LanguageLocaleKey = 'en_US';
         sampleUser.UserPermissionsMobileUser = false;
-        sampleUser.User_ExternalId__c=s;
+        sampleUser.UserPermissionsSFContentUser = false;
         newUsers.add(sampleUser);
+        insert sampleUser;
     }
-    system.debug(newUsers);
-    insert newUsers;
+    system.debug(newUsers.size());
 } else {
     System.debug('No New users Created');
  }

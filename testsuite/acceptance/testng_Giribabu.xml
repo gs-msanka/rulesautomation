@@ -10,7 +10,11 @@
 
             <!-- Giri's Test-->
 
-            <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
+            <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" >
+                <include>
+
+                </include>
+            </class>
         </classes>
     </test>
 </suite>
