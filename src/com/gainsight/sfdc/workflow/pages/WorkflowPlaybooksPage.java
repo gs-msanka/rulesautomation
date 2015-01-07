@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.workflow.pojos.Playbook;
+import com.gainsight.sfdc.workflow.pojos.PlaybookTask;
 import com.gainsight.sfdc.workflow.pojos.Task;
 
 public class WorkflowPlaybooksPage extends WorkflowBasePage {
@@ -41,6 +43,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     private final String PLAYBOOK_ERROR_MSG_BLOCK = "//div[contains(@class, 'playbook-error-message')]";
     private final String TASK_ERROR_MSG_BLOCK = "//div[contains(@class, 'task-error-message')]";
     private final String NO_PLAYBOOK_MSG = "//div[@class='no-playbooxs-ctn']/p";
+
 
     public WorkflowPlaybooksPage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -81,27 +84,28 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     private void fillTaskDetails(Task task) {
         wait.waitTillElementDisplayed(TASK_SAVE_BUTTON, MIN_TIME, MAX_TIME);
         if(task.getAssignee() != null && task.getAssignee() != "") {
-            selectTaskOwner(task.getAssignee());
-        }
-        if(task.getSubject() != null) {
-            field.clearAndSetText(TASK_SUBJECT_INPUT, task.getSubject());
-        }
-        if(task.getDate() != null) {
-            field.clearAndSetText(TASK_DATE_INPUT, task.getDate());
-        }
-        if(task.getPriority() != null) {
-            item.click(TASK_PRIORITY_INPUT);
-            selectValueInDropDown(task.getPriority());
-        }
-        if(task.getStatus() != null) {
-            item.click(TASK_STATUS_INPUT);
-            selectValueInDropDown(task.getStatus());
-        }
+        	           selectTaskOwner(task.getAssignee());
+                }
+                if(task.getSubject() != null) {
+                    field.clearAndSetText(TASK_SUBJECT_INPUT, task.getSubject());
+                }
+                if(task.getDate() != null) {
+                    field.clearAndSetText(TASK_DATE_INPUT, task.getDate());
+                }
+                if(task.getPriority() != null) {
+                            item.click(TASK_PRIORITY_INPUT);
+                            selectValueInDropDown(task.getPriority());
+                        }
+                        if(task.getStatus() != null) {
+                            item.click(TASK_STATUS_INPUT);
+                            selectValueInDropDown(task.getStatus());
+                        }
     }
 
 
     public void selectTaskOwner(String owner) {
         Log.info("Selecting Task Owner : " + owner);
+        Timer.sleep(3);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(TASK_OWNER_INPUT, owner);
@@ -187,8 +191,9 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         return false;
     }
 
+
     private String getTaskPropXpath(String prop) {
-        String s = ".//div[@class='tasks-label' and contains(text(), '"+prop+"')]/following-sibling::div[contains(@class, 'tasks-value')]";
+        String s = ".//div[@class='tasks-label' and contains(text(), '"+prop+"')]/following-sibling::div[contains(@class,'tasks-value')]";
         return s;
     }
 
@@ -200,7 +205,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     public WorkflowPlaybooksPage editTask(Task task, Task newTask) {
-        String s = getTaskXpath(task)+"/descendant::a[contains(@class, 'edit') and @title='Edit task']";
+        String s = "//div[@class='header']/h4[contains(text(),'"+task.getSubject()+"')]/following-sibling::ul[contains(@class,'playbook-tools')]/descendant::a[contains(@class, 'edit') and @title='Edit task']";
         item.click(s);
         fillTaskDetails(newTask);
         item.click(TASK_SAVE_BUTTON);
@@ -209,7 +214,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     }
 
     public WorkflowPlaybooksPage deleteTask(Task task) {
-        String s = getTaskXpath(task)+"/descendant::a[contains(@class, 'delete') and @title='Delete task']";
+        String s = "//div[@class='header']/h4[contains(text(),'"+task.getSubject()+"')]/following-sibling::ul[contains(@class,'playbook-tools')]/descendant::a[contains(@class, 'delete') and @title='Delete task']";
         item.click(s);
         item.click(POPUP_YES_BUTTON);
         Timer.sleep(2);
@@ -241,7 +246,6 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         Timer.sleep(2);
         return this;
     }
-
     public boolean noPlaybooksMessage() {
         String actualText = element.getText(NO_PLAYBOOK_MSG).trim();
         String expectedText = "No Playbooks are defined. Create your first one now.";

@@ -12,7 +12,11 @@ public class WorkflowBasePage extends BasePage {
 	private final String LIST_VIEW_TAB         		= "//a[@data-type='LIST']";
     private final String CALENDAR_VIEW_TAB         	= "//a[@data-type='CALENDAR']";
     private final String REPORTING_TAB              = "//a[@data-type='REPORTS']";
+<<<<<<< Updated upstream
     private final String PLAYBOOKS_TAB     			= "//a[contains(@class, 'workflow-playbooks require-tooltip')]";
+=======
+    private final String PLAYBOOKS_TAB     			= "//a[contains(@class,'workflow-playbooks require-tooltip')]";
+>>>>>>> Stashed changes
     private final String SHOW_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_show']";		//show salesforce header
 	private final String HIDE_SALESFORCE_HEADER_ICON= "//a[@class='tooltips h_hide']";		//hide salesforce header
   
