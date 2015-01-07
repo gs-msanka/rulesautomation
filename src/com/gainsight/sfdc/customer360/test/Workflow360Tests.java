@@ -42,6 +42,8 @@ public class Workflow360Tests extends WorkflowSetup{
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+        cleanPlaybooksData();
+        loadDefaultPlaybooks();
     }
     
     @BeforeMethod

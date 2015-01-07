@@ -400,7 +400,7 @@ public class WorkflowPage extends WorkflowBasePage {
             Timer.sleep(2);
         }
         if(!selected) {
-            throw new RuntimeException("Unable to select owner");
+            throw new RuntimeException("Unable to select Customer");
         }
         Log.info("Selected Customer Successfully: " +cName);
     }

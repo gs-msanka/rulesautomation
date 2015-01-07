@@ -36,9 +36,17 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__StatePreservation__c];"+
                                         "Delete [Select id from JBCXM__Milestone__c];";
 	 @BeforeClass
-	    public void setup() {
-		 	sfdc.connect();
-	        basepage.login();
+	    public void setup() throws Exception {
+         sfdc.connect();
+         basepage.login();
+         createExtIdFieldOnAccount();
+         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+         createExtIdFieldOnUser();
+         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+         cleanPlaybooksData();
+         loadDefaultPlaybooks();
+         cleanPlaybooksData();
+         loadDefaultPlaybooks();
 	   }
 	 	
 	  @BeforeMethod

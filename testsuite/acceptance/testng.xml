@@ -7,7 +7,8 @@
 
     <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
         <classes>
-            <!-- Srividya, Giri -->
+
+            <!-- Customer 360 Test Suite -->
             <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
@@ -15,9 +16,31 @@
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
             <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
             <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests" />
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+
+            <!--Work flow Test Suite -->
             <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest"/>
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests"/>
+            <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" />
+            <class name="com.gainsight.sfdc.customer360.test.Workflow360Tests"/>
+            <class name="com.gainsight.sfdc.sfWidgets.accWidget.tests.AccWidget_CockpitTests" />
+            <class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests" />
+
+            <!-- Adoption Test Suite -->
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/>
+
+            <!-- Engagement Rules Test Suite -->
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Weekly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Monthly_Test"/>
+            <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Instance_Weekly_Test"/>
+
         </classes>
     </test>
 </suite>

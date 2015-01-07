@@ -31,6 +31,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class WorkflowSetup extends BaseTest{
     ObjectMapper mapper                         = new ObjectMapper();
+    private final String DEFAULT_PLAYBOOKS_SCRIPT = "./testdata/sfdc/workflow/scripts/DefaultPlaybooks.txt";
     
     public void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
@@ -295,8 +296,10 @@ public class WorkflowSetup extends BaseTest{
         return count;
     }
 
-    @AfterClass
-    public void tearDown() {
-        basepage.logout();
+    public void cleanPlaybooksData() {
+        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
+    }
+    public void loadDefaultPlaybooks() {
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_PLAYBOOKS_SCRIPT));
     }
 }

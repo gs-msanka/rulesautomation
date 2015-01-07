@@ -48,6 +48,8 @@ public class WorkFlowTest extends WorkflowSetup {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+        cleanPlaybooksData();
+        loadDefaultPlaybooks();
         weekDayMap.put(1, "Sun");
         weekDayMap.put(2, "Mon");
         weekDayMap.put(3, "Tue");
@@ -846,9 +848,8 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfinfo.getUserFullName());
-       workflowPage.createCTA(cta); 
-      
-      workflowPage.deleteCTA(cta);
+       workflowPage.createCTA(cta);
+        workflowPage.deleteCTA(cta);
       Assert.assertFalse(workflowPage.isCTADisplayed(cta), "Verifying if the CTA is delete successfully");
       
    }
