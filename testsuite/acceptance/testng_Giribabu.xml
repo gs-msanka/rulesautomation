@@ -11,9 +11,10 @@
             <!-- Giri's Test-->
 
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" >
-                <include>
+                <methods>
+                    <include name="duplicate_RiskPlaybook" />
 
-                </include>
+                </methods>
             </class>
         </classes>
     </test>
