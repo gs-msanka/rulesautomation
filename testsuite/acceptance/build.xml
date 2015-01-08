@@ -93,6 +93,7 @@
     </target>
 
     <target name="zipReports">
-        <zip destfile="${ws.home}/xsltReports/Results.zip" basedir="${ws.home}/xsltReports/output"/>
+        <zip destfile="${ws.home}/result/xsltReport.zip" basedir="${ws.home}/xsltReports/output"/>
+        <zip destfile="${ws.home}/result/Results.zip" basedir="${ws.home}/result"/>
     </target>
 </project>
