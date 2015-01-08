@@ -9,9 +9,9 @@
 
 
     <!-- TestNG file name for pre and post tests -->
-	<property name="testngFileName" value="all_test.xml"/>
+	<property name="testngFileName" value="testng_Giribabu.xml"/>
 
-	<target name="runTest" depends="init, editPropertyFile,  compile, bat, makexsltreports"/>
+	<target name="runTest" depends="init, editPropertyFile,  compile, bat, makexsltreports, zipReports"/>
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
@@ -90,5 +90,9 @@
             <param name="testNgXslt.outputDir" expression="${ws.home}/xsltReports/output/"/>
             <param name="testNgXslt.showRuntimeTotals" expression="true"/>
         </xslt>
+    </target>
+
+    <target name="zipReports">
+        <zip destfile="${ws.home}/xsltReports/Results.zip" basedir="${ws.home}/xsltReports/output"/>
     </target>
 </project>
