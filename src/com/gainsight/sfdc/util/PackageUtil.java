@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.gainsight.testdriver.Application;
 import com.sforce.soap.metadata.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,15 +59,15 @@ public class PackageUtil {
     public void updateWidgetLayouts(boolean accLayout, boolean oppLayout, boolean caseLayout)  {
         try {
             String zipFile          = "retrieveResults.zip";
-            String MANIFEST_FILE    = "./resources/sfdcmetadata/widgets/package.xml";
-            String tempDir          = "./resources/sfdcmetadata/temp";
+            String MANIFEST_FILE    = Application.basedir+"/resources/sfdcmetadata/widgets/package.xml";
+            String tempDir          = Application.basedir+"resources/sfdcmetadata/temp";
             String tempDirSrc       = tempDir+"/src";
             String accLayoutFile    = tempDirSrc+"/unpackaged/layouts/Account-Account Layout.layout";
-            String accWidgetFile    = "./resources/sfdcmetadata/widgets/accountWidget.xml";
+            String accWidgetFile    = Application.basedir+"resources/sfdcmetadata/widgets/accountWidget.xml";
             String oppLayoutFile    = tempDirSrc+"/unpackaged/layouts/Opportunity-Opportunity Layout.layout";
-            String oppWidgetFile    = "./resources/sfdcmetadata/widgets/opportWidget.xml";
+            String oppWidgetFile    = Application.basedir+"resources/sfdcmetadata/widgets/opportWidget.xml";
             String caseLayoutFile   = tempDirSrc+"/unpackaged/layouts/Case-Case Layout.layout";
-            String caseWidgetFile   = "./resources/sfdcmetadata/widgets/caseWidget.xml";
+            String caseWidgetFile   = Application.basedir+"resources/sfdcmetadata/widgets/caseWidget.xml";
 
             File file = new File(tempDir);
             file.deleteOnExit();
@@ -110,9 +111,9 @@ public class PackageUtil {
 
 
     public  void installApplication(String version, String password) throws Exception {
-        String srcDir = "./resources/sfdcmetadata/appInstall";
-        String desDir = "./resources/sfdcmetadata/temp";
-        String filePath = "./resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
+        String srcDir = Application.basedir+"resources/sfdcmetadata/appInstall";
+        String desDir = Application.basedir+"resources/sfdcmetadata/temp";
+        String filePath = Application.basedir+"resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = docBuilder.parse(filePath);
@@ -133,8 +134,8 @@ public class PackageUtil {
     }
 
     public void unInstallApplication() throws Exception {
-        String srcDir = "./resources/sfdcmetadata/appUnInstall";
-        String desDir = "./resources/sfdcmetadata/temp/";
+        String srcDir = Application.basedir+"resources/sfdcmetadata/appUnInstall";
+        String desDir = Application.basedir+"resources/sfdcmetadata/temp/";
         createZipFile(srcDir, desDir, "appUnInstall");
         deployZip(desDir+"appUnInstall.zip");
     }

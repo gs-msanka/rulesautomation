@@ -1,4 +1,4 @@
-List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'Automation Standard User'];
+List<Profile> profileList = [SELECT Id, Name FROM Profile WHERE Name =: 'Standard User'];
 System.debug(profileList);
 
 Map<String, String> userNamesMap = new Map<String, String>{'GiribabuG' => 'ggolla@gainsight.com',

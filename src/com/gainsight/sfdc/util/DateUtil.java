@@ -17,6 +17,8 @@ import com.gainsight.testdriver.Log;
  */
 public class DateUtil {
 
+    public static TimeZone timeZone = TimeZone.getTimeZone("GMT");
+
 	/**
 	 * Increment or decrement months and also fetch the date in the required format.
 	 * @param cal Calendar Object
@@ -25,9 +27,10 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String addMonths(Calendar cal, int amount, String format) {
-        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         cal.add(Calendar.MONTH, amount);
-		return fmt.format(cal.getTime());
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(cal.getTime());
 	}
 
     public static String addMonths(TimeZone timeZone, int amount, String format) {
@@ -54,14 +57,16 @@ public class DateUtil {
      * @return
      */
     public static String addDays(Calendar cal, int amount, String format) {
-        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         cal.add(Calendar.DATE, amount);
-        return fmt.format(cal.getTime());
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(cal.getTime());
     }
 
     public static String addDays(Date date, int amount, String format) {
-        SimpleDateFormat fmt = new SimpleDateFormat(format);
-        return fmt.format(DateUtils.addDays(date, amount));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(DateUtils.addDays(date, amount));
     }
 
     public static String addDays(TimeZone timeZone, int amount, String format) {
@@ -88,9 +93,10 @@ public class DateUtil {
      * @return
      */
     public static String addWeeks(Calendar cal, int amount, String format) {
-        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(timeZone);
         cal.add(Calendar.WEEK_OF_YEAR, amount);
-        return fmt.format(cal.getTime());
+        return dateFormat.format(cal.getTime());
     }
 
     public static String addWeeks(TimeZone timeZone, int amount, String format) {
@@ -119,6 +125,7 @@ public class DateUtil {
      */
     public static String getWeekLabelDate(String weekDay, String format, TimeZone timeZone, int amount, boolean usesEndDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        simpleDateFormat.setTimeZone(timeZone);
         String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone, amount, usesEndDate).getTime());
         Log.info("Formatted Date : " +sDate);
         return sDate;
@@ -302,6 +309,7 @@ public class DateUtil {
     
     public static String getMonthName(Calendar cal) {
     	SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+        dateFormat.setTimeZone(timeZone);
     	return dateFormat.format(cal.getTime());
     }
 
@@ -324,7 +332,7 @@ public class DateUtil {
     public static String getShortWeekDayName(Calendar cal) {
         DateFormatSymbols symbols = new DateFormatSymbols(new Locale("en"));
         String[] dayNames = symbols.getShortWeekdays();
-        String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)]+1;
+        String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)+1];
         Log.info("Day Name : " +dayName);
         return dayName;
     }

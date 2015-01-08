@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.workflow.tests;
 
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import io.lamma.Date;
 import io.lamma.Dates;
@@ -31,7 +32,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class WorkflowSetup extends BaseTest{
     ObjectMapper mapper                         = new ObjectMapper();
-    private final String DEFAULT_PLAYBOOKS_SCRIPT = "./testdata/sfdc/workflow/scripts/DefaultPlaybooks.txt";
+    private final String DEFAULT_PLAYBOOKS_SCRIPT = Application.basedir+"/testdata/sfdc/workflow/scripts/DefaultPlaybooks.txt";
     
     public void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
