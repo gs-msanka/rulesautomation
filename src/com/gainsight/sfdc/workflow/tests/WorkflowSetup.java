@@ -191,6 +191,7 @@ public class WorkflowSetup extends BaseTest{
     public List<String> getFormatDates(List<io.lamma.Date>  dates) {
         List<String> fDates = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(userTimezone);
         for(io.lamma.Date date : dates) {
             Calendar cal = Calendar.getInstance(userTimezone);
             cal.set(date.yyyy(), date.mm()-1, date.dd(), 0, 0, 0);
@@ -211,6 +212,7 @@ public class WorkflowSetup extends BaseTest{
             sDate.add(Calendar.DATE, 1);
         }
         DateFormat dateFormat = new SimpleDateFormat(USER_DATE_FORMAT);
+        dateFormat.setTimeZone(userTimezone);
         return dateFormat.format(eDate.getTime());
     }
 
@@ -266,6 +268,7 @@ public class WorkflowSetup extends BaseTest{
                 throw new RuntimeException("Please check the date format "+e.getErrorOffset());
             }
         }
+        dateFormat.setTimeZone(userTimezone);
         return dateFormat.format(date);
     }
 
