@@ -60,14 +60,14 @@ public class PackageUtil {
         try {
             String zipFile          = "retrieveResults.zip";
             String MANIFEST_FILE    = Application.basedir+"/resources/sfdcmetadata/widgets/package.xml";
-            String tempDir          = Application.basedir+"resources/sfdcmetadata/temp";
+            String tempDir          = Application.basedir+"/resources/sfdcmetadata/temp";
             String tempDirSrc       = tempDir+"/src";
             String accLayoutFile    = tempDirSrc+"/unpackaged/layouts/Account-Account Layout.layout";
-            String accWidgetFile    = Application.basedir+"resources/sfdcmetadata/widgets/accountWidget.xml";
+            String accWidgetFile    = Application.basedir+"/resources/sfdcmetadata/widgets/accountWidget.xml";
             String oppLayoutFile    = tempDirSrc+"/unpackaged/layouts/Opportunity-Opportunity Layout.layout";
-            String oppWidgetFile    = Application.basedir+"resources/sfdcmetadata/widgets/opportWidget.xml";
+            String oppWidgetFile    = Application.basedir+"/resources/sfdcmetadata/widgets/opportWidget.xml";
             String caseLayoutFile   = tempDirSrc+"/unpackaged/layouts/Case-Case Layout.layout";
-            String caseWidgetFile   = Application.basedir+"resources/sfdcmetadata/widgets/caseWidget.xml";
+            String caseWidgetFile   = Application.basedir+"/resources/sfdcmetadata/widgets/caseWidget.xml";
 
             File file = new File(tempDir);
             file.deleteOnExit();
