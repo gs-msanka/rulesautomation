@@ -85,7 +85,7 @@
 
     <target name="makexsltreports">
         <mkdir dir="${ws.home}/xsltReports/output"/>
-        <xslt in="${result.dir}/testng-results.xml" style="src/xslt/testng-results.xsl"
+        <xslt in="${result.dir}/testng-results.xml" style="testsuite/xslt/testng-results.xsl"
               out="${ws.home}/xsltReports/output/index.html" classpathref="runpath" processor="SaxonLiaison">
             <param name="testNgXslt.outputDir" expression="${ws.home}/xsltReports/output/"/>
             <param name="testNgXslt.showRuntimeTotals" expression="true"/>
