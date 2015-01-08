@@ -9,7 +9,7 @@
 
 
     <!-- TestNG file name for pre and post tests -->
-	<property name="testngFileName" value="testng_Giribabu.xml"/>
+	<property name="testngFileName" value="all_test.xml"/>
 
 	<target name="runTest" depends="init, editPropertyFile,  compile, bat, makexsltreports, zipReports"/>
 
