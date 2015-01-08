@@ -239,12 +239,9 @@ public class WorkflowPage extends WorkflowBasePage {
         button.click(SAVE_CTA);
         Log.info("Clicked on Save CTA");
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
-        else {
-        	env.setTimeout(1);
-            wait.waitTillElementNotPresent("//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]", MIN_TIME, MAX_TIME);
-            env.setTimeout(30);
-        }
+        else waitTillNoLoadingIcon_360();
        if(!cta.isFromCustomer360orWidgets()) waitTillNoSearchIcon();
+       else waitTillNoLoadingIcon_360();
 	}
 
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {

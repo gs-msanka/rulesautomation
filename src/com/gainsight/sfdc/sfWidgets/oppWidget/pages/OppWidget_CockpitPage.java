@@ -28,11 +28,14 @@ WorkflowPage  wfPage;
 	}
 
 	public boolean isTaskDisplayedUnderCTA(CTA cta, Task task) {
+		cta.setFromCustomer360orWidgets(true);
+		task.setFromCustomer360orWidgets(true);
 		return wfPage.isTaskDisplayedUnderCTA(cta, task);
 	}
 
 	public OppWidget_CockpitPage applyPlayBook(CTA cta, String playBookName,
 			ArrayList<Task> tasks, boolean isApply) {
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.applyPlayBook(cta, playBookName, tasks, isApply);		
 		return this;
 	}
@@ -53,6 +56,7 @@ WorkflowPage  wfPage;
 	}
 
 	public boolean isTaskDisplayed(Task task) {
+		task.setFromCustomer360orWidgets(true);
 		return wfPage.isTaskDisplayed(task);
 	}
 
@@ -69,18 +73,22 @@ WorkflowPage  wfPage;
 	}
 
 	public void openORCloseTask(Task task) {
+		task.setFromCustomer360orWidgets(true);
 		wfPage.openORCloseTask(task);
 	}
 
 	public boolean verifyTaskDetails(Task task) {
+		task.setFromCustomer360orWidgets(true);
 		return wfPage.verifyTaskDetails(task);
 	}
 
 	public boolean verifyCTADetails(CTA cta) {
+		cta.setFromCustomer360orWidgets(true);
 		return wfPage.verifyCTADetails(cta);
 	}
 	
 	public void openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
+		cta.setFromCustomer360orWidgets(true);
 		wfPage.openCTA(cta, hasTasks, tasks);
 	}
 
@@ -95,14 +103,20 @@ WorkflowPage  wfPage;
 	}
 
 	public void deleteTask(Task task) {
+		task.setFromCustomer360orWidgets(true);
 		wfPage.deleteTask(task);
 	}
 
 	public void updateTaskDetails(Task ExpectedTask, Task newTask) {
+		ExpectedTask.setFromCustomer360orWidgets(true);
+		newTask.setFromCustomer360orWidgets(true);
 		wfPage.updateTaskDetails(ExpectedTask, newTask);
 	}
 
 	public void editTasks(CTA cta, Task updatedTask, Task task) {
+		cta.setFromCustomer360orWidgets(true);
+		updatedTask.setFromCustomer360orWidgets(true);
+		task.setFromCustomer360orWidgets(true);
 		wfPage.editTasks(cta, updatedTask, task);
 	}
 
@@ -117,6 +131,7 @@ WorkflowPage  wfPage;
 	}
 
 	public boolean isOverDueCTADisplayed(CTA cta) {
+		cta.setFromCustomer360orWidgets(true);
 		return wfPage.isOverDueCTADisplayed(cta);
 	}
 	

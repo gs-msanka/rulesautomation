@@ -52,7 +52,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     public WorkflowPlaybooksPage addPlaybook(Playbook pb) {
         item.click(ADD_PLAYBOOK_BUTTON);
-        fillPlaybookDetails(pb);
+        fillPlaybookDetails(pb,false);
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(3);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
@@ -62,8 +62,14 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage clickOnSearchOutput(Playbook pb){
     	return this;
     }
-    public void fillPlaybookDetails(Playbook pb) {
+    public void fillPlaybookDetails(Playbook pb,boolean isEdit) {
         wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
+        if(isEdit) {
+        	for(int i=0;i<3;i++){
+        		if(item.getText(PLAYBOOK_NAME_INPUT).equalsIgnoreCase(pb.getName())) break;
+        		else Timer.sleep(2);        		
+        	}
+        }
         if(pb.getType() != null && pb.getType() != "") {
             item.click("//input[@type='radio' and @value='"+pb.getType()+"']");
         }
@@ -148,7 +154,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage editPlaybook(Playbook pb, Playbook newPB) {
         expandPlaybookView(pb);
         item.click(PLAYBOOK_EDIT);
-        fillPlaybookDetails(newPB);
+        fillPlaybookDetails(newPB,true);
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(4);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
