@@ -498,13 +498,12 @@ public class PackageUtil {
 	private static DeployResult waitForDeployCompletion(String asyncResultId)
 			throws Exception {
 		int poll = 0;
-		long waitTimeMilliSecs = ONE_SECOND;
+		long waitTimeMilliSecs = 15 * ONE_SECOND;
 		DeployResult deployResult;
 		boolean fetchDetails;
 		do {
 			Thread.sleep(waitTimeMilliSecs);
 			// double the wait time for the next iteration
-			waitTimeMilliSecs *= 2;
 			if (poll++ > MAX_NUM_POLL_REQUESTS) {
 				throw new Exception(
 						"Request timed out. If this is a large set of metadata components, "
