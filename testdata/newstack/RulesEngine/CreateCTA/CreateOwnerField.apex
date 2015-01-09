@@ -43,9 +43,9 @@ else{
 	insert lsUser;      
 }
 
-//Assigning this Active User for "CSM_Automation__c" lookup field in Account Object.
+//Assigning this Active User for "C_Reference__c" lookup field in Account Object.
 Account Acc=[Select id from Account where Name like 'Create CTA No Adv Criteria'];
-Acc.CSM_Automation__c=active.Id;
+Acc.C_Reference__c=active.Id;
 update Acc;
 
 
