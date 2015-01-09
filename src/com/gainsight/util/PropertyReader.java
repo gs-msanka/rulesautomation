@@ -19,6 +19,8 @@ public class PropertyReader {
 	public static final String baseDir;
 	public static final String partnerUrl;
 	public static final String sfdcApiVersion;
+	public static final boolean managedPackage;
+	public static final String NAMESPACE;
 	
 	static {
 		baseDir = System.getProperty("basedir", ".");
@@ -43,5 +45,10 @@ public class PropertyReader {
 		partnerUrl = p.getProperty("sfdc.partnerUrl");
 		sfdcApiVersion = p.getProperty("sfdc.apiVersion");
 		nsAppUrl = p.getProperty("ns.appurl");
+		if(p.getProperty("sfdc.managedPackage").equalsIgnoreCase("true"))
+			managedPackage = true;
+		else 
+			managedPackage = false;
+		NAMESPACE = p.getProperty("sfdc.nameSpace");
 	}
 }
