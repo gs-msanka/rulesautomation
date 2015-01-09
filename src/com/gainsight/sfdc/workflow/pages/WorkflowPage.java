@@ -387,7 +387,7 @@ public class WorkflowPage extends WorkflowBasePage {
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(CREATE_FORM_CUSTOMER, cName);
             driver.findElement(By.xpath(CREATE_FORM_CUSTOMER)).sendKeys(Keys.ENTER);
-            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[contains(text(), '"+cName+"')]")) {
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a/label[text()='"+cName+"']")) {
                 if(ele.isDisplayed()) {
                     ele.click();
                     selected = true;

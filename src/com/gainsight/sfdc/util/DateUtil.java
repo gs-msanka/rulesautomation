@@ -330,9 +330,10 @@ public class DateUtil {
     }
 
     public static String getShortWeekDayName(Calendar cal) {
+        cal.setTimeZone(timeZone);
         DateFormatSymbols symbols = new DateFormatSymbols(new Locale("en"));
         String[] dayNames = symbols.getShortWeekdays();
-        String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)+1];
+        String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)];
         Log.info("Day Name : " +dayName);
         return dayName;
     }

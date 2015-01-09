@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.gainsight.pageobject.util.Timer;
@@ -68,7 +69,19 @@ public class BasePage extends WebPage implements Constants {
 		field.setTextField("username", env.get().getUserName());
 		field.setTextField("password", env.get().getUserPassword());
 		button.click("Login");
-		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+        try {
+            wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+        } catch (NoSuchElementException e) {
+            Log.info("Trying to clicking on continue in on schedule screen.");
+            if(isTextPresent("Scheduled Maintenance Notification")) {
+                item.click("//a[@class='continue' and text()='Continue']");
+                wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+            } else {
+                Log.error("Login Failed");
+                throw new RuntimeException("Login Failed");
+            }
+        }
+
 		return this;
 	}
 
