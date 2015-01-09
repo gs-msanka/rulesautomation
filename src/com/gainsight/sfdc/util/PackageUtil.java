@@ -111,9 +111,9 @@ public class PackageUtil {
 
 
     public  void installApplication(String version, String password) throws Exception {
-        String srcDir = Application.basedir+"resources/sfdcmetadata/appInstall";
-        String desDir = Application.basedir+"resources/sfdcmetadata/temp";
-        String filePath = Application.basedir+"resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
+        String srcDir = Application.basedir+"/resources/sfdcmetadata/appInstall";
+        String desDir = Application.basedir+"/resources/sfdcmetadata/temp";
+        String filePath = Application.basedir+"/resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = docBuilder.parse(filePath);
@@ -134,8 +134,8 @@ public class PackageUtil {
     }
 
     public void unInstallApplication() throws Exception {
-        String srcDir = Application.basedir+"resources/sfdcmetadata/appUnInstall";
-        String desDir = Application.basedir+"resources/sfdcmetadata/temp/";
+        String srcDir = Application.basedir+"/resources/sfdcmetadata/appUnInstall";
+        String desDir = Application.basedir+"/resources/sfdcmetadata/temp/";
         createZipFile(srcDir, desDir, "appUnInstall");
         deployZip(desDir+"appUnInstall.zip");
     }
