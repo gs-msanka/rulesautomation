@@ -44,7 +44,7 @@ public class CreateCTA extends NSTestBase{
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
     ResponseObj result=null;
     //SOQLUtil soql=new SOQLUtil();
-    //NSTestBase NS=new NSTestBase();
+    
     BaseTest bt=new BaseTest();
 
 	
@@ -55,8 +55,6 @@ public class CreateCTA extends NSTestBase{
 		
     }
 	
-	
-		
 	//Create CTA : No Advance Criteria, No Playbook, No Token, No Owner Field.
 	@Test
 	public void NoAdvCriteriaNoPbNoTokenNoOwnerField() throws Exception {
@@ -72,8 +70,8 @@ public class CreateCTA extends NSTestBase{
         Log.info("I am here");
         
 //        Log.info("asdasd " + sfdc.getPartnerConnection().query("Select Id, Name from JBCXM__AutomatedAlertRules__c").toString());
-        SObject[] CTAreq = sfdc.getRecords("Select Id, Name from JBCXM__AutomatedAlertRules__c");
-        //SObject[] CTAreq = sfdc.getRecords(resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='"+RuleName+"'"));
+        //SObject[] CTAreq = sfdc.getRecords("Select Id, Name from JBCXM__AutomatedAlertRules__c");
+        SObject[] CTAreq = sfdc.getRecords(resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='"+RuleName+"'"));
         
         Log.info("asdasdasdasd");
         
