@@ -12,10 +12,12 @@ import org.openqa.selenium.WebElement;
 import com.gainsight.sfdc.workflow.pojos.Playbook;
 import com.gainsight.sfdc.workflow.pojos.PlaybookTask;
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.sforce.soap.metadata.Report;
 
 public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
-    private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add']";
+    private static final String PB_SEARCH_OUTPUT = null;
+	private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add']";
     private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='add-playbtn-ctn']/input[@class='gs-btn btn-add']";
     private final String SAVE_PLAYBOOK_BUTTON		= "//input[contains(@class, 'btn-save-playbook') and @value='Save']";
     private final String PLAYBOOK_NAME_INPUT		= "//input[@class='form-control pb-subject']";
@@ -59,8 +61,13 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
         return this;
     }
     
-    public WorkflowPlaybooksPage clickOnSearchOutput(Playbook pb){
-    	return this;
+    public boolean clickOnSearchOutput(Playbook pb){
+    	if(!item.isElementPresent(String.format(PB_SEARCH_OUTPUT, pb.getName()))){
+    		Log.info("Search returned no results");
+    		return false;
+    	}
+    	item.click(String.format(PB_SEARCH_OUTPUT, pb.getName()));  	
+    	return true;
     }
     public void fillPlaybookDetails(Playbook pb,boolean isEdit) {
         wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
