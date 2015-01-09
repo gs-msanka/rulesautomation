@@ -27,7 +27,7 @@ import com.sforce.soap.partner.sobject.SObject;
 public class OppWidget_CockpitTests  extends WorkflowSetup {
 	
     ObjectMapper mapper                         = new ObjectMapper();
-    private final String TEST_DATA_FILE         = "testdata/sfdc/workflow/tests/WorkFlow_Test_AccWidget.xls";
+    private final String TEST_DATA_FILE         = "testdata/sfdc/workflow/tests/WorkFlow_Test_Widgets.xls";
     private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/workflow/scripts/CreateUsers.txt";
     private final String CREATE_ACCOUNTS_CUSTOMERS=Application.basedir+"/testdata/sfdc/workflow/scripts/Create_Accounts_Customers_For_CTA.txt";
     private final String CLEANUP_SCRIPT = "Delete [Select id from JBCXM__CTA__c];"+
@@ -36,9 +36,15 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__StatePreservation__c];"+
                                         "Delete [Select id from JBCXM__Milestone__c];";
 	 @BeforeClass
-	    public void setup() {
-		 	sfdc.connect();
-	        basepage.login();
+	    public void setup() throws Exception {
+         sfdc.connect();
+         basepage.login();
+         createExtIdFieldOnAccount();
+         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+         createExtIdFieldOnUser();
+         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+         cleanPlaybooksData();
+         loadDefaultPlaybooks();
 	   }
 	 	
 	  @BeforeMethod
@@ -61,7 +67,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 	
 	 @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	 @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA2")
-	  public void createNonRecurringEventCTA_in360(HashMap<String, String> testData) throws IOException {
+	  public void createNonRecurringEventCTA(HashMap<String, String> testData) throws IOException {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -73,7 +79,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA3")
-		    public void createOpportunityCTA_in360(HashMap<String, String> testData) throws IOException {
+		    public void createOpportunityCTA(HashMap<String, String> testData) throws IOException {
 		    	CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		    	SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 				OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -85,7 +91,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA4")
-		   public void createRecurringEventCTA_Daily_EVeryWeekDay_in360(HashMap<String, String> testData) throws IOException  {
+		   public void createRecurringEventCTA_Daily_EVeryWeekDay(HashMap<String, String> testData) throws IOException  {
 		    	  CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		    	  SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 				     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -104,7 +110,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA5")
-		   public void createRecurringEventCTA_Daily_EveryNDays_in360(HashMap<String, String> testData) throws IOException  {
+		   public void createRecurringEventCTA_Daily_EveryNDays(HashMap<String, String> testData) throws IOException  {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -123,7 +129,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA6")
-		   public void createRecurringEventCTA_Weekly_EveryNWeeks_in360(HashMap<String, String> testData) throws IOException  {
+		   public void createRecurringEventCTA_Weekly_EveryNWeeks(HashMap<String, String> testData) throws IOException  {
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -141,7 +147,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA7")
-		   public void createRecurringEventCTA_Monthly_in360(HashMap<String, String> testData) throws IOException, InterruptedException {
+		   public void createRecurringEventCTA_Monthly(HashMap<String, String> testData) throws IOException, InterruptedException {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -160,7 +166,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA8")
-		   public void createRecurringEventCTA_Monthly_ByWeek_in360(HashMap<String, String> testData) throws IOException {
+		   public void createRecurringEventCTA_Monthly_ByWeek(HashMap<String, String> testData) throws IOException {
 		         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		         SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -179,9 +185,9 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA9")
-		   public void createRecurringEventCTA_Yearly_ByMonth_in360(HashMap<String, String> testData) throws IOException {
+		   public void createRecurringEventCTA_Yearly_ByMonth(HashMap<String, String> testData) throws IOException {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
+		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name like '%"+cta.getCustomer().trim()+"%')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        int temp = Integer.valueOf(cta.getDueDate());
 		        cta.setDueDate(getDateWithFormat(temp, 0, false));
@@ -195,7 +201,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA10")
-		   public void createRecurringEventCTA_Yearly_ByMonthAndWeek_in360(HashMap<String, String> testData) throws IOException {
+		   public void createRecurringEventCTA_Yearly_ByMonthAndWeek(HashMap<String, String> testData) throws IOException {
 		        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -211,7 +217,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA11")
-		   public void createRiskCTAWithTasks_in360(HashMap<String,String> testData) throws IOException{
+		   public void createRiskCTAWithTasks(HashMap<String,String> testData) throws IOException{
 			    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 			    SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -235,7 +241,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA40")
-		   public void createRiskCTAWithTasks_AssignedToDifferentUsers_in360(HashMap<String,String> testData) throws IOException{
+		   public void createRiskCTAWithTasks_AssignedToDifferentUsers(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -259,7 +265,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA12")
-		   public void createOpportunityCTAWithTasks_in360(HashMap<String,String> testData) throws IOException{
+		   public void createOpportunityCTAWithTasks(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -282,7 +288,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA13")
-		   public void createEventCTAWithTasks_in360(HashMap<String,String> testData) throws IOException{
+		   public void createEventCTAWithTasks(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -304,7 +310,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   }
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA14")
-		   public void createRiskCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
+		   public void createRiskCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -328,7 +334,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA41")
-		   public void createRiskCTAWithPlaybook_DifferentAssignees_in360(HashMap<String,String> testData) throws IOException{
+		   public void createRiskCTAWithPlaybook_DifferentAssignees(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -356,7 +362,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA15")
-		   public void createAndReplacePlaybook_RiskCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createAndReplacePlaybook_RiskCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -403,7 +409,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		  
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA16")
-		   public void createOpportunityCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
+		   public void createOpportunityCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -426,7 +432,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA17")
-		   public void createAndReplacePlaybook_OpporCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createAndReplacePlaybook_OpporCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -468,7 +474,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA18")
-		   public void createEventCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
+		   public void createEventCTAWithPlaybook(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -491,7 +497,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA19")
-		   public void createAndReplacePlaybook_EventCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createAndReplacePlaybook_EventCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -527,7 +533,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		    }
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
-		   public void createMilestoneForRiskCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForRiskCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -546,7 +552,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
-		   public void createMilestoneForOpportunityCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForOpportunityCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -565,7 +571,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
-		   public void createMilestoneForEventCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForEventCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -583,7 +589,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
-		   public void createMilestoneForRiskCTA_Resolved_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForRiskCTA_Resolved(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -609,7 +615,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
-		   public void createMilestoneForOpportunityCTA_Won_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForOpportunityCTA_Won(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -635,7 +641,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
-		   public void createMilestoneForEventCTA_Completed_in360(HashMap<String,String> testData) throws IOException{
+		   public void createMilestoneForEventCTA_Completed(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -661,7 +667,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
-		   public void snoozeRiskCTA_in360(HashMap<String,String> testData) throws IOException{
+		   public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 	          SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 		     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();

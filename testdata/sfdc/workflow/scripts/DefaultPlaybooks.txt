@@ -1,0 +1,168 @@
+List<JBCXM__Playbook__c> defaultPlayBookList = new List<JBCXM__Playbook__c>();
+    JBCXM__Playbook__c p1 = new JBCXM__Playbook__c();
+    p1.Name = 'Drop in Usage';
+    p1.JBCXM__PlayBookType__c = 'Risk';
+    p1.JBCXM__Tasks_Count__c = 4;
+
+defaultPlayBookList.add(p1);
+
+    JBCXM__Playbook__c p2 = new JBCXM__Playbook__c();
+    p2.Name = 'Loss of Power User';
+    p2.JBCXM__PlayBookType__c = 'Risk';
+    p2.JBCXM__Tasks_Count__c = 4;
+defaultPlayBookList.add(p2);
+
+    JBCXM__Playbook__c p3 = new JBCXM__Playbook__c();
+    p3.Name = 'Loss of Exec Sponsor';
+    p3.JBCXM__PlayBookType__c = 'Risk';
+    p3.JBCXM__Tasks_Count__c = 5;
+defaultPlayBookList.add(p3);
+
+JBCXM__Playbook__c p4 = new JBCXM__Playbook__c();
+    p4.Name = 'Late payment';
+    p4.JBCXM__PlayBookType__c = 'Risk';
+    p4.JBCXM__Tasks_Count__c = 6;
+defaultPlayBookList.add(p4);
+
+JBCXM__Playbook__c p5 = new JBCXM__Playbook__c();
+    p5.Name = 'Low Survey Rating (NPS Detractor)';
+    p5.JBCXM__PlayBookType__c = 'Risk';
+    p5.JBCXM__Tasks_Count__c = 5;
+defaultPlayBookList.add(p5);
+
+JBCXM__Playbook__c p6 = new JBCXM__Playbook__c();
+    p6.Name = 'High Survey Rating (NPS Promoter)';
+    p6.JBCXM__PlayBookType__c = 'Opportunity';
+    p6.JBCXM__Tasks_Count__c = 5;
+defaultPlayBookList.add(p6);
+
+JBCXM__Playbook__c p7 = new JBCXM__Playbook__c();
+    p7.Name = '120 Days Until Renewal';
+    p7.JBCXM__PlayBookType__c = 'Opportunity';
+    p7.JBCXM__Tasks_Count__c = 6;
+defaultPlayBookList.add(p7);
+
+JBCXM__Playbook__c p8 = new JBCXM__Playbook__c();
+    p8.Name = 'Executive Business Review (EBR)';
+    p8.JBCXM__PlayBookType__c = 'Event';
+    p8.JBCXM__Tasks_Count__c = 6;
+
+defaultPlayBookList.add(p8);
+insert 	defaultPlayBookList;
+
+List<String> taskList = new List<String>{'Check Adoption usage and analytics',
+								'Schedule call with Admin and/or Power User to identify reason for drop',
+								'Schedule best practices training',
+								'Update Product and Sales Teams with customer feedback'};
+List<String> priority = new List<String>{ 'High', 'High','Medium', 'Medium'};
+List<Integer> days = new List<Integer>{3, 7, 10, 10};
+List<JBCXM__PlaybookTasks__c> pbTasks =  new List<JBCXM__PlaybookTasks__c>();
+pbTasks.addAll(createTasks(taskList,p1.id,priority,days));
+
+
+taskList = new List<String>{'Review usage for next highest active user',
+                        'Reach out to Admin to verify replacement contact & role',
+                        'Contact Business Sponsor regarding personnel changes',
+                        'Train & nurture new Power User' };
+priority = new List<String>{ 'Medium','Medium','Medium','Medium'};
+days = new List<Integer>{3, 3, 5, 10};
+pbTasks.addAll(createTasks(taskList,p2.id,priority, days));
+
+
+taskList = new List<String>{'Notify internal Exec Sponsor regarding change',
+					'Contact Business Owner, restate ROI & verify replacement contact - ask for introduction',
+					'Make connection with new Exec Sponsor (Phone Call)',
+					'Schedule Exec Business Review (EBR) with Sponsor (see EBR playbook)',
+					'In EBR, reaffirm ROI & goals of partnership' };
+priority = new List<String>{ 'High', 'High','High','High','High' };
+days = new List<Integer>{2,4 ,7, 8 , 15};
+pbTasks.addAll(createTasks(taskList, p3.id, priority, days));
+
+
+taskList = new List<String>{ 'Check with Finance on T&C\'s',
+				'Check 360 View for usage, latest NPS score, & open cases',
+				'Reach out to customer regarding delay',
+				'Escalate to Business Owner/Exec Sponsor (if needed)',
+				'Follow up with Finance to confirm payment commitment',
+				'Confirm payment received' };
+priority = new List<String>{ 'Medium', 'Low', 'Medium','Medium','Medium','High'};
+days = new List<Integer>{2, 2, 4 , 7 , 10 , 15};
+pbTasks.addAll(createTasks(taskList,p4.id, priority, days));
+
+
+taskList = new List<String>{'Review NPS comments & research possible source of concern',
+				'Review survey responses from other respondents',
+				'Contact Detractor to discuss concern & create action plan to correct/resolve',
+				'Create internal plan to address customer concern',
+				'Close loop with Detractor (in email and copy Business Owner)' };
+
+priority = new List<String>{ 'High','High','High','High','High'};
+days = new List<Integer>{1, 1, 2, 5, 7};
+pbTasks.addAll(createTasks(taskList, p5.id, priority, days));
+
+
+taskList = new List<String>{ 'Review NPS comments',
+					'Verify role of person in organization',
+					'Contact Promoter to discuss survey - verify if they are referenceable',
+					'If customer agrees to be a reference, add to reference database',
+					'Nuture based on role: (a) user/admin=invite to user group (b) exec=request marketing activity quote, case study, or press release)' };
+priority = new List<String>{ 'High','Medium','High','Medium','Low'};
+days = new List<Integer>{2, 2, 3, 4, 7};
+pbTasks.addAll(createTasks(taskList,p6.id, priority, days));
+
+
+taskList = new List<String>{ 'Check 360 View for current usage, latest NPS score, & open cases',
+				   'Research & resolve open concerns identified from 360 View analysis',
+ 				   'Prepare renewal paperwork',
+ 				    'Contact Business Sponsor to confirm renewal process',
+ 					'Send renewal paperwork',
+ 					'Upon signed renewal, close renewal opportunity & update systems' };
+priority = new List<String>{ 'Medium','Medium','High','High','High','Medium'};
+days = new List<Integer>{10, 10, 15, 20, 25, 115};
+pbTasks.addAll(createTasks(taskList,p7.id, priority, days));
+
+
+taskList = new List<String>{'Reach out to Business Owner & Exec Sponsor to schedule EBR',
+                  'Review 360 View for usage, latest NPS score, & open cases',
+                  'Build EBR Deck with emphasis on ROI, goals & project status',
+				  'Circulate presentation internally for review (include Exec Sponsor)',
+				  'Meet with customer to present findings - validate ROI and re-affirm value',
+				  'Send meeting summary & action items in follow-up email' };
+
+priority = new List<String>{ 'High','Medium','High','High','High','High'};
+days = new List<Integer>{5, 5, 10, 15, 20, 22};
+pbTasks.addAll(createTasks(taskList,p8.id, priority, days));
+
+insert pbTasks;
+	
+
+public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String id, List<String> priority1, List<Integer> days1){
+    Integer i = 0;
+    List<JBCXM__PlaybookTasks__c> pbTasks1 = new List<JBCXM__PlaybookTasks__c>();
+    Integer nmbr = 0;
+    for(String name : taskList1){
+            JBCXM__PlaybookTasks__c pt = new JBCXM__PlaybookTasks__c();
+            pt.JBCXM__PlaybookId__c = id;
+            pt.JBCXM__TaskJSON__c = getJSON(name, days1.get(i), priority1.get(i++) );
+            pt.JBCXM__DisplayOrder__c = (++nmbr);
+            pbTasks1.add(pt);
+        }
+    return 	pbTasks1;
+}
+
+private static String getJSON(String name, Integer days2, String priority2){
+    return '[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"'+name+'","value":"'+name+'"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"'+days2+'","value":"'+days2+'"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Medium","value":"Medium"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"'+priority2+'","value":"'+priority2+'"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Open","value":"Open"},{"key":"Closed","value":"Closed"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Open","value":"Open"}]}]';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

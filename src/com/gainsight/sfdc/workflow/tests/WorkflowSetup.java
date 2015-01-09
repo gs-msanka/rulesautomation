@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.workflow.tests;
 
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import io.lamma.Date;
 import io.lamma.Dates;
@@ -31,6 +32,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class WorkflowSetup extends BaseTest{
     ObjectMapper mapper                         = new ObjectMapper();
+    private final String DEFAULT_PLAYBOOKS_SCRIPT = Application.basedir+"/testdata/sfdc/workflow/scripts/DefaultPlaybooks.txt";
     
     public void enableSFDCSync_Manual() throws IOException {
          SObject[] appSettings=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__CockpitConfig__c FROM JBCXM__ApplicationSettings__c"));
@@ -190,6 +192,7 @@ public class WorkflowSetup extends BaseTest{
     public List<String> getFormatDates(List<io.lamma.Date>  dates) {
         List<String> fDates = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(userTimezone);
         for(io.lamma.Date date : dates) {
             Calendar cal = Calendar.getInstance(userTimezone);
             cal.set(date.yyyy(), date.mm()-1, date.dd(), 0, 0, 0);
@@ -210,6 +213,7 @@ public class WorkflowSetup extends BaseTest{
             sDate.add(Calendar.DATE, 1);
         }
         DateFormat dateFormat = new SimpleDateFormat(USER_DATE_FORMAT);
+        dateFormat.setTimeZone(userTimezone);
         return dateFormat.format(eDate.getTime());
     }
 
@@ -265,6 +269,7 @@ public class WorkflowSetup extends BaseTest{
                 throw new RuntimeException("Please check the date format "+e.getErrorOffset());
             }
         }
+        dateFormat.setTimeZone(userTimezone);
         return dateFormat.format(date);
     }
 
@@ -295,8 +300,10 @@ public class WorkflowSetup extends BaseTest{
         return count;
     }
 
-    @AfterClass
-    public void tearDown() {
-        basepage.logout();
+    public void cleanPlaybooksData() {
+        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
+    }
+    public void loadDefaultPlaybooks() {
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_PLAYBOOKS_SCRIPT));
     }
 }

@@ -59,6 +59,7 @@ public class AccWidget_CockpitPage extends AccountWidgetPage{
     }
 
     public boolean isTaskDisplayed(Task task) {
+    	task.setFromCustomer360orWidgets(true);
         return wfPage.isTaskDisplayed(task);
     }
 
@@ -75,18 +76,22 @@ public class AccWidget_CockpitPage extends AccountWidgetPage{
     }
 
     public void openORCloseTask(Task task) {
+    	task.setFromCustomer360orWidgets(true);
         wfPage.openORCloseTask(task);
     }
 
     public boolean verifyTaskDetails(Task task) {
+    	task.setFromCustomer360orWidgets(true);
         return wfPage.verifyTaskDetails(task);
     }
 
     public boolean verifyCTADetails(CTA cta) {
+    	cta.setFromCustomer360orWidgets(true);
         return wfPage.verifyCTADetails(cta);
     }
 
     public void openCTA(CTA cta,boolean hasTasks,ArrayList<Task> tasks){
+    	cta.setFromCustomer360orWidgets(true);
         wfPage.openCTA(cta, hasTasks, tasks);
     }
 
@@ -101,28 +106,37 @@ public class AccWidget_CockpitPage extends AccountWidgetPage{
     }
 
     public void deleteTask(Task task) {
+    	task.setFromCustomer360orWidgets(true);
         wfPage.deleteTask(task);
     }
 
     public void updateTaskDetails(Task ExpectedTask, Task newTask) {
+    	ExpectedTask.setFromCustomer360orWidgets(true);
+    	newTask.setFromCustomer360orWidgets(true);
         wfPage.updateTaskDetails(ExpectedTask, newTask);
     }
 
     public void editTasks(CTA cta, Task updatedTask, Task task) {
+    	cta.setFromCustomer360orWidgets(true);
+    	updatedTask.setFromCustomer360orWidgets(true);
+    	task.setFromCustomer360orWidgets(true);
         wfPage.editTasks(cta, updatedTask, task);
     }
 
     public void syncTasksToSF(CTA cta, Task task) {
         task.setFromCustomer360orWidgets(true);
+        cta.setFromCustomer360orWidgets(true);
         wfPage.syncTasksToSF(cta, task);
     }
 
     public void deSyncTaskFromSF(CTA cta, Task task, boolean keepInSF) {
+    	cta.setFromCustomer360orWidgets(true);
         task.setFromCustomer360orWidgets(true);
         wfPage.deSyncTaskFromSF(cta, task, keepInSF);
     }
 
     public boolean isOverDueCTADisplayed(CTA cta) {
+    	cta.setFromCustomer360orWidgets(true);
         return wfPage.isOverDueCTADisplayed(cta);
     }
 

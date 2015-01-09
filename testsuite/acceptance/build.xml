@@ -5,11 +5,13 @@
 	<property name="screenshots.dir" value="${result.dir}/screenshots" />
 	<property name="failures.dir" value="${screenshots.dir}/failures" />
 	<property environment="env"/>
-	
-	<!-- TestNG file name for pre and post tests -->
+    <property name="ws.home" value="${basedir}"/>
+
+
+    <!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="all_test.xml"/>
 
-	<target name="runTest" depends="init, editPropertyFile, compile, bat"/>
+	<target name="runTest" depends="init, editPropertyFile,  compile, bat, makexsltreports, zipReports"/>
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
@@ -78,5 +80,20 @@
 		<delete dir="${failed.dir}" failonerror="false" />
 		<delete dir="${screenshots.dir}" failonerror="false" />
 		<delete dir="${failures.dir}" failonerror="false" />
+        <delete dir="${ws.home}/xsltReports" failonerror="false" />
 	</target>
+
+    <target name="makexsltreports">
+        <mkdir dir="${ws.home}/xsltReports/output"/>
+        <xslt in="${result.dir}/testng-results.xml" style="testsuite/xslt/testng-results.xsl"
+              out="${ws.home}/xsltReports/output/index.html" classpathref="runpath" processor="SaxonLiaison">
+            <param name="testNgXslt.outputDir" expression="${ws.home}/xsltReports/output/"/>
+            <param name="testNgXslt.showRuntimeTotals" expression="true"/>
+        </xslt>
+    </target>
+
+    <target name="zipReports">
+        <zip destfile="${ws.home}/xsltReports/xsltReport.zip" basedir="${ws.home}/xsltReports/output"/>
+        <zip destfile="${ws.home}/xsltReports/Results.zip" basedir="${ws.home}/result"/>
+    </target>
 </project>
