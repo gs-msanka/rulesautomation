@@ -315,7 +315,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	public WorkflowPage addTaskToCTA(CTA cta,List<Task> tasks){
 		expandCTAView(cta);
 		for(Task task : tasks){
-			item.click(SELECT_MORE_OPTIONS);
+			clickOnCTAMoreOptions();
 			item.click(ADD_NEW_TASK);
 			wait.waitTillElementDisplayed(ADD_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
             selectTaskOwner(task.getAssignee().trim());
@@ -361,7 +361,7 @@ public class WorkflowPage extends WorkflowBasePage {
 	public WorkflowPage editTasks(CTA cta,Task newTask,Task oldTask){
 		//item.click(VIEW_TASKS);
 		expandTaskView(oldTask);
-		item.click(TASK_EXP_MORE_OPTIONS);
+		clickOnTaskMoreOptions();
 		item.click(TASK_EXP_EDIT_OPTION);
 		wait.waitTillElementDisplayed(EDIT_TASK_POPUP_TITLE, MIN_TIME, MAX_TIME);
         if(!oldTask.getAssignee().equalsIgnoreCase(newTask.getAssignee())) {
@@ -381,7 +381,17 @@ public class WorkflowPage extends WorkflowBasePage {
 		return this;
 	}
 	
-    private void selectCustomer(String cName) {
+    private WorkflowPage clickOnTaskMoreOptions() {
+		item.click(TASK_EXP_MORE_OPTIONS);
+		for(int i=0;i<3;i++){
+			if(element.isElementPresent(TASK_EXP_EDIT_OPTION)) break;
+			else item.click(TASK_EXP_MORE_OPTIONS);
+		}
+		return this;
+	}
+
+
+	private void selectCustomer(String cName) {
         Log.info("Selecting Customer : " +cName);
         boolean selected = false;
         for(int i=0; i< 3; i++) {
@@ -929,8 +939,7 @@ public class WorkflowPage extends WorkflowBasePage {
     
     public WorkflowPage deleteTask(Task task) {
         expandTaskView(task);
-        item.click(TASK_EXP_MORE_OPTIONS);
-        wait.waitTillElementDisplayed(TASK_EXP_DELETE_OPTION, MIN_TIME, MAX_TIME);
+        clickOnTaskMoreOptions();
         item.click(TASK_EXP_DELETE_OPTION);
         wait.waitTillElementDisplayed(DELETE_ACTION, MIN_TIME, MAX_TIME);
         item.click(DELETE_ACTION);
@@ -942,7 +951,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage deleteCTA(CTA cta) {
         expandCTAView(cta);
-        item.click(EXP_VIEW_CTA_MORE_OPTIONS);
+        clickOnCTAMoreOptions();
         item.click(String.format(EXP_VIEW_DELETE_CTA, cta.getType()));
         item.click(DELETE_ACTION);
         Timer.sleep(2);
@@ -979,8 +988,8 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage applyPlayBook(CTA cta, String playBookName, List<Task> tasks,boolean isApply) {
         expandCTAView(cta);
-        item.click(EXP_VIEW_CTA_MORE_OPTIONS);
-        if(isApply) item.click(EXP_VIEW_APPLY_PLAYBOOK);
+        clickOnCTAMoreOptions();
+        if(isApply) 	item.click(EXP_VIEW_APPLY_PLAYBOOK);
         else item.click(EXP_VIEW_REPLACE_PLAYBOOK);
         Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
@@ -1000,7 +1009,17 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
+    private WorkflowPage clickOnCTAMoreOptions() {
+    	item.click(EXP_VIEW_CTA_MORE_OPTIONS);
+    	for(int i=0;i<3;i++){
+    		if(element.isElementPresent(EXP_VIEW_ADD_NEW_TASK)) break;
+    		else item.click(EXP_VIEW_CTA_MORE_OPTIONS);
+    	}
+    	return this;
+	}
+
+
+	private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
         for(Task task : tasks) {
             String path = "//h4[contains(text(), '"+task.getSubject().replace("\\\"", "'")+"')]" +
                     "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";

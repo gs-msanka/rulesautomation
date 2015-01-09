@@ -59,7 +59,14 @@
 			<entry  key="sfdc.managedPackage" value="${sfdc.managedPackage}"/>
 			<entry  key="sfdc.setAsDefaultApp" value="${sfdc.setAsDefaultApp}"/>
 			<entry  key="sfdc.loadDefaultData" value="${sfdc.loadDefaultData}"/>
-			
+            <entry  key="sfdc.nameSpace" value="${sfdc.nameSpace}"/>
+            <entry  key="sfdc.updateWidgetLayouts" value="${sfdc.updateWidgetLayouts}"/>
+            <entry  key="sfdc.unInstallApp" value="${sfdc.unInstallApp}"/>
+            <entry  key="sfdc.installApp" value="${sfdc.installApp}"/>
+            <entry  key="sfdc.packageVersionNumber" value="${sfdc.packageVersionNumber}"/>
+            <entry  key="sfdc.packagePassword" value="${sfdc.packagePassword}"/>
+            <entry  key="sfdc.partnerUrl" value="${sfdc.partnerUrl}"/>
+            <entry  key="sfdc.apiVersion" value="${sfdc.apiVersion}"/>
 			<entry  key="browser" value="${browser}"/>
 		</propertyfile>
 	</target>

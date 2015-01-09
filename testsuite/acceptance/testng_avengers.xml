@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Automation Project" preserve-order="true" >
+
+	<listeners>
+		<listener class-name="com.gainsight.utils.AutTestListener" />
+	</listeners>
+	
+	<test verbose="3" name="Avengers Test Suite - 360 Test cases" preserve-order="true">
+		<classes>
+            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+		</classes>
+	</test>
+</suite>
