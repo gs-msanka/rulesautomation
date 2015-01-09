@@ -11,7 +11,6 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.metadata.CreateObjectAndFields;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
