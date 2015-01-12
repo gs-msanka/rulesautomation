@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.rulesengine;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -39,7 +40,6 @@ public class CreateCTA extends NSTestBase{
     
     	
 	//static WebAction wa = new WebAction();
-    public Header header = new Header();
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
     ResponseObj result=null;
     //SOQLUtil soql=new SOQLUtil();
@@ -54,39 +54,45 @@ public class CreateCTA extends NSTestBase{
 		
     }
 	
+	
+	@Test
+	public void dummy(){
+		try {
+			System.out.println(header.toString());
+		    ResponseObj result=	wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" +"a069000000doXxhAAE", header.getAllHeaders(),
+		         "{}");
+		    System.out.println(result.toString());
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}		
+	}
+	
 	//Create CTA : No Advance Criteria, No Playbook, No Token, No Owner Field.
 	@Test
 	public void NoAdvCriteriaNoPbNoTokenNoOwnerField() throws Exception {
 		String RuleName="Create CTA No Adv Criteria",Comment="Sample",Priority = null,Status= null,Assignee= null,Type= null,Reason= null;
-        //GSUtil.runApexCode(CreateCTACustomer);
-		sfdc.runApexCode(bt.getNameSpaceResolvedFileContents(CreateCTACustomer));
-        //GSUtil.runApexCode(AAR_CreateConfig_StringFilter);
-        sfdc.runApexCode(bt.getNameSpaceResolvedFileContents(AAR_CreateConfig_StringFilter));
-        //GSUtil.runApexCode(AT_CreateConfigNoAdvCriteriaNoPbNoTokenNoOwnerField);
-        sfdc.runApexCode(bt.getNameSpaceResolvedFileContents(AT_CreateConfigNoAdvCriteriaNoPbNoTokenNoOwnerField));
-        
-        //SObject[] CTAreq = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='"+RuleName+"'");
-        Log.info("I am here");
-        
-//        Log.info("asdasd " + sfdc.getPartnerConnection().query("Select Id, Name from JBCXM__AutomatedAlertRules__c").toString());
-        //SObject[] CTAreq = sfdc.getRecords("Select Id, Name from JBCXM__AutomatedAlertRules__c");
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(AAR_CreateConfig_StringFilter));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(AT_CreateConfigNoAdvCriteriaNoPbNoTokenNoOwnerField));
+                
         SObject[] CTAreq = sfdc.getRecords(resolveStrNameSpace("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='"+RuleName+"'"));
-        
-        Log.info("asdasdasdasd");
-        
+               
         for (SObject r : CTAreq) {
-            String rawBody = ("{}");
-            // ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId(), header.getAllHeaders(),
-                    //rawBody);
-             result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId(), header.getAllHeaders(),
+            String rawBody = ("{}");            
+            result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId(), header.getAllHeaders(),
                     rawBody);
+            Log.info("Rule ID:" + r.getId()); 
+            Log.info("Request URL"+PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId());    
+            Log.info("Request rawBody:"+rawBody);            
+            
             ResponseObject responseObj = GSUtil.convertToObject(result
                     .getContent());
             Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
             Assert.assertNotNull(responseObj.getRequestId());
-            GSUtil.waitForCompletion(r.getId(), wa, header);
+            GSUtil.waitForCompletion(r.getId(), wa, header);            
             
-            SObject[] LRR = GSUtil.execute("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'");
+            SObject[] LRR = sfdc.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Id='" + r.getId() + "'"));
         
             for (SObject obj : LRR) {
             	//Log.info(obj.getChild(LastRunResultFieldName).getValue().toString());
@@ -95,32 +101,32 @@ public class CreateCTA extends NSTestBase{
             }
         }
             //Verify if CTA is Created.
-            SObject[] NewCTA_Created = GSUtil.execute("Select Name from JBCXM__CTA__c");
+            SObject[] NewCTA_Created = sfdc.getRecords(resolveStrNameSpace("Select Name from JBCXM__CTA__c"));            		
             Assert.assertEquals(RuleName,NewCTA_Created[0].getChild("Name").getValue().toString());	
             
             //Verify if CTA created has Priority as HIGH, Status as Open, Assigned as same value of Account createdby,Type as Risk, Reason as Product Performance
             
-            SObject[] P_Priority = GSUtil.execute("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'High'"); //Priority
+            SObject[] P_Priority = sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'High'"));
             for (SObject obj : P_Priority) {
             	 Priority=obj.getChild("Id").getValue().toString();
             }
-            SObject[] P_Status = GSUtil.execute("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'Open'"); //Status
+            SObject[] P_Status = sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'Open'"));
             for (SObject obj : P_Status) {
             	 Status=obj.getChild("Id").getValue().toString();
             }
-            SObject[] P_Assignee = GSUtil.execute("SELECT CreatedById FROM Account where Name like 'Create CTA No Adv Criteria'"); //Assignee
+            SObject[] P_Assignee = sfdc.getRecords(resolveStrNameSpace("SELECT CreatedById FROM Account where Name like 'Create CTA No Adv Criteria'"));
             for (SObject obj : P_Assignee) {
             	 Assignee=obj.getChild("CreatedById").getValue().toString();
             }
-            SObject[] P_Type = GSUtil.execute("SELECT Id, Name, JBCXM__Type__c FROM JBCXM__CTATypes__c where Name = 'Risk' and JBCXM__Type__c = 'Risk'");  //Type         
+            SObject[] P_Type = sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name, JBCXM__Type__c FROM JBCXM__CTATypes__c where Name = 'Risk' and JBCXM__Type__c = 'Risk'"));
             for (SObject obj : P_Type) {
             	 Type=obj.getChild("Id").getValue().toString();
             }
-            SObject[] P_Reason = GSUtil.execute("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'Product Performance'"); //Reason
+            SObject[] P_Reason = sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__PickList__c where Name like 'Product Performance'"));
             for (SObject obj : P_Reason) {
             	 Reason=obj.getChild("Id").getValue().toString();
             }
-            SObject[] CTA_created = GSUtil.execute("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c from JBCXM__CTA__c where Name = '"+RuleName+"'");
+            SObject[] CTA_created = sfdc.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c from JBCXM__CTA__c where Name = '"+RuleName+"'"));
             for (SObject obj : CTA_created) {
             	Assert.assertEquals(Priority, obj.getChild("JBCXM__Priority__c").getValue().toString());
             	Assert.assertEquals(Status, obj.getChild("JBCXM__Stage__c").getValue().toString());
