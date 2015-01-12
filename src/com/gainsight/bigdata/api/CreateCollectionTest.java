@@ -125,7 +125,8 @@ public class CreateCollectionTest extends NSTestBase {
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
 		h.addHeader("authToken", "AddingGarbage");
-		h.addHeader("Origin", origin);
+		//h.addHeader("Origin", origin);  //Commenting and added below Line. Because, removed the variable "origin" from NSTestBase.java
+		h.addHeader("Origin", sfinfo.getEndpoint());
 
 		ResponseObj result = wa.doPost(uri, h.getAllHeaders(), rawBody);
 		Log.info(result.toString());
@@ -144,7 +145,8 @@ public class CreateCollectionTest extends NSTestBase {
 		Header h = new Header();
 		h.addHeader("Content-Type", "text/plain");
 		h.addHeader("authToken", nsinfo.getAuthToken());
-		h.addHeader("Origin", origin);
+		//h.addHeader("Origin", origin);//Commenting and added below Line. Because, removed the variable "origin" from NSTestBase.java
+		h.addHeader("Origin", sfinfo.getEndpoint());
 
 		ResponseObj result = wa.doPost(uri, h.getAllHeaders(), rawBody);
 		Log.info(result.toString());
