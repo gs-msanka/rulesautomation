@@ -27,12 +27,9 @@ public class NSTestBase {
 	protected SFDCInfo sfinfo;
 	protected NSInfo nsinfo;
 	protected WebAction wa;
-	protected Header header;
-	
+	protected Header header;	
 	protected static String basedir;
-	protected String testDataBasePath;
-	protected String origin = "https://ap1.salesforce.com"; //"https://c.ap1.visual.force.com";
-	
+	protected String testDataBasePath;	
 	protected ObjectMapper mapper = new ObjectMapper();
     public static SalesforceMetadataClient metadataClient;
     public SalesforceConnector sfdc;
@@ -44,11 +41,8 @@ public class NSTestBase {
 	
 	@BeforeSuite
 	public void init() {
-
 		//Initializing Headers
-		header = new Header();
-		header.addHeader("Origin", origin);
-		
+		header = new Header();	
 		wa = new WebAction();
 		//Initializing SFDC Connection
 		sfdc = new SalesforceConnector(PropertyReader.userName, PropertyReader.password + PropertyReader.stoken,
@@ -57,6 +51,7 @@ public class NSTestBase {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 		sfinfo = sfdc.fetchSFDCinfo();
 		
+		header.addHeader("Origin",sfinfo.getEndpoint());
 		header.addHeader("Content-Type", "application/json");
 		header.addHeader("appOrgId", sfinfo.getOrg());
 		header.addHeader("appUserId", sfinfo.getUserId());
@@ -99,9 +94,7 @@ public class NSTestBase {
 			Log.error("Tenant Creation Failed : " + e.getLocalizedMessage(), e);
 			throw new RuntimeException(e);
 		}
-	}
-	
-	
+	}	
 	
 	/**
      * Method to remove the name space from the string "JBCXM__".
@@ -113,6 +106,7 @@ public class NSTestBase {
         return FileUtil.resolveNameSpace(str, PropertyReader.managedPackage ? PropertyReader.NAMESPACE : null);
         
     }
+    
     public static String resolveNameSpace(String str, String nameSpace) {
         String result = "";
         if (str != null && nameSpace!=null && !nameSpace.equalsIgnoreCase("JBCXM")) {
