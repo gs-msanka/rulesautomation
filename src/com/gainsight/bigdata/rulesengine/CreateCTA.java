@@ -37,7 +37,6 @@ public class CreateCTA extends NSTestBase{
     private static final String AAR_CreateConfig_StringFilter_CustomFieldsShow = rulesDir + "AAR_CreateConfig_StringFilter_CustomFieldsShow.apex";
     private static final String AT_CreateConfigNoAdvCriteriaYesPbYesCustomTokenYesOwnerField = rulesDir + "AT_CreateConfigNoAdvCriteriaYesPbYesCustomTokenYesOwnerField.apex";
            
-    
     	
 	//static WebAction wa = new WebAction();
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
