@@ -83,6 +83,19 @@ public class PackageUtil {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getLocalizedMessage());
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
+    public void deployPermissionSetCode() {
+        try {
+            String srcDir = Application.basedir+"/resources/sfdcmetadata/permissionSetCode/src";
+            String desDir = Application.basedir+"/resources/sfdcmetadata/temp";
+            String zipFileName = "PermPayload";
+            createZipFile(srcDir, desDir, zipFileName);
+            deployZip(desDir + "/"+zipFileName+".zip");
+        }catch (Exception e) {
+            throw new RuntimeException(e.getLocalizedMessage());
         }
     }
 

@@ -27,7 +27,7 @@ public class AdoptionUsagePage extends AdoptionBasePage {
     private final String MORE_BUTTON              = "//div[@class='gs-moreopt-btn']";
     private final String UNCHECK_ALL_MEASURES     = "//a/span[contains(text(), 'Uncheck all')]";
     private final String CHECK_ALL_MEASURES       = "//a[@class='ui-multiselect-all']";
-    private final String SEARCH_MEASURE_INPUT     = "//div[@class='ui-multiselect-filter']/input[@type='search']";
+    private final String SEARCH_MEASURE_INPUT     = "//div[@class='ui-multiselect-filter']/input[@type='text']";
     private final String WEEK_DATE_INPUT          = "//input[@class='calendar period']";
     private final String CUSTOMER_NAME_GIRD_FILTER_INPUT = "//div[@class='ui-state-default slick-headerrow-column l0 r0']/input[@type='text']";
     private final String SPARK_LINES_CHECKBOX     = "//div[contains(text(), 'Show Sparklines')]/input[@type='checkbox']";

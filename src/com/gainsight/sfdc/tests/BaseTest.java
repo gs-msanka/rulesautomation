@@ -7,15 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
+import com.gainsight.http.Header;
+import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.PackageUtil;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.*;
 
 import com.gainsight.sfdc.SalesforceConnector;
@@ -65,12 +63,13 @@ public class BaseTest {
             packageUtil.updateWidgetLayouts(true, true, true);
         }
 
-    	sfinfo = sfdc.fetchSFDCinfo();
+        packageUtil.deployPermissionSetCode();
+        sfinfo = sfdc.fetchSFDCinfo();
         System.out.println("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         DateUtil.timeZone =  userTimezone;
-        
+        //Add field Permissions here.
         Log.info("Initializing Selenium Environment");
         env.start();
         try {
@@ -334,7 +333,26 @@ public class BaseTest {
         }
     }
 
+    public void addFieldPermissionsToUsers(String object, String[] fields) throws Exception {
+        WebAction webAction = new WebAction();
+        Header header = new Header();
+        header.addHeader("Authorization", "Bearer "+sfinfo.getSessionId());
+        header.addHeader("Content-Type", "application/json");
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String[]> objMap = new HashMap<>();
+        objMap.put(object, fields);
+        Map<String, Object> payLoad1 = new HashMap<>();
+        payLoad1.put("modulename", "GS_Auto_Permissions");
+        List<Object> tmp = new ArrayList<Object>();
+        tmp.add(objMap);
+        payLoad1.put("data", tmp);
+        Map<String, Object> payLoad = new HashMap<>();
+        payLoad.put("params", mapper.writeValueAsString(payLoad1));
 
+        System.out.println(mapper.writeValueAsString(payLoad));
+        ResponseObj responseObj = webAction.doPost(sfinfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), payLoad.toString());
+        System.out.println(responseObj.toString());
+    }
 
     public void runMetricSetup(String fileName, String scheme) throws IOException {
         BufferedReader reader;

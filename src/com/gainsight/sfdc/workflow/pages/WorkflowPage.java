@@ -625,10 +625,12 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
-        for(int i=0; i<5; i++) {
+        for(int i=0; i<3; i++) {
             expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
             expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
+            Log.info("Expected -> Subject : " +task.getSubject() +", Priority : "+task.getPriority() +", "+task.getStatus());
+            Log.info("Actual -> Subject : " +expViewTask.getSubject() +", Priority : "+expViewTask.getPriority() +", "+expViewTask.getStatus());
 
             if(!task.getPriority().equalsIgnoreCase(expViewTask.getPriority()))
                 Log.info("Priority not matched");
