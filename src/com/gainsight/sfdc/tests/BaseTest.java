@@ -69,7 +69,6 @@ public class BaseTest {
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         DateUtil.timeZone =  userTimezone;
-        //Add field Permissions here.
         Log.info("Initializing Selenium Environment");
         env.start();
         try {
@@ -333,6 +332,14 @@ public class BaseTest {
         }
     }
 
+    /**
+     * Creates a permission set on the org with name "GS_Automation_Permission" & assigns to all the system admins & licensed users.
+     * Code deployment is done for this feature to work.
+     * Please check out ----- packageUtil.deployPermissionSetCode();
+     * @param object - Full Object API Name
+     * @param fields - Array of fields.
+     * @throws Exception - Connection exception, Runtime Exception if status is failed.
+     */
     public void addFieldPermissionsToUsers(String object, String[] fields) throws Exception {
         WebAction webAction = new WebAction();
         Header header = new Header();
@@ -348,10 +355,15 @@ public class BaseTest {
         payLoad1.put("data", tmp);
         Map<String, Object> payLoad = new HashMap<>();
         payLoad.put("params", mapper.writeValueAsString(payLoad1));
-
-        System.out.println(mapper.writeValueAsString(payLoad));
-        ResponseObj responseObj = webAction.doPost(sfinfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), payLoad.toString());
-        System.out.println(responseObj.toString());
+        Log.info(mapper.writeValueAsString(payLoad));
+        ResponseObj responseObj = webAction.doPost(sfinfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
+        Map<String, Object> resContent  = new HashMap<>();
+        resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
+        if(!resContent.get("status").toString().equalsIgnoreCase("Success")) {
+            Log.error(responseObj.getContent());
+            throw new RuntimeException("Failed to add permissions");
+        }
+        Log.info("Field permissions added successfully.");
     }
 
     public void runMetricSetup(String fileName, String scheme) throws IOException {
