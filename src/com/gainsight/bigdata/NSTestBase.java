@@ -31,7 +31,8 @@ public class NSTestBase {
 	
 	protected static String basedir;
 	protected String testDataBasePath;
-	protected String origin = "https://c.ap1.visual.force.com";
+	protected String origin = "https://ap1.salesforce.com"; //"https://c.ap1.visual.force.com";
+	
 	protected ObjectMapper mapper = new ObjectMapper();
     public static SalesforceMetadataClient metadataClient;
     public SalesforceConnector sfdc;
@@ -47,6 +48,7 @@ public class NSTestBase {
 		//Initializing Headers
 		header = new Header();
 		header.addHeader("Origin", origin);
+		
 		wa = new WebAction();
 		//Initializing SFDC Connection
 		sfdc = new SalesforceConnector(PropertyReader.userName, PropertyReader.password + PropertyReader.stoken,
@@ -54,9 +56,16 @@ public class NSTestBase {
 		sfdc.connect();
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 		sfinfo = sfdc.fetchSFDCinfo();
+		
+		header.addHeader("Content-Type", "application/json");
+		header.addHeader("appOrgId", sfinfo.getOrg());
+		header.addHeader("appUserId", sfinfo.getUserId());
+		header.addHeader("appSessionId", sfinfo.getSessionId());
+		//header.addHeader("authToken", "3b135252-473a-43f1-a6b1-e78a4db53ddd");
+		
 		//sfdc.getAccessToken();
 		System.out.println("SF INFO : " + sfinfo.toString());
-	//	createTenant();
+		//createTenant();
 	}
 	
 	@Test
@@ -64,12 +73,12 @@ public class NSTestBase {
 		SObject s[] = sfdc.getRecords("select id, name from account limit 10");
 		System.out.println("No of Records " +s.length);
 		
-	}
+	}	
 
 	private void createTenant() {
 		header.addHeader("Content-Type", "application/json");
 		Map<String, Object> contentMap = new HashMap<>();
-		Map<String, String> auth = new HashMap<>();
+		Map<String, String> auth = new HashMap<>();	
 		auth.put("appOrgId", sfinfo.getOrg());
 		auth.put("appUserId", sfinfo.getUserId());
 		auth.put("appSessionId", sfinfo.getSessionId());
@@ -93,6 +102,7 @@ public class NSTestBase {
 	}
 	
 	
+	
 	/**
      * Method to remove the name space from the string "JBCXM__".
      *
@@ -112,6 +122,10 @@ public class NSTestBase {
         } else {
             return str;
         }
+    }
+    
+    public String getNameSpaceResolvedFileContents(String filePath) {
+        return resolveStrNameSpace(FileUtil.getFileContents(filePath));
     }
 	
 	
