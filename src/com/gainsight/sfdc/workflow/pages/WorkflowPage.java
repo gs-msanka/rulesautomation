@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.workflow.pages;
 
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -430,29 +431,49 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
+    private void changeCTAOwner(CTA ExpectedCta, CTA newCta) {
+        boolean status = false;
+        for (int i=0; i< 3; i++)  {
+            try {
+                wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE, MIN_TIME, MAX_TIME);
+                item.click(EXP_VIEW_ASSIGNEE);
+                wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, MIN_TIME, MAX_TIME);
+                field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
+                field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
+                driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
+                if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
+                else waitTillNoLoadingIcon_360();
+                wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
+                for(WebElement ele : element.getAllElement(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()))){
+                    if(ele.isDisplayed()) {
+                        ele.click();
+                        status = true;
+                        break;
+                    }
+                }
+
+                if(status) {
+                    break;
+                } else {
+                    Timer.sleep(2);
+                    Log.info("Retrying to change CTA owner");
+                }
+            } catch (Exception e) {
+                Log.error("Failed to select owner",e);
+                Timer.sleep(2);
+            }
+        }
+
+        if(!status) {
+            Log.error("Failed to change the CTA owner");
+            throw new RuntimeException("Failed to change the CTA owner");
+        }
+    }
+
     public WorkflowPage updateCTADetails(CTA ExpectedCta, CTA newCta) {
         expandCTAView(ExpectedCta);
         if(!ExpectedCta.getAssignee().equalsIgnoreCase(newCta.getAssignee())) {
-            boolean status = false;
-            wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE, MIN_TIME, MAX_TIME);
-            item.click(EXP_VIEW_ASSIGNEE);
-            wait.waitTillElementDisplayed(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, MIN_TIME, MAX_TIME);
-            field.clearText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT);
-            field.setText(EXP_VIEW_ASSIGNEE_SEARCH_INPUT, newCta.getAssignee().trim());
-            driver.findElement(By.xpath(EXP_VIEW_ASSIGNEE_SEARCH_INPUT)).sendKeys(Keys.ENTER);
-            if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
-            else waitTillNoLoadingIcon_360();
-            wait.waitTillElementDisplayed(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()), MIN_TIME, MAX_TIME);
-            for(WebElement ele : element.getAllElement(String.format(EXP_VIEW_ASSIGNEE_SELECT, newCta.getAssignee()))){
-                if(ele.isDisplayed()) {
-                    ele.click();
-                    status = true;
-                    break;
-                }
-            }
-            if(!status) {
-                throw new RuntimeException("Failed to change the assignee");
-            }
+            changeCTAOwner(ExpectedCta, newCta);
         }
         if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(ExpectedCta.getDueDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -625,10 +646,12 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
-        for(int i=0; i<5; i++) {
+        for(int i=0; i<3; i++) {
             expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
             expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
+            Log.info("Expected -> Subject : " +task.getSubject() +", Priority : "+task.getPriority() +", "+task.getStatus());
+            Log.info("Actual -> Subject : " +expViewTask.getSubject() +", Priority : "+expViewTask.getPriority() +", "+expViewTask.getStatus());
 
             if(!task.getPriority().equalsIgnoreCase(expViewTask.getPriority()))
                 Log.info("Priority not matched");
@@ -1021,25 +1044,47 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	private void applyOwnersToTasksInPlaybook(List<Task> tasks) {
         for(Task task : tasks) {
-            String path = "//h4[contains(text(), '"+task.getSubject().replace("\\\"", "'")+"')]" +
-                    "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";
-            field.clearAndSetText(path, task.getAssignee());
-            driver.findElement(By.xpath(path)).sendKeys(Keys.ENTER);
-            //
-            if(!task.isFromCustomer360orWidgets())  waitTillNoLoadingIcon();
-            else waitTillNoLoadingIcon_360();
-            //wait.waitTillElementDisplayed("//li[@class='ui-menu-item' and @role='presentation']/a[contains(text(), '"+task.getAssignee()+"')]", MIN_TIME, MAX_TIME);
-            boolean selected = false;
-            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item' and @role='presentation']/a[contains(text(), '"+task.getAssignee()+"')]")) {
-                if(ele.isDisplayed()) {
-                    ele.click();
-                    selected = true;
+            selectTaskOwner(task);
+        }
+    }
+
+
+    private boolean selectTaskOwner(Task task) {
+        boolean selected = false;
+        for(int i=0; i<3; i++) {
+            try {
+                String path = "//h4[contains(text(), '"+task.getSubject().replace("\\\"", "'")+"')]" +
+                        "/ancestor::div[contains(@class, 'playbook-task')]/descendant::input[@name='search_text']";
+                field.clearAndSetText(path, task.getAssignee());
+                driver.findElement(By.xpath(path)).sendKeys(Keys.ENTER);
+                if(!task.isFromCustomer360orWidgets()) {
+                    waitTillNoLoadingIcon();
+                } else {
+                    waitTillNoLoadingIcon_360();
                 }
-            }
-            if(!selected) {
-                throw new RuntimeException("Unable to select owner");
+                for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item' and @role='presentation']/a[contains(text(), '"+task.getAssignee()+"')]")) {
+                    if(ele.isDisplayed()) {
+                        ele.click();
+                        selected = true;
+                    }
+                }
+                if(selected) {
+                    break;
+                } else {
+                    Timer.sleep(2);
+                    Log.info("Retiring Again to select task owner");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.error("Failed to select Owner", e);
             }
         }
+        if(!selected) {
+            Log.error("Failed to select Owner");
+            throw new RuntimeException("Unable to select owner");
+        }
+        return selected;
+
     }
 
 	public WorkflowPage syncTasksToSF(CTA cta,Task task) {

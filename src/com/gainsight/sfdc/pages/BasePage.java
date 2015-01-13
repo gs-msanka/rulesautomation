@@ -71,7 +71,7 @@ public class BasePage extends WebPage implements Constants {
 		button.click("Login");
         try {
             wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             Log.info("Trying to clicking on continue in on schedule screen.");
             if(isTextPresent("Scheduled Maintenance Notification")) {
                 item.click("//a[@class='continue' and text()='Continue']");
