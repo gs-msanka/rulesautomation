@@ -70,6 +70,7 @@ public class CustomersPage extends CustomerBasePage {
 
     private void setCustomerNameFilterOnTag(String customer) {
         field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']", customer);
+        driver.findElement(By.xpath("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']")).sendKeys(Keys.ENTER);
         Timer.sleep(2);
         item.click("//a[contains(text(), '"+customer+"')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
     }
@@ -278,6 +279,7 @@ public class CustomersPage extends CustomerBasePage {
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
         if(customerName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, customerName);
+            driver.findElement(By.xpath(CUSTOMER_NAME_GIRD_FILTER_INPUT)).sendKeys(Keys.ENTER);
             Timer.sleep(2);
         }
     }
