@@ -28,7 +28,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
     private final String CHECK_ALL_MEASURES                 = "//a[@class='ui-multiselect-all']/span[contains(text(), 'Check all')]";
     private final String UNCHECK_ALL_MEASURES               = "//a[@class='ui-multiselect-none']/span[contains(text(), 'Uncheck all')]";
     private final String AUTO_SELECT_LIST                   = "//ul[@class='ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all']";
-    private final String SEARCH_MEASURE_INPUT               = "//div[@class='ui-multiselect-filter']/input[@type='search']";
+    private final String SEARCH_MEASURE_INPUT               = "//div[@class='ui-multiselect-filter']/input[@type='text']";
     private final String DRILL_DOWN_MSG_DIV                  = "//div[@class='click-to-drilldown']";
 
     private String customerName;
