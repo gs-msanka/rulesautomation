@@ -97,6 +97,13 @@ global without sharing class GSAutomationRestAPI {
                         }
                     
                         for(String fieldName : objectFieldsMap.get(objectName)) {
+                            SObjectType accountType = Schema.getGlobalDescribe().get(objectName);
+                            Map<String,Schema.SObjectField> mfields = accountType.getDescribe().fields.getMap();
+                            system.debug(mfields);
+                            Schema.SObjectField field = mfields.get(fieldName);
+                            Schema.DescribeFieldResult fieldDes = field.getDescribe();
+                            editPermission = fieldDes.isUpdateable();
+
                             System.debug('Created Field Permissions : ' +objectName);
                             fieldName = objectName+'.'+fieldName;
                             fldPermission = new FieldPermissions(ParentId = permissonSet.Id, 
@@ -136,7 +143,7 @@ global without sharing class GSAutomationRestAPI {
                     }                
                     for(FieldPermissions fieldPermissions : [SELECT Field FROM FieldPermissions WHERE ParentId =: permissonSet.Id AND SobjectType IN: objectFieldsMap.keySet()]) {                  
                         System.debug('Field :' +fieldPermissions.Field);
-                        existingFieldPermissions.add(String.valueOf(fieldPermissions.Field));
+                        existingFieldPermissions.add(String.valueOf(fieldPermissions.Field).toLowerCase());
                     }                           
                     for(String objectName : objectFieldsMap.keySet()) {                 
                         //do not create duplicate object permission
@@ -147,12 +154,19 @@ global without sharing class GSAutomationRestAPI {
                             }
                         }
                         System.debug(existingFieldPermissions);
-                        for(String fieldName : objectFieldsMap.get(objectName)) {                       
+                        for(String fieldName : objectFieldsMap.get(objectName)) {
+                            SObjectType accountType = Schema.getGlobalDescribe().get(objectName);
+                            Map<String,Schema.SObjectField> mfields = accountType.getDescribe().fields.getMap();
+                            system.debug(mfields);
+                            String f1 = fieldName.trim();
                             fieldName = (objectName+'.'+fieldName).trim();
                             System.debug(!existingFieldPermissions.contains(fieldName));
                             System.debug('Field Name :' +fieldName);
-                            if(!existingFieldPermissions.contains(fieldName)) {
-                                fldPermission = new FieldPermissions(ParentId = permissonSet.Id, Field = fieldName, SobjectType = objectName, PermissionsEdit = editPermission, PermissionsRead = true);            
+                            if(!existingFieldPermissions.contains(fieldName.toLowerCase())) {
+                                Schema.SObjectField field = mfields.get(f1);
+                                Schema.DescribeFieldResult fieldDes = field.getDescribe();
+                                editPermission = fieldDes.isUpdateable();
+                                fldPermission = new FieldPermissions(ParentId = permissonSet.Id, Field = fieldName, SobjectType = objectName, PermissionsEdit = editPermission, PermissionsRead = true);
                                 fieldPermissionList.add(fldPermission);                         
                             }
                         }                               

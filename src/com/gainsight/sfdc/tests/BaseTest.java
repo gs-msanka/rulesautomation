@@ -13,6 +13,7 @@ import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.PackageUtil;
+import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.*;
 
@@ -210,7 +211,20 @@ public class BaseTest {
     }
 
     public void createExtIdFieldOnAccount() throws Exception {
-        metadataClient.createTextFields("Account", new String[]{"Data ExternalId"}, true, true, true, false, false);
+        String[] fields = new String[]{"Data ExternalId"};
+        metadataClient.createTextFields("Account", fields, true, true, true, false, false);
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields));
+    }
+
+    private String[] convertFieldNameToAPIName(String[] args) {
+        String[] temp = new String[args.length];
+        int i=0;
+        for(String s : args) {
+            temp[i] = s.replaceAll(" ", "_") + "__c";
+            Log.info("Field Name : " +temp[i]);
+            i++;
+        }
+        return temp;
     }
 
     public void createFieldsOnContact() throws Exception {
@@ -221,6 +235,9 @@ public class BaseTest {
         fields.put("InvolvedIn", new String[]{"Marketing", "Sales", "Forecast", "Finance", "Budget"});
         metadataClient.createPickListField("Contact", fields, true);
         metadataClient.createNumberField("Contact", new String[]{"DealCloseRate"}, true);
+        String[] permField = new String[]{"Contact ExternalID", "NoOfReferrals", "NumForDate",
+                            "NumberField", "Active", "InvolvedIn","DealCloseRate"};
+        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(permField));
     }
 
     public void createFieldsOnAccount() throws Exception {
@@ -286,6 +303,10 @@ public class BaseTest {
         fField7.put("HelpText", "Formula Name");
         fFields.add(fField7);
         metadataClient.createFormulaFields("Account", fFields);
+
+        String[] permFields = new String[]{"Data ExternalId", "IsActive", "InputDate", "InputDateTime",
+                                    "AccPercentage", "ActiveUsers", "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime", "FNumber", "FPercent", "FText"};
+        addFieldPermissionsToUsers("Account", permFields);
     }
 
 
@@ -293,18 +314,21 @@ public class BaseTest {
         String Scorecard_Metrics            = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId             = new String[]{"SCMetric ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
+        addFieldPermissionsToUsers(resolveStrNameSpace(Scorecard_Metrics), convertFieldNameToAPIName(SCMetric_ExtId));
     }
 
     public void createExtIdFieldOnUser() throws Exception{
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
         metadataClient.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
+        addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId));
     }
 
     public void createExternalIdFieldOnCTA() throws Exception{
         String CtaObj = "JBCXM__CTA__c";
         String[] Cta_ExtId = new String[]{"CTA ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
+        addFieldPermissionsToUsers(resolveStrNameSpace(CtaObj), convertFieldNameToAPIName(Cta_ExtId));
     }
 
     //same method is used by rules engine test cases also.
@@ -314,6 +338,7 @@ public class BaseTest {
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
+        addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)));
     }
 
     public void waitForBatchExecutionToComplete(String className) throws InterruptedException {
@@ -361,7 +386,7 @@ public class BaseTest {
         resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
         if(!resContent.get("status").toString().equalsIgnoreCase("Success")) {
             Log.error(responseObj.getContent());
-            throw new RuntimeException("Failed to add permissions");
+            throw new RuntimeException(resContent.get("errMsg").toString());
         }
         Log.info("Field permissions added successfully.");
     }
