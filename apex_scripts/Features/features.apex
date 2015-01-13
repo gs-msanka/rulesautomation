@@ -21,10 +21,25 @@ for (Integer p=0;p<products.size();p++)
 }
 insert features;
 
+//Creating an account for adding milestones
+Account acc=new Account(Name='Features Test Account');
+insert acc;
+
+//Adding the account to customers
+List<Account> accList=[SELECT Id FROM Account where name like 'Features Test Account'];
+
+JBCXM__PickList__c stage = [SELECT Id FROM JBCXM__PickList__c WHERE JBCXM__Category__c ='Customer Stage'  limit 1];
+JBCXM__PickList__c status = [SELECT ID FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' limit 1];
+
+JBCXM__CustomerInfo__c cust  = new JBCXM__CustomerInfo__c(JBCXM__Account__c = accList.get(0).Id,
+										JBCXM__Status__c = status.Id,
+										JBCXM__Stage__c = stage.Id,
+										JBCXM__Comments__c = 'Valued Customer.',
+										JBCXM__OriginalContractDate__c = date.today());
+insert cust;
+
 delete [select JBCXM__Features__c from JBCXM__CustomerFeatures__c];
 List<JBCXM__CustomerFeatures__c> CustFeat = new List<JBCXM__CustomerFeatures__c>();
-
-Account accList=[SELECT id FROM Account where name like 'Via Systems'];
 
 List<List<String>> pre=new List<List<String>>{new List<String>{'Financial Management','Core Financials','Yes','No','This is a Premium Feature'},
 																			 new List<String>{'Financial Management','Revenue Management','Yes','Yes','This is a free feature'},
@@ -36,7 +51,7 @@ for(Integer cf=0;cf<pre.size();cf++)
     System.debug(pre[cf][4]);
     String query='SELECT Id FROM JBCXM__Features__c where JBCXM__Product__c=\''+pre[cf][0]+'\' and JBCXM__Feature__c=\''+pre[cf][1]+'\'';
  	JBCXM__Features__c feat =database.query(query);
-    CustFeat.add(new JBCXM__CustomerFeatures__c(JBCXM__Account__c= accList.Id,
+    CustFeat.add(new JBCXM__CustomerFeatures__c(JBCXM__Account__c= accList.get(0).Id,
                                                 JBCXM__Enabled__c=pre[cf][3].equals('Yes')?true:false,
                                                 JBCXM__Features__c=feat.Id,
                                                 JBCXM__Licensed__c=pre[cf][2].equals('Yes')?true:false,

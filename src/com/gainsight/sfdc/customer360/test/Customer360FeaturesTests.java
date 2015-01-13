@@ -42,7 +42,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
 		// Test if all the features in the excel are displayed (pre added features)
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", false, false);
+		cp.searchCustomer("Features Test Account", false, false);
 		cf = (Customer360Features) cp.goToFeaturesSection();
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));
 		System.out.println("Prodlistsize=" + ProdList.size());
@@ -89,7 +89,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyEditFeatures(HashMap<String, String> testData) {
 		cp = basepage.clickOnC360Tab();
-		cp.searchCustomer("Via Systems", false, false);
+		cp.searchCustomer("Features Test Account", false, false);
 		cf = (Customer360Features) cp.goToFeaturesSection();
 		//In the Edit features form check on Licensed for a Feature and verify if same is reflected in features module
 		HashMap<String, String> ProdList = getMapFromData(testData.get("Products"));

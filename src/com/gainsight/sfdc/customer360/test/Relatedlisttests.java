@@ -98,7 +98,7 @@ public class Relatedlisttests extends BaseTest {
         rLPage.closeWindow();
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+   /* @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_3")
     public void custObjEditVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
@@ -140,7 +140,7 @@ public class Relatedlisttests extends BaseTest {
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
         rLPage.closeWindow();
-    }
+    }*/
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_6")
@@ -152,7 +152,7 @@ public class Relatedlisttests extends BaseTest {
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
 
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+ /*   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_1")
     public void custTasksAddFunc(HashMap<String, String> testData) {
         if(!taskScriptCreated) {
@@ -175,7 +175,7 @@ public class Relatedlisttests extends BaseTest {
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
         rLPage.closeWindow();
     }
-
+*/
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_2")
     public void customObjTasksDataVerification(HashMap<String, String> testData) {
