@@ -115,6 +115,8 @@ public class Customer360FeaturesTests extends BaseTest {
 				}
 			}
  			cf.clickOnSave();
+ 			basepage.refreshPage();
+ 			cf = (Customer360Features) cp.goToFeaturesSection();
  			boolean c1=false,c2=false;
 			for (int f = 0; f < rowspan; f++) {
 				

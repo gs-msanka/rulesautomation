@@ -12,16 +12,16 @@ public class Customer360Features extends Customer360Page{
 	protected final String FEATURE_ROW_WITH_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
 													"/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
 													"/following-sibling::td[1][contains(.,'%s')]"+
-													"/following-sibling::td[1]/img[@src='%s']/parent::td"+
-													"/following-sibling::td[1]/img[@src='%s']/parent::td"+
-													"/following-sibling::td[1][contains(.,'%s')]";
+													"/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
+													"/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
+													"/following-sibling::td[1]/div[contains(.,'%s')]";
 	protected final String FEATURE_ROW_WITHOUT_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
 													   "/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
 													   "/parent::tr/following-sibling::tr/"+
 			                                           "td[1][contains(.,'%s')]"+
-			                                           "/following-sibling::td[1]/img[@src='%s']/parent::td"+
-			                                           "/following-sibling::td[1]/img[@src='%s']/parent::td"+
-			                                           "/following-sibling::td[1][contains(.,'%s')]";
+			                                           "/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
+			                                           "/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
+			                                           "/following-sibling::td[1]/div[contains(.,'%s')]";
 	
 	public void clickOnEditFeatures()
 	{
@@ -42,7 +42,7 @@ public class Customer360Features extends Customer360Page{
 
 	public void addComments(String product,String feature,String comment){
 		Timer.sleep(2);
-		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[3]/input[@class='comments']")).sendKeys(comment);
+		driver.findElement(By.xpath(EDIT_FEATURES_TABLE+"/tbody//td[contains(.,'"+feature+"')]/following-sibling::td[3]/div/input[@class='comments']")).sendKeys(comment);
 		//field.clearAndSetText(,comment);
 	}
 	

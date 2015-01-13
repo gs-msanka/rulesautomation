@@ -1,5 +1,5 @@
 delete [select JBCXM__Feature__c from JBCXM__Features__c];
-
+delete [select id from Account where Name like 'Features Test Account'];
 Map<String,List<String>> productNFeatureMAp=new Map<String,List<String>>{'Engage'=>new List<String>{'CoreMotives','Email','Marketing Automation','PlacePunch','Business Assets'},
 																																								'Financial Management'=>new List<String>{'Core Financials','Expenses','Revenue Management'},
 																																								'Health Care Mgmt Suite'=>new List<String>{'Health Plans','Mobile','Pharmacy','Rewards'},
