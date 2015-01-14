@@ -33,8 +33,8 @@ public class Relatedlisttests extends BaseTest {
         basepage.login();
     }
 
-    public void createEventsFromScript() {
-        String file = env.basedir+"/testdata/sfdc/eventtests/Event_Create_Script.txt";
+    public void createCtasFromScript() {
+        String file = env.basedir+"/testdata/sfdc/relatedlist/scripts/createCTAs_CSTasks.txt";
         Log.info("File :" + file);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(file));
         taskScriptCreated = true;
@@ -98,10 +98,13 @@ public class Relatedlisttests extends BaseTest {
         rLPage.closeWindow();
     }
 
-   /* @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_3")
     public void custObjEditVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
+        if(!taskScriptCreated) {
+            createCtasFromScript();
+        }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
@@ -124,6 +127,9 @@ public class Relatedlisttests extends BaseTest {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_4")
     public void custObjViewVerification(HashMap<String, String> testData) {
         String relatedListName = testData.get("Section");
+        if(!taskScriptCreated) {
+            createCtasFromScript();
+        }
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         rLPage = rLPage.selectUIView(relatedListName, testData.get("UIView"));
@@ -140,7 +146,7 @@ public class Relatedlisttests extends BaseTest {
         }
         Assert.assertTrue(salesPage.verifyRecordViewIsDisplayed(objectId), "Verifying the Page Url is contact record view or not");
         rLPage.closeWindow();
-    }*/
+    }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_6")
@@ -152,11 +158,11 @@ public class Relatedlisttests extends BaseTest {
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
 
- /*   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_1")
     public void custTasksAddFunc(HashMap<String, String> testData) {
         if(!taskScriptCreated) {
-            createEventsFromScript();
+            createCtasFromScript();
         }
         String relatedListName = testData.get("Section");
         Customer360Page cPage  = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
@@ -175,12 +181,12 @@ public class Relatedlisttests extends BaseTest {
         Assert.assertTrue(sal.verifyRecordAddIsDisplayed(objectId));
         rLPage.closeWindow();
     }
-*/
+
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_CUST_GSTASK_2")
     public void customObjTasksDataVerification(HashMap<String, String> testData) {
         if(!taskScriptCreated) {
-            createEventsFromScript();
+        	createCtasFromScript();
         }
         String relatedListName = testData.get("Section");
         HashMap<String, String> colHeaders = getMapFromData(testData.get("TableHeader"));
