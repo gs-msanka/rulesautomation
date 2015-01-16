@@ -117,22 +117,31 @@ public class Customer360Page extends BasePage {
     public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
     	Log.info("Searching for customer : " +name);
         wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
+        for(int i=0;i<3;i++){
         button.click(CUST_SERCHBY_SELECT);
         Timer.sleep(2); //Few times, customer selection is fails.
         wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
         if(isInstanceName) {
             if(isContains) {
-                item.click("//li[@class='instance-name-cnt']");
+            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
+                		item.click("//li[@class='instance-name-cnt']");
+               else  continue; 
             } else {
-                item.click("//li[@class='instance-name-starts']");
+            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
+            			item.click("//li[@class='instance-name-starts']");
+            	else  continue; 
             }
         } else {
             if(isContains) {
-                item.click("//li[@class='cust-name-cnt']");
+            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
+            			item.click("//li[@class='cust-name-cnt']");
+            	else  continue; 
             } else {
-                item.click("//li[contains(@class, 'cust-name-starts')]");
-
+            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
+            			item.click("//li[contains(@class, 'cust-name-starts')]");
+            	else  continue; 
             }
+        }
         }
         driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(name);
         driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
