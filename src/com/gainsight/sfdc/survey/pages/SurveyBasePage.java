@@ -1,3 +1,10 @@
+/*Survey Base page is home page of survey 
+
+The following are the actions done in SurveyBasePage:
+a) Create Survey
+b) Navigations to all primary menu items, click on primary options, verify if particular page is loaded
+SurveyBasePage extends the BasePage. BasePage is home page and contains clicking on all tabs*/
+
 package com.gainsight.sfdc.survey.pages;
 
 import com.gainsight.sfdc.pages.BasePage;
@@ -39,8 +46,8 @@ public class SurveyBasePage extends BasePage {
         	item.click(SAVE_SURVEY); 	//Save button click.
 		return new SurveyPropertiesPage();
 	}
-
-	public SurveyBasePage clickOnDashboard() {
+	
+		public SurveyBasePage clickOnDashboard() {
         //Click
 		item.click(DASHBOARD_OPTION);
 		wait.waitTillElementPresent(DASHBOARDPAGE_DISPLAY, MIN_TIME, MAX_TIME);

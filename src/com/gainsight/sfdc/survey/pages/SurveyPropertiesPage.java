@@ -1,3 +1,8 @@
+/*SurveyProperties page -> Navigating to properties page and filling the fields in this page
+ * and save the page 
+ */
+
+
 package com.gainsight.sfdc.survey.pages;
 
 import com.gainsight.testdriver.Log;
@@ -32,13 +37,16 @@ public class SurveyPropertiesPage extends SurveyDesignPage {
 //	private final String SELECTEXISTING_IMAGE = "";
 	private final String SAVE_SURVEY="//input[@class='gs-btn btn-save']";
 	
-	
+	private final SurveyDesignPage sideNav;
 
     public SurveyPropertiesPage() {
         wait.waitTillElementDisplayed(PROPERTIES_PAGE, MIN_TIME, MAX_TIME);
+        sideNav=new SurveyDesignPage();
     }
     
-   
+    public SurveyDesignPage getSideNavInstance(){
+    	return sideNav;
+    }
     public void fillAndSaveSurveyProperties (SurveyProperties surveyproperties) {
     	Log.info("Started Filling Survey Form");
     	//field.clearAndSetText(EMAIL_SERVICE, surveyproperties.getEmailService());
