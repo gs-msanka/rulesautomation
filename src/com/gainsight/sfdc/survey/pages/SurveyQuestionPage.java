@@ -94,7 +94,7 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 		}
 		else if(ques.getquestionType().equalsIgnoreCase("NPS - Single answer per row (radio)")){
 			item.click(NPS_QUESTION);
-			field.selectCheckbox(CLICK_SHOWHEADER_CHECKBOX);
+			field.selectCheckBox(CLICK_SHOWHEADER_CHECKBOX);
 		//	field.selectFromDropDown(NPS_HEADER_DROPDOWN,ques.getAllowedAnswers());
 			field.selectFromDropDown(NPS_HEADER_DROPDOWN, ques.getShowHeader());
 			
@@ -178,18 +178,18 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 		// image - TBD
 		if (ques.isAllowComment()) {
 			if (!ques.getquestionType().equalsIgnoreCase("nps"))
-				field.selectCheckbox(String.format(SETTINGS_ALLOWCOMMENT_CHECKBOX,quesNumber));
+				field.selectCheckBox(String.format(SETTINGS_ALLOWCOMMENT_CHECKBOX,quesNumber));
 			field.clearAndSetText(String.format(SETTINGS_COMMENT_LABEL,quesNumber),
 					ques.getCommentLabel());
 		}
 		if (ques.isaddOthers()) {
-			field.selectCheckbox(String.format(SETTINGS_ADDOTHERS_CHECKBOX,quesNumber));
+			field.selectCheckBox(String.format(SETTINGS_ADDOTHERS_CHECKBOX,quesNumber));
 			field.clearAndSetText(String.format(SETTINGS_OTHERSLABEL,quesNumber), ques.getotherLabel());
 		}
 		if (ques.isRequired())
-			field.selectCheckbox(String.format(SETTINGS_ANSWER_REQUIREDCHECKBOX,quesNumber));
+			field.selectCheckBox(String.format(SETTINGS_ANSWER_REQUIREDCHECKBOX,quesNumber));
 		if (ques.isSingleAnswer())
-			field.selectCheckbox(String.format(SETTINGS_SINGLEANSWER_CHECKBOX,quesNumber));
+			field.selectCheckBox(String.format(SETTINGS_SINGLEANSWER_CHECKBOX,quesNumber));
 		return this;
 	}
 
