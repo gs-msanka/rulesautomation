@@ -2,236 +2,258 @@ package com.gainsight.sfdc.survey.pojo;
 
 public class SurveyProperties {
 
-    private String surveyCode;
-    private String surveyTitle;
-    private String anonymousAccount;
-    private String type;
-  //  private String anonymous_option;
-    private String tOption;
-    private String imageName;
-    private String filePath;
-    private String startDate;
-    private String endDate;
-    private String emailService;
-    private String description = "This is loaded form pojo class";
-    private String thankYou;
-    private String status ;
-    private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
-    private String backgroundColor;
-    private String message;
-    private boolean anonymous = false;
-    private boolean cloneLogicRules = true;
-    private boolean cloneParticipants = true;
-    private boolean cloneAlertRules = true;
-    private boolean allowInternalSub = true;
-    private boolean loadPartFromCustomObj = false;
+	private String surveyCode;
+	private String surveyTitle;
+	private String anonymousAccount;
+	private String type;
+	// private String anonymous_option;
+	private String tOption;
+	private String imageName;
+	private String filePath;
+	private String startDate;
+	private String endDate;
+	private String emailService;
+	private String siteURL;
+	private String emailTemplate;
+	private String defaultAddress;
+	private String description = "This is loaded form pojo class";
+	private String thankYou;
+	private String status;
+	private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
+	private String backgroundColor;
+	private String message;
+	private boolean anonymous = false;
+	private boolean cloneLogicRules = true;
+	private boolean cloneParticipants = true;
+	private boolean cloneAlertRules = true;
+	private boolean allowInternalSub = true;
+	private boolean loadPartFromCustomObj = false;
 
-    public String getStatus() {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    public String getType() {
-        return type;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    
-    public String getMessage() {
-        return message;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    
-    public String getEmailService() {
-    	return emailService;
-    }
-    
-    public void setEmailService(String emailService) {
-    	this.emailService = emailService;
-    }
-    
-    
-    public String getBackgroundColor() {
-    	return backgroundColor;
-    }
-    
-    public void setBackgroundColor(String backgroundColor) {
-    	this.backgroundColor = backgroundColor;
-    }
-    
-    public String getFooterMsg() {
-        return footerMsg;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public void setFooterMsg(String footerMsg) {
-        this.footerMsg = footerMsg;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public String getThankYou() {
-        return thankYou;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public void setThankYou(String thankYou) {
-        this.thankYou = thankYou;
-    }
+	public String getEmailService() {
+		return emailService;
+	}
 
-    public boolean isAllowInternalSub() {
+	public void setEmailService(String emailService) {
+		this.emailService = emailService;
+	}
 
-        return allowInternalSub;
-    }
+	public String getSiteURL() {
+		return siteURL;
+	}
 
-    public void setAllowInternalSub(boolean allowInternalSub) {
-        this.allowInternalSub = allowInternalSub;
-    }
+	public void setSiteURL(String siteURL) {
+		this.siteURL = siteURL;
+	}
 
-    public boolean isLoadPartFromCustomObj() {
-        return loadPartFromCustomObj;
-    }
+	public String getEmailTemplate() {
+		return emailTemplate;
+	}
 
-    public void setLoadPartFromCustomObj(boolean loadPartFromCustomObj) {
-        this.loadPartFromCustomObj = loadPartFromCustomObj;
-    }
+	public void setEmailTemplate(String emailTemplate) {
+		this.emailTemplate = emailTemplate;
+	}
 
+	public String getDefaultAddress() {
+		return defaultAddress;
+	}
 
-//    public String getAnonymous_option() {
-//        return anonymous_option;
-//    }
-//
-//    public void setAnonymous_option(String anonymous_option) {
-//        this.anonymous_option = anonymous_option;
-//    }
+	public void setDefaultAddress(String defaultAddress) {
+		this.defaultAddress = defaultAddress;
+	}
 
-    public String gettOption() {
-        return tOption;
-    }
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
 
-    public void settOption(String tOption) {
-        this.tOption = tOption;
-    }
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getFooterMsg() {
+		return footerMsg;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setFooterMsg(String footerMsg) {
+		this.footerMsg = footerMsg;
+	}
 
-    public boolean isCloneLogicRules() {
-        return cloneLogicRules;
-    }
+	public String getThankYou() {
+		return thankYou;
+	}
 
-    public void setCloneLogicRules(boolean cloneLogicRules) {
-        this.cloneLogicRules = cloneLogicRules;
-    }
+	public void setThankYou(String thankYou) {
+		this.thankYou = thankYou;
+	}
 
-    public boolean isCloneAlertRules() {
-        return cloneAlertRules;
-    }
+	public boolean isAllowInternalSub() {
 
-    public void setCloneAlertRules(boolean cloneAlertRules) {
-        this.cloneAlertRules = cloneAlertRules;
-    }
+		return allowInternalSub;
+	}
 
-    public boolean isCloneParticipants() {
-        return cloneParticipants;
-    }
+	public void setAllowInternalSub(boolean allowInternalSub) {
+		this.allowInternalSub = allowInternalSub;
+	}
 
-    public void setCloneParticipants(boolean cloneParticipants) {
-        this.cloneParticipants = cloneParticipants;
-    }
+	public boolean isLoadPartFromCustomObj() {
+		return loadPartFromCustomObj;
+	}
 
-    public void setCode(String surveyCode) {
-        this.surveyCode = surveyCode;
-    }
+	public void setLoadPartFromCustomObj(boolean loadPartFromCustomObj) {
+		this.loadPartFromCustomObj = loadPartFromCustomObj;
+	}
 
-    public String getSurveyCode() {
+	// public String getAnonymous_option() {
+	// return anonymous_option;
+	// }
+	//
+	// public void setAnonymous_option(String anonymous_option) {
+	// this.anonymous_option = anonymous_option;
+	// }
 
-        return surveyCode;
-    }
+	public String gettOption() {
+		return tOption;
+	}
 
-    public void setTitle(String surveyTitle) {
-        this.surveyTitle = surveyTitle;
-    }
+	public void settOption(String tOption) {
+		this.tOption = tOption;
+	}
 
-    public String getSurveyTitle() {
+	public String getDescription() {
+		return description;
+	}
 
-        return surveyTitle;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-//    public void setAOption(String anomymous_option) {
-//        this.anonymous_option = anomymous_option;
-//    }
-//
-//    public String getAOption() {
-//        return anonymous_option;
-//    }
+	public boolean isCloneLogicRules() {
+		return cloneLogicRules;
+	}
 
-    public void setAnonymousAccount(String anonymousAccount) {
-        this.anonymousAccount = anonymousAccount;
-    }
+	public void setCloneLogicRules(boolean cloneLogicRules) {
+		this.cloneLogicRules = cloneLogicRules;
+	}
 
-    public String getAccountName() {
-        return anonymousAccount;
-    }
+	public boolean isCloneAlertRules() {
+		return cloneAlertRules;
+	}
 
-    public void setTUOption(String toption) {
-        this.tOption = toption;
-    }
+	public void setCloneAlertRules(boolean cloneAlertRules) {
+		this.cloneAlertRules = cloneAlertRules;
+	}
 
-    public String getTUOption() {
-        return tOption;
-    }
+	public boolean isCloneParticipants() {
+		return cloneParticipants;
+	}
 
+	public void setCloneParticipants(boolean cloneParticipants) {
+		this.cloneParticipants = cloneParticipants;
+	}
 
-    public void setImageName(String imagename) {
-        this.imageName = imagename;
-    }
+	public void setCode(String surveyCode) {
+		this.surveyCode = surveyCode;
+	}
 
-    public String getImageName() {
-        return imageName;
-    }
+	public String getSurveyCode() {
 
-    public void setAnonymous(boolean flag) {
-        this.anonymous = flag;
-    }
+		return surveyCode;
+	}
 
-    public boolean isAnonymous() {
-        return anonymous;
-    }
+	public void setTitle(String surveyTitle) {
+		this.surveyTitle = surveyTitle;
+	}
 
-    public void setFilePath(String filepath) {
-        this.filePath = filepath;
-    }
+	public String getSurveyTitle() {
 
-    public String getFilePath() {
-        return filePath;
-    }
+		return surveyTitle;
+	}
 
-    public void setStartDate(String startdate) {
-        this.startDate = startdate;
-    }
+	// public void setAOption(String anomymous_option) {
+	// this.anonymous_option = anomymous_option;
+	// }
+	//
+	// public String getAOption() {
+	// return anonymous_option;
+	// }
 
-    public String getStartDate() {
-        return startDate;
-    }
+	public void setAnonymousAccount(String anonymousAccount) {
+		this.anonymousAccount = anonymousAccount;
+	}
 
-    public void setEndDate(String enddate) {
-        this.endDate = enddate;
-    }
+	public String getAccountName() {
+		return anonymousAccount;
+	}
 
-    public String getEndDate() {
-        return endDate;
-    }
-    
-  }
+	public void setTUOption(String toption) {
+		this.tOption = toption;
+	}
 
+	public String getTUOption() {
+		return tOption;
+	}
+
+	public void setImageName(String imagename) {
+		this.imageName = imagename;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setAnonymous(boolean flag) {
+		this.anonymous = flag;
+	}
+
+	public boolean isAnonymous() {
+		return anonymous;
+	}
+
+	public void setFilePath(String filepath) {
+		this.filePath = filepath;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setStartDate(String startdate) {
+		this.startDate = startdate;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setEndDate(String enddate) {
+		this.endDate = enddate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+}
