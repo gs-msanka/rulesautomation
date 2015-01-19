@@ -19,10 +19,18 @@ public class SurveyQuestion {
     private String commentLabel;    
     private boolean addOthers;
     private String otherLabel;
+    private String showHeader;
     private ArrayList<SurveyAllowedAnswer> allowedAnswers = new ArrayList<SurveyAllowedAnswer>();
     private ArrayList<SurveySubQuestions> subQuestions = new ArrayList<SurveySubQuestions>();
     
-       
+    public String getShowHeader () {
+    	return showHeader;
+    }
+    
+    public void setShowHeader(String showHeader) {
+        this.showHeader = showHeader;
+    }      
+    
     public String getquestionType () {
     	return questionType;
     }

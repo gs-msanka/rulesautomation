@@ -20,7 +20,7 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 	private final String MULTIPLECHOICE_MULTISELECT = "//li//a[@data-label='Multiple choice' and @data-type ='MULTIPLE_CHOICE_QUESTION'  and @data-control='CHECKBOX' and @data-multiple='true']//i[@class='mco']";
 	private final String DROPDOWN_SINGLESELECT = "//li//a[@data-label='Dropdown' and @data-type ='MULTIPLE_CHOICE_QUESTION' and @data-control='SELECT' and @data-multiple='true']//i[@class='dropdown']";
 	private final String DROPDOWN_MULTISELECT = "//li//a[@data-label='Dropdown' and @data-type ='MULTIPLE_CHOICE_QUESTION' and @data-control='SELECT' and @data-multiple='true']//i[@class='dropdown']";
-	private final String NPS_QUESTION = "//li//a[@data-label='NPS' and @data-type ='NPS_QUESTION' and @data-control='CHECKBOX' and @data-multiple='true']//i[@class='nps']";
+	private final String NPS_QUESTION = "//li//a[@data-label='NPS' and @data-type ='NPS_QUESTION' and @data-control='NPS' and @data-multiple='false']//i[@class='nps']";
 	private final String CLICK_SHOWHEADER_CHECKBOX ="//span[@class='f-left line-height30 pull-left']//input[@type='checkbox']";
 	private final String NPS_HEADER_DROPDOWN = "//select[@class='/following-sibling::/option[@value='%s']";
 //	private final String SELECT_HEADER_TEXT ="//select[@class='form-control header-type-select pull-left mag-left10']//option[contains(@value, 'Text')]";
@@ -95,7 +95,8 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 		else if(ques.getquestionType().equalsIgnoreCase("NPS - Single answer per row (radio)")){
 			item.click(NPS_QUESTION);
 			field.selectCheckbox(CLICK_SHOWHEADER_CHECKBOX);
-	//		field.selectFromDropDown(NPS_HEADER_DROPDOWN,ques.getAllowedAnswers());
+		//	field.selectFromDropDown(NPS_HEADER_DROPDOWN,ques.getAllowedAnswers());
+			field.selectFromDropDown(NPS_HEADER_DROPDOWN, ques.getShowHeader());
 			
 			waitTillNoLoadingIcon();
 			//select smiley or textt

@@ -57,6 +57,9 @@ public class SurveyQuestionsTest extends BaseTest {
 		SurveyDesignPage sideNav = surpropPage.getSideNavInstance();
 		SurveyQuestionPage surQuePage = sideNav.clickOnQuestions();
 		surQuePage.SurveyDefaultPageVerification();
+/*Defined test data in such a way that all question types (there are totally 8 question types in survey) are in same sheet.
+ * The below steps perform reading all 8 question types from test data and then add all question types*/
+
 	    ArrayList<SurveyQuestion> surQues =new ArrayList<SurveyQuestion>();
         for(int i=1;i<=8;i++){
         	surQues.add(mapper.readValue(testData.get("Question"+i), SurveyQuestion.class));
