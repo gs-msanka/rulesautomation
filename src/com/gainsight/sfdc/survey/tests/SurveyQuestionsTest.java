@@ -1,6 +1,5 @@
 package com.gainsight.sfdc.survey.tests;
 
-import com.gainsight.pageobject.core.Report;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyDesignPage;
 import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
@@ -33,14 +32,7 @@ public class SurveyQuestionsTest extends BaseTest {
 
 	@BeforeClass
 	public void setUp() {
-        userLocale = soql.getUserLocale();
-        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
         basepage.login();
-        //apex.runApex(resolveStrNameSpace(QUERY));
-		//sdata.setStartDate(getDateWithFormat(0, 0, false));
-	//	sdata.setEndDate(getDateWithFormat(30, 0, false));
-	//	sdata.setTUOption("Message");
-
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
