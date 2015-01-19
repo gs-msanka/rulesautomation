@@ -306,7 +306,7 @@ public class BaseTest {
 
         String[] permFields = new String[]{"Data ExternalId", "IsActive", "InputDate", "InputDateTime",
                                     "AccPercentage", "ActiveUsers", "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime", "FNumber", "FPercent", "FText"};
-        addFieldPermissionsToUsers("Account", permFields);
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields));
     }
 
 
@@ -385,6 +385,7 @@ public class BaseTest {
         Map<String, Object> resContent  = new HashMap<>();
         resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
         if(!resContent.get("status").toString().equalsIgnoreCase("Success")) {
+            Log.error("Failed to create field permissions");
             Log.error(responseObj.getContent());
             throw new RuntimeException(resContent.get("errMsg").toString());
         }
