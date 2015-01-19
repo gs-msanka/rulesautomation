@@ -114,39 +114,38 @@ public class Customer360Page extends BasePage {
 		wait.waitTillElementDisplayed("//div[@class='workflow-summary']", MIN_TIME, MAX_TIME);
 		return new Workflow360Page("360 Page");
 	}
-    public Customer360Page searchCustomer(String name, Boolean isInstanceName, Boolean isContains) {
+    public Customer360Page searchCustomer(String name, Boolean byInstance, Boolean byContains) {
     	Log.info("Searching for customer : " +name);
-        wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
-        for(int i=0;i<3;i++){
-        button.click(CUST_SERCHBY_SELECT);
-        Timer.sleep(2); //Few times, customer selection is fails.
-        wait.waitTillElementDisplayed("//div[@class='gs_filter_option_section']", MIN_TIME, MAX_TIME);
-        if(isInstanceName) {
-            if(isContains) {
-            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
-                		item.click("//li[@class='instance-name-cnt']");
-               else  continue; 
-            } else {
-            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
-            			item.click("//li[@class='instance-name-starts']");
-            	else  continue; 
+        String dropdownElement = "//ul[@id='ui-id-1' and @role='menu']";
+        for(int i=0; i <3; i++) {
+            try {
+                wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME-15);
+                item.click(CUST_SERCHBY_SELECT);
+                wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, MAX_TIME-20);
+                if(byInstance) {
+                    if(byContains) {
+                        item.click(dropdownElement+"/li[contains(@class, 'instance-name-cnt')]");
+                    } else {
+                        item.click(dropdownElement+"/li[contains(@class, 'instance-name-starts')]");
+                    }
+                } else {
+                    if(byContains) {
+                        item.click(dropdownElement+"/li[contains(@class, 'cust-name-cnt')]");
+                    } else {
+                        item.click(dropdownElement+"/li[contains(@class, 'cust-name-starts')]");
+                    }
+                }
+                driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(name);
+                driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
+                wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
+                break;
+            } catch (Exception e) {
+                Log.error("Unable to select customer", e);
+                Timer.sleep(2);
             }
-        } else {
-            if(isContains) {
-            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
-            			item.click("//li[@class='cust-name-cnt']");
-            	else  continue; 
-            } else {
-            	if(item.isElementPresent("//div[@class='gs_filter_option_section']"))
-            			item.click("//li[contains(@class, 'cust-name-starts')]");
-            	else  continue; 
-            }
+
         }
-        }
-        driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(name);
-        driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
-        wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
-        driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
         Log.info("Customer Search Completed. ");
         waitForLoadingImagesNotPresent();
         return this;
