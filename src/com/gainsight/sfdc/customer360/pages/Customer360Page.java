@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import java.sql.Time;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
@@ -14,7 +15,7 @@ import com.gainsight.sfdc.pages.BasePage;
 
 public class Customer360Page extends BasePage {
 
-    private final String ACC_INS_NAME_INPUT     = "//input[contains(@class, 'search_input search-field gs-left-noradius ui-autocomplete-input') and @type='text']";
+    private final String ACC_INS_NAME_INPUT     = "//div[@class='gs_search_section']/input[@type='text' and @name='search_text']";
     private final String READY_INDICATOR        = "//input[contains(@placeholder, 'Customer name') and @name='search_text']";
 	private final String LOADING_IMAGES         = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION       = "//div[@class='gs_navtabs']//a[text()='%s']";
@@ -117,9 +118,10 @@ public class Customer360Page extends BasePage {
     public Customer360Page searchCustomer(String name, Boolean byInstance, Boolean byContains) {
     	Log.info("Searching for customer : " +name);
         String dropdownElement = "//ul[@id='ui-id-1' and @role='menu']";
+        boolean selected = false;
         for(int i=0; i <3; i++) {
             try {
-                wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME-15);
+                wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
                 item.click(CUST_SERCHBY_SELECT);
                 wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, MAX_TIME-20);
                 if(byInstance) {
@@ -135,16 +137,20 @@ public class Customer360Page extends BasePage {
                         item.click(dropdownElement+"/li[contains(@class, 'cust-name-starts')]");
                     }
                 }
-                driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(name);
+                Timer.sleep(2); //As its failing more frequently, add stale pause.
+                field.clearAndSetText(ACC_INS_NAME_INPUT, name);
                 driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
                 wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
                 driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
+                selected = true;
                 break;
             } catch (Exception e) {
                 Log.error("Unable to select customer", e);
                 Timer.sleep(2);
             }
-
+        }
+        if(!selected) {
+            throw new RuntimeException("Failed to select customer");
         }
         Log.info("Customer Search Completed. ");
         waitForLoadingImagesNotPresent();
