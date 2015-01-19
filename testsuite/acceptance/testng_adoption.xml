@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true">
+<suite name="Adoption Automation Project" preserve-order="true">
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
@@ -10,35 +10,5 @@
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
         </classes>
     </test>
-    <test verbose="3" name="Adoption_Account_Weekly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="Adoption_Instance_Monthly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="Adoption_Instance_Weekly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="Adoption_User_Monthly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="Adoption_User_Weekly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Weekly_Test"/>
-        </classes>
-    </test>
-
 </suite>
 
