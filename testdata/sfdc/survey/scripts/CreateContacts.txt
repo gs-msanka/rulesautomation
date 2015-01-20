@@ -1,0 +1,16 @@
+//Get the Account names prefixed with Survey
+                                            
+List<Account> acctID = [Select ID from ACCOUNT where NAME like 'SURVEY Account%' limit 10];
+List<String> emailIDs = new List<String>{'sjha@gainsight.com','jvunnam@gainsight.com','ggolla@gainsight.com','srallapalli@gainsight.com','ryaddanapalli@gainsight.com','spulluri@gainsight.com','snasika@gainsight.com','rkalisipudi@gainsight.com','hsharma@gainsight.com','spadmanabhan@gainsight.com'};
+
+for(Integer i=0,i<10,i++){
+List<Contact> contacts = new List<Contact>();
+Contact c1 = new Contact();
+c1.AccountId = acctID[i].ID;
+c1.FirstName = 'FName'+i;
+c1.LastName = 'LName'+i; 
+c1.Title = 'QA' ;  
+c1.Email = emailIDs[i];
+contacts.add(c1);
+}
+insert(contacts);
