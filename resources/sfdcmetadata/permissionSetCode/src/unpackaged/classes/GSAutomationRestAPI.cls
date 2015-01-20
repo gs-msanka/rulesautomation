@@ -36,13 +36,28 @@ global without sharing class GSAutomationRestAPI {
             }   
             system.debug('ObjectFieldMap ' +objectFieldMap);
             if(objectFieldMap.size() >0 ) {
-                resObj = createObjectFieldPermission(objectFieldMap, false);    
+                resObj = createObjectFieldPermission(objectFieldMap, true);    
             }
 
 
         } else {
             resObj = new Map<String, Object>{'status' => 'FAILED', 'errMsg' => 'In Correct Module Name :' +modulename};         
         }
+        
+            Map<String, List<String>> map1 = new Map<String, List<String>>();
+            List<String> acclist = new List<String>{'AccountNumber', 'Site', 'AccountSource', 'AnnualRevenue', 'Description',
+                                    'NumberOfEmployees', 'Industry', 'Ownership', 'Phone', 'Rating', 'TickerSymbol', 'Type', 'Website'};
+            map1.put('Account', acclist);                       
+            List<String> oppList = new List<String>{ 'Amount', 'Description',  'ExpectedRevenue',
+                                        'LeadSource', 'NextStep',  'IsPrivate', 'Probability', 'TotalOpportunityQuantity',
+                                         'Type'};
+            map1.put('Opportunity', oppList);                           
+            List<String> conList = new List<String>{ 'AssistantName', 'AssistantPhone', 'Birthdate', 'Department', 'Description',
+                                    'DoNotCall', 'Email', 'HasOptedOutOfEmail', 'Fax', 'HasOptedOutOfFax', 'HomePhone', 
+                                    'LeadSource',  'OtherPhone', 'Phone','Title'};
+            map1.put('Contact', conList);
+            createObjectFieldPermission(map1, false);    
+        
         res.responseBody = Blob.valueOf(JSON.serialize(resObj));
         return;
     }
@@ -88,13 +103,45 @@ global without sharing class GSAutomationRestAPI {
                     //loop through each object and fields sent              
                     for(String objectName : objectFieldsMap.keySet()) {         
                         if(isObjectPermissionReq) { //do not give permission to object
-                            objectPermission = new ObjectPermissions(SobjectType = objectName, 
+                            if(objectName != 'Account' && objectName != 'Contact' && objectName !='Opportunity') {
+                                objectPermission = new ObjectPermissions(SobjectType = objectName, 
                                                                         PermissionsRead = true, 
                                                                         PermissionsEdit = editPermission,
                                                                         PermissionsCreate = createPermission, 
+                                                                        PermissionDelete = true,
                                                                         ParentId = permissonSet.Id);        
-                            objectPermissionList.add(objectPermission);
+                            objectPermissionList.add(objectPermission);    
+                            }
+                            
                         }
+                        //Account Object Permissions Are Manditory.
+                        objectPermission = new ObjectPermissions(SobjectType = 'Account', 
+                                                                    PermissionsRead = true, 
+                                                                    PermissionsEdit = true,
+                                                                    PermissionsCreate = true, 
+                                                                    PermissionDelete = true,
+                                                                    ParentId = permissonSet.Id);        
+                        
+                        insert objectPermission;
+                        //Contact Object Permission are added by default.
+                        objectPermission = new ObjectPermissions(SobjectType = 'Contact', 
+                                                                    PermissionsRead = true, 
+                                                                    PermissionsEdit = true,
+                                                                    PermissionsCreate = true, 
+                                                                    PermissionDelete = true,
+                                                                    ParentId = permissonSet.Id);        
+                        
+                        insert objectPermission;
+                        //Opportunity Object Permission are added by default.
+                        objectPermission = new ObjectPermissions(SobjectType = 'Opportunity', 
+                                                                    PermissionsRead = true, 
+                                                                    PermissionsEdit = true,
+                                                                    PermissionsCreate = true, 
+                                                                    PermissionDelete = true,
+                                                                    ParentId = permissonSet.Id);        
+                        
+                        insert objectPermission;
+
                     
                         for(String fieldName : objectFieldsMap.get(objectName)) {
                             SObjectType accountType = Schema.getGlobalDescribe().get(objectName);
@@ -151,6 +198,7 @@ global without sharing class GSAutomationRestAPI {
                             if(!existingObjectPermissions.contains(objectName)) {
                                 objectPermission = new ObjectPermissions(SobjectType = objectName, PermissionsRead = true, PermissionsEdit = editPermission, PermissionsCreate = createPermission, ParentId = permissonSet.Id);                     
                                 objectPermissionList.add(objectPermission);
+                                existingObjectPermissions.add(objectName);
                             }
                         }
                         System.debug(existingFieldPermissions);
@@ -168,6 +216,7 @@ global without sharing class GSAutomationRestAPI {
                                 editPermission = fieldDes.isUpdateable();
                                 fldPermission = new FieldPermissions(ParentId = permissonSet.Id, Field = fieldName, SobjectType = objectName, PermissionsEdit = editPermission, PermissionsRead = true);
                                 fieldPermissionList.add(fldPermission);                         
+                                existingFieldPermissions.add(fieldName.toLowerCase());
                             }
                         }                               
                     }
