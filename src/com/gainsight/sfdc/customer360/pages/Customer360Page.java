@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
@@ -27,7 +28,7 @@ public class Customer360Page extends BasePage {
    // private final String CUST_NOTFOUND_MSG      = "//div[@class='gs_inavlidCustomerSpan']";
     private final String DEBOOK_TRN_CONFIRM     = "//div[@class='gs_tsn_confirmation']";
     private final String DEBOOK_OK_BTN	        ="//div[@class='modal-footer']/a[text()='Ok']";
-
+    private final String SUMMARY_WIDGET         = "//div[@class='gs_summary']"; 
     private static final String RETENTION_SECTION_TAB       = "//ul[@class='nav']/li[@class='retention']";
     private static final String USAGE_SECTION_TAB           = "//ul[@class='nav']/li[@class='usage']";
     private static final String ACCOUNT_ATTRIBUTES_SECTION_TAB = "//ul[@class='nav']/li[@class='accountattributes']";
@@ -107,6 +108,13 @@ public class Customer360Page extends BasePage {
         waitForLoadingImagesNotPresent();
 		wait.waitTillElementDisplayed("//div[@class='scorecardsbody']", MIN_TIME, MAX_TIME);
 		return new Customer360Scorecard();
+	}
+	
+	public Customer360SummaryWidget goToSummaryWidgetSection() {
+		item.click(String.format(NAVIGATE_SECTION,"Summary"));
+        waitForLoadingImagesNotPresent();
+		wait.waitTillElementDisplayed(SUMMARY_WIDGET, MIN_TIME, MAX_TIME);
+		return new Customer360SummaryWidget();
 	}
 	
 	public Workflow360Page goToCockpitSection(){
