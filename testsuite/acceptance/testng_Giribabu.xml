@@ -13,7 +13,7 @@
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" >
                 <methods>
                     <include name="duplicate_RiskPlaybook" />
-
+                    <include name="duplicate_OpportunityPlaybook"/>
                 </methods>
             </class>
         </classes>
