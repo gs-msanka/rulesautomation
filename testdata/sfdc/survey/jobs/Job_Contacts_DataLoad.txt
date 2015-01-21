@@ -1,0 +1,12 @@
+{
+    "jobName": "Load contacts for survey- add participant cases",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "load": {
+        "target": "sfdc",
+        "sObject": "CONTACT",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "/testdata/sfdc/survey/data/Contacts_forAddParticipants.csv"
+    }
+}
