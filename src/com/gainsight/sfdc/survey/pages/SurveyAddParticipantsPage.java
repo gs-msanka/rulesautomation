@@ -30,6 +30,12 @@ public class SurveyAddParticipantsPage extends SurveyBasePage {
 	private final String ADD_FILTER_ICON = "//a[@class='add' and @data-control='ADD_FIELD']";
 	private final String DELETE_FILTER_ICON = "//a[@class='delete gs-rb-report-close' and @data-type='DELETE_FIELD']";
 	
+	//Elements when selected to load from Load Survey participants from Custom Object
+	private final String SELECT_CUSTOM_OBJECT = "//span[@class='ui-multiselect-selected-label' and contains(text(),'Select Object')]";
+		
+	//Elements when selected to load from Load Survey participants from CSV File
+	private final String UPLOAD_CSV = "//span[@class='fileupload-new-inside' and contains(text(),'Upload CSV')]";
+	
 	private final String EXCLUDE_PARTICIPANTS = "//span[@class='ui-multiselect-selected-label' and contains(text(),'None')]|//span[@class='ui-multiselect-selected-label' and contains(text(),'Contacted')]|//span[@class='ui-multiselect-selected-label' and contains(text(),'Responded')]";
 	private final String EXCLUDE_PARTICIPANTS_OPTIONS = "//span[@class='ui-multiselect-selected-label' and contains(text(),'Select options')]";
 	
@@ -39,7 +45,8 @@ public class SurveyAddParticipantsPage extends SurveyBasePage {
 	private final String SELECT_ALL = "//input[@id='isLoadAll']";
 	
 	private final String SELECT_ALL_DISPLAYED_IN_GRID = "//input[@id='cb_show-contacts-tbl']";
-	private final String ADD_TO_DISTRIBUTION_LIST = "//a[@class='primary-btn mgrn add-distribution' and contains(text(),'Add to Distribution List')]";
+	private final String ADD_TO_DISTRIBUTION_LIST = "//a[contains(text(),'Add to Distribution List')]";
+	
 	
 	private final String SUCCESSFUL_MSG = "//div[contains(text(),'Selected participants are added successfully')]";
 	
