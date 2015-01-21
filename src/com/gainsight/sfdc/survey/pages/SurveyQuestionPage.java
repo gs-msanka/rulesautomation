@@ -15,23 +15,23 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 	private final String CREATE_PAGE = "//input[@class='gs-btn btn-save pull-right addqtn-dropdown add-page']";
 	private final String CLICKON_QUESTIONICON = "//a[@class='page-up-down' and @title='Add question']//span[@class='add-qst-icon']";
 	private final String QUESTION_DROPDOWNMENU = "//div[@class='qtntypes pull-right dropdown clearfix']";
-	// "//div[@class='qtntypes pull-right dropdown clearfix']//ui[@class='dropdown-menu addqtn-dropdown-menu']//span[@class='top-arrow']"
 	private final String MULTIPLECHOICE_SINGLESELECT = "//li//a[@data-label='Multiple choice' and @data-type ='MULTIPLE_CHOICE_QUESTION' and @data-control='CHECKBOX' and @data-multiple='true']//i[@class='mco']";
 	private final String MULTIPLECHOICE_MULTISELECT = "//li//a[@data-label='Multiple choice' and @data-type ='MULTIPLE_CHOICE_QUESTION'  and @data-control='CHECKBOX' and @data-multiple='true']//i[@class='mco']";
 	private final String DROPDOWN_SINGLESELECT = "//li//a[@data-label='Dropdown' and @data-type ='MULTIPLE_CHOICE_QUESTION' and @data-control='SELECT' and @data-multiple='true']//i[@class='dropdown']";
 	private final String DROPDOWN_MULTISELECT = "//li//a[@data-label='Dropdown' and @data-type ='MULTIPLE_CHOICE_QUESTION' and @data-control='SELECT' and @data-multiple='true']//i[@class='dropdown']";
 	private final String NPS_QUESTION = "//li//a[@data-label='NPS' and @data-type ='NPS_QUESTION' and @data-control='NPS' and @data-multiple='false']//i[@class='nps']";
 	private final String CLICK_SHOWHEADER_CHECKBOX ="//span[@class='f-left line-height30 pull-left']//input[@type='checkbox']";
-	private final String NPS_HEADER_DROPDOWN = "//select[@class='/following-sibling::/option[@value='%s']";
-//	private final String SELECT_HEADER_TEXT ="//select[@class='form-control header-type-select pull-left mag-left10']//option[contains(@value, 'Text')]";
-//	private final String SELECT_HEADER_SMILEY = "//select[@class='form-control header-type-select pull-left mag-left10']//option[contains(@value, 'Icon')]";
-	private final String RATING_QUESTION = "//li//a[@data-label='Rating' and @data-type ='RATING_QUESTION' and @data-control='RATING' and @data-multiple='true']//i[@class='rating']";
-	private final String RANKING_QUESTION = "//li//a[@data-label='Ranking' and @data-type ='RANKING_QUESTION' and @data-control='RANKING' and @data-multiple='true']//i[@class='ranking']";
+	private final String NPS_HEADER_DROPDOWN = "//select[@class='form-control header-type-select pull-left mag-left10']";
+	private final String RATING_QUESTION = "//li//a[@data-label='Rating' and @data-type ='RATING_QUESTION' and @data-control='RATING' and @data-multiple='false']//i[@class='rating']";
+	private final String RANKING_QUESTION = "//li//a[@data-label='Ranking' and @data-type ='RANKING_QUESTION' and @data-control='RANKING' and @data-multiple='false']//i[@class='ranking']";
 	private final String SHORT_TEXT = "//li//a[@data-label='Short Text' and @data-type ='TEXT_QUESTION' and @data-control='TEXT_INPUT' and @data-multiple='']//i[@class='shrttxt']";
+	private final String SELECT_ROWS_SHRT_TEXT = "//div[@class='selectanswer select text-answer']//select[@class='selectstyle select-size show']";
 	private final String LONG_TEXT = "//li//a[@data-label='Long Text' and @data-type ='TEXT_QUESTION' and @data-control='TEXT_AREA' and @data-multiple='']//i[@class='longtxt']";
+	private final String SELECT_ROWS_LONG_TEXT ="//div[@class='selectanswer select text-answer']//select[@class='selectstyle select-rows show']";
+	private final String SELECT_COLUMNS= "//div[@class='selectanswer select text-answer']//select[@class='selectstyle select-cols show']";
 	private final String MATRIX_SINGLESELECT = "//li//a[@data-label='Matrix' and @data-type ='MATRIX_QUESTION' and @data-control='MATRIX' and @data-multiple='true']//i[@class='matrix']";
 	private final String MATRIX_MULTISELECT = "//li//a[@data-label='Matrix' and @data-type ='MATRIX_QUESTION' and @data-control='MATRIX' and @data-multiple='true']//i[@class='matrix']";
-	private final String QUESTION_TEXTAREA = "//div[@class='qtn-div ui-draggable' and @data-order='%d']//textarea[@class='form-control inputstyle' and @placeholder ='Enter the question here.']";
+	private final String QUESTION_TEXTAREA = "//div[@class='qtn-div ui-draggable' and @data-order='%d']//textarea[@class='form-control inputstyle']";
 	private final String ENTERSUBQUESTIONS_TEXTAREA ="//li[%d]/input[@class='form-control inputstyle-small pull-left' and @type = 'text' and @placeholder = 'Enter option']";
 	private final String ENTERCHOICES_TEXTAREA = "//div[@class='qtn-div ui-draggable' and @data-order='%d']//li[%d]/input[@class='form-control inputstyle-small pull-left' and @type = 'text' and @placeholder = 'Enter option']";
 	private final String CLICKON_ADDCHOICE_ICON = "//div[@class='qtn-div ui-draggable' and @data-order='%d']//div[@class='addmail option-add-delete']/descendant::a[@class='mailadd' and @data-action='ADD']";
@@ -111,22 +111,22 @@ public class SurveyQuestionPage extends SurveyDesignPage {
 			waitTillNoLoadingIcon();
 			enterAllowedAnswers(ques.getAllowedAnswers(),quesNumber);
 		}
-		else if(ques.getquestionType().equalsIgnoreCase("Open Text - Single line")){
+		else if(ques.getquestionType().equalsIgnoreCase("ShortText")){
 			item.click(SHORT_TEXT);
 			waitTillNoLoadingIcon();
 		}
-		else if(ques.getquestionType().equalsIgnoreCase("Open Text - Comments")){
+		else if(ques.getquestionType().equalsIgnoreCase("LongText")){
 			item.click(LONG_TEXT);
 			waitTillNoLoadingIcon();
 			//row and column selection
 		}
-		else if(ques.getquestionType().equalsIgnoreCase("Matrix - Single answer per row radio")){
+		else if(ques.getquestionType().equalsIgnoreCase("MatrixRadio")){
 			item.click(MATRIX_SINGLESELECT);
 			waitTillNoLoadingIcon();
 			enterAllowedAnswers(ques.getAllowedAnswers(),quesNumber);
 			enterSubQuestions(ques.getsubQuestions(),quesNumber);
 		}
-		else if(ques.getquestionType().equalsIgnoreCase("Matrix - Multiple answer per row checkbox")){
+		else if(ques.getquestionType().equalsIgnoreCase("MatrixCheckbox")){
 			item.click(MATRIX_MULTISELECT);
 			waitTillNoLoadingIcon();
 			enterAllowedAnswers(ques.getAllowedAnswers(),quesNumber);

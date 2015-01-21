@@ -28,19 +28,10 @@ import jxl.read.biff.BiffException;
 
 public class SurveyQuestionsTest extends BaseTest {
 	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";
-//	String QUERY = "DELETE [SELECT Id FROM JBCXM__Survey__c WHERE JBCXM__Title__c  = 'Survey_01']";
-
 
 	@BeforeClass
 	public void setUp() {
         basepage.login();
-//        userLocale = soql.getUserLocale();
-//        userTimezone = TimeZone.getTimeZone(soql.getUserTimeZone());
-//        basepage.login();
-        //apex.runApex(resolveStrNameSpace(QUERY));
-		//sdata.setStartDate(getDateWithFormat(0, 0, false));
-	//	sdata.setEndDate(getDateWithFormat(30, 0, false));
-	//	sdata.setTUOption("Message");
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -61,7 +52,7 @@ public class SurveyQuestionsTest extends BaseTest {
  * The below steps perform reading all 8 question types from test data and then add all question types*/
 
 	    ArrayList<SurveyQuestion> surQues =new ArrayList<SurveyQuestion>();
-        for(int i=1;i<=8;i++){
+        for(int i=1;i<=11;i++){
         	surQues.add(mapper.readValue(testData.get("Question"+i), SurveyQuestion.class));
         }
         int quesNumber=0;

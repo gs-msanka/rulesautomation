@@ -20,8 +20,37 @@ public class SurveyQuestion {
     private boolean addOthers;
     private String otherLabel;
     private String showHeader;
+    private String ratingChoices;
+    private String shortTextRows;
+    private String rows;
+    private String columns;
     private ArrayList<SurveyAllowedAnswer> allowedAnswers = new ArrayList<SurveyAllowedAnswer>();
     private ArrayList<SurveySubQuestions> subQuestions = new ArrayList<SurveySubQuestions>();
+    
+    public String getShortTextRows () {
+    	return shortTextRows;
+    }
+    
+    public void setShortTextRows (String shortTextRows) {
+    	this.shortTextRows = shortTextRows;
+    }
+    
+    
+    public String getRows () {
+    	return rows;
+    }
+    
+    public void setRows(String rows) {
+        this.rows = rows;
+    }  
+    
+    public String getColumns () {
+    	return columns;
+    }
+    
+    public void seColumns(String columns) {
+        this.columns = columns;
+    }     
     
     public String getShowHeader () {
     	return showHeader;
@@ -29,7 +58,15 @@ public class SurveyQuestion {
     
     public void setShowHeader(String showHeader) {
         this.showHeader = showHeader;
-    }      
+    }  
+    
+    public String getRatingChoices () {
+    	return ratingChoices;
+    }
+    
+    public void setRatingChoices(String ratingChoices) {
+        this.ratingChoices = ratingChoices;
+    }       
     
     public String getquestionType () {
     	return questionType;
@@ -125,24 +162,25 @@ public class SurveyQuestion {
 	public static class SurveyAllowedAnswer {
 		private String ansLabel;
 		private String ansValue;
-		private String rows;
-		private String columns;
+	//	private String rows;
+	//	private String columns;
 		
-		public String getColumns() {
-			return columns;
-		}
-
-		public void setColumns(String columns) {
-			this.columns = columns;
-		}
-
-		public String getRows() {
-			return rows;
-		}
-
-		public void setRows(String rows) {
-			this.rows = rows;
-		}
+//		public String getColumns() {
+//			return columns;
+//		}
+//
+//		public void setColumns(String columns) {
+//			this.columns = columns;
+//		}
+//
+//		public String getRows() {
+//			return rows;
+//		}
+//
+//		public void setRows(String rows) {
+//			this.rows = rows;
+//		}
+		
         public String getAnsLabel() {
 			return ansLabel;
 		}
