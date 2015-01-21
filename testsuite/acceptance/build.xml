@@ -11,7 +11,9 @@
     <!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="all_test.xml"/>
 
-	<target name="runTest" depends="init, editPropertyFile,  compile, bat, makexsltreports, zipReports"/>
+	<target name="runTest" depends="init, editPropertyFile, compile, bat, makexsltreports, zipReports"/>
+
+    <target name="runFailedTest" depends="init, editPropertyFile, compile, failedRun, makexsltreports, zipReports"/>
 
 	<!-- Classpath files required for compiling -->
 	<path id="cpath">
@@ -42,7 +44,18 @@
 		</testng>
 	</target>
 
-	<target name="compile" depends="">
+    <target name="failedRun" depends="">
+        <echo message="Starting Acceptance Tests" />
+        <testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
+            <sysproperty key="run" value="BAT" />
+            <sysproperty key="basedir" value="${basedir}" />
+
+            <xmlfileset dir="/var/lib/jenkins" includes="${testngFileName}"/>
+        </testng>
+    </target>
+
+
+    <target name="compile" depends="">
 		<echo message="compiling tests" />
 		<javac srcdir="src" destdir="${build.dir}" classpathref="cpath" nowarn="on" debug="on" debuglevel="lines,vars,source">
 		</javac>
