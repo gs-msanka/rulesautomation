@@ -45,10 +45,20 @@ public class SurveyAddParticipantsPage extends SurveyBasePage {
 	private final String SELECT_ALL = "//input[@id='isLoadAll']";
 	
 	private final String SELECT_ALL_DISPLAYED_IN_GRID = "//input[@id='cb_show-contacts-tbl']";
+	private final String SELECTCONTACTTOADD_CHCKBOX = "//input[@id='jqg_show-contacts-tbl_'+%d]"; //Need Review - //input[@id='jqg_show-contacts-tbl_1']
+	
+	//String.format(RETRIEVE_CONTACT_ROW,Account Name,Name,Role,Email)
+	private final String RETRIEVE_CONTACT_ROW = "//table[@id='show-contacts-tbl']"+
+										"/tbody/tr/td[@title='%s']"+
+										"/following-sibling::td[@title='%s']"+
+										"/following-sibling::td[@title='%s']"+
+										"/following-sibling::td[@title='%s']";
+	
 	private final String ADD_TO_DISTRIBUTION_LIST = "//a[contains(text(),'Add to Distribution List')]";
 	
 	
 	private final String SUCCESSFUL_MSG = "//div[contains(text(),'Selected participants are added successfully')]";
+
 	
 	
 	public SurveyAddParticipantsPage() {
@@ -73,6 +83,10 @@ public class SurveyAddParticipantsPage extends SurveyBasePage {
 	public void verifySuccessfulMessage(){
 		Log.info("Verify the successful message after adding the contacts to the distribution list");
 		wait.waitTillElementPresent(SUCCESSFUL_MSG, MIN_TIME, MAX_TIME);
+		
+	}
+	
+	public void verifyDataInParticipantDetailsGrid(){
 		
 	}
 	

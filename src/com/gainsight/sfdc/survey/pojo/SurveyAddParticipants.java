@@ -54,14 +54,5 @@ public class SurveyAddParticipants {
 		ExcludeParticipants = excludeParticipants;
 	}
 	
-	
-		/*  "LoadParticipants": "Contact Object",
-		  "SelectRole": "Contact",
-		  "SelectRoleField": "Title",
-		  "Filter": "Account ID Name",
-		  "Operator": "starts with",
-		  "Value": "SURVEY Account 1",
-		  "AdvancedLogic": "",
-		  "ExcludeParticipants": ""*/
 		
 }

@@ -1,11 +1,15 @@
 package com.gainsight.sfdc.survey.tests;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.gainsight.sfdc.survey.pojo.SurveyAddParticipants;
+import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -26,11 +30,14 @@ public class SurveyAddParticipantsTest extends BaseTest {
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-	public void loadContactsThroughContactObject() throws IOException{
+	public void loadContactsThroughContactObject(HashMap<String, String> testData) throws IOException{
 		DataETL dataLoader = new DataETL();
 		ObjectMapper mapper = new ObjectMapper();
 		JobInfo loadContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_Contacts_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadContacts);
+        
+        ArrayList<SurveyAddParticipants> addparticipant =new ArrayList<SurveyAddParticipants>();
+        addparticipant.add(mapper.readValue(testData.get("AddParticipant"), SurveyAddParticipants.class));
         
 	}
 	
