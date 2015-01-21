@@ -107,8 +107,7 @@ global without sharing class GSAutomationRestAPI {
                                 objectPermission = new ObjectPermissions(SobjectType = objectName, 
                                                                         PermissionsRead = true, 
                                                                         PermissionsEdit = editPermission,
-                                                                        PermissionsCreate = createPermission, 
-                                                                        PermissionDelete = true,
+                                                                        PermissionsCreate = createPermission,
                                                                         ParentId = permissonSet.Id);        
                             objectPermissionList.add(objectPermission);    
                             }
@@ -119,8 +118,7 @@ global without sharing class GSAutomationRestAPI {
                                                                     PermissionsRead = true, 
                                                                     PermissionsEdit = true,
                                                                     PermissionsCreate = true, 
-                                                                    PermissionDelete = true,
-                                                                    ParentId = permissonSet.Id);        
+                                                                    ParentId = permissonSet.Id);
                         
                         insert objectPermission;
                         //Contact Object Permission are added by default.
@@ -128,16 +126,14 @@ global without sharing class GSAutomationRestAPI {
                                                                     PermissionsRead = true, 
                                                                     PermissionsEdit = true,
                                                                     PermissionsCreate = true, 
-                                                                    PermissionDelete = true,
-                                                                    ParentId = permissonSet.Id);        
+                                                                    ParentId = permissonSet.Id);
                         
                         insert objectPermission;
                         //Opportunity Object Permission are added by default.
                         objectPermission = new ObjectPermissions(SobjectType = 'Opportunity', 
                                                                     PermissionsRead = true, 
                                                                     PermissionsEdit = true,
-                                                                    PermissionsCreate = true, 
-                                                                    PermissionDelete = true,
+                                                                    PermissionsCreate = true,
                                                                     ParentId = permissonSet.Id);        
                         
                         insert objectPermission;
