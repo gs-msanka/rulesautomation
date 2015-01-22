@@ -15,7 +15,7 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.utils.DataProviderArguments;
 
-public class SurveyAddParticipantsTest extends BaseTest {
+public class SurveyAddParticipantsTest extends SurveySetup {
 
 	private final String CREATE_ACCS=env.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";

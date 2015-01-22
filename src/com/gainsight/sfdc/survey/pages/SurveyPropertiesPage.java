@@ -13,7 +13,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 /**
  * Created by gainsight on 05/12/14.
  */
-public class SurveyPropertiesPage extends SurveyDesignPage {
+public class SurveyPropertiesPage extends SurveyPage {
 	
 	private final String PROPERTIES_PAGE ="//a[@class='sub-menu-option  sub-opt-properties active']";
 	private final String SURVEY_NAME ="//input[@class='form-control forminput survey-prop-title']";
@@ -37,14 +37,14 @@ public class SurveyPropertiesPage extends SurveyDesignPage {
 //	private final String SELECTEXISTING_IMAGE = "";
 	private final String SAVE_SURVEY="//input[@class='gs-btn btn-save']";
 	
-	private final SurveyDesignPage sideNav;
+	private final SurveyPage sideNav;
 
     public SurveyPropertiesPage() {
         wait.waitTillElementDisplayed(PROPERTIES_PAGE, MIN_TIME, MAX_TIME);
-        sideNav=new SurveyDesignPage();
+        sideNav=new SurveyPage();
     }
     
-    public SurveyDesignPage getSideNavInstance(){
+    public SurveyPage getSideNavInstance(){
     	return sideNav;
     }
     public void fillAndSaveSurveyProperties (SurveyProperties surveyproperties) {

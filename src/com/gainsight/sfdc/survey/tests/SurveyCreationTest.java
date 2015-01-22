@@ -37,7 +37,7 @@ public class SurveyCreationTest extends BaseTest {
 		sdata.setStartDate(getDateWithFormat(Integer.valueOf(sdata.getStartDate()), 0, false));
 		sdata.setEndDate(getDateWithFormat(Integer.valueOf(sdata.getEndDate()), 19, false));
 		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
-		@SuppressWarnings("unused")
+//		@SuppressWarnings("unused")
 		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata.getSurveyTitle(), true);
 		surPropPage.fillAndSaveSurveyProperties(sdata);
 		

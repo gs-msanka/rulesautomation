@@ -11,7 +11,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-public class SurveyDesignPage extends SurveyBasePage {
+
+
+public class SurveyPage extends SurveyBasePage {
 	
 	private final String DESIGN_PAGE  = "//div[@class='survey-sub-menu survey-menu']";
 	private final String PROPERTIES_PAGE = "//a[@class='sub-menu-option  sub-opt-properties']";
@@ -30,11 +32,11 @@ public class SurveyDesignPage extends SurveyBasePage {
 	private final String ANALYZEPAGE_DISPLAY ="//div[@class='survey-editor-body analyse']";
 	
 
-	public SurveyDesignPage() {
+	public SurveyPage() {
 		wait.waitTillElementPresent(DESIGN_PAGE, MIN_TIME, MAX_TIME);
 	}
 
-	public SurveyDesignPage clickOnProperties() {
+	public SurveyPage clickOnProperties() {
         //Click
     	item.click(PROPERTIES_PAGE);
     	wait.waitTillElementPresent(PROPERTIESPAGE_DISPLAY, MIN_TIME, MAX_TIME);
@@ -48,39 +50,39 @@ public class SurveyDesignPage extends SurveyBasePage {
         return new SurveyQuestionPage();
     }
 	
-	public SurveyDesignPage clickOnSetCta() {
+	public SurveySetCTAPage clickOnSetCta() {
         //Click
     	item.click(SETCTA_PAGE);
     	wait.waitTillElementPresent(SETCTAPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+        return new SurveySetCTAPage();
     }
 	
-	public SurveyDesignPage clickOnPublish() {
+	public SurveyPublishPage clickOnPublish() {
         //Click
     	item.click(PUBLISHSURVEY_PAGE);
     	wait.waitTillElementPresent(PUBLISHSURVEYPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+        return new SurveyPublishPage();
     }
 	
-	public SurveyDesignPage clickOnAddparticipants() {
+	public SurveyAddParticipantsPage clickOnAddparticipants() {
         //Click
     	item.click(ADDPARTICIPANTS_PAGE);
     	wait.waitTillElementPresent(ADDPARTICIPANTSPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+        return new SurveyAddParticipantsPage();
     }
 	
-	public SurveyDesignPage clickOnDistribute() {
+	public SurveyDistributePage clickOnDistribute() {
         //Click
     	item.click(DISTRIBUTE_PAGE);
     	wait.waitTillElementPresent(DISTRIBUTEPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+        return new SurveyDistributePage();
     }
 	
-	public SurveyDesignPage clickOnAnalyze() {
+	public SurveyAnalyzePage clickOnAnalyze() {
         //Click
     	item.click(ANALYZE_PAGE);
     	wait.waitTillElementPresent(ANALYZEPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+        return new SurveyAnalyzePage();
     }
 
 

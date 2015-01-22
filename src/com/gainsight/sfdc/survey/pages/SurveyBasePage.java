@@ -60,14 +60,7 @@ public class SurveyBasePage extends BasePage {
     	wait.waitTillElementPresent(DRAFTSPAGE_DISPLAY, MIN_TIME, MAX_TIME);
         return this;
     }
-
-    public SurveyBasePage clickOnPublish() {
-        //Click
-    	item.click(PUBLISHED_OPTION);
-    	wait.waitTillElementPresent(PUBLISHPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
-    }
-
+    
     public SurveyBasePage clickOnExpired() {
         //Click
     	item.click(EXPIRED_OPTION);

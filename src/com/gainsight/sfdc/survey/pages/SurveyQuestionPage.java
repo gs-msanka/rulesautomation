@@ -8,7 +8,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyQuestion.SurveyAllowedAnswer;
 /**
  * Created by gainsight on 05/12/14.
  */
-public class SurveyQuestionPage extends SurveyDesignPage {
+public class SurveyQuestionPage extends SurveyPage {
 
 	private final String QUESTIONS_PAGE = "//a[contains(@class,'sub-menu-option  sub-opt-questions')]";
 	private final String VERIFYDEFAULTPAGE_DISPLAYED = "//div[@class='page-tool-bar clearfix']/descendant::h3[@class='page-title']";

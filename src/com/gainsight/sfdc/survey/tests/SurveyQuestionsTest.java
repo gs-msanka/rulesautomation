@@ -2,7 +2,7 @@ package com.gainsight.sfdc.survey.tests;
 
 
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
-import com.gainsight.sfdc.survey.pages.SurveyDesignPage;
+import com.gainsight.sfdc.survey.pages.SurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
@@ -45,7 +45,7 @@ public class SurveyQuestionsTest extends BaseTest {
 		SurveyBasePage surBasePage=basepage.clickOnSurveyTab();
 		SurveyPropertiesPage surpropPage = surBasePage.createSurvey(sdata.getSurveyTitle(), true);
 		surpropPage.fillAndSaveSurveyProperties(sdata);
-		SurveyDesignPage sideNav = surpropPage.getSideNavInstance();
+		SurveyPage sideNav = surpropPage.getSideNavInstance();
 		SurveyQuestionPage surQuePage = sideNav.clickOnQuestions();
 		surQuePage.SurveyDefaultPageVerification();
 /*Defined test data in such a way that all question types (there are totally 8 question types in survey) are in same sheet.
