@@ -6,8 +6,10 @@
 package com.gainsight.sfdc.survey.pages;
 
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.WebElement;
 
+import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 
 /**
@@ -16,8 +18,8 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 public class SurveyPropertiesPage extends SurveyPage {
 	
 	private final String PROPERTIES_PAGE ="//a[@class='sub-menu-option  sub-opt-properties active']";
-	private final String SURVEY_NAME ="//input[@class='form-control forminput survey-prop-title']";
-	private final String EMAIL_SERVICE ="//div[@class='formfill clearfix']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']"; //button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-active']";
+	private final String SURVEY_NAME_TEXTBOX ="//input[@class='form-control forminput survey-prop-title']";
+	private final String EMAIL_SERVICE = "//span[@class='ui-multiselect-selected-label' and contains(text(),'%s')]";
 	private final String AUTOSELECT_EMAILSERVICE = "//ul/li/label/span[text()='%s']"; //li[@class='ui-multiselect-option ui-multiselect-disabled ']//label[@class='ui-corner-all ui-state-active']//input[@title='Gainsight email service']";
 	private final String START_DATE ="//input[@class='survey-date form-control forminput' and @type='text' and @name='startDate']";
 	private final String END_DATE ="//input[@class='survey-date form-control forminput' and @type='text' and @name='endDate']";
@@ -39,6 +41,11 @@ public class SurveyPropertiesPage extends SurveyPage {
 	
 	private final SurveyPage sideNav;
 
+	public SurveyBasePage refreshPropPage(){
+		refreshPage();
+		return new SurveyBasePage();
+	}
+	
     public SurveyPropertiesPage() {
         wait.waitTillElementDisplayed(PROPERTIES_PAGE, MIN_TIME, MAX_TIME);
         sideNav=new SurveyPage();
@@ -111,4 +118,42 @@ public class SurveyPropertiesPage extends SurveyPage {
     	
     	
 	}
+
+		public boolean verifySurveyProperties(SurveyProperties sProps) {
+			if(!sProps.getSurveyTitle().equals(item.getText(SURVEY_NAME_TEXTBOX))) 
+				{
+					Log.error("Survey Name Not Matched!!");
+					return false;
+				}
+			if(!element.isElementPresent(String.format(EMAIL_SERVICE,sProps.getEmailService()))) 
+			{
+				Log.error("Survey Email Service Not Matched!!");
+				return false;
+			}
+			if(!sProps.getStartDate().equals(item.getText(START_DATE))) 
+			{
+				Log.error("Survey Start Date Not Matched!!");
+				return false;
+			}
+			if(!sProps.getEndDate().equals(item.getText(END_DATE))) 
+			{
+				Log.error("Survey End Date Not Matched!!");
+				return false;
+			}
+			if(!sProps.getDescription().equals(item.getText(DESCRIPTION))) 
+			{
+				Log.error("Survey Description Not Matched!!");
+				return false;
+			}
+			if(!sProps.getSurveyCode().equals(item.getText(SURVEY_CODE))) 
+			{
+				Log.error("Survey Code Not Matched!!");
+				return false;
+			}
+			
+			
+			return true;	 
+		}
+		
+		
 }

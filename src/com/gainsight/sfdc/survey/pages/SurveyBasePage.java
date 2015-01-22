@@ -25,10 +25,11 @@ public class SurveyBasePage extends BasePage {
 	private final String DRAFTS_OPTION ="//div[@class='survey-menu-blocks']//a[@class='menu-option opt-drafts']";
 	private final String PUBLISHED_OPTION = "//div[@class='survey-menu-blocks']//a[@class='menu-option opt-hosted']";
 	private final String EXPIRED_OPTION = "//div[@class='survey-menu-blocks']//a[@class='menu-option opt-expired']";
-	private final String DASHBOARDPAGE_DISPLAY ="//span[@class='surveyHeaderText' and 'Ongoing Surveys']";
-	private final String DRAFTSPAGE_DISPLAY ="//span[@class='surveyHeaderText' and 'Drafts']";
-	private final String PUBLISHPAGE_DISPLAY ="//span[@class='surveyHeaderText' and 'Hosted Surveys']";
-	private final String EXPIREDPAGE_DISPLAY ="//span[@class='surveyHeaderText' and 'Expired Surveys']";
+	private final String DASHBOARDPAGE_DISPLAY ="//a[@ref-module='DASHBOARD']";
+	private final String DRAFTSPAGE_DISPLAY = "//a[@ref-module='DRAFTS']";
+	private final String PUBLISHPAGE_DISPLAY = "//a[@ref-module='HOSTED']";
+	private final String EXPIREDPAGE_DISPLAY ="//a[@ref-module='EXPIRED']";
+	private final String CLICK_ON_SURVEY = "//h3[@class='box-title survey-title' and contains(text(),'%s')]"; 
 	
 
 	public SurveyBasePage() {
@@ -67,5 +68,14 @@ public class SurveyBasePage extends BasePage {
     	wait.waitTillElementPresent(EXPIREDPAGE_DISPLAY, MIN_TIME, MAX_TIME);
         //Waiting.
         return this;
+    }
+    
+    public SurveyPropertiesPage clickOnSurveyFromDrafts(String surveyTitle){
+    	item.click(String.format(CLICK_ON_SURVEY, surveyTitle));
+    	return new SurveyPropertiesPage();
+    }
+    
+    public SurveyAnalyzePage clickOnSurveyFromDashboards(){
+    	return new SurveyAnalyzePage();
     }
 }
