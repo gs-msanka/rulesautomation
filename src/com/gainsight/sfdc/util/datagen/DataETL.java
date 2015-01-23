@@ -264,6 +264,7 @@ public class DataETL implements IJobExecutor {
 		finally {
 			//Closing Db Connection
 			db.close();
+            new File(System.getProperty("user.home")+"/"+jobInfo.getJobName()+".h2.db").delete();
 		}
 	}
 	
