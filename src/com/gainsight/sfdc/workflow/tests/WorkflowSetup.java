@@ -250,14 +250,11 @@ public class WorkflowSetup extends BaseTest{
     }
 
     public String getHighestTaskDate(List<Task> tasks) {
+        if((tasks.size() ==0)) {
+            throw new RuntimeException("List should have one task.");
+        }
         java.util.Date date = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat(USER_DATE_FORMAT);
-        try {
-            date = dateFormat.parse(tasks.get(0).getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Please check the date format "+e.getErrorOffset());
-        }
         for(Task t : tasks) {
             try {
                 java.util.Date temp = dateFormat.parse(t.getDate());
@@ -269,7 +266,7 @@ public class WorkflowSetup extends BaseTest{
                 throw new RuntimeException("Please check the date format "+e.getErrorOffset());
             }
         }
-        dateFormat.setTimeZone(userTimezone);
+        Log.info("Highest Task Date : " +dateFormat.format(date));
         return dateFormat.format(date);
     }
 
