@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
 import jxl.read.biff.BiffException;
 
@@ -317,6 +318,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         ruleEngineDataSetup.cleanDataSetup();
         ruleEngineDataSetup.executeRule(testData, sfdcInfo, resty, uri);
         ruleEngineDataSetup.updateUsageDateToTriggerRule(testData.get("Account"));
+        Timer.sleep(2); //Wait for the rule completion.
         try {
             ruleEngineDataSetup.assertRuleResult(testData, sfdcInfo);
         } catch (ConnectionException e) {
