@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 public class Customer360Features extends Customer360Page{
 
 	private final String EDIT_FEATURES_ICON="//a[text()='Edit Features']";
-	private final String SAVE_BUTTON="//a[@class='btn_save edit_features']";
+	private final String SAVE_BUTTON="//a[contains(@class, 'btn_save edit_features')]";
 	public final String FEATURES_TABLE_HEADER="//table[@class='gs_features_grid gs_features_grid_header gs_features_display_header']";
 	public final String FEATURES_TABLE_DATA="//table[@class='gs_features_grid gs_features_display']";
 	public final String EDIT_FEATURES_TABLE="//table[@class='gs_features_grid gs_features_grid_dialog gs_features_edit']";
@@ -47,8 +47,7 @@ public class Customer360Features extends Customer360Page{
 	}
 	
 	public void clickOnSave(){
-		Timer.sleep(2);
-		Timer.sleep(2);
+		Timer.sleep(5);
 		item.click(SAVE_BUTTON);
 	}
 	
