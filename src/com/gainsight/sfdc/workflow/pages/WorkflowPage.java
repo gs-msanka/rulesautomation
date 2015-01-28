@@ -161,7 +161,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String ADD_DATE_TO_TASK			= "//input[@class='Date__c form-control gs-calendar']";
     private final String TO_SELECT_PRIORITY_IN_TASK = "//select[@class='Priority__c form-control form-select']/following-sibling::button";
     private final String TO_SELECT_STATUS_IN_TASK	= "//select[@class='Status__c form-control form-select']/following-sibling::button";
-    private final String SAVE_TASK		            = "//div[@class='taskForm']//button[contains(text(),'Save')]";
+    private final String SAVE_TASK		            = "//div[@class='cta-form']/div[@class='modal-footer text-center']/button[contains(text(),'Save')]";
     private final String TASK_TITLE_TO_VERIFY		= "//span[@class='title-name workflow-task-title' and contains(text(),'%s')]";
     
     //Playbook From Elements
