@@ -919,7 +919,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       Assert.assertTrue(accWfPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
 		   }
 
-		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+		   /*
+		      Commenting as Hitesh mentioned that this feature is failing in 4.22 & will not be supported going further.
+            @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
 		   public void createAndEditCTATasks(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -946,6 +948,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       accWfPage.editTasks(cta, updatedTask,tasks.get(0));
 		       Assert.assertTrue(accWfPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
 		   }
+		   */
 		   
 		    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")

@@ -914,6 +914,8 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
 	   }
 
+    /*
+       Commenting as Hitesh mentioned that this feature is failing in 4.22 & will not be supported going further.
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
 	   public void createAndEditCTATasks(HashMap<String,String> testData) throws IOException{
@@ -941,7 +943,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360.editTasks(cta, updatedTask,tasks.get(0));
 	       Assert.assertTrue(workflow360.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
 	   }
-	   
+	  */
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
 	    public void syncTaskToSF_Manual(HashMap<String, String> testData) throws IOException {

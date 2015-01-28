@@ -695,8 +695,8 @@ public class WorkflowPage extends WorkflowBasePage {
                     Log.info("Actual Value : " +expViewCta.getCustomer());
                     Log.info("Customer Name not matched.");
                 } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
-                    Log.info("Expected Value :" +cta.getType()+"a");
-                    Log.info("Actual Value :" +expViewCta.getType()+"a");
+                    Log.info("Expected Value :" +cta.getType());
+                    Log.info("Actual Value :" +expViewCta.getType());
                     Log.info("Type not matched.");
                 } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
                     Log.info("Expected Value : " +cta.getPriority());

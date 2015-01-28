@@ -109,10 +109,12 @@ public class BaseTest {
         }
     }
 
-    /*@BeforeMethod
-    public void beInMainWindow() {
+    @BeforeMethod
+    public void setDefaultTimeout() {
         basepage.beInMainWindow();
-    }*/
+        env.setTimeout(30);
+    }
+
 
     public String currencyFormat(String amt) {
         DecimalFormat moneyFormat = new DecimalFormat("$###,###");
