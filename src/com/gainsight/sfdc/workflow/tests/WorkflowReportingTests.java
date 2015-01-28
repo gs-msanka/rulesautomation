@@ -29,7 +29,7 @@ public class WorkflowReportingTests extends BaseTest {
 	public void setup() throws Exception {
 		sfdc.connect();
 		basepage.login();
-		/*DataETL dataLoader = new DataETL();
+		DataETL dataLoader = new DataETL();
         ObjectMapper mapper = new ObjectMapper();
         createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
@@ -40,7 +40,7 @@ public class WorkflowReportingTests extends BaseTest {
         JobInfo loadCTAs= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad.txt"), JobInfo.class);
         dataLoader.execute(loadCTAs);
         JobInfo loadCSTasks= mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/workflow/jobs/Job_leaderboard_DataLoad_Tasks.txt"), JobInfo.class);
-        dataLoader.execute(loadCSTasks);*/
+        dataLoader.execute(loadCSTasks);
         
 	}
 		 
