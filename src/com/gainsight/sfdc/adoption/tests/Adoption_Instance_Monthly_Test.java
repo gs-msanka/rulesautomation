@@ -113,6 +113,7 @@ public class Adoption_Instance_Monthly_Test extends AdoptionDataSetup {
         Calendar cal = DateUtil.addMonths(userTimezone, Integer.valueOf(testData.get("Date")));
         usage.setMonth(DateUtil.getMonthName(cal));
         usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
+        usage = usage.displayMonthlyUsageData();
         Assert.assertTrue(usage.isAdoptionGridDisplayed());
         Assert.assertTrue(usage.isGridHeaderMapped(testData.get("Headers")));
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
