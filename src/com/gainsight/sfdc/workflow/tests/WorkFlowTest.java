@@ -43,9 +43,9 @@ public class WorkFlowTest extends WorkflowSetup {
     public void setup() throws Exception {
     	sfdc.connect();
         basepage.login();
-        createExtIdFieldOnAccount();
+       //createExtIdFieldOnAccount();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        createExtIdFieldOnUser();
+        //createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         cleanPlaybooksData();
         loadDefaultPlaybooks();
@@ -683,6 +683,7 @@ public class WorkFlowTest extends WorkflowSetup {
        cta.setClosed(true);
        workflowPage = workflowBasePage.clickOnListView();
        workflowPage = workflowPage.showClosedCTA();
+       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
    }
    
@@ -702,6 +703,7 @@ public class WorkFlowTest extends WorkflowSetup {
        cta.setStatus("Closed Lost");
        workflowPage = workflowBasePage.clickOnListView();
        workflowPage = workflowPage.showClosedCTA();
+       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
    }
    
@@ -733,6 +735,7 @@ public class WorkFlowTest extends WorkflowSetup {
        workflowPage = workflowBasePage.clickOnListView();
        Assert.assertFalse(workflowPage.isCTADisplayed(cta));
        workflowPage = workflowPage.showClosedCTA();
+       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
        Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
    }
    
@@ -1264,6 +1267,7 @@ public class WorkFlowTest extends WorkflowSetup {
         ctaList.get(0).setClosed(true);
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(0)));
         workflowPage = workflowPage.showClosedCTA();
+        workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
         for(CTA cta : ctaList) {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }

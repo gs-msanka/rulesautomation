@@ -714,6 +714,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
 	       workflowPage = workflowPage.showClosedCTA();
+	       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
 	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 	   }
 	   
@@ -735,6 +736,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
 	       workflowPage = workflowPage.showClosedCTA();
+	       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
 	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 	   }
 	   
@@ -769,6 +771,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
 	       //Assert.assertFalse(workflowPage.isCTADisplayed(cta));
 	       workflowPage = workflowPage.showClosedCTA();
+	       workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
 	       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
 	   }
 	   
