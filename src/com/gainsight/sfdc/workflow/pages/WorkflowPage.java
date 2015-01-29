@@ -78,7 +78,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String RECUR_EVENT_END_DATE           = "//input[@class='form-control date-input scheduler-event-end-datepick']";
     private final String RECUR_WEEK_COUNT               = "//div[@class='date-float']/input[@class='form-control width40 text-center weekly-recursevery-weekpick']";
     private final String RECUR_WEEKDAY                  = "//div[@class='row']/label[@class='checkbox-inline']/input[@value='%d']";
-    private final String TO_SELECT_RECUR_DAY_OF_MONTH   = "//div[@class='date-float']/button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String TO_SELECT_RECUR_DAY_OF_MONTH   = "//select[@class='form-control1 monthly-onDay-daynumpick']/following-sibling::button";
     private final String RECUR_DAY_OF_MONTH             = "//li[contains(@class,'ui-multiselect-option')]/label[contains(@class,'ui-corner-all')]/span[contains(text(),'%s')]";
     private final String RECUR_MONTH_INTERVAL           = "//div[@class='date-float']/input[@class='form-control width40 text-center monthly-onday-ofevery-monthpick']";
     private final String RECUR_MONTHLY_BY_WEEKDAY       = "//label[@class='radio-inline']/input[@value='RecursMonthlyNth']";

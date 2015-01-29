@@ -1341,12 +1341,14 @@ public class WorkFlowTest extends WorkflowSetup {
         cta.setDueDate(getDateWithFormat(-1, 0, false));
         cta.setStatus("In Progress");
         workflowPage = workflowPage.updateCTADetails(ctaList.get(0), cta);
-
         workflowPage = workflowBasePage.clickOnListView();
-        workflowPage = workflowPage.selectGroupBy("New and Due");
-        Assert.assertTrue(workflowPage.isCTADisplayedInGroup("Due", cta));
-        Assert.assertEquals(1, workflowPage.countOfCTASInGroup("Due", null));
-        Assert.assertEquals(8, workflowPage.countOfCTASInGroup("New", null));
+        workflowPage = workflowPage.selectGroupBy("Due Date (Due)");
+        Assert.assertTrue(workflowPage.isCTADisplayedInGroup("Overdue", cta));
+        Assert.assertEquals(1, workflowPage.countOfCTASInGroup("Overdue", null));
+        Assert.assertEquals(8, workflowPage.countOfCTASInGroup("Next 7 days", null));
+        workflowPage = workflowPage.selectGroupBy("Created Date (New)");
+        Assert.assertTrue(workflowPage.isCTADisplayedInGroup("Today", cta));
+        Assert.assertEquals(9, workflowPage.countOfCTASInGroup("Today", null));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

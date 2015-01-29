@@ -5,29 +5,13 @@ import org.openqa.selenium.By;
 
 public class Customer360Features extends Customer360Page{
 
-	private final String EDIT_FEATURES_ICON="//a[text()='Edit Features']";
-	private final String SAVE_BUTTON="//a[contains(@class, 'btn_save edit_features')]";
-	public final String FEATURES_TABLE_HEADER="//table[@class='gs_features_grid gs_features_grid_header gs_features_display_header']";
-	public final String FEATURES_TABLE_DATA="//table[@class='gs_features_grid gs_features_display']";
-
-	protected final String FEATURE_ROW_WITH_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
-													"/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
-													"/following-sibling::td[1][contains(.,'%s')]"+
-													"/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
-													"/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
-													"/following-sibling::td[1]/div[contains(.,'%s')]";
-	protected final String FEATURE_ROW_WITHOUT_ROWSPAN="//table[@class='gs_features_grid gs_features_display']"+
-													   "/tbody/tr/td[contains(.,'%s') and @rowspan=%d]"+
-													   "/parent::tr/following-sibling::tr/"+
-			                                           "td[1][contains(.,'%s')]"+
-			                                           "/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
-			                                           "/following-sibling::td[1]/div/img[@src='%s']/parent::div/parent::td"+
-			                                           "/following-sibling::td[1]/div[contains(.,'%s')]";
-
-    private final String FEATURE_POPUP = "//div[contains(@class, 'featuresCls ui-draggable')]/descendant::div[@class='gs_features']";
-    private final String FEATURE_ROW = FEATURE_POPUP+"/descendant::td[@title='%s']/ancestor::table/descendant::td[@title='%s']/ancestor::tbody/tr/td[@title='%s']";
-
-    private final String FEATURE_TABLE = "//div[@class='gs_features_grid_row']/table[@class='gs_features_grid gs_features_display']";
+	private final String EDIT_FEATURES_ICON     = "//a[text()='Edit Features']";
+	private final String SAVE_BUTTON            = "//a[contains(@class, 'btn_save edit_features')]";
+	private final String FEATURES_TABLE_HEADER  = "//table[@class='gs_features_grid gs_features_grid_header gs_features_display_header']";
+	private final String FEATURES_TABLE_DATA    = "//table[@class='gs_features_grid gs_features_display']";
+    private final String FEATURE_POPUP          = "//div[contains(@class, 'featuresCls ui-draggable')]/descendant::div[@class='gs_features']";
+    private final String FEATURE_ROW            = FEATURE_POPUP+"/descendant::td[@title='%s']/ancestor::table/descendant::td[@title='%s']/ancestor::tbody/tr/td[@title='%s']";
+    private final String FEATURE_TABLE          = "//div[@class='gs_features_grid_row']/table[@class='gs_features_grid gs_features_display']";
     private final String FEATURE_TABLE_VIEW_ROW = FEATURE_TABLE+"/descendant::td[@title='%s']/ancestor::table/descendant::td[@title='%s']/ancestor::tbody/tr/td[@title='%s']";
 
     //
@@ -79,8 +63,6 @@ public class Customer360Features extends Customer360Page{
 		wait.waitTillElementPresent(FEATURES_TABLE_DATA, MIN_TIME, MAX_TIME);
 		return true;
 	}
-
-    // /following-sibling::td/div/img[@src='/img/checkbox_checked.gif']/ancestor::td[@class='featuresTd featuresTdCb']/following-sibling::td[@class='featuresTd featuresTdCb']
 
     public boolean checkFeatureRow(String product, String feature,
 			String licensed, String enabled, String comments) {
