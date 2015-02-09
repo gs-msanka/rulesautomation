@@ -2,7 +2,6 @@ package com.gainsight.sfdc.customer360.pages;
 
 import org.openqa.selenium.By;
 
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 public class Customer360SummaryWidget extends Customer360Page {
