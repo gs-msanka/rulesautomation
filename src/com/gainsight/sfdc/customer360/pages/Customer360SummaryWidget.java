@@ -1,14 +1,22 @@
 package com.gainsight.sfdc.customer360.pages;
 
 import org.openqa.selenium.By;
+
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 public class Customer360SummaryWidget extends Customer360Page {
 	
 	
-	private final String READY_INDICATOR       = "//div[@class='gs_summary']";
+	private final String READY_INDICATOR  = "//div[@class='gs_summary']";
+	private final String EDIT_BUTTON      = "//a[@class='GSEditSummary']";
+	private final String STATUS           =  "//table[@class='summary-table']/tbody/tr/td/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";          //table[@class='summary-table']/tbody/tr/td/button/span";
+    private final String STAGE            = "//table[@class='summary-table']/tbody/tr/td/following::tr/td/button/span";
+	private final String COMMENTS         = "//textarea[@class='summaryComment']";
+	private final String SAVE             = "//a[@class='btn_save saveSummary']";
+	private final String FORM_BLOCK       = "//div[contains(@class,'ui-widget ui-widget-content') and contains(@style,'display: block')]";
+	private final String FORM_NONE        = "//div[contains(@class,'ui-widget ui-widget-content') and contains(@style,'display: none')]";
 	
-
 	public Customer360SummaryWidget() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 
@@ -43,9 +51,9 @@ public boolean verifyLeftPanel(String lName, String lValue) {
 	Log.info("Validating  Widget Panel Verification");
 	
 	String label  = item.getText("//span[contains(@class,'gs-label-name') and contains(text(),'"+lName+"')]");
-	System.out.println("Value of label:"+label);
+	
 	String value = item.getText("//span[contains(@class,'gs-sum-value')and contains(text(),'"+lValue+"')]");
-	System.out.println("Value of label:"+value);
+
 	if(isElementPresentAndDisplay(By.xpath("//span[contains(@class,'gs-label-name') and contains(text(),'"+lName+"')]"))) {
 		if(label.equals(lName) && value.equals(lValue)){
 			Log.info("Widget and Value is correct");
@@ -60,6 +68,27 @@ public boolean verifyLeftPanel(String lName, String lValue) {
 		} 
 	return true;
 	}
+
+ 
+public boolean editSummary(String Status, String Stage, String Comments) {
+	
+	button.click(EDIT_BUTTON);
+	wait.waitTillElementPresent(FORM_BLOCK, MIN_TIME , MAX_TIME);
+	String text = item.getText("//span[contains(@class,'ui-dialog-title')]");
+	System.out.println("Print the Text:"+text);
+	item.clearAndSetText(COMMENTS, Comments);
+	item.click("//table[@class='summary-table']/tbody/tr/td/button/span");
+	System.out.println("Status Value is:"+ Status);
+
+	item.click("//input[@title ='"+Status+"']//following-sibling::span[text()='"+Status+"']");
+	System.out.println("Stage Value is:"+ Stage);
+	item.click("//table[@class='summary-table']/tbody/tr/following::td/button/span");
+	item.click("//input[@title ='"+Stage+"']//following-sibling::span[text()='"+Stage+"']");
+	
+	button.click(SAVE);
+	return true;
+	
+}
 
 
 	}
