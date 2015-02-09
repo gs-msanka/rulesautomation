@@ -35,15 +35,15 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 	public void setUp() throws Exception {
         Log.info("Starting Customer 360 Summary Widgets module Test Cases...");
         metadataClient.createNumberField("JBCXM__CustomerInfo__c", new String[]{"CustPercentage"}, true);
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"JBCXM__CustPercentage__c"});
+        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"CustPercentage__c"});
         HashMap<String, String[]> fields = new HashMap<String, String[]>();
         fields.put("InRegions", new String[]{"India", "America", "England", "France"});
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"JBCXM__InRegions__c"});
+        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"InRegions__c"});
         metadataClient.createPickListField("JBCXM__CustomerInfo__c", fields, true);
         metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", new String[]{"CurrencyField"});
-       addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"JBCXM__CurrencyField__c"});
+       addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"CurrencyField__c"});
         metadataClient.createFields("JBCXM__CustomerInfo__c", new String[]{"IsActive"}, true, false, false);
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"JBCXM__IsActive__c"});
+        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"IsActive__c"});
        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCNT_CASES_SCRIPT));
        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET1)); 
         basepage.login();
@@ -67,7 +67,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
     	}
    	}
 	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
+	/*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
 	
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "lfetPanelVali")
 	public void leftRule1(HashMap<String, String> testData){
@@ -163,7 +163,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 		
 		
     }
-	
+	*/
 
 	
 
