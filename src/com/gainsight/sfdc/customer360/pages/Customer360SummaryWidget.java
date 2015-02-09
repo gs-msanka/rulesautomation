@@ -80,13 +80,9 @@ public boolean editSummary(String Status, String Stage, String Comments) {
 	button.click(EDIT_BUTTON);
 	wait.waitTillElementPresent(FORM_BLOCK, MIN_TIME , MAX_TIME);
 	String text = item.getText("//span[contains(@class,'ui-dialog-title')]");
-	System.out.println("Print the Text:"+text);
 	item.clearAndSetText(COMMENTS, Comments);
 	item.click("//table[@class='summary-table']/tbody/tr/td/button/span");
-	System.out.println("Status Value is:"+ Status);
-
 	item.click("//input[@title ='"+Status+"']//following-sibling::span[text()='"+Status+"']");
-	System.out.println("Stage Value is:"+ Stage);
 	item.click("//table[@class='summary-table']/tbody/tr/following::td/button/span");
 	item.click("//input[@title ='"+Stage+"']//following-sibling::span[text()='"+Stage+"']");
 	
