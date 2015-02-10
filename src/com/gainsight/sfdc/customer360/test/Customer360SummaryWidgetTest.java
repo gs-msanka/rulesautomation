@@ -81,7 +81,6 @@ public class Customer360SummaryWidgetTest extends BaseTest {
    	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-	
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "lfetPanelVali")
 	public void leftRule1(HashMap<String, String> testData){
 		
@@ -129,7 +128,6 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 		}
 	}
 	
-	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5 )
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Widget3")
     public void widgetRule3(HashMap<String, String> testData){
@@ -147,7 +145,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
    	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "lfetPanelVali")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Leftpanel002")
 	public void leftRule3(HashMap<String, String> testData){
 		
 		Customer360Page c360 = basepage.clickOnC360Tab().searchCustomer(testData.get("Search_Customer"), false, false);
@@ -161,9 +159,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 			System.out.println("Key value is:"+ key+"value is :"+val);
 		}
 	}
-	
-	
-	
+
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_Summary")

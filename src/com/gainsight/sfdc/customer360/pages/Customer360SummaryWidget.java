@@ -15,7 +15,8 @@ public class Customer360SummaryWidget extends Customer360Page {
 	private final String SAVE             = "//a[@class='btn_save saveSummary']";
 	private final String FORM_BLOCK       = "//div[contains(@class,'ui-widget ui-widget-content') and contains(@style,'display: block')]";
 	private final String FORM_NONE        = "//div[contains(@class,'ui-widget ui-widget-content') and contains(@style,'display: none')]";
-	
+	private final String STATUS_DROP_DOWN = "//table[@class='summary-table']/tbody/tr/td/button/span";
+	private final String STAGE_DROP_DOWN  = "//table[@class='summary-table']/tbody/tr/following::td/button/span";
 	public Customer360SummaryWidget() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 
@@ -78,11 +79,11 @@ public boolean editSummary(String Status, String Stage, String Comments) {
 	
 	button.click(EDIT_BUTTON);
 	wait.waitTillElementPresent(FORM_BLOCK, MIN_TIME , MAX_TIME);
-	String text = item.getText("//span[contains(@class,'ui-dialog-title')]");
+	
 	item.clearAndSetText(COMMENTS, Comments);
-	item.click("//table[@class='summary-table']/tbody/tr/td/button/span");
+	item.click(STATUS_DROP_DOWN);
 	item.click("//input[@title ='"+Status+"']//following-sibling::span[text()='"+Status+"']");
-	item.click("//table[@class='summary-table']/tbody/tr/following::td/button/span");
+	item.click(STAGE_DROP_DOWN);
 	item.click("//input[@title ='"+Stage+"']//following-sibling::span[text()='"+Stage+"']");
 	
 	button.click(SAVE);
