@@ -17,6 +17,10 @@ public class Customer360SummaryWidget extends Customer360Page {
 	private final String FORM_NONE        = "//div[contains(@class,'ui-widget ui-widget-content') and contains(@style,'display: none')]";
 	private final String STATUS_DROP_DOWN = "//table[@class='summary-table']/tbody/tr/td/button/span";
 	private final String STAGE_DROP_DOWN  = "//table[@class='summary-table']/tbody/tr/following::td/button/span";
+	private final String WNAME_TEXT       = "//div[contains(@class,'gs-sum-widgethead') and contains(text(),'%s')]";
+	private final String WVALUE_TEXT      = "//div[contains(@class,'gs-sum-widgethead') and contains(text(),'%s')]/following-sibling::div/div";
+	private final String LNAME            = "//span[contains(@class,'gs-label-name') and contains(text(),'%s')]";
+	private final String IVALUE           = "//span[contains(@class,'gs-sum-value')and contains(text(),'%s')]";
 	public Customer360SummaryWidget() {
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
 
@@ -24,11 +28,20 @@ public class Customer360SummaryWidget extends Customer360Page {
 	  	
 	public boolean verifyWidgetPanel(String wName, String wValue) {
 		Log.info("Validating  Widget Panel Verification");
+		String label	= String.format(WNAME_TEXT, wName);
+		 item.getText(label);
+		 System.out.println("Print the label value:" +label);
+		 
+		 String value	= String.format(WVALUE_TEXT, wName);
+		 item.getText(value);
+		 System.out.println("Print the label value:" +value);
+		 
+	//String label  = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]");
         //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	String label  = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]");
+	//String value = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]/following-sibling::div/div");
         //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	String value = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]/following-sibling::div/div");
-        //TODO - Please declare the locator's globally & use String.format(); to build xpath.
+	
+	
 		if(isElementPresentAndDisplay(By.xpath("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]"))) {
 			
 			if(label.equals(wName) && value.equals(wValue)){
@@ -45,15 +58,13 @@ public class Customer360SummaryWidget extends Customer360Page {
 		return true;
 		}
 		
-
-
    public boolean verifyLeftPanel(String lName, String lValue) {
 	Log.info("Validating  Widget Panel Verification");
-    //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	String label  = item.getText("//span[contains(@class,'gs-label-name') and contains(text(),'"+lName+"')]");
-    //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	String value = item.getText("//span[contains(@class,'gs-sum-value')and contains(text(),'"+lValue+"')]");
-    //TODO - Please declare the locator's globally & use String.format(); to build xpath.
+	String label = String.format(LNAME, lName);
+	 item.getText(label);
+	String value = String.format(IVALUE, lValue);
+	item.getText(value);
+			
 		if(isElementPresentAndDisplay(By.xpath("//span[contains(@class,'gs-label-name') and contains(text(),'"+lName+"')]"))) {
 			if(label.equals(lName) && value.equals(lValue)){
 				Log.info("Widget and Value is correct");

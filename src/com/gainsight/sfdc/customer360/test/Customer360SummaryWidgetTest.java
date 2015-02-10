@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 
 public class Customer360SummaryWidgetTest extends BaseTest {
 
-		final static String  TEST_DATA_FILE              =  "testdata/sfdc/c360Summary/tests/SummaryWidgetTestdata.xls";
+		final static String  TEST_DATA_FILE          =  "testdata/sfdc/c360Summary/tests/SummaryWidgetTestdata.xls";
 	private final String CREATE_ACCNT_CASES_SCRIPT   = Application.basedir+"/testdata/sfdc/c360Summary/scripts/Create_AccountandCases.txt";
 	private final String DEFAULT_SUMMARY_WIDGET1     =  Application.basedir+"/testdata/sfdc/c360Summary/scripts/Create_DefaultSummaryWidgets1.txt";
 	private final String SUMMARY_WIDGET2             =  Application.basedir+"/testdata/sfdc/c360Summary/scripts/Create_SummaryWidgets2.txt";
