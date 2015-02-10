@@ -32,7 +32,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
         
         		
         
-		/*metadataClient.createNumberField("Account", new String[]{"ActiveUsers__c"}, true);
+		metadataClient.createNumberField("Account", new String[]{"ActiveUsers__c"}, true);
         addFieldPermissionsToUsers("Account", new String[]{"ActiveUsers__c"});
 
         metadataClient.createNumberField("Account", new String[]{"FNumber"}, true);
@@ -56,7 +56,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
         metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", new String[]{"CurrencyField"});
        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"CurrencyField__c"});
         metadataClient.createFields("JBCXM__CustomerInfo__c", new String[]{"IsActive"}, true, false, false);
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"IsActive__c"});*/
+        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"IsActive__c"});
        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCNT_CASES_SCRIPT));
        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET1)); 
         basepage.login();
