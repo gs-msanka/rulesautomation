@@ -218,7 +218,7 @@ public class BaseTest {
         addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields));
     }
 
-    private String[] convertFieldNameToAPIName(String[] args) {
+    public String[] convertFieldNameToAPIName(String[] args) {
         String[] temp = new String[args.length];
         int i=0;
         for(String s : args) {

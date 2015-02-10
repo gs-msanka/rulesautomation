@@ -28,42 +28,31 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 	@BeforeClass
 	public void setUp() throws Exception {
         Log.info("Starting Customer 360 Summary Widgets module Test Cases...");
-    
-        
-        		
-        
-		metadataClient.createNumberField("Account", new String[]{"ActiveUsers__c"}, true);
-        addFieldPermissionsToUsers("Account", new String[]{"ActiveUsers__c"});
-
+    	metadataClient.createNumberField("Account", new String[]{"ActiveUsers"}, true);
         metadataClient.createNumberField("Account", new String[]{"FNumber"}, true);
-        addFieldPermissionsToUsers("Account", new String[]{"FNumber__c"});
-        
 		metadataClient.createFields("Account", new String[]{"IsActive"}, true, false, false);
-        addFieldPermissionsToUsers("Account", new String[]{"IsActive__c"});
-
         metadataClient.createCurrencyField("Account", new String[]{"CurrencyField"});
-        addFieldPermissionsToUsers("Account", new String[]{"CurrencyField__c"});
-               
-                
         metadataClient.createNumberField("Account", new String[]{"AccPercentage"}, true);
-        addFieldPermissionsToUsers("Account", new String[]{"AccPercentage__c"});
+        String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive",
+                "CurrencyField", "AccPercentage"};
+         addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(addFieldsPerm));
+
         metadataClient.createNumberField("JBCXM__CustomerInfo__c", new String[]{"CustPercentage"}, true);
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"CustPercentage__c"});
         HashMap<String, String[]> fields = new HashMap<String, String[]>();
         fields.put("InRegions", new String[]{"India", "America", "England", "France"});
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"InRegions__c"});
         metadataClient.createPickListField("JBCXM__CustomerInfo__c", fields, true);
         metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", new String[]{"CurrencyField"});
-       addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"CurrencyField__c"});
         metadataClient.createFields("JBCXM__CustomerInfo__c", new String[]{"IsActive"}, true, false, false);
-        addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"IsActive__c"});
+        
+        String[] addCustFields = new String[]{"CustPercentage", "InRegions", "CurrencyField",
+                "IsActive"};
+       addFieldPermissionsToUsers(resolveStrNameSpace("JBCXM__CustomerInfo__c"), convertFieldNameToAPIName(addFieldsPerm));
+        
        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCNT_CASES_SCRIPT));
        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET1)); 
         basepage.login();
 	}
-	
-	
-    
+
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "DefaultSummaryWidget")
     public void widgetRule(HashMap<String, String> testData){
@@ -159,7 +148,6 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 			System.out.println("Key value is:"+ key+"value is :"+val);
 		}
 	}
-
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_Summary")
@@ -169,13 +157,8 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 		Customer360SummaryWidget sumWidget = c360.goToSummaryWidgetSection();
 		HashMap<String, String> edtSumry = getMapFromData(testData.get("edit_Summary_Values"));
 		sumWidget.editSummary(edtSumry.get("Status"), edtSumry.get("Stage"), edtSumry.get("Comments"));
-		
-		
     }
 	
-
-	
-
 	
 @AfterClass
 public void tearDown() {
