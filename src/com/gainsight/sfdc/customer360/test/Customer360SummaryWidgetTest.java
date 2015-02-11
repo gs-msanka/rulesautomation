@@ -33,8 +33,7 @@ public class Customer360SummaryWidgetTest extends BaseTest {
 		metadataClient.createFields("Account", new String[]{"IsActive"}, true, false, false);
         metadataClient.createCurrencyField("Account", new String[]{"CurrencyField"});
         metadataClient.createNumberField("Account", new String[]{"AccPercentage"}, true);
-        String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive",
-                "CurrencyField", "AccPercentage"};
+        String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive", "CurrencyField", "AccPercentage"};
          addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(addFieldsPerm));
 
         metadataClient.createNumberField("JBCXM__CustomerInfo__c", new String[]{"CustPercentage"}, true);
@@ -43,11 +42,9 @@ public class Customer360SummaryWidgetTest extends BaseTest {
         metadataClient.createPickListField("JBCXM__CustomerInfo__c", fields, true);
         metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", new String[]{"CurrencyField"});
         metadataClient.createFields("JBCXM__CustomerInfo__c", new String[]{"IsActive"}, true, false, false);
-        
-        String[] addCustFields = new String[]{"CustPercentage", "InRegions", "CurrencyField",
-                "IsActive"};
-       addFieldPermissionsToUsers(resolveStrNameSpace("JBCXM__CustomerInfo__c"), convertFieldNameToAPIName(addFieldsPerm));
-        
+        String[] addCustFields = new String[]{"CustPercentage", "InRegions", "CurrencyField","IsActive"};
+       addFieldPermissionsToUsers(resolveStrNameSpace("JBCXM__CustomerInfo__c"), convertFieldNameToAPIName(addCustFields));
+       
        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCNT_CASES_SCRIPT));
        sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET1)); 
         basepage.login();
@@ -65,27 +62,17 @@ public class Customer360SummaryWidgetTest extends BaseTest {
     	for(String key : itr){
     		String val = widgetPnl.get(key);
     		Assert.assertTrue(sumWidget.verifyWidgetPanel(key, val));
-    		System.out.println("Key value is:"+ key+"value is :"+val);
-    	}
-   	}
-	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "lfetPanelVali")
-	public void leftRule1(HashMap<String, String> testData){
-		
-		Customer360Page c360 = basepage.clickOnC360Tab().searchCustomer(testData.get("Search_Customer"), false, false);
-		Customer360SummaryWidget sumWidget = c360.goToSummaryWidgetSection();
-		HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
-		
-		Set<String> itr = leftPnl.keySet();
-		for(String key : itr){
+    		System.out.println("Key value is:"+ key+"value is :"+val); }
+    	
+    	HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
+    	Set<String> itrr = leftPnl.keySet();
+		for(String key : itrr){
 			String val = leftPnl.get(key);
 			Assert.assertTrue(sumWidget.verifyLeftPanel(key, val));
-			System.out.println("Key value is:"+ key+"value is :"+val);
-		}
-	}
-	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
+			System.out.println("Key value is:"+ key+"value is :"+val);  }
+   	}
+
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=2)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Widget2")
     public void widgetRule2(HashMap<String, String> testData){
 		 sfdc.runApexCode(getNameSpaceResolvedFileContents(SUMMARY_WIDGET2));
@@ -97,27 +84,19 @@ public class Customer360SummaryWidgetTest extends BaseTest {
     	for(String key : itr){
     		String val = widgetPnl.get(key);
     		Assert.assertTrue(sumWidget.verifyWidgetPanel(key, val));
-    		System.out.println("Key value is:"+ key+"value is :"+val);
-    	}
-   	}
-	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LeftPanel001")
-	public void leftRule2(HashMap<String, String> testData){
+    		System.out.println("Key value is:"+ key+"value is :"+val);   }
+    	
+HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
 		
-		Customer360Page c360 = basepage.clickOnC360Tab().searchCustomer(testData.get("Search_Customer"), false, false);
-		Customer360SummaryWidget sumWidget = c360.goToSummaryWidgetSection();
-		HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
-		
-		Set<String> itr = leftPnl.keySet();
-		for(String key : itr){
+		Set<String> itrr = leftPnl.keySet();
+		for(String key : itrr){
 			String val = leftPnl.get(key);
 			Assert.assertTrue(sumWidget.verifyLeftPanel(key, val));
 			System.out.println("Key value is:"+ key+"value is :"+val);
 		}
-	}
+   	}
 	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=5 )
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=3)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Widget3")
     public void widgetRule3(HashMap<String, String> testData){
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET3));
@@ -129,27 +108,18 @@ public class Customer360SummaryWidgetTest extends BaseTest {
     	for(String key : itr){
     		String val = widgetPnl.get(key);
     		Assert.assertTrue(sumWidget.verifyWidgetPanel(key, val));
-    		System.out.println("Key value is:"+ key+"value is :"+val);
-    	}
-   	}
-	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=6)
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Leftpanel002")
-	public void leftRule3(HashMap<String, String> testData){
-		
-		Customer360Page c360 = basepage.clickOnC360Tab().searchCustomer(testData.get("Search_Customer"), false, false);
-		Customer360SummaryWidget sumWidget = c360.goToSummaryWidgetSection();
-		HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
-		
-		Set<String> itr = leftPnl.keySet();
-		for(String key : itr){
+    		System.out.println("Key value is:"+ key+"value is :"+val);	}
+    	
+HashMap<String, String> leftPnl = getMapFromData(testData.get("leftWidgetPnl"));
+		Set<String> itrr = leftPnl.keySet();
+		for(String key : itrr){
 			String val = leftPnl.get(key);
 			Assert.assertTrue(sumWidget.verifyLeftPanel(key, val));
 			System.out.println("Key value is:"+ key+"value is :"+val);
 		}
-	}
+   	}
 	
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=7)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=4)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Edit_Summary")
     public  void editSummary(HashMap<String, String> testData) {
 		

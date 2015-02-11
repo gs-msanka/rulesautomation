@@ -30,19 +30,11 @@ public class Customer360SummaryWidget extends Customer360Page {
 		Log.info("Validating  Widget Panel Verification");
 		String label	= String.format(WNAME_TEXT, wName);
 		 item.getText(label);
-		 System.out.println("Print the label value:" +label);
 		 
 		 String value	= String.format(WVALUE_TEXT, wName);
 		 item.getText(value);
-		 System.out.println("Print the label value:" +value);
 		 
-	//String label  = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]");
-        //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	//String value = item.getText("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]/following-sibling::div/div");
-        //TODO - Please declare the locator's globally & use String.format(); to build xpath.
-	
-	
-		if(isElementPresentAndDisplay(By.xpath("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]"))) {
+	if(isElementPresentAndDisplay(By.xpath("//div[contains(@class,'gs-sum-widgethead') and contains(text(),'"+wName+"')]"))) {
 			
 			if(label.equals(wName) && value.equals(wValue)){
 				Log.info("Widget and Value is correct");
@@ -54,8 +46,7 @@ public class Customer360SummaryWidget extends Customer360Page {
 		 }else {
 			Log.info("Widget is Present but value is not matching");
 			Log.info("expected value is:"+wValue+" but actual value present here is"+ value );
-			} 
-		return true;
+			} return true;
 		}
 		
    public boolean verifyLeftPanel(String lName, String lValue) {
@@ -76,8 +67,7 @@ public class Customer360SummaryWidget extends Customer360Page {
 		 }else {
 			Log.info("Widget is Present but value is not matching");
 			Log.info("expected value is:"+lValue+" but actual value present here is"+ value );
-			} 
-	return true;
+			} return true;
 	}
 
  
