@@ -40,10 +40,10 @@ public class SurveyQuestionPage extends SurveyPage {
 
     //Question Edit View Selectors
     private final String QUESTION_BLOCK                 = ".//div[contains(@class, 'qtn-div') and @data-id='%s']";
-    private final String QUESTION_TEXT_INPUT            = QUESTION_BLOCK+"/descendant::div[contains(id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
-    private final String SECTION_TITLE_INPUT            = QUESTION_BLOCK+"/descendant::h3[@class='section-title drag-handle']/input[@class='form-control']";
-    private final String SECTION_TITLE_VIEW             = QUESTION_BLOCK+"/descendant::h3[@class='section-title drag-handle']";
-    private final String QUESTION_TITLE_VIEW            = QUESTION_BLOCK+"/descendant::h3[@class='qtn-title drag-handle']";
+    private final String QUESTION_TEXT_INPUT            = ".//div[contains(id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
+    private final String SECTION_TITLE_INPUT            = ".//h3[@class='section-title drag-handle']/input[@class='form-control']";
+    private final String SECTION_TITLE_VIEW             = ".//h3[@class='section-title drag-handle']";
+    private final String QUESTION_TITLE_VIEW            = ".//h3[@class='qtn-title drag-handle']/a";
     private final String NPS_SHOW_HEADERS_CHECKBOX_CSS  = "input[id$=_show_header_check][type=checkbox]";
     private final String NPS_HEADER_SELECT_CSS          = "select[class*='form-control header-type-select']";
     private final String RATING_SELECT_CSS              = "select[class=form-control]";
@@ -105,19 +105,21 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     public SurveyQuestionPage clickOnAddNewQuestion(SurveyQuestion surveyQuestion) {
-        WebElement surQuestionsPageEle = element.getElement(String.format(PAGE_BLOCK, surveyQuestion.getPageId(), surveyQuestion.getPageId()));
+        WebElement surQuestionsPageEle = getPageElement(surveyQuestion);
         WebElement addQuestionEle = surQuestionsPageEle.findElement(By.cssSelector(ADD_QUESTION_CSS));
         addQuestionEle.click();
         waitTillElementDisplayed(surQuestionsPageEle, QUESTIONS_MENU_CSS, MIN_TIME, MAX_TIME);
         surQuestionsPageEle.findElement(By.cssSelector(String.format(QUESTION_TYPE_SELECT_CSS, surveyQuestion.getQuestionType()))).click();
         waitTillNoLoadingIcon();
+
+        fillQuestionFormInfo(surveyQuestion);
         return this;
     }
 
     public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
-        surQuestionEle.findElement(By.cssSelector(QUESTION_TEXT_INPUT)).clear();
-        surQuestionEle.findElement(By.cssSelector(QUESTION_TEXT_INPUT)).sendKeys(surveyQuestion.getQuestionText());
+        surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();
+        surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).sendKeys(surveyQuestion.getQuestionText());
 
         //TO Mark Question Active / InActive
         WebElement activeCheckboxEle = surQuestionEle.findElement(By.cssSelector(ACTIVE_CHECKBOX_CSS));
@@ -176,17 +178,27 @@ public class SurveyQuestionPage extends SurveyPage {
             commentsLabelEle.sendKeys(surveyQuestion.getCommentsLabel());
         }
 
+
+
         if(surveyQuestion.getQuestionType().equals("TEXT_AREA")) {
             surQuestionEle.findElement(By.cssSelector(LONG_TEXT_ROWS_SELECT_CSS)).sendKeys("10 Rows");
             surQuestionEle.findElement(By.cssSelector(LONG_TEXT_COLS_SELECT_CSS)).sendKeys("40 Columns");
-        } else if(surveyQuestion.getQuestionType().equals("TEXT_INPUT")) {
+        }
+
+        else if(surveyQuestion.getQuestionType().equals("TEXT_INPUT")) {
             surQuestionEle.findElement(By.cssSelector(SHORT_TEXT_SIZE_SELECT_CSS)).sendKeys("60 Characters");
-        } else if(surveyQuestion.getQuestionType().equals("RATING")) {
+        }
+
+        else if(surveyQuestion.getQuestionType().equals("RATING")) {
             surQuestionEle.findElement(By.cssSelector(RATING_SELECT_CSS)).sendKeys("5 Stars");
-        } else if(surveyQuestion.getQuestionType().equals("NPS")) {
+        }
+
+        else if(surveyQuestion.getQuestionType().equals("NPS")) {
             surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
             surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys("Text");
-        } else if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT")
+        }
+
+        else if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT")
                 || surveyQuestion.getQuestionType().equals("RANKING")) {
             for(SurveyQuestion.SurveyAllowedAnswer surveyAllowedAnswer : surveyQuestion.getAllowedAnswers()) {
                 addAnsChoice(surQuestionEle, surveyAllowedAnswer.getAnswerText());
@@ -299,11 +311,133 @@ public class SurveyQuestionPage extends SurveyPage {
         return result;
     }
 
-    public boolean isQuestionPresent(SurveyQuestion surveyQuestion) {
+    public boolean isQuestionDisplayed(SurveyQuestion surveyQuestion) {
         boolean result = false;
+        WebElement surveyQuestionEle = getQuestionElement(surveyQuestion);
+        String questionText = surveyQuestionEle.findElement(By.xpath(QUESTION_TITLE_VIEW)).getText();
+        Log.info("Actual Question Text : "+questionText);
+        Log.info("Expected Question Text : "+surveyQuestion.getQuestionText());
+        if(!questionText.contains(surveyQuestion.getQuestionText())) {
+            Log.info("Survey Question Text not matched.");
+            return false;
+        }
 
         return result;
     }
+
+    public boolean verifyQuestionType(WebElement surveyQuestionEle, SurveyQuestion surveyQuestion) {
+        String questionType = surveyQuestionEle.findElement(By.xpath(".//div[contains(@class,'qtype-set')]/ul/li[contains(text(), 'Question Type')]/span")).getText();
+        Log.info("Actual Question Type : "+questionType);
+        String expectedQuestionText = getQuestionType(surveyQuestion);
+        if(questionType !=null && questionType.toUpperCase().contains(expectedQuestionText.toUpperCase())) {
+            Log.info("Type not Matched.");
+            return true;
+        }
+        return false;
+    }
+
+    private String getQuestionType(SurveyQuestion surveyQuestion) {
+        String expectedQuestionText = null;
+        if(surveyQuestion.getQuestionType().equals("CHECKBOX")) {
+            if(surveyQuestion.isSingleAnswer()) {
+                expectedQuestionText = "Radio";
+            } else {
+                expectedQuestionText = "Checkbox";
+            }
+        } else if(surveyQuestion.getQuestionType().equals("SELECT")) {
+            if(surveyQuestion.isSingleAnswer()) {
+                expectedQuestionText = "SingleSelect";
+            } else {
+                expectedQuestionText = "MultiSelect";
+            }
+        } else if(surveyQuestion.getQuestionType().equals("TEXT_INPUT")) {
+            expectedQuestionText = "Text";
+        } else if(surveyQuestion.getQuestionType().equals("TEXT_AREA")) {
+            expectedQuestionText = "Comment";
+        } else if(surveyQuestion.getQuestionType().equals("MATRIX")) {
+            if (surveyQuestion.isSingleAnswer()) {
+                expectedQuestionText = "MatrixSingleAnswer";
+            } else {
+                expectedQuestionText = "MatrixMultipleAnswers";
+            }
+        }
+        Log.info("Expected Question Type :" +expectedQuestionText);
+        return expectedQuestionText;
+    }
+
+    private boolean verifyQuestionStatus(WebElement surveyQuestionEle, SurveyQuestion surveyQuestion) {
+        String QUE_STATUS_CSS = ".//div[contains(@class, 'qtype-set')]/ul/li[contains(text(), 'Active')]/i[@class='glyphicon glyphicon-%s-circle']";
+        if (surveyQuestion.isActive()) {
+            return isElementPresentAndDisplayed(surveyQuestionEle, String.format(QUE_STATUS_CSS, "ok"));
+        } else {
+            return isElementPresentAndDisplayed(surveyQuestionEle, String.format(QUE_STATUS_CSS, "ban"));
+        }
+    }
+
+    private boolean verifyQuestionRequired(WebElement surveyQuestionEle, SurveyQuestion surveyQuestion) {
+        String QUE_STATUS_CSS = ".//div[contains(@class, 'qtype-set')]/ul/li[contains(text(), 'Answer required')]/i[contains(@class, 'glyphicon-%s-star')]";
+        if (surveyQuestion.isActive()) {
+            return isElementPresentAndDisplayed(surveyQuestionEle, String.format(QUE_STATUS_CSS, "yes"));
+        } else {
+            return isElementPresentAndDisplayed(surveyQuestionEle, String.format(QUE_STATUS_CSS, "no"));
+        }
+    }
+
+    private boolean isElementPresentAndDisplayed(WebElement wEle, String xpath) {
+        boolean result = false;
+        Log.info("Checking if element is present : " +xpath);
+        try {
+            result = wEle.findElement(By.xpath(xpath)).isDisplayed();
+        } catch (Exception e) {
+            Log.error("Element not present, "+xpath, e);
+        }
+        return result;
+    }
+
+    private boolean verifySurveyQuestionAnswers(WebElement surQuesEle, SurveyQuestion surveyQuestion) {
+        String questionType = getQuestionType(surveyQuestion);
+        boolean result = false;
+        if(questionType.equalsIgnoreCase("Checkbox")) {
+            return verifyCheckBoxQuestionAnswers(surQuesEle, surveyQuestion);
+        } else if(questionType.equalsIgnoreCase("Radio")) {
+
+        } else if(questionType.equalsIgnoreCase("SingleSelect")) {
+
+        } else if(questionType.equalsIgnoreCase("MultiSelect")) {
+
+        } else if(questionType.equalsIgnoreCase("Text")) {
+
+        } else if(questionType.equalsIgnoreCase("Comment")) {
+
+        } else if(questionType.equalsIgnoreCase("MatrixSingleAnswer")) {
+
+        } else if(questionType.equalsIgnoreCase("MatrixMultipleAnswers")) {
+
+        } else if(questionType.equalsIgnoreCase("NPS")) {
+
+        } else if(questionType.equalsIgnoreCase("Rating")) {
+
+        } else if(questionType.equalsIgnoreCase("Ranking")) {
+
+        }
+        return result;
+    }
+
+    private boolean verifyCheckBoxQuestionAnswers(WebElement surveyQuesEle , SurveyQuestion surveyQuestion) {
+        boolean result = false;
+        String ansXPath = ".//div[@class='qtn-answer-ctn']/descendant::label[contains(., '%s')]/input[@type='checkbox' and @value='%s']";
+        for(SurveyQuestion.SurveyAllowedAnswer surveyAllowedAnswer: surveyQuestion.getAllowedAnswers()) {
+            if(!isElementPresentAndDisplayed(surveyQuesEle, String.format(ansXPath, surveyAllowedAnswer.getAnswerText(), surveyAllowedAnswer.getsId()))) {
+                Log.error("Ans Text : "+surveyAllowedAnswer.getAnswerText());
+                result = false;
+                break;
+            }
+            result = true;
+        }
+        return result;
+    }
+
+
 
 
 
