@@ -1,248 +1,242 @@
 package com.gainsight.sfdc.survey.pojo;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import com.gainsight.sfdc.workflow.pojos.CTA.Attribute;
 
 /**
  * Created by gainsight on 05/12/14.
  */
 public class SurveyQuestion {
-	private String surveyPage;
-	private String questionType;
-	private String question;
-    private boolean isActive;
-    private boolean isRequired;
-    private boolean singleAnswer;
-    private boolean allowComment;
-    private String commentLabel;    
-    private boolean addOthers;
-    private String otherLabel;
-    private String showHeader;
-    private String ratingChoices;
-    private String shortTextRows;
-    private String rows;
-    private String columns;
+
+
+    private String pageTitle    = "Untitled Page";
+    private String questionText = "Untitled question";
+    private String pageId;
+    private String questionId;
+    private String questionType;  //Expected Values - CHECKBOX, SELECT, NPS, RATING, RANKING, TEXT_INPUT, TEXT_AREA, MATRIX
+    private String parentQuestionText;
+    private String parentQuestionId;
+    private boolean active          = true;
+    private boolean required        = false;
+    private boolean allowComments   = false;
+    private boolean addOther        = false;
+    private boolean singleAnswer    = false;
+    private boolean sectionHeader   = false;
+    private String image;
+    private String commentsLabel    = "Comments";
+    private int displayOrder;
     private ArrayList<SurveyAllowedAnswer> allowedAnswers = new ArrayList<SurveyAllowedAnswer>();
     private ArrayList<SurveySubQuestions> subQuestions = new ArrayList<SurveySubQuestions>();
-    
-    public String getShortTextRows () {
-    	return shortTextRows;
-    }
-    
-    public void setShortTextRows (String shortTextRows) {
-    	this.shortTextRows = shortTextRows;
-    }
-    
-    
-    public String getRows () {
-    	return rows;
-    }
-    
-    public void setRows(String rows) {
-        this.rows = rows;
-    }  
-    
-    public String getColumns () {
-    	return columns;
-    }
-    
-    public void seColumns(String columns) {
-        this.columns = columns;
-    }     
-    
-    public String getShowHeader () {
-    	return showHeader;
-    }
-    
-    public void setShowHeader(String showHeader) {
-        this.showHeader = showHeader;
-    }  
-    
-    public String getRatingChoices () {
-    	return ratingChoices;
-    }
-    
-    public void setRatingChoices(String ratingChoices) {
-        this.ratingChoices = ratingChoices;
-    }       
-    
-    public String getquestionType () {
-    	return questionType;
-    }
-    
-    public void setquestionType(String questionType) {
-        this.questionType = questionType;
-    }   
-    
-      
-    public String getsurveyPage() {
-    	return surveyPage;
-    }
-    
-    public void setsurveyPage(String surveyPage) {
-        this.surveyPage = surveyPage;
-    }
-    
-    public String getQuestion() {
-        return question;
+    private SurveyProperties surveyProperties;
+
+    public String getParentQuestionText() {
+        return parentQuestionText;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setParentQuestionText(String parentQuestionText) {
+        this.parentQuestionText = parentQuestionText;
+    }
+
+    public String getParentQuestionId() {
+        return parentQuestionId;
+    }
+
+    public void setParentQuestionId(String parentQuestionId) {
+        this.parentQuestionId = parentQuestionId;
+    }
+
+    public String getCommentsLabel() {
+        return commentsLabel;
+    }
+
+    public void setCommentsLabel(String commentsLabel) {
+        this.commentsLabel = commentsLabel;
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
+
+    public String getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
+    }
+
+    public String getQuestionText() {
+        return questionText;
+    }
+
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean active) {
+        this.active = active;
     }
-    
+
     public boolean isRequired() {
-        return isRequired;
+        return required;
     }
 
-    public void setRequired(boolean isRequired) {
-        this.isRequired = isRequired;
-    }
-    
-
-    public boolean isAllowComment() {
-        return allowComment;
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
-    public void setAllowComment(boolean allowComment) {
-        this.allowComment = allowComment;
-    }
-    
-    public boolean isaddOthers() {
-        return addOthers;
+    public boolean isAllowComments() {
+        return allowComments;
     }
 
-    public void setaddOthers(boolean addOthers) {
-        this.addOthers = addOthers;
+    public void setAllowComments(boolean allowComments) {
+        this.allowComments = allowComments;
     }
 
-    public String getCommentLabel() {
-        return commentLabel;
+    public boolean isAddOther() {
+        return addOther;
     }
 
-    public void setCommentLabel(String commentLabel) {
-        this.commentLabel = commentLabel;
-    }
-    
-    
-    public String getotherLabel() {
-        return otherLabel;
+    public void setAddOther(boolean addOther) {
+        this.addOther = addOther;
     }
 
-    public void setotherLabel(String otherLabel) {
-        this.otherLabel = otherLabel;
-    }
-    
     public boolean isSingleAnswer() {
         return singleAnswer;
     }
 
     public void setSingleAnswer(boolean singleAnswer) {
         this.singleAnswer = singleAnswer;
-    }  
-    
+    }
+
+    public boolean isSectionHeader() {
+        return sectionHeader;
+    }
+
+    public void setSectionHeader(boolean sectionHeader) {
+        this.sectionHeader = sectionHeader;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public ArrayList<SurveyAllowedAnswer> getAllowedAnswers() {
-		return allowedAnswers;
-	}
+        return allowedAnswers;
+    }
 
-	public void setAllowedAnswers(ArrayList<SurveyAllowedAnswer> allowedAnswers) {
-		this.allowedAnswers = allowedAnswers;
-	}
+    public void setAllowedAnswers(ArrayList<SurveyAllowedAnswer> allowedAnswers) {
+        this.allowedAnswers = allowedAnswers;
+    }
 
-	public static class SurveyAllowedAnswer {
-		private String ansLabel;
-		private String ansValue;
-	//	private String rows;
-	//	private String columns;
-		
-//		public String getColumns() {
-//			return columns;
-//		}
-//
-//		public void setColumns(String columns) {
-//			this.columns = columns;
-//		}
-//
-//		public String getRows() {
-//			return rows;
-//		}
-//
-//		public void setRows(String rows) {
-//			this.rows = rows;
-//		}
-		
-        public String getAnsLabel() {
-			return ansLabel;
-		}
+    public ArrayList<SurveySubQuestions> getSubQuestions() {
+        return subQuestions;
+    }
 
-		public void setAnsLabel(String attLabel) {
-			this.ansLabel = attLabel;
-		}
+    public void setSubQuestions(ArrayList<SurveySubQuestions> subQuestions) {
+        this.subQuestions = subQuestions;
+    }
 
-		public String getAnsValue() {
-			return ansValue;
-		}
+    public static class SurveyAllowedAnswer {
+        private String sId;
+		private String answerText;
+        private String displayOrder;
 
-		public void setAnsValue(String ansValue) {
-			this.ansValue = ansValue;
-		}
-	}	
-	
-	 public ArrayList<SurveySubQuestions> getsubQuestions() {
-			return subQuestions;
-		}
+        public String getsId() {
+            return sId;
+        }
 
-		public void setsubQuestions(ArrayList<SurveySubQuestions> subQuestions) {
-			this.subQuestions = subQuestions;
-		}
+        public void setsId(String sId) {
+            this.sId = sId;
+        }
 
-		public static class SurveySubQuestions {
-			private String subQuesLabel;
-			private String subQuesValue;
-			private String ansLabel;
-			private String ansValue;
-			
-	        public String getsubQuesLabel() {
-				return subQuesLabel;
-			}
+        public String getAnswerText() {
+            return answerText;
+        }
 
-			public void setsubQuesLabel(String subQuesLabel) {
-				this.subQuesLabel = subQuesLabel;
-			}
+        public void setAnswerText(String answerText) {
+            this.answerText = answerText;
+        }
 
-			public String getsubQuesValue() {
-				return subQuesValue;
-			}
+        public String getDisplayOrder() {
+            return displayOrder;
+        }
 
-			public void setsubQuesValue(String subQuesValue) {
-				this.subQuesValue = subQuesValue;
-			}
-			
-//			public String getAnsLabel() {
-//				return ansLabel;
-//			}
-//
-//			public void setAnsLabel(String attLabel) {
-//				this.ansLabel = attLabel;
-//			}
-//
-//			public String getAnsValue() {
-//				return ansValue;
-//			}
-//
-//			public void setAnsValue(String ansValue) {
-//				this.ansValue = ansValue;
-//			}
-//		}
-		}
+        public void setDisplayOrder(String displayOrder) {
+            this.displayOrder = displayOrder;
+        }
+    }
+
+    public static class SurveySubQuestions {
+        private String sId;
+        private String subQuestionText;
+        private String displayOrder;
+
+        public String getsId() {
+            return sId;
+        }
+
+        public void setsId(String sId) {
+            this.sId = sId;
+        }
+
+        public String getSubQuestionText() {
+            return subQuestionText;
+        }
+
+        public void setSubQuestionText(String subQuestionText) {
+            this.subQuestionText = subQuestionText;
+        }
+
+        public String getDisplayOrder() {
+            return displayOrder;
+        }
+
+        public void setDisplayOrder(String displayOrder) {
+            this.displayOrder = displayOrder;
+        }
+    }
+
+    public SurveyProperties getSurveyProperties() {
+        return surveyProperties;
+    }
+
+    public void setSurveyProperties(SurveyProperties surveyProperties) {
+        this.surveyProperties = surveyProperties;
+    }
 }
