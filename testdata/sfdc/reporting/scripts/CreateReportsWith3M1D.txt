@@ -1,0 +1,316 @@
+//Show Me: Subject, Case Reason , Status
+//By: Case Type
+//Where: Subject Conatins A
+//Having : Count of Subject >0
+//Object: Case
+
+
+Delete[Select ID from JBCXM__UIViews__c where name in ('Bubble_3_1_CaseObj','Stacked_Column_3_1_CaseObj','Stacked_Bar_3_1_CaseObj','Table_3_1_CaseObj','Bar_3_1_CaseObj','Column_3_1_CaseObj','Line_3_1_CaseObj','Area_3_1_CaseObj')];
+Delete[Select id from JBCXM__Dashboard__c where name = '3ShowMe_1By_Layout'];
+Delete[Select id from JBCXM__C360Sections__c where name = '3ShowMe_1By_RL'];
+
+
+
+Integer currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = '3ShowMe_1By_RL', 
+														  JBCXM__DisplayLabel__c = '3ShowMe_1By_RL',
+														  JBCXM__AccountReference__c = 'AccountId',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = 'Case',
+														  JBCXM__Type__c = 'RelatedList');
+insert rList;
+
+
+List<JBCXM__UIViews__c> pbr = new List<JBCXM__UIViews__c>();
+//***************************Table 3,1********************************
+JBCXM__UIViews__c viewObj = new JBCXM__UIViews__c(
+	name = 'Table_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Subject","label":"Subject","displayOrder":1,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'LIST',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj); 
+//***************************Bar 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Bar_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'BAR',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj); 
+//***************************Column 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Column_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj); 
+//***************************Line 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Line_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'LINE',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj);
+//***************************Area 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Area_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'AREA',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj);
+//***************************Stacked Bar 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Stacked_Bar_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'STACKED-BAR',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj);
+//***************************Stacked Column 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Stacked_Column_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'STACKED-COLUMN',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj);
+//***************************BUbble 3,1********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Bubble_3_1_CaseObj',
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Status","label":"Status","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false},{"name":"Type","label":"Case Type","displayOrder":5,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Type","label":"Case Type","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'BUBBLE',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false},{"objectName":"Case","name":"Reason","label":"Count of Case Reason","graphType":null,"aggType":"COUNT","aliasName":"DS2","fieldType":"PICKLIST","hasJBCXMNS":false},{"objectName":"Case","name":"Status","label":"Count of Status","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"PICKLIST","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+
+pbr.add(viewObj);
+
+insert pbr;
+
+//To create Layout
+JBCXM__Dashboard__c defaultLayout = new JBCXM__Dashboard__c(Name = '3ShowMe_1By_Layout', JBCXM__IsActive__c = true, 
+												JBCXM__LayoutType__c = 'Home Page', JBCXM__Visibility__c 	= 'Public',
+												JBCXM__User__c = Userinfo.getUserId() );
+defaultLayout.JBCXM__FilterConditions__c = '{"maxCols":2,"layoutWidth":960,"margin":[8,8],"tileWidth":470,"tileHeight":300}';
+insert defaultLayout;
+
+//Creating container 
+List<JBCXM__DashboardContainer__c> dcList = new List<JBCXM__DashboardContainer__c>();			
+//lc layoutContainer									
+JBCXM__DashboardContainer__c lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+														JBCXM__Dashboard__c			= defaultLayout.Id,
+														JBCXM__ContainerOptions__c	= '{"col":"1","row":"1","size_x":"2","size_y":"1"}',
+														JBCXM__UIView__c			= pbr[0].Id,
+														JBCXM__SourceType__c		= 'FORCE'
+													);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"2","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[1].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"3","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[2].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"4","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[3].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"5","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[4].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"6","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[5].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"7","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[6].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"8","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[7].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+
+insert dcList;
