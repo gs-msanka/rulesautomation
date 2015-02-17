@@ -22,7 +22,8 @@ public class ReportingTest extends BaseTest{
 	private final String CREATE_REPORTS_NORMALIZATION_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithNormalization.txt";
 	private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateUsers.txt";
 	private final String CREATE_CTAS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCTAs.txt";
-	
+	private final String CREATE_MILESTONES_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/Milestones.txt";
+
 	//Colors - Need to load Milestones
 	//Colors - Accounts should have Current score label in Customer Info object
 	//Colors - Accounts should have Current Score Value in Usage data object
@@ -35,7 +36,10 @@ public class ReportingTest extends BaseTest{
         Log.info("Executing the script to create Users...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         Log.info("Executing the script to create CTAs...");
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CTAS_SCRIPT)); 
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CTAS_SCRIPT));
+        Log.info("Executing the script to create Milestones");      
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_MILESTONES_SCRIPT).replaceAll("customerRecordCount", "5"));
+        
     }
 	
 	

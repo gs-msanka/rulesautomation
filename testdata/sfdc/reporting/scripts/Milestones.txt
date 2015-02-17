@@ -1,0 +1,41 @@
+Integer noOfCustomers = customerRecordCount;
+System.Debug('No of Customers from Reporting Test Java file is:'+noOfCustomers);
+Delete [select Name from JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
+
+//Adding into picklist for category Milestones
+List<JBCXM__PickList__c> pList=new List<JBCXM__PickList__c>();
+List<String>  milestones=new List<String>{'Implementation end date','Referral','HealthCheck','First Transaction','Go Live!','Renewal!','Software Upgrade','Quarterly Business Review Meet'};
+List<String> colors=new List<String>{'#FF0000','#ff9900','#ffff00','#008b00','#3333ff','#0000cc','#00cd00','#99ffcc'};
+for(Integer i=0;i<milestones.size();i++)
+{
+	pList.add(new JBCXM__PickList__c(Name=milestones.get(i),
+										JBCXM__Category__c='Milestones',
+										JBCXM__SystemName__c=milestones.get(i),
+										JBCXM__ShortName__c=milestones.get(i).substring(0,3),
+										JBCXM__Attribute1__c=colors.get(i),
+										JBCXM__Active__c=true,
+										JBCXM__DisplayOrder__c=i+1));
+}
+insert pList;
+
+List<Account> accList = [SELECT ID, Name FROM Account WHERE JBCXM__CustomerInfo__c != null ORDER BY Auto_Data_Load__c LIMIT : noOfCustomers];
+List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
+Integer j = 0;
+Integer i =0;
+for(Account acc: accList) {
+	i=0;
+	for(JBCXM__PickList__c pkObj : pList) {
+		JBCXM__Milestone__c milestone = new JBCXM__Milestone__c(JBCXM__Account__c 	= acc.Id,
+																JBCXM__Date__c 		= date.today().addDays(-i),
+																JBCXM__Milestone__c = pkObj.Id, 
+																JBCXM__Comment__c	= 'Sample comments for account ' +acc.Name +' on milestone ' +pkObj.Name);
+	i++;
+	j++;
+	mList.add(milestone);
+	}	
+	if(j >= 9900) {
+		break;
+	}
+}
+System.debug('Total Milestones added ' +mList.size());
+insert mList;
