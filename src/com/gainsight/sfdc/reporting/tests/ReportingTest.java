@@ -20,13 +20,22 @@ public class ReportingTest extends BaseTest{
 	private final String CREATE_REPORTS_6M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith6M1D.txt";
 	private final String CREATE_REPORTS_COLORS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithColors.txt";
 	private final String CREATE_REPORTS_NORMALIZATION_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithNormalization.txt";
+	private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateUsers.txt";
+	private final String CREATE_CTAS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCTAs.txt";
 	
+	//Colors - Need to load Milestones
+	//Colors - Accounts should have Current score label in Customer Info object
+	//Colors - Accounts should have Current Score Value in Usage data object
 	
 	@BeforeClass
-	public void loadCases() {
-        Log.info("Executing the script to load cases into Case Object...");
+	public void loadInitScripts() throws Exception {
+		sfdc.connect();
+        Log.info("Executing the script to create cases into Case Object...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CASES_SCRIPT));
-        Log.info("Completed the script to load cases into Case Object...");
+        Log.info("Executing the script to create Users...");
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+        Log.info("Executing the script to create CTAs...");
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CTAS_SCRIPT)); 
     }
 	
 	
@@ -113,20 +122,30 @@ public class ReportingTest extends BaseTest{
 	}
 	
 	@Test
+	/*Creates reports with 6 Measures and 1 Dimension combination
+	Creates a Layout and adds the reports
+	Creates a Related List and adds the reports*/
 	public void createReportsWith6M1D(){
 		Log.info("Executing the script to load reports with 6 Measures and 1 Dimension combination ");
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_6M1D_SCRIPT));
 		Log.info("Completed the script to load reports with 6 Measures and 1 Dimension combination ");
 	}
 	
-	/*@Test
+	@Test
+	/*Creates reports with all the supported color combinations
+	Creates a Layout and adds the reports
+	Creates a Related List and adds the reports*/
 	public void createReportWithColors(){
-		sfdc.runApexCode(CREATE_REPORTS_COLORS_SCRIPT);
-	}*/
+		Log.info("Executing the script to load reports with color combinations ");
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_COLORS_SCRIPT));
+		Log.info("Completed the script to load reports with color combinations ");
+	}
 	
-	/*@Test
+	@Test
 	public void createReportWithNormalization(){
-		sfdc.runApexCode(CREATE_REPORTS_NORMALIZATION_SCRIPT);
-	}*/
+		Log.info("Executing the script to load reports with Normalizations ");
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_NORMALIZATION_SCRIPT));
+		Log.info("Completed the script to load reports with Normalizations ");
+	}
 	
 }

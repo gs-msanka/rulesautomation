@@ -1,20 +1,24 @@
-List<Account> acctID = [Select id from Account limit 5];
-List<String> reasonList = new List<String>{'User didn\'t attend training','Complex functionality','Existing problem','Instructions not clear','New problem'};
-List<String> statusList = new List<String>{'On Hold','New','Escalated','New','Escalated'};
-List<String> typeList = new List<String>{'Problem','Feature Request','Question','Problem','Question'};
-List<String> priorityList = new List<String>{'High','Medium','Low','Low','Medium'};
-List<String> originList = new List<String>{'Email','Phone','Web','Phone','Email'};
-List<Case> Cl = new List<Case>();
-for(Integer i=1;i<5;i++){
-	Case a = new Case(
-	    Reason =  reasonList[i],
-		Status = statusList[i],
-		Subject = 'Sample Case '+i,
-		Type = typeList[i],
-		AccountID = acctID[i].id,
-		Priority = priorityList[i],
-		Origin = originList[i]);
-	cl.add(a);
-	//System.Debug('Account Name is '+acctID[i].id);
+Integer caseRecordCnt = [Select Count() from case];
+//System.Debug(caseRecordCnt);
+if(caseRecordCnt < 1){
+	List<Account> acctID = [Select id from Account limit 5];
+	List<String> reasonList = new List<String>{'User didn\'t attend training','Complex functionality','Existing problem','Instructions not clear','New problem'};
+	List<String> statusList = new List<String>{'On Hold','New','Escalated','New','Escalated'};
+	List<String> typeList = new List<String>{'Problem','Feature Request','Question','Problem','Question'};
+	List<String> priorityList = new List<String>{'High','Medium','Low','Low','Medium'};
+	List<String> originList = new List<String>{'Email','Phone','Web','Phone','Email'};
+	List<Case> Cl = new List<Case>();
+	for(Integer i=1;i<=5;i++){
+		Case a = new Case(
+			Reason =  reasonList[i],
+			Status = statusList[i],
+			Subject = 'Sample Case '+i,
+			Type = typeList[i],
+			AccountID = acctID[i].id,
+			Priority = priorityList[i],
+			Origin = originList[i]);
+		cl.add(a);
+		//System.Debug('Account Name is '+acctID[i].id);
+	}
+	insert cl;
 }
-insert cl;

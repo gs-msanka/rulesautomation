@@ -1,0 +1,389 @@
+//Chart with CTA Types
+//Chart with CTA Priority
+//Chart with CTA Reason
+//Chart with CTA Status
+//Chart with CTA Snooze Reasons
+//Chart with Milestone Colors
+//Chart with Current Score Label - Customers
+//Chart with Scorecard Labels - GS-Scorecards/Usage Data - Not added to CS 360 section
+
+
+//Show Me: Call to Action Name
+//By: CTA Type Name
+//Where: Age > 0
+//Having : Count of Call to Action Name >0
+//Object: Case
+
+Delete[Select ID from JBCXM__UIViews__c where name in ('AvgCurrentScoreValue_Colors','CurrentScoreLabel_Colors','Milestone_Colors','CTA_Colors_SnoozeReason','CTA_Colors_CTAStatus','CTA_Colors_CTATypes','CTA_Colors_1_2_CTATypes','CTA_Colors_CTAPriority','CTA_Colors_CTAReason')];
+Delete[Select id from JBCXM__Dashboard__c where name = 'Colors_Layout'];
+Delete[Select id from JBCXM__C360Sections__c where name = 'Colors_RL'];
+
+//Adding Related List for CTA object
+Integer currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = 'CTAColors_RL', 
+														  JBCXM__DisplayLabel__c = 'CTAColors_RL',
+														  JBCXM__AccountReference__c = 'JBCXM__Account__c',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = 'JBCXM__CTA__c',
+														  JBCXM__Type__c = 'RelatedList');
+insert rList;
+
+//Adding Related List for Milestone object
+currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList2 = new JBCXM__C360Sections__c(Name = 'MilestoneColors_RL', 
+														  JBCXM__DisplayLabel__c = 'MilestoneColors_RL',
+														  JBCXM__AccountReference__c = 'JBCXM__Account__c',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = 'JBCXM__Milestone__c',
+														  JBCXM__Type__c = 'RelatedList');
+insert rList2;
+
+//Adding Related List for Customer Info object
+currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList3 = new JBCXM__C360Sections__c(Name = 'CurrentScoreLabel_RL', 
+														  JBCXM__DisplayLabel__c = 'CurrentScoreLabel_RL',
+														  JBCXM__AccountReference__c = 'JBCXM__Account__c',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = 'JBCXM__CustomerInfo__c',
+														  JBCXM__Type__c = 'RelatedList');
+insert rList3;
+
+
+
+List<JBCXM__UIViews__c> pbr = new List<JBCXM__UIViews__c>();
+
+//***************************CTA Types********************************
+JBCXM__UIViews__c viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_CTATypes',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Type__r.Name","label":"CTA Type Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Type__r.Name","label":"CTA Type Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":1,"objectName":"JBCXM__CTA__c","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Name","fieldLabel":"Call To Action Name","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************CTA Types with 1_2 combo********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_1_2_CTATypes',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Type__r.Name","label":"CTA Type Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Reason__r.Name","label":"Reason Name","displayOrder":4,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Reason__r.Name","label":"Reason Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false},{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Type__r.Name","label":"CTA Type Name","groupable":true,"aliasName":"Cat2","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'STACKED-COLUMN',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":1,"objectName":"JBCXM__CTA__c","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Name","fieldLabel":"Call To Action Name","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************CTA Priority********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_CTAPriority',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Priority__r.Name","label":"Priority Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Priority__r.Name","label":"Priority Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************CTA Reason********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_CTAReason',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Reason__r.Name","label":"Reason Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Reason__r.Name","label":"Reason Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************CTA Status********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_CTAStatus',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Stage__r.Name","label":"Status Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Stage__r.Name","label":"Status Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************CTA Snooze Reason********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_Colors_SnoozeReason',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Name","label":"Call To Action Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__SnoozeReason__r.Name","label":"Snooze Reason Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__SnoozeReason__r.Name","label":"Snooze Reason Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"Name","label":"Count of Call To Action Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************Milestone Colors********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'Milestone_Colors',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__Milestone__c',
+	JBCXM__ColumnList__c = '[{"name":"JBCXM__Account__r.Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"JBCXM__Milestone__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Milestone__r.Name","label":"Milestone Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__Milestone__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__Milestone__c","name":"JBCXM__Milestone__r.Name","label":"Milestone Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__Milestone__c","name":"JBCXM__Account__r.Name","label":"Count of Account Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"TEXT","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList2.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Milestone',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"JBcurfy","objectName":"JBCXM__Milestone__c","fieldType":"TIMEFRAMENORMALDATETIME","logicalOperator":"AND","operator":"e","name":"CreatedDate","fieldLabel":"Created Date","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************Customers-Current Score Label Colors********************************
+viewObj = new JBCXM__UIViews__c(
+	name = 'CurrentScoreLabel_Colors',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CustomerInfo__c',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__CurScoreId__r.JBCXM__Display__c","label":"Current Score Label","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CustomerInfo__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CustomerInfo__c","name":"JBCXM__CurScoreId__r.JBCXM__Display__c","label":"Current Score Label","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CustomerInfo__c","name":"JBCXM__Account__r.Name","label":"Count of Account Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"TEXT","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rList3.Id,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Customers',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"JBCXM__CustomerInfo__c","fieldType":"TEXT","logicalOperator":"AND","operator":"g","name":"JBCXM__CurScoreId__r.JBCXM__Display__c","fieldLabel":"Current Score Label","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+//***************************GS-Scorecards/Usagedata-Colors********************************
+//Show Me:Avg of Current Score Value, By: Account Name, Where: Current Score value >0
+viewObj = new JBCXM__UIViews__c(
+	name = 'AvgCurrentScoreValue_Colors',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__UsageData__c',
+	JBCXM__ColumnList__c = '[{"name":"JBCXM__CurScoreId__r.JBCXM__Score__c","label":"Current Score Value","displayOrder":1,"visibilityMode":true,"objectName":"JBCXM__CustomerInfo__c","fieldType":"DOUBLE","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Account__r.Name","label":"Account Name","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__UsageData__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__UsageData__c","name":"JBCXM__Account__r.Name","label":"Account Name","groupable":true,"aliasName":"Cat1","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'COLUMN',
+	JBCXM__HavingClause__c = null,
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CustomerInfo__c","name":"JBCXM__CurScoreId__r.JBCXM__Score__c","label":"Avg of Current Score Value","graphType":null,"aggType":"AVG","aliasName":"DS1","fieldType":"DOUBLE","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = null,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'GS Scorecards',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	//JBCXM__WhereClause__c = '{"filterLogic":"","filterCriteria":[]}'
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"0","objectName":"JBCXM__CustomerInfo__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__CurScoreId__r.JBCXM__Score__c","fieldLabel":"Current Score Value","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+
+insert pbr;
+
+//To create Layout
+JBCXM__Dashboard__c defaultLayout = new JBCXM__Dashboard__c(Name = 'Colors_Layout', JBCXM__IsActive__c = true, 
+												JBCXM__LayoutType__c = 'Home Page', JBCXM__Visibility__c 	= 'Public',
+												JBCXM__User__c = Userinfo.getUserId() );
+defaultLayout.JBCXM__FilterConditions__c = '{"maxCols":2,"layoutWidth":960,"margin":[8,8],"tileWidth":470,"tileHeight":300}';
+insert defaultLayout;
+
+//Creating container 
+List<JBCXM__DashboardContainer__c> dcList = new List<JBCXM__DashboardContainer__c>();			
+//lc layoutContainer									
+JBCXM__DashboardContainer__c lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+														JBCXM__Dashboard__c			= defaultLayout.Id,
+														JBCXM__ContainerOptions__c	= '{"col":"1","row":"1","size_x":"2","size_y":"1"}',
+														JBCXM__UIView__c			= pbr[0].Id,
+														JBCXM__SourceType__c		= 'FORCE'
+													);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"2","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[1].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"3","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[2].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"4","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[3].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"5","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[4].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"6","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[5].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"7","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[6].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"8","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[7].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+								JBCXM__Dashboard__c		= defaultLayout.Id,
+								JBCXM__ContainerOptions__c	= '{"col":"1","row":"9","size_x":"2","size_y":"1"}',
+								JBCXM__UIView__c			= pbr[8].Id,
+								JBCXM__SourceType__c		= 'FORCE'
+							);
+dcList.add(lc);
+
+insert dcList;
