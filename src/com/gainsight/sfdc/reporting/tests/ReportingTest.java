@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.sforce.soap.partner.sobject.SObject;
 
 public class ReportingTest extends BaseTest{
 	private final String CREATE_CASES_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCases.txt";
@@ -23,15 +24,16 @@ public class ReportingTest extends BaseTest{
 	private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateUsers.txt";
 	private final String CREATE_CTAS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCTAs.txt";
 	private final String CREATE_MILESTONES_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/Milestones.txt";
+	private final String CREATE_REPORTS_MULTIPLECOMBO_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithMultipleCombo.txt";
 
-	//Colors - Need to load Milestones
+	
 	//Colors - Accounts should have Current score label in Customer Info object
 	//Colors - Accounts should have Current Score Value in Usage data object
 	
 	@BeforeClass
 	public void loadInitScripts() throws Exception {
 		sfdc.connect();
-        Log.info("Executing the script to create cases into Case Object...");
+		Log.info("Executing the script to create cases into Case Object...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CASES_SCRIPT));
         Log.info("Executing the script to create Users...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
@@ -151,5 +153,33 @@ public class ReportingTest extends BaseTest{
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_NORMALIZATION_SCRIPT));
 		Log.info("Completed the script to load reports with Normalizations ");
 	}
+	
+	
+	@Test
+	public void createreportsWithMultipleCombinations(){
+		Log.info("Executing the script to load reports with multiple combinations ");
+		
+		SObject[] productPerformance = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Performance' and JBCXM__Category__c='Alert Reason'"));
+		SObject[] productAdoption = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Adoption' and JBCXM__Category__c='Alert Reason'"));
+		SObject[] productRelease = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Release' and JBCXM__Category__c='Alert Reason'"));
+		SObject[] expectationMismatch = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Expectation Mismatch' and JBCXM__Category__c='Alert Reason'"));
+		
+		SObject[] open = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Open' and JBCXM__Category__c = 'Alert Status'"));
+		SObject[] inProgress = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'In Progress' and JBCXM__Category__c = 'Alert Status'"));
+		
+		String tmpfileContents = getNameSpaceResolvedFileContents(CREATE_REPORTS_MULTIPLECOMBO_SCRIPT);
+	
+		tmpfileContents = tmpfileContents.replaceAll("Product Performance", productPerformance[0].getId());
+		tmpfileContents = tmpfileContents.replaceAll("Product Adoption", productAdoption[0].getId());
+		tmpfileContents = tmpfileContents.replaceAll("Product Release", productRelease[0].getId());
+		tmpfileContents = tmpfileContents.replaceAll("Expectation Mismatch", expectationMismatch[0].getId());
+		
+		tmpfileContents = tmpfileContents.replaceAll("Open", open[0].getId());
+		tmpfileContents = tmpfileContents.replaceAll("In Progress", inProgress[0].getId());
+		System.out.println(tmpfileContents);
+		sfdc.runApexCode(resolveStrNameSpace(tmpfileContents));
+		Log.info("Completed the script to load reports with multiple combinations ");
+	}
+	
 	
 }

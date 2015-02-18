@@ -1,0 +1,61 @@
+//Script to create Report with Where and Having Filters
+//Script to create Report with 
+//Script to create Report with Picklist filter values
+//Script to create Report with Summarized by
+
+
+//Report with Where and Having Filters
+//show Me: Account Name, Age , Status name, Priority Name
+//By: Created Date, Reason Name
+//Where : 
+/*
+		1)Reason includes 'Product Performance', 'Expectation Mismatch','Product Release','Product Adoption'
+		2)Staus includes 'Open','In Progress'
+		3)Age > 0
+   		4)Created Date = Current FQ
+		5)Industry Does not contain 'Biotechnology'
+		6)Account Name Does not contain 'Gainsight'
+		7)isRecurring is False
+		8)ASV !=100
+		9)Assignee = Current user
+
+Having: 1)Sum of Age !=10
+		2)Count of Account Name <=10
+Reason--
+Select ID from JBCXM__Picklist__c where name = 'Product Performance' and JBCXM__Category__c='Alert Reason'
+Select ID from JBCXM__Picklist__c where name = 'Product Adoption' and JBCXM__Category__c='Alert Reason
+Select ID from JBCXM__Picklist__c where name = 'Product Release' and JBCXM__Category__c='Alert Reason'
+Select ID from JBCXM__Picklist__c where name = 'Expectation Mismatch' and JBCXM__Category__c='Alert Reason'
+Status---
+Select ID from JBCXM__Picklist__c where name = 'Open' and JBCXM__Category__c = 'Alert Status'
+Select ID from JBCXM__Picklist__c where name = 'In Progress' and JBCXM__Category__c = 'Alert Status'
+
+*/
+
+List<JBCXM__UIViews__c> pbr = new List<JBCXM__UIViews__c>();
+
+//***************************CTA Types********************************
+JBCXM__UIViews__c viewObj = new JBCXM__UIViews__c(
+	name = 'CTA_WhereAndHavingFilters',
+	JBCXM__AccountReference__c = 'JBCXM__Account__c',
+	JBCXM__BaseObject__c = 'JBCXM__CTA__c',
+	JBCXM__ColumnList__c = '[{"name":"JBCXM__Account__r.Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Age__c","label":"Age","displayOrder":2,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":false},{"name":"JBCXM__Stage__r.Name","label":"Status Name","displayOrder":3,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Priority__r.Name","label":"Priority Name","displayOrder":4,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__CreatedDate__c","label":"Created Date","displayOrder":5,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"DATE","isGroupable":true,"hasJBCXMNS":false},{"name":"JBCXM__Reason__r.Name","label":"Reason Name","displayOrder":6,"visibilityMode":true,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__CreatedDate__c","label":"Created Date","groupable":true,"aliasName":"Cat1","fieldType":"DATE","hasJBCXMNS":false,"stacked":false},{"summerizedBy":null,"objectName":"JBCXM__CTA__c","name":"JBCXM__Reason__r.Name","label":"Reason Name","groupable":true,"aliasName":"Cat2","fieldType":"TEXT","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = 'LIST',
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1 AND JBCXM__2","filterCriteria":[{"value":10,"objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"n","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__1","locked":false,"aggregation":"SUM"},{"value":10,"objectName":"JBCXM__CTA__c","fieldType":"TEXT","logicalOperator":"AND","operator":"m","name":"JBCXM__Account__r.Name","fieldLabel":"Account Name","alias":"JBCXM__2","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"JBCXM__CTA__c","name":"JBCXM__Account__r.Name","label":"Count of Account Name","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"TEXT","hasJBCXMNS":false},{"objectName":"JBCXM__CTA__c","name":"JBCXM__Age__c","label":"Sum of Age","graphType":null,"aggType":"SUM","aliasName":"DS2","fieldType":"DOUBLE","hasJBCXMNS":false},{"objectName":"JBCXM__CTA__c","name":"JBCXM__Stage__r.Name","label":"Count of Status Name","graphType":null,"aggType":"COUNT","aliasName":"DS3","fieldType":"TEXT","hasJBCXMNS":false},{"objectName":"JBCXM__CTA__c","name":"JBCXM__Priority__r.Name","label":"Count of Priority Name","graphType":null,"aggType":"COUNT","aliasName":"DS4","fieldType":"TEXT","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = null,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'CTA',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	JBCXM__WhereClause__c = '{"filterLogic":"(JBCXM__1 AND JBCXM__2 AND JBCXM__3 AND JBCXM__4 AND JBCXM__5 AND JBCXM__6 AND JBCXM__7 AND JBCXM__8) OR JBCXM__9","filterCriteria":[{"value":"('Product Performance','Product Adoption','Product Release','Expectation Mismatch')","objectName":"JBCXM__CTA__c","fieldType":"CUSTOMLOOKUP","logicalOperator":"AND","operator":"u","name":"JBCXM__Reason__c","fieldLabel":"Reason","referenceTo":"JBCXM__PickList__c","alias":"JBCXM__1","locked":false},{"value":"('Open','In Progress')","objectName":"JBCXM__CTA__c","fieldType":"CUSTOMLOOKUP","logicalOperator":"AND","operator":"u","name":"JBCXM__Stage__c","fieldLabel":"Status","referenceTo":"JBCXM__PickList__c","alias":"JBCXM__2","locked":false},{"value":"0","objectName":"JBCXM__CTA__c","fieldType":"DOUBLE","logicalOperator":"AND","operator":"g","name":"JBCXM__Age__c","fieldLabel":"Age","alias":"JBCXM__3","locked":false},{"value":"JBcurrentfq","objectName":"JBCXM__CTA__c","fieldType":"TIMEFRAMENORMALDATE","logicalOperator":"AND","operator":"e","name":"JBCXM__CreatedDate__c","fieldLabel":"Created Date","alias":"JBCXM__4","locked":false},{"value":"Biotechnology","objectName":"Account","fieldType":"PICKLIST","logicalOperator":"AND","operator":"k","name":"Industry","fieldLabel":"Industry","alias":"JBCXM__5","locked":false},{"value":"Gainsight","objectName":"JBCXM__CTA__c","fieldType":"TEXT","logicalOperator":"AND","operator":"k","name":"JBCXM__Account__r.Name","fieldLabel":"Account Name","alias":"JBCXM__6","locked":false},{"value":false,"objectName":"JBCXM__CTA__c","fieldType":"BOOLEAN","logicalOperator":"AND","operator":"e","name":"JBCXM__IsRecurring__c","fieldLabel":"IsRecurring","alias":"JBCXM__7","locked":false},{"value":"100","objectName":"JBCXM__CustomerInfo__c","fieldType":"CURRENCY","logicalOperator":"AND","operator":"n","name":"JBCXM__ASV__c","fieldLabel":"ASV","alias":"JBCXM__8","locked":false},{"value":"@@CURRENTUSER","objectName":"JBCXM__CTA__c","fieldType":"REFERENCE","logicalOperator":"AND","operator":"e","name":"JBCXM__Assignee__c","fieldLabel":"Assignee","referenceTo":"User","alias":"JBCXM__9","locked":false}]}'
+);
+pbr.add(viewObj);
+insert pbr;
