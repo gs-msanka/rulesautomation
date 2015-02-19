@@ -1,0 +1,9 @@
+String HomePagelayoutName = 'layoutName';
+Delete[Select id from JBCXM__Dashboard__c where name =: HomePagelayoutName];
+
+//To create Layout
+JBCXM__Dashboard__c defaultLayout = new JBCXM__Dashboard__c(Name = HomePagelayoutName, JBCXM__IsActive__c = true, 
+												JBCXM__LayoutType__c = 'Home Page', JBCXM__Visibility__c 	= 'Public',
+												JBCXM__User__c = Userinfo.getUserId() );
+defaultLayout.JBCXM__FilterConditions__c = '{"maxCols":2,"layoutWidth":960,"margin":[8,8],"tileWidth":470,"tileHeight":300}';
+insert defaultLayout;
