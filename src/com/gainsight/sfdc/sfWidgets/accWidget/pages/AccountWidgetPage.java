@@ -27,6 +27,7 @@ public class AccountWidgetPage extends BasePage {
     private final String OVERLAY_BLOCK="//div[@class='overlayBackground jbaraDummyOverLayFormForOpp']";
     private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
   	private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
+  	private final String FEATURES_TAB = "//a[@class='Features']";
   	
     public AccountWidgetPage() {
         //wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -50,6 +51,11 @@ public class AccountWidgetPage extends BasePage {
         item.click(ADOPTION_TAB);
         field.switchToMainWindow();
         return this;
+    }
+    
+    public AccWidget_FeaturesPage selectFeaturesSubTab() {
+        item.click(FEATURES_TAB);
+        return new AccWidget_FeaturesPage();
     }
 
 
