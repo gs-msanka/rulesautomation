@@ -32,7 +32,8 @@ public class Customer360FeaturesTests extends BaseTest {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
-        Customer360Features cf = basepage.clickOnC360Tab().searchCustomer("Features Test Account", false, false).goToFeaturesSection();
+        
+		Customer360Features cf = basepage.clickOnC360Tab().searchCustomer("Features Test Account", false, false).goToFeaturesSection();
 		HashMap<String, String> prodList = getMapFromData(testData.get("Products"));
 		Log.info("ProdListSize=" + prodList.size());
 		List<HashMap<String, String>> productFeatureList = new ArrayList();
