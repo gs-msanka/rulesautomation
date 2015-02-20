@@ -72,39 +72,41 @@ public class AccWidget_FeaturesTests extends BaseTest{
 	        }
 		}
 
-		/*@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+		@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 		public void verifyEditFeatures(HashMap<String, String> testData) {
-	        Customer360Features cf = basepage.clickOnC360Tab().searchCustomer("Features Test Account", false, false).goToFeaturesSection();
+			String AccId=sfdc.getRecords("select id from Account where name='Features Test Account'")[0].getId();
+			AccountPage accPage = basepage.gotoAccountPageWithId(AccId);
+			AccWidget_FeaturesPage accFutrePage=accPage.switchToAccountWidget().selectFeaturesSubTab();
+	        //Customer360Features cf = basepage.clickOnC360Tab().searchCustomer("Features Test Account", false, false).goToFeaturesSection();
 			//In the Edit features form check on Licensed for a Feature and verify if same is reflected in features module
 			HashMap<String, String> prodList = getMapFromData(testData.get("Products"));
 			List<HashMap<String, String>> prodFeatureList = new ArrayList();
-			if (cf.isDataGridPresent()) {
+			if (accFutrePage.isDataGridPresent()) {
 	            for (String prodName : prodList.keySet()) {
 	                prodFeatureList = getMapFromDataList(testData.get(prodList.get(prodName)));
-	                cf.clickOnEditFeatures();
+	                accFutrePage.clickOnEditFeatures();
 
 	                for(HashMap<String, String> data : prodFeatureList) {
 	                    if(data.get("Edit").equals("Yes")) {
 	                        if(data.get("Licensed").equals("Yes"))
-	                            cf.selectLicensed(prodList.get(prodName),data.get("Feature"));
+	                        	accFutrePage.selectLicensed(prodList.get(prodName),data.get("Feature"));
 	                        if(data.get("Enabled").equals("Yes"))
-	                            cf.selectEnabled(prodList.get(prodName),data.get("Feature"));
-	                        cf.addComments(prodList.get(prodName), data.get("Feature"), data.get("Comments"));
+	                        	accFutrePage.selectEnabled(prodList.get(prodName),data.get("Feature"));
+	                        accFutrePage.addComments(prodList.get(prodName), data.get("Feature"), data.get("Comments"));
 	                    }
 	                }
-	                cf = cf.clickOnSave();
+	                accFutrePage = accFutrePage.clickOnSave();
 	                for(HashMap<String, String> data : prodFeatureList) {
 	                    if(data.get("Edit").equals("Yes")) {
-	                        Assert.assertTrue(cf.checkFeatureRow(prodList.get(prodName), data.get("Feature"), data.get("Licensed"), data.get("Enabled"), data.get("Comments")));
-	                    }
+	                        Assert.assertTrue(accFutrePage.checkFeatureRow(prodList.get(prodName), data.get("Feature"), data.get("Licensed"), data.get("Enabled"), data.get("Comments")));	                    }
 
 	                }
 	            }
 			}  else {
 	            Assert.assertTrue(false, "Data grid is not displayed.");
 	        }
-		 }*/
+		 }
 		
 	
 	
