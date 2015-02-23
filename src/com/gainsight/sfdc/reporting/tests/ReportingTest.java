@@ -50,17 +50,18 @@ public class ReportingTest extends BaseTest{
 	
 	public void createReportWithAnyCombination(String ScriptName,String ReportName,String GraphType,String RLName,String LayoutName,String baseObjName){
 		//Creating Report and assign the report to CS 360 section
-		SObject[] CS360SectionID = sfdc.getRecords("SELECT ID FROM JBCXM__C360Sections__c WHERE NAME = '"+RLName+"'");
+		
+		SObject[] CS360SectionID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__C360Sections__c WHERE NAME = '"+RLName+"'"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(ScriptName).replaceAll("viewName", ReportName).replaceAll("graphType", GraphType).replaceAll("cs360SectionID", CS360SectionID[0].getId()));
 		//Adding the report to home page	
-		SObject[] HomeLayoutID = sfdc.getRecords("SELECT ID FROM JBCXM__Dashboard__c WHERE NAME ='"+LayoutName +"'");
-		SObject[] ReportID = sfdc.getRecords("SELECT ID FROM JBCXM__UIViews__c WHERE NAME = '"+ReportName+"'");
+		SObject[] HomeLayoutID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__Dashboard__c WHERE NAME ='"+LayoutName +"'"));
+		SObject[] ReportID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__UIViews__c WHERE NAME = '"+ReportName+"'"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTAINER_SCRIPT).replaceAll("LayoutID", HomeLayoutID[0].getId()).replaceAll("viewID", ReportID[0].getId()));		
 	}
 	
 	
 
-@Test
+	@Test(priority = 1)
 	//Creates Reports on Case Object
 	public void createReportsWith1M1D(){
 		//Creating CS 360 Section
@@ -76,7 +77,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_1M1D_SCRIPT,"Table_1_1_CaseObj","LIST", "1ShowMe_1By_RL", "1ShowMe_1By_Layout", "Case");
 	}
 	
-	@Test
+	@Test(priority = 2)
 	public void createReportsWith1M2D(){
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "1ShowMe_2By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "1ShowMe_2By_Layout"));
@@ -91,7 +92,7 @@ public class ReportingTest extends BaseTest{
 	}
 	
 		
-	@Test
+	@Test(priority = 3)
 	public void createReportsWith2M1D(){
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "2ShowMe_1By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "2ShowMe_1By_Layout"));
@@ -108,7 +109,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_2M1D_SCRIPT,"AREA_2_1_CaseObj","AREA", "2ShowMe_1By_RL", "2ShowMe_1By_Layout", "Case");
 	}
 	
-	@Test
+	@Test(priority = 4)
 	public void createReportsWith2M2D(){	
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "2ShowMe_2By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "2ShowMe_2By_Layout"));
@@ -117,7 +118,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_2M2D_SCRIPT,"Scatter_2_2_CaseObj","SCATTER", "2ShowMe_2By_RL", "2ShowMe_2By_Layout", "Case");
 	}
 	
-	@Test
+	@Test(priority = 5)
 	public void createReportsWith3M1D(){	
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "3ShowMe_1By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "3ShowMe_1By_Layout"));
@@ -133,7 +134,7 @@ public class ReportingTest extends BaseTest{
 		
 	}
 	
-	@Test
+	@Test(priority = 6)
 	public void createReportsWith3M2D(){	
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "3ShowMe_2By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "3ShowMe_2By_Layout"));
@@ -142,7 +143,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_3M2D_SCRIPT,"Bubble_3_2_CaseObj","BUBBLE", "3ShowMe_2By_RL", "3ShowMe_2By_Layout", "Case");
 	}
 	
-	@Test
+	@Test(priority = 7)
 	public void createReportsWith4M1D(){	
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "4ShowMe_1By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "4ShowMe_1By_Layout"));
@@ -154,7 +155,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_4M1D_SCRIPT,"Stacked_COlumn_4_1_CaseObj","STACKED-COLUMN", "4ShowMe_1By_RL", "4ShowMe_1By_Layout", "Case");		
 	}
 	
-	@Test
+	@Test(priority = 8)
 	public void createReportsWith5M1D(){
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "5ShowMe_1By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "5ShowMe_1By_Layout"));
@@ -165,7 +166,7 @@ public class ReportingTest extends BaseTest{
 		
 	}
 	
-	@Test
+	@Test(priority = 9)
 	public void createReportsWith6M1D(){
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CS360SECTION_SCRIPT).replaceAll("CS360SectionName", "6ShowMe_1By_RL").replaceAll("objName", "Case"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", "6ShowMe_1By_Layout"));
@@ -175,21 +176,21 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_6M1D_SCRIPT,"Area_6_1_CaseObj","AREA", "6ShowMe_1By_RL", "6ShowMe_1By_Layout", "Case");
 	}
 	
-	@Test
+	@Test(priority = 10)
 	public void createReportWithColors(){
 		Log.info("Executing the script to load reports with color combinations ");
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_COLORS_SCRIPT));
 		Log.info("Completed the script to load reports with color combinations ");
 	}
 	
-	@Test
+	@Test(priority = 11)
 	public void createReportWithNormalization(){
 		Log.info("Executing the script to load reports with Normalizations ");
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_NORMALIZATION_SCRIPT));
 		Log.info("Completed the script to load reports with Normalizations ");
 	}
 	
-	@Test
+	@Test(priority = 12)
 	public void createreportsWithMultipleCombinations(){
 		Log.info("Executing the script to load reports with multiple combinations ");
 		
