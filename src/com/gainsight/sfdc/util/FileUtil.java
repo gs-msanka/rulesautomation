@@ -87,7 +87,7 @@ public class FileUtil {
             Log.info(result);
             return result;
         }else if(str!= null && nameSpace == null){
-        	result = str.replaceAll("JBCXM__", " ");
+        	result = str.replaceAll("JBCXM__", "");
         	return result;
         }else {
             return str;
