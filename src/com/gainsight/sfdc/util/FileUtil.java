@@ -86,7 +86,10 @@ public class FileUtil {
             result = str.replaceAll("JBCXM__", nameSpace+"__").replaceAll("JBCXM\\.", nameSpace+".");
             Log.info(result);
             return result;
-        } else {
+        }else if(str!= null && nameSpace == null){
+        	result = str.replaceAll("JBCXM__", " ");
+        	return result;
+        }else {
             return str;
         }
     }
