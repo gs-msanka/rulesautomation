@@ -58,25 +58,23 @@ public class FileUtil {
 
     public static FileReader resolveNameSpace(File file, String nameSpace) {
         try {
-            if (nameSpace!=null) {
-
+            if(!nameSpace.equalsIgnoreCase("JBCXM")) {
                 String extension = FilenameUtils.getExtension(file.getName());
                 File tempFile = new File( "./resources/datagen/process/tempFile."+extension);
                 FileOutputStream fOut = new FileOutputStream(tempFile);
-                try {
                     fOut.write(resolveNameSpace(getFileContents(file), nameSpace).getBytes());
                     fOut.close();
                     fOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 return new FileReader(tempFile);
             } else {
                 return new FileReader(file);
             }
         } catch (FileNotFoundException e) {
-            Log.info(e.getLocalizedMessage());
+            Log.error(e.getLocalizedMessage());
             throw new RuntimeException("File Not Found : " +file.getName());
+        } catch (IOException e) {
+            Log.error(e.getLocalizedMessage());
+            throw new RuntimeException("IO Exception on : " +file.getName());
         }
     }
 
