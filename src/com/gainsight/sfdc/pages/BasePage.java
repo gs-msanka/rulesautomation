@@ -336,4 +336,18 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
+    public void selectValueInDropDown(String value) {
+        boolean selected = false;
+        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+            Log.info("Checking : "+ele.isDisplayed());
+            if(ele.isDisplayed()) {
+                ele.click();
+                selected = true;
+                break;
+            }
+        }
+        if(selected != true) {
+            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
+        }
+    }
 }

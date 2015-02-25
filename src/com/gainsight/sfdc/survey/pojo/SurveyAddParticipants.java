@@ -1,58 +1,120 @@
 package com.gainsight.sfdc.survey.pojo;
 
-public class SurveyAddParticipants {
+import java.util.ArrayList;
+import java.util.List;
 
-	private String LoadParticipants;
-	private String SelectRole;
-	private String SelectRoleField;
-	private String Filter;
-	private String Operator;
-	private String Value;
-	private String AdvancedLogic;
-	private String ExcludeParticipants;
+import com.gainsight.sfdc.workflow.pojos.CTA.Attribute;
+
+public class SurveyAddParticipants implements Cloneable {
+
+	private String loadParticipantsFrom;
+	private String selectRole;
+	private String selectRoleField;
+	private String filter;
+	private String operator;
+	private String value;
+	private String advancedLogic;
+	private String excludeParticipants_Type;
+	private String excludePtp_Survey;
+	private boolean loadAll;
+	private List<ParticipantDetails> participantsList = new ArrayList<ParticipantDetails>();
 	
-	public String getLoadParticipants() {
-		return LoadParticipants;
+	public boolean isLoadAll() {
+		return loadAll;
 	}
-	public void setLoadParticipants(String loadParticipants) {
-		LoadParticipants = loadParticipants;
+	public void setLoadAll(boolean loadAll) {
+		this.loadAll = loadAll;
+	}
+	public String getExcludePtp_Survey() {
+		return excludePtp_Survey;
+	}
+	public void setExcludePtp_Survey(String excludePtp_Survey) {
+		this.excludePtp_Survey = excludePtp_Survey;
+	}
+	public String getLoadParticipantsFrom() {
+		return loadParticipantsFrom;
+	}
+	public void setLoadParticipantsFrom(String loadParticipantsFrom) {
+		this.loadParticipantsFrom = loadParticipantsFrom;
 	}
 	public String getSelectRole() {
-		return SelectRole;
+		return selectRole;
 	}
 	public void setSelectRole(String selectRole) {
-		SelectRole = selectRole;
+		this.selectRole = selectRole;
 	}
 	public String getSelectRoleField() {
-		return SelectRoleField;
+		return selectRoleField;
 	}
 	public void setSelectRoleField(String selectRoleField) {
-		SelectRoleField = selectRoleField;
+		this.selectRoleField = selectRoleField;
 	}
 	public String getOperator() {
-		return Operator;
+		return operator;
 	}
 	public void setOperator(String operator) {
-		Operator = operator;
+		this.operator = operator;
 	}
 	public String getValue() {
-		return Value;
+		return value;
 	}
 	public void setValue(String value) {
-		Value = value;
+		this.value = value;
 	}
 	public String getAdvancedLogic() {
-		return AdvancedLogic;
+		return advancedLogic;
 	}
 	public void setAdvancedLogic(String advancedLogic) {
-		AdvancedLogic = advancedLogic;
+		this.advancedLogic = advancedLogic;
 	}
-	public String getExcludeParticipants() {
-		return ExcludeParticipants;
+	public String getExcludeParticipants_Type() {
+		return excludeParticipants_Type;
 	}
-	public void setExcludeParticipants(String excludeParticipants) {
-		ExcludeParticipants = excludeParticipants;
+	public void setExcludeParticipants_Type(String excludeParticipants_Type) {
+		this.excludeParticipants_Type = excludeParticipants_Type;
 	}
-	
+	public String getFilter() {
+		return filter;
+	}
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+	public List<ParticipantDetails> getParticipantsList() {
+		return participantsList;
+	}
+
+	public void setParticipantsList(List<ParticipantDetails> participantsList) {
+		this.participantsList = participantsList;
+	}
+	public static class ParticipantDetails{
+		private String name;
+		private String email;
+		private String accName;
+		private String role;
 		
-}
+		public void setName(String name){
+			this.name=name;
+		}
+		public String getName(){
+			return name;
+		}
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		public String getAccName() {
+			return accName;
+		}
+		public void setAccName(String accName) {
+			this.accName = accName;
+		}
+		public String getRole() {
+			return role;
+		}
+		public void setRole(String role) {
+			this.role = role;
+		}
+	}
+	}

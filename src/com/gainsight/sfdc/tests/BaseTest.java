@@ -217,6 +217,12 @@ public class BaseTest {
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
         addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields));
     }
+    
+    public void createExtIdFieldOnContacts() throws Exception {
+        String[] fields = new String[]{"Contact ExternalId"};
+        metadataClient.createTextFields("Contact", fields, true, true, true, false, false);
+        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(fields));
+    }
 
     public String[] convertFieldNameToAPIName(String[] args) {
         String[] temp = new String[args.length];

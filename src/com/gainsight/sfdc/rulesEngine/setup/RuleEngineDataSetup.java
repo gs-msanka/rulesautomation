@@ -397,8 +397,8 @@ public class RuleEngineDataSetup extends BaseTest {
             rule.setJBCXM__ScorecardCriteria__c(mapper.writeValueAsString(ruleScCriteria));
         }
         result = resolveStrNameSpace(mapper.writeValueAsString(rule));
-        Log.info("Rule Json String : " +result);
-        return result;
+        Log.info("Rule Json String : " +resolveStrNameSpace(result));
+        return resolveStrNameSpace(result);
     }
 
     /**

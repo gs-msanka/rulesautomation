@@ -82,10 +82,12 @@ public class FileUtil {
         String result = "";
         if (str != null && nameSpace!=null && !nameSpace.equalsIgnoreCase("JBCXM")) {
             result = str.replaceAll("JBCXM__", nameSpace+"__").replaceAll("JBCXM\\.", nameSpace+".");
+            result = result.replaceAll("jbcxm__", nameSpace+"__").replaceAll("jbcxm\\.", nameSpace+".");
             Log.info(result);
             return result;
         }else if(str!= null && nameSpace == null){
         	result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
+	     	result = result.replaceAll("jbcxm__", "").replaceAll("jbcxm\\.","");
         	return result;
         }else {
             return str;

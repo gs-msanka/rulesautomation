@@ -32,7 +32,10 @@ public class SurveyPage extends SurveyBasePage {
         waitTillNoLoadingIcon();
 		wait.waitTillElementPresent(String.format(Survey_TITLE, surveyName), MIN_TIME, MAX_TIME);
 	}
-
+	
+	public SurveyPage(){
+		
+	}
 	public SurveyProperties clickOnProperties() {
     	item.click(PROPERTIES_SECTION_LINK);
         return new SurveyProperties();
@@ -53,9 +56,9 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveyPublishPage();
     }
 	
-	public SurveyAddParticipantsPage clickOnAddParticipants() {
+	public SurveyAddParticipantsPage clickOnAddParticipants(SurveyProperties sData) {
     	item.click(ADD_PARTICIPANTS_SECTION_LINK);
-        return new SurveyAddParticipantsPage();
+        return new SurveyAddParticipantsPage(sData);
     }
 	
 	public SurveyDistributePage clickOnDistribute() {
@@ -63,16 +66,13 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveyDistributePage();
     }
 	
-	public SurveyAnalyzePage clickOnAnalyze() {
+	public SurveyAnalyzePage clickOnAnalyze(SurveyProperties sData) {
     	item.click(ANALYZE_SECTION_LINK);
-        return new SurveyAnalyzePage();
+        return new SurveyAnalyzePage(sData);
     }
 
     public SurveyBasePage goToSurveyBasePage() {
         item.click(BACK_ICON);
         return new SurveyBasePage();
     }
-
-
-	
 }
