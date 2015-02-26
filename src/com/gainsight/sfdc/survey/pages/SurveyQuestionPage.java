@@ -7,6 +7,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion.SurveyAllowedAnswer;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -116,7 +117,13 @@ public class SurveyQuestionPage extends SurveyPage {
         return this;
     }
 
-    public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
+    private void waitTillElementDisplayed(WebElement surQuestionsPageEle,
+			String qUESTIONS_MENU_CSS2, int minTime, int maxTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).sendKeys(surveyQuestion.getQuestionText());
