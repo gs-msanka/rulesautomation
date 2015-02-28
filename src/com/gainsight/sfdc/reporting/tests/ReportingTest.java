@@ -89,6 +89,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"Area_1_2_CaseObj","AREA", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"Stacked_Bar_1_2_CaseObj","STACKED-BAR", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"Stacked_Column_1_2_CaseObj","STACKED-COLUMN", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
+		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"HeatMap_1_2_CaseObj","HEATMAP", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 	}
 	
 		

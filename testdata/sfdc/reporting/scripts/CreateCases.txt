@@ -1,5 +1,5 @@
 Delete[Select id from case];
-List<Account> acctID = [Select id from Account limit 100];
+List<JBCXM__CustomerInfo__c> acctID = [SELECT JBCXM__Account__c FROM JBCXM__CustomerInfo__c limit 100];
 	List<String> reasonList = new List<String>{'User didn\'t attend training','Complex functionality','Existing problem','Instructions not clear','New problem','User didn\'t attend training','Complex functionality','Existing problem','Instructions not clear','New problem'};
 	List<String> statusList = new List<String>{'On Hold','New','Escalated','New','Escalated','On Hold','New','Escalated','New','Escalated'};
 	List<String> typeList = new List<String>{'Problem','Feature Request','Question','Problem','Question','Problem','Feature Request','Question','Problem','Question'};
@@ -13,7 +13,7 @@ List<Account> acctID = [Select id from Account limit 100];
 			Status = statusList[Integer.valueof(math.random()*statusList.size())],
 			Subject = 'Sample Case '+i,
 			Type = typeList[Integer.valueof(math.random()*typeList.size())],
-			AccountID = acctID[i].id,
+			AccountID = acctID[i].JBCXM__Account__c,
 			Priority = priorityList[Integer.valueof(math.random()*priorityList.size())],
 			Origin = originList[Integer.valueof(math.random()*originList.size())]);
 		cl.add(a);
