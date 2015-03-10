@@ -15,6 +15,8 @@ public class SurveyQuestion {
     private String questionType;  //Expected Values - CHECKBOX, SELECT, NPS, RATING, RANKING, TEXT_INPUT, TEXT_AREA, MATRIX
     private String parentQuestionText;
     private String parentQuestionId;
+    private String headerId;
+    private String headerTitle;
     private boolean active          = true;
     private boolean required        = false;
     private boolean allowComments   = false;
@@ -23,10 +25,36 @@ public class SurveyQuestion {
     private boolean sectionHeader   = false;
     private String image;
     private String commentsLabel    = "Comments";
+    private String otherLabel = "Other";
+
+    public String getOtherLabel() {
+        return otherLabel;
+    }
+
+    public void setOtherLabel(String otherLabel) {
+        this.otherLabel = otherLabel;
+    }
+
     private int displayOrder;
     private ArrayList<SurveyAllowedAnswer> allowedAnswers = new ArrayList<SurveyAllowedAnswer>();
     private ArrayList<SurveySubQuestions> subQuestions = new ArrayList<SurveySubQuestions>();
     private SurveyProperties surveyProperties;
+
+    public String getHeaderId() {
+        return headerId;
+    }
+
+    public void setHeaderId(String headerId) {
+        this.headerId = headerId;
+    }
+
+    public String getHeaderTitle() {
+        return headerTitle;
+    }
+
+    public void setHeaderTitle(String headerTitle) {
+        this.headerTitle = headerTitle;
+    }
 
     public String getParentQuestionText() {
         return parentQuestionText;

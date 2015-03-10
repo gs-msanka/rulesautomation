@@ -15,18 +15,20 @@ public class SurveySetup extends BaseTest {
      * Populate ths survey Id.
      * @param surveyProp
      */
-	public void setSurveyId(SurveyProperties surveyProp){
+	public String setSurveyId(SurveyProperties surveyProp){
         String query = resolveStrNameSpace("Select id, Name From JBCXM__Survey__c Where JBCXM__title__c = '" + surveyProp.getSurveyName() + "' order by createdDate desc limit 1");
         Log.info("Query to get survey ID : "+query);
         SObject[] sObjects = sfdc.getRecords(query);
         Log.info("No of records returned : "+sObjects.length);
+        String surveyId;
         if(sObjects.length >=1) {
-            String surveyId = sObjects[0].getId();
+            surveyId = sObjects[0].getId();
             Log.info("Survey Id : "+surveyId);
             surveyProp.setsId(surveyId);
         } else {
             throw new RuntimeException("No Survey Found with this name : " +surveyProp.getSurveyName());
         }
+        return surveyId;
     }
 
     public String getRecentAddedPageId(SurveyProperties surveyProp) {
@@ -44,9 +46,25 @@ public class SurveySetup extends BaseTest {
         return pageId;
     }
 
-    public void setQuestionId(SurveyQuestion surQues) {
+    public String getRecentAddedQuestionId(SurveyQuestion surQues) {
         String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where " +
-                            "JBCXM__SurveyMaster__c='"+surQues.getSurveyProperties().getsId()+"'  and JBCXM__Title__c='"+surQues.getQuestionText()+"' and JBCXM__ParentQuestion__c=null  order by createdDate desc limit 1 ");
+                "JBCXM__SurveyMaster__c='"+surQues.getSurveyProperties().getsId()+"' order by createdDate desc limit 1 ");
+        Log.info("Query to get survey question ID : "+query);
+        SObject[] sObjects = sfdc.getRecords(query);
+        Log.info("No of records returned : "+sObjects.length);
+        String questId;
+        if(sObjects.length >=1) {
+            questId = sObjects[0].getId();
+            Log.info("Question Id : "+questId);
+        } else {
+            throw new RuntimeException("No Survey Question Found with this name : " +surQues.getQuestionText());
+        }
+        return questId;
+    }
+
+    public void getQuestionId(SurveyQuestion surQues) {
+        String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where " +
+                            "JBCXM__SurveyMaster__c='"+surQues.getSurveyProperties().getsId()+"'  and JBCXM__Title__c='"+surQues.getQuestionText()+"' and JBCXM__Type__c = '"+surQues.getQuestionType()+"' order by createdDate desc limit 1 ");
         Log.info("Query to get survey question ID : "+query);
         SObject[] sObjects = sfdc.getRecords(query);
         Log.info("No of records returned : "+sObjects.length);
@@ -112,8 +130,12 @@ public class SurveySetup extends BaseTest {
         }
     }
 	
-    public void createSurveyQuestion(SurveyQuestion surveyQuestion, SurveyQuestionPage surveyQuestionPage) {
-
+    public SurveyQuestionPage createSurveyQuestion(SurveyQuestion surveyQuestion, SurveyQuestionPage surveyQuestionPage) {
+        surveyQuestionPage.clickOnAddNewQuestion(surveyQuestion);
+        surveyQuestion.setQuestionId(getRecentAddedQuestionId(surveyQuestion));
+        surveyQuestionPage.fillQuestionFormInfo(surveyQuestion);
+        surveyQuestionPage = surveyQuestionPage.clickOnSaveQuestion(surveyQuestionPage.getQuestionElement(surveyQuestion));
+        return surveyQuestionPage;
     }
 	
 

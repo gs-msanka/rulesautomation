@@ -10,6 +10,7 @@ import com.gainsight.testdriver.Log;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 /**
  * Created by gainsight on 05/12/14.
@@ -28,7 +29,7 @@ public class SurveyQuestionPage extends SurveyPage {
 
     //Page Level Selectors
     private final String PAGE_BLOCK             = "//div[contains(@class, 'page-break-ctn page') and (@data-page-id='%s' or @data-oder='%s')]";
-    private final String QUESTIONS_MENU_CSS     = "ul[class=dropdown-menu addqtn-dropdown-menu]";
+    private final String QUESTIONS_MENU_CSS     = "ul[class='dropdown-menu addqtn-dropdown-menu']";
     private final String QUESTION_TYPE_SELECT_CSS  = "a[data-control=%s]";
     private final String ADD_SECTION_CSS        = "a[data-action=ADD_SECTION]";
     private final String ADD_QUESTION_CSS       = "a[data-action=ADD_QUESTION]";
@@ -41,16 +42,16 @@ public class SurveyQuestionPage extends SurveyPage {
 
     //Question Edit View Selectors
     private final String QUESTION_BLOCK                 = ".//div[contains(@class, 'qtn-div') and @data-id='%s']";
-    private final String QUESTION_TEXT_INPUT            = ".//div[contains(id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
+    private final String QUESTION_TEXT_INPUT            = ".//div[contains(@id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
     private final String SECTION_TITLE_INPUT            = ".//h3[@class='section-title drag-handle']/input[@class='form-control']";
     private final String SECTION_TITLE_VIEW             = ".//h3[@class='section-title drag-handle']";
     private final String QUESTION_TITLE_VIEW            = ".//h3[@class='qtn-title drag-handle']/a";
     private final String NPS_SHOW_HEADERS_CHECKBOX_CSS  = "input[id$=_show_header_check][type=checkbox]";
     private final String NPS_HEADER_SELECT_CSS          = "select[class*='form-control header-type-select']";
-    private final String RATING_SELECT_CSS              = "select[class=form-control]";
-    private final String SHORT_TEXT_SIZE_SELECT_CSS     = "select[class='selectstyle select-size show']";
-    private final String LONG_TEXT_ROWS_SELECT_CSS      = "select[class='selectstyle select-rows show']";
-    private final String LONG_TEXT_COLS_SELECT_CSS      = "select[class='selectstyle select-cols show']";
+    private final String RATING_SELECT              = ".//div[contains(@id, 'ans_entry')]/select[@class='form-control']";
+    private final String SHORT_TEXT_SIZE_SELECT     = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-size show']";
+    private final String LONG_TEXT_ROWS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-rows show']";
+    private final String LONG_TEXT_COLS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-cols show']";
     private final String QUESTION_SURVEY_BRANCHING      = "a[class=qtn-link-a]";
     private final String ACTIVE_CHECKBOX_CSS        = "input[id$=_active][type=checkbox]";
     private final String COMMENTS_CHECKBOX_CSS      = "input[id$=_cmt_check][type=checkbox]";
@@ -112,107 +113,159 @@ public class SurveyQuestionPage extends SurveyPage {
         waitTillElementDisplayed(surQuestionsPageEle, QUESTIONS_MENU_CSS, MIN_TIME, MAX_TIME);
         surQuestionsPageEle.findElement(By.cssSelector(String.format(QUESTION_TYPE_SELECT_CSS, surveyQuestion.getQuestionType()))).click();
         waitTillNoLoadingIcon();
-
-        fillQuestionFormInfo(surveyQuestion);
         return this;
     }
 
-    private void waitTillElementDisplayed(WebElement surQuestionsPageEle,
+   /* private void waitTillElementDisplayed(WebElement surQuestionsPageEle,
 			String qUESTIONS_MENU_CSS2, int minTime, int maxTime) {
 		// TODO Auto-generated method stub
 		
-	}
+	} */
 
 	public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
+        Log.info("Entering Question Title");
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).sendKeys(surveyQuestion.getQuestionText());
 
         //TO Mark Question Active / InActive
+        Log.info("Making question Active / InActive");
         WebElement activeCheckboxEle = surQuestionEle.findElement(By.cssSelector(ACTIVE_CHECKBOX_CSS));
         String attributeValue = activeCheckboxEle.getAttribute("CHECKED");
         if(attributeValue == null && surveyQuestion.isActive()) {
+            Log.info("Making Question Active");
             activeCheckboxEle.click();
         } else if(attributeValue != null && !surveyQuestion.isActive()) {
+            Log.info("Making Question De-Active");
             activeCheckboxEle.click();
         }
 
-        if(surveyQuestion.getQuestionType() != "RANKING") {
+        Log.info("Making question Required / Not Required");
+        if(!surveyQuestion.getQuestionType().equals("RANKING")) {
             WebElement requiredCheckEle = surQuestionEle.findElement(By.cssSelector(REQUIRED_CHECKBOX_CSS));
             String attVal = activeCheckboxEle.getAttribute("CHECKED");
             if(attVal == null && surveyQuestion.isRequired()) {
+                Log.info("Marking question as required");
                 requiredCheckEle.click();
             } else if(attVal != null && !surveyQuestion.isRequired()) {
+                Log.info("Marking question as not required");
                 requiredCheckEle.click();
             }
         }
 
+        Log.info("Marking single select / multi select");
         if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT") || surveyQuestion.getQuestionType().equals("MATRIX")){
             WebElement singleSelect = surQuestionEle.findElement(By.cssSelector(SINGLE_ANS_CHECKBOX_CSS));
             String attVal = singleSelect.getAttribute("CHECKED");
             if(attVal == null && surveyQuestion.isSingleAnswer()) {
+                Log.info("Checking Single Select");
                 singleSelect.click();
             } else if(attVal != null && !surveyQuestion.isSingleAnswer()) {
+                Log.info("Un-Checking Single Select");
                 singleSelect.click();
             }
         }
 
+        Log.info("Allow Comments & Comments Label");
         if(surveyQuestion.getQuestionType().equals("MATRIX") || surveyQuestion.getQuestionType().equals("RANKING")
                 || surveyQuestion.getQuestionType().equals("RATING") || surveyQuestion.getQuestionType().equals("CHECKBOX")
-                ||   surveyQuestion.getQuestionType().equals("SELECT")) {
+                ||   surveyQuestion.getQuestionType().equals("SELECT") || surveyQuestion.getQuestionType().equals("NPS")) {
             WebElement commentsEle = surQuestionEle.findElement(By.cssSelector(COMMENTS_CHECKBOX_CSS));
             String attVal = commentsEle.getAttribute("CHECKED");
-            if(attVal == null && surveyQuestion.isSingleAnswer()) {
+            if(attVal == null && surveyQuestion.isAllowComments()) {
                 commentsEle.click();
-            } else if(attVal != null && !surveyQuestion.isSingleAnswer()) {
+                if(surveyQuestion.getCommentsLabel() != null) {
+                    WebElement commentsLabelEle = surQuestionEle.findElement(By.cssSelector(COMMENTS_INPUT_CSS));
+                    commentsLabelEle.clear();
+                    commentsLabelEle.sendKeys(surveyQuestion.getCommentsLabel());
+                }
+            } else if(attVal != null && !surveyQuestion.isAllowComments()) {
                 commentsEle.click();
             }
-            WebElement commentsLabelEle = surQuestionEle.findElement(By.cssSelector(COMMENTS_INPUT_CSS));
-            commentsLabelEle.clear();
-            commentsLabelEle.sendKeys(surveyQuestion.getCommentsLabel());
         }
 
+        Log.info("Marking/Un-Marking allowing others");
         if(surveyQuestion.getQuestionType().equals("CHECKBOX")  || surveyQuestion.getQuestionType().equals("SELECT")) {
             WebElement allowOtherEle = surQuestionEle.findElement(By.cssSelector(ADD_OTHERS_CHECKBOX_CSS));
             String attVal = allowOtherEle.getAttribute("CHECKED");
-            if(attVal == null && surveyQuestion.isSingleAnswer()) {
+            if(attVal == null && surveyQuestion.isAddOther()) {
                 allowOtherEle.click();
-            } else if(attVal != null && !surveyQuestion.isSingleAnswer()) {
+                WebElement othersLabelEle = surQuestionEle.findElement(By.cssSelector(ADD_OTHERS_INPUT_CSS));
+                othersLabelEle.clear();
+                othersLabelEle.sendKeys(surveyQuestion.getOtherLabel());
+            } else if(attVal != null && !surveyQuestion.isAddOther()) {
                 allowOtherEle.click();
             }
-            WebElement commentsLabelEle = surQuestionEle.findElement(By.cssSelector(ADD_OTHERS_INPUT_CSS));
-            commentsLabelEle.clear();
-            commentsLabelEle.sendKeys(surveyQuestion.getCommentsLabel());
         }
 
 
 
         if(surveyQuestion.getQuestionType().equals("TEXT_AREA")) {
-            surQuestionEle.findElement(By.cssSelector(LONG_TEXT_ROWS_SELECT_CSS)).sendKeys("10 Rows");
-            surQuestionEle.findElement(By.cssSelector(LONG_TEXT_COLS_SELECT_CSS)).sendKeys("40 Columns");
+            if(!(surveyQuestion.getAllowedAnswers().size() >1)) {
+                throw new RuntimeException("Answer options should not be null");
+            }
+            Select dropdown = new Select(surQuestionEle.findElement(By.xpath(LONG_TEXT_ROWS_SELECT)));
+            String s = surveyQuestion.getAllowedAnswers().get(0).getAnswerText();
+            System.out.println("******************** ::"+s);
+            dropdown.selectByValue(s.split(" ")[0].trim());
+            dropdown = new Select(surQuestionEle.findElement(By.xpath(LONG_TEXT_COLS_SELECT)));
+            s = surveyQuestion.getAllowedAnswers().get(1).getAnswerText();
+            System.out.println("******************** ::"+s);
+            dropdown.selectByValue(s.split(" ")[0].trim());
         }
 
         else if(surveyQuestion.getQuestionType().equals("TEXT_INPUT")) {
-            surQuestionEle.findElement(By.cssSelector(SHORT_TEXT_SIZE_SELECT_CSS)).sendKeys("60 Characters");
+            if(surveyQuestion.getAllowedAnswers().size()!=1) {
+                throw new RuntimeException("Answer options should not be null");
+            }
+            Select dropdown = new Select(surQuestionEle.findElement(By.xpath(SHORT_TEXT_SIZE_SELECT)));
+            String s = surveyQuestion.getAllowedAnswers().get(0).getAnswerText();
+            System.out.println("******************** ::"+s);
+            dropdown.selectByValue(s.split(" ")[0].trim());
         }
 
         else if(surveyQuestion.getQuestionType().equals("RATING")) {
-            surQuestionEle.findElement(By.cssSelector(RATING_SELECT_CSS)).sendKeys("5 Stars");
+            if(surveyQuestion.getAllowedAnswers().size() !=1) {
+                throw new RuntimeException("Answer options should not be null");
+            }
+            Select dropdown = new Select(surQuestionEle.findElement(By.xpath(RATING_SELECT)));
+            String s = surveyQuestion.getAllowedAnswers().get(0).getAnswerText();
+            System.out.println("******************** ::"+s);
+            System.out.println(s.split(" ")[0].trim());
+            for(WebElement ele : dropdown.getOptions()) {
+                System.out.println(ele.getAttribute("value"));
+                System.out.println(ele.getText());
+            }
+            dropdown.selectByValue(s.split(" ")[0].trim());
         }
 
         else if(surveyQuestion.getQuestionType().equals("NPS")) {
-            surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
-            surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys("Text");
+            if(surveyQuestion.getAllowedAnswers().size() ==1) {
+                surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
+                surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys(surveyQuestion.getAllowedAnswers().get(0).getAnswerText());
+            }
         }
 
         else if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT")
-                || surveyQuestion.getQuestionType().equals("RANKING")) {
+                || surveyQuestion.getQuestionType().equals("RANKING") || surveyQuestion.getQuestionType().equals("MATRIX")) {
+            boolean flag = false;
             for(SurveyQuestion.SurveyAllowedAnswer surveyAllowedAnswer : surveyQuestion.getAllowedAnswers()) {
-                addAnsChoice(surQuestionEle, surveyAllowedAnswer.getAnswerText());
+                if(!flag) {
+                    fillAnsChoice(surQuestionEle, surveyAllowedAnswer.getAnswerText());
+                    flag=true;
+                } else {
+                    addAnsChoice(surQuestionEle, surveyAllowedAnswer.getAnswerText());
+                }
             }
             if(surveyQuestion.getQuestionType().equals("MATRIX")) {
+                flag = false;
                 for(SurveyQuestion.SurveySubQuestions surveySubQuestion : surveyQuestion.getSubQuestions()) {
-                    addSubQuestion(surQuestionEle, surveySubQuestion.getSubQuestionText());
+                    if(!flag) {
+                        fillSubQuestion(surQuestionEle, surveySubQuestion.getSubQuestionText());
+                        flag=true;
+                    } else {
+                        addSubQuestion(surQuestionEle, surveySubQuestion.getSubQuestionText());
+                    }
                 }
             }
         }
@@ -230,13 +283,17 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     public SurveyQuestionPage addAnsChoice(WebElement QuestionEle, String ansText) {
-        String ADD_CHOICE = ".//div[contains(@id,'_ans_entry')]/descendant::a[@class='mailadd' and @data-action='ADD' and @data-type='ANSWER']";
-        WebElement addAnsChoiceEle = QuestionEle.findElement(By.xpath(ADD_CHOICE));
+        String ADD_ANS_CHOICE = ".//div[contains(@id,'_ans_entry')]/descendant::a[@class='mailadd' and @data-action='ADD']";
+        WebElement addAnsChoiceEle = QuestionEle.findElement(By.xpath(ADD_ANS_CHOICE));
         addAnsChoiceEle.click();
-        String LAST_CHOICE_QUESTION = "//div[contains(@id, '_sub_qtn_entry')]/ul/li[last()]/input";
-        QuestionEle.findElement(By.xpath(LAST_CHOICE_QUESTION)).clear();
-        QuestionEle.findElement(By.xpath(LAST_CHOICE_QUESTION)).sendKeys(ansText);
+        fillAnsChoice(QuestionEle, ansText);
         return this;
+    }
+
+    private void fillAnsChoice(WebElement QuestionEle, String ansText) {
+        String LAST_ANSWER_CHOICE = ".//div[contains(@id, '_ans_entry')]/ul/li[last()]/input";
+        QuestionEle.findElement(By.xpath(LAST_ANSWER_CHOICE)).clear();
+        QuestionEle.findElement(By.xpath(LAST_ANSWER_CHOICE)).sendKeys(ansText);
     }
 
     public SurveyQuestionPage removeAnsChoice(WebElement QuestionEle, String ansText) {
@@ -271,10 +328,15 @@ public class SurveyQuestionPage extends SurveyPage {
         String ADD_SUB_QUESTION = ".//div[contains(@id,'_sub_qtn_entry')]/descendant::a[@class='mailadd' and @data-action='ADD']";
         WebElement addQueChoiceEle = QuestionEle.findElement(By.xpath(ADD_SUB_QUESTION));
         addQueChoiceEle.click();
-        String LAST_SUB_QUESTION = "//div[contains(@id, '_sub_qtn_entry')]/ul/li[last()]/input";
+        fillSubQuestion(QuestionEle, subQuesText);
+        return this;
+    }
+
+    private void fillSubQuestion(WebElement QuestionEle, String subQuesText) {
+        String LAST_SUB_QUESTION = ".//div[contains(@id, '_sub_qtn_entry')]/ul/li[last()]/input";
         QuestionEle.findElement(By.xpath(LAST_SUB_QUESTION)).clear();
         QuestionEle.findElement(By.xpath(LAST_SUB_QUESTION)).sendKeys(subQuesText);
-        return this;
+
     }
 
     public SurveyQuestionPage removeSubQuestion(WebElement QuestionEle, String subQuesText) {
