@@ -10,7 +10,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class ReportingTest extends BaseTest{
 	private final String CREATE_CASES_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCases.txt";
-	private final String CREATE_USERS_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateUsers.txt";
+	private final String CREATE_USERS_SCRIPT    = Application.basedir+"/apex_scripts/general/CreateUsers.txt";
 	private final String CREATE_CTAS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCTAs.txt";
 	private final String CREATE_MILESTONES_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/Milestones.txt";
 	
