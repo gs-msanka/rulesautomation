@@ -84,7 +84,7 @@ public class LoadTestData extends NSTestBase{
 		metadataClient.deleteFields("JBCXM__CustomerInfo__c",FieldsToDelete5);
 		
 		//CreateCTA
-		metadataClient.createAutoNumberFields("JBCXM__CustomerInfo__c", AutoNumber);
+		//metadataClient.createAutoNumberFields("JBCXM__CustomerInfo__c", AutoNumber);
 		metadataClient.createFields("JBCXM__CustomerInfo__c", Checkbox, true, false, false);
 		metadataClient.createLookupField("JBCXM__CustomerInfo__c", Lookup_Contact, Contact_Reference);
 		metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", Currency);
@@ -106,11 +106,11 @@ public class LoadTestData extends NSTestBase{
 		
 		
 		//Permission
-		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_AutoNumber__c","p_c_Checkbox__c","p_c_Contact__c","p_c_Currency__c","p_c_Date__c"});
+		/*addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_AutoNumber__c","p_c_Checkbox__c","p_c_Contact__c","p_c_Currency__c","p_c_Date__c"});
 		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_DateTime__c","p_c_Formula__c","p_c_GeoLocation__c","p_c_MultiPicklist__c","p_c_Number__c"});
 		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_Percent__c","p_c_PhoneNumber__c","p_c_Picklist__c","p_c_Text__c","p_c_TextArea__c"});
 		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_TextAreaLong__c","p_c_TextAreaRich__c","p_c_TextEncrypted__c","p_c_URL__c","p_c_User__c"});
-		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_Email__c"});
+		addFieldPermissionsToUsers("JBCXM__CustomerInfo__c", new String[]{"p_c_Email__c"});*/
 	}
 	
 	@AfterClass
