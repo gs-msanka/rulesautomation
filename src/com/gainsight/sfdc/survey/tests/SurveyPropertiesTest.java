@@ -25,20 +25,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 	    }
 	  
 
-	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
-	    public void nonanonymous(HashMap<String, String> testData) throws IOException {
-	    	SurveyProperties sProps= mapper.readValue(testData.get("SurveyProp"),SurveyProperties.class);
-	    	sProps.setStartDate(getDateWithFormat(Integer.getInteger(sProps.getStartDate()), 0, false));
-	    	sProps.setEndDate(getDateWithFormat(Integer.getInteger(sProps.getEndDate()), 0, false));
-	        SurveyPropertiesPage surPropPage = basepage.clickOnSurveyTab().createSurvey(sProps.getSurveyTitle(), true);	   
-	        surPropPage.fillAndSaveSurveyProperties(sProps);
-	    
-	        SurveyBasePage surBasePage = surPropPage.refreshPropPage();
-	        surBasePage.clickOnDrafts();
-	        SurveyPropertiesPage sPropsVerification=surBasePage.clickOnSurveyFromDrafts(sProps.getSurveyTitle());
-	        Assert.assertTrue(sPropsVerification.verifySurveyProperties(sProps),"All Survey Properties Matched- Case Success!");
-	    }
+
 	    
 	    //anonymous
 	    //partialAnonymous 

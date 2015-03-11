@@ -29,6 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import com.sforce.soap.metadata.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,6 +58,7 @@ public class PackageUtil {
      * This method updates the widget layouts.
      */
     public void updateWidgetLayouts(boolean accLayout, boolean oppLayout, boolean caseLayout)  {
+        Log.info("Started to deploy widget layouts");
         try {
             String zipFile          = "retrieveResults.zip";
             String MANIFEST_FILE    = Application.basedir+"/resources/sfdcmetadata/widgets/package.xml";
@@ -82,12 +84,14 @@ public class PackageUtil {
             deployZip(tempDir + "/playload.zip");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getLocalizedMessage());
+            Log.info(e.getLocalizedMessage());
             throw new RuntimeException(e.getLocalizedMessage());
         }
+        Log.info("Deploy widget layouts Successful");
     }
 
     public void deployPermissionSetCode() {
+        Log.info("Started Deploying Permission Sets Custom Code");
         try {
             String srcDir = Application.basedir+"/resources/sfdcmetadata/permissionSetCode/src";
             String desDir = Application.basedir+"/resources/sfdcmetadata/temp";
@@ -95,11 +99,13 @@ public class PackageUtil {
             createZipFile(srcDir, desDir, zipFileName);
             deployZip(desDir + "/"+zipFileName+".zip");
         }catch (Exception e) {
+            Log.error("Failed to deploy permission sets", e);
             throw new RuntimeException(e.getLocalizedMessage());
         }
     }
 
     private void updateLayout(String parentFile, String childFile) {
+        Log.info("Update the Layout on file : " +parentFile);
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -118,7 +124,7 @@ public class PackageUtil {
             StreamResult result = new StreamResult(new FileOutputStream(parentFile));
             transformer.transform(source, result);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("Failed to update layout file : " +parentFile, e);
         }
     }
 
@@ -127,6 +133,7 @@ public class PackageUtil {
         String srcDir = Application.basedir+"/resources/sfdcmetadata/appInstall";
         String desDir = Application.basedir+"/resources/sfdcmetadata/temp";
         String filePath = Application.basedir+"/resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
+        Log.info("Started Installation Application Version :" +version);
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             org.w3c.dom.Document doc = docBuilder.parse(filePath);
@@ -141,20 +148,24 @@ public class PackageUtil {
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(filePath));
             transformer.transform(source, result);
-            System.out.println("package.xml is updated successfully");
+            Log.info("package.xml is updated successfully");
             createZipFile(srcDir, desDir,"appInstall");
             deployZip(desDir+"/appInstall.zip");
+        Log.info("Installation Successful");
     }
 
     public void unInstallApplication() throws Exception {
         String srcDir = Application.basedir+"/resources/sfdcmetadata/appUnInstall";
         String desDir = Application.basedir+"/resources/sfdcmetadata/temp/";
+        Log.info("Started un-installing application");
         createZipFile(srcDir, desDir, "appUnInstall");
         deployZip(desDir+"appUnInstall.zip");
+        Log.info("Application un-install successful");
     }
 
 
     private void retrieveZip(String dirPath, String zipFile, String MANIFEST_FILE) throws RemoteException, Exception {
+        Log.info("Pulling metadata from SFDC from manifest file : " +MANIFEST_FILE);
         RetrieveRequest retrieveRequest =  new RetrieveRequest();
         // The version in package.xml overrides the version in RetrieveRequest
         retrieveRequest.setApiVersion(version);
@@ -181,7 +192,7 @@ public class PackageUtil {
                     asyncResultId);
 
 
-            System.out.println("Retrieve Status: " + result.getStatus());
+            Log.info("Retrieve Status: " + result.getStatus());
         } while (!result.isDone());
 
         if (result.getStatus() == RetrieveStatus.Failed) {
@@ -196,11 +207,11 @@ public class PackageUtil {
                 }
             }
             if (buf.length() > 0) {
-                System.out.println("Retrieve warnings:\n" + buf);
+                Log.info("Retrieve warnings:\n" + buf);
             }
 
             // Write the zip to the file system
-            System.out.println("Writing results to zip file");
+            Log.info("Writing results to zip file");
             ByteArrayInputStream bais = new ByteArrayInputStream(result.getZipFile());
             File desDir = new File(dirPath);
             desDir.mkdirs();
@@ -211,11 +222,12 @@ public class PackageUtil {
                 FileChannel dest = os.getChannel();
                 copy(src, dest);
 
-                System.out.println("Results written to " + resultsFile.getAbsolutePath());
+                Log.info("Results written to " + resultsFile.getAbsolutePath());
             } finally {
                 os.close();
             }
         }
+        Log.info("Pulling metadata from SFDC from manifest file Successful");
     }
 
     /**
@@ -240,7 +252,7 @@ public class PackageUtil {
     {
         // Edit the path, if necessary, if your package.xml file is located elsewhere
         File unpackedManifest = new File(MANIFEST_FILE);
-        System.out.println("Manifest file: " + unpackedManifest.getAbsolutePath());
+        Log.info("Manifest file: " + unpackedManifest.getAbsolutePath());
 
         if (!unpackedManifest.exists() || !unpackedManifest.isFile())
             throw new Exception("Should provide a valid retrieve manifest " +
@@ -320,7 +332,7 @@ public class PackageUtil {
             while(ze!=null){
                 String fileName = ze.getName();
                 File newFile = new File(destDirectory + File.separator + fileName);
-                System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+                Log.info("file unzip : "+ newFile.getAbsoluteFile());
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder
                 new File(newFile.getParent()).mkdirs();
@@ -334,7 +346,7 @@ public class PackageUtil {
             }
             zis.closeEntry();
             zis.close();
-            System.out.println("Done");
+            Log.info("Done");
         }catch(IOException ex){
             ex.printStackTrace();
         }
@@ -347,9 +359,9 @@ public class PackageUtil {
         }
         List<File> fileList = new ArrayList<File>();
         getAllFiles(directoryToZip, fileList);
-        System.out.println("---Creating zip file");
+        Log.info("---Creating zip file");
         writeZipFile(directoryToZip, fileList, destDir, fileName);
-        System.out.println("---Done");
+        Log.info("---Done");
     }
 
     public static void getAllFiles(File dir, List<File> fileList) {
@@ -358,10 +370,10 @@ public class PackageUtil {
             for (File file : files) {
                 fileList.add(file);
                 if (file.isDirectory()) {
-                    System.out.println("directory:" + file.getCanonicalPath());
+                    Log.info("directory:" + file.getCanonicalPath());
                     getAllFiles(file, fileList);
                 } else {
-                    System.out.println("     file:" + file.getCanonicalPath());
+                    Log.info("     file:" + file.getCanonicalPath());
                 }
             }
         } catch (IOException e) {
@@ -370,12 +382,13 @@ public class PackageUtil {
     }
 
     public static void writeZipFile(File directoryToZip, List<File> fileList, String destDir, String fileName) {
+        Log.info("Writing all the files to zip");
         try {
             File tempDir = new File(destDir);
             if(!tempDir.exists()) {
                 tempDir.mkdirs();
             }
-            System.out.println(destDir+"/"+ fileName+ ".zip");
+            Log.info(destDir+"/"+ fileName+ ".zip");
             FileOutputStream fos = new FileOutputStream(destDir+"/"+fileName + ".zip");
             ZipOutputStream zos = new ZipOutputStream(fos);
 
@@ -392,6 +405,7 @@ public class PackageUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.info("Writing all the files to zip successful");
     }
 
     public static void addToZip(File directoryToZip, File file, ZipOutputStream zos) throws FileNotFoundException,
@@ -402,7 +416,7 @@ public class PackageUtil {
         // to the directory being zipped, so chop off the rest of the path
         String zipFilePath = file.getCanonicalPath().substring(directoryToZip.getCanonicalPath().length() + 1,
                 file.getCanonicalPath().length());
-        System.out.println("Writing '" + zipFilePath + "' to zip file");
+        Log.info("Writing '" + zipFilePath + "' to zip file");
         ZipEntry zipEntry = new ZipEntry(zipFilePath);
         zos.putNextEntry(zipEntry);
 
@@ -427,7 +441,7 @@ public class PackageUtil {
 			printErrors(result, "Final list of failures:\n");
 			throw new Exception("The files were not successfully deployed");
 		}
-		System.out.println("The file " + filePath
+		Log.info("The file " + filePath
 				+ " was successfully deployed\n");
 	}
 
@@ -505,7 +519,7 @@ public class PackageUtil {
 		}
 		if (stringBuilder.length() > 0) {
 			stringBuilder.insert(0, messageHeader);
-			System.out.println(stringBuilder.toString());
+			Log.info(stringBuilder.toString());
 		}
 	}
 
@@ -527,7 +541,7 @@ public class PackageUtil {
 			fetchDetails = (poll % 3 == 0);
 			deployResult = metadataConnection.checkDeployStatus(asyncResultId,
 					fetchDetails);
-			System.out.println("Status is: " + deployResult.getStatus());
+			Log.info("Status is: " + deployResult.getStatus());
 			if (!deployResult.isDone() && fetchDetails) {
 				printErrors(deployResult,
 						"Failures for deployment in progress:\n");

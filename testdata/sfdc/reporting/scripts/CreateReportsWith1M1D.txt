@@ -1,0 +1,32 @@
+String UIViewName = 'viewName';
+String UIGraphType = 'graphType';
+String rListID = 'cs360SectionID';
+
+Delete[Select ID from JBCXM__UIViews__c where name =: UIViewName ];
+
+List<JBCXM__UIViews__c> pbr = new List<JBCXM__UIViews__c>();
+
+JBCXM__UIViews__c viewObj = new JBCXM__UIViews__c(	
+	name = UIViewName,
+	JBCXM__AccountReference__c = 'AccountId',
+	JBCXM__BaseObject__c = 'Case',
+	JBCXM__ColumnList__c = '[{"name":"Name","label":"Account Name","displayOrder":1,"visibilityMode":true,"objectName":"Account","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Subject","label":"Subject","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false},{"name":"Reason","label":"Case Reason","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false}]',
+	JBCXM__Dimensions__c = '[{"summerizedBy":null,"objectName":"Case","name":"Reason","label":"Case Reason","groupable":true,"aliasName":"Cat1","fieldType":"PICKLIST","hasJBCXMNS":false,"stacked":false}]',
+	JBCXM__FilterConditions__c = null,
+	JBCXM__GraphType__c = UIGraphType,
+	JBCXM__HavingClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":0,"objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"g","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false,"aggregation":"COUNT"}]}',
+	JBCXM__IsRB__c = true,
+	JBCXM__IsShown__c = true,
+	JBCXM__IsStandard__c = false,	
+	JBCXM__Measures__c = '[{"objectName":"Case","name":"Subject","label":"Count of Subject","graphType":null,"aggType":"COUNT","aliasName":"DS1","fieldType":"STRING","hasJBCXMNS":false}]',
+	JBCXM__QueryOptions__c	= null,
+	JBCXM__ReportParams__c	= null,
+	JBCXM__SectionId__c = rListID,	
+	JBCXM__ShowDefault__c = false,
+	JBCXM__UITabName__c = 'Case',
+	JBCXM__Visibility__c = 'Public',
+	JBCXM__VisualType__c = 'Chart',
+	JBCXM__WhereClause__c = '{"filterLogic":"JBCXM__1","filterCriteria":[{"value":"A","objectName":"Case","fieldType":"STRING","logicalOperator":"AND","operator":"c","name":"Subject","fieldLabel":"Subject","alias":"JBCXM__1","locked":false}]}'
+);
+pbr.add(viewObj);
+insert pbr;

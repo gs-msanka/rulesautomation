@@ -7,6 +7,7 @@ SurveyDesignPage extends the SurveyBasePage. */
 package com.gainsight.sfdc.survey.pages;
 
 
+import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -14,77 +15,64 @@ import org.openqa.selenium.support.ui.Select;
 
 
 public class SurveyPage extends SurveyBasePage {
-	
-	private final String DESIGN_PAGE  = "//div[@class='survey-sub-menu survey-menu']";
-	private final String PROPERTIES_PAGE = "//a[@class='sub-menu-option  sub-opt-properties']";
-	private final String QUESTIONS_PAGE = "//a[@class='sub-menu-option  sub-opt-questions']";
-	private final String SETCTA_PAGE= "//a[@class='sub-menu-option  sub-opt-setalerts']";
-	private final String PUBLISHSURVEY_PAGE = "//a[@class='sub-menu-option  sub-opt-hostsurvey']";
-	private final String ADDPARTICIPANTS_PAGE = "//a[@class='sub-menu-option  sub-opt-addparticipants']";
-	private final String DISTRIBUTE_PAGE = "//a[@class='sub-menu-option  sub-opt-distribute']";
-	private final String ANALYZE_PAGE = "//a[@class='sub-menu-option  sub-opt-analyse']";
-	private final String PROPERTIESPAGE_DISPLAY ="//div[@class='survey-editor-body properties']";
-	private final String QUESTIONSPAGE_DISPLAY= "//div[@class='question-composer survey-editor-body']";
-	private final String SETCTAPAGE_DISPLAY="//div[@class='survey-editor-body setalerts']";
-	private final String PUBLISHSURVEYPAGE_DISPLAY="//div[@class='survey-editor-body host-survey']";
-	private final String ADDPARTICIPANTSPAGE_DISPLAY="//div[@class='survey-editor-body add-participants']";
-	private final String DISTRIBUTEPAGE_DISPLAY ="//div[@class ='survey-editor-body distribute']";
-	private final String ANALYZEPAGE_DISPLAY ="//div[@class='survey-editor-body analyse']";
-	
 
-	public SurveyPage() {
-		wait.waitTillElementPresent(DESIGN_PAGE, MIN_TIME, MAX_TIME);
+    //Global Selectors
+	private final String Survey_TITLE                   = "//h3[@class='leftinner-title']/span[text()='%s']";
+    private final String BACK_ICON                      = "//a[@class='pull-left backbtn']";
+    //Left Navigation Selectors
+    private final String PROPERTIES_SECTION_LINK        = "//a[@ref-link='properties']";
+    private final String QUESTIONS_SECTION_LINK         = "//a[@ref-link='questions']";
+    private final String SET_CTA_SECTION_LINK           = "//a[@ref-link='setalerts']";
+    private final String PUBLISH_SECTION_LINK           = "//a[@ref-link='hostsurvey']";
+    private final String ADD_PARTICIPANTS_SECTION_LINK  = "//a[@ref-link='addparticipants']";
+    private final String DISTRIBUTE_SECTION_LINK        = "//a[@ref-link='distribute']";
+    private final String ANALYZE_SECTION_LINK           = "//a[@ref-link='analyse']";
+
+	public SurveyPage(String surveyName) {
+        waitTillNoLoadingIcon();
+		wait.waitTillElementPresent(String.format(Survey_TITLE, surveyName), MIN_TIME, MAX_TIME);
 	}
-
-	public SurveyPage clickOnProperties() {
-        //Click
-    	item.click(PROPERTIES_PAGE);
-    	wait.waitTillElementPresent(PROPERTIESPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return this;
+	
+	public SurveyPage(){
+		
+	}
+	public SurveyProperties clickOnProperties() {
+    	item.click(PROPERTIES_SECTION_LINK);
+        return new SurveyProperties();
     }
 
-	public SurveyQuestionPage clickOnQuestions() {
-        //Click
-    	item.click(QUESTIONS_PAGE);
-    	wait.waitTillElementPresent(QUESTIONSPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return new SurveyQuestionPage();
+	public SurveyQuestionPage clickOnQuestions(SurveyProperties surveyProp) {
+    	item.click(QUESTIONS_SECTION_LINK);
+        return new SurveyQuestionPage(surveyProp);
     }
 	
 	public SurveySetCTAPage clickOnSetCta() {
-        //Click
-    	item.click(SETCTA_PAGE);
-    	wait.waitTillElementPresent(SETCTAPAGE_DISPLAY, MIN_TIME, MAX_TIME);
+    	item.click(SET_CTA_SECTION_LINK);
         return new SurveySetCTAPage();
     }
 	
 	public SurveyPublishPage clickOnPublish() {
-        //Click
-    	item.click(PUBLISHSURVEY_PAGE);
-    	wait.waitTillElementPresent(PUBLISHSURVEYPAGE_DISPLAY, MIN_TIME, MAX_TIME);
+    	item.click(PUBLISH_SECTION_LINK);
         return new SurveyPublishPage();
     }
 	
-	public SurveyAddParticipantsPage clickOnAddparticipants() {
-        //Click
-    	item.click(ADDPARTICIPANTS_PAGE);
-    	wait.waitTillElementPresent(ADDPARTICIPANTSPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return new SurveyAddParticipantsPage();
+	public SurveyAddParticipantsPage clickOnAddParticipants(SurveyProperties sData) {
+    	item.click(ADD_PARTICIPANTS_SECTION_LINK);
+        return new SurveyAddParticipantsPage(sData);
     }
 	
 	public SurveyDistributePage clickOnDistribute() {
-        //Click
-    	item.click(DISTRIBUTE_PAGE);
-    	wait.waitTillElementPresent(DISTRIBUTEPAGE_DISPLAY, MIN_TIME, MAX_TIME);
+    	item.click(DISTRIBUTE_SECTION_LINK);
         return new SurveyDistributePage();
     }
 	
-	public SurveyAnalyzePage clickOnAnalyze() {
-        //Click
-    	item.click(ANALYZE_PAGE);
-    	wait.waitTillElementPresent(ANALYZEPAGE_DISPLAY, MIN_TIME, MAX_TIME);
-        return new SurveyAnalyzePage();
+	public SurveyAnalyzePage clickOnAnalyze(SurveyProperties sData) {
+    	item.click(ANALYZE_SECTION_LINK);
+        return new SurveyAnalyzePage(sData);
     }
 
-
-	
+    public SurveyBasePage goToSurveyBasePage() {
+        item.click(BACK_ICON);
+        return new SurveyBasePage();
+    }
 }

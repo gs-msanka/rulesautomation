@@ -2,32 +2,98 @@ package com.gainsight.sfdc.survey.pojo;
 
 public class SurveyProperties {
 
-	private String surveyCode;
-	private String surveyTitle;
-	private String anonymousAccount;
-	private String type;
-	// private String anonymous_option;
-	private String tOption;
-	private String imageName;
-	private String filePath;
-	private String startDate;
-	private String endDate;
-	private String emailService;
-	private String siteURL;
+    private String sId;
+	private String surveyName;
+    private String emailService = "Salesforce";
+    private String startDate;
+    private String endDate;
+    private boolean anonymous = false;
+    private String type = "Anonymous with account tracking";
+    private String anonymousAccount;
+    private boolean allowInternalSub = true;
+    private String description = "This is loaded form pojo class";
+    private String thankYouType = "Message";
+    private String thankYouNote = "Thank you for submitting your feedback.";
+    private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
+    private String surveyCode;
+    private String surveyTitle;
+    private String bgColor = "ffffff";
+    private String siteURL;
 	private String emailTemplate;
 	private String defaultAddress;
-	private String description = "This is loaded form pojo class";
-	private String thankYou;
-	private String status;
-	private String footerMsg = "Copyright © 2009-2014 Gainsight.com, inc. All rights reserved";
-	private String backgroundColor;
-	private String message;
-	private boolean anonymous = false;
-	private boolean cloneLogicRules = true;
-	private boolean cloneParticipants = true;
-	private boolean cloneAlertRules = true;
-	private boolean allowInternalSub = true;
-	private boolean loadPartFromCustomObj = false;
+    private String status;
+    private boolean cloneLogicRules = true;
+    private boolean cloneParticipants = true;
+    private boolean cloneAlertRules = true;
+    private boolean loadPartFromCustomObj = false;
+
+    public String getsId() {
+        return sId;
+    }
+
+    public void setsId(String sId) {
+        this.sId = sId;
+    }
+
+    public String getSurveyName() {
+        return surveyName;
+    }
+
+    public void setSurveyName(String surveyName) {
+        this.surveyName = surveyName;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getAnonymousAccount() {
+        return anonymousAccount;
+    }
+
+    public String getThankYouType() {
+        return thankYouType;
+    }
+
+    public void setThankYouType(String thankYouType) {
+        this.thankYouType = thankYouType;
+    }
+
+    public String getThankYouNote() {
+        return thankYouNote;
+    }
+
+    public void setThankYouNote(String thankYouNote) {
+        this.thankYouNote = thankYouNote;
+    }
+
+    public void setSurveyCode(String surveyCode) {
+        this.surveyCode = surveyCode;
+    }
+
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
+    }
+
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(String bgColor) {
+        this.bgColor = bgColor;
+    }
 
 	public String getStatus() {
 		return status;
@@ -45,13 +111,6 @@ public class SurveyProperties {
 		this.type = type;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
 	public String getEmailService() {
 		return emailService;
@@ -85,13 +144,6 @@ public class SurveyProperties {
 		this.defaultAddress = defaultAddress;
 	}
 
-	public String getBackgroundColor() {
-		return backgroundColor;
-	}
-
-	public void setBackgroundColor(String backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
 
 	public String getFooterMsg() {
 		return footerMsg;
@@ -101,13 +153,6 @@ public class SurveyProperties {
 		this.footerMsg = footerMsg;
 	}
 
-	public String getThankYou() {
-		return thankYou;
-	}
-
-	public void setThankYou(String thankYou) {
-		this.thankYou = thankYou;
-	}
 
 	public boolean isAllowInternalSub() {
 
@@ -124,22 +169,6 @@ public class SurveyProperties {
 
 	public void setLoadPartFromCustomObj(boolean loadPartFromCustomObj) {
 		this.loadPartFromCustomObj = loadPartFromCustomObj;
-	}
-
-	// public String getAnonymous_option() {
-	// return anonymous_option;
-	// }
-	//
-	// public void setAnonymous_option(String anonymous_option) {
-	// this.anonymous_option = anonymous_option;
-	// }
-
-	public String gettOption() {
-		return tOption;
-	}
-
-	public void settOption(String tOption) {
-		this.tOption = tOption;
 	}
 
 	public String getDescription() {
@@ -192,14 +221,6 @@ public class SurveyProperties {
 		return surveyTitle;
 	}
 
-	// public void setAOption(String anomymous_option) {
-	// this.anonymous_option = anomymous_option;
-	// }
-	//
-	// public String getAOption() {
-	// return anonymous_option;
-	// }
-
 	public void setAnonymousAccount(String anonymousAccount) {
 		this.anonymousAccount = anonymousAccount;
 	}
@@ -208,21 +229,6 @@ public class SurveyProperties {
 		return anonymousAccount;
 	}
 
-	public void setTUOption(String toption) {
-		this.tOption = toption;
-	}
-
-	public String getTUOption() {
-		return tOption;
-	}
-
-	public void setImageName(String imagename) {
-		this.imageName = imagename;
-	}
-
-	public String getImageName() {
-		return imageName;
-	}
 
 	public void setAnonymous(boolean flag) {
 		this.anonymous = flag;
@@ -231,29 +237,8 @@ public class SurveyProperties {
 	public boolean isAnonymous() {
 		return anonymous;
 	}
-
-	public void setFilePath(String filepath) {
-		this.filePath = filepath;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setStartDate(String startdate) {
-		this.startDate = startdate;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setEndDate(String enddate) {
-		this.endDate = enddate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
 }
+
+
+
+

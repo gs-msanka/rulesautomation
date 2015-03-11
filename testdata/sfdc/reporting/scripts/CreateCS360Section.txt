@@ -1,0 +1,17 @@
+String SectionName = 'CS360SectionName';
+String CS360objName = 'objName';
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+
+Integer currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName, 
+														  JBCXM__DisplayLabel__c = SectionName,
+														  JBCXM__AccountReference__c = 'AccountId',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = CS360objName,
+														  JBCXM__Type__c = 'RelatedList');
+insert rList;

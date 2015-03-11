@@ -4,9 +4,12 @@ package com.gainsight.sfdc.survey.tests;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
+import com.gainsight.sfdc.survey.pages.SurveyPublishPage;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
+import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
+import com.gainsight.sfdc.survey.pojo.SurveyRuleProperties;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.Utilities;
 import com.gainsight.sfdc.workflow.pojos.Task;
@@ -43,11 +46,11 @@ public class SurveyQuestionsTest extends BaseTest {
 		sdata.setStartDate(getDateWithFormat(Integer.valueOf(sdata.getStartDate()), 0, false));
 		sdata.setEndDate(getDateWithFormat(Integer.valueOf(sdata.getEndDate()), 19, false));
 		SurveyBasePage surBasePage=basepage.clickOnSurveyTab();
-		SurveyPropertiesPage surpropPage = surBasePage.createSurvey(sdata.getSurveyTitle(), true);
+	/*	SurveyPropertiesPage surpropPage = surBasePage.createSurvey(sdata.getSurveyTitle(), true);
 		surpropPage.fillAndSaveSurveyProperties(sdata);
 		SurveyPage sideNav = surpropPage.getSideNavInstance();
 		SurveyQuestionPage surQuePage = sideNav.clickOnQuestions();
-		surQuePage.SurveyDefaultPageVerification();
+		surQuePage.SurveyDefaultPageVerification();*/
 /*Defined test data in such a way that all question types (there are totally 8 question types in survey) are in same sheet.
  * The below steps perform reading all 8 question types from test data and then add all question types*/
 
@@ -57,8 +60,10 @@ public class SurveyQuestionsTest extends BaseTest {
         }
         int quesNumber=0;
         for(SurveyQuestion sq : surQues){
-        	surQuePage.AddQuestionAndSave(sq,++quesNumber);
+        	//surQuePage.AddQuestionAndSave(sq,++quesNumber);
         }		
+    	//SurveySetCTAPage surSetCta=sideNav.clickOnSetCta();   	
 	}
+
 }
 

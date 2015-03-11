@@ -58,25 +58,23 @@ public class FileUtil {
 
     public static FileReader resolveNameSpace(File file, String nameSpace) {
         try {
-            if (nameSpace!=null) {
-
+            if(!nameSpace.equalsIgnoreCase("JBCXM")) {
                 String extension = FilenameUtils.getExtension(file.getName());
                 File tempFile = new File( "./resources/datagen/process/tempFile."+extension);
                 FileOutputStream fOut = new FileOutputStream(tempFile);
-                try {
                     fOut.write(resolveNameSpace(getFileContents(file), nameSpace).getBytes());
                     fOut.close();
                     fOut.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 return new FileReader(tempFile);
             } else {
                 return new FileReader(file);
             }
         } catch (FileNotFoundException e) {
-            Log.info(e.getLocalizedMessage());
+            Log.error(e.getLocalizedMessage());
             throw new RuntimeException("File Not Found : " +file.getName());
+        } catch (IOException e) {
+            Log.error(e.getLocalizedMessage());
+            throw new RuntimeException("IO Exception on : " +file.getName());
         }
     }
 
@@ -84,9 +82,14 @@ public class FileUtil {
         String result = "";
         if (str != null && nameSpace!=null && !nameSpace.equalsIgnoreCase("JBCXM")) {
             result = str.replaceAll("JBCXM__", nameSpace+"__").replaceAll("JBCXM\\.", nameSpace+".");
+            result = result.replaceAll("jbcxm__", nameSpace+"__").replaceAll("jbcxm\\.", nameSpace+".");
             Log.info(result);
             return result;
-        } else {
+        }else if(str!= null && nameSpace == null){
+        	result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
+	     	result = result.replaceAll("jbcxm__", "").replaceAll("jbcxm\\.","");
+        	return result;
+        }else {
             return str;
         }
     }

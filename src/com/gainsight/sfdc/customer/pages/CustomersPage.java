@@ -96,7 +96,7 @@ public class CustomersPage extends CustomerBasePage {
         if(!customerSelected) throw new RuntimeException("Unable to select customer (or) customer not found" );
     }
 
-    private void selectValueInDropDown(String value) {
+    public void selectValueInDropDown(String value) {
         wait.waitTillElementDisplayed("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
         item.click("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
     }
