@@ -7,6 +7,7 @@ SurveyBasePage extends the BasePage. BasePage is home page and contains clicking
 
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.testdriver.Log;
@@ -68,15 +69,15 @@ public class SurveyBasePage extends BasePage {
 
     public SurveyBasePage clickOnDashboardView() {
         item.click(DASHBOARD_SECTION);
-        waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(String.format(SURVEYS_HEADER_SECTION, "Ongoing Surveys"), MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
     public SurveyBasePage clickOnDraftsView() {
         item.click(DRAFTS_SECTION);
-        waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(String.format(SURVEYS_HEADER_SECTION, "Drafts"), MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
@@ -96,8 +97,14 @@ public class SurveyBasePage extends BasePage {
 
     public SurveyPropertiesPage openSurveyFromDrafts(SurveyProperties surveyProp){
         clickOnDraftsView();
-        item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyTitle()));
+        searchSurvey(surveyProp.getSurveyName());
+        item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyName()));
         return new SurveyPropertiesPage(surveyProp);
+    }
+
+    public void searchSurvey(String surName) {
+        element.clearAndSetText(SEARCH_SURVEY_INPUT, surName);
+        Timer.sleep(2);
     }
 
     public void selectValueInDropDown(String value) {

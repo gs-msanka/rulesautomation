@@ -40,9 +40,9 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 	    SurveyAddParticipants addparticipant =mapper.readValue(testData.get("AddParticipant"), SurveyAddParticipants.class);
         
         SurveyProperties sData=mapper.readValue(testData.get("SurveyDetails"), SurveyProperties.class);
-        SurveyAddParticipantsPage addPtpPage=basepage.clickOnSurveyTab().clickOnPublished().clickOnSurveyFromPublished(sData).clickOnAddParticipants(sData);
+        //SurveyAddParticipantsPage addPtpPage=basepage.clickOnSurveyTab().clickOnPublished().clickOnSurveyFromPublished(sData).clickOnAddParticipants(sData);
         
-        addPtpPage.loadFromContactObj(addparticipant, sData);
+//        addPtpPage.loadFromContactObj(addparticipant, sData);
         
         
 	}
