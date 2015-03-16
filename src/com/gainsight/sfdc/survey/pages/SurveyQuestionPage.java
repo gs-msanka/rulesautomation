@@ -69,6 +69,7 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String QUESTION_SAVE_BUTTON_CSS   = "a[data-action=SAVE]";
     private final String QUESTION_CANCEL_BUTTON_CSS = "a[data-action=CANCEL]";
 
+    private final String POP_DELETE_YES = "//input[@class='gs-btn btn-save btn_save saveSummary' and @value='Yes']";
 
 
     //Miscellaneous
@@ -91,12 +92,6 @@ public class SurveyQuestionPage extends SurveyPage {
         waitTillNoLoadingIcon();
 	}
 
-    public SurveyQuestionPage addNewPage() {
-        item.click(PAGE_CREATE_BUTTON);
-        Timer.sleep(3); //No loading icons are implemented.
-        return this;
-    }
-
     public SurveyQuestionPage clickOnExpandView() {
         item.click(EXPAND_VIEW);
         Timer.sleep(2);
@@ -114,8 +109,21 @@ public class SurveyQuestionPage extends SurveyPage {
         return surQuestionsPageEle;
     }
 
+    public WebElement getPageElement(String pageTitle, String pageId) {
+        String PAGE_TITLE_PATH = String.format("//h3[@class='page-title' and text()='%s']/ancestor::div[contains(@class, 'page-break-ctn')]", pageTitle);
+        if(pageId!=null) {
+            PAGE_TITLE_PATH = String.format("//h3[@class='page-title' and text()='%s']/ancestor::div[contains(@class, 'page-break-ctn') and (@data-page-id='%s' or data-order='%s')]", pageTitle, pageId, pageId);
+        }
+        return getWebElement(By.xpath(PAGE_TITLE_PATH));
+    }
+
     public WebElement getQuestionElement(SurveyQuestion surveyQuestion) {
-        WebElement surveyQuestionEle = getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
+        WebElement surveyQuestionEle;
+        try {
+            surveyQuestionEle= getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to find survey Question");
+        }
         return surveyQuestionEle;
     }
 
@@ -354,7 +362,7 @@ public class SurveyQuestionPage extends SurveyPage {
 
 
     public SurveyQuestionPage removeSubQuestion(WebElement QuestionEle, String subQuesText) {
-        if(subQuesText==null && subQuesText =="") {
+        if(subQuesText==null && subQuesText.equals("")) {
             String LAST_SUB_QUESTION = ".//div[contains(@id, '_sub_qtn_entry')]/ul/li[last()]/descendant::a[@data-action='DELETE' and @data-type='SUB_QUESTION']";
             QuestionEle.findElement(By.xpath(LAST_SUB_QUESTION)).click();
             waitTillNoLoadingIcon();
@@ -379,19 +387,6 @@ public class SurveyQuestionPage extends SurveyPage {
             throw new RuntimeException("Sub Question doesn't exists, to update : "+oldQuesText);
         }
         return this;
-    }
-
-    public boolean isPagePresent(String pageTitle, String pageId) {
-        if(pageTitle==null) {
-            throw new RuntimeException("Page Title is mandatory");
-        }
-        String PAGE_TITLE_PATH = "//div[contains(@class, 'page')]/descendant::h3[@class='page-title' and text()='%s']";
-        if(pageId!=null) {
-            PAGE_TITLE_PATH = "//div[contains(@class, 'page') and (@data-page-id='%s' or data-order='%s')]/descendant::h3[@class='page-title' and text()='%s']";
-        }
-        boolean result = isElementPresentAndDisplay(By.xpath(PAGE_TITLE_PATH));
-        Log.info("Page Displayed : " +result);
-        return result;
     }
 
 
@@ -474,17 +469,6 @@ public class SurveyQuestionPage extends SurveyPage {
         } else {
             return isElementPresentAndDisplayed(surveyQuestionEle, String.format(QUE_REQUIRED_CSS, "no"));
         }
-    }
-
-    private boolean isElementPresentAndDisplayed(WebElement wEle, String xpath) {
-        boolean result = false;
-        Log.info("Checking if element is present : " +xpath);
-        try {
-            result = wEle.findElement(By.xpath(xpath)).isDisplayed();
-        } catch (Exception e) {
-            Log.error("Element not present, "+xpath, e);
-        }
-        return result;
     }
 
     public boolean verifySurveyQuestionAnswers(WebElement surQuesEle, SurveyQuestion surveyQuestion) {
@@ -684,6 +668,75 @@ public class SurveyQuestionPage extends SurveyPage {
         }
         return true;
     }
+
+    public boolean isPagePresent(String pageTitle, String pageId) {
+        if(pageTitle==null) {
+            throw new RuntimeException("Page Title is mandatory");
+        }
+        String PAGE_TITLE_PATH = "//div[contains(@class, 'page')]/descendant::h3[@class='page-title' and text()='%s']";
+        if(pageId!=null) {
+            PAGE_TITLE_PATH = "//div[contains(@class, 'page') and (@data-page-id='%s' or data-order='%s')]/descendant::h3[@class='page-title' and text()='%s']";
+        }
+        boolean result = isElementPresentAndDisplay(By.xpath(PAGE_TITLE_PATH));
+        Log.info("Page Displayed : " +result);
+        return result;
+    }
+
+    public SurveyQuestionPage updatePageTitle(String pageId, String oldPageTitle, String newPageTitle) {
+        if(isPagePresent(oldPageTitle, pageId)) {
+            WebElement wEle = getPageElement(oldPageTitle, pageId);
+            wEle.findElement(By.cssSelector(EDIT_PAGE_CSS)).click();
+            wait.waitTillElementDisplayed(PAGE_TITLE_INPUT, MIN_TIME, MAX_TIME);
+            item.click(PAGE_TITLE_INPUT);
+            field.clearAndSetText(PAGE_TITLE_INPUT, newPageTitle);
+            item.click(PAGE_EDIT_FORM_SAVE_BUTTON);
+            Timer.sleep(1);
+            waitTillNoLoadingIcon();
+        } else {
+            throw new RuntimeException("Page not found");
+        }
+        return this;
+    }
+
+    public SurveyQuestionPage addNewPage() {
+        Log.info("Adding New Page");
+        int noExistingPages = element.getAllElement("//div[@class='page-break-ctn']").size();
+        item.click(PAGE_CREATE_BUTTON);
+        for(int i=0; i<3; i++) {
+            if(noExistingPages+1==element.getAllElement("//div[@class='page-break-ctn']").size()) {
+                break;
+            } else {
+                Log.info("Waiting for page element to be added to dom");
+                Timer.sleep(2);
+            }
+        }
+        return this;
+    }
+
+    public SurveyQuestionPage deletePage(String pageTile, String pageId) {
+        if(isPagePresent(pageTile, pageId)) {
+            WebElement pageEle = getPageElement(pageTile, pageId);
+            pageEle.findElement(By.cssSelector(DELETE_PAGE_CSS)).click();
+            wait.waitTillElementDisplayed(POP_DELETE_YES, MIN_TIME, MAX_TIME);
+            item.click(POP_DELETE_YES);
+            waitTillNoLoadingIcon();
+            return this;
+        } else {
+            Log.error("No Page Found to Delete");
+            throw new RuntimeException("No Page Found to Delete");
+        }
+    }
+
+    public SurveyQuestionPage deleteQuestion(SurveyQuestion surveyQuestion) {
+        WebElement surveyQuesEle = getQuestionElement(surveyQuestion);
+        surveyQuesEle.findElement(By.cssSelector(QUESTION_DELETE_CSS)).click();
+        wait.waitTillElementDisplayed(POP_DELETE_YES, MIN_TIME, MAX_TIME);
+        item.click(POP_DELETE_YES);
+        waitTillNoLoadingIcon();
+        return this;
+    }
+
+
 
 
 

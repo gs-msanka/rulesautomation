@@ -15,7 +15,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class SurveyBasePage extends BasePage {
 
@@ -107,6 +110,10 @@ public class SurveyBasePage extends BasePage {
         Timer.sleep(2);
     }
 
+    public boolean isSurveyDisplayed(SurveyProperties surveyProperties) {
+         return isElementPresentAndDisplay(By.xpath(String.format(SURVEY_CARD_TITLE, surveyProperties.getSurveyName())));
+    }
+
     public void selectValueInDropDown(String value) {
         boolean selected = false;
         for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
@@ -139,5 +146,23 @@ public class SurveyBasePage extends BasePage {
             }
         });
 
+    }
+
+    public boolean isElementPresentAndDisplayed(WebElement wEle, String xpath) {
+        boolean result = false;
+        Log.info("Checking if element is present : " +xpath);
+        try {
+            result = wEle.findElement(By.xpath(xpath)).isDisplayed();
+        } catch (Exception e) {
+            Log.error("Element not present, "+xpath, e);
+        }
+        return result;
+    }
+
+    public void selectValueFromDropDown(WebElement webEle, List<String> options) {
+        Select dropDown = new Select(webEle);
+        for(String option: options) {
+            dropDown.selectByVisibleText(option);
+        }
     }
 }

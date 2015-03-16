@@ -189,6 +189,12 @@ public class SurveyAcceptanceTests extends SurveySetup {
 
     }
 
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
+    public void test3(Map<String, String> testData) throws IOException {
+
+    }
+
 
         @AfterClass
 	public void tearDown() {
