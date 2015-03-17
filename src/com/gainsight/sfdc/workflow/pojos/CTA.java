@@ -1,11 +1,15 @@
 package com.gainsight.sfdc.workflow.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by gainsight on 07/11/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CTA  implements Cloneable {
 	private String type;
 	private String subject;
