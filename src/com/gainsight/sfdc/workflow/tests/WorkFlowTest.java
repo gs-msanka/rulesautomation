@@ -42,8 +42,8 @@ public class WorkFlowTest extends WorkflowSetup {
     @BeforeClass
     public void setup() throws Exception {
     	sfdc.connect();
-        basepage.login();
-       //createExtIdFieldOnAccount();
+       basepage.login();
+       metaUtil.createExtIdFieldOnAccount(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         //createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));

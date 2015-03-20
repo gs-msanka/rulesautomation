@@ -63,7 +63,7 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
+      /*sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
@@ -73,12 +73,12 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
-        ruleEngineDataSetup = new RuleEngineDataSetup();
-        ruleEngineDataSetup.cleanDataSetup();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));*/
+       ruleEngineDataSetup = new RuleEngineDataSetup();
+        /*ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
-        ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);
+        ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);*/
 
         //Run all the rules one by one, Do Assertions in test cases.
         //ExcelDataProvider.getDataFromExcel("", "");

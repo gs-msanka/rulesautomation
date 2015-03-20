@@ -58,11 +58,11 @@ public class GSEmailTests extends BaseTest {
 	
 	@Test
 	public void testSendEmailSingleRecipient(){
-		gse.updateNSURLInAppSettings(NSURL);
-		gse.enableOAuthForOrg();
+		//gse.updateNSURLInAppSettings(NSURL);
+		//gse.enableOAuthForOrg();
 		gse.createSurveyWithGSEmail();
 		gse.sendTestEmail();
-		gse.deleteOldEmailActivityLogFromMongo();	
+		//gse.deleteOldEmailActivityLogFromMongo();	
 	}
 	
 	 @AfterClass
