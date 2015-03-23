@@ -174,6 +174,11 @@ public class WorkflowPage extends WorkflowBasePage {
     String CALENDER_VIEW_SELECT         = "//ul[@class='calendar-tab']/descendant::a[@data-type='%s']";
     String CALENDER_DIR_LEFT            = "//div[@class='calendar-ctn']/div[@data-direction='LEFT']";
     String CALENDER_DIR_RIGHT           = "//div[@class='calendar-ctn']/div[@data-direction='RIGHT']";
+    
+    private final String CLICK_TO_OPEN_CTA       ="//div[@class='gs-cta-head workflow-ctaitem']";
+    private final String CTA_LINK            ="//li[contains(@class, 'gs-cockpit-tab active') and contains(@tabname, 'JBCXM__CTA__c')]";
+    private final String ACCOUNT_LINK            ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Account')]";
+    
 
     public WorkflowPage() {
         waitForPageLoad();
@@ -1347,7 +1352,18 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
+    public WorkflowPage openctadetailview(){
+    	item.click(CLICK_TO_OPEN_CTA);
+    	return this;
+    }
 
 
+	public boolean verifyingctalink(){
+	     return link.verifyLinkVisible(CTA_LINK);
+    	
+    }
 
+	public boolean verifyingAccountlink(){
+		return link.verifyLinkVisible(ACCOUNT_LINK);
+	}
 }

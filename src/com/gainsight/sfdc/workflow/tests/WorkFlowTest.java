@@ -8,9 +8,11 @@ import java.util.List;
 
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
+import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1455,5 +1457,22 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
 
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA42")
+    public void updating_Association_Metadata(HashMap<String, String> testData) throws IOException, InterruptedException {
+    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
+    jsondata[0].removeField("Id");
+    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+    sfdc.updateRecords(jsondata);
+    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+    cta.setAssignee(sfinfo.getUserFullName());
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    Thread.sleep(5000);
+    Assert.assertTrue(detailpage.verifyingAccountlink(), "verifying Account link");
+    Assert.assertTrue(detailpage.verifyingctalink(), "verifying CTA link");
 
+    }
 }
