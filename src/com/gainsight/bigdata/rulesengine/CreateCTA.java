@@ -22,13 +22,12 @@ public class CreateCTA extends RulesUtil{
 		
 	private static final String rulesDir = Application.basedir+"/testdata/newstack/RulesEngine/CreateCTA/";
     private static final String CreateCTACustomer = rulesDir + "CreateCTACustomer.apex";
-    private static final String CleanUpForRules=rulesDir+"CleanUpForRules.apex";
+    private static final String CleanUpForRules=Application.basedir+"/testdata/newstack/RulesEngine/CleanUpForRules.apex";
     private static final String CreateOwnerField = rulesDir + "CreateOwnerField.apex";
     private static final String AssignValuesToStandardFields = rulesDir + "AssignValuesToStandardFields.apex";
     private static final String AssignValuesToCustomFields = rulesDir + "AssignValuesToCustomFields.apex";
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
     ResponseObj result=null;
-    BaseTest bt=new BaseTest();
 	private final String TEST_DATA_FILE="/testdata/newstack/RulesEngine/CreateCTA/CreateCTAs.xls";
 	
 	@BeforeClass
