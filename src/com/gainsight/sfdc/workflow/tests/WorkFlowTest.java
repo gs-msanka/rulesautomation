@@ -39,6 +39,8 @@ public class WorkFlowTest extends WorkflowSetup {
                                         "Delete [select id from Task];"+
                                         "Delete [Select id from JBCXM__StatePreservation__c];"+
                                         "Delete [Select id from JBCXM__Milestone__c];";
+    private final String CREATE_OPPOURTUNITIES=Application.basedir+"/testdata/sfdc/workflow/scripts/Creating_account_and_oppourtunity.txt";
+    private final String OPPOURTUNITY_CLEANUP="Delete[SELECT Id,Name FROM Opportunity where name='Opp Account - Opportunity'];";
     ObjectMapper mapper                         = new ObjectMapper();
 
     @BeforeClass
@@ -1474,5 +1476,25 @@ public class WorkFlowTest extends WorkflowSetup {
     Assert.assertTrue(detailpage.verifyingAccountlink(), "verifying Account link");
     Assert.assertTrue(detailpage.verifyingctalink(), "verifying CTA link");
 
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA43")
+    public void LinkExistingOppourtunity(HashMap<String, String> testData) throws IOException, InterruptedException {
+    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
+    jsondata[0].removeField("Id");
+    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+    sfdc.updateRecords(jsondata);
+    sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
+    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_OPPOURTUNITIES));
+    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+    cta.setAssignee(sfinfo.getUserFullName());
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    detailpage.LinkingExistingOppourtunity(cta);
+    Assert.assertTrue(detailpage.verifyDelinkIcon(), "verifying DeLink Icon");
+    
     }
 }

@@ -1,0 +1,19 @@
+//Creating Accounts
+List<Account> accList = new List<Account>();
+for(integer i=1; i<10 ; i++) {
+   Account acc = new Account();
+   acc.Name='CTA Account' +i;
+   accList.add(acc);
+   }
+   Insert accList;
+
+
+//Creating a Opportunity for CTA Account 1
+List<Account> accForOpp=[SELECT Id FROM Account where name like 'CTA Account 1'];
+Opportunity opp = new Opportunity(name ='Opp Account - Opportunity',
+									StageName = 'Qualification',
+									Type = 'New Business',
+									CloseDate = date.today(),
+									AccountId = accForOpp.get(0).Id);
+
+insert opp;

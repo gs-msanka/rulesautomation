@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gainsight.pageobject.util.Timer;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -176,9 +177,13 @@ public class WorkflowPage extends WorkflowBasePage {
     String CALENDER_DIR_RIGHT           = "//div[@class='calendar-ctn']/div[@data-direction='RIGHT']";
     
     private final String CLICK_TO_OPEN_CTA       ="//div[@class='gs-cta-head workflow-ctaitem']";
-    private final String CTA_LINK            ="//li[contains(@class, 'gs-cockpit-tab active') and contains(@tabname, 'JBCXM__CTA__c')]";
+    private final String CTA_LINK                ="//li[contains(@class, 'gs-cockpit-tab active') and contains(@tabname, 'JBCXM__CTA__c')]";
     private final String ACCOUNT_LINK            ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Account')]";
-    
+    private final String OPPOURTUNITY_LINK       ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Opportunity')]";
+    private final String Link_TO_EXISTING        ="//div[@id='details']/div[3]/div[5]/div[2]/div[@class='gs-cockpit-add-new pull-left gs-cockpit-associate-btn']";
+    private final String OPPOURTUNITY_SEARCH     ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
+    private final String OPPOURTUNITY_SEARCH_LINK="Opp Account - Opportunity";
+    private final String DELINK_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='De-Link']";
 
     public WorkflowPage() {
         waitForPageLoad();
@@ -1365,5 +1370,18 @@ public class WorkflowPage extends WorkflowBasePage {
 
 	public boolean verifyingAccountlink(){
 		return link.verifyLinkVisible(ACCOUNT_LINK);
+	}
+	
+	public void LinkingExistingOppourtunity(CTA cta) throws InterruptedException{
+		item.click(OPPOURTUNITY_LINK);
+		item.click(Link_TO_EXISTING);
+		Thread.sleep(5000);
+		field.setText(OPPOURTUNITY_SEARCH, cta.getoppourtunity());
+		link.click(OPPOURTUNITY_SEARCH_LINK);
+		
+	}
+    
+	public boolean verifyDelinkIcon(){
+		return link.verifyLinkVisible(DELINK_ICON);
 	}
 }

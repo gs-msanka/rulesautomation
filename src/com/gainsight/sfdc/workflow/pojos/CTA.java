@@ -32,6 +32,7 @@ public class CTA  implements Cloneable {
     private String scoreOfCustomer;
     private boolean fromCustomer360orWidgets=false;
     private String playbookName;
+    private String oppourtunity;
     
 	public String getPlaybookName() {
 		return playbookName;
@@ -199,6 +200,14 @@ public class CTA  implements Cloneable {
 
 	public void setAttribute(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+	
+	public String getoppourtunity() {
+		return oppourtunity;
+	}
+
+	public void setoppourtunity(String oppourtunity) {
+		this.oppourtunity = oppourtunity;
 	}
 
 	public static class Attribute {
