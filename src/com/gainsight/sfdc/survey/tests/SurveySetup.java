@@ -142,8 +142,8 @@ public class SurveySetup extends BaseTest {
         }
         HashMap<String, String> tempMap = new HashMap<>();
         for(SObject sObject : sObjects) {
-            Log.info(sObject.getSObjectField(resolveStrNameSpace("JBCXM__Title__c")).toString());
-            tempMap.put(sObject.getSObjectField(resolveStrNameSpace("JBCXM__Title__c")).toString(), sObject.getId());
+            Log.info(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString());
+            tempMap.put(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString(), sObject.getId());
         }
         for(SurveyQuestion.SurveySubQuestions subQues : surQues.getSubQuestions()) {
             if(tempMap.containsKey(subQues.getSubQuestionText())) {
@@ -175,9 +175,9 @@ public class SurveySetup extends BaseTest {
         }
         HashMap<String, String> tempMap = new HashMap<>();
         for(SObject sObject : sObjects) {
-            if(sObject.getSObjectField(resolveStrNameSpace("JBCXM__Title__c")) !=null) {
-                Log.info(sObject.getSObjectField(resolveStrNameSpace("JBCXM__Title__c")).toString());
-                tempMap.put(sObject.getSObjectField(resolveStrNameSpace("JBCXM__Title__c")).toString(), sObject.getId());
+            if(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")) !=null) {
+                Log.info(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString());
+                tempMap.put(sObject.getField(resolveStrNameSpace("JBCXM__Title__c")).toString(), sObject.getId());
             }
         }
         for(SurveyQuestion.SurveyAllowedAnswer surveyAllowedAnswer : surQues.getAllowedAnswers()) {

@@ -45,8 +45,9 @@ public class SurveyBasePage extends BasePage {
     //Drafts Section/View Selectors
     private final String SURVEY_CARD_TITLE        = "//li[@class='box survey-card']/descendant::h3[text()='%s']";
 
-
-
+    public SurveyBasePage(String s) {
+        System.out.println("Dummy Constructor - Survey Base Page");
+    }
 
     public SurveyBasePage() {
         waitTillNoLoadingIcon();
