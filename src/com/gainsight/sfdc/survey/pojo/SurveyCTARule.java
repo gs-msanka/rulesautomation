@@ -12,8 +12,18 @@ public class SurveyCTARule {
     private CTA cta;
     private String ownerField;
     private String playbook;
+    private String chatterUpdate;
     private List<SurveyQuestion> surveyQuestions;
     private String whereLogic;
+
+    public String getChatterUpdate() {
+        return chatterUpdate;
+    }
+
+    public void setChatterUpdate(String chatterUpdate) {
+        this.chatterUpdate = chatterUpdate;
+    }
+
 
     public String getStatus() {
         return status;

@@ -7,11 +7,11 @@ SurveyDesignPage extends the SurveyBasePage. */
 package com.gainsight.sfdc.survey.pages;
 
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
 
 
 public class SurveyPage extends SurveyBasePage {
@@ -29,13 +29,14 @@ public class SurveyPage extends SurveyBasePage {
     private final String ANALYZE_SECTION_LINK           = "//a[@ref-link='analyse']";
 
 	public SurveyPage(String surveyName) {
-        waitTillNoLoadingIcon();
+        super(surveyName);
+        Timer.sleep(2);
 		wait.waitTillElementPresent(String.format(Survey_TITLE, surveyName), MIN_TIME, MAX_TIME);
 	}
 	
 	public SurveyPage(){
-		
-	}
+        System.out.println("Dummy Constructor - Survey Page");
+    }
 	public SurveyProperties clickOnProperties() {
     	item.click(PROPERTIES_SECTION_LINK);
         return new SurveyProperties();
@@ -46,9 +47,9 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveyQuestionPage(surveyProp);
     }
 	
-	public SurveySetCTAPage clickOnSetCta() {
+	public SurveySetCTAPage clickOnSetCta(SurveyProperties surveyProp) {
     	item.click(SET_CTA_SECTION_LINK);
-        return new SurveySetCTAPage();
+        return new SurveySetCTAPage(surveyProp);
     }
 	
 	public SurveyPublishPage clickOnPublish() {

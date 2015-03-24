@@ -1,10 +1,14 @@
 package com.gainsight.sfdc.survey.tests;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
+import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
+import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
+import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -16,6 +20,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SurveyAcceptanceTests extends SurveySetup {
@@ -28,7 +34,7 @@ public class SurveyAcceptanceTests extends SurveySetup {
 	public void setUp() {
 		Log.info("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
-        sfdc.runApexCode(resolveStrNameSpace(QUERY));
+       // sfdc.runApexCode(resolveStrNameSpace(QUERY));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -192,6 +198,27 @@ public class SurveyAcceptanceTests extends SurveySetup {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
     public void test3(Map<String, String> testData) throws IOException {
+        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+        setSurveyId(surProp);
+        SurveySetCTAPage surveySetCTAPage = surveyBasePage.openSurveyFromDrafts(surProp).clickOnSetCta(surProp);
+        String a = "{\"type\":\"Risk\",\"subject\":\"I am gainsight\",\"customer\":\"AAR CORP\",\"status\":\"Open\",\"reason\":\"Other - Uncategorized\",\"dueDate\":\"5\",\"comments\":null,\"taskCount\":0,\"priority\":\"Medium\",\"assignee\":\"GiribabuG\",\"attributes\":[],\"eventRecurring\":null,\"snoozeDate\":\"1\",\"snoozeReason\":\"Other\",\"scoreOfCustomer\":null,\"fromCustomer360orWidgets\":false,\"recurring\":false,\"ctaoverDue\":false,\"closed\":false,\"imp\":false}";
+        CTA cta  =  mapper.readValue(a, CTA.class);
+
+        SurveyCTARule surveyCTARule = new SurveyCTARule();
+        surveyCTARule.setCta(cta);
+
+
+        String b = "{\"pageTitle\":\"Untitled Page\",\"questionText\":\"Matrix Single Answer\",\"pageId\":null,\"questionId\":null,\"headerId\":null,\"headerTitle\":null,\"questionType\":\"MATRIX\",\"active\":true,\"required\":true,\"allowComments\":true,\"addOther\":true,\"singleAnswer\":true,\"image\":null,\"allowedAnswers\":[{\"answerText\":\"Ans 3\"},{\"answerText\":\"Ans 4\"},{\"answerText\":\"Ans 5\"}],\"subQuestions\":[{\"subQuestionText\":\"Sub Question 1\"}]}";
+        SurveyQuestion surveyQuestion = mapper.readValue(b, SurveyQuestion.class);
+
+        List<SurveyQuestion> s = new ArrayList<>();
+        s.add(surveyQuestion);
+        surveyCTARule.setSurveyQuestions(s);
+
+        surveySetCTAPage.addRule(surveyCTARule);
+        surveySetCTAPage.clickOnSetCta(surProp);
+        Assert.assertTrue(surveySetCTAPage.verifyRule(surveyCTARule));
 
     }
 
