@@ -34,7 +34,7 @@ public class SurveyPage extends SurveyBasePage {
 		wait.waitTillElementPresent(String.format(Survey_TITLE, surveyName), MIN_TIME, MAX_TIME);
 	}
 	
-	public SurveyPage(){
+	public SurveyPage() {
         System.out.println("Dummy Constructor - Survey Page");
     }
 	public SurveyProperties clickOnProperties() {
@@ -52,9 +52,9 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveySetCTAPage(surveyProp);
     }
 	
-	public SurveyPublishPage clickOnPublish() {
+	public SurveyPublishPage clickOnPublish(SurveyProperties surveyProp) {
     	item.click(PUBLISH_SECTION_LINK);
-        return new SurveyPublishPage();
+        return new SurveyPublishPage(surveyProp.getSurveyName());
     }
 	
 	public SurveyAddParticipantsPage clickOnAddParticipants(SurveyProperties sData) {

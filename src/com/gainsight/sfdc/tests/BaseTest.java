@@ -68,7 +68,7 @@ public class BaseTest {
             packageUtil.updateWidgetLayouts(true, true, true);
         }
 
-        packageUtil.deployPermissionSetCode();
+        //packageUtil.deployPermissionSetCode();
         sfinfo = sfdc.fetchSFDCinfo();
         System.out.println("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";

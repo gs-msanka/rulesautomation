@@ -10,7 +10,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.rulesengine.GSUtil;
 import com.gainsight.bigdata.rulesengine.ResponseObject;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -25,7 +24,7 @@ public class LoadTestData extends NSTestBase{
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
     ResponseObj result=null;
     BaseTest bt=new BaseTest();
-	
+
 	@BeforeClass
     public void beforeClass() throws Exception {
         //LastRunResultFieldName = GSUtil.resolveStrNameSpace(LastRunResultFieldName);		
