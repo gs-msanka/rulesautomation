@@ -1459,6 +1459,49 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
 
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA43")
+    public void DeLinkExistingOpportunity(HashMap<String, String> testData) throws IOException, InterruptedException {
+    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
+    jsondata[0].removeField("Id");
+    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+    sfdc.updateRecords(jsondata);
+    sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
+    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_OPPOURTUNITIES));
+    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+    cta.setAssignee(sfinfo.getUserFullName());
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    detailpage.LinkingExistingOppourtunity(cta);
+    detailpage.DelinkExistingOpportunity();
+    Assert.assertTrue(detailpage.VerifyObjectDeLink(), "verifying Link to Existing Link is visible or not");
+    
+    }
+    
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA44")
+    public void CreateOpportunity(HashMap<String, String> testData) throws IOException, InterruptedException {
+    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
+    jsondata[0].removeField("Id");
+    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+    sfdc.updateRecords(jsondata);
+    sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
+    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_OPPOURTUNITIES));
+    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+    cta.setAssignee(sfinfo.getUserFullName());
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    detailpage.CreateNewOpportunity(cta);
+    Assert.assertTrue(detailpage.verifyDelinkIcon(), "Opportunity created, so verifying Delink icon");
+    detailpage.DelinkExistingOpportunity();
+    
+    }
+    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA42")
     public void updating_Association_Metadata(HashMap<String, String> testData) throws IOException, InterruptedException {

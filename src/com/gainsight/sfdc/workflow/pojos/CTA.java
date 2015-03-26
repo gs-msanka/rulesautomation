@@ -33,6 +33,7 @@ public class CTA  implements Cloneable {
     private boolean fromCustomer360orWidgets=false;
     private String playbookName;
     private String oppourtunity;
+    private String opportunityName;
     
 	public String getPlaybookName() {
 		return playbookName;
@@ -40,6 +41,10 @@ public class CTA  implements Cloneable {
 
 	public void setPlaybookName(String playbookId) {
 		this.playbookName = playbookId;
+	}
+	
+	public String getopportunityName(){
+		return opportunityName;
 	}
 
 	public boolean isFromCustomer360orWidgets() {

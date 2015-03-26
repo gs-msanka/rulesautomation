@@ -179,12 +179,21 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String CLICK_TO_OPEN_CTA       ="//div[@class='gs-cta-head workflow-ctaitem']";
     private final String CTA_LINK                ="//li[contains(@class, 'gs-cockpit-tab active') and contains(@tabname, 'JBCXM__CTA__c')]";
     private final String ACCOUNT_LINK            ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Account')]";
-    private final String OPPOURTUNITY_LINK       ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Opportunity')]";
-    private final String Link_TO_EXISTING        ="//div[@id='details']/div[3]/div[5]/div[2]/div[@class='gs-cockpit-add-new pull-left gs-cockpit-associate-btn']";
-    private final String OPPOURTUNITY_SEARCH     ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
-    private final String OPPOURTUNITY_SEARCH_LINK="Opp Account - Opportunity";
+    private final String OPPORTUNITY_LINK       ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Opportunity')]";
+    private final String LINK_TO_EXISTING        ="//div[@id='details']/div[3]/div[5]/div[2]/div[@class='gs-cockpit-add-new pull-left gs-cockpit-associate-btn']";
+    private final String OPPORTUNITY_SEARCH     ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
+    private final String OPPORTUNITY_SEARCH_LINK="Opp Account - Opportunity";
     private final String DELINK_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='De-Link']";
-
+    private final String DELETE_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='Delete']";
+    private final String DELINK_CONFIRMATION_BOX ="//div[@class='layout_popup ui-dialog-content ui-widget-content']/descendant::div[@class='modal_footer']/descendant::input[@class='gs-btn btn-save btn_save saveSummary']";
+    private final String CREATE_NEW_LINK         ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-add-new pull-left gs-cockpit-create-record']";
+    private final String NAME_SELECT             ="//div[@class='gs-cockpit-field-value pull-left']/input";
+    private final String SELECT_DATE             ="//div[@class='gs-cockpit-field-record']/descendant::span[text()='Close Date']/ancestor::div[@class='gs-cockpit-field-record']/descendant::input[last()]";
+    private final String DATE_PICKER             ="//div[@id='datePicker']/descendant::div[@class='calBody']/descendant::div[@class='buttonBar']/a";
+    private final String STAGE_SELECT            ="//div[@class='gs-cockpit-field-record']/descendant::span[text()='Stage']/ancestor::div[@class='gs-cockpit-field-record']/descendant::button";
+    private final String CLICK_SCREEN            ="//div[@class='workflow-tabs workflow-header']"; //Clicking somewhere on screen to disappear calendar
+    private final String CLICK_SAVE              ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/div[2]/div/a[1]";
+    
     public WorkflowPage() {
         waitForPageLoad();
     }
@@ -1373,15 +1382,37 @@ public class WorkflowPage extends WorkflowBasePage {
 	}
 	
 	public void LinkingExistingOppourtunity(CTA cta) throws InterruptedException{
-		item.click(OPPOURTUNITY_LINK);
-		item.click(Link_TO_EXISTING);
-		Thread.sleep(5000);
-		field.setText(OPPOURTUNITY_SEARCH, cta.getoppourtunity());
-		link.click(OPPOURTUNITY_SEARCH_LINK);
+		item.click(OPPORTUNITY_LINK);
+		item.click(LINK_TO_EXISTING);
+		Timer.sleep(5);
+		field.setText(OPPORTUNITY_SEARCH, cta.getoppourtunity());
+		link.click(OPPORTUNITY_SEARCH_LINK);
 		
 	}
     
+	public void DelinkExistingOpportunity(){
+		item.click(DELINK_ICON);
+		item.click(DELINK_CONFIRMATION_BOX);
+	}
+	
 	public boolean verifyDelinkIcon(){
 		return link.verifyLinkVisible(DELINK_ICON);
+	}
+	
+	public boolean VerifyObjectDeLink(){
+		return link.verifyLinkVisible(LINK_TO_EXISTING);
+	}
+	
+	public void CreateNewOpportunity(CTA cta){
+		Log.info("Creating New opportunity");
+		item.click(OPPORTUNITY_LINK);
+		item.click(CREATE_NEW_LINK);
+		field.setText(NAME_SELECT, cta.getopportunityName());
+		item.click(SELECT_DATE);
+		item.click(DATE_PICKER);
+		item.click(CLICK_SCREEN); 
+		item.click(STAGE_SELECT);
+		item.click("//span[text()='Prospecting']");
+		item.click(CLICK_SAVE);
 	}
 }
