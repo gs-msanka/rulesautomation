@@ -1537,7 +1537,7 @@ public class WorkFlowTest extends WorkflowSetup {
     cta.setAssignee(sfinfo.getUserFullName());
     WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
     detailpage.LinkingExistingOppourtunity(cta);
-    Assert.assertTrue(detailpage.verifyDelinkIcon(), "verifying DeLink Icon");
+    Assert.assertTrue(detailpage.verifyDelinkIcon(), "verifying DeLink Icon.");
     
     }
 }
