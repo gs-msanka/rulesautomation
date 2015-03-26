@@ -20,7 +20,7 @@ import com.gainsight.testdriver.Log;
 
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
-	
+	 public static final Application env = new Application();
 	
 	 public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
@@ -222,8 +222,10 @@ public class MetaDataUtil {
 	    }
 	    
 	    public String resolveStrNameSpace(String str) {
-	      final Boolean isPackage = Boolean.valueOf(Application.get().getProperty("sfdc.managedPackage"));
-	      final String NAMESPACE = Application.get().getProperty("sfdc.nameSpace");
+	    	Application env=new Application();
+	    			
+	      final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+	      final String NAMESPACE = env.getProperty("sfdc.nameSpace");
 
 	        return FileUtil.resolveNameSpace(str, isPackage ? NAMESPACE : null);
 	    }
