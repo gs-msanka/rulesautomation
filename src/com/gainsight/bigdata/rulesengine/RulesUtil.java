@@ -100,7 +100,7 @@ public boolean isCTACreateSuccessfully(String priorityValue,String statusValue,S
 
     public static void waitForCompletion(String ruleId, WebAction webAction, Header header) throws Exception {
         boolean flag = true;
-        int maxWaitingTime = 300000;
+        int maxWaitingTime = 3000000;
         long startTime = System.currentTimeMillis();
         long executionTime = 0;
         while (flag && executionTime < maxWaitingTime) {

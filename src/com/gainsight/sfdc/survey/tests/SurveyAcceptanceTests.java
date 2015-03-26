@@ -1,10 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
-import com.gainsight.pageobject.util.Timer;
-import com.gainsight.sfdc.survey.pages.SurveyBasePage;
-import com.gainsight.sfdc.survey.pages.SurveyPage;
-import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
-import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
+import com.gainsight.sfdc.survey.pages.*;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
@@ -12,7 +8,6 @@ import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,14 +22,14 @@ import java.util.Map;
 public class SurveyAcceptanceTests extends SurveySetup {
 
     private final String TEST_DATA_FILE         = "testdata/sfdc/survey/tests/SurveyTests.xls";
-    String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c];";
-    ObjectMapper mapper = new ObjectMapper();
+    private final String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c];";
+    private ObjectMapper mapper = new ObjectMapper();
 
 	@BeforeClass
 	public void setUp() {
 		Log.info("Starting Survey Creation / Clone Test Cases...");
 		basepage.login();
-       // sfdc.runApexCode(resolveStrNameSpace(QUERY));
+        //sfdc.runApexCode(resolveStrNameSpace(QUERY));
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -219,6 +214,30 @@ public class SurveyAcceptanceTests extends SurveySetup {
         surveySetCTAPage.addRule(surveyCTARule);
         surveySetCTAPage.clickOnSetCta(surProp);
         Assert.assertTrue(surveySetCTAPage.verifyRule(surveyCTARule));
+
+    }
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S3")
+    public void test4(Map<String, String> testData) throws IOException {
+        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+        setSurveyId(surProp);
+        SurveyQuestionPage surveyQuestionPage = surveyPage.clickOnQuestions(surProp);
+        SurveyQuestion surQues = mapper.readValue(testData.get("Question1"), SurveyQuestion.class);
+        surQues.setPageId(getRecentAddedPageId(surProp));
+        surQues.setSurveyProperties(surProp);
+        surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+        verifyQuestionDisplayed(surveyQuestionPage, surQues);
+        SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp);
+        publishPage.updatePublishDetails(surProp);
+        surProp.setStatus("Publish");
+        Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(), "Verifying Survey Status");
+        publishPage.sendTestEmail(testData.get("Recipients").split(","), sfinfo.getUserFullName());
+        Assert.assertEquals(publishPage.getTestEmailSuccessMsg(), "Test emails sent successfully.");
+        publishPage.closeTestEmailDialog();
+
 
     }
 

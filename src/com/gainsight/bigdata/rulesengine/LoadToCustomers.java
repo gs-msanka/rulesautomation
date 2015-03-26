@@ -2,7 +2,6 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
@@ -13,24 +12,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.http.WebAction;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
 
 public class LoadToCustomers extends NSTestBase{
-    private static final String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/LoadToCustomers/";
     private static final String CleanUpForRules=Application.basedir+"/testdata/newstack/RulesEngine/CleanUpForRules.apex";
 	private final String TEST_DATA_FILE="/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
 
     ResponseObj result=null;
 
-    private static final boolean isEnabled = false;
     public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
 
     // Work In Progress Need to optimize the code as we will proceed
