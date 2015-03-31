@@ -1,5 +1,10 @@
 package com.gainsight.sfdc.survey.pojo;
 
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SurveyProperties {
 
     private String sId;
@@ -26,6 +31,15 @@ public class SurveyProperties {
     private boolean cloneParticipants = true;
     private boolean cloneAlertRules = true;
     private boolean loadPartFromCustomObj = false;
+    private boolean hidePublishDate = false;
+
+    public boolean isHidePublishDate() {
+        return hidePublishDate;
+    }
+
+    public void setHidePublishDate(boolean hidePublishDate) {
+        this.hidePublishDate = hidePublishDate;
+    }
 
     public String getsId() {
         return sId;

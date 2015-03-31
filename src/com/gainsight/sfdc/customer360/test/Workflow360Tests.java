@@ -37,9 +37,9 @@ public class Workflow360Tests extends WorkflowSetup{
     public void setup() throws Exception {
     	sfdc.connect();
         basepage.login();
-        createExtIdFieldOnAccount();
+        metaUtil.createExtIdFieldOnAccount(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        createExtIdFieldOnUser();
+        metaUtil.createExtIdFieldOnUser(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         cleanPlaybooksData();
         loadDefaultPlaybooks();

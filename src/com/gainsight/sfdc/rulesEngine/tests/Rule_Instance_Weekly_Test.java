@@ -69,9 +69,9 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        createExtIdFieldForScoreCards();
-        createFieldsOnAccount();
-        createFieldsOnUsageData();
+        metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
+        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
+        metaUtil.createFieldsOnUsageData(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORE_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));

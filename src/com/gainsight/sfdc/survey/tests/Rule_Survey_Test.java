@@ -67,8 +67,8 @@ public class Rule_Survey_Test extends BaseTest {
     public void setup() throws Exception {
         publishURL = env.getProperty("sfdc.siteCustomURL");
 
-        createFieldsOnAccount();
-        createFieldsOnContact();
+        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
+        metaUtil.createFieldsOnContact(sfdc,sfinfo);
         resty = new Resty();
         resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         resty.withHeader("Content-Type", "application/json");

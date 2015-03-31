@@ -1,86 +1,88 @@
 package com.gainsight.bigdata.rulesengine;
 
+import java.util.HashMap;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.sfdc.SalesforceMetadataClient;
 import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.util.PropertyReader;
+import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 
-public class LoadToUsageData extends NSTestBase {
-    private static final String rulesDir = Application.basedir + "/testdata/newstack/RulesEngine/LoadToUsageData/";
-    private static final String UsageDataSync = rulesDir + "/UsageDataSync.apex";
-    private static final String UsageDataSync1 = rulesDir + "/UsageDataSync1.apex";
-    private static final String UsageDateSync = rulesDir + "/UsageDateSync.apex";
-    private static final String UsageDateSync1 = rulesDir + "/UsageDateSync1.apex";
-    private static final boolean isEnabled = false;
-    static WebAction wa = new WebAction();
-    public Header header = new Header();
+public class LoadToUsageData extends RulesUtil {
+	private static final String CleanUpForRules=Application.basedir+"/testdata/newstack/RulesEngine/CleanUpForRules.apex";
+	private final String TEST_DATA_FILE="/testdata/newstack/RulesEngine/LoadToUsageData/LoadToUsageData.xls";
 
-    // Work In Progress Need to optimize the code as we will proceed
+    ResponseObj result=null;
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        GSUtil.sfdcLogin(header, wa);
-        String[] fields = {"FilesDownloaded", "NoOfReportsRun"};
-        metadataClient.createNumberField(GSUtil.resolveStrNameSpace("JBCXM__UsageData__c"), fields, false);
+        sfdc.connect();
+        metaUtil.createFieldsOnUsageData(sfdc, sfinfo);        
     }
-
-    @Test
+    
+    @BeforeMethod
+ 	public void cleanUp() {
+ 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
+     }
+    
     // Its for UsageData sync with Account Id's only
-    public void rulesUsageOne() throws Exception {
-        GSUtil.runApexCode(UsageDataSync);
-        GSUtil.runApexCode(UsageDataSync1);
-        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDataSync'");
-        for (SObject r : rules) {
-            String rawBody = ("{}");
-            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
-                    rawBody);
-            ResponseObject responseObj = GSUtil.convertToObject(result
-                    .getContent());
-            Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
-            Assert.assertNotNull(responseObj.getRequestId());
-            GSUtil.waitForCompletion(r.getId(), wa, header);
-        }
-        SObject[] rules1 = GSUtil.execute("SELECT count(Id) FROM Account");
-        SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__UsageData__c");
-        System.out.println(rules1[0].getChild("expr0").getValue());
-        System.out.println(rules2[0].getChild("expr0").getValue());
-        Assert.assertEquals(
-                rules1[0].getChild("expr0").getValue()
-                        .equals(rules2[0].getChild("expr0").getValue()), true);
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
+    public void rulesUsageOne(HashMap<String,String> testData) throws Exception {
+    	RulesUtil ru=new RulesUtil();
+		ru.setupRule(testData);  
+		String ruleId=getSFId(testData.get("JBCXM__AutomatedAlertRules__c"));    
+		System.out.println("request:"+PropertyReader.nsAppUrl + "/api/eventrule/" +ruleId);
+        result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" +ruleId, header.getAllHeaders(),"{}");
+    	Log.info("Rule ID:" + ruleId+"\n Request URL"+PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId+"\n Request rawBody:{}");            
+        
+    	ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+        RulesUtil.waitForCompletion(ruleId, wa, header);      
+        
+        String LRR = getSFId("SFID:JBCXM__LastRunResult__c:JBCXM__AutomatedAlertRules__c:Id:"+ruleId+"");
+            Assert.assertEquals("SUCCESS", LRR);
+            
+            int rules1 = sfdc.getRecordCount("SELECT Id FROM Account where IsDeleted=false ");
+            int rules2 = sfdc.getRecordCount("SELECT Id FROM JBCXM__UsageData__c where IsDeleted=false ");
+            Assert.assertEquals(rules1,rules2);
     }
 
-    @Test
-    public void rulesUsageTwo() throws Exception {
-        GSUtil.runApexCode(UsageDateSync);
-        GSUtil.runApexCode(UsageDateSync1);
-        SObject[] rules = GSUtil.execute("select Id,Name from JBCXM__AutomatedAlertRules__c where Name='UsageDateSync'");
-        for (SObject r : rules) {
-            String rawBody = ("{}");
-            ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" + r.getId() + "", header.getAllHeaders(),
-                    rawBody);
-            ResponseObject responseObj = GSUtil.convertToObject(result
-                    .getContent());
-            Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
-            Assert.assertNotNull(responseObj.getRequestId());
-            GSUtil.waitForCompletion(r.getId(), wa, header);
-        }
-        SObject[] rules1 = GSUtil.execute(" Select count(Id) From Account Where ((Name LIKE 'B%')) AND JBCXM__CustomerInfo__c != null");
-        SObject[] rules2 = GSUtil.execute("SELECT count(Id) FROM JBCXM__UsageData__c where FilesDownloaded__c=12345");
-        System.out.println(rules1[0].getChild("expr0").getValue());
-        System.out.println(rules2[0].getChild("expr0").getValue());
-        Assert.assertEquals(
-                rules1[0].getChild("expr0").getValue()
-                        .equals(rules2[0].getChild("expr0").getValue()), true);
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
+    public void rulesUsagTwo(HashMap<String,String> testData) throws Exception {
+    	RulesUtil ru=new RulesUtil();
+		ru.setupRule(testData);  
+		String ruleId=getSFId(testData.get("JBCXM__AutomatedAlertRules__c"));    
+		System.out.println("request:"+PropertyReader.nsAppUrl + "/api/eventrule/" +ruleId);
+       result = wa.doPost(PropertyReader.nsAppUrl + "/api/eventrule/" +ruleId, header.getAllHeaders(),"{}");
+    	Log.info("Rule ID:" + ruleId+"\n Request URL"+PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId+"\n Request rawBody:{}");            
+        
+    	ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+        RulesUtil.waitForCompletion(ruleId, wa, header);            
+        
+        String LRR = getSFId("SFID:JBCXM__LastRunResult__c:JBCXM__AutomatedAlertRules__c:Id:"+ruleId+"");
+            Assert.assertEquals("SUCCESS", LRR);
+            
+            int rules1 = sfdc.getRecordCount("SELECT Id FROM Account Where ((Name LIKE 'B%')) AND JBCXM__CustomerInfo__c != null");
+            int rules2 = sfdc.getRecordCount("SELECT Id FROM JBCXM__UsageData__c where Files_Downloaded__c=12345.0 and IsDeleted=false");
+            Assert.assertEquals(rules1,rules2);
     }
 
     @AfterClass

@@ -1,11 +1,15 @@
 package com.gainsight.sfdc.workflow.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by gainsight on 07/11/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CTA  implements Cloneable {
 	private String type;
 	private String subject;
@@ -27,7 +31,22 @@ public class CTA  implements Cloneable {
     private boolean isOverDue= false;
     private String scoreOfCustomer;
     private boolean fromCustomer360orWidgets=false;
+    private String playbookName;
+    private String oppourtunity;
+    private String opportunityName;
     
+	public String getPlaybookName() {
+		return playbookName;
+	}
+
+	public void setPlaybookName(String playbookId) {
+		this.playbookName = playbookId;
+	}
+	
+	public String getopportunityName(){
+		return opportunityName;
+	}
+
 	public boolean isFromCustomer360orWidgets() {
 		return fromCustomer360orWidgets;
 	}
@@ -186,6 +205,14 @@ public class CTA  implements Cloneable {
 
 	public void setAttribute(List<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+	
+	public String getoppourtunity() {
+		return oppourtunity;
+	}
+
+	public void setoppourtunity(String oppourtunity) {
+		this.oppourtunity = oppourtunity;
 	}
 
 	public static class Attribute {

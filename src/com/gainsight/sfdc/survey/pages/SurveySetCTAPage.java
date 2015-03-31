@@ -1,110 +1,303 @@
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
+import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
+import com.gainsight.sfdc.workflow.pojos.CTA;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyRuleProperties;
 import com.gainsight.testdriver.Log;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by gainsight on 05/12/14.
  */
-public class SurveySetCTAPage extends BasePage {
+public class SurveySetCTAPage extends SurveyPage {
 	
-	private final String ADD_NEW_RULE_BUTTON="//a[@class='gs-btn btn-add' and contains(text(),'Add New Rule')]";
+	private final String ADD_NEW_RULE_BUTTON    = "//a[@class='gs-btn btn-add' and contains(text(), 'Rule') and contains(text(), 'Add New')]";
 	
 	//Adding new Rule
-	private final String NEW_AUTOMATED_RULE_BOX="//div[contains(@class,'logicrulebox logic-editmode clearfix show')//p[contains(@class='logic-title-edit') and contains(text(),'New Automated Rule')]";
-	private final String DELETE_RULE_ICON="//div[@class='add-actions pull-right']//a[@original-title='Delete' and contains(text(),'DELETE')]";
-	private final String DELETE_RULE_CONFIRM="//input[@type='button' and contains(@class,'gs-btn btn-save btn_save saveSummary')]";
-	
-	//Question and Answer selection for Rule
-	private final String SELECT_QUESTION_DD="//div[contains(@class='emailadd pull-left question-set')]/select[@class='form-control sel-question']";
-	private final String SELECT_QUESTION_VALUE="//div[@class='emailadd pull-left question-set']/select/option[contains(@value,'%s')]";
-	private final String ADD_ANOTHER_QUESTION="//div[@class='addmail']/a[@class='mailadd add-question-button add-question-set' and contains(text(),'ADD')]";
-	private final String DELETE_SELECTED_QUESTION="//div[@class='addmail']/a[@class='maildelete delete-question-set' and contains(text(),'DELETE')]";
-	private final String SELECT_ANSWER="//select[@multiple class='form-control pull-left sel-answer']";
-	private final String SELECT_SUBQUESTION="//select[@class='form-control pull-left sel-sub-question show']";
-	
+	private final String NEW_AUTOMATED_RULE_BOX = "//p[@class='logic-title-edit' and contains(text(), 'New Automated Rule')]/ancestor::div[@class='alert-rule']";
+	private final String DELETE_RULE_ICON       = ".//a[@original-title='Delete' and contains(text(),'DELETE')]";
+    private final String DELETE_RULE_CONFIRM    = "//input[@type='button' and contains(@class,'gs-btn btn-save btn_save saveSummary')]";
+
 	//Advanced logic selection for Rule
-	private final String ADD_ADVNC_LOGIC_COLLAPSED="//a[@data-toggle='collapse' and @class='btn-slide btn-slide-all collapsed']";
-	private final String ADD_ADVNC_LOGIC_EXPANDED="//a[@data-toggle='collapse' and @class='btn-slide btn-slide-all']";
-	private final String SELECT_FIELD="";
-	private final String SELECT_OPERATOR="";
-	private final String SELECT_VALUE="";
-	private final String SET_RULE_FOR_FILTER_LOGIC="";
-	private final String ADD_ANOTHER_FILTER="";
-	private final String DELETE_FILTER="";
-	
-	//Set Action for Rule
-	private final String ACTION_SELECT_CTA="//li[contains(@class,'alert-rule-tab') and @data-action='CTA']/a[text()='CTA']";
-	private final String ACTION_SELECT_ALERT="//li[contains(@class,'alert-rule-tab') and @data-action='Alert']/a[text()='Alert']";
-	
+	private final String ADV_LOGIC_COLLAPSED    = "//a[@data-toggle='collapse' and @class='btn-slide btn-slide-all collapsed']";
+	private final String ADV_LOGIC_EXPANDED     = "//a[@data-toggle='collapse' and @class='btn-slide btn-slide-all']";
+
 	//Set CTA properties
-	private final String SET_CTA_PRIORITY_DD="//div[@class='rule-cta']//select[@class='alertSeverity form-select']";
-	private final String SET_CTA_STATUS_DD="//div[@class='rule-cta']//select[@class='alertStatus form-select']";
-	private final String SET_CTA_REASON_DD="//div[@class='rule-cta']//select[@class='alertReason form-select']";
-	private final String SET_CTA_DUE_DATE="//div[@class='rule-cta']//div[@class='dueDate']/input[@class='form-control formControlDataInput']";
-	private final String SET_CTA_CHATTER_UPDATE="//div[@class='rule-cta']//select[@class='comments_post_frequency form-select']";
-	private final String SET_CTA_TYPE="//div[@class='rule-cta']//select[@class='alertType form-select']";
-	private final String SET_CTA_PLAYBOOK="//div[@class='rule-cta']//select[@class='form-select playBook']";
-	private final String SET_CTA_OWNER="//div[@class='rule-cta']//select[@class='taskOwnerField form-select']";
-	private final String SET_CTA_DEFAULT_OWNER="//div[@class='rule-cta']//div[@class='gs_search_section']/input[@class='search_input form-control ui-autocomplete-input']";
-	private final String SET_CTA_COMMENTS="//div[@class='rule-cta']//div[@class='form-control alertComment']";
-	
-	//Set Alert Properties
-	private final String SET_ALERT_SEVERITY="//div[@class='rule-alert']//select[@class='alertSeverity form-select']";
-	private final String SET_ALERT_TYPE="//div[@class='rule-alert']//select[@class='alertType form-select']";
-	private final String SET_ALERT_PLAYBOOK="//div[@class='rule-alert']//select[@class='form-select playBook']";
-	private final String SET_ALERT_STATUS="//div[@class='rule-alert']//select[@class='alertStatus form-select']";
-	private final String SET_ALERT_REASON="//div[@class='rule-alert']//select[@class='alertStatus form-select']";
-	private final String SET_ALERT_TASK_OWNER="//div[@class='rule-alert']//select[@class='taskOwnerField form-select']";
-	private final String SET_ALERT_DEFAULT_TASKOWNER="//div[@class='rule-alert']//input[@class='search_input form-control ui-autocomplete-input']";
-	
-	//	Save Rule
-	private final String SAVE_RULE="//input[@class='gs-btn btn-save save-editmode' and @value='Save']";
-	private final String CANCEL_RULE="//input[@class='gs-btn btn-cancel cancel-editmode' and @value='Cancel']";
-	
-	//Rule verification
-	private final String RULE_STATUS_SWITCH="//label[@class='onoffswitch-label']/span[@class='onoffswitch-switch']";
-	private final String RULE_STATUS_ACTIVE="//div[@class='onoffswitch pull-left set-alert-cta']/input[@class='onoffswitch-checkbox rule-status' and @checked='checked']";
-	private final String RULE_STATUS_INACTIVE="//div[@class='onoffswitch pull-left set-alert-cta']/input[@class='onoffswitch-checkbox rule-status' and @checked='']";
-	private final String RULE_TITLE="//div[@class='display-rule-questions']"; //the entire rule with the question,sub question + answer combination
-	private final String RULE_CONDITION="//div[@class='disp-filter-logic' and contains(text(),'Condition']/i/span[@class='badge']";
-	private final String RULE_ACTIONS="//div[@class='display-rule-alert-header' and contains(text(),'Actions')]/following-sibling::div[@class='display-rule-alert-title' and contains(text(),'Create %s with the following propertis')]";
-	private final String RULE_ACTION_CTA_Props="";
-	private final String RULE_ACTION_ALERT_Props="";
-	
+    private final String SET_CTA_SECTION_HEADER = ".//li[contains(@class, 'alert-rule-tab') and @data-action='CTA']/a";
+	private final String SET_CTA_PRIORITY_DD    = ".//select[@class='alertSeverity form-select']/following-sibling::button";
+	private final String SET_CTA_STATUS_DD      = ".//select[@class='alertStatus form-select']/following-sibling::button";
+	private final String SET_CTA_REASON_DD      = ".//select[@class='alertReason form-select']/following-sibling::button";
+    private final String SET_CTA_TYPE           = ".//select[@class='alertType form-select']/following-sibling::button";
+    private final String SET_CTA_PLAYBOOK       = ".//select[@class='form-select playBook']/following-sibling::button";
+    private final String SET_CTA_OWNER          = ".//select[@class='taskOwnerField form-select']/following-sibling::button";
+    private final String SET_CTA_CHATTER_UPDATE = ".//select[@class='comments_post_frequency form-select']/following-sibling::button";
+    private final String SET_CTA_DUE_DATE       = ".//div[@class='dueDate']/input[contains(@class, 'formControlDataInput')]";
+    private final String SET_CTA_DEFAULT_OWNER  = ".//div[@class='gs_search_section']/input[@class='search_input form-control ui-autocomplete-input']";
+    private final String SET_CTA_COMMENTS       = ".//div[@class='form-control alertComment']";
+
+    //Save Rule
+    private final String SAVE_RULE      = ".//input[@class='gs-btn btn-save save-editmode' and @value='Save']";
+    private final String CANCEL_RULE    = ".//input[@class='gs-btn btn-cancel cancel-editmode' and @value='Cancel']";
+
+    //Question And Answers Area
+    private final String LAST_QUES_ANS_DIV      = ".//div[contains(@class, 'question-answer-set')][last()]";
+    private final String ADD_QUESTION_ICON      = ".//a[contains(@class, 'add-question-set') and text()='ADD']";
+    private final String REMOVE_QUESTION_ICON   = ".//a[contains(@class, 'delete-question-set') and text()='DELETE']";
+    private final String QUESTION_SELECT        = ".//select[contains(@class, 'sel-question')]";
+    private final String SUB_QUES_SELECT        = ".//select[contains(@class, 'sel-sub-question')]";
+    private final String ANSWER_SELECT          = ".//select[contains(@class, 'sel-answer')]";
+
+    private final String PRIORITY_XPATH          = ".//label[contains(text(),'Priority')]/following-sibling::div";
+    private final String TYPE_XPATH              = ".//label[contains(text(),'Type')]/following-sibling::div";
+    private final String STATUS_XPATH            = ".//label[contains(text(),'Status')]/following-sibling::div";
+    private final String REASON_XPATH            = ".//label[contains(text(),'Reason')]/following-sibling::div";
+    private final String DATE_XPATH              = ".//label[contains(text(),'Due Date')]/following-sibling::div";
+    private final String PLAYBOOK_XPATH         = ".//label[contains(text(),'Playbook')]/following-sibling::div";
+    private final String OWNER_FIELD_XPATH      = ".//label[contains(text(),'Owner field')]/following-sibling::div";
+
 	//Edit Rule
 	private final String EDIT_RULE_ICON="";
 	
 	private final String RULE_SET_STATUS=""; //Active or inactive!
-	
+
+    public SurveySetCTAPage(SurveyProperties surveyProp) {
+        super(surveyProp.getSurveyName());
+        wait.waitTillElementDisplayed(ADD_NEW_RULE_BUTTON, MIN_TIME, MAX_TIME);
+        Log.info("Set CTA Page Loaded Successfully");
+    }
+
 	public SurveySetCTAPage clickOnAddNewRule(){
 		item.click(ADD_NEW_RULE_BUTTON);
-		waitTillNoLoadingIcon();
-		item.isElementPresent(NEW_AUTOMATED_RULE_BOX);
-		return this;
+		wait.waitTillElementDisplayed(NEW_AUTOMATED_RULE_BOX, MIN_TIME, MAX_TIME);
+        return this;
 	}
-	
-	public SurveySetCTAPage setQuestionAndAnswers(SurveyRuleProperties sProps){
-		item.click(SELECT_QUESTION_DD);
-		return this;
-		
-	}
-	  public void selectValueInDropDown(String value) {
-	        boolean selected = false;
-	        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
-	            Log.info("Checking : "+ele.isDisplayed());
-	            if(ele.isDisplayed()) {
-	                ele.click();
-	                selected = true;
-	                break;
-	            }
-	        }
-	        if(selected != true) {
-	            throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
-	        }
-	    }
+
+    public WebElement getRecentAddedRuleEle() {
+        return element.getElement(NEW_AUTOMATED_RULE_BOX);
+    }
+
+
+    public SurveySetCTAPage addRule(SurveyCTARule surveyCTARule) {
+        clickOnAddNewRule();
+        WebElement ruleEle = getRecentAddedRuleEle();
+        setCTACriteria(ruleEle, surveyCTARule.getCta(), surveyCTARule.getPlaybook(), surveyCTARule.getOwnerField(), surveyCTARule.getChatterUpdate());
+        setQuestionAndAnswerCriteria(ruleEle, surveyCTARule.getSurveyQuestions());
+        ruleEle.findElement(By.xpath(SAVE_RULE)).click();
+        Timer.sleep(5);
+        return this;
+    }
+
+
+    public void setCTACriteria(WebElement ruleEle, CTA cta, String playbook, String ownerField, String chatterUpdate) {
+        ruleEle.findElement(By.xpath(SET_CTA_SECTION_HEADER)).click();
+        ruleEle.findElement(By.xpath(SET_CTA_PRIORITY_DD)).click();
+        selectValueInDropDown(cta.getPriority());
+        ruleEle.findElement(By.xpath(SET_CTA_STATUS_DD)).click();
+        selectValueInDropDown(cta.getStatus());
+        ruleEle.findElement(By.xpath(SET_CTA_REASON_DD)).click();
+        selectValueInDropDown(cta.getReason());
+        ruleEle.findElement(By.xpath(SET_CTA_TYPE)).click();
+        selectValueInDropDown(cta.getType());
+        selectOwner(ruleEle, cta.getAssignee());
+        //TODO - owner search pending
+        if(cta.getDueDate() != null) {
+            ruleEle.findElement(By.xpath(SET_CTA_DUE_DATE)).clear();
+            ruleEle.findElement(By.xpath(SET_CTA_DUE_DATE)).sendKeys(cta.getDueDate());
+        }
+        if(playbook!=null && playbook!="") {
+            ruleEle.findElement(By.xpath(SET_CTA_PLAYBOOK)).click();
+            selectValueInDropDown(playbook);
+        }
+        if(ownerField!=null && ownerField!="") {
+            ruleEle.findElement(By.xpath(SET_CTA_OWNER)).click();
+            selectValueInDropDown(ownerField);
+        }
+        if(cta.getComments() !=null) {
+            ruleEle.findElement(By.xpath(SET_CTA_COMMENTS)).clear();
+            ruleEle.findElement(By.xpath(SET_CTA_COMMENTS)).sendKeys(cta.getComments());
+        }
+        if(chatterUpdate !=null && chatterUpdate!="") {
+            ruleEle.findElement(By.xpath(SET_CTA_CHATTER_UPDATE)).click();
+            selectValueInDropDown(chatterUpdate);
+        }
+    }
+
+    private void selectOwner(WebElement ruleEle, String ownerName) {
+        Log.error("Selecting Default Owner");
+        ruleEle.findElement(By.xpath(SET_CTA_DEFAULT_OWNER)).click();
+        ruleEle.findElement(By.xpath(SET_CTA_DEFAULT_OWNER)).sendKeys(ownerName);
+        ruleEle.findElement(By.xpath(SET_CTA_DEFAULT_OWNER)).sendKeys(Keys.ENTER);
+        wait.waitTillElementNotDisplayed("//div[@class='search_progress_icon']", MIN_TIME, MAX_TIME);
+        ruleEle.findElement(By.xpath(".//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+ownerName+"')]")).click();
+        Log.error("Selected Default Owner");
+    }
+
+    public boolean verifyCTACriteria(WebElement ruleEle, SurveyCTARule ctaRule) {
+        CTA cta = ctaRule.getCta();
+        String dueDate = (cta.getDueDate()==null ||cta.getDueDate()=="") ? "5" : cta.getDueDate();
+        WebElement ele = ruleEle.findElement(By.xpath(PRIORITY_XPATH));
+        System.out.println(ele.getAttribute("text"));
+        System.out.println(ele.getText());
+        System.out.println(ruleEle.findElement(By.xpath(PRIORITY_XPATH)).getText());
+        String a = ruleEle.findElement(By.xpath(PRIORITY_XPATH)).getText();
+        System.out.println(ele.getCssValue("text"));
+        System.out.println(ele.getAttribute("class"));
+        System.out.println(ele.getAttribute("value"));
+        String priority = ruleEle.findElement(By.xpath(PRIORITY_XPATH)).getText().trim();
+        String type = ruleEle.findElement(By.xpath(TYPE_XPATH)).getText().trim();
+        String status = ruleEle.findElement(By.xpath(STATUS_XPATH)).getText().trim();
+        String reason = ruleEle.findElement(By.xpath(REASON_XPATH)).getText().trim();
+        Log.info("Expected Priority : "+cta.getPriority());
+        Log.info("Actual Priority   : "+priority);
+        Log.info("Expected Type     : "+cta.getType());
+        Log.info("Actual Type       : "+type);
+        Log.info("Expected Status   : "+cta.getStatus());
+        Log.info("Actual Status     : "+status);
+        Log.info("Expected Reason   : "+cta.getReason());
+        Log.info("Actual Reason     : "+reason);
+
+        if(!(cta.getType().equals(type) && cta.getReason().equals(reason) && cta.getStatus().equals(status) && cta.getPriority().equals(priority))) {
+            Log.error("One of cta parameters type, reason, status, priority not matched");
+            return false;
+        }
+
+        if(ctaRule.getPlaybook()!=null && ctaRule.getPlaybook()!="") {
+            String actualPlaybook = ruleEle.findElement(By.xpath(PLAYBOOK_XPATH)).getText().trim();
+            if(!ctaRule.getPlaybook().equals(actualPlaybook)) {
+                Log.error("Playbook Details not matched");
+                return false;
+            }
+        }
+
+        if(ctaRule.getOwnerField()!=null && ctaRule.getOwnerField()!="") {
+            String actualOwnerField = ruleEle.findElement(By.xpath(OWNER_FIELD_XPATH)).getText().trim();
+            if(!(ctaRule.getOwnerField().equals(actualOwnerField))) {
+                Log.error("Owner Field Not Matched");
+                return false;
+            }
+        }
+
+        String actualDate = ruleEle.findElement(By.xpath(DATE_XPATH)).getText().trim();
+        if(actualDate!=null ) {
+            return actualDate.contains(dueDate);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean verifyRuleQuestions(WebElement ruleEle, List<SurveyQuestion> surveyQuestions) {
+        String QUESTION_DIV = ".//div[@class='display-rule-questions']";
+        List<WebElement> questions  = ruleEle.findElement(By.xpath(QUESTION_DIV)).findElements(By.tagName("p"));
+        int temp=0;
+        for(SurveyQuestion surveyQuestion : surveyQuestions) {
+            String actualText = questions.get(temp).getText().trim();
+            actualText = actualText.substring(1, actualText.length());
+            String expectedText = null;
+            if(surveyQuestion.getQuestionType().equals("MATRIX")) {
+                expectedText = "If answer to the question : \" " + surveyQuestion.getQuestionText() + " - (" + surveyQuestion.getPageTitle() + ") \" with Sub-Question ";
+                expectedText += "\" "+surveyQuestion.getSubQuestions().get(0).getSubQuestionText()+" \" is ";
+            } else {
+                expectedText = "If answer to the question : \" " + surveyQuestion.getQuestionText() + " - (" + surveyQuestion.getPageTitle() + ") \" is ";
+            }
+            for (SurveyQuestion.SurveyAllowedAnswer allowedAnswer : surveyQuestion.getAllowedAnswers()) {
+                expectedText += allowedAnswer.getAnswerText() + ", ";
+            }
+            expectedText = expectedText.trim().substring(0, expectedText.length() - 2);
+
+            Log.info("Expected Text : " +expectedText);
+            Log.info("Actual Text   : " + actualText);
+            if(!actualText.contains(expectedText) && !expectedText.contains(actualText)) {
+                Log.error("Question Text not Matched");
+                return false;
+            }
+        }
+        Log.info("Question Text Matched");
+        return true;
+    }
+
+    public boolean verifyRule(SurveyCTARule surveyCTARule) {
+        String RULE_DIV = "//div[@class='survey-alert-ctn']/div[@class='alert-rule']";
+        Log.info("Checking for all the rules");
+        boolean ctaResult = false;
+        boolean questionResult = false;
+        System.out.println(element.getAllElement(RULE_DIV).size());
+        for(WebElement ele : element.getAllElement(RULE_DIV)) {
+            ctaResult = verifyCTACriteria(ele, surveyCTARule);
+            if(ctaResult) {
+                Log.info("Found the criteria match, Checking the questions");
+                questionResult = verifyRuleQuestions(ele, surveyCTARule.getSurveyQuestions());
+            }
+            if(ctaResult && questionResult) {
+                Log.info("CTA & Question information matched");
+                return true;
+            }
+            questionResult = false;
+        }
+        return false;
+    }
+
+    public void setQuestionAndAnswerCriteria(WebElement ruleEle, List<SurveyQuestion> surveyQuestions) {
+        boolean flag = false;
+        for(SurveyQuestion surQues : surveyQuestions) {
+            if(flag) {
+                ruleEle.findElement(By.xpath(ADD_QUESTION_ICON)).click();
+            }
+            flag=true;
+            fillQuestionAndAnswer(ruleEle, surQues);
+        }
+    }
+
+    //TODO - Action Item.
+    public void setAdvancedFilter() {
+
+    }
+
+    private void fillQuestionAndAnswer(WebElement ruleEle, SurveyQuestion surveyQuestion) {
+        WebElement quesEle = getRecentAddedQuestionEle(ruleEle);
+        List<String> temp = new ArrayList<>();
+        temp.add(surveyQuestion.getQuestionText()+ " - (" + surveyQuestion.getPageTitle() + ")");
+        selectValueFromDropDown(quesEle.findElement(By.xpath(QUESTION_SELECT)),temp);
+        if(surveyQuestion.getQuestionType().equals("MATRIX")) {
+            temp.clear();
+            temp.add(surveyQuestion.getSubQuestions().get(0).getSubQuestionText());
+            selectValueFromDropDown(quesEle.findElement(By.xpath(SUB_QUES_SELECT)), temp);
+        }
+        temp.clear();
+        for(SurveyQuestion.SurveyAllowedAnswer allowedAnswer : surveyQuestion.getAllowedAnswers()) {
+            temp.add(allowedAnswer.getAnswerText());
+        }
+        selectValueFromDropDown(quesEle.findElement(By.xpath(ANSWER_SELECT)), temp);
+    }
+
+    private WebElement getRecentAddedQuestionEle(WebElement ruleEle) {
+        Log.info("Returning the Latest Added Question/Answer DIV");
+        return ruleEle.findElement(By.xpath(LAST_QUES_ANS_DIV));
+    }
+
+    private WebElement getQuestionEle(WebElement ruleEle, String quesTitle) {
+        for(WebElement wEle : ruleEle.findElements(By.xpath(QUESTION_SELECT))){
+            Select dropDown = new Select(wEle);
+            String selectValue = dropDown.getFirstSelectedOption().toString().trim();
+            if(selectValue.contains(quesTitle)) {
+                WebElement e = ruleEle.findElement(By.xpath("../.."));
+                return e;
+            }
+        }
+        throw new RuntimeException("Unable to Find the Question With Given Text, "+quesTitle);
+    }
+
+
+
 }

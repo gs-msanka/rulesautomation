@@ -7,6 +7,7 @@ SurveyBasePage extends the BasePage. BasePage is home page and contains clicking
 
 package com.gainsight.sfdc.survey.pages;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.testdriver.Log;
@@ -14,7 +15,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class SurveyBasePage extends BasePage {
 
@@ -41,8 +45,9 @@ public class SurveyBasePage extends BasePage {
     //Drafts Section/View Selectors
     private final String SURVEY_CARD_TITLE        = "//li[@class='box survey-card']/descendant::h3[text()='%s']";
 
-
-
+    public SurveyBasePage(String s) {
+        System.out.println("Dummy Constructor - Survey Base Page");
+    }
 
     public SurveyBasePage() {
         waitTillNoLoadingIcon();
@@ -68,15 +73,15 @@ public class SurveyBasePage extends BasePage {
 
     public SurveyBasePage clickOnDashboardView() {
         item.click(DASHBOARD_SECTION);
-        waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(String.format(SURVEYS_HEADER_SECTION, "Ongoing Surveys"), MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
     public SurveyBasePage clickOnDraftsView() {
         item.click(DRAFTS_SECTION);
-        waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(String.format(SURVEYS_HEADER_SECTION, "Drafts"), MIN_TIME, MAX_TIME);
+        waitTillNoLoadingIcon();
         return this;
     }
 
@@ -96,8 +101,18 @@ public class SurveyBasePage extends BasePage {
 
     public SurveyPropertiesPage openSurveyFromDrafts(SurveyProperties surveyProp){
         clickOnDraftsView();
-        item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyTitle()));
+        searchSurvey(surveyProp.getSurveyName());
+        item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyName()));
         return new SurveyPropertiesPage(surveyProp);
+    }
+
+    public void searchSurvey(String surName) {
+        element.clearAndSetText(SEARCH_SURVEY_INPUT, surName);
+        Timer.sleep(2);
+    }
+
+    public boolean isSurveyDisplayed(SurveyProperties surveyProperties) {
+         return isElementPresentAndDisplay(By.xpath(String.format(SURVEY_CARD_TITLE, surveyProperties.getSurveyName())));
     }
 
     public void selectValueInDropDown(String value) {
@@ -132,5 +147,23 @@ public class SurveyBasePage extends BasePage {
             }
         });
 
+    }
+
+    public boolean isElementPresentAndDisplayed(WebElement wEle, String xpath) {
+        boolean result = false;
+        Log.info("Checking if element is present : " +xpath);
+        try {
+            result = wEle.findElement(By.xpath(xpath)).isDisplayed();
+        } catch (Exception e) {
+            Log.error("Element not present, "+xpath, e);
+        }
+        return result;
+    }
+
+    public void selectValueFromDropDown(WebElement webEle, List<String> options) {
+        Select dropDown = new Select(webEle);
+        for(String option: options) {
+            dropDown.selectByVisibleText(option);
+        }
     }
 }

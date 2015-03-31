@@ -68,9 +68,9 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        createFieldsOnAccount();
-        createExtIdFieldForScoreCards();
-        createFieldsOnUsageData();
+        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
+        metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
+        metaUtil.createFieldsOnUsageData(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
