@@ -1,4 +1,5 @@
 delete [select JBCXM__Feature__c from JBCXM__Features__c];
+delete [select id from Opportunity where AccountId in (select id  from Account where name='Features Test Account')];
 delete [select id from Account where Name like 'Features Test Account'];
 Map<String,List<String>> productNFeatureMAp=new Map<String,List<String>>{'Engage'=>new List<String>{'CoreMotives','Email','Marketing Automation','PlacePunch','Business Assets'},
 																																								'Financial Management'=>new List<String>{'Core Financials','Expenses','Revenue Management'},
@@ -24,6 +25,16 @@ insert features;
 //Creating an account for adding milestones
 Account acc=new Account(Name='Features Test Account');
 insert acc;
+
+//Creating a Opportunity for CTA Account 360 - for Opp widget cases
+List<Account> accForOpp=[SELECT Id FROM Account where name like 'Features Test Account'];
+Opportunity opp = new Opportunity(name ='Features Account - Opportunity',
+									StageName = 'Closed Won',
+									Type = 'New Business',
+									Amount = 2000,
+									CloseDate = date.today(),
+									AccountId = accForOpp.get(0).Id);
+insert opp;
 
 //Adding the account to customers
 List<Account> accList=[SELECT Id FROM Account where name like 'Features Test Account'];
