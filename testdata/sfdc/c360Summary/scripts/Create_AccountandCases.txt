@@ -1,4 +1,4 @@
- Account acct = new Account(Name = 'SummaryWidgetTest ',
+ Account acct = new Account(Name = 'SummaryWidgetTest',
 industry ='Banking',
 Phone='9177996995-45',
 AccPercentage__c=50,

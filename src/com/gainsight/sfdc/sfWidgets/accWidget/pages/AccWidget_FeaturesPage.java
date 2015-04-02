@@ -10,38 +10,6 @@ import com.gainsight.testdriver.Log;
 
 public class AccWidget_FeaturesPage extends AccountWidgetPage {
 	
-	/*private final String  IFRAME            = "//iframe[contains(@title,'CustomerSuccess')]";
-	private final String  EDIT_FEATURES_BUTTON  =  "//a[contains(text(),'Edit Features')]";
-	
-	
-	// Load Features through script.
-	//Navigate to account widget and click on Edit Features
-	//Create Features and pass some comments and save
-	//Edit the comments and do some changes and save
-	//remove all the comments and check boxes and save
-	//validate all the above by assert
-	
-	
-
-	public AccWidget_FeaturesPage() {
-		// field.switchToFrame(IFRAME);
-		item.click(EDIT_FEATURES_BUTTON);
-		 
-	}
-	
-	public void createFeatures() {
-		
-	}
-
-	public void editFeatures() {
-		
-		
-	}
-	public void removeFeatures() {
-		
-	}*/
-	
-	
 	private final String EDIT_FEATURES_ICON     = "//a[text()='Edit Features']";
 	private final String SAVE_BUTTON            = "//a[contains(@class, 'btn_save edit_features')]";
 	private final String FEATURES_TABLE_HEADER  = "//table[@class='gs_features_grid gs_features_grid_header gs_features_display_header']";
