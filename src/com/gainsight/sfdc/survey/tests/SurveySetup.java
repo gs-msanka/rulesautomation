@@ -5,7 +5,10 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.MetaDataUtil;
 import com.sforce.soap.partner.sobject.SObject;
+import com.sforce.ws.ConnectionException;
+
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
@@ -209,4 +212,22 @@ public class SurveySetup extends BaseTest {
         Assert.assertTrue(surveyQuestionPage.verifyQuestionRequired(surQuesEle, surQues) , "Checking question mandatory");
         Assert.assertTrue(surveyQuestionPage.verifySurveyQuestionAnswers(surQuesEle, surQues) , "Checking answers");
     }
+    
+    public void Create_Custom_Obj_For_Addparticipants() throws Exception{
+    	
+        metadataClient.createCustomObject("EmailCustomObjct");
+        String TextField[]={"Dis Name", "Dis Role"};
+        String Email[]={"Dis Email"};
+        String C_Reference="C_Reference";
+        String ReferenceTo="Account";  //Reference to User Object
+        String ReleationShipName="Accountss_AutomationnS"; //Relation Name
+        String LookupFieldName[]={C_Reference} , Reference[]={ReferenceTo,ReleationShipName};
+        metadataClient.createTextFields("EmailCustomObjct__c", TextField, false, false,true, false, false);
+        metadataClient.createEmailField("EmailCustomObjct__c", Email);
+        metadataClient.createLookupField("EmailCustomObjct__c", LookupFieldName, Reference );
+        metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
+    }
+    
+    
+    
 }

@@ -2,9 +2,12 @@ package com.gainsight.sfdc.survey.pojo;
 
 import java.util.ArrayList;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Created by gainsight on 05/12/14.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SurveyQuestion {
 
 
@@ -26,7 +29,7 @@ public class SurveyQuestion {
     private String image;
     private String commentsLabel    = "Comments";
     private String otherLabel = "Other";
-
+    
     public String getOtherLabel() {
         return otherLabel;
     }

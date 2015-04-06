@@ -3,13 +3,16 @@ package com.gainsight.sfdc.survey.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gainsight.sfdc.workflow.pojos.CTA.Attribute;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.gainsight.sfdc.workflow.pojos.CTA.Attribute;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SurveyAddParticipants implements Cloneable {
 
 	private String loadParticipantsFrom;
 	private String selectRole;
-	private String selectRoleField;
+	private String SelectRoleField;
+	private String EmailSearch="gainsight.com";
 	private String filter;
 	private String operator;
 	private String value;
@@ -17,7 +20,20 @@ public class SurveyAddParticipants implements Cloneable {
 	private String excludeParticipants_Type;
 	private String excludePtp_Survey;
 	private boolean loadAll;
+	private String customobjectname;
+	private String DisplayName;
+	private String DisplayEmail;
+	private String DisplayRole;
+
 	private List<ParticipantDetails> participantsList = new ArrayList<ParticipantDetails>();
+	
+	public void setcustomobjectname(String customobjectname) {
+		this.customobjectname = customobjectname;
+	}
+	
+	public String getcustomobjectname() {
+		return customobjectname;
+	}
 	
 	public boolean isLoadAll() {
 		return loadAll;
@@ -44,10 +60,17 @@ public class SurveyAddParticipants implements Cloneable {
 		this.selectRole = selectRole;
 	}
 	public String getSelectRoleField() {
-		return selectRoleField;
+		return SelectRoleField;
 	}
-	public void setSelectRoleField(String selectRoleField) {
-		this.selectRoleField = selectRoleField;
+	public void setSelectRoleField(String SelectRoleField) {
+		this.SelectRoleField = SelectRoleField;
+	}
+    
+	public String getEmailSearch() {
+		return EmailSearch;
+	}
+	public void setEmailSearch(String EmailSearch) {
+		this.EmailSearch = EmailSearch;
 	}
 	public String getOperator() {
 		return operator;
@@ -73,12 +96,34 @@ public class SurveyAddParticipants implements Cloneable {
 	public void setExcludeParticipants_Type(String excludeParticipants_Type) {
 		this.excludeParticipants_Type = excludeParticipants_Type;
 	}
+	public String getDisplayName() {
+		return DisplayName;
+	}
+	public void setDisplayName(String DisplayName) {
+		this.DisplayName = DisplayName;
+	}
+
+	public String getDisplayEmail() {
+		return DisplayEmail;
+	}
+	public void setDisplayEmail(String DisplayEmail) {
+		this.DisplayEmail = DisplayEmail;
+	}
+	
+	public String getDisplayRole() {
+		return DisplayRole;
+	}
+	public void setDisplayRole(String DisplayRole) {
+		this.DisplayRole = DisplayRole;
+	}
+	
 	public String getFilter() {
 		return filter;
 	}
 	public void setFilter(String filter) {
 		this.filter = filter;
 	}
+	
 	public List<ParticipantDetails> getParticipantsList() {
 		return participantsList;
 	}
