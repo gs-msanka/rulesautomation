@@ -1,9 +1,13 @@
- Account acct = new Account(Name = 'SummaryWidgetTest',
+delete [select id from case where AccountId in (select id from Account where name='SummaryWidgetTest')];
+delete [select id from Opportunity where AccountId in (select id  from Account where name='SummaryWidgetTest')];
+delete [select id from Account where Name like 'SummaryWidgetTest'];
+
+Account acct = new Account(Name = 'SummaryWidgetTest',
 industry ='Banking',
 Phone='9177996995-45',
 AccPercentage__c=50,
 ActiveUsers__c=35,
-FNumber__c = 2345,
+FNumber__c = 234,
 IsActive__c=False,
 CurrencyField__c=100);
 insert acct;
@@ -26,6 +30,17 @@ JBCXM__OneTimeRevenue__c=5000,
 JBCXM__Users__c=34,
 JBCXM__Account__c=acctID);
 insert cinfo;
+
+
+//Creating a Opportunity for  Account 360 - for Opp widget cases
+List<Account> accForOpp=[SELECT Id FROM Account where name like 'SummaryWidgetTest'];
+Opportunity opp = new Opportunity(name ='SummaryWidgetTest',
+									StageName = 'Closed Won',
+									Type = 'New Business',
+									Amount = 2000,
+									CloseDate = date.today(),
+									AccountId = accForOpp.get(0).Id);
+insert opp;
                                          
  // Add a case to this account.
     case cs = new case(

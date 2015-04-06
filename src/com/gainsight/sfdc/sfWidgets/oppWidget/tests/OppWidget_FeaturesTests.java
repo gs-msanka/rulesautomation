@@ -31,11 +31,8 @@ public class OppWidget_FeaturesTests extends BaseTest{
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",priority=1)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
     public void createFeatures(HashMap<String, String> testData){
-		//String OppId=sfdc.getRecords("select id from Account where name='Features Test Account'")[0].getId();
+		
 		SObject[] OppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='Features Test Account')");
-		//OpportunityPage OppPage = basepage.gotoOpportunityPageWithId(OppId);
-		//OppWidget_FeaturesPage oppFutrePage=OppPage.switchToOppCSWidget().selectOppFeaturesSubTab();
-		System.out.println("added debug...");
 	OppWidget_FeaturesPage oppFutrePage = basepage.gotoOpportunityPageWithId(OppId[0].getId()).switchToOppCSWidget().selectOppFeaturesSubTab();
 
 			HashMap<String, String> prodList = getMapFromData(testData.get("Products"));
