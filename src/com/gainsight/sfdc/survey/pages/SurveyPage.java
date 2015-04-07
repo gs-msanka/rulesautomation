@@ -57,9 +57,9 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveyPublishPage(surveyProp.getSurveyName());
     }
 	
-	public SurveyAddParticipantsPage clickOnAddParticipants(SurveyProperties sData) {
+	public SurveyAddParticipantsPage clickOnAddParticipants(SurveyProperties surveyProp) {
     	item.click(ADD_PARTICIPANTS_SECTION_LINK);
-        return new SurveyAddParticipantsPage(sData);
+        return new SurveyAddParticipantsPage(surveyProp.getSurveyName());
     }
 	
 	public SurveyDistributePage clickOnDistribute() {

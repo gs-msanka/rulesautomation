@@ -1,0 +1,12 @@
+{
+    "jobName": "Load contacts into custome object for survey- add participant cases",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "load": {
+        "target": "sfdc",
+        "sObject": "EmailCustomObjct__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "file": "/testdata/sfdc/survey/data/Contacts_into_custom_obj_forAddParticipants.csv"
+    }
+}
