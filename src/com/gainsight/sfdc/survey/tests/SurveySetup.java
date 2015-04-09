@@ -228,6 +228,16 @@ public class SurveySetup extends BaseTest {
         metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
     }
     
+    public int GetRecordCountFromContactObject(){
+    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where isDeleted=false");
+    	Log.info("Count from Object is" + count);
+		return count;	
+    }
     
-    
+    public int RecordCountFromContactObjectWithFilterCond(){
+    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where  email like '%gainsight.com%'and isDeleted=false");
+    	Log.info("Count from Object is" + count);
+		return count;
+    	
+    }
 }
