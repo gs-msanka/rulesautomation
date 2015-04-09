@@ -58,7 +58,6 @@ public class SurveyDistributionListTest extends SurveySetup {
         SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp); // Here doing actions related to publish page
         publishPage.updatePublishDetails(surProp);
         surProp.setStatus("Publish");
-        Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(), "Verifying Survey Status");
         SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
         SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipant"), SurveyAddParticipants.class); 
         addparcp.loadFromContactObj(surveyparts);
@@ -88,7 +87,6 @@ public class SurveyDistributionListTest extends SurveySetup {
         SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp); // Here doing actions related to publish page
         publishPage.updatePublishDetails(surProp);
         surProp.setStatus("Publish");
-        Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(), "Verifying Survey Status");
         SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
         SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipantsFromContactobjFilter"), SurveyAddParticipants.class); 
         addparcp.loadFromContactObj(surveyparts);
@@ -119,7 +117,6 @@ public class SurveyDistributionListTest extends SurveySetup {
         SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp); // Here doing actions related to publish page
         publishPage.updatePublishDetails(surProp);
         surProp.setStatus("Publish");
-        Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(), "Verifying Survey Status");
         SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
         SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipantsFromContactobjFilter"), SurveyAddParticipants.class);
         addparcp.loadFromContactObj(surveyparts);
