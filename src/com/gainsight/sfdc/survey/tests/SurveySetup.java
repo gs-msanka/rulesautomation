@@ -203,6 +203,11 @@ public class SurveySetup extends BaseTest {
         }
         return surveyQuestionPage;
     }
+    
+    public void LogicRules(SurveyQuestionPage surveyQuestionPage){
+    	surveyQuestionPage.AddLogicRules();
+      
+    }
 
     public void verifyQuestionDisplayed(SurveyQuestionPage surveyQuestionPage, SurveyQuestion surQues) {
         WebElement surQuesEle = surveyQuestionPage.getQuestionElement(surQues);
