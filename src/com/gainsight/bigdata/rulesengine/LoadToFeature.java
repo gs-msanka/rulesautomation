@@ -61,6 +61,9 @@ public class LoadToFeature extends RulesUtil {
 						+ RuleName + "'")[0]
 				.getChild("JBCXM__LastRunResult__c").getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
+		int rules1 = sfdc.getRecordCount("SELECT count(Id) FROM Account");
+		int rules2 = sfdc.getRecordCount("Select count(JBCXM__Account__c) from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One'");
+		Assert.assertEquals(rules1,rules2);
 
 	}
 }

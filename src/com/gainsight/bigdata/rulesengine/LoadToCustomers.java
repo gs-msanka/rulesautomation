@@ -19,7 +19,7 @@ import com.gainsight.utils.DataProviderArguments;
 
 public class LoadToCustomers extends RulesUtil {
 	private static final String CleanUpForRules = Application.basedir
-			+ "/testdata/newstack/RulesEngine/CleanUpForRules.apex";
+			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
 
 	ResponseObj result = null;
