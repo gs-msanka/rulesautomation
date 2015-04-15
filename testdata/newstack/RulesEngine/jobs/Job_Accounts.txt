@@ -1,0 +1,15 @@
+ {
+	"jobName": "Load Account For Custom Rules",
+    "jobType" : "AccountUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+	"load": {
+        "target": "sfdc",
+        "sObject": "Account",
+        "operation": "insert",
+        "contentType": "CSV",
+		"externalIDField": "Data_ExternalId__c",
+        "cleanUp" : false,
+        "file": "/testdata/newstack/RulesEngine/data/Rules_Accounts.csv"
+    }
+}

@@ -1,0 +1,51 @@
+Name,NumberOfEmployees,ActiveUsers__c,AnnualRevenue,Type,AccountSource,Industry,InRegions__c,AccPercentage__c,IsActive__c,InputDate__c,InputDateTime__c,Data_ExternalId__c,AccountNumber
+CustomRule Account 1,1000,,,Prospect,Web,Agriculture,India,,,,,CustomRule Account 1,CustomRulesAccount
+CustomRule Account 2,1000,,,Customer - Direct,Phone Inquiry,Apparel,America,,,,,CustomRule Account 2,CustomRulesAccount
+CustomRule Account 3,1000,,,Customer - Channel,Partner Referral,Banking,England,,,,,CustomRule Account 3,CustomRulesAccount
+CustomRule Account 4,1000,,,Channel Partner / Reseller,Purchased List,Biotechnology,France,,,,,CustomRule Account 4,CustomRulesAccount
+CustomRule Account 5,1600,,,Installation Partner,Other,Chemicals,Italy,,,,,CustomRule Account 5,CustomRulesAccount
+CustomRule Account 6,1600,,,Technology Partner,,Communications,Germany,,,,,CustomRule Account 6,CustomRulesAccount
+CustomRule Account 7,1600,,,Other,,Construction,Japan,,,,,CustomRule Account 7,CustomRulesAccount
+CustomRule Account 8,1600,,,,,Consulting,China,,,,,CustomRule Account 8,CustomRulesAccount
+CustomRule Account 9,555,,,,,Education,Australia,,,,,CustomRule Account 9,CustomRulesAccount
+CustomRule Account 10,555,,,,,Electronics,Russia,,,,,CustomRule Account 10,CustomRulesAccount
+CustomRule Account 11,555,,,,,Energy,Africa,,,,,CustomRule Account 11,CustomRulesAccount
+CustomRule Account 12,555,,,,,Engineering,Arab ,,,,,CustomRule Account 12,CustomRulesAccount
+CustomRule Account 13,300,,,,,Entertainment,,,,,,CustomRule Account 13,CustomRulesAccount
+CustomRule Account 14,0,,,,,Environmental,,,,,,CustomRule Account 14,CustomRulesAccount
+CustomRule Account 15,1000,,,,,Finance,,,TRUE,,,CustomRule Account 15,CustomRulesAccount
+CustomRule Account 16,1000,,,,,Food & Beverage,,,,,,CustomRule Account 16,CustomRulesAccount
+CustomRule Account 17,1000,2000,,,,Government,,,,,,CustomRule Account 17,CustomRulesAccount
+CustomRule Account 18,1000,,5000,,,Healthcare,,,,,,CustomRule Account 18,CustomRulesAccount
+CustomRule Account 19,1600,,,,,Hospitality,,90,,,,CustomRule Account 19,CustomRulesAccount
+CustomRule Account 20,1600,,,Customer - Direct,Web,Insurance,India;America;Italy,,,,,CustomRule Account 20,CustomRulesAccount
+CustomRule Account 21,1600,,,Technology Partner,Purchased List,Machinery,Russia,,,,,CustomRule Account 21,CustomRulesAccount
+CustomRule Account 22,1600,,,,,Manufacturing,,,,0,-1,CustomRule Account 22,CustomRulesAccount
+CustomRule Account 23,555,,,,,Media,,,,,,CustomRule Account 23,CustomRulesAccount
+CustomRule Account 24,555,,,,,Not For Profit,,,,,,CustomRule Account 24,CustomRulesAccount
+CustomRule Account 25,555,,,,,Recreation,,,,,,CustomRule Account 25,CustomRulesAccount
+CustomRule Account 26,555,,,,,Retail,,,,,,CustomRule Account 26,CustomRulesAccount
+CustomRule Account 27,300,,,,,Shipping,,,,,,CustomRule Account 27,CustomRulesAccount
+CustomRule Account 28,0,,,,,Technology,,,,,,CustomRule Account 28,CustomRulesAccount
+CustomRule Account 29,1000,15,,Customer - Direct,,Telecommunications,India;Germany,,,,,CustomRule Account 29,CustomRulesAccount
+CustomRule Account 30,1000,,,,,Transportation,,,,,,CustomRule Account 30,CustomRulesAccount
+CustomRule Account 31,1000,,,,,Utilities,,,,,,CustomRule Account 31,CustomRulesAccount
+CustomRule Account 32,1000,31,20000,Channel Partner / Reseller,Purchased List,Other,India;Germany,,,,,CustomRule Account 32,CustomRulesAccount
+CustomRule Account 33,1600,3232,10000,Installation Partner,Partner Referral,Agriculture,India,,,,,CustomRule Account 33,CustomRulesAccount
+CustomRule Account 34,1600,,,,,,,,,,,CustomRule Account 34,CustomRulesAccount
+CustomRule Account 35,1600,,,,,,,,,,,CustomRule Account 35,CustomRulesAccount
+CustomRule Account 36,1600,,,,,,,,,,,CustomRule Account 36,CustomRulesAccount
+CustomRule Account 37,555,,,,,,,,,,,CustomRule Account 37,CustomRulesAccount
+CustomRule Account 38,555,,,,,,,,,,,CustomRule Account 38,CustomRulesAccount
+CustomRule Account 39,555,,,,,,,,,,,CustomRule Account 39,CustomRulesAccount
+CustomRule Account 40,555,,,,,,,,,,,CustomRule Account 40,CustomRulesAccount
+CustomRule Account 41,300,,,,,,,,,,,CustomRule Account 41,CustomRulesAccount
+CustomRule Account 42,0,,,,,,,,,,,CustomRule Account 42,CustomRulesAccount
+CustomRule Account 43,0,,,,,,,,,,,CustomRule Account 43,CustomRulesAccount
+CustomRule Account 44,0,,,,,,,,,,,CustomRule Account 44,CustomRulesAccount
+CustomRule Account 45,0,,,,,,,,,,,CustomRule Account 45,CustomRulesAccount
+CustomRule Account 46,0,,,,,,,,,,,CustomRule Account 46,CustomRulesAccount
+CustomRule Account 47,0,,,,,,,,,,,CustomRule Account 47,CustomRulesAccount
+CustomRule Account 48,0,,,,,,,,,,,CustomRule Account 48,CustomRulesAccount
+CustomRule Account 49,0,,,,,,,,,,,CustomRule Account 49,CustomRulesAccount
+CustomRule Account 50,0,,,,,,,,,,,CustomRule Account 50,CustomRulesAccount
