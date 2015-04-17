@@ -13,6 +13,7 @@ import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 public class SurveyPropertiesTest extends SurveySetup{
 	
@@ -27,7 +28,8 @@ public class SurveyPropertiesTest extends SurveySetup{
 		basepage.login();
 		sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
 	}
-
+    
+	@TestInfo(testCaseIds={"GS-2662","GS-2664","GS-2665","GS-2666","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
 	public void TestNonAnonymousSurvey(HashMap<String, String> testData)
