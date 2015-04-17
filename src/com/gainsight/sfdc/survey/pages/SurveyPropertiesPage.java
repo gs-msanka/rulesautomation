@@ -27,14 +27,14 @@ public class SurveyPropertiesPage extends SurveyPage {
     private final String ANONYMOUS_ACCOUNT_INPUT        = "//input[contains(@class, 'search_input search-field')]";
     private final String INTERNAL_SUBMISSION_CHECKBOX   = "//input[@name='internalSubmission']";
     private final String DESCRIPTION_INPUT              = "//textarea[contains(@class, 'survey-prop-description')]";
-    private final String THANK_MSG_SELECT               = "//select[@class, 'survey-prop-msgtype']";
+    private final String THANK_MSG_SELECT               = "//select[contains(@class, 'survey-prop-msgtype')]/following-sibling::button";
     private final String THANK_MSG_INPUT                = "//input[contains(@class, 'survey-prop-msgval')]";
     private final String THANK_URL_INPUT                = "//input[contains(@class, 'survey-direct-url')]";
     private final String THANK_PAGE_INPUT               = "//input[contains(@class, 'survey-custom-url')]";
     private final String FOOTER_MSG_INPUT               = "//textarea[contains(@class, 'survey-prop-footermsg')]";
     private final String SURVEY_CODE_INPUT              = "//input[contains(@class, 'survey-prop-code')]";
     private final String SURVEY_TITLE_INPUT             = "//input[contains(@class, 'survey-prop-exttitle')]";
-    private final String BG_COLOR_RADIO                 = "//input[@class='color' and @value='fm-check' and @value ='%s']";
+    private final String BG_COLOR_RADIO                 = "//input[@class='color' and @name='fm-check' and @value ='%s']";
     private final String SURVEY_SAVE_BUTTON             = "//input[@class='gs-btn btn-save' and @value='Save']";
 
 
@@ -44,13 +44,13 @@ public class SurveyPropertiesPage extends SurveyPage {
         waitForSurveyPropertiesFormToLoad(surveyProp);
     }
 
-    public SurveyPropertiesPage updateSurveyProperties(SurveyProperties surveyProp) {
+    public SurveyPropertiesPage CreateSurveyProperties(SurveyProperties surveyProp) {
     	Log.info("Started Filling Survey Form");
         if(surveyProp.getSurveyName() != null) {
             field.clearAndSetText(SURVEY_NAME_INPUT, surveyProp.getSurveyName());
         }
         if(surveyProp.getEmailService() != null) {
-            item.click(EMAIL_SERVICE_SELECT);
+            button.click(EMAIL_SERVICE_SELECT);
             selectValueInDropDown(surveyProp.getEmailService());
         }
         if(surveyProp.getStartDate() != null) {
@@ -75,9 +75,9 @@ public class SurveyPropertiesPage extends SurveyPage {
         }
 
         if(surveyProp.isAllowInternalSub()) {
-            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
+/*            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
         } else {
-            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
+            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);*/
             item.click(INTERNAL_SUBMISSION_CHECKBOX);
         }
 
@@ -94,7 +94,7 @@ public class SurveyPropertiesPage extends SurveyPage {
             }
         }
         item.clearAndSetText(FOOTER_MSG_INPUT, surveyProp.getFooterMsg());
-        item.clearAndSetText(SURVEY_CODE_INPUT, surveyProp.getSurveyCode());
+        //item.clearAndSetText(SURVEY_CODE_INPUT, surveyProp.getSurveyCode());
         item.clearAndSetText(SURVEY_TITLE_INPUT, surveyProp.getSurveyTitle());
         item.click(String.format(BG_COLOR_RADIO, surveyProp.getBgColor()));
         item.click(SURVEY_SAVE_BUTTON);

@@ -10,8 +10,8 @@ public class SurveyProperties {
     private String sId;
 	private String surveyName;
     private String emailService = "Salesforce";
-    private String startDate;
-    private String endDate;
+    private String startDate ="1";
+    private String endDate ="19";
     private boolean anonymous = false;
     private String type = "Anonymous with account tracking";
     private String anonymousAccount;
