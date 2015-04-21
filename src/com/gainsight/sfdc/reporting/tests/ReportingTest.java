@@ -75,6 +75,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_1M1D_SCRIPT,"Line_1_1_CaseObj","LINE", "1ShowMe_1By_RL", "1ShowMe_1By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M1D_SCRIPT,"Area_1_1_CaseObj","AREA", "1ShowMe_1By_RL", "1ShowMe_1By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M1D_SCRIPT,"Table_1_1_CaseObj","LIST", "1ShowMe_1By_RL", "1ShowMe_1By_Layout", "Case");
+		createReportWithAnyCombination(CREATE_REPORTS_1M1D_SCRIPT,"D3BUBBLE_1_1_CaseObj","D3BUBBLE", "1ShowMe_1By_RL", "1ShowMe_1By_Layout", "Case");
 	}
 	
 	@Test
@@ -90,6 +91,7 @@ public class ReportingTest extends BaseTest{
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"Stacked_Bar_1_2_CaseObj","STACKED-BAR", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"Stacked_Column_1_2_CaseObj","STACKED-COLUMN", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"HeatMap_1_2_CaseObj","HEATMAP", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
+		createReportWithAnyCombination(CREATE_REPORTS_1M2D_SCRIPT,"D3BUBBLE_1_2_CaseObj","D3BUBBLE", "1ShowMe_2By_RL", "1ShowMe_2By_Layout", "Case");
 	}
 	
 		

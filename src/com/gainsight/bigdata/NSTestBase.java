@@ -39,6 +39,7 @@ public class NSTestBase {
     public static final Application env = new Application();
     public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
     public static MetaDataUtil metaUtil=new MetaDataUtil();
+
     public NSTestBase() {
 		basedir = System.getenv("basedir");
 		testDataBasePath = basedir + "/testdata/newstack";
@@ -61,12 +62,14 @@ public class NSTestBase {
 		header.addHeader("appOrgId", sfinfo.getOrg());
 		header.addHeader("appUserId", sfinfo.getUserId());
 		header.addHeader("appSessionId", sfinfo.getSessionId());
+		
 		//header.addHeader("authToken", "3b135252-473a-43f1-a6b1-e78a4db53ddd");
 		
 		//sfdc.getAccessToken();
 		System.out.println("SF INFO : " + sfinfo.toString());
-		//createTenant();
+		  
 	}
+		//createTenant()
 	
 	@Test
 	public void sampleTest() {
@@ -75,6 +78,24 @@ public class NSTestBase {
 		
 	}	
 	
+	
+	/**
+	 * @param objName = the object from which we need the map
+	 * @param fieldName = the field name that needs to be queried for - it will be the key in the hashmap
+	 * @param shortCut = the shortCut for each object will be unique.in the test data we need to prepend the key with the shortcut
+	 * @return
+	 */
+	public HashMap<String,String> getMapFromObject(String objName,String fieldName,String shortCut){
+		    String Query         = "SELECT Id,"+fieldName+" from "+objName; 
+			HashMap<String,String> objMap=new HashMap<String,String>();
+		    SObject[] objRecords = sfdc.getRecords(resolveStrNameSpace(Query));
+		    Log.info("Total Piclist Records : " +objRecords.length);
+	        for(SObject sObject : objRecords) {
+	            Log.info("ObjectName:"+objName+"..FieldName : "+sObject.getField(resolveStrNameSpace(fieldName)) + " - With Id : " +sObject.getId());
+	            objMap.put(shortCut+"."+sObject.getField(fieldName).toString(), sObject.getId());
+	        }
+	        return objMap;
+	}
 	private void createTenant() {
 		header.addHeader("Content-Type", "application/json");
 		Map<String, Object> contentMap = new HashMap<>();
@@ -107,7 +128,7 @@ public class NSTestBase {
      * @param str -The string where name space should be removed.
      * @return String - with name space removed.
      */
-    public String resolveStrNameSpace(String str) {
+    public static String resolveStrNameSpace(String str) {
         return FileUtil.resolveNameSpace(str, PropertyReader.managedPackage ? PropertyReader.NAMESPACE : null);
         
     }
@@ -129,13 +150,13 @@ public class NSTestBase {
 	
   //key is of format : SFID:ObjectName:FieldName:FieldValue 
   //Handling only string type of fields for now
-    public String getSFId(String key){
+   /* public String getSFId(String key){
     	System.out.println("got key as:"+key);
     	String[] values=key.split(":");
     	System.out.println("Executing query:   select "+values[1]+" from "+values[2]+" where "+values[3]+"='"+values[4]+"'");
     	SObject[] records=sfdc.getRecords("select "+values[1]+" from "+values[2]+" where "+values[3]+"='"+values[4]+"'");
     	return records[0].getChild(values[1]).getValue().toString();
-    }
+    }*/
     
 
 	public  HashMap<String,String> getSFValues(HashMap<String, String> fAndV,
@@ -161,6 +182,15 @@ public class NSTestBase {
 		fAndV.put(key, records[0].getChild(key).getValue().toString());
 		}
 		return fAndV;
+	}
+	
+	public void updateNSURLInAppSettings(String NSURL) {
+		System.out.println("setting ns url in app settings");
+        sfdc.connect();
+        sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
+		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
+                + "appSet.JBCXM__NSURL__c='" + NSURL + "';"
+                + "update appSet;"));
 	}
 
 }

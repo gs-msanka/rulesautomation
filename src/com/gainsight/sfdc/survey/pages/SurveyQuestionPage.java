@@ -69,7 +69,11 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String QUESTION_SAVE_BUTTON_CSS   = "a[data-action=SAVE]";
     private final String QUESTION_CANCEL_BUTTON_CSS = "a[data-action=CANCEL]";
 
-    private final String POP_DELETE_YES = "//input[@class='gs-btn btn-save btn_save saveSummary' and @value='Yes']";
+    private final String POP_DELETE_YES  = "//input[@class='gs-btn btn-save btn_save saveSummary' and @value='Yes']";
+    private final String LINK_ICON       ="//ul[@class='radiolist']/li[1]/div[contains(@class, 'attatchicon')]/span[@class='glyphicon glyphicon-link']";
+    private final String LOGIC_RULES_DIV ="//div[contains(@class, 'ui-dialog-titlebar')]/span[text()='Link Question']";
+    private final String LINK_CHECKBOX   ="//div[contains(@class, 'i-checks pull-left')]/label/input[@type='checkbox']";
+    private final String LINK_SAVE_BUTTON="//div[contains(@class, 'text-center')]/button[text()='Save']";
 
 
     //Miscellaneous
@@ -735,11 +739,17 @@ public class SurveyQuestionPage extends SurveyPage {
         waitTillNoLoadingIcon();
         return this;
     }
-
-
-
-
-
-
-
+    public void AddLogicRules(){
+    	
+    	item.click(LINK_ICON);
+    	wait.waitTillElementDisplayed(LOGIC_RULES_DIV, MIN_TIME, MAX_TIME);
+    	item.click(LINK_CHECKBOX);
+    	button.click(LINK_SAVE_BUTTON);
+    }
+    
+   public boolean existsElement() {
+	        element.getElement(By.xpath("//ul[@class='radiolist']/li[1]/div[contains(@class, 'attached')]"));
+	        return true;
+   }
+   
 }

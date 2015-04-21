@@ -14,6 +14,10 @@ public class AdminIntegrationPage extends BasePage {
 	private static final String AUTHORIZE_DISABLED = "//button[@id='btnAuthorize' and @disabled='disabled']";
 	private static final String REVOKE="//button[@id='btnRevoke']";
 	private static final String MARKETO_ENABLE="";
+	private static final String GSEMAIL_ENABLE="//div[@class='gs-cta-head EMAIL_SERVICE']//div[@class='onoffswitch-switch']";
+	private static final String GSEMAIL_ON="//button[@class='btnEnable gs-btn btn-add' and @apptype='EMAIL_SERVICE']";
+	private static final String GSEMAIL_OFF="//button[@class='btnDisable gs-btn btn-cancel' and @action='DISABLE']";
+	private static final String GSEMAIL_SECTION="//div[@class='data-title' and text()='Gainsight Email Service']";
 	
 	public void AdminIntegrationPage(){
 		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -24,6 +28,12 @@ public class AdminIntegrationPage extends BasePage {
 		wait.waitTillElementDisplayed(SIDE_SECTION, MIN_TIME, MAX_TIME);
 	}
 	
+	public void enableGSEmail(){
+		item.click(GSEMAIL_ENABLE);
+		wait.waitTillElementDisplayed(GSEMAIL_SECTION, MIN_TIME, MAX_TIME);
+		item.click(GSEMAIL_ON);
+		
+	}
 	public void clickOnAuthorize(){
 		
 		if(item.isElementPresent(AUTHORIZE_DISABLED))

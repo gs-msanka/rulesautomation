@@ -4,6 +4,7 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OppWidget_SummaryWidgetPage;
 
 import java.util.HashMap;
 
@@ -28,6 +29,7 @@ public class AccountWidgetPage extends BasePage {
     private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
   	private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
   	private final String FEATURES_TAB = "//a[@class='Features']";
+  	private final String SUMMARY_TAB = "//a[@class='Summary']";
   	
     public AccountWidgetPage() {
         //wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -57,7 +59,11 @@ public class AccountWidgetPage extends BasePage {
         item.click(FEATURES_TAB);
         return new AccWidget_FeaturesPage();
     }
-
+    
+    public AccWidget_SummaryWidgetPage selectSummarySubTab() {
+        item.click(SUMMARY_TAB);
+        return new AccWidget_SummaryWidgetPage();
+    }
 
      public AccWidget_CockpitPage gotoCockpitSubTab(){
         item.click(COCKPIT_SUBTAB);

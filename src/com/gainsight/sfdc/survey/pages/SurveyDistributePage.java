@@ -1,5 +1,11 @@
 package com.gainsight.sfdc.survey.pages;
 
+import org.openqa.selenium.By;
+
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.survey.pojo.SurveyDistribution;
+import com.gainsight.testdriver.Log;
+
 /**
  * Created by gainsight on 05/12/14.
  */
@@ -39,13 +45,82 @@ public class SurveyDistributePage extends SurveyBasePage{
 	private final String CALENDARVIEW_DAY ="//button[@class='fc-agendaDay-button fc-button fc-state-default fc-corner-right']";
 	private final String CALENDARVIEW_PREVIOUS_ARROWMARK ="//button[@class='fc-prev-button fc-button fc-state-default fc-corner-left']";
 	private final String CALENDARVIEW_NEXT_ARROWMARK ="//button[@class='fc-next-button fc-button fc-state-default fc-corner-right']";
-	private final String CLICKON_CREATED_SCHEDULE ="";
+	private final String CLICKON_CREATE_SCHEDULE ="//div[@class='col-md-2']/input[@value='+ Create Schedule']";
 	private final String CLICKON_EDIT_SCHEDULE ="";
 	private final String CLICKON_DELETE_SCHEDULE ="";
 	private final String CLICKON_ALLOWINTERNAL_SUBMISSION ="";
 	private final String CLICKON_VIEW_SURVEYRESPONSE ="//span[@class='surveyParticipantResponsePreview']";
 	private final String SELECT_PARTICIPANTS_FROMGRID ="";
 	private final String SELECT_ALLPARTICIPANTS_FROMGRID ="";
-	private final String REMOVE_PARTICIPANTS_FROMSCHEDULE ="";	
+	private final String REMOVE_PARTICIPANTS_FROMSCHEDULE ="";
+	private final String SELECT_CONTACTS_CHECKBOX ="//input[@id='cb_add-participants-tbl']";
+	private final String EMAIL_CONFIRM_DILOG_TEXT ="//div[@class='modal_body']/div[@class='layout_popup_text']";
+	private final String EMAIL_CONFIRM            ="//div[@class='modal_footer']/descendant::input[contains(@class, 'saveSummary')]";
+	private final String CREATE_SCHEDULE_DIV      ="//div[contains(@class, 'ui-dialog-titlebar')]/span[text()='Create Schedule']";
+	private final String TODAY_LINK_IN_CALENDER   ="Today";
+	private final String CALENDER_CLICK           ="//div[@class='clearfix']/span[text()='Minutes']"; //Clicking somewhere on Div
+	private final String SCHEDULE_CHECKBOX        ="//div[contains(@id, 'new-schedule-participants')]/input[@class='cbox']";
 	
+	
+	
+	public SurveyDistributePage(String  surveyName) {
+		super(surveyName);
+		wait.waitTillElementDisplayed(CLICKON_CREATE_SCHEDULE, MIN_TIME, MAX_TIME);
+	}
+	
+	public void ClickingToBeContacted(){
+		
+		item.click(CLICKON_TOBECONTACTED_CIRCLE);
+		wait.waitTillElementPresent(CLICKON_SENDEMAIL_BUTTON, MIN_TIME, MAX_TIME);
+		item.click(SELECT_CONTACTS_CHECKBOX);	
+	}
+
+	public int GetContactsCount(){
+		
+		String temptext=element.getElement(By.xpath("//a[@class='numcolor-5 mininum-add']/span")).getText();
+		Log.info("String Text is  : " + temptext);
+		int Count=Integer.parseInt(temptext);
+		System.out.println(Count);
+		return Count;
+	}
+	
+	public void SendEmail(){
+		
+		item.click(CLICKON_SENDEMAIL_BUTTON);
+		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME, MAX_TIME);
+		item.click(EMAIL_CONFIRM);
+		
+	}
+	
+	public void CreateSchedule(SurveyDistribution SurveyDist){
+		
+		item.click(CLICKON_CREATE_SCHEDULE);
+		wait.waitTillElementDisplayed(CREATE_SCHEDULE_DIV, MIN_TIME, MAX_TIME);
+		field.setText(SCHEDULE_NAME_TEXTAREA, SurveyDist.getScheduleName());
+		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN, SurveyDist.getScheduleType());
+		item.click(SCHEDULE_DATE);
+		link.click(TODAY_LINK_IN_CALENDER);
+		item.click(CALENDER_CLICK); //Clicking somewhere on Div to disperse the calender
+		element.selectFromDropDown(SCHEDULE_TIME_HRS, SurveyDist.getHours());
+		element.selectFromDropDown(SCHEDULE_TIME_MINUTES, SurveyDist.getMinutes());
+		item.click(SCHEDULE_NEXT_BUTTON);
+		CreateScheduleNext(SurveyDist);
+	}
+	
+	public void CreateScheduleNext(SurveyDistribution SurveyDist){
+		
+		wait.waitTillElementDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
+		item.click(SCHEDULE_CHECKBOX);
+		button.click(SCHEDULE_DONE_BUTTON);	
+	}
+
+	public int GetScheduledCount(){
+		Timer.sleep(9);
+		String temptext=element.getElement(By.xpath("//a[@class='numcolor-4 mininum-add']/span")).getText();
+		Log.info("String Text is  : " + temptext);
+		int Count=Integer.parseInt(temptext);
+		System.out.println(Count);
+		return Count;
+	}
 }
+

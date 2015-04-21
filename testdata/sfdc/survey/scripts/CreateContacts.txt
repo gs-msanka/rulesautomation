@@ -1,4 +1,5 @@
 //Get the Account names prefixed with Survey
+delete [SELECT Id,Name,Title FROM Contact where TITLE='QA'];
 List<Account> acctID = [Select ID from ACCOUNT where NAME like 'SURVEY Account%' limit 10];
 List<String> emailIDs = new List<String>{'athaduka@gainsight.com','jvunnam@gainsight.com','ggolla@gainsight.com','srallapalli@gainsight.com','ryaddanapalli@gainsight.com','spulluri@gainsight.com','snasika@gainsight.com','rkalisipudi@gainsight.com','hsharma@gainsight.com','spadmanabhan@gainsight.com'};
 List<Contact> contacts = new List<Contact>();
