@@ -2,6 +2,7 @@
     <settings defaultResolver="chain"/>
     <credentials host="jenkins.gainsight.com" realm="Sonatype Nexus Repository Manager" username="development"
                  passwd="gsNexu5DeploY"/>
+    <caches defaultCacheDir="${user.home}/.m2/repository" />
     <resolvers>
         <chain name="chain">
             <ibiblio name="central" m2compatible="true"/>
