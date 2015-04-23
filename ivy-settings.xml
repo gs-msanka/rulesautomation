@@ -1,0 +1,20 @@
+<ivysettings>
+    <settings defaultResolver="chain"/>
+    <credentials host="jenkins.gainsight.com" realm="Sonatype Nexus Repository Manager" username="development"
+                 passwd="gsNexu5DeploY"/>
+    <caches defaultCacheDir="${user.home}/.m2/repository" />
+    <resolvers>
+        <chain name="chain">
+            <ibiblio name="central" m2compatible="true"/>
+            <ibiblio name="release" m2compatible="true"
+                     root="http://jenkins.gainsight.com:8082/nexus/content/repositories/releases/"/>
+            <ibiblio name="snapshot" m2compatible="true"
+                     root="http://jenkins.gainsight.com:8082/nexus/content/repositories/snapshots/"/>
+            <!--<vfs name="public">
+                <artifact
+                        pattern="http://deployment:gsNexu5DeploY@http://jenkins.gainsight.com:8082/nexus/content/repositories/snapshot/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"
+                        />http://jenkins.gainsight.com:8082/nexus/service/local/repositories/releases/content/com/gainsight/testdriver/0.1.0/testdriver-0.1.0.jar
+            </vfs>-->
+        </chain>
+    </resolvers>
+</ivysettings>
