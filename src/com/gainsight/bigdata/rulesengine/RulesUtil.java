@@ -344,5 +344,10 @@ public void setupRule(HashMap<String,String> testData){
         Pattern pattern = Pattern.compile("\"\\w{18}\"");
         return replaceStringWithTokens(text, pattern, replacements);
     }
+    
+    public static Boolean createAndRunRule(HashMap<String,String> testData){
+    	
+    	return true;
+    }
 
 }
