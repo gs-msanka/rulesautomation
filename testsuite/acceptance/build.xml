@@ -1,9 +1,10 @@
-<project name="Acceptance Test" default="" basedir="../../.">
+<project name="Acceptance Test" default="" basedir="../../." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<property name="build.dir" location="${basedir}/bin" />
 	<property name="result.dir" location="${basedir}/result" />
 	<property name="failed.dir" location="${result.dir}/failed" />
 	<property name="screenshots.dir" value="${result.dir}/screenshots" />
 	<property name="failures.dir" value="${screenshots.dir}/failures" />
+	<property name="ivy.file" value="${basedir}/ivy.xml" />
 	<property environment="env"/>
     <property name="ws.home" value="${basedir}"/>
 
@@ -11,32 +12,55 @@
     <!-- TestNG file name for pre and post tests -->
 	<property name="testngFileName" value="all_test.xml"/>
 
+	<property environment="env"/>
+	<property name="ivy.home" value="${basedir}/lib/ivy-2.3.0.jar"/>
+	<property name="ivy.settings.file" value="${basedir}/ivy-settings.xml"/>
+
+	<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			 uri="antlib:org.apache.ivy.ant">
+		<classpath>
+			<fileset file="${ivy.home}" />
+		</classpath>
+	</taskdef>
+
 	<target name="runTest" depends="init, editPropertyFile, compile, bat, makexsltreports, zipReports"/>
 
     <target name="runFailedTest" depends="init, editPropertyFile, compile, failedRun, makexsltreports, zipReports"/>
 
-	<!-- Classpath files required for compiling -->
+	<!-- Classpath files required for compiling
 	<path id="cpath">
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
-	</path>
+	</path> -->
+
+	<target name="resolveivy">
+		<ivy:settings file="${ivy.settings.file}" />
+		<ivy:resolve file="${ivy.file}"/>
+		<ivy:cachepath pathid="runpath" conf="default"/>
+		<ivy:retrieve conf="default" pattern="${basedir}/ivy-lib/[artifact]-[type]-[revision].[ext]"/>
+		<taskdef resource="testngtasks" classpathref="runpath"/>
+	</target>
 
 	<!-- Classpath files required at run-time -->
-	<path id="runpath">
+	<!--<path id="runpath">
 		<fileset dir="lib">
 			<include name="**/*.jar"/>
 		</fileset>
 		<pathelement location="${build.dir}"/>
+	</path>-->
+	<path id="main.classpath">
+		<path refid="runpath" />
+		<pathelement location="${build.dir}"/>
 	</path>
 
 	<!-- TestNG Ant Task Def -->
-	<taskdef resource="testngtasks" classpathref="cpath"/>
+
 
 	<!-- Run Tests by specifying testNG file name -->
 	<target name="bat" depends="">
 		<echo message="Starting Acceptance Tests" />	
-		<testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
+		<testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
 
@@ -46,7 +70,7 @@
 
     <target name="failedRun" depends="">
         <echo message="Starting Acceptance Tests" />
-        <testng haltonfailure="no" classpathref="runpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
+        <testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
             <sysproperty key="run" value="BAT" />
             <sysproperty key="basedir" value="${basedir}" />
 
@@ -55,9 +79,9 @@
     </target>
 
 
-    <target name="compile" depends="">
+    <target name="compile" depends="resolveivy">
 		<echo message="compiling tests" />
-		<javac srcdir="src" destdir="${build.dir}" classpathref="cpath" nowarn="on" debug="on" debuglevel="lines,vars,source">
+		<javac srcdir="src" destdir="${build.dir}" classpathref="runpath" nowarn="on" debug="on" debuglevel="lines,vars,source">
 		</javac>
 	</target>
 
