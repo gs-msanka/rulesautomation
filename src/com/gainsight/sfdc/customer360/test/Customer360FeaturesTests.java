@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -16,6 +17,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Features;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 public class Customer360FeaturesTests extends BaseTest {
 
@@ -29,6 +31,7 @@ public class Customer360FeaturesTests extends BaseTest {
 	}
 
     // Test if all the features in the excel are displayed (pre added features)
+	@TestInfo(testCaseIds={"GS-980"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
@@ -58,7 +61,8 @@ public class Customer360FeaturesTests extends BaseTest {
             }
         }
 	}
-
+	
+	@TestInfo(testCaseIds={"GS-938","GS-939"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
 	public void verifyEditFeatures(HashMap<String, String> testData) {
