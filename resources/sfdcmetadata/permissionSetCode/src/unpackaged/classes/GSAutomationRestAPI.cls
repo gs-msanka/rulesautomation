@@ -72,9 +72,9 @@ global without sharing class GSAutomationRestAPI {
             if(!objectFieldsMap.isEmpty() && objectFieldsMap != null) {
                 String APP_NAMESPACE_PREFIX = 'JBCXM';
                 System.debug(APP_NAMESPACE_PREFIX);
-                List<User> licensedUsers = [SELECT Id, Name, ProfileId FROM User WHERE Id in (SELECT UserId FROM UserPackageLicense WHERE (PackageLicense.NamespacePrefix = :APP_NAMESPACE_PREFIX))];
+                List<User> licensedUsers = [SELECT Id, Name, ProfileId FROM User WHERE IsActive = true AND Id in (SELECT UserId FROM UserPackageLicense WHERE (PackageLicense.NamespacePrefix = :APP_NAMESPACE_PREFIX))];
                 System.debug('Licensed Users :' +licensedUsers.size());
-                List<User> systemAdminUsers = [SELECT Id, Name FROM User WHERE Profile.Name = 'System Administrator'];
+                List<User> systemAdminUsers = [SELECT Id, Name FROM User WHERE Profile.Name = 'System Administrator' and IsActive = true];
                 System.debug('SystemAdminUsers Users :' +systemAdminUsers.size());
                 Set<String> userIds = new Set<String>();
                 for(User u : licensedUsers) {
