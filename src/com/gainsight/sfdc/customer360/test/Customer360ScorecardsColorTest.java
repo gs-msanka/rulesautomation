@@ -90,7 +90,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-    @TestInfo(testCaseIds={})
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-3")
     public void removeScoreForMeasures(HashMap<String, String> testData) {
@@ -254,7 +254,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
     
-    @TestInfo(testCaseIds={})
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-7")
     public void updateOverallScoreSummary(HashMap<String, String> testData) {
@@ -267,7 +267,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverAllSummary(overallScorecardSummary), "Checking Over All Summary.");
     }
 
-    @TestInfo(testCaseIds={})
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-8")
     public void disabledOverAllHealthUpdateCheck(HashMap<String, String> testData) {
@@ -298,7 +298,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
     }
     
-    @TestInfo(testCaseIds={})
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-10")
     public void updateOverAllCustomerHealth(HashMap<String, String> testData) {

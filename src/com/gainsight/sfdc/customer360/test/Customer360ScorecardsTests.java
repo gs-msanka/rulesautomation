@@ -80,7 +80,7 @@ public class Customer360ScorecardsTests extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-	@TestInfo(testCaseIds={})
+	//No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-3")
     public void removeScoreForMeasures(HashMap<String, String> testData) {
@@ -230,7 +230,7 @@ public class Customer360ScorecardsTests extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-	@TestInfo(testCaseIds={})
+	//No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-6")
     public void addUpdateRemoveMeasureScore(HashMap<String, String> testData) {
