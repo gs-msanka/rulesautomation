@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.gainsight.testdriver.Log;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,6 +16,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +52,9 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
             throw new RuntimeException("Failed to create metrics for scorecards");
         }
     }
-
+    
+    //No testcase in test-link for this
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-1")
     public void addScoreToMeasureWithOutWeight(HashMap<String, String> testData) {
@@ -64,7 +68,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
     }
-
+    
+    @TestInfo(testCaseIds={"GS-787"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-2")
     public void addScoreToMeasureWithWeight(HashMap<String, String> testData) {
@@ -78,7 +83,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
     }
-
+    
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-3")
     public void removeScoreForMeasures(HashMap<String, String> testData) {
@@ -115,6 +121,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
 
+    @TestInfo(testCaseIds={"GS-788"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-4")
     public void scorecardUpdates(HashMap<String, String> testData) {
@@ -172,7 +179,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScoreTrend(customerHealth.get("Trend")));
     }
-
+    
+    @TestInfo(testCaseIds={"GS-789"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-5")
     public void updateMeasureComments(HashMap<String, String> testData) {
@@ -210,7 +218,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScoreTrend(customerHealth.get("Trend")));
     }
-
+    
+    @TestInfo(testCaseIds={"GS-787","GS-788"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-6")
     public void addUpdateRemoveMeasureScore(HashMap<String, String> testData) {
@@ -245,7 +254,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure.get("GroupName"), measure.get("MeasureName"), "NA"));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
-
+    
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-7")
     public void updateOverallScoreSummary(HashMap<String, String> testData) {
@@ -257,7 +267,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         customer360Scorecard = customer360Scorecard.updateCustomerSummary(overallScorecardSummary);
         Assert.assertTrue(customer360Scorecard.verifyOverAllSummary(overallScorecardSummary), "Checking Over All Summary.");
     }
-
+    
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-8")
     public void disabledOverAllHealthUpdateCheck(HashMap<String, String> testData) {
@@ -287,7 +298,8 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
     }
-
+    
+    //No Test case in TestLink
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-10")
     public void updateOverAllCustomerHealth(HashMap<String, String> testData) {
