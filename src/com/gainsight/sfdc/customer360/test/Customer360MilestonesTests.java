@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.util.HashMap;
 
 import com.gainsight.testdriver.Log;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -12,6 +13,7 @@ import com.gainsight.sfdc.customer360.pages.Customer360Milestones;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 public class Customer360MilestonesTests extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/milestone/tests/MilestonesTests.xls";
@@ -24,6 +26,7 @@ public class Customer360MilestonesTests extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir+"/apex_scripts/Milestones/Milestones.apex"));
 	}
 	 
+	@TestInfo(testCaseIds={"GS-951"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M1")
 	public void verifyDataFromExcel(HashMap<String, String> testData) {
@@ -55,6 +58,7 @@ public class Customer360MilestonesTests extends BaseTest {
 		}
 	}
 
+	@TestInfo(testCaseIds={"GS-940","GS-941"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M2")
 	public void verifyAddAndEditMilestones(HashMap<String, String> testData) {
@@ -70,6 +74,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Assert.assertTrue(cm.isMilestonePresent(milestoneData2), "Checking for Milestone present 2.");
 	}
 
+	@TestInfo(testCaseIds={"GS-940"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M3")
     public void verifyAddMilestone(HashMap<String, String> testData) {
@@ -81,7 +86,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Assert.assertTrue(cm.isMilestonePresent(milestoneData), "Checking for is added successfully.");
     }
 
-
+	@TestInfo(testCaseIds={"GS-942"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M4")
     public void verifyDeleteMilestone(HashMap<String, String> testData) {
@@ -95,6 +100,7 @@ public class Customer360MilestonesTests extends BaseTest {
         Assert.assertFalse(cm.isMilestonePresent(milestoneData), "Checking if milestone is deleted successfully");
     }
 
+	@TestInfo(testCaseIds={"GS-982"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "M5")
     public void verifyNoMilestonesMessage(HashMap<String, String> testData) {
