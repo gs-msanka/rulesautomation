@@ -219,7 +219,7 @@ public class RuleEngineDataSetup extends BaseTest {
      * Delete all the Rules, Alerts, CTAs that are setup in the org.
      */
     public void cleanDataSetup() {
-        //sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FILE));
     }
 
     private HashMap<String, String> getPickListSetupData() {
