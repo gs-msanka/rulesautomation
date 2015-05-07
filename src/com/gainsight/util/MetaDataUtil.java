@@ -234,6 +234,57 @@ public class MetaDataUtil {
 	        metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
 	        addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)),sfinfo);
 	    }
+	   //same method is used by rules engine test cases also.
+	    public void createFieldsForAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception{
+			metadataClient=SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+			String object = "Account";
+			String[] numberFields1 = new String[]{"Number Auto"};
+			String[] Currency= new String[]{"Currency Auto"};
+			String[] Checkbox = new String[]{"Boolean Auto","Boolean Auto1"};
+			String[] Date= new String[]{"Date Auto","Date Auto1"};
+			String[] DateTime= new String[]{"DateTime Auto"};
+			String[] Email= new String[]{"Email Auto"};
+			String[] Percent= new String[]{"Percent Auto"};
+			String[] URL= new String[]{"URL Auto"};
+			HashMap<String,String[]> Pick = new HashMap<String,String[]>();
+			Pick.put("PickList Auto", new String[]{"Excellent", "Vgood", "Good", "Average", "Poor", "Vpoor"});
+			HashMap<String, String[]> MultipickList=new HashMap<String, String[]>();
+			MultipickList.put("MultiPicklist Auto", new String[]{"MPL1", "MPL2"});
+			metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
+			metadataClient.createCurrencyField(resolveStrNameSpace(object), Currency);
+			metadataClient.createFields(object, Checkbox, true, false, false);
+			metadataClient.createDateField(object, Date, false);
+			metadataClient.createDateField(object, DateTime, true);
+			metadataClient.createEmailField(object, Email);
+			metadataClient.createNumberField(object, Percent, true);
+			metadataClient.createFields(object, URL, false, false, true);
+			metadataClient.createPickListField(object, Pick, false);
+			metadataClient.createPickListField(object,MultipickList, true);
+			String[] targetArray = ArrayUtils.addAll(numberFields1,Currency);
+			String[] targetArray1= ArrayUtils.addAll(Checkbox,Date);
+			String[] targetArray2= ArrayUtils.addAll(DateTime,Email);
+			String[] targetArray3= ArrayUtils.addAll(Percent);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,targetArray1)), sfinfo);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray2,targetArray3)), sfinfo);
+		}
+
+	 //Delete Account metadata Rules Engine
+	 public void deleteAccountMetadata(SalesforceConnector sfdc){
+		 try{
+			 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+			 String object = "Account";
+			 String FieldsToDelete1[]={"Boolean_Auto__c","Boolean_Auto1__c","Currency_Auto__c","Date_Auto__c","Date_Auto1__c","DateTime_Auto__c"};
+			 String FieldsToDelete2[]={"Email_Auto__c","MultiPicklist_Auto__c","Number_Auto__c","Percent_Auto__c","PickList_Auto__c","URL_Auto__c"};
+
+			 metadataClient.deleteFields(object,FieldsToDelete1);
+			 metadataClient.deleteFields(object,FieldsToDelete2);
+		 }
+		 catch(Exception e){
+			 e.printStackTrace();
+			 System.out.println("Exception is "+e.getMessage());
+		 }
+	 }
+
 	    
 	    public String resolveStrNameSpace(String str) {
 	    	Application env=new Application();
