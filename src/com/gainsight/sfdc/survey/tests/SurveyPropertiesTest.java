@@ -44,6 +44,8 @@ public class SurveyPropertiesTest extends SurveySetup{
 		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
 				surveyPropData, true);
 		surPropPage.CreateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.GetPropertiesMessage(),
+				"Survey properties successfully saved.");
 	}
 
 }

@@ -8,6 +8,7 @@ package com.gainsight.sfdc.survey.pages;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
@@ -51,6 +52,7 @@ public class SurveyPropertiesPage extends SurveyPage {
         }
         if(surveyProp.getEmailService() != null) {
             button.click(EMAIL_SERVICE_SELECT);
+            Log.info("Selecting SalesForce Email Services");
             selectValueInDropDown(surveyProp.getEmailService());
         }
         if(surveyProp.getStartDate() != null) {
@@ -126,5 +128,11 @@ public class SurveyPropertiesPage extends SurveyPage {
         boolean result = false;
         //TODO - More implementation yet to come
         return result;
+    }
+    
+    public String GetPropertiesMessage(){
+    	String result=element.getElement(By.xpath("//div[contains(@class, 'bgselect')]/div")).getText();
+        System.out.println(result);
+		return result;
     }
 }
