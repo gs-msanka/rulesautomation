@@ -1,0 +1,10 @@
+<ivy-module version="2.0">
+    <info organisation="com.gainsight" module="gs-automation"/>
+    <dependencies>
+        <dependency org="com.gainsight" name="testdriver" rev="0.0.1-SNAPSHOT"/>
+        <dependency org="us.monoid.web" name="resty" rev="0.3.2"/>
+        <dependency org="org.apache.pdfbox" name="pdfbox" rev="1.8.9"/>
+        <dependency org="io.lamma" name="lamma_2.10" rev="2.2.1"/>
+        <dependency org="com.h2database" name="h2" rev="1.3.174"/>
+    </dependencies>
+</ivy-module>

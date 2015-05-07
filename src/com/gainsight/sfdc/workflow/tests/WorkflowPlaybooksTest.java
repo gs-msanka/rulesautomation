@@ -19,6 +19,7 @@ import com.gainsight.sfdc.workflow.pojos.PlaybookTask;
 import com.gainsight.sfdc.workflow.pojos.Task;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 
 public class WorkflowPlaybooksTest extends WorkflowSetup {
@@ -35,7 +36,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
 	        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
 	        basepage.login();
 	    }
-
+	
+	@TestInfo(testCaseIds={"GS-2140","GS-2141","GS-2142","GS-2143"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
     public void crud_RiskPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
@@ -75,6 +77,7 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         Assert.assertFalse(pbPage.isPlaybookDisplayed(pb), "Verifying Risk Playbook - deleted");
   }
     
+	@TestInfo(testCaseIds={"GS-2140","GS-2148","GS-2149","GS-2147"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
     public void crud_EventPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
@@ -113,6 +116,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         pbPage=pbPage.deletePlaybook(updatedPb);
         Assert.assertFalse(pbPage.isPlaybookDisplayed(pb), "Verifying Event Playbook - deleted");
   }
+	
+	@TestInfo(testCaseIds={"GS-2140","GS-2144","GS-2145","GS-2146"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
     public void crud_OpporPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
@@ -151,6 +156,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         pbPage=pbPage.deletePlaybook(updatedPb);
         Assert.assertFalse(pbPage.isPlaybookDisplayed(pb), "Verifying Opportunity Playbook - deleted");
   }
+	
+	@TestInfo(testCaseIds={"GS-2140","GS-2154","GS-2155","GS-2156"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
     public void crud_AllPlaybook_WithTasks(HashMap<String, String> testData) throws IOException {
@@ -189,6 +196,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         pbPage=pbPage.deletePlaybook(updatedPb);
         Assert.assertFalse(pbPage.isPlaybookDisplayed(pb), "Verifying All Type Playbook - deleted");
     }
+	
+	@TestInfo(testCaseIds={"GS-2150"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
     public void duplicate_RiskPlaybook(HashMap<String, String> testData) throws IOException {
@@ -212,7 +221,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         Assert.assertTrue(pbPage.isTaskDisplayed(task2));
         Assert.assertTrue(pbPage.isTaskDisplayed(task3));
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2151"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
     public void duplicate_OpportunityPlaybook(HashMap<String, String> testData) throws IOException {
@@ -236,7 +246,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         Assert.assertTrue(pbPage.isTaskDisplayed(task2));
         Assert.assertTrue(pbPage.isTaskDisplayed(task3));
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2152"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
     public void duplicate_EventPlaybook(HashMap<String, String> testData) throws IOException {
@@ -260,7 +271,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         Assert.assertTrue(pbPage.isTaskDisplayed(task2));
         Assert.assertTrue(pbPage.isTaskDisplayed(task3));
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2153"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
     public void duplicate_AllPlaybook(HashMap<String, String> testData) throws IOException {
@@ -284,7 +296,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         Assert.assertTrue(pbPage.isTaskDisplayed(task2));
         Assert.assertTrue(pbPage.isTaskDisplayed(task3));
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2164"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T9")
     public void errorMessageForMandatoryFields(HashMap<String, String> testData) throws IOException {
@@ -313,7 +326,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         pbPage = pbPage.addTask(task);
         Assert.assertTrue(pbPage.isTaskDisplayed(task));
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2160"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
     public void duplicatePlaybookWithoutTasks(HashMap<String, String> testData) throws IOException {
@@ -325,7 +339,8 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
         pbPage.duplicatePlaybook(pb.getName());
         Assert.assertTrue(pbPage.isPlaybookDisplayed(pb), "Verifying duplicated playbook is displayed");
     }
-
+	
+	@TestInfo(testCaseIds={"GS-2164"})
     @Test
     public void noPlaybooksMessage() {
         cleanPlaybooksData();

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
+import com.gainsight.utils.annotations.TestInfo;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -63,6 +64,39 @@ public class LoadToFeature extends RulesUtil {
 		Assert.assertEquals("SUCCESS", LRR);
 		int rules1 = sfdc.getRecordCount("SELECT count(Id) FROM Account");
 		int rules2 = sfdc.getRecordCount("Select count(JBCXM__Account__c) from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One'");
+		Assert.assertEquals(rules1,rules2);
+
+	}
+
+	@TestInfo(testCaseIds = {"GS-4404"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Feature2")
+	public void Feature2(HashMap<String, String> testData) throws Exception {
+		RulesUtil ru = new RulesUtil();
+		ru.populateObjMaps();
+		ru.setupRule(testData);
+		String RuleName = testData.get("Name");
+		String ruleId = getRuleId(RuleName);
+		result = wa.doPost(
+				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				header.getAllHeaders(), "{}");
+		Log.info("Rule ID:" + ruleId + "\n Request URL"
+				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ "\n Request rawBody:{}");
+
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+		Assert.assertNotNull(responseObj.getRequestId());
+		RulesUtil.waitForCompletion(ruleId, wa, header);
+
+		String LRR = sfdc
+				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'")[0]
+				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+		Assert.assertEquals("SUCCESS", LRR);
+		int rules1 = sfdc.getRecordCount("Select count(Id) From Account Where ((Name LIKE 'A%') OR ((Name LIKE 'B%') AND ((IsDeleted = false) AND (JBCXM__CustomerInfo__r.Id != null)))) AND JBCXM__CustomerInfo__c != null ");
+		int rules2 = sfdc.getRecordCount("Select count(JBCXM__Account__c) from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='Three'");
 		Assert.assertEquals(rules1,rules2);
 
 	}

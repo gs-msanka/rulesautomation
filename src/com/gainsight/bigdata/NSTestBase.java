@@ -181,7 +181,7 @@ public class NSTestBase {
 		String key=(String) newIterator.next();
 		fAndV.put(key, records[0].getChild(key).getValue().toString());
 		}
-		return fAndV;
+        return fAndV;
 	}
 	
 	public void updateNSURLInAppSettings(String NSURL) {
@@ -191,6 +191,7 @@ public class NSTestBase {
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
                 + "appSet.JBCXM__NSURL__c='" + NSURL + "';"
                 + "update appSet;"));
+        Log.info("NS URL Updated Successfully");
 	}
 
 }

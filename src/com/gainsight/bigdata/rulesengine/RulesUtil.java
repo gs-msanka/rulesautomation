@@ -14,7 +14,6 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
@@ -112,11 +111,13 @@ public void setupRule(HashMap<String,String> testData){
 	private String getIdResolvedString(String string) {
 		string = replaceSystemNameInRule(
 				replaceSystemNameInRule(
-						replaceSystemNameInRule(string, featuresMap),
+						replaceSystemNameInRule(
+								replaceSystemNameInRule(string,
+										emailTemplateMap), featuresMap),
 						ctaTypesMap), PickListMap);
 		return string;
 	}
-	
+
 	/**
 	 * @param priorityValue - Expected Priority value
 	 * @param statusValue - Expected Status value of cTA
@@ -342,6 +343,11 @@ public void setupRule(HashMap<String,String> testData){
     public static String replaceSFIDWithSystemName(String text, HashMap<String, String> replacements) {
         Pattern pattern = Pattern.compile("\"\\w{18}\"");
         return replaceStringWithTokens(text, pattern, replacements);
+    }
+    
+    public static Boolean createAndRunRule(HashMap<String,String> testData){
+    	
+    	return true;
     }
 
 }

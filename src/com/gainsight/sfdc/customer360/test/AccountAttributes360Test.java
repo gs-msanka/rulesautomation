@@ -12,6 +12,7 @@ import com.gainsight.sfdc.customer360.pages.Attributes;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 /**
  * Created by gainsight on 08/01/14.
@@ -28,7 +29,8 @@ public class AccountAttributes360Test extends BaseTest {
         basepage.login();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
     }
-
+    
+    
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ACC_ATT_1")
     public void uiViewNotConfMsgVerification(HashMap<String, String> testData) {

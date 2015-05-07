@@ -10,3 +10,4 @@ selenium.properties
 /pdf_temp
 /testdata/sfdc/RulesEngine/Jobs/Temp_job.txt
 /resources/datagen/process
+.idea
