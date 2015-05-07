@@ -45,7 +45,7 @@ public class SurveyPropertiesPage extends SurveyPage {
         waitForSurveyPropertiesFormToLoad(surveyProp);
     }
 
-    public SurveyPropertiesPage CreateSurveyProperties(SurveyProperties surveyProp) {
+    public SurveyPropertiesPage createSurveyProperties(SurveyProperties surveyProp) {
     	Log.info("Started Filling Survey Form");
         if(surveyProp.getSurveyName() != null) {
             field.clearAndSetText(SURVEY_NAME_INPUT, surveyProp.getSurveyName());
@@ -130,7 +130,7 @@ public class SurveyPropertiesPage extends SurveyPage {
         return result;
     }
     
-    public String GetPropertiesMessage(){
+    public String getPropertiesMessage(){
     	String result=element.getElement(By.xpath("//div[contains(@class, 'bgselect')]/div")).getText();
         System.out.println(result);
 		return result;
