@@ -1,23 +1,21 @@
 package com.gainsight.bigdata;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.http.entity.StringEntity;
-import org.codehaus.jackson.JsonNode;
+
+import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.pojo.TenantInfo;
+import com.gainsight.http.Header;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.SalesforceMetadataClient;
 import com.gainsight.sfdc.beans.SFDCInfo;
-import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
@@ -27,18 +25,23 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class NSTestBase {
 
+    protected TenantInfo tenantInfo;
 	protected SFDCInfo sfinfo;
-	protected NSInfo nsinfo;
 	protected WebAction wa;
-	protected Header header;	
+	protected Header header;
 	protected static String basedir;
 	protected String testDataBasePath;	
 	protected ObjectMapper mapper = new ObjectMapper();
     public static SalesforceMetadataClient metadataClient;
     public static SalesforceConnector sfdc;
     public static final Application env = new Application();
-    public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+    public static final Boolean isPackage = PropertyReader.managedPackage;
     public static MetaDataUtil metaUtil=new MetaDataUtil();
+    private String accessKey;
+
+    String Api_Tokens = "/api/tokens";
+    String Admin_DataLoad_Authenticate = "/admin/dataload/authenticate";
+
 
     public NSTestBase() {
 		basedir = System.getenv("basedir");
@@ -46,7 +49,7 @@ public class NSTestBase {
 	}
 	
 	@BeforeSuite
-	public void init() {
+	public void init() throws Exception {
 		//Initializing Headers
 		header = new Header();	
 		wa = new WebAction();
@@ -55,30 +58,59 @@ public class NSTestBase {
     			PropertyReader.partnerUrl, PropertyReader.sfdcApiVersion);
 		sfdc.connect();
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
-		sfinfo = sfdc.fetchSFDCinfo();
+        sfinfo = sfdc.fetchSFDCinfo();
 		
 		header.addHeader("Origin",sfinfo.getEndpoint());
 		header.addHeader("Content-Type", "application/json");
 		header.addHeader("appOrgId", sfinfo.getOrg());
 		header.addHeader("appUserId", sfinfo.getUserId());
 		header.addHeader("appSessionId", sfinfo.getSessionId());
-		
-		//header.addHeader("authToken", "3b135252-473a-43f1-a6b1-e78a4db53ddd");
-		
-		//sfdc.getAccessToken();
-		System.out.println("SF INFO : " + sfinfo.toString());
-		  
-	}
-		//createTenant()
-	
-	@Test
-	public void sampleTest() {
-		SObject s[] = sfdc.getRecords("select id, name from account limit 10");
-		System.out.println("No of Records " +s.length);
-		
-	}	
-	
-	
+        header.addHeader("authToken", "initialcall");
+        accessKey = getDataLoadAccessToken();
+    }
+
+    public String getDataLoadAccessToken() throws Exception {
+        Log.info("Getting Access Key");
+        String accessKey;
+        String postURL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion+Api_Tokens;
+        System.out.println(postURL);
+        ResponseObj responseObj =  wa.doPost(postURL, header.getAllHeaders(), "{}");
+
+        NsResponseObj rs;
+        try {
+            rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to get Access Token.");
+        }
+        if(rs.isResult()) {
+            HashMap<String, String> data = (HashMap < String, String >)rs.getData();
+            accessKey = data.get("accessKey");
+            Log.info("AccessKey : " +accessKey);
+        } else {
+            Log.info("Error Code :" +rs.getErrorCode());
+            Log.info("Error Desc : " +rs.getErrorDesc());
+            throw new RuntimeException("Failed to get Access Token.");
+        }
+        return accessKey;
+    }
+
+    public void updateTenantAuthToken() throws Exception {
+        String postURL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion+Admin_DataLoad_Authenticate;
+        Log.info("Authorise URL " +postURL);
+        header.addHeader("accessKey", accessKey);
+        header.addHeader("loginName", sfinfo.getUserName());
+        ResponseObj responseObj=  wa.doGet(postURL, header.getAllHeaders());
+
+        org.apache.http.Header[] aList =  responseObj.getAllHeaders();
+        for(org.apache.http.Header a : aList) {
+            if(a.getName() !=null && a.getName().equals("Authtoken")) {
+                Log.info("Updated AuthToken Details");
+                tenantInfo.setAuthToken(a.getValue());
+            }
+        }
+    }
+
 	/**
 	 * @param objName = the object from which we need the map
 	 * @param fieldName = the field name that needs to be queried for - it will be the key in the hashmap
@@ -96,35 +128,9 @@ public class NSTestBase {
 	        }
 	        return objMap;
 	}
-	private void createTenant() {
-		header.addHeader("Content-Type", "application/json");
-		Map<String, Object> contentMap = new HashMap<>();
-		Map<String, String> auth = new HashMap<>();	
-		auth.put("appOrgId", sfinfo.getOrg());
-		auth.put("appUserId", sfinfo.getUserId());
-		auth.put("appSessionId", sfinfo.getSessionId());
-		contentMap.put("auth_content", auth);
-		try {
-			String authJson = mapper.writeValueAsString(contentMap);
-			String provisionUrl = PropertyReader.nsAppUrl + "/v1.0/api/provision";
-			
-			ResponseObj responseObj = wa.doPost(provisionUrl, header.getAllHeaders(), new StringEntity(authJson));
-			if(responseObj.getStatusCode() == 200) {
-				JsonNode node = mapper.readTree(responseObj.getContent());
-				if(!node.get("result").asBoolean()) throw new RuntimeException("Unable to Provision Tenant");
-			}
-			
-			Log.info("Tenant Provisioned");
-		}
-		catch(Exception e) {
-			Log.error("Tenant Creation Failed : " + e.getLocalizedMessage(), e);
-			throw new RuntimeException(e);
-		}
-	}	
 	
 	/**
      * Method to remove the name space from the string "JBCXM__".
-     *
      * @param str -The string where name space should be removed.
      * @return String - with name space removed.
      */
@@ -133,31 +139,9 @@ public class NSTestBase {
         
     }
     
-    public static String resolveNameSpace(String str, String nameSpace) {
-        String result = "";
-        if (str != null && nameSpace!=null && !nameSpace.equalsIgnoreCase("JBCXM")) {
-            result = str.replaceAll("JBCXM__", nameSpace+"__").replaceAll("JBCXM\\.", nameSpace+".");
-            Log.info(result);
-            return result;
-        } else {
-            return str;
-        }
-    }
-    
     public String getNameSpaceResolvedFileContents(String filePath) {
         return resolveStrNameSpace(FileUtil.getFileContents(filePath));
     }
-	
-  //key is of format : SFID:ObjectName:FieldName:FieldValue 
-  //Handling only string type of fields for now
-   /* public String getSFId(String key){
-    	System.out.println("got key as:"+key);
-    	String[] values=key.split(":");
-    	System.out.println("Executing query:   select "+values[1]+" from "+values[2]+" where "+values[3]+"='"+values[4]+"'");
-    	SObject[] records=sfdc.getRecords("select "+values[1]+" from "+values[2]+" where "+values[3]+"='"+values[4]+"'");
-    	return records[0].getChild(values[1]).getValue().toString();
-    }*/
-    
 
 	public  HashMap<String,String> getSFValues(HashMap<String, String> fAndV,
 			String Key) {
@@ -184,14 +168,22 @@ public class NSTestBase {
         return fAndV;
 	}
 	
-	public void updateNSURLInAppSettings(String NSURL) {
-		System.out.println("setting ns url in app settings");
-        sfdc.connect();
-        sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
-		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
-                + "appSet.JBCXM__NSURL__c='" + NSURL + "';"
-                + "update appSet;"));
-        Log.info("NS URL Updated Successfully");
+	public void updateNSURLInAppSettings(String nsURL) {
+		Log.info("Setting NS URL in Application Settings");
+        if(sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c") >0 )  {
+            String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, JBCXM__ISNSEnabled__c from JBCXM__Applicationsettings__c];\n" +
+                                "if(appSettings.size() >0 ) {\n" +
+                                "\tSystem.debug(Failed to Update Application Settings);\n" +
+                                "} else {\n" +
+                                "\tappSettings.get(0).JBCXM__NSURL__C = '"+nsURL+"';\n" +
+                                "}\n" +
+                                "update appSettings; ";
+            sfdc.runApexCode(resolveStrNameSpace(apexCode));
+            Log.info("NS URL Updated Successfully");
+        } else {
+            Log.error("Configure Gainsight Application to update NS URL");
+            throw new RuntimeException("Configure Gainsight Application to update NS URL");
+        }
 	}
 
 }

@@ -155,7 +155,7 @@ public class CreateTenantTest extends NSTestBase {
 		
 		Header h = new Header();
 		h.addHeader("Content-Type", "text/plain");
-		h.addHeader("authToken", nsinfo.getAuthToken());
+		//h.addHeader("authToken", nsinfo.getAuthToken());
 		//h.addHeader("Origin", origin);//Commenting and added below Line. Because, removed the variable "origin" from NSTestBase.java
 		h.addHeader("Origin", sfinfo.getEndpoint());
 		

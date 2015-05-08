@@ -6,42 +6,37 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TenantInfo {
 
-	String TenantId;
-	private String authToken;
+    @JsonProperty("TenantId")
+    private String tenantId;
 
-    @JsonProperty("TenantName")
-    private String TenantName;
+	private String authToken;
+    private String tenantName;
 	
 	@JsonProperty("ExternalTenantID")
 	private String externalTenantID;
 	
 	@JsonProperty("ExternalTenantName")
 	private String externalTenantName;
-
-    @JsonProperty("tenantType")
     private String tenantType;
-
-    @JsonProperty("disabled")
     private boolean disabled;
 
+    public String getTenantName() {
+        return tenantName;
+    }
 
-	public String getTenantName() {
-		return TenantName;
-	}
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
 
-	public void setTenantName(String tenantName) {
-		TenantName = tenantName;
-	}
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public String getTenantId() {
-		return TenantId;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public void setTenantId(String tenantId) {
-		TenantId = tenantId;
-	}
-
-	public String getExternalTenantID() {
+    public String getExternalTenantID() {
 		return externalTenantID;
 	}
 

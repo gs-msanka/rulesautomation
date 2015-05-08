@@ -5,8 +5,6 @@ import java.io.File;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.gainsight.bigdata.pojo.NSInfo;
-import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -16,7 +14,6 @@ import com.gainsight.util.PropertyReader;
 
 public class RestTester {
 
-	static NSInfo nsinfo;
 	static WebAction wa;
 	
 	/**
@@ -37,7 +34,7 @@ public class RestTester {
 	private static void init() throws Exception {
 		// TODO Auto-generated method stub
 		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		nsinfo= NSUtil.fetchNewStackInfo(sfinfo, new Header());
+
 		wa = new WebAction();
 	}
 
@@ -46,7 +43,7 @@ public class RestTester {
 		String rawBody = "{\"TenantId\":\"ea745732-af3d-4216-b68d-f10375348c66\",\"ReportInfo\":[{\"SchemaName\":\"Angies.UsageData\",\"limit\":10,\"Type\":\"adhoc\",\"Dimensions\":[{\"col\":\"Category\",\"axis\":\"column\"},{\"col\":\"CurrentReviews\",\"axis\":\"measure\",\"agg_func\":\"sum\"}]}],\"FormatOfReport\":\"matrix\"}";
 		Header h = new Header();
 		h.addHeader("Content-Type", "application/json");
-		h.addHeader("authToken", nsinfo.getAuthToken());
+		//h.addHeader("authToken", nsinfo.getAuthToken());
 		ResponseObj result = wa.doPost(PropertyReader.nsAppUrl + "/preparereport", h.getAllHeaders(), rawBody);
 		System.out.println(result.getContent());
 		
