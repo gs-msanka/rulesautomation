@@ -12,8 +12,8 @@ public class SurveyProperties {
     private String emailService = "Salesforce";
     private String startDate ="1";
     private String endDate ="19";
-    private boolean anonymous = false;
-    private String type = "Anonymous with account tracking";
+    private boolean anonymous;
+    private String type;
     private String anonymousAccount;
     private boolean allowInternalSub = true;
     private String description = "This is loaded form pojo class";

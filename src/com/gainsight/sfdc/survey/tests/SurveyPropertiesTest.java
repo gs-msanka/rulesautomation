@@ -3,6 +3,8 @@ package com.gainsight.sfdc.survey.tests;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -19,6 +21,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 	
 	private final String TEST_DATA_FILE = "testdata/sfdc/survey/tests/SurveyProperties_Test.xls";
 	private final String SURVEYDATA_CLEANUP = "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
+	private final String CREATE_ACCS=env.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_For_CompleteAnonymousSurvey.txt";
 	ObjectMapper mapper = new ObjectMapper();
 
 	@BeforeClass
@@ -27,10 +30,11 @@ public class SurveyPropertiesTest extends SurveySetup{
 		sfdc.connect();
 		basepage.login();
 		sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
+		updateNSURLInAppSettings("https://test-router.herokuapp.com/v1.0");
 	}
     
 	@TestInfo(testCaseIds={"GS-2662","GS-2664","GS-2665","GS-2666","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
 	public void TestNonAnonymousSurvey(HashMap<String, String> testData)
 			throws IOException {
@@ -46,6 +50,45 @@ public class SurveyPropertiesTest extends SurveySetup{
 		surPropPage.createSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
 				"Survey properties successfully saved.");
+	}
+	
+	@TestInfo(testCaseIds={"GS-2664","GS-2665","GS-2666","GS-2667","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet2")
+	public void testPartialAnonymousSurvey(HashMap<String, String> testData) throws JsonParseException, JsonMappingException, IOException{
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("SurveyProp"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.createSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+
+	}
+	
+	@TestInfo(testCaseIds={"GS-2664","GS-2665","GS-2666","GS-2667","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet3")
+	public void testCompleteAnonymousSurvey(HashMap<String, String> testData)
+			throws IOException {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("SurveyProp"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.createSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+
 	}
 
 }

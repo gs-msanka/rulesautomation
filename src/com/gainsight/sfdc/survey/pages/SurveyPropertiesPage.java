@@ -63,18 +63,21 @@ public class SurveyPropertiesPage extends SurveyPage {
             field.clearAndSetText(END_DATE_INPUT, surveyProp.getEndDate());
         }
 
-        if(surveyProp.isAnonymous()) {
-            item.selectCheckBox(ANONYMOUS_CHECKBOX);
-            item.click(ANONYMOUS_TYPE_SELECT);
-            selectValueInDropDown(surveyProp.getType());
-            if(surveyProp.getType() != null && surveyProp.getType().equals("Anonymous without account tracking")) {
-                if(surveyProp.getAnonymousAccount() != null) {
-                    //TODO - Search for accounts.
-                } else {
-                    new RuntimeException("Account Name is mandatory for this type of survey");
-                }
-            }
-        }
+		if (surveyProp.isAnonymous()) {
+			item.selectCheckBox(ANONYMOUS_CHECKBOX);
+			item.click(ANONYMOUS_TYPE_SELECT);
+			selectValueInDropDown(surveyProp.getType());
+			if (surveyProp.getType() != null
+					&& surveyProp.getType().equals(
+							"Anonymous without account tracking")) {
+				if (surveyProp.getAnonymousAccount() != null) {
+					field.setText(ANONYMOUS_ACCOUNT_INPUT,
+							surveyProp.getAnonymousAccount());
+					Log.info("Selecting Account");
+					link.click("SURVEY Account 1");
+				}
+			}
+		}
 
         if(surveyProp.isAllowInternalSub()) {
 /*            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
