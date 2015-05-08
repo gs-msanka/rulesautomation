@@ -26,6 +26,7 @@ public class LoadToCustomers extends RulesUtil {
 			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
 	private final String LOAD_ACCOUNTS_JOB=env.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Accounts.txt";
+	private final String LOAD_CUSTOMERS_JOB=env.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Customers.txt";
 	private DataETL dataETL;
 	ResponseObj result = null;
 
@@ -37,10 +38,12 @@ public class LoadToCustomers extends RulesUtil {
 		Log.info("Calling delete method");
 		metaUtil.deleteAccountMetadata(sfdc);
 		metaUtil.createFieldsForAccount(sfdc, sfinfo);
-		ObjectMapper mapper     = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 		dataETL=new DataETL();
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
+		JobInfo jobInfo1=mapper.readValue((new FileReader(LOAD_CUSTOMERS_JOB)),JobInfo.class);
+		dataETL.execute(jobInfo1);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
 
