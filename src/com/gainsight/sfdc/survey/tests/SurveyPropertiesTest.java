@@ -33,7 +33,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 		updateNSURLInAppSettings("https://test-router.herokuapp.com/v1.0");
 	}
     
-	@TestInfo(testCaseIds={"GS-2662","GS-2664","GS-2665","GS-2666","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
+	@TestInfo(testCaseIds={"GS-2662","GS-2667","GS-2668","GS-2669"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet1")
 	public void TestNonAnonymousSurvey(HashMap<String, String> testData)
@@ -47,12 +47,12 @@ public class SurveyPropertiesTest extends SurveySetup{
 				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
 		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
 				surveyPropData, true);
-		surPropPage.createSurveyProperties(surveyPropData);
+		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
 				"Survey properties successfully saved.");
 	}
 	
-	@TestInfo(testCaseIds={"GS-2664","GS-2665","GS-2666","GS-2667","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
+	@TestInfo(testCaseIds={"GS-2667","GS-2668","GS-2669"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet2")
 	public void testPartialAnonymousSurvey(HashMap<String, String> testData) throws JsonParseException, JsonMappingException, IOException{
@@ -65,13 +65,13 @@ public class SurveyPropertiesTest extends SurveySetup{
 				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
 		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
 				surveyPropData, true);
-		surPropPage.createSurveyProperties(surveyPropData);
+		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
 				"Survey properties successfully saved.");
 
 	}
 	
-	@TestInfo(testCaseIds={"GS-2664","GS-2665","GS-2666","GS-2667","GS-2668","GS-2669","GS-2665","GS-2670","GS-2671"})
+	@TestInfo(testCaseIds={"GS-2667","GS-2668","GS-2669"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet3")
 	public void testCompleteAnonymousSurvey(HashMap<String, String> testData)
@@ -85,7 +85,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
 		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
 				surveyPropData, true);
-		surPropPage.createSurveyProperties(surveyPropData);
+		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
 				"Survey properties successfully saved.");
 

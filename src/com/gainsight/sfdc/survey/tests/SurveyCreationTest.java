@@ -43,7 +43,7 @@ public class SurveyCreationTest extends SurveySetup {
 		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
 //		@SuppressWarnings("unused")
 		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(surveyPropData, true);
-		surPropPage.createSurveyProperties(surveyPropData);
+		surPropPage.updateSurveyProperties(surveyPropData);
 		
 		
 		
@@ -64,7 +64,7 @@ public class SurveyCreationTest extends SurveySetup {
 		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
 		@SuppressWarnings("unused")
 		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata, true);
-		surPropPage.createSurveyProperties(sdata);
+		surPropPage.updateSurveyProperties(sdata);
 		
 	//	SurveyDesignPage surDesignPage = 
 		
@@ -82,7 +82,7 @@ public class SurveyCreationTest extends SurveySetup {
 		SurveyBasePage surBasePage =  basepage.clickOnSurveyTab();
 		@SuppressWarnings("unused")
 		SurveyPropertiesPage surPropPage =  surBasePage.createSurvey(sdata, true);
-		surPropPage.createSurveyProperties(sdata);
+		surPropPage.updateSurveyProperties(sdata);
 	//	SurveyDesignPage surDesignPage =
 		
 	}

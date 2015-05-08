@@ -45,7 +45,7 @@ public class SurveyPropertiesPage extends SurveyPage {
         waitForSurveyPropertiesFormToLoad(surveyProp);
     }
 
-    public SurveyPropertiesPage createSurveyProperties(SurveyProperties surveyProp) {
+    public SurveyPropertiesPage updateSurveyProperties(SurveyProperties surveyProp) {
     	Log.info("Started Filling Survey Form");
         if(surveyProp.getSurveyName() != null) {
             field.clearAndSetText(SURVEY_NAME_INPUT, surveyProp.getSurveyName());
@@ -80,9 +80,6 @@ public class SurveyPropertiesPage extends SurveyPage {
 		}
 
         if(surveyProp.isAllowInternalSub()) {
-/*            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
-        } else {
-            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);*/
             item.click(INTERNAL_SUBMISSION_CHECKBOX);
         }
 
@@ -99,7 +96,6 @@ public class SurveyPropertiesPage extends SurveyPage {
             }
         }
         item.clearAndSetText(FOOTER_MSG_INPUT, surveyProp.getFooterMsg());
-        //item.clearAndSetText(SURVEY_CODE_INPUT, surveyProp.getSurveyCode());
         item.clearAndSetText(SURVEY_TITLE_INPUT, surveyProp.getSurveyTitle());
         item.click(String.format(BG_COLOR_RADIO, surveyProp.getBgColor()));
         item.click(SURVEY_SAVE_BUTTON);
@@ -134,7 +130,7 @@ public class SurveyPropertiesPage extends SurveyPage {
     }
     
     public String getPropertiesMessage(){
-    	String result=element.getElement(By.xpath("//div[contains(@class, 'bgselect')]/div")).getText();
+    	String result=element.getText("//div[contains(@class, 'bgselect')]/div");
         System.out.println(result);
 		return result;
     }
