@@ -1,0 +1,10 @@
+delete [select id from Account where name like 'SURVEY Account%'];
+//if required delete contacts from contact object where name like SURVEY
+
+//Create Accounts
+List<Account> accList = new List<Account>();
+for(integer i=1; i<10 ; i++) {
+   Account acc = new Account(Name ='SURVEY Account ' +i,Data_ExternalID__c='SURVEY Account ' +i);
+   accList.add(acc);
+}
+insert accList;

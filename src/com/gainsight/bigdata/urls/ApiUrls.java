@@ -5,5 +5,7 @@ package com.gainsight.bigdata.urls;
  */
 public interface ApiUrls extends NSURLs {
 
-    public String SEND_GRID_SETTINGS = NS_URL+"/api/sendgrid/settings";
+    public String SEND_GRID_SETTINGS    = NS_URL+"/api/sendgrid/settings";
+    public String APP_API_TOKENS        = NS_URL+"/api/tokens";
+
 }

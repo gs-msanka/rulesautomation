@@ -11,20 +11,20 @@
                     "weekly" : false,
                     "daily"  : true,
                     "dateTime" : false,
-                    "fieldName" : "Date_Auto__c"
+                    "fieldName" : "JBCXM__Date__c"
 
                 },
                 {
                     "weekly" : false,
                     "daily"  : true,
                     "dateTime" : false,
-                    "fieldName" : "Date_Auto1__c"
+                    "fieldName" : "JBCXM__OriginalDueDate__c"
                 },
                 {
                     "weekly" : false,
                     "daily"  : true,
-                    "dateTime" : true,
-                    "fieldName" : "DateTime_Auto__c"
+                    "dateTime" : false,
+                    "fieldName" : "JBCXM__ClosedDate__c"
                 }
             ]
         },

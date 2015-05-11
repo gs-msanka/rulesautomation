@@ -13,5 +13,6 @@ public interface AdminURLs extends NSURLs {
     public String ADMIN_TOKENS                  = NS_ADMIN_URL+"/admin/tokens";
     public String ADMIN_ACTIVITIES              = NS_ADMIN_URL+"/admin/activities";
     public String ADMIN_TEST_CONNECTION         = NS_ADMIN_URL+"/admin/test/connection";
+    public String ADMIN_DATALOAD_AUTHENTICATE   = NS_ADMIN_URL+"/admin/dataload/authenticate";
 
 }

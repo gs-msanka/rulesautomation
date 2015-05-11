@@ -7,6 +7,8 @@ import java.util.Iterator;
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
+import com.gainsight.bigdata.urls.AdminURLs;
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeSuite;
@@ -23,7 +25,7 @@ import com.gainsight.util.MetaDataUtil;
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
-public class NSTestBase {
+public class NSTestBase implements ApiUrls, AdminURLs {
 
     protected TenantInfo tenantInfo;
 	protected SFDCInfo sfinfo;
@@ -38,10 +40,6 @@ public class NSTestBase {
     public static final Boolean isPackage = PropertyReader.managedPackage;
     public static MetaDataUtil metaUtil=new MetaDataUtil();
     private String accessKey;
-
-    String Api_Tokens = "/api/tokens";
-    String Admin_DataLoad_Authenticate = "/admin/dataload/authenticate";
-
 
     public NSTestBase() {
 		basedir = System.getenv("basedir");
@@ -65,24 +63,24 @@ public class NSTestBase {
 		header.addHeader("appOrgId", sfinfo.getOrg());
 		header.addHeader("appUserId", sfinfo.getUserId());
 		header.addHeader("appSessionId", sfinfo.getSessionId());
-        header.addHeader("authToken", "initialcall");
     }
 
-    public String getDataLoadAccessToken() throws Exception {
+    /**
+     * Generates the access token for data load purpose.
+     * @return - String AccessToken that can be used for data load.
+     */
+    public String getDataLoadAccessToken() {
         Log.info("Getting Access Key");
-        String accessKey;
-        String postURL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion+Api_Tokens;
-        System.out.println(postURL);
-        ResponseObj responseObj =  wa.doPost(postURL, header.getAllHeaders(), "{}");
-
-        NsResponseObj rs;
+        String accessKey = null;
+        NsResponseObj rs =null;
         try {
+            ResponseObj responseObj =  wa.doPost(APP_API_TOKENS, header.getAllHeaders(), "{}");
             rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to get Access Token.");
+        } catch (Exception e) {
+            Log.error("Failed to get Access Token", e);
+            throw new RuntimeException("Failed to get Access Token.");
         }
-        if(rs.isResult()) {
+        if(rs!=null && rs.isResult()) {
             HashMap<String, String> data = (HashMap < String, String >)rs.getData();
             accessKey = data.get("accessKey");
             Log.info("AccessKey : " +accessKey);
@@ -94,12 +92,22 @@ public class NSTestBase {
         return accessKey;
     }
 
-    public void updateTenantAuthToken() throws Exception {
-        String postURL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion+Admin_DataLoad_Authenticate;
-        Log.info("Authorise URL " +postURL);
+    /**
+     * Sets the Auth Token for tenantInfo.
+     */
+    public void setTenantAuthToken() {
+        if(accessKey ==null || sfinfo==null || sfinfo.getUserName() ==null) {
+            throw new RuntimeException("Access Key , sfinfo details are mandatory.");
+        }
         header.addHeader("accessKey", accessKey);
         header.addHeader("loginName", sfinfo.getUserName());
-        ResponseObj responseObj=  wa.doGet(postURL, header.getAllHeaders());
+        ResponseObj responseObj= null;
+        try {
+            responseObj = wa.doGet(ADMIN_DATALOAD_AUTHENTICATE, header.getAllHeaders());
+        } catch (Exception e) {
+            Log.error("Failed to get Auth Token", e);
+            throw new RuntimeException("Failed to get Auth Token"+e);
+        }
 
         org.apache.http.Header[] aList =  responseObj.getAllHeaders();
         for(org.apache.http.Header a : aList) {
@@ -112,7 +120,7 @@ public class NSTestBase {
 
 	/**
 	 * @param objName = the object from which we need the map
-	 * @param fieldName = the field name that needs to be queried for - it will be the key in the hashmap
+	 * @param fieldName = the field name that needs to be queried for - it will be the key in the HashMap
 	 * @param shortCut = the shortCut for each object will be unique.in the test data we need to prepend the key with the shortcut
 	 * @return
 	 */
@@ -166,8 +174,12 @@ public class NSTestBase {
 		}
         return fAndV;
 	}
-	
-	public void updateNSURLInAppSettings(String nsURL) {
+
+    /**
+     * Updates the application settings nsurl with the appropriate nsurl__c.
+     * @param nsURL - The NSURL that need to be updated in Application settings NSURL__C.
+     */
+    public void updateNSURLInAppSettings(String nsURL) {
 		Log.info("Setting NS URL in Application Settings");
         if(sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c") >0 )  {
             String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, JBCXM__ISNSEnabled__c from JBCXM__Applicationsettings__c];\n" +
