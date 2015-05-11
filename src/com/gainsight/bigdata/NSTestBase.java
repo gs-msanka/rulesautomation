@@ -66,7 +66,6 @@ public class NSTestBase {
 		header.addHeader("appUserId", sfinfo.getUserId());
 		header.addHeader("appSessionId", sfinfo.getSessionId());
         header.addHeader("authToken", "initialcall");
-        accessKey = getDataLoadAccessToken();
     }
 
     public String getDataLoadAccessToken() throws Exception {

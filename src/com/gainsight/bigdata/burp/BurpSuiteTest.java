@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
-import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
+import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.DimensionBrowserInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
@@ -27,7 +27,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	String tenantName = "AutTenant";
 	CollectionInfo cinfo;
-	List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
+	List<Column> colList = new ArrayList<Column>();
 	
 	@BeforeClass
 	public void setUp() throws Exception {

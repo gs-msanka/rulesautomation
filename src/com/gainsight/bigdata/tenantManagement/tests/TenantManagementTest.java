@@ -1,10 +1,10 @@
 package com.gainsight.bigdata.tenantManagement.tests;
 
-import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -15,10 +15,11 @@ import java.util.HashMap;
 /**
  * Created by gainsight on 08/05/15.
  */
-public class TenantManagementTest extends NSTestBase {
+public class TenantManagementTest {
 
     private final String TEST_DATA_FILE = "testdata/newstack/tenantManagement/tests/TenantMgtTests.xls";
     private TenantManager tenantManager;
+    private ObjectMapper mapper = new ObjectMapper();
 
     @BeforeClass
     public void setup() {
@@ -33,9 +34,7 @@ public class TenantManagementTest extends NSTestBase {
         Assert.assertTrue(tenantManager.createTenant(tenantDetails));
         Assert.assertNotNull(tenantDetails.getTenantId());
         Assert.assertTrue(tenantManager.deleteTenant(null, tenantDetails.getTenantId()));
+
     }
-
-
-
 
 }

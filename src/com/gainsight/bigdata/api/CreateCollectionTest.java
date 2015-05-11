@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo.CollectionDetails;
-import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
+import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -26,7 +26,7 @@ public class CreateCollectionTest extends NSTestBase {
 	String baseuri;
 	String tenantName = "DummTenant";
 	CollectionInfo cinfo;
-	List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
+	List<Column> colList = new ArrayList<Column>();
 
 	@BeforeClass
 	public void setUp() throws Exception {
@@ -38,14 +38,11 @@ public class CreateCollectionTest extends NSTestBase {
 		CollectionDetails colDetails = cinfo.new CollectionDetails();
 		colDetails.setCollectionName("DummyCollection" + epoch);
 		cinfo.setCollectionDetails(colDetails);
-		Columns col = cinfo.new Columns();
-		col.setDisplayName("dim1");
-		col.setDatatype("string");
-		col.setColattribtype(0);
+		Column col = new CollectionInfo.Column();
 
-		colList = new ArrayList<CollectionInfo.Columns>();
+		colList = new ArrayList<Column>();
 		colList.add(col);
-		cinfo.setColumns(colList);
+
 	}
 
 	@Test
@@ -97,13 +94,10 @@ public class CreateCollectionTest extends NSTestBase {
 
 		CollectionInfo cinfo = new CollectionInfo();
 		// cinfo.setTenantName("DummyTenantName");
-		Columns col = cinfo.new Columns();
-		col.setDisplayName("spid");
-		col.setColattribtype(0);
+		Column col =new  CollectionInfo.Column();
 
-		List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
+		List<Column> colList = new ArrayList<Column>();
 		colList.add(col);
-		cinfo.setColumns(colList);
 
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);
