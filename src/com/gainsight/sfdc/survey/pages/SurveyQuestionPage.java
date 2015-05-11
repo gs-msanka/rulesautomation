@@ -767,10 +767,4 @@ public class SurveyQuestionPage extends SurveyPage {
 		element.selectFromDropDown(BRANCHING_ICON, surQus.getPageTitle());
 		item.click(BRANCHING_SAVE_ON_POPUP);
 	}
-	
-	public boolean verifyBranching(){
-		item.click(BRANCHING_IN_FIRST_PAGE);
-		return false;
-		
-	}
 }
