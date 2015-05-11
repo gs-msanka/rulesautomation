@@ -108,7 +108,7 @@ public class SurveyQuestion {
         this.pageTitle = pageTitle;
     }
     
-    public String getnewPageTitle(){
+    public String getNewPageTitle(){
     	return newPageTitle;
     }
 
