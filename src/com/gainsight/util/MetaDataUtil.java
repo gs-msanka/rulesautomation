@@ -264,8 +264,12 @@ public class MetaDataUtil {
 			String[] targetArray1= ArrayUtils.addAll(Checkbox,Date);
 			String[] targetArray2= ArrayUtils.addAll(DateTime,Email);
 			String[] targetArray3= ArrayUtils.addAll(Percent);
+			String[] keyArray = Pick.keySet().toArray(new String[Pick.keySet().size()]);
+			String[] key1Array = MultipickList.keySet().toArray(new String[MultipickList.keySet().size()]);
 			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,targetArray1)), sfinfo);
-			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray2,targetArray3)), sfinfo);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(targetArray2, targetArray3)), sfinfo);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,keyArray)), sfinfo);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,key1Array)), sfinfo);
 		}
 
 	 //Delete Account metadata Rules Engine
