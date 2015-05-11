@@ -74,6 +74,10 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String LOGIC_RULES_DIV ="//div[contains(@class, 'ui-dialog-titlebar')]/span[text()='Link Question']";
     private final String LINK_CHECKBOX   ="//div[contains(@class, 'i-checks pull-left')]/label/input[@type='checkbox']";
     private final String LINK_SAVE_BUTTON="//div[contains(@class, 'text-center')]/button[text()='Save']";
+    private final String LOGIC_ATTACH_LINK="//ul[@class='radiolist']/li[4]/div[contains(@class, 'attatchicon')]";
+    private final String BRANCHING_IN_FIRST_PAGE="//div[contains(@class, 'ui-draggable')]/descendant::div[@class='qtn-link']/a";
+    private final String BRANCHING_ICON="//div[contains(@class, 'logicrulepopup')]/descendant::div[contains(@class, 'logic-rule')]/div[@class='col-sm-8']/select";
+    private final String BRANCHING_SAVE_ON_POPUP="//div[contains(@class, 'modal-footer')]/button[text()='Save']";
 
 
     //Miscellaneous
@@ -739,17 +743,34 @@ public class SurveyQuestionPage extends SurveyPage {
         waitTillNoLoadingIcon();
         return this;
     }
-    public void AddLogicRules(){
-    	
+    public void addLogicRules(){
     	item.click(LINK_ICON);
     	wait.waitTillElementDisplayed(LOGIC_RULES_DIV, MIN_TIME, MAX_TIME);
     	item.click(LINK_CHECKBOX);
     	button.click(LINK_SAVE_BUTTON);
     }
     
-   public boolean existsElement() {
-	        element.getElement(By.xpath("//ul[@class='radiolist']/li[1]/div[contains(@class, 'attached')]"));
-	        return true;
-   }
-   
+	public boolean existsElement() {
+		Log.info("Verifying Logic Rule");
+		return element.getElement(By
+				.xpath("//ul[@class='radiolist']/li[1]/div[contains(@class, 'attached')]")).isDisplayed();
+	}
+
+	public boolean verifyAttachLink() {
+		Timer.sleep(3);
+		Log.info("Verifying Logic Rule");
+		return element.getElement(By.xpath(LOGIC_ATTACH_LINK)).isDisplayed();
+	}
+	
+	public void addBranching(SurveyQuestion surQus) {
+		item.click(BRANCHING_IN_FIRST_PAGE);
+		element.selectFromDropDown(BRANCHING_ICON, surQus.getPageTitle());
+		item.click(BRANCHING_SAVE_ON_POPUP);
+	}
+	
+	public boolean verifyBranching(){
+		item.click(BRANCHING_IN_FIRST_PAGE);
+		return false;
+		
+	}
 }
