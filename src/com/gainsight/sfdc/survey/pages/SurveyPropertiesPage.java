@@ -8,6 +8,7 @@ package com.gainsight.sfdc.survey.pages;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
@@ -27,14 +28,14 @@ public class SurveyPropertiesPage extends SurveyPage {
     private final String ANONYMOUS_ACCOUNT_INPUT        = "//input[contains(@class, 'search_input search-field')]";
     private final String INTERNAL_SUBMISSION_CHECKBOX   = "//input[@name='internalSubmission']";
     private final String DESCRIPTION_INPUT              = "//textarea[contains(@class, 'survey-prop-description')]";
-    private final String THANK_MSG_SELECT               = "//select[@class, 'survey-prop-msgtype']";
+    private final String THANK_MSG_SELECT               = "//select[contains(@class, 'survey-prop-msgtype')]/following-sibling::button";
     private final String THANK_MSG_INPUT                = "//input[contains(@class, 'survey-prop-msgval')]";
     private final String THANK_URL_INPUT                = "//input[contains(@class, 'survey-direct-url')]";
     private final String THANK_PAGE_INPUT               = "//input[contains(@class, 'survey-custom-url')]";
     private final String FOOTER_MSG_INPUT               = "//textarea[contains(@class, 'survey-prop-footermsg')]";
     private final String SURVEY_CODE_INPUT              = "//input[contains(@class, 'survey-prop-code')]";
     private final String SURVEY_TITLE_INPUT             = "//input[contains(@class, 'survey-prop-exttitle')]";
-    private final String BG_COLOR_RADIO                 = "//input[@class='color' and @value='fm-check' and @value ='%s']";
+    private final String BG_COLOR_RADIO                 = "//input[@class='color' and @name='fm-check' and @value ='%s']";
     private final String SURVEY_SAVE_BUTTON             = "//input[@class='gs-btn btn-save' and @value='Save']";
 
 
@@ -50,7 +51,8 @@ public class SurveyPropertiesPage extends SurveyPage {
             field.clearAndSetText(SURVEY_NAME_INPUT, surveyProp.getSurveyName());
         }
         if(surveyProp.getEmailService() != null) {
-            item.click(EMAIL_SERVICE_SELECT);
+            button.click(EMAIL_SERVICE_SELECT);
+            Log.info("Selecting SalesForce Email Services");
             selectValueInDropDown(surveyProp.getEmailService());
         }
         if(surveyProp.getStartDate() != null) {
@@ -61,23 +63,23 @@ public class SurveyPropertiesPage extends SurveyPage {
             field.clearAndSetText(END_DATE_INPUT, surveyProp.getEndDate());
         }
 
-        if(surveyProp.isAnonymous()) {
-            item.selectCheckBox(ANONYMOUS_CHECKBOX);
-            item.click(ANONYMOUS_TYPE_SELECT);
-            selectValueInDropDown(surveyProp.getType());
-            if(surveyProp.getType() != null && surveyProp.getType().equals("Anonymous without account tracking")) {
-                if(surveyProp.getAnonymousAccount() != null) {
-                    //TODO - Search for accounts.
-                } else {
-                    new RuntimeException("Account Name is mandatory for this type of survey");
-                }
-            }
-        }
+		if (surveyProp.isAnonymous()) {
+			item.selectCheckBox(ANONYMOUS_CHECKBOX);
+			item.click(ANONYMOUS_TYPE_SELECT);
+			selectValueInDropDown(surveyProp.getType());
+			if (surveyProp.getType() != null
+					&& surveyProp.getType().equals(
+							"Anonymous without account tracking")) {
+				if (surveyProp.getAnonymousAccount() != null) {
+					field.setText(ANONYMOUS_ACCOUNT_INPUT,
+							surveyProp.getAnonymousAccount());
+					Log.info("Selecting Account");
+					link.click("SURVEY Account 1");
+				}
+			}
+		}
 
         if(surveyProp.isAllowInternalSub()) {
-            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
-        } else {
-            item.selectCheckBox(INTERNAL_SUBMISSION_CHECKBOX);
             item.click(INTERNAL_SUBMISSION_CHECKBOX);
         }
 
@@ -94,7 +96,6 @@ public class SurveyPropertiesPage extends SurveyPage {
             }
         }
         item.clearAndSetText(FOOTER_MSG_INPUT, surveyProp.getFooterMsg());
-        item.clearAndSetText(SURVEY_CODE_INPUT, surveyProp.getSurveyCode());
         item.clearAndSetText(SURVEY_TITLE_INPUT, surveyProp.getSurveyTitle());
         item.click(String.format(BG_COLOR_RADIO, surveyProp.getBgColor()));
         item.click(SURVEY_SAVE_BUTTON);
@@ -126,5 +127,11 @@ public class SurveyPropertiesPage extends SurveyPage {
         boolean result = false;
         //TODO - More implementation yet to come
         return result;
+    }
+    
+    public String getPropertiesMessage(){
+    	String result=element.getText("//div[contains(@class, 'bgselect')]/div");
+        System.out.println(result);
+		return result;
     }
 }

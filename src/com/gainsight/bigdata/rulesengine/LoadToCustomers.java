@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine;
 
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -16,12 +17,17 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
+import org.codehaus.jackson.map.ObjectMapper;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
 
 public class LoadToCustomers extends RulesUtil {
 	private static final String CleanUpForRules = Application.basedir
 			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
-
+	private final String LOAD_ACCOUNTS_JOB=env.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Accounts.txt";
+	private final String LOAD_CUSTOMERS_JOB=env.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Customers.txt";
+	private DataETL dataETL;
 	ResponseObj result = null;
 
 	public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
@@ -29,8 +35,18 @@ public class LoadToCustomers extends RulesUtil {
 	@BeforeClass
 	public void beforeClass() throws Exception {
 		sfdc.connect();
+		Log.info("Calling delete method");
+		metaUtil.deleteAccountMetadata(sfdc);
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
+		ObjectMapper mapper = new ObjectMapper();
+		dataETL=new DataETL();
+		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		JobInfo jobInfo1=mapper.readValue((new FileReader(LOAD_CUSTOMERS_JOB)),JobInfo.class);
+		dataETL.execute(jobInfo1);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
+
 	}
 
 	@BeforeMethod
