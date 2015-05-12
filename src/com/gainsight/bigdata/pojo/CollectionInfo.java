@@ -117,35 +117,18 @@ public class CollectionInfo {
 		this.collectionDetails = collectionDetails;
 	}
 
-	public class CollectionDetails {
+	public static class CollectionDetails {
 		@JsonProperty("CollectionName")
 		private String collectionName;
 		@JsonProperty("dbType")
         private String dbType;
 		@JsonProperty("dataStoreType")
         private String dataStoreType;
-        private String assetType;
-        private String entityType;
         @JsonProperty("dbCollectionName")
         private String dbCollectionName;
         @JsonProperty("CollectionID")
-        private String collectionID;
+        private String collectionId;
 
-        public String getAssetType() {
-            return assetType;
-        }
-
-        public void setAssetType(String assetType) {
-            this.assetType = assetType;
-        }
-
-        public String getEntityType() {
-            return entityType;
-        }
-
-        public void setEntityType(String entityType) {
-            this.entityType = entityType;
-        }
 
         public String getDbCollectionName() {
             return dbCollectionName;
@@ -155,12 +138,12 @@ public class CollectionInfo {
             this.dbCollectionName = dbCollectionName;
         }
 
-        public String getCollectionID() {
-            return collectionID;
+        public String getCollectionId() {
+            return collectionId;
         }
 
-        public void setCollectionID(String collectionID) {
-            this.collectionID = collectionID;
+        public void setCollectionId(String collectionId) {
+            this.collectionId = collectionId;
         }
 
         public String getCollectionName() {
