@@ -263,7 +263,7 @@ public class MetaDataUtil {
 			String[] targetArray = ArrayUtils.addAll(numberFields1,Currency);
 			String[] targetArray1= ArrayUtils.addAll(Checkbox,Date);
 			String[] targetArray2= ArrayUtils.addAll(DateTime,Email);
-			String[] targetArray3= ArrayUtils.addAll(Percent);
+			String[] targetArray3= ArrayUtils.addAll(Percent,URL);
 			String[] keyArray = Pick.keySet().toArray(new String[Pick.keySet().size()]);
 			String[] key1Array = MultipickList.keySet().toArray(new String[MultipickList.keySet().size()]);
 			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,targetArray1)), sfinfo);
