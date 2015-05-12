@@ -142,7 +142,7 @@ public class SurveyQuestionsTest extends SurveySetup {
 		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
 		verifyQuestionDisplayed(surveyQuestionPage, surQues);
 		surveyQuestionPage.addBranching(surQues);
-		Assert.assertTrue(getBranchingField().equals("true"),
+		Assert.assertTrue(getBranchingField(),
 				"verifying Branching Field value from backend");
 	}
 }

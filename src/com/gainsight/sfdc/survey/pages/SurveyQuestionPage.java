@@ -74,10 +74,11 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String LOGIC_RULES_DIV ="//div[contains(@class, 'ui-dialog-titlebar')]/span[text()='Link Question']";
     private final String LINK_CHECKBOX   ="//div[contains(@class, 'i-checks pull-left')]/label/input[@type='checkbox']";
     private final String LINK_SAVE_BUTTON="//div[contains(@class, 'text-center')]/button[text()='Save']";
-    private final String LOGIC_ATTACH_LINK="//ul[@class='radiolist']/li[4]/div[contains(@class, 'attatchicon')]";
+    private final String LOGIC_ATTACH_LINK="//div[@class='qtn-body']/descendant::label[contains(., 'Cochin')]/ancestor::li[@class='clearfix']/div[contains(@class, 'attatchicon')]/span";
     private final String BRANCHING_IN_FIRST_PAGE="//div[contains(@class, 'ui-draggable')]/descendant::div[@class='qtn-link']/a";
     private final String BRANCHING_ICON="//div[contains(@class, 'logicrulepopup')]/descendant::div[contains(@class, 'logic-rule')]/div[@class='col-sm-8']/select";
     private final String BRANCHING_SAVE_ON_POPUP="//div[contains(@class, 'modal-footer')]/button[text()='Save']";
+    private final String LOGIC_ATTACHED_ICON="//ul[@class='radiolist']/descendant::div[contains(@class, 'attached')]";
 
 
     //Miscellaneous
@@ -752,14 +753,13 @@ public class SurveyQuestionPage extends SurveyPage {
     
 	public boolean existsElement() {
 		Log.info("Verifying Logic Rule");
-		return element.getElement(By
-				.xpath("//ul[@class='radiolist']/li[1]/div[contains(@class, 'attached')]")).isDisplayed();
+		return element.getElement(LOGIC_ATTACHED_ICON).isDisplayed();
 	}
 
 	public boolean verifyAttachLink() {
 		Timer.sleep(3);
 		Log.info("Verifying Logic Rule");
-		return element.getElement(By.xpath(LOGIC_ATTACH_LINK)).isDisplayed();
+		return element.getElement(LOGIC_ATTACH_LINK).isDisplayed();
 	}
 	
 	public void addBranching(SurveyQuestion surQus) {

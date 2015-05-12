@@ -255,14 +255,16 @@ public class SurveySetup extends BaseTest {
 		Log.info("NS URL Updated Successfully");
 	}
 
-	public String getBranchingField() {
+	public boolean getBranchingField() {
 		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
+		Timer.sleep(5);
 		SObject[] jsondata = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c order by createdDate asc limit 1"));
-		Object sField = jsondata[0].getField("JBCXM__HasRules__c");
-		Timer.sleep(2);
-		System.out.println(String.valueOf(sField));
-		String temp = String.valueOf(sField);
-		return temp;
+		boolean result = false;
+		if (jsondata.length > 0) {
+			String sTemp = (String) jsondata[0].getField("JBCXM__HasRules__c");
+			result = Boolean.valueOf(sTemp);
+		}
+		return result;
 	}
 }
