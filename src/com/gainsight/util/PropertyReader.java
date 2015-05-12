@@ -15,12 +15,18 @@ public class PropertyReader {
 	public static final String userName;
 	public static final String password;
 	public static final String stoken;
-	public static final String nsAppUrl;
 	public static final String baseDir;
 	public static final String partnerUrl;
 	public static final String sfdcApiVersion;
 	public static final boolean managedPackage;
 	public static final String NAMESPACE;
+
+    public static final String nsAppUrl;
+    public static final String nsAdminUrl;
+    public static final String nsApiVersion;
+    public static final String tenantMgtUserName;
+    public static final String tenantMgtPassword;
+    public static final String tenantMgtSecurityToken;
 	
 	static {
 		baseDir = System.getProperty("basedir", ".");
@@ -38,17 +44,22 @@ public class PropertyReader {
 		}
 		
 		clientId = p.getProperty("sfdc.clientId");
-		clientSecret = p.getProperty("sfdc.cilentSecret");
+		clientSecret = p.getProperty("sfdc.clientSecret");
 		userName = p.getProperty("sfdc.username");
 		password = p.getProperty("sfdc.password");
 		stoken = p.getProperty("sfdc.stoken");
 		partnerUrl = p.getProperty("sfdc.partnerUrl");
 		sfdcApiVersion = p.getProperty("sfdc.apiVersion");
-		nsAppUrl = p.getProperty("ns.appurl");
+		nsAppUrl = p.getProperty("ns.appUrl");
+        nsAdminUrl = p.getProperty("ns.adminUrl");
 		if(p.getProperty("sfdc.managedPackage").equalsIgnoreCase("true"))
 			managedPackage = true;
 		else 
 			managedPackage = false;
 		NAMESPACE = p.getProperty("sfdc.nameSpace");
+        nsApiVersion = p.getProperty("ns.version");
+        tenantMgtUserName = p.getProperty("ns.tenantMgtUserName");
+        tenantMgtPassword = p.getProperty("ns.tenantMgtPassword");
+        tenantMgtSecurityToken = p.getProperty("ns.tenantMgtSecurityToken");
 	}
 }

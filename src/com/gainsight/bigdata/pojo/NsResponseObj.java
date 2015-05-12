@@ -1,39 +1,22 @@
 package com.gainsight.bigdata.pojo;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA. User: sundar Date: 6/12/13 Time: 4:01 PM To
  * change this template use File | Settings | File Templates.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NsResponseObj {
 
-	private boolean result;
+    private boolean result;
+    private String requestId;
+    private Object data;
+    private String errorCode;
+    private String errorDesc;
 
-	private Map data;
-
-	private String requestId;
-
-	public NsResponseObj() {
-	}
-
-	public NsResponseObj(boolean result, Map data, String errorCode,
-			String errorDesc, String requestId) {
-		this.result = result;
-		this.data = data;
-		this.errorCode = errorCode;
-		this.errorDesc = errorDesc;
-		this.requestId = requestId;
-	}
-
-	private String errorCode;
-	private String errorDesc;
-
-	public NsResponseObj(boolean result, String errorCode, String errorDesc) {
-		this.result = result;
-		this.errorCode = errorCode;
-		this.errorDesc = errorDesc;
-	}
 
 	public String getErrorDesc() {
 		return errorDesc;
@@ -51,23 +34,23 @@ public class NsResponseObj {
 		this.errorCode = errorCode;
 	}
 
-	public boolean isResult() {
-		return result;
-	}
+    public boolean isResult() {
+        return result;
+    }
 
-	public void setResult(boolean result) {
-		this.result = result;
-	}
+    public void setResult(boolean result) {
+        this.result = result;
+    }
 
-	public Map getData() {
-		return data;
-	}
+    public Object getData() {
+        return data;
+    }
 
-	public void setData(Map data) {
-		this.data = data;
-	}
+    public void setData(Object data) {
+        this.data = data;
+    }
 
-	public String getRequestId() {
+    public String getRequestId() {
 		return requestId;
 	}
 
