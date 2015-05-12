@@ -29,6 +29,7 @@ public class SurveyQuestion {
     private String image;
     private String commentsLabel    = "Comments";
     private String otherLabel = "Other";
+    private String newPageTitle;
     
     public String getOtherLabel() {
         return otherLabel;
@@ -105,6 +106,10 @@ public class SurveyQuestion {
 
     public void setPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
+    }
+    
+    public String getNewPageTitle(){
+    	return newPageTitle;
     }
 
     public String getPageId() {
