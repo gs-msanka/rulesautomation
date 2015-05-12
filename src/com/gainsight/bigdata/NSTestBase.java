@@ -7,9 +7,11 @@ import java.util.Iterator;
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
+import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.urls.AdminURLs;
 import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
+import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeSuite;
 
@@ -197,4 +199,46 @@ public class NSTestBase implements ApiUrls, AdminURLs {
         }
 	}
 
+    /**
+     * Tenant Auto-provisions will be done here.
+     *
+     * @return - true if tenant auto-provision is success (or) tenant already exists.
+     */
+    public boolean tenantAutoProvision() {
+        boolean result = false;
+        Header h = new Header();
+        h.addHeader("Origin", sfinfo.getEndpoint());
+        h.addHeader("Content-Type", "application/json");
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("appSessionId", sfinfo.getSessionId());
+        params.put("appUserId", sfinfo.getUserId());
+        params.put("appOrgId", sfinfo.getOrg());
+
+        HashMap<String, Object> auth_content = new HashMap<>();
+        auth_content.put("auth_content", params);
+        auth_content.put("appOrgName", sfinfo.getUserName()+"-"+sfinfo.getOrg());
+
+        String payload ="{}";
+
+        try {
+            payload = mapper.writeValueAsString(auth_content);
+            ResponseObj responseObj = wa.doPost(APP_API_TENANT_PROVISION, h.getAllHeaders(), payload);
+            if(responseObj.getStatusCode()== HttpStatus.SC_OK) {
+                Log.info("Tenant auto-provision is successful");
+                result = true;
+
+            } else if(responseObj.getStatusCode()== HttpStatus.SC_BAD_REQUEST) {
+                NsResponseObj nsResponseObj = mapper.convertValue(responseObj.getContent(), NsResponseObj.class);
+                if(nsResponseObj.getErrorCode()!=null && nsResponseObj.getErrorCode().equals(MDAErrorCodes.TENANT_ALREADY_EXIST.getGSCode())) {
+                    result = true;
+                    Log.info(nsResponseObj.getErrorDesc());
+                }
+            }
+        } catch (Exception e) {
+            Log.error("Failed tenant auto provision ", e);
+            throw new RuntimeException("Failed tenant auto provision " +e.getLocalizedMessage());
+        }
+        return result;
+    }
 }

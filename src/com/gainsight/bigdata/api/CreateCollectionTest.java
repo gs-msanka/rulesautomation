@@ -35,7 +35,7 @@ public class CreateCollectionTest extends NSTestBase {
 		baseuri = PropertyReader.nsAppUrl + "/admin/collections";
 
 		cinfo = new CollectionInfo();
-		CollectionDetails colDetails = cinfo.new CollectionDetails();
+		CollectionDetails colDetails = new CollectionInfo.CollectionDetails();
 		colDetails.setCollectionName("DummyCollection" + epoch);
 		cinfo.setCollectionDetails(colDetails);
 		Column col = new CollectionInfo.Column();

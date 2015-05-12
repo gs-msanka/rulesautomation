@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.gainsight.bigdata.urls.AdminURLs.*;
+
 /**
  * Created by Giribabu on 07/05/15.
  * Create, Update, Delete of Tenants & Subject Areas.
  */
-public class TenantManager implements AdminURLs {
+public class TenantManager {
 
     private SFDCInfo sfdcInfo;
     private SalesforceConnector sfConnector;
@@ -103,20 +105,19 @@ public class TenantManager implements AdminURLs {
     public boolean updateTenant(TenantDetails tenantDetails) {
         Log.info("Updating the Tenant...");
         boolean result = false;
-        String url = ADMIN_TENANTS + "/" + tenantDetails.getTenantId();
-        Log.info(url);
         try {
-            ResponseObj responseObj = wa.doPut(url, mapper.writeValueAsString(tenantDetails), header.getAllHeaders());
+            ResponseObj responseObj = wa.doPut(ADMIN_TENANTS + "/" + tenantDetails.getTenantId(), mapper.writeValueAsString(tenantDetails), header.getAllHeaders());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
                     result = true;
                 } else {
-                    Log.info(nsResponseObj.getErrorCode() + " ::: " + nsResponseObj.getErrorDesc());
+                    Log.error(nsResponseObj.getErrorCode() + " ::: " + nsResponseObj.getErrorDesc());
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error("Failed to update the tenant ", e);
+            throw new RuntimeException("Failed to update the tenant " +e.getLocalizedMessage());
         }
         return result;
     }
@@ -272,7 +273,10 @@ public class TenantManager implements AdminURLs {
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
-                    collectionDetails = mapper.convertValue(nsResponseObj.getData(), CollectionInfo.CollectionDetails.class);
+                    HashMap<String, String> data = (HashMap<String, String>)mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+                    collectionDetails = new CollectionInfo.CollectionDetails();
+                    collectionDetails.setDbCollectionName(data.get("dbCollectionName"));
+                    collectionDetails.setCollectionId(data.get("collectionId"));
                 }
             } else if (responseObj.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 Log.error("Failed to create subject area");
@@ -301,6 +305,7 @@ public class TenantManager implements AdminURLs {
         String payload = "";
         try {
             payload = mapper.writeValueAsString(collectionInfo);
+            Log.info("Collection Schema :" +payload);
             collectionDetails = createSubjectArea(tenantId, payload);
         } catch (IOException e) {
             Log.error("Failed while creating subject area" + e);
