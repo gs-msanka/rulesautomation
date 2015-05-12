@@ -36,22 +36,22 @@ public class LoadToCustomers extends RulesUtil {
 	public void beforeClass() throws Exception {
 		sfdc.connect();
 		Log.info("Calling delete method");
-		//metaUtil.deleteAccountMetadata(sfdc);
-		//metaUtil.createFieldsForAccount(sfdc, sfinfo);
-		//ObjectMapper mapper = new ObjectMapper();
-		//dataETL=new DataETL();
-		//JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		//dataETL.execute(jobInfo);
-		//JobInfo jobInfo1=mapper.readValue((new FileReader(LOAD_CUSTOMERS_JOB)),JobInfo.class);
-		//dataETL.execute(jobInfo1);
-		//LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
+		metaUtil.deleteAccountMetadata(sfdc);
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
+		ObjectMapper mapper = new ObjectMapper();
+		dataETL=new DataETL();
+		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		JobInfo jobInfo1=mapper.readValue((new FileReader(LOAD_CUSTOMERS_JOB)),JobInfo.class);
+		dataETL.execute(jobInfo1);
+		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
 
 	}
 
 	@BeforeMethod
 	public void cleanUp() {
-		//sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
 	}
 
 	// Its for CustomerInfo Sync when Checkbox Apply to Gainsight customers is
