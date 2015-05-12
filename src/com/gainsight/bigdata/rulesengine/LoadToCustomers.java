@@ -58,7 +58,7 @@ public class LoadToCustomers extends RulesUtil {
 	// not enabled
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-	public void LoadToCust1(HashMap<String, String> testData) throws Exception {
+	public void LoadToCustomers1(HashMap<String, String> testData) throws Exception {
 		RulesUtil ru = new RulesUtil();
 		ru.setupRule(testData);
 		String RuleName = testData.get("Name");
