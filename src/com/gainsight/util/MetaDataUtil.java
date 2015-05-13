@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -235,43 +236,37 @@ public class MetaDataUtil {
 	        addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)),sfinfo);
 	    }
 	   //same method is used by rules engine test cases also.
-	    public void createFieldsForAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception{
-			metadataClient=SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+	    public void createFieldsForAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
+			metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 			String object = "Account";
 			String[] numberFields1 = new String[]{"Number Auto"};
-			String[] Currency= new String[]{"Currency Auto"};
-			String[] Checkbox = new String[]{"Boolean Auto","Boolean Auto1"};
-			String[] Date= new String[]{"Date Auto","Date Auto1"};
-			String[] DateTime= new String[]{"DateTime Auto"};
-			String[] Email= new String[]{"Email Auto"};
-			String[] Percent= new String[]{"Percent Auto"};
-			String[] URL= new String[]{"URL Auto"};
-			HashMap<String,String[]> Pick = new HashMap<String,String[]>();
-			Pick.put("PickList Auto", new String[]{"Excellent", "Vgood", "Good", "Average", "Poor", "Vpoor"});
-			HashMap<String, String[]> MultipickList=new HashMap<String, String[]>();
-			MultipickList.put("MultiPicklist Auto", new String[]{"MPL1", "MPL2"});
+			String[] currency = new String[]{"Currency Auto"};
+			String[] checkbox = new String[]{"Boolean Auto", "Boolean Auto1"};
+			String[] date = new String[]{"Date Auto", "Date Auto1"};
+			String[] dateTime = new String[]{"DateTime Auto"};
+			String[] email = new String[]{"Email Auto"};
+			String[] percent = new String[]{"Percent Auto"};
+			String[] url = new String[]{"URL Auto"};
+			HashMap<String, String[]> pick = new HashMap<String, String[]>();
+			pick.put("PickList Auto", new String[]{"Excellent", "Vgood", "Good", "Average", "Poor", "Vpoor"});
+			HashMap<String, String[]> multipickList = new HashMap<String, String[]>();
+			multipickList.put("MultiPicklist Auto", new String[]{"MPL1", "MPL2"});
 			metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
-			metadataClient.createCurrencyField(resolveStrNameSpace(object), Currency);
-			metadataClient.createFields(object, Checkbox, true, false, false);
-			metadataClient.createDateField(object, Date, false);
-			metadataClient.createDateField(object, DateTime, true);
-			metadataClient.createEmailField(object, Email);
-			metadataClient.createNumberField(object, Percent, true);
-			metadataClient.createFields(object, URL, false, false, true);
-			metadataClient.createPickListField(object, Pick, false);
-			metadataClient.createPickListField(object,MultipickList, true);
-			String[] targetArray = ArrayUtils.addAll(numberFields1,Currency);
-			String[] targetArray1= ArrayUtils.addAll(Checkbox,Date);
-			String[] targetArray2= ArrayUtils.addAll(DateTime,Email);
-			String[] targetArray3= ArrayUtils.addAll(Percent,URL);
-			String[] keyArray = Pick.keySet().toArray(new String[Pick.keySet().size()]);
-			String[] key1Array = MultipickList.keySet().toArray(new String[MultipickList.keySet().size()]);
-			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,targetArray1)), sfinfo);
-			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(targetArray2, targetArray3)), sfinfo);
-			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,keyArray)), sfinfo);
-			addFieldPermissionsToUsers(resolveStrNameSpace(object),convertFieldNameToAPIName(ArrayUtils.addAll(targetArray,key1Array)), sfinfo);
-		}
+			metadataClient.createCurrencyField(resolveStrNameSpace(object), currency);
+			metadataClient.createFields(object, checkbox, true, false, false);
+			metadataClient.createDateField(object, date, false);
+			metadataClient.createDateField(object, dateTime, true);
+			metadataClient.createEmailField(object, email);
+			metadataClient.createNumberField(object, percent, true);
+			metadataClient.createFields(object, url, false, false, true);
+			metadataClient.createPickListField(object, pick, false);
+			metadataClient.createPickListField(object, multipickList, true);
+			String[] targetArray = ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(numberFields1, currency), checkbox), date), dateTime), email), percent), url);
+			targetArray = ArrayUtils.addAll(targetArray, pick.keySet().toArray(new String[pick.keySet().size()]));
+			targetArray = ArrayUtils.addAll(targetArray, multipickList.keySet().toArray(new String[multipickList.keySet().size()]));
+			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(targetArray), sfinfo);
 
+		}
 	 //Delete Account metadata Rules Engine
 	 public void deleteAccountMetadata(SalesforceConnector sfdc){
 		 try{
