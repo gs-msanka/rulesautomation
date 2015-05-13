@@ -239,7 +239,7 @@ public class MetaDataUtil {
 	    public void createFieldsForAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
 			metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 			String object = "Account";
-			String[] numberFields1 = new String[]{"Number Auto"};
+			String[] numberField = new String[]{"Number Auto"};
 			String[] currency = new String[]{"Currency Auto"};
 			String[] checkbox = new String[]{"Boolean Auto", "Boolean Auto1"};
 			String[] date = new String[]{"Date Auto", "Date Auto1"};
@@ -251,7 +251,7 @@ public class MetaDataUtil {
 			pick.put("PickList Auto", new String[]{"Excellent", "Vgood", "Good", "Average", "Poor", "Vpoor"});
 			HashMap<String, String[]> multipickList = new HashMap<String, String[]>();
 			multipickList.put("MultiPicklist Auto", new String[]{"MPL1", "MPL2"});
-			metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
+			metadataClient.createNumberField(resolveStrNameSpace(object), numberField, false);
 			metadataClient.createCurrencyField(resolveStrNameSpace(object), currency);
 			metadataClient.createFields(object, checkbox, true, false, false);
 			metadataClient.createDateField(object, date, false);
@@ -261,7 +261,7 @@ public class MetaDataUtil {
 			metadataClient.createFields(object, url, false, false, true);
 			metadataClient.createPickListField(object, pick, false);
 			metadataClient.createPickListField(object, multipickList, true);
-			String[] targetArray = ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(numberFields1, currency), checkbox), date), dateTime), email), percent), url);
+			String[] targetArray = ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(numberField, currency), checkbox), date), dateTime), email), percent), url);
 			targetArray = ArrayUtils.addAll(targetArray, pick.keySet().toArray(new String[pick.keySet().size()]));
 			targetArray = ArrayUtils.addAll(targetArray, multipickList.keySet().toArray(new String[multipickList.keySet().size()]));
 			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(targetArray), sfinfo);
