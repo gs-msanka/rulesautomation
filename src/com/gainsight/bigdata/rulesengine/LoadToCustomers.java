@@ -186,6 +186,7 @@ public class LoadToCustomers extends RulesUtil {
 
     }
 
+    @TestInfo(testCaseIds = {"gs-4644"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers5")
     public void loadToCustomers5(HashMap<String, String> testData) throws Exception {
