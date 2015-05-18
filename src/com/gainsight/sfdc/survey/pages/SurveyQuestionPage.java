@@ -311,21 +311,21 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     //TODO - Take up at last
-    public SurveyQuestionPage addSection(SurveyQuestion surQus) {
-    	Log.info("Adding Section Header");
-    	item.click(SECTION_HEADER);
-    	field.click(SECTION_HEADER_TEXTINPUT);
-    	field.setText(SECTION_HEADER_TEXTINPUT, surQus.getSectionHeaders());
+	public SurveyQuestionPage addSection(SurveyQuestion surQus) {
+		Log.info("Adding Section Header");
+		item.click(SECTION_HEADER);
+		field.click(SECTION_HEADER_TEXTINPUT);
+		field.setText(SECTION_HEADER_TEXTINPUT, surQus.getSectionHeaders());
     	item.click(COLLAPSE_VIEW); /*Clicking somewhere on screen to save section header*/
         return this;
     }
     
-    public String getSectionAttribute(){
-    	String attribute=element.getElement(SECTION_HEADER_TEXTINPUT).getAttribute("value");
-    	Log.info("Attribute value is" +attribute);
+	public String getSectionAttribute() {
+		String attribute = element.getElement(SECTION_HEADER_TEXTINPUT)
+				.getAttribute("value");
+		Log.info("Attribute value is" + attribute);
 		return attribute;
-    	
-    }
+	}
 
     public SurveyQuestionPage addAnsChoice(WebElement QuestionEle, String ansText) {
         String ADD_ANS_CHOICE = ".//div[contains(@id,'_ans_entry')]/descendant::a[@class='mailadd' and @data-action='ADD']";

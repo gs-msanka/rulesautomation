@@ -139,8 +139,8 @@ public class SurveyQuestionsTest extends SurveySetup {
 				"verifying Branching Field value from backend");
 	}
 	
-	@TestInfo(testCaseIds={"GS-3622","GS-3623"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@TestInfo(testCaseIds = { "GS-3622", "GS-3623" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LogicRulesQuestions")
 	public void testAddSectionHeader(Map<String, String> testData)
 			throws IOException {
@@ -152,9 +152,10 @@ public class SurveyQuestionsTest extends SurveySetup {
 		setSurveyId(surProp);
 		SurveyQuestionPage surveyQuestionPage = surveyPage
 				.clickOnQuestions(surProp);
-	    SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
 				SurveyQuestion.class);
 		surveyQuestionPage.addSection(surQues);
-		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(), surQues.getSectionHeaders());
-    }
+		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
+				surQues.getSectionHeaders());
+	}
 }
