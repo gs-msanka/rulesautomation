@@ -44,12 +44,8 @@ public class LoadToCustomers extends RulesUtil {
 		dataETL.execute(jobInfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
 		updateNSURLInAppSettings(PropertyReader.nsAppUrl);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Clean_Up_For_Rules));
 
-	}
-
-	@BeforeMethod
-	public void cleanUp() {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(Clean_Up_For_Rules));
 	}
 
 	@TestInfo(testCaseIds = {"GS-4578"})
