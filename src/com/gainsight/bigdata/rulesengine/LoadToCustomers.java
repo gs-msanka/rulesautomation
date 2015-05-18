@@ -57,6 +57,7 @@ public class LoadToCustomers extends RulesUtil {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers1")
 	public void loadToCustomers1(HashMap<String, String> testData) throws Exception {
 		RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
 		ru.setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
@@ -89,9 +90,10 @@ public class LoadToCustomers extends RulesUtil {
 
 	@TestInfo(testCaseIds = {"GS-4540"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers1")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers2")
 	public void loadToCustomers2(HashMap<String, String> testData) throws Exception {
 		RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
 		ru.setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
@@ -120,9 +122,136 @@ public class LoadToCustomers extends RulesUtil {
 		Assert.assertEquals(rules1,rules2);
 	}
 
+	@TestInfo(testCaseIds = {"gs-4642"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers3")
+    public void loadToCustomers3(HashMap<String,String> testData) throws Exception{
+        RulesUtil ru=new RulesUtil();
+        ru.populateObjMaps();
+        ru.setupRule(testData);
+        String RuleName = testData.get("Name");
+        String ruleId = getRuleId(RuleName);
+        System.out.println("request:" + PropertyReader.nsAppUrl
+                + "/api/eventrule/" + ruleId);
+        result = wa.doPost(
+                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                header.getAllHeaders(), "{}");
+        Log.info("Rule ID:" + ruleId + "\n Request URL"
+                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + "\n Request rawBody:{}");
+        ResponseObject responseObj = RulesUtil.convertToObject(result
+                .getContent());
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+        RulesUtil.waitForCompletion(ruleId, wa, header);
+
+        String LRR = sfdc
+                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'")[0]
+                .getChild("JBCXM__LastRunResult__c").getValue().toString();
+        Assert.assertEquals("SUCCESS", LRR);
+        int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100))");
+        int rules2 = sfdc.getRecordCount("SELECT Id,JBCXM__Stage__r.Name FROM JBCXM__CustomerInfo__c WHERE JBCXM__Stage__c != null AND isdeleted=false and JBCXM__Stage__r.Name = 'Expert'");
+        Assert.assertEquals(rules1, rules2);
+
+    }
+
+    @TestInfo(testCaseIds = {"gs-4643"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers4")
+    public void loadToCustomers4(HashMap<String,String> testData) throws Exception{
+        RulesUtil ru=new RulesUtil();
+        ru.populateObjMaps();
+        ru.setupRule(testData);
+        String RuleName = testData.get("Name");
+        String ruleId = getRuleId(RuleName);
+        System.out.println("request:" + PropertyReader.nsAppUrl
+                + "/api/eventrule/" + ruleId);
+        result = wa.doPost(
+                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                header.getAllHeaders(), "{}");
+        Log.info("Rule ID:" + ruleId + "\n Request URL"
+                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + "\n Request rawBody:{}");
+        ResponseObject responseObj = RulesUtil.convertToObject(result
+                .getContent());
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+        RulesUtil.waitForCompletion(ruleId, wa, header);
+
+        String LRR = sfdc
+                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'")[0]
+                .getChild("JBCXM__LastRunResult__c").getValue().toString();
+        Assert.assertEquals("SUCCESS", LRR);
+        int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100) AND (Date_Auto__c !=YESTERDAY))");
+        int rules2 = sfdc.getRecordCount("SELECT JBCXM__Comments__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__OneTimeRevenue__c=123");
+        Assert.assertEquals(rules1, rules2);
+
+    }
+
+    @TestInfo(testCaseIds = {"gs-4644"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers5")
+    public void loadToCustomers5(HashMap<String, String> testData) throws Exception {
+        RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
+        ru.setupRule(testData);
+        String RuleName = testData.get("Name");
+        String ruleId = getRuleId(RuleName);
+        System.out.println("request:" + PropertyReader.nsAppUrl
+                + "/api/eventrule/" + ruleId);
+        result = wa.doPost(
+                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                header.getAllHeaders(), "{\"numberOfRecords\": \"10\"}");
+        Log.info("Rule ID:" + ruleId + "\n Request URL"
+                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + "\n Request rawBody:{}");
+        ResponseObject responseObj = RulesUtil.convertToObject(result
+                .getContent());
+        LinkedHashMap<Object, Object> data = (LinkedHashMap<Object, Object>) responseObj
+                .getData();
+        Assert.assertTrue(data.size() <= 10);
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+    }
+
+    @TestInfo(testCaseIds = {"gs-4650"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers6")
+    public void loadToCustomers6(HashMap<String,String> testData) throws Exception{
+        RulesUtil ru=new RulesUtil();
+        ru.populateObjMaps();
+        ru.setupRule(testData);
+        String RuleName = testData.get("Name");
+        String ruleId = getRuleId(RuleName);
+        System.out.println("request:" + PropertyReader.nsAppUrl
+                + "/api/eventrule/" + ruleId);
+        result = wa.doPost(
+                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                header.getAllHeaders(), "{}");
+        Log.info("Rule ID:" + ruleId + "\n Request URL"
+                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + "\n Request rawBody:{}");
+        ResponseObject responseObj = RulesUtil.convertToObject(result
+                .getContent());
+        Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+        Assert.assertNotNull(responseObj.getRequestId());
+        RulesUtil.waitForCompletion(ruleId, wa, header);
+
+        String LRR = sfdc
+                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'")[0]
+                .getChild("JBCXM__LastRunResult__c").getValue().toString();
+        Assert.assertEquals("SUCCESS", LRR);
+        int rules1 = sfdc.getRecordCount("Select Id, Name, IsDeleted, CreatedDate, Boolean_Auto__c, DateTime_Auto__c, Email_Auto__c, PickList_Auto__c, URL_Auto__c, Boolean_Auto1__c From Account Where ((Id != null) AND ((Name LIKE 'A%') OR (Name LIKE 'B%')) AND (IsDeleted = false)) AND JBCXM__CustomerInfo__c != null");
+        int rules2 = sfdc.getRecordCount("SELECT JBCXM__MRR__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__MRR__c=22222");
+        Assert.assertEquals(rules1, rules2);
+
+    }
 
 
-	@AfterClass
+    @AfterClass
 	public void afterClass() {
 		//GSUtil.soql = null;
 	}
