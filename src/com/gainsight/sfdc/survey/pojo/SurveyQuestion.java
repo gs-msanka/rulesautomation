@@ -30,6 +30,7 @@ public class SurveyQuestion {
     private String commentsLabel    = "Comments";
     private String otherLabel = "Other";
     private String newPageTitle;
+    private String sectionHeaders;
     
     public String getOtherLabel() {
         return otherLabel;
@@ -111,6 +112,14 @@ public class SurveyQuestion {
     public String getNewPageTitle(){
     	return newPageTitle;
     }
+    
+    public void setSectionHeaders(String sectionHeaders){
+    	this.sectionHeaders= sectionHeaders;
+    }
+    
+    public String getSectionHeaders(){
+		return sectionHeaders;
+    } 
 
     public String getPageId() {
         return pageId;

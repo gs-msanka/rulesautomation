@@ -267,4 +267,17 @@ public class SurveySetup extends BaseTest {
 		}
 		return result;
 	}
+	
+	public boolean getDependentField() {
+		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
+		Timer.sleep(5);
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__Dependent__c FROM JBCXM__SurveyQuestion__c order by createdDate desc limit 1"));
+		boolean result = false;
+		if (jsondata.length > 0) {
+			String sTemp = (String) jsondata[0].getField("JBCXM__Dependent__c");
+			result = Boolean.valueOf(sTemp);
+		}
+		return result;
+	}
 }

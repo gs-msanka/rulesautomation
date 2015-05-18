@@ -105,7 +105,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 	@TestInfo(testCaseIds={"GS-3200","GS-2662","GS-2667","GS-2668","GS-2669"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Sheet4")
-	public void TestGSEmailNonAnonymousSurvey(HashMap<String, String> testData)
+	public void testGSEmailNonAnonymousSurvey(HashMap<String, String> testData)
 			throws IOException {
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
