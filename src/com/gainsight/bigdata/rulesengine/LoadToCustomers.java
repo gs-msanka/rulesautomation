@@ -57,6 +57,7 @@ public class LoadToCustomers extends RulesUtil {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers1")
 	public void loadToCustomers1(HashMap<String, String> testData) throws Exception {
 		RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
 		ru.setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
@@ -92,6 +93,7 @@ public class LoadToCustomers extends RulesUtil {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers2")
 	public void loadToCustomers2(HashMap<String, String> testData) throws Exception {
 		RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
 		ru.setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
@@ -127,7 +129,6 @@ public class LoadToCustomers extends RulesUtil {
         RulesUtil ru=new RulesUtil();
         ru.populateObjMaps();
         ru.setupRule(testData);
-
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
         System.out.println("request:" + PropertyReader.nsAppUrl
@@ -160,6 +161,7 @@ public class LoadToCustomers extends RulesUtil {
     @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers4")
     public void loadToCustomers4(HashMap<String,String> testData) throws Exception{
         RulesUtil ru=new RulesUtil();
+        ru.populateObjMaps();
         ru.setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
@@ -193,6 +195,7 @@ public class LoadToCustomers extends RulesUtil {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers5")
     public void loadToCustomers5(HashMap<String, String> testData) throws Exception {
         RulesUtil ru = new RulesUtil();
+        ru.populateObjMaps();
         ru.setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
@@ -218,6 +221,7 @@ public class LoadToCustomers extends RulesUtil {
     @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers6")
     public void loadToCustomers6(HashMap<String,String> testData) throws Exception{
         RulesUtil ru=new RulesUtil();
+        ru.populateObjMaps();
         ru.setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
