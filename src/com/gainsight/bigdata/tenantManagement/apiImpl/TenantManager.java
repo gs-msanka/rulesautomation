@@ -31,7 +31,7 @@ import static com.gainsight.bigdata.urls.AdminURLs.*;
  */
 public class TenantManager {
 
-    private SFDCInfo sfdcInfo;
+    public SFDCInfo sfdcInfo;
     private SalesforceConnector sfConnector;
     private Header header = new Header();
     private WebAction wa = new WebAction();
@@ -329,7 +329,7 @@ public class TenantManager {
         header.addHeader("contextTenantId", tenantId);
         fieldsToQuery = "{\"includeFields\":\"id,CollectionDetails,createdByName,createdDate,modifiedByName,modifiedDate,TenantId\"}";
         try {
-            ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS_LIST, header.getAllHeaders(), fieldsToQuery);
+            ResponseObj responseObj = wa.doPost(ADMIN_POST_COLLECTIONS_LIST, header.getAllHeaders(), fieldsToQuery);
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 List<CollectionInfo> collectionInfoList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<CollectionInfo>>() {

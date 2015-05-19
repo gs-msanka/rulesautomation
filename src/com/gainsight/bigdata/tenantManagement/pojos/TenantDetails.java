@@ -1,12 +1,14 @@
 package com.gainsight.bigdata.tenantManagement.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.List;
 
 /**
- * Created by gainsight on 07/05/15.
+ * Created by Giribabu on 07/05/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TenantDetails {
 
     private String createdBy;
@@ -36,6 +38,7 @@ public class TenantDetails {
     private boolean disabled = false;
     private String tenantType = "OTHERS";
     private boolean systemDefined = false;
+    private boolean redshiftEnabled = false;
     private Config configs;
     private EmailSetting emailSetting;
     private Profile profile;
@@ -445,5 +448,13 @@ public class TenantDetails {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public boolean isRedshiftEnabled() {
+        return redshiftEnabled;
+    }
+
+    public void setRedshiftEnabled(boolean redshiftEnabled) {
+        this.redshiftEnabled = redshiftEnabled;
     }
 }

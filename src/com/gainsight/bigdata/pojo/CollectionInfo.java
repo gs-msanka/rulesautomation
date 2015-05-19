@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionInfo {
 
     private String createdBy;
@@ -280,13 +281,52 @@ public class CollectionInfo {
         private boolean deleted = false;
         @JsonProperty("DBName")
         private String dbName;
-        @JsonProperty("datatype")
+        private String datatype;
         private String dataType;
         @JsonProperty("DisplayName")
         private String displayName;
         @JsonProperty("colattribtype")
         private int columnAttributeType = 0;
+
+        @JsonProperty("columnAttribute")
+        private int columnAttribute;
         private int useThousandSeparator;
+
+        private String defaultValue;
+        private String groupName;
+        private String measureValueBucket;
+
+        public String getDatatype() {
+            return datatype;
+        }
+
+        public void setDatatype(String datatype) {
+            this.datatype = datatype;
+        }
+
+        public String getMeasureValueBucket() {
+            return measureValueBucket;
+        }
+
+        public void setMeasureValueBucket(String measureValueBucket) {
+            this.measureValueBucket = measureValueBucket;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public String getDefaultValue() {
+            return defaultValue;
+        }
+
+        public void setDefaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
+        }
 
         public int getUseThousandSeparator() {
             return useThousandSeparator;
