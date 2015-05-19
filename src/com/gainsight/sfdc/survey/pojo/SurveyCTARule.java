@@ -15,7 +15,35 @@ public class SurveyCTARule {
     private String chatterUpdate;
     private List<SurveyQuestion> surveyQuestions;
     private String whereLogic;
+    private String advanceField;
+    private String advanceOperator;
+    private String advanceValue;
+    
 
+    public String getAdvanceField() {
+        return advanceField;
+    }
+
+    public void setAdvanceField(String advanceField) {
+        this.advanceField = advanceField;
+    }
+    
+    public String getAdvanceOperator() {
+        return advanceOperator;
+    }
+
+    public void setAdvanceOperator(String advanceOperator) {
+        this.advanceOperator = advanceOperator;
+    }
+    
+    public String getAdvanceValue() {
+        return advanceValue;
+    }
+
+    public void setAdvanceValue(String advanceValue) {
+        this.advanceValue = advanceValue;
+    }
+    
     public String getChatterUpdate() {
         return chatterUpdate;
     }

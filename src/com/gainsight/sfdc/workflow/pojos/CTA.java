@@ -14,8 +14,8 @@ public class CTA  implements Cloneable {
 	private String type;
 	private String subject;
 	private String customer;
-	private String status = "Open";
-	private String reason = "Other - Uncategorized" ;
+	private String status = "New";
+	private String reason = "Other" ;
     private String dueDate = "5";
 	private String comments;
     private boolean isImp = false;
