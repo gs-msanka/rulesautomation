@@ -35,12 +35,12 @@ public class AdminScorecardSection extends BasePage {
 		
 		public void enableScorecard(){
 			item.click(GLOBAL_SETTINGS);
-			Timer.sleep(2);
-			Timer.sleep(2);
+			Timer.sleep(5);
 			item.selectCheckBox(ENABLE_SCORECARD);
 			item.selectCheckBox(CUST_ROLLUP);
 			item.click(APPLY_GLOBAL_SETTINGS);
-			waitTillNoLoadingIcon();			
+			waitTillNoLoadingIcon();
+            Timer.sleep(5);
 		}
 		
 		public void applyNumericScheme(){

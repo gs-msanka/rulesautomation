@@ -26,6 +26,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
     @BeforeClass
     public void setUp() throws IOException {
         basepage.login();
+        sfdc.connect();
         dataSetup = new AdoptionDataSetup();
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(ADV_USAGE_CONFIG)));
         dataSetup.initialSetup();

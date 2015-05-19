@@ -1,3 +1,6 @@
+Delete [Select Id from Cases Where Case.Account.Name Like 'Customers Test Case Account%'];
+Delete [Select Id from Opportunity Where Opportunity.Account.Name Like 'Customers Test Case Account%'];
+
 Delete [SELECT Id FROM Account WHERE Name Like 'Customers Test Case Account%'];
 List<Account> accList = new List<Account>();
 Account acc = null;
