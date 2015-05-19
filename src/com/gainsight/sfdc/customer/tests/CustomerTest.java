@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer.tests;
 import java.util.HashMap;
 
 import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -17,8 +18,8 @@ public class CustomerTest extends BaseTest {
 
     private final String TEST_DATA_FILE             = "testdata/sfdc/customers/data/Customers_Data.xls";
     private final String STATE_PRESERVATION_QUERY   = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c Where Name='CustomersTab'];";
-    private final String ACC_SETUP_SCRIPT           = env.basedir+"/testdata/sfdc/customers/scripts/Cust_Account_Create.txt";
-    private final String UI_VIEW_SETUP_SCRIPT           = env.basedir+"/testdata/sfdc/customers/scripts/UIView_Create.txt";
+    private final String ACC_SETUP_SCRIPT           = Application.basedir+"/testdata/sfdc/customers/scripts/Cust_Account_Create.txt";
+    private final String UI_VIEW_SETUP_SCRIPT       = Application.basedir+"/testdata/sfdc/customers/scripts/UIView_Create.txt";
 
     @BeforeClass
     public void setUp() {

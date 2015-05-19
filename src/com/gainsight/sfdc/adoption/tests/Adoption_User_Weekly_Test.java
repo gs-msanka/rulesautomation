@@ -27,6 +27,7 @@ public class Adoption_User_Weekly_Test extends AdoptionDataSetup {
     @BeforeClass
     public void setUp() throws IOException, InterruptedException {
         basepage.login();
+        sfdc.connect();
         dataSetup = new AdoptionDataSetup();
         sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(ADV_CONFIG_FILE)));
         dataSetup.initialSetup();
