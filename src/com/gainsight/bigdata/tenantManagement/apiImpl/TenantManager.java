@@ -31,7 +31,7 @@ import static com.gainsight.bigdata.urls.AdminURLs.*;
  */
 public class TenantManager {
 
-    private SFDCInfo sfdcInfo;
+    public SFDCInfo sfdcInfo;
     private SalesforceConnector sfConnector;
     private Header header = new Header();
     private WebAction wa = new WebAction();

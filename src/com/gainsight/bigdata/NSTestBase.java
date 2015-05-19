@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
 import org.apache.http.HttpStatus;
@@ -30,7 +31,6 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 
 public class NSTestBase {
 
-    protected TenantInfo tenantInfo;
     protected SFDCInfo sfinfo;
     protected WebAction wa;
     protected Header header;
@@ -44,14 +44,12 @@ public class NSTestBase {
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public String accessKey;
     public int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
-
-    public NSTestBase() {
-        basedir = System.getenv("basedir");
-        testDataBasePath = basedir + "/testdata/newstack";
-    }
+    public TenantManager tenantManager;
 
     @BeforeSuite
     public void init() throws Exception {
+        tenantManager = new TenantManager();
+        testDataBasePath = Application.basedir + "/testdata/newstack";
         //Initializing Headers
         header = new Header();
         wa = new WebAction();
@@ -67,8 +65,11 @@ public class NSTestBase {
         header.addHeader("appOrgId", sfinfo.getOrg());
         header.addHeader("appUserId", sfinfo.getUserId());
         header.addHeader("appSessionId", sfinfo.getSessionId());
-        Assert.assertTrue(tenantAutoProvision());
-        accessKey = getDataLoadAccessKey();
+        //Tenant Auto-Provision will not be done here has some test cases my require to test with out tenant creation.
+        //Please Add the tenant Auto Provision to your Test Class Setup {BeforeClass} method.
+        //Assert.assertTrue(tenantAutoProvision());
+        //accessKey = getDataLoadAccessKey();
+
     }
 
     /**
