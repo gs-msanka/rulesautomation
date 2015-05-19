@@ -96,7 +96,7 @@ public void setupRule(HashMap<String,String> testData){
 	 */
 	public void populateObjMaps() {
 		featuresMap = getMapFromObject("JBCXM__Features__c",
-				"JBCXM__SystemName__c", "FT");
+				"JBCXM__Feature__c", "FT");
 		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
 				"CT");
 		PickListMap = getMapFromObject("JBCXM__PickList__c",
@@ -330,7 +330,7 @@ public void setupRule(HashMap<String,String> testData){
             i = matcher.end();
         }
         builder.append(text.substring(i, text.length()));
-        Log.info("Replcaed String : " +builder.toString());
+        Log.info("Replaced String : " +builder.toString());
         return builder.toString();
     }
     
