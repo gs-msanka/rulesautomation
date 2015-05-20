@@ -229,7 +229,7 @@ public class NSTestBase implements ApiUrls, AdminURLs {
                 result = true;
 
             } else if(responseObj.getStatusCode()== HttpStatus.SC_BAD_REQUEST) {
-                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                NsResponseObj nsResponseObj = mapper.convertValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.getErrorCode()!=null && nsResponseObj.getErrorCode().equals(MDAErrorCodes.TENANT_ALREADY_EXIST.getGSCode())) {
                     result = true;
                     Log.info(nsResponseObj.getErrorDesc());
