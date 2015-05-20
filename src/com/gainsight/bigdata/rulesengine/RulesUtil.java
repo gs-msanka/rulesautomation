@@ -3,11 +3,19 @@ package com.gainsight.bigdata.rulesengine;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.sfdc.SalesforceConnector;
+import com.gainsight.sfdc.SalesforceMetadataClient;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.sforce.soap.metadata.*;
+import com.sforce.soap.metadata.Error;
+import com.sforce.ws.ConnectionException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -19,6 +27,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
+import org.testng.Assert;
 
 public class RulesUtil extends NSTestBase {
 
@@ -29,6 +38,8 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
+	MetadataConnection metadataConnection;
+	ResponseObj result = null;
 
 	public static ResponseObject convertToObject(String result)
 			throws IOException {
@@ -350,4 +361,96 @@ public void setupRule(HashMap<String,String> testData){
     	return true;
     }
 
+
+
+	//Delete Account metadata Rules Engine
+	public void deleteCustomObjectFields(SalesforceConnector sfdc, String object, String[] fieldsToDelete){
+		try{
+			metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+
+			metadataClient.deleteFields(object,fieldsToDelete);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Exception is " + e.getMessage());
+		}
+	}
+/*
+	This method creates all fields of all types except LookUp,PickList and MultiPickList
+ */
+	public void createCustomFieldsAndAddPermissions(String object, HashMap<String, String[]> fieldsMap) {
+		sfinfo = sfdc.fetchSFDCinfo();
+		try {
+			Iterator it = fieldsMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry)it.next();
+				String fieldType = (String) pair.getKey();
+				if ("DATE".equalsIgnoreCase(fieldType)) {
+					metadataClient.createDateField(object, fieldsMap.get(fieldType), false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("DATETIME".equalsIgnoreCase(fieldType)){
+					metadataClient.createDateField(object, fieldsMap.get(fieldType), true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("BOOLEAN".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), true, false, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("PHONE".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), false, true, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("URL".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), false, false, true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("NUMBER".equalsIgnoreCase(fieldType)){
+					metadataClient.createNumberField(object, fieldsMap.get(fieldType), false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("PERCENT".equalsIgnoreCase(fieldType)){
+					metadataClient.createNumberField(object, fieldsMap.get(fieldType), true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("EMAIL".equalsIgnoreCase(fieldType)){
+					metadataClient.createEmailField(object, fieldsMap.get(fieldType));
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("TEXT".equalsIgnoreCase(fieldType)){
+					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, false, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("TEXTAREA".equalsIgnoreCase(fieldType)){
+					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, true, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else{
+
+				}
+				continue;
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void saveCustomObjectInRulesConfig(String data) throws Exception{
+		System.out.println("request:" + PropertyReader.nsAppUrl
+				+ "/api/rulesloadableobject/");
+		Log.info("\n Request URL"
+				+ PropertyReader.nsAppUrl + "/api/rulesloadableobject"
+				+ "\n Request rawBody:"+data);
+
+ 		result = wa.doPost(
+				PropertyReader.nsAppUrl + "/api/rulesloadableobject",
+				header.getAllHeaders(), data);
+
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+		Assert.assertNotNull(responseObj.getRequestId());
+
+	}
 }

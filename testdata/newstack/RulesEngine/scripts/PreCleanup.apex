@@ -1,0 +1,1 @@
+Delete [Select Id from CustomSourceWeRules__c];

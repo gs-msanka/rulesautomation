@@ -9,6 +9,7 @@ import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
+import com.sforce.soap.metadata.MetadataConnection;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -45,6 +46,7 @@ public class NSTestBase {
     public String accessKey;
     public int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public TenantManager tenantManager;
+    MetadataConnection metadataConnection;
 
     @BeforeSuite
     public void init() throws Exception {
