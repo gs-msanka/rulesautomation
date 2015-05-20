@@ -102,16 +102,9 @@ public class SurveyQuestionsTest extends SurveySetup {
 		surQues.setSurveyProperties(surProp);
 		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
 		verifyQuestionDisplayed(surveyQuestionPage, surQues);
-
-		surQues = mapper.readValue(testData.get("Question3"),
-				SurveyQuestion.class);
-		surQues.setPageId(getRecentAddedPageId(surProp));
-		surQues.setSurveyProperties(surProp);
-		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
-		verifyQuestionDisplayed(surveyQuestionPage, surQues);
 		logicRules(surveyQuestionPage);
-		Assert.assertFalse(surveyQuestionPage.verifyAttachLink(),
-				"Verifying logicRule Attach Icon");
+		Assert.assertTrue(getDependentField(),
+				"Verifying Dependent Question Field value from backend");
 	}
 	
 	@TestInfo(testCaseIds={"GS-2680","GS-2686"})
@@ -144,5 +137,25 @@ public class SurveyQuestionsTest extends SurveySetup {
 		surveyQuestionPage.addBranching(surQues);
 		Assert.assertTrue(getBranchingField(),
 				"verifying Branching Field value from backend");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-3622", "GS-3623" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "LogicRulesQuestions")
+	public void testAddSectionHeader(Map<String, String> testData)
+			throws IOException {
+
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyQuestionPage surveyQuestionPage = surveyPage
+				.clickOnQuestions(surProp);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surveyQuestionPage.addSection(surQues);
+		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
+				surQues.getSectionHeaders());
 	}
 }

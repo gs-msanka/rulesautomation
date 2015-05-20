@@ -79,6 +79,9 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String BRANCHING_ICON="//div[contains(@class, 'logicrulepopup')]/descendant::div[contains(@class, 'logic-rule')]/div[@class='col-sm-8']/select";
     private final String BRANCHING_SAVE_ON_POPUP="//div[contains(@class, 'modal-footer')]/button[text()='Save']";
     private final String LOGIC_ATTACHED_ICON="//ul[@class='radiolist']/descendant::div[contains(@class, 'attached')]";
+    private final String SECTION_HEADER="//a[@data-action='ADD_SECTION']";
+    private final String EDIT_HEADER="//div[contains(@class, 'header-edit-tools')]/descendant::a[@data-action='EDIT']/span";
+    private final String SECTION_HEADER_TEXTINPUT="//div[contains(@class, 'section-bar')]/descendant::input";
 
 
     //Miscellaneous
@@ -308,9 +311,21 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     //TODO - Take up at last
-    public SurveyQuestionPage addSection() {
+	public SurveyQuestionPage addSection(SurveyQuestion surQus) {
+		Log.info("Adding Section Header");
+		item.click(SECTION_HEADER);
+		field.click(SECTION_HEADER_TEXTINPUT);
+		field.setText(SECTION_HEADER_TEXTINPUT, surQus.getSectionHeaders());
+    	item.click(COLLAPSE_VIEW); /*Clicking somewhere on screen to save section header*/
         return this;
     }
+    
+	public String getSectionAttribute() {
+		String attribute = element.getElement(SECTION_HEADER_TEXTINPUT)
+				.getAttribute("value");
+		Log.info("Attribute value is" + attribute);
+		return attribute;
+	}
 
     public SurveyQuestionPage addAnsChoice(WebElement QuestionEle, String ansText) {
         String ADD_ANS_CHOICE = ".//div[contains(@id,'_ans_entry')]/descendant::a[@class='mailadd' and @data-action='ADD']";

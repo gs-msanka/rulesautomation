@@ -100,8 +100,8 @@ public class GSEmailSetup extends BaseTest {
 	// getting access key for GS email,
 	// Updating the Access key in the Application Settings object
 	public void createSurveyWithGSEmail() {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir
-				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));
+/*		sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir
+				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));*/ /*Commented for now as the script doesn't exists*/
 		Header hdrs = new Header();
 		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
@@ -144,7 +144,7 @@ public class GSEmailSetup extends BaseTest {
 						+ "Blob encryptedBlob = Crypto.encryptWithManagedIV('AES128', aesKeyBlob, accessKeyBlob);"
 						+ "String encoded= EncodingUtil.base64Encode(encryptedBlob);"
 						+ "List<JBCXM__ApplicationSettings__c> appSet= [select id,JBCXM__AccessKeys__c from JBCXM__ApplicationSettings__c];"
-						+ "appSet[0].JBCXM__AccessKey__c='{\"gainsightEmailKey\":\"'+encoded+'\"}';"
+						+ "appSet[0].JBCXM__AccessKeys__c='{\"gainsightEmailKey\":\"'+encoded+'\"}';"
 						+ "upsert appSet;"));
 				// checkSubAccountInMandrill("fi_h5Ag1dOmqYFV79aYcTA", TenantId,
 				// OrgName);

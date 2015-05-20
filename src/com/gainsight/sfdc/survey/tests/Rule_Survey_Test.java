@@ -1,196 +1,187 @@
 package com.gainsight.sfdc.survey.tests;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import us.monoid.json.JSONException;
-import us.monoid.json.JSONObject;
-import us.monoid.web.JSONResource;
-import us.monoid.web.Resty;
-
-import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
-import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
-import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
-import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.survey.pages.SurveyPage;
+import com.gainsight.sfdc.survey.pages.SurveyPublishPage;
+import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
+import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
+import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
+import com.gainsight.sfdc.survey.pojo.SurveyProperties;
+import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
-
-/**
- * Created with IntelliJ IDEA.
- * User: gainsight
- * Date: 10/09/14
- * Time: 11:44 AM
- * To change this template use File | Settings | File Templates.
- */
-public class Rule_Survey_Test extends BaseTest {
-
-    private RuleEngineDataSetup ruleEngineDataSetup;
-    private Resty resty;
-    private URI uri;
-    private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
-    private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
-    private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
-    private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
-    private static final String TEST_DATA_FILE          = "testdata/sfdc/survey/tests/Survey_Rule_Test.xls";
-    private final static String JOB_ACCOUNT_FILE        = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Accounts.txt";
-    private final static String JOB_CUSTOMER_FILE       = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Customers.txt";
-    private final static String JOB_CONTACT_FILE        = Application.basedir + "/testdata/sfdc/survey/jobs/Job_Rule_Survey_Contacts.txt";
-    private final static String SURVEY_DESIGN_FILE      = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Create_Design.txt";
-    private final static String SURVEY_PUBLISH_FILE     = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Publish.txt";
-    private final static String SURVEY_PARTICIPANT_FILE = Application.basedir + "/testdata/sfdc/survey/scripts/Rule_Survey_Participants_Load.txt";
+import com.gainsight.sfdc.workflow.pojos.CTA;
 
 
-    private static final String SURVEY_MASTER_QUERY = "Select id, JBCXM__Code__c, JBCXM__Title__c From JBCXM__Survey__c Where JBCXM__Code__c = '%s' AND JBCXM__Title__c = '%s'";
-    private static final String surveyCode   = "Customer Retention";
-    private static final String surveyTitle  = "CSR";
-    private String publishURL;
-    private String SURVEY_ID = null;
-    private DataETL dataETL = new DataETL();
+public class Rule_Survey_Test extends SurveySetup {
+	
+    private final String TEST_DATA_FILE         = "testdata/sfdc/survey/tests/SurveyTests.xls";
+    private final String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c];";
     private ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeClass
-    public void setup() throws Exception {
-        publishURL = env.getProperty("sfdc.siteCustomURL");
-
-        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
-        metaUtil.createFieldsOnContact(sfdc,sfinfo);
-        resty = new Resty();
-        resty.withHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
-        resty.withHeader("Content-Type", "application/json");
-        uri = URI.create(sfdcInfo.getEndpoint() + "/services/data/v29.0/sobjects/" + resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
-
-        //Creates the survey with provided survey Code & Title & Keeps the survey in design mode - Same as UI behaviour.
-        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_DESIGN_FILE), surveyCode, surveyTitle)));
-
-        ruleEngineDataSetup = new RuleEngineDataSetup(surveyCode);
-        ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_FILE, JOB_CUSTOMER_FILE);
-        JobInfo jobInfo = mapper.readValue(resolveNameSpace(JOB_CONTACT_FILE), JobInfo.class);
-        dataETL.execute(jobInfo);
-
-        //Publishes the survey with site URL provided at Application Properties,
-        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PUBLISH_FILE), surveyCode, surveyTitle, publishURL)));
-        //Adds participants to the survey, Running using script provides the advantage of token population dynamically.
-        //And also there's no need to populate to many fields for a survey participant.
-        sfdc.runApexCode(resolveStrNameSpace(String.format(FileUtil.getFileContents(SURVEY_PARTICIPANT_FILE), surveyCode, surveyTitle)));
-
-        SObject[] surveys =  sfdc.getRecords(resolveStrNameSpace(String.format(SURVEY_MASTER_QUERY, surveyCode, surveyTitle)));
-        if(surveys.length ==1) {
-            SURVEY_ID = surveys[0].getId();
-        } else {
-            throw new RuntimeException("** Survey Not Found **");
-        }
-        ruleEngineDataSetup.cleanDataSetup();
+	@BeforeClass
+	public void setUp() {
+		Log.info("Starting Survey Creation / Clone Test Cases...");
+		basepage.login();
     }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-    public void Rule1(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-        assertRuleResult(testData);
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
-    public void Rule2(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
-    public void Rule3(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
-    public void Rule4(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
-    public void Rule5(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
-    public void Rule6(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule7")
-    public void Rule7(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("Name", SURVEY_ID);
-        executeRule(testData);
-    }
-
-
-
-    private void executeRule(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException{
-        //Always runs for current user.
-        testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
-        testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-        String rulePayLoad = ruleEngineDataSetup.generateRuleJson(testData, Boolean.valueOf(testData.get("IsCTARule")), true);
-        String ruleId = createRule(rulePayLoad);
-    }
-
-    private String createRule(String rule) throws IOException, JSONException {
-        JSONResource res = resty.json(uri, Resty.form(rule));
-        JSONObject jObj = res.toObject();
-        Log.info(jObj.toString());
-        String ruleId = jObj.getString("id");
-        Log.info("Rule Id : "+ruleId);
-        return ruleId;
-    }
-
-    private void assertRuleResult(HashMap<String, String> testData) throws IOException, JSONException, InterruptedException {
-        testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
-        testData.put("JBCXM__PlayBookIds__c", ruleEngineDataSetup.pkListMap.get(testData.get("JBCXM__PlayBookIds__c")));
-
-        ObjectMapper mapper = new ObjectMapper();
-        RuleAlertCriteria ruleAlertCriteria = mapper.readValue(testData.get(ALERT_CRITERIA_KEY), RuleAlertCriteria.class);
-        if(testData.get("JBCXM__AlertCriteria__c") != null && testData.get("JBCXM__AlertCriteria__c")!="") {
-            if(Boolean.valueOf(testData.get("IsCTARule"))) {
-                Assert.assertTrue(ruleEngineDataSetup.verifyCTAExists(testData.get("Account"), testData.get("JBCXM__TaskDefaultOwner__c"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
-            } else {
-                Assert.assertTrue(ruleEngineDataSetup.verifyAlertExists( testData.get("Account"), Integer.valueOf(testData.get("Count")), ruleAlertCriteria));
-            }
-        }
-        if(testData.get("JBCXM__ScorecardCriteria__c") != null && testData.get("JBCXM__ScorecardCriteria__c")!="") {
-            ArrayList<RuleScorecardCriteria.ActionList> actionLists = ruleEngineDataSetup.getScorecardActions(testData.get(SCORE_CRITERIA_KEY));
-            for(RuleScorecardCriteria.ActionList action : actionLists) {
-                Assert.assertTrue(ruleEngineDataSetup.verifyMetricScoreAndComments(testData.get("Account"), action));
-            }
-        }
-    }
-
-    @AfterClass
-    public void tearDown() {
-        //basepage.logout();
-    }
-
+ 
+	@BeforeMethod
+	public void cleanUpData(){
+		sfdc.runApexCode(resolveStrNameSpace(QUERY));
+	}
+	
+	@TestInfo(testCaseIds={"GS-2690"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
+    public void testSetCTA(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyQuestionPage surveyQuestionPage = surveyPage
+				.clickOnQuestions(surProp);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPage s = new SurveyPage();
+		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
+		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
+		cta.setAssignee(sfinfo.getUserFullName());
+		SurveyCTARule surveyCTARule = mapper.readValue(
+				testData.get("SurveyCTARule"), SurveyCTARule.class);
+		surveyCTARule.setCta(cta);
+		SurveyQuestion surveyQuestion = mapper.readValue(
+				testData.get("SurveyQuestion"), SurveyQuestion.class);
+		List<SurveyQuestion> sa = new ArrayList<>();
+		sa.add(surveyQuestion);
+		surveyCTARule.setSurveyQuestions(sa);
+		surveySetCTAPage.addRule(surveyCTARule);
+		surveyPage.clickOnSetCta(surProp);
+		Timer.sleep(5);
+		Assert.assertTrue(surveySetCTAPage.verifyRule(surveyCTARule));
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2688", "GS-2689" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S3")
+	public void testSetCTA2(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		surProp.setDefaultAddress(sfinfo.getUserFullName());
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyQuestionPage surveyQuestionPage = surveyPage
+				.clickOnQuestions(surProp);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp);
+		publishPage.updatePublishDetails(surProp);
+		surProp.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(),
+				"Verifying Survey Status");
+		basepage.clickOnSurveyTab().clickOnPublishedView();
+		SurveySetCTAPage setCTAPage = new SurveySetCTAPage();
+		setCTAPage.clickOnCTACardView();
+		Assert.assertTrue(setCTAPage.isCTAPageVisible(),
+				"Verifying CTA Page Navigation");
+		Assert.assertEquals(setCTAPage.getNoRulesText(), "No rules set.");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2692", "GS-2693" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
+	public void testDeleteCTA(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyQuestionPage surveyQuestionPage = surveyPage
+				.clickOnQuestions(surProp);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPage s = new SurveyPage();
+		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
+		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
+		cta.setAssignee(sfinfo.getUserFullName());
+		SurveyCTARule surveyCTARule = mapper.readValue(
+				testData.get("SurveyCTARule"), SurveyCTARule.class);
+		surveyCTARule.setCta(cta);
+		SurveyQuestion surveyQuestion = mapper.readValue(
+				testData.get("SurveyQuestion"), SurveyQuestion.class);
+		List<SurveyQuestion> sa = new ArrayList<>();
+		sa.add(surveyQuestion);
+		surveyCTARule.setSurveyQuestions(sa);
+		surveySetCTAPage.addRule(surveyCTARule);
+		surveyPage.clickOnSetCta(surProp);
+		Timer.sleep(5);
+		Assert.assertTrue(surveySetCTAPage.verifyRule(surveyCTARule));
+		surveySetCTAPage.deleteExistingRule();
+		Assert.assertEquals(surveySetCTAPage.getNoRulesText(), "No rules set.");
+	}
+	
+	@TestInfo(testCaseIds = {"GS-2694" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
+	public void testAdvanceLogic(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyQuestionPage surveyQuestionPage = surveyPage
+				.clickOnQuestions(surProp);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPage s = new SurveyPage();
+		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
+		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
+		cta.setAssignee(sfinfo.getUserFullName());
+		SurveyCTARule surveyCTARule = mapper.readValue(
+				testData.get("CTAAdvanceLogic"), SurveyCTARule.class);
+		surveyCTARule.setCta(cta);
+		SurveyQuestion surveyQuestion = mapper.readValue(
+				testData.get("SurveyQuestion"), SurveyQuestion.class);
+		List<SurveyQuestion> sa = new ArrayList<>();
+		sa.add(surveyQuestion);
+		surveyCTARule.setSurveyQuestions(sa);
+		surveySetCTAPage.addRule(surveyCTARule);
+		surveyPage.clickOnSetCta(surProp);
+		Timer.sleep(5);
+		Assert.assertTrue(surveySetCTAPage.verifyRule(surveyCTARule));
+		Assert.assertTrue(surveySetCTAPage.getAdvancedCondtion(surveyCTARule));
+	}
 }
+
