@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.bigdata.util.ApiUrl;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -33,27 +34,18 @@ public class RulesUtil extends NSTestBase {
 	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
 
-	public static ResponseObject convertToObject(String result)
-			throws IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		ResponseObject response = objectMapper.readValue(result,
-				ResponseObject.class);
-		return response;
-	}
-
 	public void loadToCustomers(HashMap<String, String> testData) throws Exception {
-		RulesUtil ru = new RulesUtil();
-		ru.populateObjMaps();
-		ru.setupRule(testData);
+		populateObjMaps();
+		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		System.out.println("request:" + PropertyReader.nsAppUrl
-				+ "/api/eventrule/" + ruleId);
+				+ ApiUrl.EVENT_RULE +"/"+ ruleId);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result

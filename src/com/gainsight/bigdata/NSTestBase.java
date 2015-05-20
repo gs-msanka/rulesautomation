@@ -1,9 +1,11 @@
 package com.gainsight.bigdata;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.gainsight.bigdata.rulesengine.ResponseObject;
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -192,6 +194,14 @@ public class NSTestBase {
                 + "appSet.JBCXM__NSURL__c='" + NSURL + "';"
                 + "update appSet;"));
         Log.info("NS URL Updated Successfully");
+	}
+
+	public static ResponseObject convertToObject(String result)
+			throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ResponseObject response = objectMapper.readValue(result,
+				ResponseObject.class);
+		return response;
 	}
 
 }

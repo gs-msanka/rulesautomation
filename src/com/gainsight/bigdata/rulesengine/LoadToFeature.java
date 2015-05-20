@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
@@ -48,22 +49,23 @@ public class LoadToFeature extends RulesUtil {
 		else {
 			throw new RuntimeException("Do it again...");
 		}
+		populateObjMaps();
+
 	}
 
     @TestInfo(testCaseIds = {"GS-4687"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToFeature1")
 	public void loadToFeature1(HashMap<String, String> testData) throws Exception {
-		populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
-                + "\n Request rawBody:{}");
+				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
 		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -86,15 +88,14 @@ public class LoadToFeature extends RulesUtil {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToFeature2")
 	public void loadToFeature2(HashMap<String, String> testData) throws Exception {
-		populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
@@ -118,15 +119,14 @@ public class LoadToFeature extends RulesUtil {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToFeature3")
 	public void loadToFeature3(HashMap<String, String> testData) throws Exception {
-		populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
@@ -150,16 +150,15 @@ public class LoadToFeature extends RulesUtil {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToFeature4")
 	public void loadToFeature4(HashMap<String, String> testData) throws Exception {
-		populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
-                + "\n Request rawBody:{}");
+				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = convertToObject(result
 				.getContent());

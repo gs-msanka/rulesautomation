@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
@@ -38,8 +39,8 @@ public class LoadToCustomers extends RulesUtil {
 		sfdc.connect();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Clean_Up_For_Rules));
         Log.info("Calling delete method");
-        //metaUtil.deleteAccountMetadata(sfdc);
-		//metaUtil.createFieldsForAccount(sfdc, sfinfo);
+        metaUtil.deleteAccountMetadata(sfdc);
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		ObjectMapper mapper = new ObjectMapper();
 		dataETL=new DataETL();
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
@@ -55,6 +56,7 @@ public class LoadToCustomers extends RulesUtil {
             else {
                 throw new RuntimeException("Do it again...");
             }
+        populateObjMaps();
 
 	}
 
@@ -62,17 +64,16 @@ public class LoadToCustomers extends RulesUtil {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers2")
 	public void loadToCustomers2(HashMap<String, String> testData) throws Exception {
-        populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		System.out.println("request:" + PropertyReader.nsAppUrl
-				+ "/api/eventrule/" + ruleId);
+				+ ApiUrl.EVENT_RULE +"/"+ ruleId);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -97,17 +98,16 @@ public class LoadToCustomers extends RulesUtil {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers3")
     public void loadToCustomers3(HashMap<String,String> testData) throws Exception{
-        populateObjMaps();
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
         System.out.println("request:" + PropertyReader.nsAppUrl
-                + "/api/eventrule/" + ruleId);
+                + ApiUrl.EVENT_RULE +"/"+ ruleId);
         result = wa.doPost(
-                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -131,17 +131,16 @@ public class LoadToCustomers extends RulesUtil {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers4")
     public void loadToCustomers4(HashMap<String,String> testData) throws Exception{
-        populateObjMaps();
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
         System.out.println("request:" + PropertyReader.nsAppUrl
-                + "/api/eventrule/" + ruleId);
+                + ApiUrl.EVENT_RULE +"/"+ ruleId);
         result = wa.doPost(
-                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -165,17 +164,16 @@ public class LoadToCustomers extends RulesUtil {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "loadToCustomers5")
     public void loadToCustomers5(HashMap<String, String> testData) throws Exception {
-        populateObjMaps();
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
         System.out.println("request:" + PropertyReader.nsAppUrl
-                + "/api/eventrule/" + ruleId);
+                + ApiUrl.EVENT_RULE +"/"+ ruleId);
         result = wa.doPost(
-                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
-                header.getAllHeaders(), "{\"numberOfRecords\": \"10\"}");
+                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+                header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -190,17 +188,16 @@ public class LoadToCustomers extends RulesUtil {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "loadToCustomers6")
     public void loadToCustomers6(HashMap<String,String> testData) throws Exception{
-        populateObjMaps();
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
         System.out.println("request:" + PropertyReader.nsAppUrl
-                + "/api/eventrule/" + ruleId);
+                + ApiUrl.EVENT_RULE +"/"+ ruleId);
         result = wa.doPost(
-                PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
