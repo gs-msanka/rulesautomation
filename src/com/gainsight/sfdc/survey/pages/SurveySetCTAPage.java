@@ -66,9 +66,20 @@ public class SurveySetCTAPage extends SurveyPage {
     private final String DATE_XPATH              = ".//label[contains(text(),'Due Date')]/following-sibling::div";
     private final String PLAYBOOK_XPATH         = ".//label[contains(text(),'Playbook')]/following-sibling::div";
     private final String OWNER_FIELD_XPATH      = ".//label[contains(text(),'Owner field')]/following-sibling::div";
+    private final String CTA_ON_CARD_VIEW         ="//div[@class='pull-left alerts']/a";
+    private final String SET_CTA_PAGE             ="//a[@ref-link='setalerts']";
+    private final String NO_RULES_DIV             ="//div[contains(@class, 'no-rule-to-display')]";
 
 	//Edit Rule
-	private final String EDIT_RULE_ICON="";
+	private final String EDIT_RULE_ICON         ="//a[contains(@class, 'showeditmode')]";
+	private final String DELETE_ICON_LINKTEXT   ="DELETE";
+	
+	//Advance Logic WebElements
+	private final String ADVANCE_LOGIC_LINK      ="//a[contains(text(),'Advanced Logic')]";
+	private final String ADVANCE_LOGIC_FIELD     ="//select[@class='field']/following-sibling::button";
+	private final String ADVANCE_LOGIC_OPERATOR  ="//div[contains(@class, 'gs-condition-operator')]/descendant::select/following-sibling::button";
+	private final String ADVANCE_LOGIC_INPUT     ="//div[contains(@class, 'value-select')]/descendant::input";
+	private final String ADVANCE_CONDITION_DIV   ="//div[@class='disp-filter-criteria']/p";
 	
 	private final String RULE_SET_STATUS=""; //Active or inactive!
 
@@ -77,6 +88,10 @@ public class SurveySetCTAPage extends SurveyPage {
         wait.waitTillElementDisplayed(ADD_NEW_RULE_BUTTON, MIN_TIME, MAX_TIME);
         Log.info("Set CTA Page Loaded Successfully");
     }
+    
+	public SurveySetCTAPage() {
+		System.out.println("Dummy Constructor - Survey SetCTAPage");
+	}
 
 	public SurveySetCTAPage clickOnAddNewRule(){
 		item.click(ADD_NEW_RULE_BUTTON);
@@ -89,15 +104,24 @@ public class SurveySetCTAPage extends SurveyPage {
     }
 
 
-    public SurveySetCTAPage addRule(SurveyCTARule surveyCTARule) {
-        clickOnAddNewRule();
-        WebElement ruleEle = getRecentAddedRuleEle();
-        setCTACriteria(ruleEle, surveyCTARule.getCta(), surveyCTARule.getPlaybook(), surveyCTARule.getOwnerField(), surveyCTARule.getChatterUpdate());
-        setQuestionAndAnswerCriteria(ruleEle, surveyCTARule.getSurveyQuestions());
-        ruleEle.findElement(By.xpath(SAVE_RULE)).click();
-        Timer.sleep(5);
-        return this;
-    }
+	public SurveySetCTAPage addRule(SurveyCTARule surveyCTARule) {
+		clickOnAddNewRule();
+		WebElement ruleEle = getRecentAddedRuleEle();
+		setCTACriteria(ruleEle, surveyCTARule.getCta(),
+				surveyCTARule.getPlaybook(), surveyCTARule.getOwnerField(),
+				surveyCTARule.getChatterUpdate());
+		setQuestionAndAnswerCriteria(ruleEle,
+				surveyCTARule.getSurveyQuestions());
+		if (surveyCTARule.getAdvanceValue() == ""
+				|| surveyCTARule.getAdvanceValue() == null) {
+			ruleEle.findElement(By.xpath(SAVE_RULE)).click();
+		} else {
+			setAdvancedFilter(surveyCTARule);
+			ruleEle.findElement(By.xpath(SAVE_RULE)).click();
+		}
+		Timer.sleep(5);
+		return this;
+	}
 
 
     public void setCTACriteria(WebElement ruleEle, CTA cta, String playbook, String ownerField, String chatterUpdate) {
@@ -259,10 +283,24 @@ public class SurveySetCTAPage extends SurveyPage {
         }
     }
 
-    //TODO - Action Item.
-    public void setAdvancedFilter() {
-
-    }
+	public void setAdvancedFilter(SurveyCTARule surveyCTARule) {
+		if (surveyCTARule.getAdvanceField() != null
+				|| surveyCTARule.getAdvanceField() != "") {
+			item.click(ADVANCE_LOGIC_LINK);
+			item.click(ADVANCE_LOGIC_FIELD);
+			selectValueInDropDown(surveyCTARule.getAdvanceField());
+		}
+		if (surveyCTARule.getAdvanceOperator() != null
+				|| surveyCTARule.getAdvanceOperator() != "") {
+			item.click(ADVANCE_LOGIC_OPERATOR);
+			selectValueInDropDown(surveyCTARule.getAdvanceOperator());
+		}
+		if (surveyCTARule.getAdvanceValue() != null
+				|| surveyCTARule.getAdvanceValue() != "") {
+			field.clearAndSetText(ADVANCE_LOGIC_INPUT,
+					surveyCTARule.getAdvanceValue());
+		}
+	}
 
     private void fillQuestionAndAnswer(WebElement ruleEle, SurveyQuestion surveyQuestion) {
         WebElement quesEle = getRecentAddedQuestionEle(ruleEle);
@@ -297,7 +335,36 @@ public class SurveySetCTAPage extends SurveyPage {
         }
         throw new RuntimeException("Unable to Find the Question With Given Text, "+quesTitle);
     }
+    
+	public void clickOnCTACardView() {
+		Log.info("Clicking CTA on Card View");
+		item.click(CTA_ON_CARD_VIEW);
+		wait.waitTillElementDisplayed(ADD_NEW_RULE_BUTTON, MIN_TIME, MAX_TIME);
+	}
 
+	public boolean isCTAPageVisible() {
+		return element.getElement(SET_CTA_PAGE).isDisplayed();
+	}
 
-
+	public String getNoRulesText() {
+		String temp = element.getElement(NO_RULES_DIV).getText().trim();
+		Log.info("Text Message is" + " " + temp);
+		return temp;
+	}
+	
+	public void deleteExistingRule() {
+		link.click(DELETE_ICON_LINKTEXT);
+		item.click(DELETE_RULE_CONFIRM);
+	}
+	
+	public boolean getAdvancedCondtion(SurveyCTARule surveyCTARule) {
+		String temp = element.getElement(ADVANCE_CONDITION_DIV).getText();
+		Log.info("message is" + " " + temp);
+		String concatText = surveyCTARule.getAdvanceField() + " "
+				+ surveyCTARule.getAdvanceOperator() + " "
+				+ surveyCTARule.getAdvanceValue();
+		Log.info(concatText);
+		return temp.contains(concatText);
+	}
+	
 }

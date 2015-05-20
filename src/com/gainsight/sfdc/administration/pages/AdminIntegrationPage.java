@@ -8,7 +8,7 @@ import com.gainsight.sfdc.pages.BasePage;
 public class AdminIntegrationPage extends BasePage {
 	
 	private static final String READY_INDICATOR="//a[contains(@text,'Gainsight Matrix Data Platform')]";
-	private static final String SIDE_SECTION="//div[@class='form-group']";
+	private static final String SIDE_SECTION="//div[contains(@class, 'main-cnt')]";
 	private static final String OAUTH_ENABLE="//div[@class='onoffswitch-switch']";
 	private static final String AUTHORIZE="//button[@id='btnAuthorize']";
 	private static final String AUTHORIZE_DISABLED = "//button[@id='btnAuthorize' and @disabled='disabled']";

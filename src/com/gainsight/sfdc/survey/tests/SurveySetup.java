@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
@@ -204,8 +205,8 @@ public class SurveySetup extends BaseTest {
         return surveyQuestionPage;
     }
     
-    public void LogicRules(SurveyQuestionPage surveyQuestionPage){
-    	surveyQuestionPage.AddLogicRules();
+    public void logicRules(SurveyQuestionPage surveyQuestionPage){
+    	surveyQuestionPage.addLogicRules();
       
     }
 
@@ -245,4 +246,38 @@ public class SurveySetup extends BaseTest {
 		return count;
     	
     }
+    
+	public void updateNSURLInAppSettings(String NSURL) {
+		System.out.println("setting ns url in app settings");
+		sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
+		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
+				+ "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
+		Log.info("NS URL Updated Successfully");
+	}
+
+	public boolean getBranchingField() {
+		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
+		Timer.sleep(5);
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c order by createdDate asc limit 1"));
+		boolean result = false;
+		if (jsondata.length > 0) {
+			String sTemp = (String) jsondata[0].getField("JBCXM__HasRules__c");
+			result = Boolean.valueOf(sTemp);
+		}
+		return result;
+	}
+	
+	public boolean getDependentField() {
+		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
+		Timer.sleep(5);
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__Dependent__c FROM JBCXM__SurveyQuestion__c order by createdDate desc limit 1"));
+		boolean result = false;
+		if (jsondata.length > 0) {
+			String sTemp = (String) jsondata[0].getField("JBCXM__Dependent__c");
+			result = Boolean.valueOf(sTemp);
+		}
+		return result;
+	}
 }

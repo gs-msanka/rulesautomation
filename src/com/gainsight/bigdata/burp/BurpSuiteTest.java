@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
-import com.gainsight.bigdata.pojo.CollectionInfo.Columns;
+import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.DimensionBrowserInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
@@ -27,7 +27,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	String tenantName = "AutTenant";
 	CollectionInfo cinfo;
-	List<Columns> colList = new ArrayList<CollectionInfo.Columns>();
+	List<Column> colList = new ArrayList<Column>();
 	
 	@BeforeClass
 	public void setUp() throws Exception {
@@ -67,7 +67,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void createCollection() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createcollection/"+ nsinfo.getTenantID() + "/AutCollection1";
+		String uri = PropertyReader.nsAppUrl + "/createcollection/"+ /*nsinfo.getTenantID()*/  "/AutCollection1";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);
@@ -81,7 +81,7 @@ public class BurpSuiteTest extends NSTestBase {
 
 	@Test
 	public void getCollection() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/getcollection/"+ nsinfo.getTenantID();
+		String uri = PropertyReader.nsAppUrl + "/getcollection/";//+ nsinfo.getTenantID();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(colList));
 		
@@ -129,7 +129,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void getSavedReports() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/savedreports/"+ nsinfo.getTenantID();
+		String uri = PropertyReader.nsAppUrl + "/savedreports/";//+ nsinfo.getTenantID();
 		ResponseObj result = wa.doGet(uri, header.getAllHeaders());
 		Log.info(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
