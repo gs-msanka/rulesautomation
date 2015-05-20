@@ -88,7 +88,7 @@ public class NSTestBase {
             Log.error("Failed to get Access Token", e);
             throw new RuntimeException("Failed to get Access Token.");
         }
-        if (rs != null && rs.isResult()) {
+        if (rs.isResult()) {
             HashMap<String, String> data = (HashMap<String, String>) rs.getData();
             accessKey = data.get("accessKey");
             Log.info("AccessKey : " + accessKey);
@@ -195,14 +195,10 @@ public class NSTestBase {
      */
     public void updateNSURLInAppSettings(String nsURL) {
         Log.info("Setting NS URL in Application Settings");
-        if (sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c") > 0) {
-            String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, JBCXM__ISNSEnabled__c from JBCXM__Applicationsettings__c];\n" +
-                    "if(appSettings.size() >0 ) {\n" +
-                    "\tSystem.debug(Failed to Update Application Settings);\n" +
-                    "} else {\n" +
-                    "\tappSettings.get(0).JBCXM__NSURL__C = '" + nsURL + "';\n" +
-                    "}\n" +
-                    "update appSettings; ";
+        if (sfdc.getRecordCount(resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")) > 0) {
+            String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, JBCXM__ISNSEnabled__c from JBCXM__Applicationsettings__c];" +
+                    "appSettings.get(0).JBCXM__NSURL__C = '" + nsURL + "';" +
+                    "update appSettings;";
             sfdc.runApexCode(resolveStrNameSpace(apexCode));
             Log.info("NS URL Updated Successfully");
         } else {
