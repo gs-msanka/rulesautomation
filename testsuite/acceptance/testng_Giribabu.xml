@@ -5,17 +5,11 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
+    <test verbose="3" name="360 Scorecard Tests" preserve-order="true">
         <classes>
-
-            <!-- Giri's Test-->
-
-            <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" >
-                <methods>
-                    <include name="duplicate_RiskPlaybook" />
-                    <include name="duplicate_OpportunityPlaybook"/>
-                </methods>
-            </class>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
         </classes>
     </test>
 </suite>
