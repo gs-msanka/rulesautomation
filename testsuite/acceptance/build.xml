@@ -23,9 +23,9 @@
 		</classpath>
 	</taskdef>
 
-	<target name="runTest" depends="init, editPropertyFile, compile, bat, makexsltreports, zipReports"/>
+	<target name="runTest" depends="init, editPropertyFile, compile, bat"/>     <!--makexsltreports, zipReports" -->
 
-    <target name="runFailedTest" depends="init, editPropertyFile, compile, failedRun, makexsltreports, zipReports"/>
+    <target name="runFailedTest" depends="init, editPropertyFile, compile, failedRun"/> <!--makexsltreports, zipReports" -->
 
 	<!-- Classpath files required for compiling
 	<path id="cpath">
