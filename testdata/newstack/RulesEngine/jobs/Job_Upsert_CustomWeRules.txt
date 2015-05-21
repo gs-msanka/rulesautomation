@@ -1,0 +1,55 @@
+{
+    "jobName": "Upsert CustomWeRules Object For Rules Engine Load To SFDC Action Test",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+            "inputFile" : "/testdata/newstack/RulesEngine/data/Upsert_TargetObjectData_SFDCAction.csv",
+            "outputFile" : "/resources/datagen/process/Upsert_TargetObjectData_SFDCAction.csv",
+            "fields" :[
+                            {
+                                "weekly" : false,
+                                "daily"  : true,
+                                "dateTime" : false,
+                                "fieldName" : "CDate1__c"
+                            },
+                            {
+                                "weekly" : false,
+                                "daily"  : true,
+                                "dateTime" : false,
+                                "fieldName" : "CDate2__c"
+                            },
+                            {
+                                "weekly" : false,
+                                "daily"  : true,
+                                "dateTime" : false,
+                                "fieldName" : "CDate3__c"
+                            },
+                            {
+                                "weekly" : false,
+                                 "daily"  : true,
+                                 "dateTime" : true,
+                          "fieldName" : "CDateTime1__c"
+                      },
+                        {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : true,
+                    "fieldName" : "CDateTime2__c"
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : true,
+                    "fieldName" : "CDateTime3__c"
+                }
+            ]
+        },
+    "load": {
+        "target": "sfdc",
+        "sObject": "CustomWeRules__c",
+        "operation": "insert",
+        "contentType": "CSV",
+        "cleanUp" : true,
+        "file": "/resources/datagen/process/Upsert_TargetObjectData_SFDCAction.csv"
+    }
+}
