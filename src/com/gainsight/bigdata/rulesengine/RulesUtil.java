@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.bigdata.util.ApiUrl;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -39,15 +40,12 @@ public class RulesUtil extends NSTestBase {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		System.out.println("request:" + PropertyReader.nsAppUrl
-				+ ApiUrl.EVENT_RULE +"/"+ ruleId);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE + "/" + ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
-
 		ResponseObject responseObj = RulesUtil.convertToObject(result
 				.getContent());
 		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));

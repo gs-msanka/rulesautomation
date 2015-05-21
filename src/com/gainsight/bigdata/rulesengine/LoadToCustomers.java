@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
@@ -31,7 +32,7 @@ public class LoadToCustomers extends RulesUtil {
 	private static final String Clean_Up_For_Rules = Application.basedir
 			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
-	private final String LOAD_ACCOUNTS_JOB=env.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Accounts.txt";
+	private final String LOAD_ACCOUNTS_JOB=Application.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Accounts.txt";
 	public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
 
 	@BeforeClass
@@ -39,8 +40,8 @@ public class LoadToCustomers extends RulesUtil {
 		sfdc.connect();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Clean_Up_For_Rules));
         Log.info("Calling delete method");
-        metaUtil.deleteAccountMetadata(sfdc);
-		metaUtil.createFieldsForAccount(sfdc, sfinfo);
+        //metaUtil.deleteAccountMetadata(sfdc);
+		//metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		ObjectMapper mapper = new ObjectMapper();
 		dataETL=new DataETL();
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
@@ -67,13 +68,11 @@ public class LoadToCustomers extends RulesUtil {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		System.out.println("request:" + PropertyReader.nsAppUrl
-				+ ApiUrl.EVENT_RULE +"/"+ ruleId);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+                +ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -101,13 +100,11 @@ public class LoadToCustomers extends RulesUtil {
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
-        System.out.println("request:" + PropertyReader.nsAppUrl
-                + ApiUrl.EVENT_RULE +"/"+ ruleId);
-        result = wa.doPost(
-                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+        Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+        result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+                +ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -134,13 +131,11 @@ public class LoadToCustomers extends RulesUtil {
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
-        System.out.println("request:" + PropertyReader.nsAppUrl
-                + ApiUrl.EVENT_RULE +"/"+ ruleId);
-        result = wa.doPost(
-                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+        Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+        result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+                +ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -167,13 +162,11 @@ public class LoadToCustomers extends RulesUtil {
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
-        System.out.println("request:" + PropertyReader.nsAppUrl
-                + ApiUrl.EVENT_RULE +"/"+ ruleId);
-        result = wa.doPost(
-                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+        Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+        result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+                +ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());
@@ -191,13 +184,11 @@ public class LoadToCustomers extends RulesUtil {
         setupRule(testData);
         String RuleName = testData.get("Name");
         String ruleId = getRuleId(RuleName);
-        System.out.println("request:" + PropertyReader.nsAppUrl
-                + ApiUrl.EVENT_RULE +"/"+ ruleId);
-        result = wa.doPost(
-                PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+        Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+        result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
                 header.getAllHeaders(), "{}");
         Log.info("Rule ID:" + ruleId + "\n Request URL"
-                + PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+                +ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
                 + "\n Request rawBody:{}");
         ResponseObject responseObj = RulesUtil.convertToObject(result
                 .getContent());

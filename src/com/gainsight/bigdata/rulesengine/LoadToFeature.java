@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -60,11 +61,11 @@ public class LoadToFeature extends RulesUtil {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
@@ -91,11 +92,11 @@ public class LoadToFeature extends RulesUtil {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
@@ -122,11 +123,11 @@ public class LoadToFeature extends RulesUtil {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
         ResponseObject responseObj = convertToObject(result
 				.getContent());
@@ -153,13 +154,12 @@ public class LoadToFeature extends RulesUtil {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId,
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE +"/"+ ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + ApiUrl.EVENT_RULE +"/"+ ruleId
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
-
 		ResponseObject responseObj = convertToObject(result
 				.getContent());
 		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
@@ -171,9 +171,10 @@ public class LoadToFeature extends RulesUtil {
 						+ RuleName + "'")[0]
 				.getChild("JBCXM__LastRunResult__c").getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-
 		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+		Log.info(""+rules1);
 		int rules2 = sfdc.getRecordCount("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=false and JBCXM__Licensed__c=false");
+		Log.info(""+rules2);
 		Assert.assertEquals(rules1,rules2);
 
 	}

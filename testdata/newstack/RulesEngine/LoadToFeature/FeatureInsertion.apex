@@ -1,9 +1,8 @@
+Delete[SELECT Id FROM Opportunity];
+Delete[SELECT Id FROM Case];
 Delete[Select Id from JBCXM__CustomerFeatures__c];
-
 Delete[Select Id from JBCXM__Features__c];
-
 Delete [Select Id from JBCXM__AutomatedAlertRules__c where Name Like 'loadToFeat%'];
-
 Delete [select id from Account];
 
 List<String> featureNames = new List<String>{'One','Two','Three','Four','Five'};
