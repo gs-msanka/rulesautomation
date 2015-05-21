@@ -1,7 +1,11 @@
 package com.gainsight.bigdata;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+
+
+import com.gainsight.bigdata.rulesengine.ResponseObject;
 
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
@@ -10,6 +14,7 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
 import org.apache.http.HttpStatus;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
@@ -187,6 +192,14 @@ public class NSTestBase {
         }
         return fAndV;
     }
+
+	public static ResponseObject convertToObject(String result)
+			throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ResponseObject response = objectMapper.readValue(result,
+				ResponseObject.class);
+		return response;
+	}
 
     /**
      * Updates the application settings nsurl with the appropriate nsurl__c.

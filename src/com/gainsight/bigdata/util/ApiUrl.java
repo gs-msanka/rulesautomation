@@ -16,6 +16,10 @@ public class ApiUrl extends NSUrl {
 	public static final String BASE_COLLECTIONS = API + "/collections";
 	public static final String BASE_UT = API + "/usagetracker";
 
+
+	//--------------------Rules Engine URLs------------------
+	public static final String EVENT_RULE= API+"/eventrule";
+
 	// ------------------- REPORT URLs -------------------
 	public static final String REPORT_GET_ALL = BASE_REPORTS + "/all";
 	// @URL_PARAM1: ReportID

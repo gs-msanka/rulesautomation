@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Automation Project" preserve-order="true">
+
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener" />
+    </listeners>
+
+    <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
+        <classes>
+            <!-- Pawel's Test-->
+            <class name="com.gainsight.bigdata.rulesengine.LoadToCustomers" />
+            <class name="com.gainsight.bigdata.rulesengine.LoadToFeature" />
+        </classes>
+    </test>
+</suite>

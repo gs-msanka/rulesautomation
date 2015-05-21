@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.bigdata.urls.ApiUrls;
+import com.gainsight.bigdata.util.ApiUrl;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -19,6 +21,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
+import org.testng.Assert;
 
 public class RulesUtil extends NSTestBase {
 
@@ -28,17 +31,43 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> ctaTypesMap;
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
+	public DataETL dataETL;
+	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
 
-	public static ResponseObject convertToObject(String result)
-			throws IOException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		ResponseObject response = objectMapper.readValue(result,
-				ResponseObject.class);
-		return response;
+	public void loadToCustomers(HashMap<String, String> testData) throws Exception {
+		populateObjMaps();
+		setupRule(testData);
+		String RuleName = testData.get("Name");
+		String ruleId = getRuleId(RuleName);
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE + "/" + ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
+				header.getAllHeaders(), "{}");
+		Log.info("Rule ID:" + ruleId + "\n Request URL"
+				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
+				+ "\n Request rawBody:{}");
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+		Assert.assertNotNull(responseObj.getRequestId());
+		RulesUtil.waitForCompletion(ruleId, wa, header);
+
+		String LRR = sfdc
+				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'")[0]
+				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+		Assert.assertEquals("SUCCESS", LRR);
+
+		int rules1 = sfdc.getRecordCount("Select Id, IsDeleted From Account Where ((IsDeleted = false))");
+		Log.info(""+rules1);
+		int rules2 = sfdc
+				.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+		Log.info(""+rules2);
+		Assert.assertEquals(rules1, rules2);
 	}
-	
-   /**
+
+
+	/**
  * @param testData - the entire testData Hashmap which we get from excel - from which we generate the rule.
  */
 public void setupRule(HashMap<String,String> testData){
