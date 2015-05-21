@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.SalesforceMetadataClient;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
@@ -41,6 +42,37 @@ public class RulesUtil extends NSTestBase {
 	public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
 	DataETL dataETL;
 	ResponseObj result = null;
+
+	public void loadToCustomers(HashMap<String, String> testData) throws Exception {
+		populateObjMaps();
+		setupRule(testData);
+		String RuleName = testData.get("Name");
+		String ruleId = getRuleId(RuleName);
+		Log.info("request:" + ApiUrls.APP_API_EVENTRULE + "/" + ruleId);
+		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
+				header.getAllHeaders(), "{}");
+		Log.info("Rule ID:" + ruleId + "\n Request URL"
+				+ ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
+				+ "\n Request rawBody:{}");
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+		Assert.assertNotNull(responseObj.getRequestId());
+		RulesUtil.waitForCompletion(ruleId, wa, header);
+
+		String LRR = sfdc
+				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'")[0]
+				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+		Assert.assertEquals("SUCCESS", LRR);
+
+		int rules1 = sfdc.getRecordCount("Select Id, IsDeleted From Account Where ((IsDeleted = false))");
+		Log.info(""+rules1);
+		int rules2 = sfdc
+				.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+		Log.info(""+rules2);
+		Assert.assertEquals(rules1, rules2);
+	}
 
 	public static ResponseObject convertToObject(String result)
 			throws IOException {

@@ -8,6 +8,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.ExcelDataProvider;
 import com.gainsight.utils.annotations.TestInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +25,7 @@ import org.testng.annotations.Test;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoadToSFDC extends RulesUtil {
@@ -36,6 +38,7 @@ public class LoadToSFDC extends RulesUtil {
     private static final String CLEANUP_PRE_TEST_RUN = "Delete [Select Id from JBCXM__AutomatedAlertRules__c];\n" +
             "Delete [Select Id from CustomWeRules__c];";
     private static final String TEST_DATA_FILE                 =       "/testdata/newstack/RulesEngine/LoadToSFDC/LoadToSFDC.xls";
+    private static final String TEST_ACCOUNT_DATA_FILE         =        "/testdata/newstack/RulesEngine/LoadToCustomers/LoadToCustomers.xls";
     private static final String LOAD_DATA_TO_SOURCE_JOB        =       Application.basedir+"/testdata/newstack/RulesEngine/jobs/Job_CustomSourceWeRules.txt";
     private static final String UPSERT_DATA_TO_SOURCE_JOB      =       Application.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Upsert_CustomWeRules.txt";
     private static final String UPDATE_DATA_TO_SOURCE_JOB      =       Application.basedir+"/testdata/newstack/RulesEngine/jobs/Job_Update_CustomWeRules.txt";
@@ -45,6 +48,14 @@ public class LoadToSFDC extends RulesUtil {
         sfdc.connect();
         sfinfo = sfdc.fetchSFDCinfo();
 
+
+        List<HashMap<String, String>> testDataList = ExcelDataProvider.getDataFromExcel(Application.basedir + TEST_ACCOUNT_DATA_FILE, "loadToCustomers1");
+        if(testDataList.size()>0) {
+            loadToCustomers(testDataList.get(0));
+        }
+        else {
+            throw new RuntimeException("Do it again...");
+        }
         String[] dateFields = new String[]{"CDate1", "CDate2", "CDate3"};
         String[] dateTimeFields = new String[]{"CDateTime1", "CDateTime2", "CDateTime3"};
         String[] checkBoxFields = new String[]{"CBoolean1", "CBoolean2", "CBoolean3"};
