@@ -37,7 +37,7 @@ public class Customer360ScorecardsNumericTest extends BaseTest {
     @BeforeClass
     public void setUp() throws Exception {
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
-        metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();

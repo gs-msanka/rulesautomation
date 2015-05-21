@@ -37,8 +37,8 @@ public class AdoptionDataSetup extends BaseTest {
         sfdc.runApexCode(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
         sfdc.runApexCode(resolveStrNameSpace(CUST_SET_DELETE));
         try {
-            metaUtil.createExtIdFieldOnAccount(sfdc,sfinfo);
-            metaUtil.createFieldsOnUsageData(sfdc,sfinfo);
+            metaUtil.createExtIdFieldOnAccount(sfdc);
+            metaUtil.createFieldsOnUsageData(sfdc);
             sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(MEASURES_FILE)));
             dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
         } catch (Exception e) {

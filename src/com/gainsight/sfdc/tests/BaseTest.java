@@ -63,6 +63,10 @@ public class BaseTest {
         if(Boolean.valueOf(env.getProperty("sfdc.installApp"))) {
             packageUtil.installApplication(env.getProperty("sfdc.packageVersionNumber"), env.getProperty("sfdc.packagePassword"));
         }
+        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
+        if(PropertyReader.managedPackage) {
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+        }
 
         if(Boolean.valueOf(env.getProperty("sfdc.updateWidgetLayouts"))) {
             packageUtil.updateWidgetLayouts(true, true, true);
@@ -70,7 +74,7 @@ public class BaseTest {
 
         packageUtil.deployPermissionSetCode();
         sfinfo = sfdc.fetchSFDCinfo();
-        System.out.println("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
+        Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
         DateUtil.timeZone =  userTimezone;
