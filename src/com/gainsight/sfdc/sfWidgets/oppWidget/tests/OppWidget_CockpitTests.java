@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -13,7 +12,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OppWidget_CockpitPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
@@ -39,9 +37,9 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 	    public void setup() throws Exception {
          sfdc.connect();
          basepage.login();
-         metaUtil.createExtIdFieldOnAccount(sfdc,sfinfo);
+         metaUtil.createExtIdFieldOnAccount(sfdc);
          sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-         metaUtil.createExtIdFieldOnUser(sfdc,sfinfo);
+         metaUtil.createExtIdFieldOnUser(sfdc);
          sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
          cleanPlaybooksData();
          loadDefaultPlaybooks();

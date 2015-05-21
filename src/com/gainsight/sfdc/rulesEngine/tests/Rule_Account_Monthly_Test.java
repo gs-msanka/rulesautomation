@@ -7,7 +7,6 @@ import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
-import jxl.read.biff.BiffException;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -70,8 +69,8 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
-        metaUtil.createFieldsOnUsageData(sfdc,sfinfo);
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
+        metaUtil.createFieldsOnUsageData(sfdc);
         metaUtil.createFieldsOnAccount(sfdc,sfinfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);

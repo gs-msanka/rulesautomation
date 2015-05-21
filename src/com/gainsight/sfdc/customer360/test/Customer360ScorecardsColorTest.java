@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer360.test;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 import org.testng.Assert;
@@ -28,18 +29,18 @@ import com.gainsight.utils.annotations.TestInfo;
 public class Customer360ScorecardsColorTest extends BaseTest {
 
     private final String TEST_DATA_FILE         = "testdata/sfdc/scorecards/tests/Color_Scheme_Data.xls";
-    private final String SETUP_FILE             = env.basedir+"/apex_scripts/scorecard/scorecard.apex";
-    private final String CLEAN_FILE             = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
-    private final String SCHEME_DEFINITION_FILE = env.basedir+"/apex_scripts/scorecard/Scorecard_Color_SchemeDefinition_Update.txt";
-    private final String COLOR_SCHEME_FILE      = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_color.apex";
-    private final String METRICS_CREATE_FILE    = env.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
+    private final String SETUP_FILE             = Application.basedir+"/apex_scripts/scorecard/scorecard.apex";
+    private final String CLEAN_FILE             = Application.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private final String SCHEME_DEFINITION_FILE = Application.basedir+"/apex_scripts/scorecard/Scorecard_Color_SchemeDefinition_Update.txt";
+    private final String COLOR_SCHEME_FILE      = Application.basedir+"/apex_scripts/scorecard/Scorecard_enable_color.apex";
+    private final String METRICS_CREATE_FILE    = Application.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private final String SCHEME                 = "Color";
 
     @BeforeClass
     public void setUp() throws Exception {
         sfdc.connect();
         Log.info("Starting Customer 360 Scorecard module Test Cases...");
-	    metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
+	    metaUtil.createExtIdFieldForScoreCards(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_FILE));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SETUP_FILE));
         basepage.login();

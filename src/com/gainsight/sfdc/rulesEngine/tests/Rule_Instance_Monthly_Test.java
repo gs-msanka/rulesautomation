@@ -3,11 +3,9 @@ package com.gainsight.sfdc.rulesEngine.tests;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import jxl.read.biff.BiffException;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -69,8 +67,8 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
         metaUtil.createFieldsOnAccount(sfdc,sfinfo);
-        metaUtil.createExtIdFieldForScoreCards(sfdc,sfinfo);
-        metaUtil.createFieldsOnUsageData(sfdc,sfinfo);
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
+        metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));

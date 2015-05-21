@@ -1,0 +1,13 @@
+//Assigns Gainsight Admin Permission to the Current User.
+List<PermissionSet> permissionSet = [SELECT Id FROM PermissionSet WHERE Label = 'Gainsight Admin'];
+system.debug(permissionSet.size());
+if(permissionSet.size()>0) {
+    List<PermissionSetAssignment> p = [Select id,PermissionSetId, AssigneeId from
+                                 PermissionSetAssignment where PermissionSetId =: permissionSet[0].Id AND
+                            	AssigneeId =: UserInfo.getUserId()];
+    if(p.size() == 0) {
+	PermissionSetAssignment perAssignment = new PermissionSetAssignment(PermissionSetId = permissionSet[0].Id, AssigneeId = UserInfo.getUserId());
+    insert perAssignment;
+
+    }
+}
