@@ -38,7 +38,8 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
-	MetadataConnection metadataConnection;
+	public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
+	DataETL dataETL;
 	ResponseObj result = null;
 
 	public static ResponseObject convertToObject(String result)
