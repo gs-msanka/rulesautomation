@@ -16,7 +16,6 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.annotations.TestInstance;
 
 import com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest;
 import com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest;
@@ -49,7 +48,7 @@ public class WorkFlowTest extends WorkflowSetup {
     public void setup() throws Exception {
     	sfdc.connect();
        basepage.login();
-       metaUtil.createExtIdFieldOnAccount(sfdc,sfinfo);
+       metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         //createExtIdFieldOnUser();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));

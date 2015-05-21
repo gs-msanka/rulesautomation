@@ -2,8 +2,6 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.util.HashMap;
 
-import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.sfdc.SalesforceMetadataClient;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
@@ -13,13 +11,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.http.WebAction;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
-import com.sforce.ws.ConnectionException;
 
 public class LoadToUsageData extends RulesUtil {
 	private static final String CleanUpForRules = Application.basedir
@@ -31,7 +25,7 @@ public class LoadToUsageData extends RulesUtil {
 	@BeforeClass
 	public void beforeClass() throws Exception {
 		sfdc.connect();
-		metaUtil.createFieldsOnUsageData(sfdc, sfinfo);
+		metaUtil.createFieldsOnUsageData(sfdc);
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
 	}
 
