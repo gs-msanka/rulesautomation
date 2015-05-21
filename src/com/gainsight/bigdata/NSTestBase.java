@@ -36,20 +36,20 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 
 public class NSTestBase {
 
-    protected SFDCInfo sfinfo;
-    protected WebAction wa;
-    protected Header header;
-    protected static String basedir;
-    protected String testDataBasePath;
-    protected ObjectMapper mapper = new ObjectMapper();
+    public static SFDCInfo sfinfo;
+    public static WebAction wa;
+    public static Header header;
+    public static String basedir;
+    public static String testDataBasePath;
+    public static ObjectMapper mapper = new ObjectMapper();
     public static SalesforceMetadataClient metadataClient;
     public static SalesforceConnector sfdc;
     public static final Application env = new Application();
     public static final Boolean isPackage = PropertyReader.managedPackage;
     public static MetaDataUtil metaUtil = new MetaDataUtil();
-    public String accessKey;
-    public int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
-    public TenantManager tenantManager;
+    public static String accessKey;
+    public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
+    public static TenantManager tenantManager;
 
     @BeforeSuite
     public void init() throws Exception {
