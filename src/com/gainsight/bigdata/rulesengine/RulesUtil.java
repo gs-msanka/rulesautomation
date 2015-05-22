@@ -3,13 +3,13 @@ package com.gainsight.bigdata.rulesengine;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gainsight.bigdata.urls.ApiUrls;
-import com.gainsight.bigdata.util.ApiUrl;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -35,6 +35,14 @@ public class RulesUtil extends NSTestBase {
 	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
 
+	public static ResponseObject convertToObject(String result)
+			throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ResponseObject response = objectMapper.readValue(result,
+				ResponseObject.class);
+		return response;
+	}
+	
 	public void loadToCustomers(HashMap<String, String> testData) throws Exception {
 		populateObjMaps();
 		setupRule(testData);
@@ -65,9 +73,7 @@ public class RulesUtil extends NSTestBase {
 		Log.info(""+rules2);
 		Assert.assertEquals(rules1, rules2);
 	}
-
-
-	/**
+   /**
  * @param testData - the entire testData Hashmap which we get from excel - from which we generate the rule.
  */
 public void setupRule(HashMap<String,String> testData){
@@ -373,10 +379,118 @@ public void setupRule(HashMap<String,String> testData){
         Pattern pattern = Pattern.compile("\"\\w{18}\"");
         return replaceStringWithTokens(text, pattern, replacements);
     }
-    
-    public static Boolean createAndRunRule(HashMap<String,String> testData){
-    	
-    	return true;
-    }
 
+	public Boolean createAndRunRule(HashMap<String,String> testData) throws Exception {
+		populateObjMaps();
+		setupRule(testData);
+		String RuleName = testData.get("Name");
+		String ruleId = getRuleId(RuleName);
+		result = wa.doPost(
+				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				header.getAllHeaders(), "{}");
+		Log.info("Rule ID:" + ruleId + "\n Request URL"
+				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ "\n Request rawBody:{}");
+
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		if(!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId()==null)
+		{
+			Log.error("Rule Request itself failed!");
+			return false;
+		}
+		else{
+			RulesUtil.waitForCompletion(ruleId, wa, header);
+
+			String LRR = sfdc
+					.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+							+ RuleName + "'"))[0]
+					.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
+			if(!LRR.equalsIgnoreCase("Success"))
+			{
+				Log.error("Rule Processing failed");
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/*
+        This method creates all fields of all types except LookUp,PickList and MultiPickList
+     */
+	public void createCustomFieldsAndAddPermissions(String object, HashMap<String, String[]> fieldsMap) {
+		sfinfo = sfdc.fetchSFDCinfo();
+		try {
+			Iterator it = fieldsMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry)it.next();
+				String fieldType = (String) pair.getKey();
+				if ("DATE".equalsIgnoreCase(fieldType)) {
+					metadataClient.createDateField(object, fieldsMap.get(fieldType), false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("DATETIME".equalsIgnoreCase(fieldType)){
+					metadataClient.createDateField(object, fieldsMap.get(fieldType), true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("BOOLEAN".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), true, false, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("PHONE".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), false, true, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("URL".equalsIgnoreCase(fieldType)){
+					metadataClient.createFields(object, fieldsMap.get(fieldType), false, false, true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("NUMBER".equalsIgnoreCase(fieldType)){
+					metadataClient.createNumberField(object, fieldsMap.get(fieldType), false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("PERCENT".equalsIgnoreCase(fieldType)){
+					metadataClient.createNumberField(object, fieldsMap.get(fieldType), true);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("EMAIL".equalsIgnoreCase(fieldType)){
+					metadataClient.createEmailField(object, fieldsMap.get(fieldType));
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("TEXT".equalsIgnoreCase(fieldType)){
+					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, false, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else if("TEXTAREA".equalsIgnoreCase(fieldType)){
+					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, true, false);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+				}
+				else{
+
+				}
+				continue;
+			}
+		}
+		catch (Exception e){
+			Log.error("Exception occurred while creating and adding field permissions.",e);
+			e.printStackTrace();
+		}
+	}
+
+	public void saveCustomObjectInRulesConfig(String data) throws Exception{
+		Log.info("\n Request URL"
+				+ ApiUrls.APP_API_RULES_LOADABLE_OBJECT
+				+ "\n Request rawBody:" + data);
+
+		result = wa.doPost(
+				ApiUrls.APP_API_RULES_LOADABLE_OBJECT,
+				header.getAllHeaders(), data);
+
+		ResponseObject responseObj = RulesUtil.convertToObject(result
+				.getContent());
+		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
+		Assert.assertNotNull(responseObj.getRequestId());
+
+	}
 }
