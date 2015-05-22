@@ -51,9 +51,6 @@ public class NSTestBase {
     public static String accessKey;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    public String accessKey;
-    public int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
-    public TenantManager tenantManager;
     MetadataConnection metadataConnection;
 
     @BeforeSuite
