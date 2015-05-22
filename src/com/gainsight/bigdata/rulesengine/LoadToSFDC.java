@@ -1,32 +1,21 @@
 package com.gainsight.bigdata.rulesengine;
-import com.gainsight.bigdata.rulesengine.RulesUtil;
-import com.gainsight.bigdata.urls.ApiUrls;
-import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.ExcelDataProvider;
 import com.gainsight.utils.annotations.TestInfo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.sforce.soap.metadata.*;
-import com.sforce.soap.metadata.Error;
-import com.sforce.ws.ConnectionException;
 import org.apache.commons.lang3.ArrayUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import com.gainsight.sfdc.util.datagen.DataETL;
+
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LoadToSFDC extends RulesUtil {
 
