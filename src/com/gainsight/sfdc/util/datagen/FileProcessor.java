@@ -12,6 +12,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.testdriver.Application;
 
 public class FileProcessor {
 
@@ -144,6 +145,11 @@ public class FileProcessor {
 		return outputFile;
 	}
 
+    public static File getDateProcessedFile(JobInfo jobInfo) throws IOException {
+        return getDateProcessedFile(new File(Application.basedir+jobInfo.getDateProcess().getInputFile()),
+                new File(Application.basedir+jobInfo.getDateProcess().getOutputFile()), jobInfo.getDateProcess().getFields());
+    }
+
     public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields) throws IOException {
         CSVReader reader = new CSVReader(new FileReader(inputFile));
         String[] cols;
@@ -172,8 +178,14 @@ public class FileProcessor {
         while(cols != null) {
             for(JobInfo.DateProcess.Fields field : fields) {
                 try {
-                    int value = Integer.parseInt(cols[field.getFieldIndex()]);
-                    cols[field.getFieldIndex()] =  getDate(field, value);
+                    String val = cols[field.getFieldIndex()];
+                    if(val == null || val == "") {
+                        System.out.println("No field Value..., just skipping date/datetime conversion...");
+                    } else {
+                        int value = Integer.parseInt(cols[field.getFieldIndex()]);
+                        cols[field.getFieldIndex()] =  getDate(field, value);
+                    }
+
                 } catch (NumberFormatException e) {
                     //Just Ignore.
                 }
@@ -188,19 +200,19 @@ public class FileProcessor {
     private static String getDate(JobInfo.DateProcess.Fields field, int value) {
         if(field.isDateTime())  {
             if(field.isDaily()) {
-               return DateUtil.addDays(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
+                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
             } else if (field.isWeekly()){
-                return DateUtil.addWeeks(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
+                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
             } else {
-                return DateUtil.addMonths(Calendar.getInstance(), value, "yyyy-MM-dd'T'HH:mm:ss");
+                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
             }
         } else {
             if(field.isDaily()) {
-                return DateUtil.addDays(Calendar.getInstance(), value, "yyyy-MM-dd");
+                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
             } else if (field.isWeekly()){
-                return DateUtil.addWeeks(Calendar.getInstance(), value, "yyyy-MM-dd");
+                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
             } else {
-                return DateUtil.addMonths(Calendar.getInstance(), value, "yyyy-MM-dd");
+                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
             }
         }
     }

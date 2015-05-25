@@ -251,6 +251,8 @@ public class TenantManager {
                 throw new RuntimeException("Failed to get Tenant Details");
             }
         }
+        Log.info("Tenant ID :" +tenantDetail.getTenantId());
+        Log.info("Org Id :" +tenantDetail.getExternalTenantID());
         return tenantDetail;
     }
 

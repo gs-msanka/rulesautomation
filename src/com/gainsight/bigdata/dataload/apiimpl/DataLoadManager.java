@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.dataload.apiimpl;
 
+import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
@@ -11,6 +12,8 @@ import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -19,16 +22,21 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 
+import org.codehaus.jackson.type.TypeReference;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
+import static com.gainsight.bigdata.urls.ApiUrls.*;
 
 /**
  * Created by Giribabu on 13/05/15.
@@ -39,8 +47,9 @@ public class DataLoadManager extends NSTestBase {
 
     @BeforeClass
     public void DataLoadManager() {
+        accessKey = getDataLoadAccessKey();
         headers.addHeader("Content-Type", "application/json");
-        headers.addHeader("accessKey", getDataLoadAccessKey());
+        headers.addHeader("accessKey", accessKey);
         headers.addHeader("appOrgId", sfinfo.getOrg());
         headers.addHeader("loginName", sfinfo.getUserName());
     }
@@ -194,8 +203,8 @@ public class DataLoadManager extends NSTestBase {
      * @return - Status/JobID of the data load.
      */
     public String dataLoadManage(DataLoadMetadata DLMetadata, File file) {
-        if(DLMetadata==null && file==null) {
-            throw new RuntimeException("Metadata & file are not null");
+        if(DLMetadata==null || file==null || !file.exists()) {
+            throw new RuntimeException("Metadata & file should not be null...");
         }
         String metadata = null;
         try {
@@ -216,7 +225,7 @@ public class DataLoadManager extends NSTestBase {
      * @return - Status/JobID after the data load.
      */
     public String dataLoadManage(String metadata, File file) {
-        if(metadata==null && file==null) {
+        if(metadata==null || file==null) {
             throw new RuntimeException("Metadata & file are not null");
         }
 
@@ -279,6 +288,7 @@ public class DataLoadManager extends NSTestBase {
      * @param file - Writes to the file specified.
      */
     public void exportFailedRecords(String statusId, File file) {
+        Log.info("Started Exporting Failed records...");
         String data = exportFailedRecords(statusId);
         if(file.exists()) {
             try {
@@ -301,7 +311,130 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    public List<CollectionInfo> getAllCollections() {
+        Log.info("Getting All the Collections...");
+        List<CollectionInfo> collectionInfoList = new ArrayList<>();
+        try {
+            ResponseObj responseObj = wa.doGet(ADMIN_GET_COLLECTIONS_ALL, header.getAllHeaders());
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+
+            HashMap<String, List<CollectionInfo>> collectionInfoMap = mapper.convertValue(nsResponseObj.getData(), new TypeReference<HashMap<String, ArrayList<CollectionInfo>>>() {});
+
+            if(collectionInfoMap != null && collectionInfoMap.containsKey("Collections")) {
+                collectionInfoList = collectionInfoMap.get("Collections");
+            }
+        } catch (Exception e) {
+            Log.error("Failed to get collections..");
+            throw new RuntimeException("Failed to get collections..");
+        }
+        Log.info("Total No of Collections... "+collectionInfoList.size());
+        return collectionInfoList;
+    }
+
+    public CollectionInfo getCollection(String subjectAreaName) {
+        Log.info("Getting Single Collection...");
+        if(subjectAreaName ==null && subjectAreaName.equals("")) {
+            throw new RuntimeException("Subject Area is Required.");
+        }
+        List<CollectionInfo> collectionInfoList = getAllCollections();
+        Log.info("No OF Collections ... " +collectionInfoList.size());
+        for(CollectionInfo collectionInfo : collectionInfoList) {
+            if(subjectAreaName.equals(collectionInfo.getCollectionDetails().getCollectionName())) {
+                return collectionInfo;
+            }
+        }
+        return null;
+    }
+
+    public CollectionInfo getCollectionInfo(String collectionId) {
+        try {
+            ResponseObj responseObj = wa.doGet(APP_API_GET_COLLECTION+collectionId, headers.getAllHeaders());
+            if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                if(nsResponseObj.isResult()) {
+                    CollectionInfo collectionInfo = mapper.convertValue(nsResponseObj.getData(), CollectionInfo.class);
+                    return collectionInfo;
+                }
+            }
+        } catch (Exception e) {
+            Log.error("Failed to get collection schema..."+e.getLocalizedMessage());
+            throw new RuntimeException("Failed to get collection schema..."+e.getLocalizedMessage());
+        }
+        return null;
+    }
 
 
+    public String clearAllCollectionData(String collectionName, String sourceType, String targetType) {
+        DataLoadMetadata metadata = new DataLoadMetadata();
+        metadata.setSourceType(sourceType);
+        metadata.setTargetType(targetType);
+        metadata.setHeaderRow(false);
+        metadata.setCollectionName(collectionName);
+        metadata.setClearOperation("CLEAR_ALL_DATA");
+        metadata.setDbNameUsed(false);
+
+        return clearAllCollectionData(metadata);
+    }
+
+    public String clearAllCollectionData(DataLoadMetadata metadata) {
+        Log.info("Clearing All Collection Data...");
+        String jobId = null;
+        try {
+            headers.removeHeader("Content-Type");
+            headers.addHeader("Content-Type", "multipart/form-data");
+
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            StringBody value = new StringBody(mapper.writeValueAsString(metadata), ContentType.APPLICATION_JSON);
+            builder.addPart("metadata", value);
+
+            HttpEntity reqEntity = builder.build();
+
+            ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                if (nsResponseObj.isResult()) {
+                    HashMap<String, String> serverData = (HashMap<String, String>) mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+                    Log.info("Status ID : " + serverData.get("statusId"));
+                    jobId = serverData.get("statusId");
+                }
+            }
+        } catch (Exception e) {
+            Log.error("Clear All Collection Data Failed.", e);
+        } finally {
+            headers.removeHeader("Content-Type");
+            headers.addHeader("Content-Type", "application/json");
+        }
+        return jobId;
+    }
+
+    public void verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
+        Assert.assertEquals(expected.getCollectionDetails().getCollectionName(), actual.getCollectionDetails().getCollectionName());
+        Assert.assertEquals(expected.getColumns().size(), actual.getColumns().size());
+        boolean result = false;
+        for(CollectionInfo.Column expColumn : expected.getColumns()) {
+            for(CollectionInfo.Column actualColumn : actual.getColumns()) {
+                if(expColumn.getDisplayName().equals(actualColumn.getDisplayName())) {
+                    Assert.assertNotNull(actualColumn.getDbName());
+                    Assert.assertEquals(expColumn.getDatatype(), actualColumn.getDatatype());
+                    result = true;
+                    break;
+                }
+
+
+            }
+            if(!result) {
+                Assert.assertFalse(true, expColumn.getName() + "is not found.");
+            }
+            result =false;
+        }
+    }
+
+    public CollectionInfo.CollectionDetails getCollectionDetail (Object content) {
+        HashMap<String, String> serverCollectionData = mapper.convertValue(content, HashMap.class);
+        CollectionInfo.CollectionDetails colDetails = new CollectionInfo.CollectionDetails();
+        colDetails.setCollectionId(serverCollectionData.get("collectionId"));
+        colDetails.setDbCollectionName(serverCollectionData.get("dbCollectionName"));
+        return colDetails;
+    }
 
 }

@@ -1,25 +1,36 @@
 package com.gainsight.bigdata.dataload.pojo;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 
 /**
- * Created by gainsight on 18/05/15.
+ * Created by Giribabu on 18/05/15.
  */
+@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public class DataLoadMetadata {
     private String ruleName;
     private String collectionName;
     private String dataLoadOperation;
+    private String clearOperation;
     private String sourceType;
     private String targetType;
     private boolean headerRow = true;
-    private char fieldSeparator = ',';
-    private char escapeCharacter = '\\';
-    private char quoteCharacter = '\"';
+    private Character fieldSeparator;
+    private Character escapeCharacter;
+    private Character quoteCharacter;
     private boolean dbNameUsed = false;
     @JsonProperty("mapping")
     private List<Mapping> mappings;
+
+    public String getClearOperation() {
+        return clearOperation;
+    }
+
+    public void setClearOperation(String clearOperation) {
+        this.clearOperation = clearOperation;
+    }
 
     public String getRuleName() {
         return ruleName;
@@ -69,28 +80,28 @@ public class DataLoadMetadata {
         this.headerRow = headerRow;
     }
 
-    public char getFieldSeparator() {
-        return fieldSeparator;
-    }
-
-    public void setFieldSeparator(char fieldSeparator) {
-        this.fieldSeparator = fieldSeparator;
-    }
-
-    public char getEscapeCharacter() {
+    public Character getEscapeCharacter() {
         return escapeCharacter;
     }
 
-    public void setEscapeCharacter(char escapeCharacter) {
+    public void setEscapeCharacter(Character escapeCharacter) {
         this.escapeCharacter = escapeCharacter;
     }
 
-    public char getQuoteCharacter() {
+    public Character getQuoteCharacter() {
         return quoteCharacter;
     }
 
-    public void setQuoteCharacter(char quoteCharacter) {
+    public void setQuoteCharacter(Character quoteCharacter) {
         this.quoteCharacter = quoteCharacter;
+    }
+
+    public Character getFieldSeparator() {
+        return fieldSeparator;
+    }
+
+    public void setFieldSeparator(Character fieldSeparator) {
+        this.fieldSeparator = fieldSeparator;
     }
 
     public boolean isDbNameUsed() {

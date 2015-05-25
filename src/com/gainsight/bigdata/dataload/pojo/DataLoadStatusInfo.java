@@ -1,10 +1,12 @@
 package com.gainsight.bigdata.dataload.pojo;
 
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * Created by Giribabu on 13/05/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DataLoadStatusInfo {
 
     private String collectionId;
