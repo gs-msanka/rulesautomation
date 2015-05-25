@@ -10,6 +10,7 @@
             <!-- Pawel's Test-->
             <class name="com.gainsight.bigdata.rulesengine.LoadToCustomers" />
             <class name="com.gainsight.bigdata.rulesengine.LoadToFeature" />
+            <class name="com.gainsight.bigdata.rulesengine.LoadToSFDC" />
         </classes>
     </test>
 </suite>
