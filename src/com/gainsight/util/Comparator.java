@@ -1,6 +1,7 @@
 package com.gainsight.util;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.gainsight.testdriver.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -63,7 +64,7 @@ public class Comparator {
             return compareListData(expectedCsvParsedData, actualCsvParsedData);
     }
 
-    private static List<Map<String, String>> getParsedCsvData(CSVReader csvReader) {
+    public static List<Map<String, String>> getParsedCsvData(CSVReader csvReader) {
 
         List<Map<String, String>> parsedCsv = new ArrayList<Map<String, String>>();
         Map<String, Integer> headerMap = new HashMap<>();
@@ -141,7 +142,7 @@ public class Comparator {
                 diff.add(actualRowData);
             }
         }
-
+        Log.info("No of Records Not Matched : " + diff.size());
         return diff;
     }
 

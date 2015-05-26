@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class JobInfo {
@@ -97,6 +98,7 @@ public class JobInfo {
 		this.load = load;
 	}
 
+
     public static class DateProcess {
         String inputFile;
         String outputFile;
@@ -127,11 +129,21 @@ public class JobInfo {
             this.fields = fields;
         }
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Fields {
             boolean weekly;
             boolean daily;
             boolean dateTime;
+            String dateFormat;
             String fieldName;
+
+            public String getDateFormat() {
+                return dateFormat;
+            }
+
+            public void setDateFormat(String dateFormat) {
+                this.dateFormat = dateFormat;
+            }
 
             public int getFieldIndex() {
                 return fieldIndex;

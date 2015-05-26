@@ -1,23 +1,32 @@
 package com.gainsight.bigdata.dataload.tests;
 
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
+import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
+import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
+import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
+import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
-import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
-import com.gainsight.http.ResponseObj;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
-import org.apache.http.HttpStatus;
-import org.codehaus.jackson.JsonParseException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Giribabu on 28/04/15.
@@ -27,71 +36,78 @@ public class LoadDataToMDATest extends DataLoadManager {
 
     private final String TEST_DATA_FILE = "testdata/newstack/dataLoader/tests/DataLoaderTests.xls";
     private TenantDetails tenantDetails;
+    private ReportManager reportManager = new ReportManager();
 
     @BeforeClass
     public void setup() {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-        accessKey = getDataLoadAccessKey();
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
     }
 
-    @TestInfo(testCaseIds = {"GS-3626"})
-    @Test
-    public void mdaAuthorizeCheckingWithValidDetails() {
-        NsResponseObj nsResponseObj = mdaDataLoadAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName());
-        Assert.assertTrue(nsResponseObj != null);
+
+    @TestInfo(testCaseIds = {"GS-4760"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
+    public void loadDataToMDACommaSeparated(HashMap<String, String> testData) throws IOException {
+        CollectionInfo collectionInfo = mapper.readValue(testData.get("CollectionSchema"), CollectionInfo.class);
+        DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata"), DataLoadMetadata.class);
+
+        NsResponseObj nsResponseObj = createSubjectArea(collectionInfo);
+        Assert.assertNotNull(nsResponseObj);
         Assert.assertTrue(nsResponseObj.isResult());
-        Assert.assertNotNull(nsResponseObj.getData());
-        HashMap<String, String> serverData = (HashMap<String, String>) mapper.convertValue(nsResponseObj.getData(), HashMap.class);
-        Assert.assertTrue(serverData.containsKey("tenantName"));
-        Assert.assertNotNull(serverData);
+
+        CollectionInfo.CollectionDetails colDetails = getCollectionDetail(nsResponseObj.getData());
+
+        Assert.assertNotNull(colDetails.getDbCollectionName());
+        Assert.assertNotNull(colDetails.getCollectionId());
+
+
+        CollectionInfo actualCollection = getCollectionInfo(colDetails.getCollectionId());
+        Assert.assertNotNull(actualCollection);
+        verifyCollectionInfo(collectionInfo, actualCollection);
+
+
+        JobInfo actualJobInfo = mapper.readValue(new File(Application.basedir+testData.get("ActualDataLoadJob")), JobInfo.class);
+        JobInfo expectedJobInfo = mapper.readValue(new File(Application.basedir+testData.get("ExpectedDataLoadJob")), JobInfo.class);
+
+        FileProcessor.getDateProcessedFile(actualJobInfo);
+        FileProcessor.getDateProcessedFile(expectedJobInfo);
+
+
+        File dataFile = new File(Application.basedir+actualJobInfo.getDateProcess().getOutputFile());
+
+        String jobId = dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        waitForDataLoadJobComplete(jobId);
+
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        Assert.assertEquals(statusInfo.getCollectionName(), collectionInfo.getCollectionDetails().getCollectionName());
+
+        Assert.assertEquals(statusInfo.getFailureCount(), Integer.parseInt(testData.get("FailedRecordCount")));
+        Assert.assertEquals(statusInfo.getSuccessCount(), Integer.parseInt(testData.get("SuccessRecordCount")));
+        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
+
+
+        String reportMaster = reportManager.createDynamicTabularReport(actualCollection);
+        String reportContent = reportManager.runReport(reportMaster);
+
+        List<Map<String,String>> actualData  = reportManager.convertReportData(reportContent);
+
+        Assert.assertEquals(testData.get("SuccessRecordCount"), actualData.size());
+        Log.info("ActualData Size : " + actualData.size());
+
+        List<Map<String, String>> processedData = reportManager.getProcessedReportData(actualData, actualCollection);
+
+
+        CSVReader expectedReader = new CSVReader(new FileReader(new File(Application.basedir+expectedJobInfo.getDateProcess().getOutputFile())));
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
+        expectedData = reportManager.populateDefaultBooleanValue(expectedData, actualCollection);
+
+        Log.info("Actual Data : " + mapper.writeValueAsString(processedData));
+        Log.info("Expected Data : " + mapper.writeValueAsString(expectedData));
+
+        Assert.assertEquals(0,Comparator.compareListData(expectedData, processedData).size());
     }
 
-    @TestInfo(testCaseIds = {"GS-3627"})
-    @Test
-    public void mdaAuthorizeCheckingWithInvalidAccessKey() throws IOException {
-        String key = accessKey;
-        accessKey = getDataLoadAccessKey(); //re-generating another accessKey to verify that old one is discarded.
-        ResponseObj responseObj = mdaAuthenticate(sfinfo.getOrg(), key, sfinfo.getUserName());
-        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
-        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        Assert.assertFalse(nsResponseObj.isResult());
-        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
-    }
 
-    @TestInfo(testCaseIds = {"GS-3628"})
-    @Test
-    public void mdaAuthorizeCheckingWithInvalidLoginName() throws IOException {
-        ResponseObj responseObj = mdaAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName()+"Invalid");
-        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
-        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        Assert.assertFalse(nsResponseObj.isResult());
-        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
-    }
-
-    @TestInfo(testCaseIds = {"GS-3629"})
-    @Test
-    public void mdaAuthorizeCheckingWithInvalidOrgId() throws IOException {
-        ResponseObj responseObj = mdaAuthenticate(tenantManager.sfdcInfo.getOrg(), accessKey, sfinfo.getUserName()); //Sending tenant management org SFDC ID which is not valid ID for the accessKey & UserName.
-        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
-        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        Assert.assertFalse(nsResponseObj.isResult());
-        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
-    }
-
-    @TestInfo(testCaseIds = {"GS-3630"})
-    @Test
-    public void mdaAuthorizeCheckingWith15DigitOrgId() {
-        System.out.println(sfinfo.getOrg().substring(0,15));
-        NsResponseObj nsResponseObj = mdaDataLoadAuthenticate(sfinfo.getOrg().substring(0,15), accessKey, sfinfo.getUserName());
-        Assert.assertTrue(nsResponseObj != null);
-        Assert.assertTrue(nsResponseObj.isResult());
-        Assert.assertNotNull(nsResponseObj.getData());
-        HashMap<String, String> serverData = (HashMap<String, String>) mapper.convertValue(nsResponseObj.getData(), HashMap.class);
-        Assert.assertTrue(serverData.containsKey("tenantName"));
-        Assert.assertNotNull(serverData);
-    }
 }

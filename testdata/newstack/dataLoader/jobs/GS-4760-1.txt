@@ -1,0 +1,34 @@
+{
+    "jobName": "MDA Loader 1",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+            "inputFile" : "/testdata/newstack/dataLoader/data/GS-4760.csv",
+            "outputFile" : "/resources/datagen/process/GS-4760-1.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "dateFormat" : "yyyy-MM-dd:HH-mm-ss",
+                    "fieldName" : "CreatedDate"
+                },
+                {
+                    "weekly" : true,
+                    "daily"  : false,
+                    "dateTime" : false,
+                    "dateFormat" : "MM/dd/yyyy",
+                    "fieldName" : "C_Date__c"
+
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : false,
+                    "dateTime" : false,
+                    "dateFormat" : "yyyy-MM-dd:HH-mm-ss",
+                    "fieldName" : "C_DateTime__c"
+
+                }
+            ]
+        }
+}

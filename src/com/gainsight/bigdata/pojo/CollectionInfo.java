@@ -118,7 +118,8 @@ public class CollectionInfo {
 		this.collectionDetails = collectionDetails;
 	}
 
-	public static class CollectionDetails {
+	@JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CollectionDetails {
 		@JsonProperty("CollectionName")
 		private String collectionName;
 		@JsonProperty("dbType")
@@ -129,7 +130,6 @@ public class CollectionInfo {
         private String dbCollectionName;
         @JsonProperty("CollectionID")
         private String collectionId;
-
 
         public String getDbCollectionName() {
             return dbCollectionName;

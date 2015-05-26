@@ -81,7 +81,7 @@ public class NSTestBase {
 
     /**
      * Generates the access token for data load purpose.
-     *
+     * If this method is used then, please update the headers that sends AccessKey{Used In DataLoad API}.
      * @return - String AccessToken that can be used for data load.
      */
     public String getDataLoadAccessKey() {

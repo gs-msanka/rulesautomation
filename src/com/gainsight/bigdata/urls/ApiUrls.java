@@ -13,6 +13,8 @@ public interface ApiUrls extends NSURLs {
     public String APP_API_RULES_LOADABLE_OBJECT = NS_URL + "/api/rulesloadableobject";
     public String API_REPORT_RUN                = NS_URL + "/api/reports/run/preparation";
     public String API_RULE_RUN                  = NS_URL + "/api/eventrule";
+    public String APP_API_GET_COLLECTION        = NS_URL + "/api/collections/";
+
 
 
 
