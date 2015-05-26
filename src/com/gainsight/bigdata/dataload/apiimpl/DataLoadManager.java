@@ -451,26 +451,38 @@ public class DataLoadManager extends NSTestBase {
      * @param expected - Expected Collection Info.
      * @param actual - Actual Collection Info.
      */
-    public void verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
-        Assert.assertEquals(expected.getCollectionDetails().getCollectionName(), actual.getCollectionDetails().getCollectionName());
-        Assert.assertEquals(expected.getColumns().size(), actual.getColumns().size());
+    public boolean verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
+        if(!expected.getCollectionDetails().getCollectionName().equals(actual.getCollectionDetails().getCollectionName())) {
+            throw new RuntimeException("Collection Name doesn't match, Expected Collection Name : " +
+                    expected.getCollectionDetails().getCollectionName()+" Found Collection Name : "+
+                    actual.getCollectionDetails().getCollectionName());
+        }
+        if(expected.getColumns().size() == actual.getColumns().size() ) {
+            throw new RuntimeException("No of Columns doesn't match, Expected no of columns : "+
+                    expected.getColumns().size()+ " Found no of columns : "+
+                    actual.getColumns().size());
+        }
+
         boolean result = false;
         for(CollectionInfo.Column expColumn : expected.getColumns()) {
             for(CollectionInfo.Column actualColumn : actual.getColumns()) {
                 if(expColumn.getDisplayName().equals(actualColumn.getDisplayName())) {
-                    Assert.assertNotNull(actualColumn.getDbName());
-                    Assert.assertEquals(expColumn.getDatatype(), actualColumn.getDatatype());
-                    result = true;
-                    break;
+                    if(actualColumn.getDbName()==null) {
+                        throw new RuntimeException("DB Found empty on Column - " +actualColumn.getDisplayName());
+                    }
+                    if(expColumn.getDatatype().equals(actualColumn.getDatatype())) {
+                        result = true;
+                        break;
+                    }
                 }
-
-
             }
             if(!result) {
-                Assert.assertFalse(true, expColumn.getName() + "is not found.");
+                throw new RuntimeException("Column Data Type Not Matched, Expected Data Type : "+expColumn.getDatatype() +
+                " on Column " + expColumn.getDisplayName());
             }
             result =false;
         }
+        return true;
     }
 
     /**
