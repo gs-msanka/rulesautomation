@@ -18,8 +18,25 @@ public class SurveyCTARule {
     private String advanceField;
     private String advanceOperator;
     private String advanceValue;
+    private String questionType;
+    private String participantName;
     
+	public String getQuestionType() {
+		return questionType;
+	}
 
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
+	}
+	
+	public String getparticipantName() {
+		return participantName;
+	}
+
+	public void setparticipantName(String participantName) {
+		this.participantName = participantName;
+	}
+	
     public String getAdvanceField() {
         return advanceField;
     }

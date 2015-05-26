@@ -105,6 +105,13 @@ public class SurveyBasePage extends BasePage {
         item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyName()));
         return new SurveyPropertiesPage(surveyProp);
     }
+    
+    public SurveyPropertiesPage openSurveyFromPublished(SurveyProperties surveyProp){
+    	clickOnPublishedView();
+        searchSurvey(surveyProp.getSurveyName());
+        item.click(String.format(SURVEY_CARD_TITLE, surveyProp.getSurveyName()));
+        return new SurveyPropertiesPage();
+    }
 
     public void searchSurvey(String surName) {
         element.clearAndSetText(SEARCH_SURVEY_INPUT, surName);
