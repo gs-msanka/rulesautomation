@@ -13,6 +13,7 @@ import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
@@ -93,7 +94,7 @@ public class LoadDataToMDATest extends DataLoadManager {
         List<Map<String,String>> actualData  = reportManager.convertReportData(reportContent);
 
         Assert.assertEquals(testData.get("SuccessRecordCount"), actualData.size());
-        System.out.println("actualData" +actualData.size());
+        Log.info("ActualData Size : " + actualData.size());
 
         List<Map<String, String>> processedData = reportManager.getProcessedReportData(actualData, actualCollection);
 
@@ -102,10 +103,10 @@ public class LoadDataToMDATest extends DataLoadManager {
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
         expectedData = reportManager.populateDefaultBooleanValue(expectedData, actualCollection);
 
-        System.out.println("Actual Data : " + mapper.writeValueAsString(processedData));
-        System.out.println("Expected Data : " + mapper.writeValueAsString(expectedData));
-        System.out.println("Final Data " + mapper.writeValueAsString(Comparator.compareListData(expectedData, processedData)));
+        Log.info("Actual Data : " + mapper.writeValueAsString(processedData));
+        Log.info("Expected Data : " + mapper.writeValueAsString(expectedData));
 
+        Assert.assertEquals(0,Comparator.compareListData(expectedData, processedData).size());
     }
 
 

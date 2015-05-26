@@ -24,9 +24,13 @@ import java.util.Map;
  */
 public class ReportManager extends NSTestBase {
 
-    DataLoadManager dataLoadManager = new DataLoadManager();
 
-
+    /**
+     * Creates a tabular report with all the columns in the collection schema supplied.
+     *
+     * @param collectionInfo - Collection Schema for which report need to created.
+     * @return - Payload for running a tabular report.
+     */
     public String createDynamicTabularReport(CollectionInfo collectionInfo) {
         Log.info("Started Creating a report with all the columns in the collection...");
         String report = null;
@@ -70,7 +74,12 @@ public class ReportManager extends NSTestBase {
         return report;
     }
 
-
+    /**
+     * Runs the report on servers & returns the data returned from server.
+     *
+     * @param reportMaster - Report payload.
+     * @return - Report data.
+     */
     public String runReport(String reportMaster) {
         Log.info("Started Running the report on server...");
         try {
@@ -88,6 +97,12 @@ public class ReportManager extends NSTestBase {
         }
     }
 
+    /**
+     * Converts the report data to list of map that can be easily used.
+     *
+     * @param reportData - Report data returned from server.
+     * @return - List of map of the report data.
+     */
     public List<Map<String, String>> convertReportData(String reportData) {
         Log.info("Converting String as List<> of Map<>...");
         List<Map<String,String>> dataList = new ArrayList<>();
@@ -103,6 +118,13 @@ public class ReportManager extends NSTestBase {
         return dataList;
     }
 
+    /**
+     * Populates default value for boolean in the data list.
+     *
+     * @param dataList - The data in which boolean fields default values need to be populated.
+     * @param collectionInfo - The Collection Info.
+     * @return
+     */
     public static List<Map<String, String>> populateDefaultBooleanValue(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
         Log.info("Started populating default boolean values for empty value... ");
         List<String> keyToUpdate = new ArrayList<>();
@@ -124,6 +146,13 @@ public class ReportManager extends NSTestBase {
         return dataList;
     }
 
+    /**
+     * Replaces the system names with display names.
+     *
+     * @param dataList - The Report data.
+     * @param collectionInfo - Collection Schema.
+     * @return List<Map> with replaced system names/DB names with display name.
+     */
     public static List<Map<String, String>> getProcessedReportData(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
         Log.info("Started changing DB names with display Names...");
         HashMap<String, String> dbDisplayNamesMap = new HashMap<>();

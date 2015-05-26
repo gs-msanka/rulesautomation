@@ -79,6 +79,14 @@ public class DataLoadManager extends NSTestBase {
         return nsResponseObj;
     }
 
+    /**
+     * Does salesforce authentication with the supplied details.
+     *
+     * @param sfOrgId - Salesforce Org Id.
+     * @param accessKey - AccessKey generated from MDA.
+     * @param loginName - user login name.
+     * @return - Response Object.
+     */
     public ResponseObj mdaAuthenticate(String sfOrgId, String accessKey, String loginName) {
         Header head = new Header();
         head.addHeader("appOrgId", NSUtil.convertSFID_15TO18(sfOrgId));
@@ -311,6 +319,11 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Gets all the Collections for a tenant.
+     *
+     * @return - List of Collection Schema (Subject Area) of a Tenant.
+     */
     public List<CollectionInfo> getAllCollections() {
         Log.info("Getting All the Collections...");
         List<CollectionInfo> collectionInfoList = new ArrayList<>();
@@ -331,6 +344,12 @@ public class DataLoadManager extends NSTestBase {
         return collectionInfoList;
     }
 
+    /**
+     * Gets the schema of a subject area / Collection.
+     *
+     * @param subjectAreaName - The SubjectArea/Collection name for which the collection schema need to be retrieved.
+     * @return - Subject/Collection schema.
+     */
     public CollectionInfo getCollection(String subjectAreaName) {
         Log.info("Getting Single Collection...");
         if(subjectAreaName ==null && subjectAreaName.equals("")) {
@@ -346,6 +365,12 @@ public class DataLoadManager extends NSTestBase {
         return null;
     }
 
+    /**
+     * Gets the schema of a subject area / Collection.
+     *
+     * @param collectionId  - The Collection Id for which the collection schema need to be retrieved.
+     * @return - Subject/Collection schema.
+     */
     public CollectionInfo getCollectionInfo(String collectionId) {
         try {
             ResponseObj responseObj = wa.doGet(APP_API_GET_COLLECTION+collectionId, headers.getAllHeaders());
@@ -363,7 +388,14 @@ public class DataLoadManager extends NSTestBase {
         return null;
     }
 
-
+    /**
+     * Initiates Clear all collection.
+     *
+     * @param collectionName - Collection Name / Subject Area Name.
+     * @param sourceType
+     * @param targetType
+     * @return JOB ID of the operation triggered.
+     */
     public String clearAllCollectionData(String collectionName, String sourceType, String targetType) {
         DataLoadMetadata metadata = new DataLoadMetadata();
         metadata.setSourceType(sourceType);
@@ -376,6 +408,12 @@ public class DataLoadManager extends NSTestBase {
         return clearAllCollectionData(metadata);
     }
 
+    /**
+     * Initiates Clear all Collection, returns the Job Id.
+     *
+     * @param metadata - Metadata / payload to clear all data.
+     * @return - JOB Id.
+     */
     public String clearAllCollectionData(DataLoadMetadata metadata) {
         Log.info("Clearing All Collection Data...");
         String jobId = null;
@@ -407,6 +445,12 @@ public class DataLoadManager extends NSTestBase {
         return jobId;
     }
 
+    /**
+     * Verifies the Collection Columns, Column Data Type & checks DB Name is not null in actual collection.
+     *
+     * @param expected - Expected Collection Info.
+     * @param actual - Actual Collection Info.
+     */
     public void verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
         Assert.assertEquals(expected.getCollectionDetails().getCollectionName(), actual.getCollectionDetails().getCollectionName());
         Assert.assertEquals(expected.getColumns().size(), actual.getColumns().size());
@@ -429,6 +473,12 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Covert the object to a readily usable POJO class.
+     *
+     * @param content - Object that's returned after subject area creation in ResponseObj.getData() method.
+     * @return - Collection Detail Pojo populated.
+     */
     public CollectionInfo.CollectionDetails getCollectionDetail (Object content) {
         HashMap<String, String> serverCollectionData = mapper.convertValue(content, HashMap.class);
         CollectionInfo.CollectionDetails colDetails = new CollectionInfo.CollectionDetails();
