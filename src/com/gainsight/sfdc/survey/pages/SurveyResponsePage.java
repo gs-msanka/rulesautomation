@@ -19,7 +19,6 @@ import static com.gainsight.sfdc.pages.Constants.*;
 public class SurveyResponsePage extends WebPage {
 	
 	//SurveyResponseForm Webelements
-	//private final String SINGLE_PICKLIST_ANSWER="//div[@class='pull-left']/descendant::input";
 	private final String SINGLE_RADIO_ANSWER_XPATH="//div[@class='preview-answr']/descendant::label[contains(., '%s')]/input";
 	private final String SURVEY_FORM_SUBMIT_BUTTON="//div[@class='savebtns']/descendant::li/a[@data-action='SUBMIT']";
 	private final String MATRIX_SINGLEANSWER_RADIO_XPATH="//table[contains(@class, 'matrix-table')]/descendant::tbody/descendant::td[contains(text(), '%s')]/ancestor::tr/descendant::div/descendant::input";
