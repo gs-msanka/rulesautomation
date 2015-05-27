@@ -12,10 +12,12 @@ import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyPage;
@@ -26,6 +28,7 @@ import com.gainsight.sfdc.survey.pages.SurveyResponsePage;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
+import com.gainsight.sfdc.survey.pojo.SurveyResponseAns;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pojos.CTA;
@@ -82,7 +85,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10); /*Added sleep, since sometimes its taking around 5sec time to return the data from salesforce*/
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
@@ -107,7 +111,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
@@ -132,7 +137,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
@@ -157,7 +163,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
@@ -182,7 +189,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
@@ -207,7 +215,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(surveyCTARule, testData);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
