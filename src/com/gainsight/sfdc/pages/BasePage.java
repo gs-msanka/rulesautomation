@@ -361,4 +361,8 @@ public class BasePage extends WebPage implements Constants {
 	public static void navigateBack() {
 		Application.getDriver().navigate().back();	
 	}
+	
+	public static String getCurrentUrl(){
+		return Application.getDriver().getCurrentUrl();
+	}
 }

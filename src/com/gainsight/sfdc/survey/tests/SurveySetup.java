@@ -399,19 +399,18 @@ public class SurveySetup extends BaseTest {
 
 	}
 	
-	public String surveyURL(SurveyCTARule surveyCTARule) {
+	public String surveyURL(SurveyCTARule surveyCTARule, HashMap<String, String> testData) {
 		Log.info("Fetching Records");
-		Timer.sleep(5);
 		SObject[] jsondata = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__DisplayName__c,JBCXM__SurveyTitle__c,JBCXM__SurveyURL__c,JBCXM__SurveyId__c, JBCXM__Token__c FROM JBCXM__SurveyParticipant__c where JBCXM__DisplayName__c='"
-						+ surveyCTARule.getparticipantName()
+						+ testData.get("participantName")
 						+ "' order by createddate desc limit 1"));
 		String concatUrl = null;
 		if (jsondata.length > 0) {
 			String sTemp1 = (String) jsondata[0]
-					.getField("JBCXM__SurveyURL__c");
-			String sTemp2 = (String) jsondata[0].getField("JBCXM__SurveyId__c");
-			String sTemp3 = (String) jsondata[0].getField("JBCXM__Token__c");
+					.getField(resolveStrNameSpace("JBCXM__SurveyURL__c"));
+			String sTemp2 = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__SurveyId__c"));
+			String sTemp3 = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__Token__c"));
 			String concatUrl1 = sTemp1 + "?surveyId=" + sTemp2
 					+ "&participantId=" + sTemp3;
 			Log.info("Survey url is " + concatUrl1);

@@ -82,17 +82,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10); /*Added sleep, since sometimes its taking around 5sec time to return the data from salesforce*/
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
@@ -107,17 +107,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
@@ -132,17 +132,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694","GS-2695"})
@@ -157,17 +157,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
@@ -182,17 +182,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
@@ -207,17 +207,17 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		surveyResponse.openSurveyForm(cta, surveyCTARule);
+		surveyResponse.openSurveyForm(surveyCTARule, testData);
 		Timer.sleep(10);
 		Assert.assertTrue(sfdc
-				.getRecordCount("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
 						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
 						+ cta.getReason()
 						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
 						+ cta.getType()
 						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
-						+ cta.getStatus() + "'") == 1);
+						+ cta.getStatus() + "'")) == 1);
 	}
     
 	@TestInfo(testCaseIds={"GS-2690"})
