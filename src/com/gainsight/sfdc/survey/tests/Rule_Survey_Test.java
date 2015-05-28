@@ -25,6 +25,7 @@ import com.gainsight.sfdc.survey.pages.SurveyPublishPage;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
 import com.gainsight.sfdc.survey.pages.SurveyResponsePage;
+import com.gainsight.sfdc.survey.pages.SurveySiteCofiguration;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
@@ -45,16 +46,23 @@ public class Rule_Survey_Test extends SurveySetup {
     private final static String SURVEY_PUBLISH_FILE        = Application.basedir + "/testdata/sfdc/survey/scripts/SurveyPublish.txt";
     private final static String SURVEY_PARTICIPANTS_FILE   = Application.basedir + "/testdata/sfdc/survey/scripts/Surveyparticipants.txt";
     private static final String SURVEY_MASTER_QUERY = "Select id, JBCXM__Code__c, JBCXM__Title__c From JBCXM__Survey__c Where JBCXM__Code__c = 'Survey created through automation' AND JBCXM__Title__c = 'Survey created through automation'";
+	private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
+	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
     private String SURVEY_ID = null;
     private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private ObjectMapper mapper = new ObjectMapper();
+    
 
 	@BeforeClass
 	public void setUp() {
 		Log.info("Starting Survey Creation");
 		sfdc.connect();
 		basepage.login();
+		SurveySiteCofiguration ss=new SurveySiteCofiguration();
+		ss.navigateToSetup();
 		sfdc.runApexCode(resolveStrNameSpace(QUERY));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_QUESTIONS_FILE));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_PUBLISH_FILE));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_PARTICIPANTS_FILE));
@@ -72,7 +80,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		sfdc.runApexCode(resolveStrNameSpace(CTA_CLEANUP));
 		sfdc.runApexCode(resolveStrNameSpace(RULES_CLEANUP));
 	}
-
+    
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
