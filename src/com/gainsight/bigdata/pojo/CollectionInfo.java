@@ -347,7 +347,15 @@ public class CollectionInfo {
             this.formula = formula;
         }
 
-        private String maxLength;
+        private int maxLength;
+
+        public int getMaxLength() {
+            return maxLength;
+        }
+
+        public void setMaxLength(int maxLength) {
+            this.maxLength = maxLength;
+        }
 
         private Map<String, String> format;
 
@@ -357,14 +365,6 @@ public class CollectionInfo {
 
         public void setFormat(Map<String, String> format) {
             this.format = format;
-        }
-
-        public String getMaxLength() {
-            return maxLength;
-        }
-
-        public void setMaxLength(String maxLength) {
-            this.maxLength = maxLength;
         }
 
         public MappingsSFDC getMappings() {

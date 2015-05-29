@@ -82,4 +82,17 @@ public class DataLoadStatusInfo {
         this.message = message;
     }
 
+    @Override
+    public String toString() {
+        return "DataLoadStatusInfo{" +
+                "collectionId='" + collectionId + '\'' +
+                ", dataLoadOperation='" + dataLoadOperation + '\'' +
+                ", collectionName='" + collectionName + '\'' +
+                ", statusType=" + statusType +
+                ", successCount=" + successCount +
+                ", failureCount=" + failureCount +
+                ", failedRecordLink='" + failedRecordLink + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

@@ -142,7 +142,7 @@ public class DataETL implements IJobExecutor {
             if(dateProcess != null) {
                 File inputFile = new File(userDir+dateProcess.getInputFile());
                 File outputFile = new File(userDir+dateProcess.getOutputFile());
-                outputFile = FileProcessor.getDateProcessedFile(inputFile, outputFile, dateProcess.getFields());
+                outputFile = FileProcessor.getDateProcessedFile(inputFile, outputFile, dateProcess.getFields(), null);
 
             }
 

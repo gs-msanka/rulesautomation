@@ -1,0 +1,11 @@
+Id,AccountName,Type,Active,AnnualRevenue,Date,CreatedDateTime,Regions,Industry,isDeleted
+0011a000002ZDIDAA4,A and T unlimit Limited,,TRUE,,-5,-4,India;USA,Agriculture,TRUE
+0011a000002ZDISAA4,AAR Corp Hardware Abscoa Division,Prospect,FALSE,234234,-1,-5,Europe,,
+0011a000002ZDIXAA4,Abacus Programming Corporation,Customer,TRUE,34234,-2,,,Information Technology,TRUE
+0011a000002ZDIcAAO,Abberley Kooiman,Enterprise -Partner,,32,,,,,TRUE
+0011a000002mkSsAAI,Abbett Electric Corp,,TRUE,,-5,-7,,,
+0011a000002ZDIIAA4,A B COMUNICACION SA DE CV,Customer,FALSE,23423,-2,-20,,,
+0011a000002ZDINAA4,AAM Freudenberg NOK General Partnership,Prospect,TRUE,23432,-3,-5,,,
+0011a000002mkStAAI,Abbey Press Inc,Installation Partner,FALSE,3000,-3,,,,
+0011a000002mkSuAAI,ABASTECIMIENTOS INDUSTRIALES GH SA DE CV,Prospect,TRUE,1000000,-4,-5,,,
+0011a000004S7ODAA0,ABICO DIGITAL IMAGING INC,Customer,FALSE,,,,,,

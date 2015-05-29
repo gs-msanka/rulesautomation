@@ -1,0 +1,11 @@
+Id,AccountName,Type,Active,AnnualRevenue,Date,CreatedDateTime,Regions,Industry,isDeleted
+0011a000004S7OUAA0,Budelpack Poortvliet BV,,TRUE,,,,,,TRUE
+0011a000004S7OVAA0,BUFETE DE REFRIGERACION INDUSTRIAL,Prospect,TRUE,23423,-2,-5,USA,Not For Profit,
+0011a000004S7OWAA0,BUJES Y ESCOBILLAS INDUSTRIALES SA DE CV,Customer,TRUE,,,,India;USA,,
+0011a000004szfwAAA,Burlington Textiles Corp of America,Prospect,FALSE,1000000,-2,-3,,Agriculture,TRUE
+0011a000004szfxAAA,BUSTOS MELCHOR ROBERTA,Prospect,TRUE,12,,-7,Europe,IT,FALSE
+0011a000004szfyAAA,Caco-Pacific Corp.,,,32,-1,-5,Australia,Biotechnology,
+0011a000004szfzAAA,CADAM Inc.,Installation Partner,FALSE,,-2,,,Communications,TRUE
+0011a000004szg0AAA,Cadbury Beverages Div Cadbury,Installation Partner,,3000,-10,,Canada,,
+0011a000004szg1AAA,CADELEC,Prospect,TRUE,,-4,-5,,,TRUE
+0011a000004szg2AAA,Cahn Instruments Inc,Customer,,232,-3,-5,India;France;Germany,Environmental,FALSE

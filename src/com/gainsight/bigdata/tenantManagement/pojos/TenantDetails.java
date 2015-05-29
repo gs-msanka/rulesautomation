@@ -209,6 +209,7 @@ public class TenantDetails {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Config {
         @JsonProperty("DISALLOW_EXCEL_GENERATION")
         private String disAllowExcelGeneration;

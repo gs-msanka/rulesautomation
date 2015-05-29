@@ -1,0 +1,35 @@
+{
+     "jobName": "GS-3690-1",
+        "namespacePrefix" : "JBCXM",
+        "useNameSpace" : false,
+        "dateProcess" : {
+            "inputFile" : "/testdata/newstack/dataLoader/data/GS-3690-1.csv",
+            "outputFile" : "/resources/datagen/process/GS-3690-1.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "dateFormat" : "M-d-yyyy",
+                    "fieldName" : "Date"
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : true,
+                    "dateFormat" : "yyyy-MM-dd HH-mm-ss",
+                    "fieldName" : "CreatedDateTime"
+                }
+            ]
+        },
+     "csvFormatter" : {
+         "inputFile": "/resources/datagen/process/GS-3690-1.csv",
+         "outputFile" : "/resources/datagen/process/GS-3690-2.csv",
+         "csvProperties" : {
+             "separator" : "\t",
+             "quoteChar" : "\"",
+             "escapeChar" : "\\",
+             "lineEnd" : "\n"
+         }
+     }
+}

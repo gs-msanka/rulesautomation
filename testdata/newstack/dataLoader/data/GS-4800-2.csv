@@ -1,0 +1,11 @@
+Id,AccountName,Type,Active,AnnualRevenue,Date,CreatedDateTime,Regions,Industry,isDeleted
+0011a000004szhSAAQ,DUPONT SA DE CV,,TRUE,,,,,Agriculture,TRUE
+0011a000004szhTAAQ,DURAN LIZARRAGA ROMEL ALBERTO,Prospect,TRUE,23423,-2,-5,USA,Not For Profit,
+0011a000004szhUAAQ,DUST LINK SA DE CV,Customer,,,-5,,India;USA;France,Biotechnology,FALSE
+0011a000004szhVAAQ,EAM MOSCA DE MEXICO S DE RL DE CV,Prospect,FALSE,323,-9,-3,,,
+0011a000004szhWAAQ,East Bay Brass Foundry,Prospect,TRUE,21,,-7,Europe,IT,FALSE
+0011a000004szhXAAQ,East Coast Traders,,,32,-1,-5,Australia,,TRUE
+0011a000004szhYAAQ,East/West Computers Inc,Installation Partner,FALSE,,-2,,,Communications,TRUE
+0011a000004szhZAAQ,EASTERN MANUFACTURING INC,Installation Partner,,3000,-10,,Canada,,
+0011a000004szhaAAA,Eastern Municipal Water Distri,Prospect,TRUE,,-4,-5,,,TRUE
+0011a000004szhbAAA,Eastman Kodak Company Health Sciences Division,Customer,,232,-3,-5,India;France;Germany,Environmental,FALSE

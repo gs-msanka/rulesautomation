@@ -1,0 +1,21 @@
+"Name","Type","Active","AnnualRevenue","Date","CreatedDateTime","Regions"
+"A and T unlimit Limited","Prospect","TRUE",100000000,-1,10,
+"A B COMUNICACION SA DE CV","Customer","FALSE",,-2,9,
+"AAM Freudenberg NOK General Partnership","Prospect","TRUE",3456789,-3,8,"India;Usa;China;Europe;Australia"
+"AAR Corp Hardware Abscoa Division",,"FALSE",,-4,7,
+"Abacus Programming Corporation",,,,0,,"India;Usa;Australia"
+"ABASTECEDOR HOSPITALARIO DEL",,,,,1,
+"ABASTECEDORA DE METALES Y DERIVADOS SA DE CV","Installation Partner","FALSE",,-1,2,
+"ABASTECEDORA DE VALVULAS INTRUMENT","Installation Partner","FALSE",,-2,3,
+"ABASTECIMIENTOS INDUSTRIALES GH SA DE CV","Prospect","TRUE",100000000,-3,4,
+"Abberley Kooiman","Customer","FALSE",,,,
+"Abbett Electric Corp","Prospect","TRUE",3456789,0,11,"India;Usa;China;Europe;Australia"
+"Abbey Press Inc",,"FALSE",,0,12,
+"ABC ALIMENTOS BOTANAS Y CEREALES SAPI DE CV","Prospect","TRUE",100000000,-1,23,
+"ABICO DIGITAL IMAGING INC","Customer","FALSE",,-2,24,
+"ABOYTES AGUILAR GABRIEL","Prospect","TRUE",3456789,-3,,"India;Usa;China;Europe;Australia"
+"ABRAHAM GAXIOLA LAZCANO",,"FALSE",,-4,1,
+"ACERO APLICADO EN TRANSMISION Y DIS TRIBUCION SA",,,,0,1,"India;Usa;Australia"
+"ACEROS Y GALVANIZADOS DE CELAYA SA",,,,,1,
+"ACEROS Y SIMILARES S.A. DE C.V.","Installation Partner","FALSE",,-1,1,
+"ACEVEDO BOLIO JOSE IGNACIO","Installation Partner","TRUE",212,0,5,"India"
