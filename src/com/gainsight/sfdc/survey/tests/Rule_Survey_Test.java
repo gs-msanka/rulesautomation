@@ -95,7 +95,6 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10); /*Added sleep, since sometimes its taking around 5sec time to return the data from salesforce*/
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -121,7 +120,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10);
+		//Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -147,7 +146,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10);
+		//Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -173,7 +172,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10);
+		//Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -199,7 +198,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10);
+		//Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -225,7 +224,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		Timer.sleep(10);
+		//Timer.sleep(10);
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()

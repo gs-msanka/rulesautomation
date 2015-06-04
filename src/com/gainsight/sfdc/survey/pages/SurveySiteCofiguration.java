@@ -36,7 +36,8 @@ public class SurveySiteCofiguration extends BasePage {
 			wait.waitTillElementDisplayed(EDIT_BUTTON, MIN_TIME, MAX_TIME);
 			addVisualForcePage();
 		} else {
-			Log.info("Site Label Not found, Plese Check");
+            Log.error("Site Label Not found, Plese Check");
+            throw new RuntimeException("Site Label Not found, Plese Check");
 		}
 	}
 	

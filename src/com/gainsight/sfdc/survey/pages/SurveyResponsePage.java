@@ -26,12 +26,12 @@ public class SurveyResponsePage extends WebPage {
 	private final String MATRIX_MULTISELECT_XPATH="//table[contains(@class, 'matrix-table')]/descendant::tbody/descendant::td[contains(text(), '%s')]/following-sibling::td/div[@class='text-center']/input";
 	
 	SurveySetup surveysetup=new SurveySetup();
-	public String currentURL = null;
+	public String homePageURL = null;
 
 	
 	public void openSurveyForm(SurveyCTARule surveyCTARule, HashMap<String, String> testData,SurveyResponseAns surveyAns) {
-		currentURL=BasePage.getCurrentUrl();
-		Log.info("Current url is " +currentURL);
+		homePageURL=BasePage.getCurrentUrl();
+		Log.info("Current url is " +homePageURL);
 		String temp = surveysetup.surveyURL(surveyCTARule, testData);
 		Log.info("Survey participant url is " + temp);
 		URL=temp;
@@ -86,7 +86,7 @@ public class SurveyResponsePage extends WebPage {
 			}
 		}
 		item.click(SURVEY_FORM_SUBMIT_BUTTON);
-		URL = currentURL;
+		URL = homePageURL;
 		open(); /*Navigating back to the Gainsight home page*/
 	}
 }
