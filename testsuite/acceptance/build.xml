@@ -87,7 +87,7 @@
 
 	<!-- Edit Property file by replacing default values with run-time values -->
 	<target name="editPropertyFile">
-		<propertyfile file="${basedir}/conf/application.properties">
+		<!--<propertyfile file="${basedir}/conf/application.properties">
 			<entry  key="sfdc.username" value="${sfdc.username}"/>
 			<entry  key="sfdc.password" value="${sfdc.password}"/>
 			<entry  key="sfdc.stoken" value="${sfdc.stoken}"/>
@@ -105,7 +105,7 @@
             <entry  key="sfdc.partnerUrl" value="${sfdc.partnerUrl}"/>
             <entry  key="sfdc.apiVersion" value="${sfdc.apiVersion}"/>
 			<entry  key="browser" value="${browser}"/>
-		</propertyfile>
+		</propertyfile>-->
 	</target>
 
 	<target name="init" depends="clean">
