@@ -1,5 +1,6 @@
 package com.gainsight.util;
 
+import com.gainsight.testdriver.Log;
 import com.google.gson.JsonObject;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -109,7 +110,9 @@ public class SfdcConfig  {
     }
 
     private String getConfigValue(String config){
-        return System.getProperty(config, configObject.get(config).getAsString());
+        String value = System.getProperty(config, configObject.get(config).getAsString());
+        Log.info(String.format("Returning value: %s for key : %s",value,config));
+        return value;
     }
 
     private interface ISfdcProperties {
