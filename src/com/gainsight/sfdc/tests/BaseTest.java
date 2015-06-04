@@ -41,14 +41,14 @@ public class BaseTest {
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static TimeZone userTimezone;
-    public static final Boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+    public static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+    public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
+
     public static MetaDataUtil metaUtil=new MetaDataUtil();
 
-    public static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
-    
     @BeforeSuite
     public void init() throws Exception {
     	Log.info("Fetching All SFDC Connections");

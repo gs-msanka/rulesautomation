@@ -14,6 +14,8 @@ import java.util.Map;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.SfdcConfigLoader;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -52,6 +54,7 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
     Application env =new Application();
+	public SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
 	static {
 		info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());
@@ -365,7 +368,7 @@ public class DataETL implements IJobExecutor {
 
 
     public File resolveNameSpace(String  fileName) throws IOException {
-        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+        boolean isPackage = sfdcConfig.getSfdcManagedPackage();
         if(!isPackage) {
             CSVReader csvReader = new CSVReader(new FileReader(fileName));
 
@@ -401,8 +404,8 @@ public class DataETL implements IJobExecutor {
      */
     public String resolveStrNameSpace(String str) {
         String result = "";
-        boolean isPackage = Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
-        if (str != null && !isPackage) {
+        boolean isPackage = sfdcConfig.getSfdcManagedPackage();
+		if (str != null && !isPackage) {
             result = str.replaceAll("JBCXM__", "").replaceAll("JBCXM\\.", "");
             return result;
         } else {

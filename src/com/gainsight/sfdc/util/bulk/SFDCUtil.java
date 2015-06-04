@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.SfdcConfigLoader;
 import com.sforce.soap.apex.ExecuteAnonymousResult;
 import com.sforce.soap.apex.SoapConnection;
 import com.sforce.soap.partner.Connector;
@@ -20,7 +22,8 @@ public class SFDCUtil {
     private final String endPointURL = "https://login.salesforce.com/services/Soap/u/29.0";
     static PartnerConnection connection;
     SoapConnection soapConnection;
-    static Application env;
+    //static Application env;
+    static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
 
     public static void main(String[] args) {
     	SFDCUtil.fetchSFDCinfo();
@@ -33,15 +36,15 @@ public class SFDCUtil {
     public static SFDCInfo fetchSFDCinfo() {
         Log.info("Fetching SalesForce Data");
         try {
-            env = new Application();
+            //env = new Application();
             
             ConnectorConfig config = new ConnectorConfig();
-            config.setAuthEndpoint(env.getProperty("sfdc.partnerUrl"));
-            config.setUsername(env.getUserName());
-            config.setPassword(env.getUserPassword() + env.getProperty("sfdc.stoken"));
+            config.setAuthEndpoint(sfdcConfig.getSfdcPartnerUrl());
+            config.setUsername(sfdcConfig.getSfdcUsername());
+            config.setPassword(sfdcConfig.getSfdcPassword() + sfdcConfig.getSfdcStoken());
 
             connection = Connector.newConnection(config);
-            LoginResult loginResult = connection.login(env.getUserName(), env.getUserPassword() + env.getProperty("sfdc.stoken"));
+            LoginResult loginResult = connection.login(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword() + sfdcConfig.getSfdcStoken());
             GetUserInfoResult userInfo = loginResult.getUserInfo();
 
             SFDCInfo info = new SFDCInfo();
@@ -121,10 +124,10 @@ public class SFDCUtil {
     private boolean login() {
         if (soapConnection != null) return true;
         else {
-            Application env = new Application();
-            String username = env.getUserName();
-            String password = env.getUserPassword();
-            String securityToken = env.getProperty("sfdc.stoken");
+            //Application env = new Application();
+            String username = sfdcConfig.getSfdcUsername();
+            String password = sfdcConfig.getSfdcPassword();
+            String securityToken = sfdcConfig.getSfdcStoken();
             return login(username, password, securityToken);
         }
     }
