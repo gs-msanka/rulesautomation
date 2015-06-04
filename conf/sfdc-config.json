@@ -1,0 +1,28 @@
+{
+  "sfdc.appurl" : "https://login.salesforce.com",
+  "sfdc.deleteRecords" : "false",
+  "sfdc.managedPackage" : "true",
+  "sfdc.setDefaultApp" : "false",
+  "sfdc.loadDefaultData" : "false",
+  "sfdc.nameSpace" : "JBCXM",
+  "sfdc.updateWidgetLayouts" : "false",
+  "sfdc.unInstallApp" : "false",
+  "sfdc.installApp" : "false",
+  "sfdc.packageVersionNumber" : "4.21",
+  "sfdc.packagePassword" : "JBCXM__Install4.21",
+  "sfdc.partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
+  "sfdc.siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
+  "sfdc.apiVersion" : "32.0",
+  "profiles" : {
+    "default" : {
+      "sfdc.username" : "pdalal@36demo.com",
+      "sfdc.password" : "gainsight1234567",
+      "sfdc.stoken" : "QGoH5XTfDBoAIyfSWdGVqrEm"
+    },
+    "conf" : {
+      "sfdc.username" : "conf@36demo.com",
+      "sfdc.password" : "confght1234567",
+      "sfdc.stoken" : "coasdasda"
+    }
+  }
+}

@@ -28,7 +28,7 @@ public class BurpSuiteTest extends NSTestBase {
 	String tenantName = "AutTenant";
 	CollectionInfo cinfo;
 	List<Column> colList = new ArrayList<Column>();
-	
+	String nsAppUrl = PropertyReader.nsAppUrl;
 	@BeforeClass
 	public void setUp() throws Exception {
 		// Need to fix this after functional test cases are up and running
@@ -50,7 +50,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void createTenant() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenant";
+		String uri = nsAppUrl + "/createtenant/AutTestTenant";
 		TenantInfo info = new TenantInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
 		info.setExternalTenantID(sfinfo.getOrg());
@@ -67,7 +67,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void createCollection() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/createcollection/"+ /*nsinfo.getTenantID()*/  "/AutCollection1";
+		String uri = nsAppUrl + "/createcollection/"+ /*nsinfo.getTenantID()*/  "/AutCollection1";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.writeValueAsString(cinfo);
@@ -81,7 +81,7 @@ public class BurpSuiteTest extends NSTestBase {
 
 	@Test
 	public void getCollection() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/getcollection/";//+ nsinfo.getTenantID();
+		String uri = nsAppUrl + "/getcollection/";//+ nsinfo.getTenantID();
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode inputNode = mapper.readTree(mapper.writeValueAsString(colList));
 		
@@ -97,7 +97,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void test_1Col_1Measure() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/preparereport";
+		String uri = nsAppUrl + "/preparereport";
 		String rawBody = FileUtils.readFileToString(new File(testDataBasePath
 				+ "1col_1measure_input.txt"));
 		Log.info("Request:\n"+rawBody);
@@ -115,7 +115,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void upsertReport() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/upsertreport";
+		String uri = nsAppUrl + "/upsertreport";
 		ObjectMapper mapper = new ObjectMapper();
 		String rawBody = mapper.readTree(new File(testDataBasePath + "UpsertReportInput1.txt")).toString();
 		Log.info(rawBody);
@@ -129,7 +129,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void getSavedReports() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/savedreports/";//+ nsinfo.getTenantID();
+		String uri = nsAppUrl + "/savedreports/";//+ nsinfo.getTenantID();
 		ResponseObj result = wa.doGet(uri, header.getAllHeaders());
 		Log.info(result.toString());
 		ObjectMapper mapper = new ObjectMapper();
@@ -139,7 +139,7 @@ public class BurpSuiteTest extends NSTestBase {
 	
 	@Test
 	public void dimensionBrowser() throws Exception {
-		String uri = PropertyReader.nsAppUrl + "/dimenbrowser";
+		String uri = nsAppUrl + "/dimenbrowser";
 		DimensionBrowserInfo info = new DimensionBrowserInfo();
 		/*info.setTenantId(nsinfo.getTenantID());
 		info.setCollectionName("AutCollection1");*/

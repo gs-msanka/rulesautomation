@@ -9,15 +9,15 @@ import com.gainsight.bigdata.rulesengine.ResponseObject;
 
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
+import com.gainsight.util.SfdcConfigLoader;
+import com.gainsight.util.SfdcConfig;
 import com.sforce.soap.metadata.MetadataConnection;
 import org.apache.http.HttpStatus;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 
 import com.gainsight.http.ResponseObj;
@@ -29,7 +29,6 @@ import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.MetaDataUtil;
-import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
@@ -46,12 +45,13 @@ public class NSTestBase {
     public static SalesforceMetadataClient metadataClient;
     public static SalesforceConnector sfdc;
     public static final Application env = new Application();
-    public static final Boolean isPackage = PropertyReader.managedPackage;
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String accessKey;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
     MetadataConnection metadataConnection;
+    public static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+    public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
 
     @BeforeSuite
     public void init() throws Exception {
@@ -61,8 +61,8 @@ public class NSTestBase {
         header = new Header();
         wa = new WebAction();
         //Initializing SFDC Connection
-        sfdc = new SalesforceConnector(PropertyReader.userName, PropertyReader.password + PropertyReader.stoken,
-                PropertyReader.partnerUrl, PropertyReader.sfdcApiVersion);
+        sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
+                sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         sfdc.connect();
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         sfinfo = sfdc.fetchSFDCinfo();
@@ -162,7 +162,7 @@ public class NSTestBase {
      * @return String - with name space removed.
      */
     public static String resolveStrNameSpace(String str) {
-        return FileUtil.resolveNameSpace(str, PropertyReader.managedPackage ? PropertyReader.NAMESPACE : null);
+        return FileUtil.resolveNameSpace(str, sfdcConfig.getSfdcManagedPackage()? sfdcConfig.getSfdcNameSpace() : null);
 
     }
 

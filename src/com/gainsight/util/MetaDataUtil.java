@@ -22,6 +22,7 @@ import com.gainsight.testdriver.Log;
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
 	 public static final Application env = new Application();
+	public SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
 	
 	 public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
@@ -322,7 +323,7 @@ public class MetaDataUtil {
      * @return - names space removed string.
      */
     public String resolveStrNameSpace(String str) {
-        return FileUtil.resolveNameSpace(str, PropertyReader.managedPackage ? PropertyReader.NAMESPACE : null);
+        return FileUtil.resolveNameSpace(str, sfdcConfig.getSfdcManagedPackage() ? sfdcConfig.getSfdcNameSpace() : null);
     }
 
     /**

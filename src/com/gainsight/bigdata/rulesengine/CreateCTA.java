@@ -35,6 +35,7 @@ public class CreateCTA extends RulesUtil {
 	public String LastRunResultFieldName = "JBCXM__LastRunResult__c";
 	ResponseObj result = null;
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/CreateCTA/CreateCTAs.xls";
+	String nsAppUrl = PropertyReader.nsAppUrl;
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
@@ -60,10 +61,10 @@ public class CreateCTA extends RulesUtil {
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				nsAppUrl + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsAppUrl + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -100,10 +101,10 @@ public class CreateCTA extends RulesUtil {
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				nsAppUrl + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsAppUrl + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -149,10 +150,10 @@ public class CreateCTA extends RulesUtil {
 		String ruleId = getRuleId(RuleName);
 
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				nsAppUrl + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsAppUrl + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -201,10 +202,10 @@ public class CreateCTA extends RulesUtil {
 		String ruleId = getRuleId(RuleName);
 
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+				nsAppUrl + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsAppUrl + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -311,7 +312,7 @@ public class CreateCTA extends RulesUtil {
 						+ RuleName + "'"));
 		for (SObject r : CTAreq) {
 			String rawBody = ("{}");
-			ResponseObj result = wa.doPost(PropertyReader.nsAppUrl
+			ResponseObj result = wa.doPost(nsAppUrl
 					+ "/api/eventrule/" + r.getId(), header.getAllHeaders(),
 					rawBody);
 			ResponseObject responseObj = RulesUtil.convertToObject(result

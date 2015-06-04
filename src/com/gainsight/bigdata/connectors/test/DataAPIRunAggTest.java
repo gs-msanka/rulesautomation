@@ -26,15 +26,16 @@ import com.gainsight.utils.DataProviderArguments;
 
 public class DataAPIRunAggTest extends NSTestBase {
 
+	String nsAppUrl = PropertyReader.nsAppUrl;
 	final String TEST_DATA_FILE = "testdata/newstack/connectors/DataAPIExpectedOutput.xls";
-	String dataSyncUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_SYNC;
-	String syncStatusUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_SYNC_STATUS;
-	String distinctEventsByAcc_UT_Url = PropertyReader.nsAppUrl + ApiUrl.UT_DISTINCT_EVENTS_BY_ACC;
-	String usageTrackerGetDataUrl = PropertyReader.nsAppUrl + ApiUrl.UT_GET_DATA;
-	String reportRunUrl = PropertyReader.nsAppUrl + ApiUrl.REPORT_RUN;
-	String accDeleteUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_DELETE;
-	String ACCOUNT_ID = "001o000000E4KKRAA3";
+	String dataSyncUrl = nsAppUrl + ApiUrl.ACC_SYNC;
+	String syncStatusUrl = nsAppUrl + ApiUrl.ACC_SYNC_STATUS;
+	String distinctEventsByAcc_UT_Url = nsAppUrl + ApiUrl.UT_DISTINCT_EVENTS_BY_ACC;
+	String usageTrackerGetDataUrl = nsAppUrl + ApiUrl.UT_GET_DATA;
+	String reportRunUrl = nsAppUrl + ApiUrl.REPORT_RUN;
+	String accDeleteUrl = nsAppUrl + ApiUrl.ACC_DELETE;
 
+	String ACCOUNT_ID = "001o000000E4KKRAA3";
 	String ACC_DATE_DAY_AGG = "ACC_DATE_DAY_AGG";
 	String ACC_USER_DATE_DAY_AGG = "ACC_USER_DATE_DAY_AGG";
 	String ACC_EVENT_DATE_DAY_AGG = "ACC_EVENT_DATE_DAY_AGG";

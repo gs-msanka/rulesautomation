@@ -14,6 +14,8 @@ import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.SfdcConfigLoader;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -36,13 +38,14 @@ public class TenantManager {
     private Header header = new Header();
     private WebAction wa = new WebAction();
     private ObjectMapper mapper = new ObjectMapper();
+    private SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
 
     /**
      * Logs in to tenant Management SFDC org & sets up the default headers required.
      */
     public TenantManager() {
         sfConnector = new SalesforceConnector(PropertyReader.tenantMgtUserName, PropertyReader.tenantMgtPassword + PropertyReader.tenantMgtSecurityToken,
-                PropertyReader.partnerUrl, PropertyReader.sfdcApiVersion);
+                sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         if (!sfConnector.connect()) {
             throw new RuntimeException("Failed to Connect to salesforce - Check your admin credentials.");
         }

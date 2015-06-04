@@ -26,14 +26,14 @@ import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.ExcelDataProvider;
 
 public class SegmentIORunAggTest extends NSTestBase {
-
+	String nsAppUrl = PropertyReader.nsAppUrl;
 	final String TEST_DATA_FILE = "testdata/newstack/connectors/SIOExpectedOutput.xls";
-	String dataSyncUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_SYNC;
-	String syncStatusUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_SYNC_STATUS;
-	String distinctEventsByAcc_UT_Url = PropertyReader.nsAppUrl + ApiUrl.UT_DISTINCT_EVENTS_BY_ACC;
-	String usageTrackerGetDataUrl = PropertyReader.nsAppUrl + ApiUrl.UT_GET_DATA;
-	String reportRunUrl = PropertyReader.nsAppUrl + ApiUrl.REPORT_RUN;
-	String accDeleteUrl = PropertyReader.nsAppUrl + ApiUrl.ACC_DELETE;
+	String dataSyncUrl = nsAppUrl + ApiUrl.ACC_SYNC;
+	String syncStatusUrl = nsAppUrl + ApiUrl.ACC_SYNC_STATUS;
+	String distinctEventsByAcc_UT_Url = nsAppUrl + ApiUrl.UT_DISTINCT_EVENTS_BY_ACC;
+	String usageTrackerGetDataUrl = nsAppUrl + ApiUrl.UT_GET_DATA;
+	String reportRunUrl = nsAppUrl + ApiUrl.REPORT_RUN;
+	String accDeleteUrl = nsAppUrl + ApiUrl.ACC_DELETE;
 	String ACCOUNT_ID = "001o000000E4KKRAA3";
 
 	String ACC_USER_EVENT_DATE_AGG_RES = "ACC_USER_EVENT_DATE_AGG_RES";

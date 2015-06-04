@@ -14,6 +14,8 @@ import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.PackageUtil;
 
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.SfdcConfigLoader;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -44,17 +46,19 @@ public class BaseTest {
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
     public static MetaDataUtil metaUtil=new MetaDataUtil();
+
+    public static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
     
     @BeforeSuite
     public void init() throws Exception {
     	Log.info("Fetching All SFDC Connections");
-    	sfdc = new SalesforceConnector(PropertyReader.userName, PropertyReader.password + PropertyReader.stoken,
-    			PropertyReader.partnerUrl, PropertyReader.sfdcApiVersion);
+    	sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
+    			sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
     	
     	Assert.assertTrue(sfdc.connect(), "SFDC Connection established successfully!");
     	//MetadataClient is initialized
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
-        packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(PropertyReader.sfdcApiVersion));
+        packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
         if(Boolean.valueOf(env.getProperty("sfdc.unInstallApp"))) {
             packageUtil.unInstallApplication();
@@ -64,7 +68,7 @@ public class BaseTest {
             packageUtil.installApplication(env.getProperty("sfdc.packageVersionNumber"), env.getProperty("sfdc.packagePassword"));
         }
         //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
-        if(PropertyReader.managedPackage) {
+        if(sfdcConfig.getSfdcManagedPackage()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
         }
 
