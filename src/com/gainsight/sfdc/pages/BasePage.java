@@ -13,6 +13,8 @@ import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountPage;
 import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunityPage;
 import com.gainsight.testdriver.Log;
 
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.SfdcConfigLoader;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -60,14 +62,14 @@ public class BasePage extends WebPage implements Constants {
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
-
+    SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
 			driver.get(env.getDefaultUrl());
 		}
-		field.setTextField("username", env.get().getUserName());
-		field.setTextField("password", env.get().getUserPassword());
+		field.setTextField("username", sfdcConfig.getSfdcUsername());
+		field.setTextField("password", sfdcConfig.getSfdcPassword());
 		button.click("Login");
         try {
             wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
