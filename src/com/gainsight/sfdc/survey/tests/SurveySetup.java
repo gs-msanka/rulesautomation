@@ -419,4 +419,20 @@ public class SurveySetup extends BaseTest {
 		return concatUrl;
 	}
 	
+	public String surveySiteURL() {
+		SObject siteObject[] = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Name, Status, Subdomain FROM Site where Status='Active' Limit 1"));
+		String publishURL = null;
+		if (siteObject.length > 0) {
+			String siteURL = "http://"
+					+ siteObject[0].getField(resolveStrNameSpace("Subdomain"))
+					+ ".force.com/";
+			Log.info(" Site url is " + siteURL);
+			publishURL = siteURL;
+		} else {
+			throw new RuntimeException("Site Not Found");
+		}
+		return publishURL;
+	}
 }
+
