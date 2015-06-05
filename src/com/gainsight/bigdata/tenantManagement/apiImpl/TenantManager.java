@@ -5,7 +5,6 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
-import com.gainsight.bigdata.urls.AdminURLs;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -15,7 +14,7 @@ import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.SfdcConfigLoader;
+import com.gainsight.util.ConfigLoader;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -38,7 +37,7 @@ public class TenantManager {
     private Header header = new Header();
     private WebAction wa = new WebAction();
     private ObjectMapper mapper = new ObjectMapper();
-    private SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+    private SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
     /**
      * Logs in to tenant Management SFDC org & sets up the default headers required.

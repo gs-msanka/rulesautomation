@@ -15,7 +15,7 @@ import java.util.Map;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.SfdcConfigLoader;
+import com.gainsight.util.ConfigLoader;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -54,7 +54,7 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
     Application env =new Application();
-	public SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+	public SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 	static {
 		info = SFDCUtil.fetchSFDCinfo();
 		op = new SfdcBulkOperationImpl(info.getSessionId());

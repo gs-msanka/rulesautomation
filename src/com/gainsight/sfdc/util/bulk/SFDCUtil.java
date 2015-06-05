@@ -4,10 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.SfdcConfigLoader;
+import com.gainsight.util.ConfigLoader;
 import com.sforce.soap.apex.ExecuteAnonymousResult;
 import com.sforce.soap.apex.SoapConnection;
 import com.sforce.soap.partner.Connector;
@@ -23,7 +22,7 @@ public class SFDCUtil {
     static PartnerConnection connection;
     SoapConnection soapConnection;
     //static Application env;
-    static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+    static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
     public static void main(String[] args) {
     	SFDCUtil.fetchSFDCinfo();

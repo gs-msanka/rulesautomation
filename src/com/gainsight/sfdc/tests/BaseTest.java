@@ -6,18 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.gainsight.http.Header;
-import com.gainsight.http.ResponseObj;
-import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.PackageUtil;
 
 import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.SfdcConfigLoader;
-import org.apache.commons.lang3.ArrayUtils;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.gainsight.util.ConfigLoader;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -30,7 +24,6 @@ import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.MetaDataUtil;
-import com.gainsight.util.PropertyReader;
 
 public class BaseTest {
     public static final Application env = new Application();
@@ -41,7 +34,7 @@ public class BaseTest {
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static TimeZone userTimezone;
-    public static SfdcConfig sfdcConfig = SfdcConfigLoader.getConfig();
+    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
     public static SalesforceMetadataClient metadataClient;

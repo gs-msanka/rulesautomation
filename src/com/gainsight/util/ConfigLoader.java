@@ -12,11 +12,12 @@ import java.util.Map;
 /**
  * Created by vmenon on 29/5/15.
  */
-public class SfdcConfigLoader {
-    private static File confFile = new File(System.getProperty("basedir", ".") + "/conf/sfdc-config.json");
+public class ConfigLoader {
+    private static String baseDir = System.getProperty("basedir", ".");
+    private static File sfdcConfFile = new File( baseDir + "/conf/sfdc-config.json");
     private static JsonObject loadedSfdcConfig;
 
-    private SfdcConfigLoader(){
+    private ConfigLoader(){
 
     }
 
@@ -24,14 +25,14 @@ public class SfdcConfigLoader {
         if(loadedSfdcConfig == null) {
             try {
                 JsonParser parser = new JsonParser();
-                loadedSfdcConfig = parser.parse(new FileReader(confFile)).getAsJsonObject();
+                loadedSfdcConfig = parser.parse(new FileReader(sfdcConfFile)).getAsJsonObject();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public static SfdcConfig getConfig(String env){
+    public static SfdcConfig getSfdcConfig(String env){
         JsonObject config = null;
         init();
         if(loadedSfdcConfig.getAsJsonObject("profiles") != null){
@@ -52,7 +53,8 @@ public class SfdcConfigLoader {
         return new SfdcConfig(config);
     }
 
-    public static SfdcConfig getConfig(){
-        return getConfig("default");
+    public static SfdcConfig getSfdcConfig(){
+        String env = System.getProperty("sfdc.env" , "default");
+        return getSfdcConfig(env);
     }
 }
