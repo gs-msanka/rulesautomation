@@ -4,9 +4,12 @@ import com.gainsight.sfdc.workflow.pojos.CTA;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Created by gainsight on 13/03/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SurveyCTARule {
     private String status;
     private CTA cta;
@@ -18,8 +21,16 @@ public class SurveyCTARule {
     private String advanceField;
     private String advanceOperator;
     private String advanceValue;
+    private String questionType;
     
+	public String getQuestionType() {
+		return questionType;
+	}
 
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
+	}
+	
     public String getAdvanceField() {
         return advanceField;
     }

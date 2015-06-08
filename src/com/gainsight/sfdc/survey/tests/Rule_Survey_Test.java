@@ -2,14 +2,17 @@ package com.gainsight.sfdc.survey.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -21,30 +24,213 @@ import com.gainsight.sfdc.survey.pages.SurveyPage;
 import com.gainsight.sfdc.survey.pages.SurveyPublishPage;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pages.SurveySetCTAPage;
+import com.gainsight.sfdc.survey.pages.SurveyResponsePage;
+import com.gainsight.sfdc.survey.pages.SurveySiteCofiguration;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
+import com.gainsight.sfdc.survey.pojo.SurveyResponseAns;
 import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+import com.sforce.soap.partner.sobject.SObject;
 
 
 public class Rule_Survey_Test extends SurveySetup {
 	
-    private final String TEST_DATA_FILE         = "testdata/sfdc/survey/tests/SurveyTests.xls";
-    private final String QUERY  = "DELETE [SELECT ID FROM JBCXM__Survey__c];";
+    private final String TEST_DATA_FILE                    = "testdata/sfdc/survey/tests/SurveyTests.xls";
+    private final String QUERY                             = "DELETE [SELECT ID FROM JBCXM__Survey__c];";
+    private final String RULES_CLEANUP                     = "DELETE [SELECT ID FROM JBCXM__AutomatedAlertRules__c];";
+    private final String CTA_CLEANUP                       = "DELETE [SELECT Id FROM JBCXM__CTA__c];";
+    private final static String SURVEY_QUESTIONS_FILE      = Application.basedir + "/testdata/sfdc/survey/scripts/SurveyQuestions.txt";
+    private final static String SURVEY_PUBLISH_FILE        = Application.basedir + "/testdata/sfdc/survey/scripts/SurveyPublish.txt";
+    private final static String SURVEY_PARTICIPANTS_FILE   = Application.basedir + "/testdata/sfdc/survey/scripts/Surveyparticipants.txt";
+    private static final String SURVEY_MASTER_QUERY = "Select id, JBCXM__Code__c, JBCXM__Title__c From JBCXM__Survey__c Where JBCXM__Code__c = 'Survey created through automation' AND JBCXM__Title__c = 'Survey created through automation'";
+	private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
+	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
+    private String SURVEY_ID = null;
+    private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private ObjectMapper mapper = new ObjectMapper();
+    
 
 	@BeforeClass
 	public void setUp() {
-		Log.info("Starting Survey Creation / Clone Test Cases...");
+		Log.info("Starting Survey Creation");
+		sfdc.connect();
 		basepage.login();
-    }
+		SurveySiteCofiguration ss=new SurveySiteCofiguration();
+		ss.navigateToSetup();
+		sfdc.runApexCode(resolveStrNameSpace(QUERY));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_QUESTIONS_FILE));
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_PUBLISH_FILE));
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(SURVEY_PARTICIPANTS_FILE));
+		SObject[] surveys = sfdc
+				.getRecords(resolveStrNameSpace(SURVEY_MASTER_QUERY));
+		if (surveys.length == 1) {
+			SURVEY_ID = surveys[0].getId();
+		} else {
+			throw new RuntimeException("Survey Not Found");
+		}
+	}
  
 	@BeforeMethod
 	public void cleanUpData(){
-		sfdc.runApexCode(resolveStrNameSpace(QUERY));
+		sfdc.runApexCode(resolveStrNameSpace(CTA_CLEANUP));
+		sfdc.runApexCode(resolveStrNameSpace(RULES_CLEANUP));
+	}
+    
+	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
+	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
 	}
 	
+	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
+	public void surveyRuleMatixSingleQuestionType(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
+	}
+	
+	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
+	public void surveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
+	}
+	
+	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694","GS-2695"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
+	public void surveyRuleSingleSelect(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
+	}
+	
+	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
+	public void surveyRuleMultiSelect(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
+	}
+	
+	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
+	public void surveyRuleMatrixMultipleAnswers	(HashMap<String, String> testData) throws Exception {
+		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put("Name", SURVEY_ID);
+		populateObjMaps();
+		setupRule(testData);
+		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
+				SurveyCTARule.class);
+		SurveyResponsePage surveyResponse = new SurveyResponsePage();
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		Assert.assertTrue(sfdc
+				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+						+ cta.getPriority()
+						+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+						+ cta.getReason()
+						+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+						+ cta.getType()
+						+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+						+ cta.getStatus() + "'")) == 1);
+	}
+    
 	@TestInfo(testCaseIds={"GS-2690"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S2")
@@ -103,9 +289,9 @@ public class Rule_Survey_Test extends SurveySetup {
 		surProp.setStatus("Publish");
 		Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(),
 				"Verifying Survey Status");
-		basepage.clickOnSurveyTab().clickOnPublishedView();
+		basepage.clickOnSurveyTab();
+		surveyBasePage.openSurveyFromPublished(surProp).clickOnSetCta(surProp);
 		SurveySetCTAPage setCTAPage = new SurveySetCTAPage();
-		setCTAPage.clickOnCTACardView();
 		Assert.assertTrue(setCTAPage.isCTAPageVisible(),
 				"Verifying CTA Page Navigation");
 		Assert.assertEquals(setCTAPage.getNoRulesText(), "No rules set.");
