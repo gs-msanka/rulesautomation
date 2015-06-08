@@ -36,7 +36,7 @@ public class BaseTest {
     public static TimeZone userTimezone;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
-    public static final String NAMESPACE = env.getProperty("sfdc.nameSpace");
+    public static final String NAMESPACE = sfdcConfig.getSfdcNameSpace();
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
 
@@ -53,19 +53,19 @@ public class BaseTest {
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
-        if(Boolean.valueOf(env.getProperty("sfdc.unInstallApp"))) {
+        if(Boolean.valueOf(sfdcConfig.getSfdcUnInstallApp())) {
             packageUtil.unInstallApplication();
         }
         //Install Application.
-        if(Boolean.valueOf(env.getProperty("sfdc.installApp"))) {
-            packageUtil.installApplication(env.getProperty("sfdc.packageVersionNumber"), env.getProperty("sfdc.packagePassword"));
+        if(Boolean.valueOf(sfdcConfig.getSfdcInstallApp())) {
+            packageUtil.installApplication(sfdcConfig.getSfdcPackageVersionNumber(), sfdcConfig.getSfdcPackagePassword());
         }
         //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
         if(sfdcConfig.getSfdcManagedPackage()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
         }
 
-        if(Boolean.valueOf(env.getProperty("sfdc.updateWidgetLayouts"))) {
+        if(Boolean.valueOf(sfdcConfig.getSfdcUpdateWidgetLayouts())) {
             packageUtil.updateWidgetLayouts(true, true, true);
         }
 
@@ -78,8 +78,8 @@ public class BaseTest {
         Log.info("Initializing Selenium Environment");
         env.start();
         try {
-            String setAsDefaultApp = env.getProperty("sfdc.setAsDefaultApp");
-            String loadDefaultData = env.getProperty("sfdc.loadDefaultData");
+            String setAsDefaultApp = sfdcConfig.getSfdcSetDefaultApp();
+            String loadDefaultData = sfdcConfig.getSfdcLoadDefaultData();
             env.launchBrower();
             basepage = new BasePage();
             Log.info("Initializing Base Page : " + basepage);

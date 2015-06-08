@@ -122,7 +122,7 @@ public class SfdcConfig  {
         public static final String sfdcAppurl = "sfdc.appurl";
         public static final String sfdcDeleteRecords = "sfdc.deleteRecords";
         public static final String sfdcManagedPackage = "sfdc.managedPackage";
-        public static final String sfdcSetDefaultApp = "sfdc.setAsDefaultApp";
+        public static final String sfdcSetDefaultApp = "sfdc.setDefaultApp";
         public static final String sfdcLoadDefaultData = "sfdc.loadDefaultData";
         public static final String sfdcNameSpace = "sfdc.nameSpace";
         public static final String sfdcUpdateWidgetLayouts= "sfdc.updateWidgetLayouts" ;
