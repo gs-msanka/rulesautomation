@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.gainsight.sfdc.SalesforceConnector;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -40,15 +35,6 @@ public class WorkflowPlaybooksTest extends WorkflowSetup {
             loadDefaultPlaybooks();
 	        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
 	        basepage.login();
-            WebDriverWait wait = new WebDriverWait(Application.getDriver(),10, 1000);
-            wait.until(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver webDriver) {
-                    SalesforceConnector sfdcInfo = new SalesforceConnector("","","","");
-                    return sfdcInfo.getRecordCount("")>1;
-                    //return null;
-                }
-            });
 	    }
 	
 	@TestInfo(testCaseIds={"GS-2140","GS-2141","GS-2142","GS-2143"})
