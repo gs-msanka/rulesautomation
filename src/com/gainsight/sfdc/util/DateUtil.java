@@ -38,6 +38,12 @@ public class DateUtil {
         return addMonths(cal, amount, format);
     }
 
+    public static String addMonths(Date date, int amount, String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(DateUtils.addMonths(date, amount));
+    }
+
     public static Calendar addMonths(TimeZone timeZone, int amount) {
         Calendar cal = Calendar.getInstance(timeZone);
         cal.add(Calendar.MONTH, amount);
@@ -97,6 +103,12 @@ public class DateUtil {
         dateFormat.setTimeZone(timeZone);
         cal.add(Calendar.WEEK_OF_YEAR, amount);
         return dateFormat.format(cal.getTime());
+    }
+
+    public static String addWeeks(Date date, int amount, String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(DateUtils.addWeeks(date, amount));
     }
 
     public static String addWeeks(TimeZone timeZone, int amount, String format) {

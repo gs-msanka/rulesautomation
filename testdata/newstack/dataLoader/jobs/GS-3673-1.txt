@@ -1,0 +1,25 @@
+{
+    "jobName": "GS-3673-1",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "dateProcess" : {
+        "inputFile" : "/testdata/newstack/dataLoader/data/GS-3673.csv",
+        "outputFile" : "/resources/datagen/process/GS-3673-1.csv",
+        "fields" :[
+            {
+                "weekly" : false,
+                "daily"  : true,
+                "dateTime" : false,
+                "dateFormat" : "MM/d/yyyy",
+                "fieldName" : "Date"
+            },
+            {
+                "weekly" : false,
+                "daily"  : true,
+                "dateTime" : true,
+                "dateFormat" : "MM/dd/yyyy HH:mm",
+                "fieldName" : "CreatedDateTime"
+            }
+        ]
+    }
+}

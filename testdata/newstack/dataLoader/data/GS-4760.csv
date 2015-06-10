@@ -1,9 +1,1 @@
-Name,Type,Active__c,AnnualRevenue,CreatedDate,C_Date__c,C_DateTime__c,Regions__c
-Acme,Prospect,TRUE,100000000,0,5,,
-salesforce.com,Customer,FALSE,,,2,,
-Global Media,Prospect,TRUE,3456789,1,1,6,India;Usa;China;Europe;Australia
-Sunand Acc 1,,FALSE,,3,,3,
-Parthibhan 1,,,,,10,4,India;Usa;Australia
-Sunand Acc 2,,,,4,6,,
-Scorecard Account 0,Installation Partner,FALSE,,,,,
-Scorecard Account 1,Installation Partner,FALSE,,,,,
+Name,Type,Active,AnnualRevenue,Date,CreatedDateTime,RegionsAcme,Prospect,TRUE,100000000,5,,salesforce.com,Customer,FALSE,,2,5,Global Media,Prospect,TRUE,3456789,1,,India;Usa;China;Europe;AustraliaSunand Acc 1,,FALSE,,,4,Parthibhan 1,,,,10,,India;Usa;AustraliaSunand Acc 2,,,,6,10,Scorecard Account 0,Installation Partner,FALSE,,,,Scorecard Account 1,Installation Partner,FALSE,,,20,

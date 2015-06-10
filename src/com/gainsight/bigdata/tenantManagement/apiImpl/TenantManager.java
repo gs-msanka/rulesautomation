@@ -216,11 +216,11 @@ public class TenantManager {
      */
     public TenantDetails getTenantDetail(String sfOrgId, String tenantId) {
         TenantDetails tenantDetail = null;
-        Log.info("Getting All Tenant Details to get one Tenant Detail...");
         sfOrgId = NSUtil.convertSFID_15TO18(sfOrgId);
         String url = ADMIN_TENANTS;
 
         if (tenantId != null) {
+            Log.info("Getting Tenant Details : " +tenantId);
             url = ADMIN_TENANTS + "/" + tenantId;
             try {
                 ResponseObj responseObj = wa.doGet(url, header.getAllHeaders());
@@ -233,6 +233,7 @@ public class TenantManager {
             }
         } else {
             try {
+                Log.info("Getting All Tenant Details to get one Tenant Detail...");
                 ResponseObj responseObj = wa.doGet(url, header.getAllHeaders());
                 if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                     NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
@@ -247,8 +248,8 @@ public class TenantManager {
                     }
                 }
             } catch (Exception e) {
-                Log.error("Some Exception in request" + e);
-                throw new RuntimeException("Failed to get Tenant Details");
+                Log.error("Some Exception in request " + e);
+                throw new RuntimeException("Failed to get Tenant Details " +e.getLocalizedMessage());
             }
         }
         Log.info("Tenant ID :" +tenantDetail.getTenantId());
@@ -264,6 +265,7 @@ public class TenantManager {
      * @return - on success returns collection details, else returns NULL.
      */
     public CollectionInfo.CollectionDetails createSubjectArea(String tenantId, String payload) {
+        Log.info("Creating Subject Area for tenant : "+tenantId);
         if (tenantId == null || tenantId.equals("") || payload == null) {
             Log.error("Tenant ID, payload are mandatory");
             throw new RuntimeException("Tenant ID, payload are mandatory");
@@ -324,6 +326,7 @@ public class TenantManager {
      * @return - List of all the subject area for a tenant.
      */
     public List<CollectionInfo> getAllSubjectAreas(String tenantId, String fieldsToQuery) {
+        Log.info("Getting All Subject Areas for a tenant Id " +tenantId);
         if (tenantId == null && tenantId.equals("")) {
             Log.error("Tenant ID is mandatory");
             throw new RuntimeException("Tenant Id mandatory");
@@ -356,9 +359,10 @@ public class TenantManager {
      * @return Returns the schema (collectionInfo) of the Subject area of a tenant.
      */
     public CollectionInfo getSubjectAreaMetadata(String tenantId, String collectionId) {
+        Log.info("Getting Subject Area / Collection Schema for Tenant Id :" +tenantId + "And Collection Id "+collectionId);
         if (tenantId == null || collectionId == null) {
             Log.info("Both Tenant Id, Collection Id are Mandatory");
-            throw new RuntimeException("Both Tenant Id, Collection Id are Mandatory");
+            throw new IllegalArgumentException("Both Tenant Id, Collection Id are Mandatory");
         }
         CollectionInfo collectionInfo = null;
         header.addHeader("contextTenantId", tenantId);
@@ -388,9 +392,10 @@ public class TenantManager {
      * @return - True of subject are deletion, false/Run time exception on failure.
      */
     public boolean deleteSubjectArea(String tenantId, String collectionId) {
+        Log.info("Deleting Subject Area / Collection Id : " +collectionId + " For Tenant Id : " +tenantId);
         if (tenantId == null || collectionId == null) {
             Log.info("Both Tenant Id, Collection Id are Mandatory");
-            throw new RuntimeException("Both Tenant Id, Collection Id are Mandatory");
+            throw new IllegalArgumentException("Both Tenant Id, Collection Id are Mandatory");
         }
         boolean result = false;
         header.addHeader("contextTenantId", tenantId);
@@ -420,6 +425,7 @@ public class TenantManager {
      * @return true on successful collection update, false/RunTime Exception on failure.
      */
     public boolean updateSubjectArea(String tenantId, CollectionInfo collectionInfo) {
+        Log.info("Updating Subject Area of a tenant : " +tenantId);
         if (tenantId == null || collectionInfo == null) {
             Log.info("Both Tenant Id, collectionInfo are Mandatory");
             throw new RuntimeException("Both Tenant Id, collectionInfo are Mandatory");

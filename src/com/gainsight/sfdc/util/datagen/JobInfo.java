@@ -26,6 +26,17 @@ public class JobInfo {
 	@JsonProperty("load")
 	SfdcLoad load;
 
+    @JsonProperty("csvFormatter")
+    CSVFormat csvFormatter;
+
+    public CSVFormat getCsvFormatter() {
+        return csvFormatter;
+    }
+
+    public void setCsvFormatter(CSVFormat csvFormatter) {
+        this.csvFormatter = csvFormatter;
+    }
+
     public DateProcess getDateProcess() {
         return dateProcess;
     }
@@ -188,13 +199,83 @@ public class JobInfo {
                 this.fieldName = fieldName;
             }
         }
-
-
     }
 
+    public static class CSVFormat {
+        private String inputFile;
+        private String outputFile;
 
+        public String getInputFile() {
+            return inputFile;
+        }
 
+        public void setInputFile(String inputFile) {
+            this.inputFile = inputFile;
+        }
 
+        public String getOutputFile() {
+            return outputFile;
+        }
+
+        public void setOutputFile(String outputFile) {
+            this.outputFile = outputFile;
+        }
+
+        @JsonProperty("csvProperties")
+        CSVProperties csvProperties = new CSVProperties();
+
+        public CSVProperties getCsvProperties() {
+            return csvProperties;
+        }
+
+        public void setCsvProperties(CSVProperties csvProperties) {
+            this.csvProperties = csvProperties;
+        }
+    }
+
+    public static class CSVProperties {
+        private char separator = ',';
+        private char quoteChar = '"';
+        private char escapeChar = '\\';
+        private String lineEnd = "\n";
+
+        public char getSeparator() {
+            return separator;
+        }
+
+        public void setSeparator(char separator) {
+            this.separator = separator;
+        }
+
+        public char getQuoteChar() {
+            return quoteChar;
+        }
+
+        public void setQuoteChar(char quoteChar) {
+            this.quoteChar = quoteChar;
+        }
+
+        public char getEscapeChar() {
+            return escapeChar;
+        }
+
+        public void setEscapeChar(char escapeChar) {
+            this.escapeChar = escapeChar;
+        }
+
+        public String getLineEnd() {
+            return lineEnd;
+        }
+
+        public void setLineEnd(String lineEnd) {
+            this.lineEnd = lineEnd;
+        }
+
+        @Override
+        public String toString() {
+            return "CSVProperties{separator:"+separator+", quoteChar : "+quoteChar+" , escapeChar : "+escapeChar+", lineEnd : "+lineEnd+" }";
+        }
+    }
 
 	/**
 	 * To Store any pre processing of data required before ETL process

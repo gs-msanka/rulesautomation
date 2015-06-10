@@ -14,6 +14,7 @@ public class DataLoadMetadata {
     private String collectionName;
     private String dataLoadOperation;
     private String clearOperation;
+    private String[] keyFields;
     private String sourceType;
     private String targetType;
     private boolean headerRow = true;
@@ -23,6 +24,14 @@ public class DataLoadMetadata {
     private boolean dbNameUsed = false;
     @JsonProperty("mapping")
     private List<Mapping> mappings;
+
+    public String[] getKeyFields() {
+        return keyFields;
+    }
+
+    public void setKeyFields(String[] keyFields) {
+        this.keyFields = keyFields;
+    }
 
     public String getClearOperation() {
         return clearOperation;
