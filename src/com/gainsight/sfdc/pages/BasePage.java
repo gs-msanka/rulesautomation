@@ -10,10 +10,12 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.util.AmountsUtil;
 import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountPage;
 import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunityPage;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -350,4 +352,17 @@ public class BasePage extends WebPage implements Constants {
             throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
         }
     }
+    
+	public static void open(String url) {
+		Application.getDriver().get(url);
+		Log.info("Opening" + " " + url);
+	}
+	
+	public static void navigateBack() {
+		Application.getDriver().navigate().back();	
+	}
+	
+	public static String getCurrentUrl(){
+		return Application.getDriver().getCurrentUrl();
+	}
 }

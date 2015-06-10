@@ -44,6 +44,10 @@ public class SurveyPropertiesPage extends SurveyPage {
         super(surveyProp.getSurveyName());
         waitForSurveyPropertiesFormToLoad(surveyProp);
     }
+    
+    public SurveyPropertiesPage() {
+       Log.info("Dummy Constructor - SurveyProperties Page");
+    }
 
     public SurveyPropertiesPage updateSurveyProperties(SurveyProperties surveyProp) {
     	Log.info("Started Filling Survey Form");

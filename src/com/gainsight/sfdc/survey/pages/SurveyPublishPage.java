@@ -39,12 +39,9 @@ public class SurveyPublishPage extends SurveyPage {
     private static final String TEST_EMAIL_ERROR_MSG            = ".//div[@class='errorMessage alert alert-danger']";
     private static final String TEST_EMAIL_ERROR_INFO_MSG       = ".//div[@class='sendTestMailMsg alert alert-danger']";
     private static final String TEST_EMAIL_SUCCESS_MSG          = "//div[@class='sendTestMailMsg alert alert-success']";
+    private static final String EMAIL_ALERT_BUTTON              = "//div[@class='modal_footer']/input";
+    private static final String EMAIL_ALERT_DIV                 = "//div[@class='modal_body']/descendant::div[@class='layout_popup_text']";
 
-
-    //There are no active questions in the survey and you cannot publish this survey. Please add at least one active question before publishing.
-    //* Fields are Mandatory.
-    //Test emails sent for valid emails. Following emails found to be invalid : giribabu121@gmail.com
-    //Test Emails Sent Successfully
     public SurveyPublishPage(String surveyName) {
         super(surveyName);
         wait.waitTillElementDisplayed(PUBLISH_BUTTON, MIN_TIME, MAX_TIME);
@@ -75,11 +72,14 @@ public class SurveyPublishPage extends SurveyPage {
                 item.click(PUBLISH_DATE_ON_OFF);
             }
         }*/
-
+        
+		clickOnPublishSurvey();
+        return this;
+	}
+	
+	public void clickOnPublishSurvey(){
         item.click(PUBLISH_BUTTON);
 		waitTillNoLoadingIcon();
-        Timer.sleep(STALE_PAUSE);
-        return this;
 	}
 
     public SurveyPublishPage sendTestEmail(String[] recipientEmails, String fromAddress){
@@ -154,4 +154,24 @@ public class SurveyPublishPage extends SurveyPage {
         return true;
     }
 	
+	public void sendTestEmails(String[] recipientEmails) {
+		item.click(SEND_TEST_EMAIL_BUTTON); /*iterating 10 times below, since according to testcase we can send maximum 10 test emails*/
+		for (int i = 0; i < 10; i++) {
+			String emails = recipientEmails[0];
+			WebElement temp = element.getElement(TEST_EMAIL_DIV);
+			temp.findElement(By.xpath(TEST_EMAIL_INPUT)).sendKeys(emails);
+			temp.findElement(By.xpath(ADD_TEST_EMAIL)).click();
+			temp = element.getElement(TEST_EMAIL_DIV);
+		}
+	}
+    
+	public String getMaxTestEmailsAletMsg() {
+		wait.waitTillElementDisplayed(EMAIL_ALERT_DIV, MIN_TIME, MAX_TIME);
+		return element.getElement(EMAIL_ALERT_DIV).getText();
+	}
+    
+	public SurveyPublishPage closeAlertEmailDialog() {
+		item.click(EMAIL_ALERT_BUTTON);
+		return this;
+	}
 }
