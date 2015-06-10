@@ -2,12 +2,15 @@ package com.gainsight.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import sun.util.logging.resources.logging;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -18,12 +21,15 @@ import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.bigdata.pojo.ObjectFields;
 
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
 	 public static final Application env = new Application();
 	
-	 public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
+	 /*  Commenting, as we created another method which is Generic on any Object "createFieldsOnObject"
+	   
+	   public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 	    	String TextField[]={"C_Text"} , NumberField[]={"C_Number"} , Checkbox[]={"C_Checkbox"} , Currency[]={"C_Currency"} , Email[]={"C_Email"} , Percent[]={"C_Percent"} ,  Phone[]={"C_Phone"} , Picklist_FieldName="C_Picklist" , 
 					Picklist_Values[]={"Pvalue1","Pvalue2","Pvalue3"} , MultiPicklist_FieldName="C_MultiPicklist", MultiPicklist_Values[]={"MPvalue1","MPvalue2","MPvalue3"} , TextArea[]={"C_TextArea"} , EncryptedString[]={"C_EncryptedString"} , URL[]={"C_URL"};
@@ -120,7 +126,111 @@ public class MetaDataUtil {
 	                                    "C_Number","C_Checkbox","C_Currency","C_Email","C_Percent","C_Phone","C_Picklist","C_MultiPicklist","C_TextArea","C_EncryptedString",
 	                                    "C_URL","C_Reference"};
 	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields),sfinfo);
-	    }
+	    }*/
+	 
+	 public void createFieldsOnObject(SalesforceConnector sfdc,SFDCInfo sfinfo,String Object,ObjectFields objF) throws Exception {
+		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
+		 List<String> permFieldsList = new ArrayList<String>();
+	    
+		 if(objF.getLookups().size() > 0){
+			 for (HashMap<String,String> hm : objF.getLookups()){
+				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("ReleationShipName")});
+				 permFieldsList.add(hm.get("Name"));
+			 }
+		 }
+		 if(objF.getFormulaFieldsList().size() > 0){
+			 metadataClient.createFormulaFields(resolveStrNameSpace(Object), objF.getFormulaFieldsList());
+			 
+			 for (HashMap<String,String> hm : objF.getFormulaFieldsList()){
+				 permFieldsList.add(hm.get("FieldName"));
+			 }
+		 }
+		 if(objF.getTextFields().size() > 0){
+			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextFields().toArray(new String[objF.getTextFields().size()]), false, false, true, false, false);
+			 permFieldsList.addAll(objF.getTextFields());
+		 }
+		 if(objF.getNumberFields().size() > 0){
+			 metadataClient.createNumberField(resolveStrNameSpace(Object), objF.getNumberFields().toArray(new String[objF.getNumberFields().size()]), false);
+			 permFieldsList.addAll(objF.getNumberFields());
+		 }
+		 if(objF.getCheckBoxes().size() > 0){
+			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getCheckBoxes().toArray(new String[objF.getCheckBoxes().size()]), true, false, false);
+			 permFieldsList.addAll(objF.getCheckBoxes());
+		 }
+		 if(objF.getCurrencies().size() > 0){
+			 metadataClient.createCurrencyField(resolveStrNameSpace(Object), objF.getCurrencies().toArray(new String[objF.getCurrencies().size()]));
+			 permFieldsList.addAll(objF.getCurrencies());
+		 }
+		 if(objF.getEmails().size() > 0){
+			 metadataClient.createEmailField(resolveStrNameSpace(Object), objF.getEmails().toArray(new String[objF.getEmails().size()]));
+			 permFieldsList.addAll(objF.getEmails());
+		 }
+		 if(objF.getPercents().size() > 0){
+			 metadataClient.createNumberField(resolveStrNameSpace(Object), objF.getPercents().toArray(new String[objF.getPercents().size()]), true);
+			 permFieldsList.addAll(objF.getPercents());
+		 }
+		 if(objF.getPhones().size() > 0){
+			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getPhones().toArray(new String[objF.getPhones().size()]), false, true, false);
+			 permFieldsList.addAll(objF.getPhones());
+		 }
+		 if(objF.getPickLists().size() > 0){
+			 for(HashMap<String,String[]> hmPickLists : objF.getPickLists()){
+			 metadataClient.createPickListField(resolveStrNameSpace(Object), hmPickLists, false);
+			 //permFieldsList.add(hmPickLists)
+			 Log.info("PickList Field Name is " + hmPickLists.keySet().toString());
+			 permFieldsList.add(hmPickLists.keySet().toString());			 
+			 }
+		 }
+		 if(objF.getMultiPickLists().size() > 0){
+			 for(HashMap<String,String[]> hmMultiPickLists : objF.getMultiPickLists()){
+			 metadataClient.createPickListField(resolveStrNameSpace(Object),hmMultiPickLists,true);
+			 Log.info("MultiPickList Field Name is " + hmMultiPickLists.keySet().toString());
+			 permFieldsList.add(hmMultiPickLists.keySet().toString());
+			 }
+		 }
+		 
+		 if(objF.getAutoNumber().size() > 0){
+			 metadataClient.createAutoNumberFields(resolveStrNameSpace(Object), objF.getAutoNumber().toArray(new String[objF.getAutoNumber().size()]));
+			 permFieldsList.addAll(objF.getAutoNumber());
+		 }
+		 if(objF.getDates().size() > 0){
+			 metadataClient.createDateField(resolveStrNameSpace(Object), objF.getDates().toArray(new String[objF.getDates().size()]), false);
+			 permFieldsList.addAll(objF.getDates());
+		 }
+		 if(objF.getDateTimes().size() > 0){
+			 metadataClient.createDateField(resolveStrNameSpace(Object), objF.getDateTimes().toArray(new String[objF.getDateTimes().size()]), true);
+			 permFieldsList.addAll(objF.getDateTimes());
+		 }
+		 if(objF.getGeoLocation().size() > 0){
+			 //SalesforceMetadataClient Doesn't have Geo Location to create a Field
+		 }
+		 if(objF.getTextArea_Long().size() > 0){
+			//SalesforceMetadataClient Doesn't have Text Area Long to create a Field. Text Fields,Text Area, Text Rich are available.
+		 }
+		 if(objF.getTextArea_Rich().size() > 0){
+			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextArea_Rich().toArray(new String[objF.getTextArea_Rich().size()]), false, false, false, false, true);
+			 permFieldsList.addAll(objF.getTextArea_Rich());
+		 }
+		 if(objF.getTextAreas().size() > 0){
+			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextAreas().toArray(new String[objF.getTextAreas().size()]), false, false, false, true, false);
+			 permFieldsList.addAll(objF.getTextFields());
+		 }
+		 if(objF.getEncryptedStrings().size() > 0){
+			 metadataClient.createEncryptedTextFields(resolveStrNameSpace(Object), objF.getEncryptedStrings().toArray(new String[objF.getEncryptedStrings().size()]));
+			 permFieldsList.addAll(objF.getEncryptedStrings());
+		 }
+
+		 if(objF.getURLs().size() > 0){
+			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getURLs().toArray(new String[objF.getURLs().size()]), false, false, true);
+			 permFieldsList.addAll(objF.getURLs());
+		 }
+		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])),sfinfo);	    	
+	 }
+	 
+		 
+		 
+		 
+	    //metadataClient.createTextFields("Account", TextField, false, false, true, false, false);
 
     /**
      * Creates a permission set on the org with name "GS_Automation_Permission" & assigns to all the system admins & licensed users.
