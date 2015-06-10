@@ -11,6 +11,7 @@ import java.util.Map;
 
 /**
  * Created by vmenon on 29/5/15.
+ * Class to load different configuration files and keep it in the memory
  */
 public class ConfigLoader {
     private static String baseDir = System.getProperty("basedir", ".");
@@ -32,6 +33,12 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * Returns the SfdcConfig object after loading the sfdc-config.json file from the conf folder.
+     * The utility overides any existing master properties in json with those mentioned in a particular profile.
+     * @param env Profile to choose for overriding.
+     * @return SfdcConfig object of the said loaded config
+     */
     public static SfdcConfig getSfdcConfig(String env){
         JsonObject config = null;
         init();
@@ -53,6 +60,13 @@ public class ConfigLoader {
         return new SfdcConfig(config);
     }
 
+    /**
+     * Returns the SfdcConfig object after loading the sfdc-config.json file from the conf folder.
+     * The utility overrides any existing master properties in json with those mentioned in a particular profile.
+     * This method checks if there is any system property <i>sfdc.env</i> set to load a particular profile else it loads
+     * a profile named "default" from the json file.
+     * @return SfdcConfig object of the said loaded config
+     */
     public static SfdcConfig getSfdcConfig(){
         String env = System.getProperty("sfdc.env" , "default");
         return getSfdcConfig(env);
