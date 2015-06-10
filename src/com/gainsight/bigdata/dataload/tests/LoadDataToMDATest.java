@@ -450,7 +450,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
     public void deleteCollectionDataWithDateAccountField(HashMap<String, String> testData) throws IOException {
-        Calendar calendar = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         CollectionInfo collectionInfo = mapper.readValue(testData.get("CollectionSchema"), CollectionInfo.class);
         DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata"), DataLoadMetadata.class);
         collectionInfo.getCollectionDetails().setCollectionName(testData.get("CollectionName"));
@@ -474,12 +474,12 @@ public class LoadDataToMDATest extends NSTestBase {
         JobInfo actualJobInfo = mapper.readValue(new File(Application.basedir + testData.get("ActualDataLoadJob")), JobInfo.class);
         JobInfo expectedJobInfo = mapper.readValue(new File(Application.basedir + testData.get("ExpectedDataLoadJob")), JobInfo.class);
 
-        File dataLoadFile = FileProcessor.getDateProcessedFile(actualJobInfo, null);
+        File dataLoadFile = FileProcessor.getDateProcessedFile(actualJobInfo, cal.getTime());
         if (actualJobInfo.getCsvFormatter() != null) {
             dataLoadFile = FileProcessor.getFormattedCSVFile(actualJobInfo.getCsvFormatter());
         }
 
-        File expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, null);
+        File expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, cal.getTime());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(jobId);
@@ -515,7 +515,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CSVWriter writer = new CSVWriter(new FileWriter(file), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date", "AccountName"});
-        allLines.add(new String[]{DateUtil.addDays(Calendar.getInstance(), -2, "yyyy-MM-dd"), "A and T unlimit Limited"});
+        allLines.add(new String[]{DateUtil.addDays(cal.getTime(), -2, "yyyy-MM-dd"), "A and T unlimit Limited"});
         writer.writeAll(allLines);
         writer.flush();
         writer.close();
@@ -527,7 +527,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
 
         expectedJobInfo = mapper.readValue(new File(Application.basedir + testData.get("ExpectedDataLoadJob1")), JobInfo.class);
-        expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, null);
+        expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, cal.getTime());
 
         actualData = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(actualCollection)));
         actualData = reportManager.getProcessedReportData(actualData, actualCollection);
@@ -535,7 +535,7 @@ public class LoadDataToMDATest extends NSTestBase {
         expectedReader = new CSVReader(new FileReader(expectedDataFile));
         expectedData = Comparator.getParsedCsvData(expectedReader);
         expectedData = reportManager.populateDefaultBooleanValue(expectedData, actualCollection);
-        Log.info("Actual Data : " + mapper.writeValueAsString(processedData));
+        Log.info("Actual Data : " + mapper.writeValueAsString(actualData));
         Log.info("Expected Data : " + mapper.writeValueAsString(expectedData));
 
         Assert.assertEquals(0, Comparator.compareListData(expectedData, actualData).size());
