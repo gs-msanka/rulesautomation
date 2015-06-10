@@ -1,0 +1,16 @@
+String surveyCode   = 'Survey created through automation';
+String surveyTitle  = 'Survey created through automation';
+JBCXM__Survey__c survey = [SELECT Id, JBCXM__Code__c,JBCXM__PublishedURL__c,JBCXM__EmailTemplate__c,  JBCXM__Title__c, JBCXM__EmailOpenURL__c, JBCXM__Status__c,JBCXM__PublishDate__c  FROM JBCXM__Survey__c
+							Where JBCXM__Code__c=:surveyCode and JBCXM__Title__c=:surveyTitle limit 1];
+EmailTemplate emailTemplate = [select Id, Name, FolderId, Folder.Name from EmailTemplate where Name ='Gainsight Survey Template' Limit 1];
+String surveyPublish = 'JBCXM__SurveyResponse';
+String surveyEmailOpen = 'JBCXM__SurveyEmailOpen';
+Site siteObject = [SELECT Name, Status, Subdomain FROM Site where Status='Active' Limit 1];
+String publishURL = 'http://' + siteObject.Subdomain + '.force.com/';
+
+survey.JBCXM__EmailOpenURL__c = publishURL+surveyEmailOpen;
+survey.JBCXM__PublishedURL__c = publishURL+surveyPublish;
+survey.JBCXM__EmailTemplate__c = emailTemplate.Id;
+survey.JBCXM__Status__c         = 'Publish';
+survey.JBCXM__PublishDate__c = Date.today();
+update survey;

@@ -1,21 +1,40 @@
 package com.gainsight.sfdc.survey.tests;
 
+import java.sql.Driver;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.openqa.selenium.WebElement;
+import org.stringtemplate.v4.compiler.STParser.element_return;
+import org.testng.Assert;
+
+import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
+import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.bulk.SFDCInfo;
+import com.gainsight.sfdc.util.bulk.SFDCUtil;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.MetaDataUtil;
 import com.sforce.soap.partner.sobject.SObject;
-import com.sforce.ws.ConnectionException;
-
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-
-import java.util.HashMap;
 
 public class SurveySetup extends BaseTest {
+	
+	private final static String PICK_LIST_QUERY  = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
+	private final static String CTA_TYPES_QUERY  = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
+	private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
+	private RuleEngineDataSetup ruleEngineDataSetup;
+	private static HashMap<String, String> suveyQus;
+	private static HashMap<String, String> ctaTypesMap;
+	private static HashMap<String, String> PickListMap;
+	private static HashMap<String, String> playBook;
+	private static HashMap<String, String> surveyAns;
 
     /**
      * Populate ths survey Id.
@@ -280,4 +299,140 @@ public class SurveySetup extends BaseTest {
 		}
 		return result;
 	}
+    
+	public void setupRule(HashMap<String, String> testData) {
+		// Create Rule in AutomatedAlertHandler
+		String apexCodeForRuleCreation = "JBCXM__AutomatedAlertRules__c rule=new JBCXM__AutomatedAlertRules__c(Name='"
+				+ testData.get("Name")
+				+ "',"
+				+ "JBCXM__ruleType__c='"
+				+ testData.get("JBCXM__ruleType__c")
+				+ "',JBCXM__SourceType__c='"
+				+ testData.get("JBCXM__SourceType__c")
+				+ "',JBCXM__AdvanceCriteria__c='"
+				+ testData.get("JBCXM__AdvanceCriteria__c")
+				+ "',JBCXM__PlayBookIds__c='"
+				+ getIdResolvedString(testData.get("JBCXM__PlayBookIds__c"))
+				+ "',JBCXM__TaskDefaultOwner__c='"
+				+ testData.get("JBCXM__TaskDefaultOwner__c")
+				+ "',JBCXM__TriggerCriteria__c='"
+				+ getIdResolvedString(testData.get("JBCXM__TriggerCriteria__c"))
+				+ "',JBCXM__AlertCriteria__c='"
+				+ getIdResolvedString(testData.get("JBCXM__AlertCriteria__c"))
+				+ "');" + "insert rule;";
+		Log.info("Creating Rule...." + apexCodeForRuleCreation);
+		sfdc.runApexCode(resolveStrNameSpace(apexCodeForRuleCreation));
+	}
+
+	public HashMap<String, String> getMapFromObject(String objName,
+			String fieldName, String shortCut) {
+		String Query = "SELECT Id," + fieldName + " from " + objName;
+		HashMap<String, String> objMap = new HashMap<String, String>();
+		SObject[] objRecords = sfdc.getRecords(resolveStrNameSpace(Query));
+		Log.info("Total Records : " + objRecords.length);
+		for (SObject sObject : objRecords) {
+			Log.info("ObjectName:" + objName + "..FieldName : "
+					+ sObject.getField(resolveStrNameSpace(fieldName))
+					+ " - With Id : " + sObject.getId());
+			objMap.put(shortCut + "." + sObject.getField(fieldName).toString(),
+					sObject.getId());
+		}
+
+		for (Entry<String, String> entry : objMap.entrySet()) {
+			Log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
+
+		}
+		return objMap;
+	}
+    
+	private String getIdResolvedString(String string) {
+		string = replaceSystemNameInRule(
+				replaceSystemNameInRule(
+						replaceSystemNameInRule(
+								replaceSystemNameInRule(
+										replaceSystemNameInRule(string,
+												playBook), suveyQus),
+								ctaTypesMap), PickListMap), surveyAns);
+		return string;
+	}
+	
+	public static String replaceSystemNameInRule(String text,
+			HashMap<String, String> replacements) {
+		Pattern pattern = Pattern.compile("#(.+?)#");
+		return replaceStringWithTokens(text, pattern, replacements);
+	}
+    
+	public static String replaceStringWithTokens(String text, Pattern pattern,
+			HashMap<String, String> replacements) {
+		Matcher matcher = pattern.matcher(text);
+		// populate the replacements map ...
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		while (matcher.find()) {
+			Log.info("Found " + matcher.group());
+			String replacement = replacements.get(matcher.group().substring(1,
+					matcher.group().length() - 1));
+			Log.info("replacement : " + replacement);
+			builder.append(text.substring(i, matcher.start()));
+			if (replacement == null) {
+				builder.append(matcher.group(0));
+			} else {
+				builder.append(replacement);
+			}
+			i = matcher.end();
+		}
+		builder.append(text.substring(i, text.length()));
+		Log.info("Replaced String : " + builder.toString());
+		return builder.toString();
+	}
+   
+	public void populateObjMaps() {
+		suveyQus = getMapFromObject("JBCXM__SurveyQuestion__c",
+				"JBCXM__Title__c", "SQ");
+		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
+				"CT");
+		PickListMap = getMapFromObject("JBCXM__PickList__c",
+				"JBCXM__SystemName__c", "PL");
+		playBook = getMapFromObject("JBCXM__Playbook__c", "Name", "PB");
+		surveyAns = getMapFromObject("JBCXM__SurveyAllowedAnswers__c",
+				"JBCXM__Title__c", "SA");
+
+	}
+	
+	public String surveyURL(SurveyCTARule surveyCTARule, HashMap<String, String> testData) {
+		Log.info("Fetching Records");
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__DisplayName__c,JBCXM__SurveyTitle__c,JBCXM__SurveyURL__c,JBCXM__SurveyId__c, JBCXM__Token__c FROM JBCXM__SurveyParticipant__c where JBCXM__DisplayName__c='"
+						+ testData.get("participantName")
+						+ "' order by createddate desc limit 1"));
+		String concatUrl = null;
+		if (jsondata.length > 0) {
+			String sTemp1 = (String) jsondata[0]
+					.getField(resolveStrNameSpace("JBCXM__SurveyURL__c"));
+			String sTemp2 = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__SurveyId__c"));
+			String sTemp3 = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__Token__c"));
+			String concatUrl1 = sTemp1 + "?surveyId=" + sTemp2
+					+ "&participantId=" + sTemp3;
+			Log.info("Survey url is " + concatUrl1);
+			concatUrl = concatUrl1;
+		}
+		return concatUrl;
+	}
+	
+	public String surveySiteURL() {
+		SObject siteObject[] = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Name, Status, Subdomain FROM Site where Status='Active' Limit 1"));
+		String publishURL = null;
+		if (siteObject.length > 0) {
+			String siteURL = "http://"
+					+ siteObject[0].getField(resolveStrNameSpace("Subdomain"))
+					+ ".force.com/";
+			Log.info(" Site url is " + siteURL);
+			publishURL = siteURL;
+		} else {
+			throw new RuntimeException("Site Not Found");
+		}
+		return publishURL;
+	}
 }
+
