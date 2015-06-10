@@ -146,6 +146,12 @@ public class ReportManager extends NSTestBase {
         return dataList;
     }
 
+    /**
+     * Adds empty keys to the data list provided.
+     *
+     * @param dataList - DataList i.e. report data as key, values pairs.
+     * @param keys - Array of keys to be added to data list.
+     */
     public static void addKeysWithEmptyValues(List<Map<String, String>> dataList, String[] keys) {
         if(dataList ==null || keys==null || keys.length == 0) {
             throw new IllegalArgumentException("DataList, Keys Should Not be Null & Keys length should be at-least 1" );

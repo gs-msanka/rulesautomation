@@ -392,6 +392,12 @@ public class DataLoadManager extends NSTestBase {
         return null;
     }
 
+    /**
+     * Fetches the failed records for the job id.
+     *
+     * @param jobId - Job Id to get failed records.
+     * @return - List<String></> data rows.
+     */
     public List<String> getFailedRecords(String jobId) {
         Log.info("Fetching Failed records...");
         List<String> dataList = null;
@@ -520,6 +526,11 @@ public class DataLoadManager extends NSTestBase {
         return colDetails;
     }
 
+    /**
+     * Trims the string fields to 250 characters & appends "...".
+     * @param dataList - Data List to trim.
+     * @param collectionInfo
+     */
     public static void trimStringDataColumns(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
         if (dataList == null || collectionInfo == null) {
             throw new IllegalArgumentException("DataList, Collection Info Should not be null.");
