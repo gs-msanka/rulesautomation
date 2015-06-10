@@ -8,8 +8,8 @@
   "sfdc.updateWidgetLayouts" : "false",
   "sfdc.unInstallApp" : "false",
   "sfdc.installApp" : "false",
-  "sfdc.packageVersionNumber" : "4.21",
-  "sfdc.packagePassword" : "JBCXM__Install4.21",
+  "sfdc.packageVersionNumber" : "4.27",
+  "sfdc.packagePassword" : "JBCXM__Install4.27",
   "sfdc.partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
   "sfdc.siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
   "sfdc.apiVersion" : "32.0",
@@ -19,10 +19,10 @@
       "sfdc.password" : "gainsight1234567",
       "sfdc.stoken" : "QGoH5XTfDBoAIyfSWdGVqrEm"
     },
-    "conf" : {
-      "sfdc.username" : "conf@36demo.com",
-      "sfdc.password" : "confght1234567",
-      "sfdc.stoken" : "coasdasda"
+    "marvels" : {
+      "sfdc.username" : "marvels@gsautomation.com",
+      "sfdc.password" : "Gainsight1234",
+      "sfdc.stoken" : "H1SOLcR5rVcrsWIuk7jlZDaDj"
     }
   }
 }
