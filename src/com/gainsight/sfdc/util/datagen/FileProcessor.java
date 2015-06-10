@@ -11,7 +11,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
-import com.oracle.tools.packager.Log;
+import com.gainsight.testdriver.Log;
 
 public class FileProcessor {
 
@@ -171,7 +171,7 @@ public class FileProcessor {
         writer.flush();
         writer.close();
         reader.close();
-        Log.info("CSV File created Successfully. " +csvFormatter.getOutputFile());
+        Log.info("CSV File created Successfully. " + csvFormatter.getOutputFile());
         return outputFile;
     }
 
