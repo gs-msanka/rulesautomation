@@ -17,7 +17,7 @@ import com.gainsight.testdriver.Log;
 
 public class SponsorTracking extends BaseTest {
 	WebAction wa = new WebAction();
-	private Boolean isPackaged =Boolean.valueOf(env.getProperty("sfdc.managedPackage"));
+	private Boolean isPackaged = sfdcConfig.getSfdcManagedPackage();
 	private static final String EXISTS_CALL = "/api/accounts/SFDC/exists";
 	private static final String SEARCH_SPONSOR = "/api/sponsor/search";
 

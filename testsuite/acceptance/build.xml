@@ -16,6 +16,10 @@
 	<property name="ivy.home" value="${basedir}/lib/ivy-2.3.0.jar"/>
 	<property name="ivy.settings.file" value="${basedir}/ivy-settings.xml"/>
 
+	<propertyset id="sfdc-command-line-properties">
+		<propertyref prefix="sfdc."/>
+	</propertyset>
+
 	<taskdef resource="org/apache/ivy/ant/antlib.xml"
 			 uri="antlib:org.apache.ivy.ant">
 		<classpath>
@@ -63,6 +67,7 @@
 		<testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
+			<propertyset refid = "sfdc-command-line-properties"/>
 
 			<xmlfileset dir="testsuite/acceptance" includes="${testngFileName}"/>
 		</testng>
@@ -73,7 +78,7 @@
         <testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
             <sysproperty key="run" value="BAT" />
             <sysproperty key="basedir" value="${basedir}" />
-
+			<propertyset refid = "sfdc-command-line-properties"/>
             <xmlfileset dir="/var/lib/jenkins" includes="${testngFileName}"/>
         </testng>
     </target>
@@ -87,7 +92,7 @@
 
 	<!-- Edit Property file by replacing default values with run-time values -->
 	<target name="editPropertyFile">
-		<propertyfile file="${basedir}/conf/application.properties">
+		<!--<propertyfile file="${basedir}/conf/application.properties">
 			<entry  key="sfdc.username" value="${sfdc.username}"/>
 			<entry  key="sfdc.password" value="${sfdc.password}"/>
 			<entry  key="sfdc.stoken" value="${sfdc.stoken}"/>
@@ -105,7 +110,7 @@
             <entry  key="sfdc.partnerUrl" value="${sfdc.partnerUrl}"/>
             <entry  key="sfdc.apiVersion" value="${sfdc.apiVersion}"/>
 			<entry  key="browser" value="${browser}"/>
-		</propertyfile>
+		</propertyfile>-->
 	</target>
 
 	<target name="init" depends="clean">

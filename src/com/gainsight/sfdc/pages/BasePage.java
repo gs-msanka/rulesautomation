@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.gainsight.pageobject.util.Timer;
@@ -14,6 +13,8 @@ import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunityPage;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
+import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.ConfigLoader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -27,7 +28,6 @@ import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.transactions.pages.Transactions;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
-import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountWidgetPage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
 /**
@@ -62,14 +62,14 @@ public class BasePage extends WebPage implements Constants {
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
-
+    SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){
 			driver.get(env.getDefaultUrl());
 		}
-		field.setTextField("username", env.get().getUserName());
-		field.setTextField("password", env.get().getUserPassword());
+		field.setTextField("username", sfdcConfig.getSfdcUsername());
+		field.setTextField("password", sfdcConfig.getSfdcPassword());
 		button.click("Login");
         try {
             wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -295,7 +295,7 @@ public class BasePage extends WebPage implements Constants {
 	
 	public  void waitTillNoLoadingIcon() {
         env.setTimeout(1);
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
 

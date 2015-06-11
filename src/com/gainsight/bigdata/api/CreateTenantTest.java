@@ -20,6 +20,7 @@ public class CreateTenantTest extends NSTestBase {
 
 	String uri;
 	String tenantName = "AutTenant";
+	String nsAppUrl = PropertyReader.nsAppUrl;
 	
 	@BeforeClass
 	public void setUp() throws Exception {
@@ -27,7 +28,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenant() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantFromPgm";
+		uri = nsAppUrl + "/createtenant/AutTestTenantFromPgm";
 		TenantInfo info = new TenantInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
 		info.setExternalTenantID(sfinfo.getOrg());
@@ -44,7 +45,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithExistingTenantNameWithDummyOrg() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenant";
+		uri = nsAppUrl + "/createtenant/AutTestTenant";
 		TenantInfo info = new TenantInfo();
 //		info.setTenantId(UUID.randomUUID().toString());
 		info.setExternalTenantID("dummyOrgId");
@@ -61,7 +62,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithExisitingTenantNameAndOrg() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenant";
+		uri = nsAppUrl + "/createtenant/AutTestTenant";
 		TenantInfo info = new TenantInfo();
 		info.setExternalTenantID(sfinfo.getOrg());
 		info.setExternalTenantName("AutExternalTenantName");
@@ -77,7 +78,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithExisitingOrgAndDiffTenantName() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantDifferent";
+		uri = nsAppUrl + "/createtenant/AutTestTenantDifferent";
 		TenantInfo info = new TenantInfo();
 		info.setExternalTenantID(sfinfo.getOrg());
 		info.setExternalTenantName("AutExternalTenantName");
@@ -93,7 +94,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithImproperInput() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantWithImproperInput";
+		uri = nsAppUrl + "/createtenant/AutTestTenantWithImproperInput";
 		TenantInfo info = new TenantInfo();
 		info.setTenantId(UUID.randomUUID().toString());
 		info.setExternalTenantID(sfinfo.getOrg());
@@ -110,7 +111,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithWrongInput() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantWithWrongInput";
+		uri = nsAppUrl + "/createtenant/AutTestTenantWithWrongInput";
 		String rawBody = "Dummy Text";
 		ResponseObj result = wa.doPost(uri, header.getAllHeaders(), rawBody);
 		Log.info(result.toString());
@@ -122,7 +123,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithInvalidAuthHeader() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantInvalidAuthToken";
+		uri = nsAppUrl + "/createtenant/AutTestTenantInvalidAuthToken";
 		TenantInfo info = new TenantInfo();
 		info.setExternalTenantID(sfinfo.getOrg());
 		info.setExternalTenantName("AutExternalTenantName");
@@ -144,7 +145,7 @@ public class CreateTenantTest extends NSTestBase {
 	
 	@Test
 	public void createTenantWithInvalidContentType() throws Exception {
-		uri = PropertyReader.nsAppUrl + "/createtenant/AutTestTenantInvalidContentType";
+		uri = nsAppUrl + "/createtenant/AutTestTenantInvalidContentType";
 		TenantInfo info = new TenantInfo();
 		info.setExternalTenantID(sfinfo.getOrg());
 		info.setExternalTenantName("AutExternalTenantName");

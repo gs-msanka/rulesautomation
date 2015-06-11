@@ -20,8 +20,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 public class GSEmailSetup extends BaseTest {
 	WebAction wa = new WebAction();
-	private Boolean isPackaged = Boolean.valueOf(env
-			.getProperty("sfdc.managedPackage"));
+	private Boolean isPackaged = sfdcConfig.getSfdcManagedPackage();
 	private static final String EXISTS_CALL = "/api/accounts/SFDC/exists";
 	private static final String GET_ACCESS_KEY = "/api/email/account";
 	private static final String SEND_EMAIL = "/api/email/template";
