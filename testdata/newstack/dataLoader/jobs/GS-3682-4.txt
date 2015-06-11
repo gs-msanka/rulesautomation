@@ -1,10 +1,10 @@
 {
-    "jobName": "GS-3682-2",
+    "jobName": "GS-3682-4",
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
     "dateProcess" : {
-        "inputFile" : "/testdata/newstack/dataLoader/data/GS-3682-1.csv",
-        "outputFile" : "/resources/datagen/process/GS-3682-2.csv",
+        "inputFile" : "/testdata/newstack/dataLoader/data/GS-3682-3.csv",
+        "outputFile" : "/resources/datagen/process/GS-3682-4.csv",
         "fields" :[
              {
                 "weekly" : false,
