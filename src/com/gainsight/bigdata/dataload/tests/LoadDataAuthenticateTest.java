@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.dataload.tests;
 
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
@@ -18,19 +19,21 @@ import java.util.HashMap;
 /**
  * Created by gainsight on 24/05/15.
  */
-public class LoadDataAuthenticateTest extends DataLoadManager {
+public class LoadDataAuthenticateTest extends NSTestBase {
     private TenantDetails tenantDetails;
+    private DataLoadManager dataLoadManager;
 
     @BeforeClass
     public void setup() {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
+        dataLoadManager = new DataLoadManager();
     }
 
     @TestInfo(testCaseIds = {"GS-3626"})
     @Test
     public void mdaAuthorizeCheckingWithValidDetails() {
-        NsResponseObj nsResponseObj = mdaDataLoadAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName());
+        NsResponseObj nsResponseObj = dataLoadManager.mdaDataLoadAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName());
         Assert.assertTrue(nsResponseObj != null);
         Assert.assertTrue(nsResponseObj.isResult());
         Assert.assertNotNull(nsResponseObj.getData());
@@ -44,9 +47,9 @@ public class LoadDataAuthenticateTest extends DataLoadManager {
     public void mdaAuthorizeCheckingWithInvalidAccessKey() throws IOException {
         String key = accessKey;
         accessKey = getDataLoadAccessKey(); //re-generating another accessKey to verify that old one is discarded.
-        headers.removeHeader("accessKey");
-        headers.addHeader("accessKey", accessKey);  //As the access token is reset here, it should be updated at global level else all other test cases with fail.
-        ResponseObj responseObj = mdaAuthenticate(sfinfo.getOrg(), key, sfinfo.getUserName());
+        dataLoadManager.headers.removeHeader("accessKey");
+        dataLoadManager.headers.addHeader("accessKey", accessKey);  //As the access token is reset here, it should be updated at global level else all other test cases with fail.
+        ResponseObj responseObj = dataLoadManager.mdaAuthenticate(sfinfo.getOrg(), key, sfinfo.getUserName());
         Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
@@ -57,7 +60,7 @@ public class LoadDataAuthenticateTest extends DataLoadManager {
     @TestInfo(testCaseIds = {"GS-3628"})
     @Test
     public void mdaAuthorizeCheckingWithInvalidLoginName() throws IOException {
-        ResponseObj responseObj = mdaAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName()+"Invalid");
+        ResponseObj responseObj = dataLoadManager.mdaAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName() + "Invalid");
         Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
@@ -68,7 +71,7 @@ public class LoadDataAuthenticateTest extends DataLoadManager {
     @TestInfo(testCaseIds = {"GS-3629"})
     @Test
     public void mdaAuthorizeCheckingWithInvalidOrgId() throws IOException {
-        ResponseObj responseObj = mdaAuthenticate(tenantManager.sfdcInfo.getOrg(), accessKey, sfinfo.getUserName()); //Sending tenant management org SFDC ID which is not valid ID for the accessKey & UserName.
+        ResponseObj responseObj = dataLoadManager.mdaAuthenticate(tenantManager.sfdcInfo.getOrg(), accessKey, sfinfo.getUserName()); //Sending tenant management org SFDC ID which is not valid ID for the accessKey & UserName.
         Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_UNAUTHORIZED);
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
@@ -80,7 +83,7 @@ public class LoadDataAuthenticateTest extends DataLoadManager {
     @Test
     public void mdaAuthorizeCheckingWith15DigitOrgId() {
         System.out.println(sfinfo.getOrg().substring(0,15));
-        NsResponseObj nsResponseObj = mdaDataLoadAuthenticate(sfinfo.getOrg().substring(0,15), accessKey, sfinfo.getUserName());
+        NsResponseObj nsResponseObj = dataLoadManager.mdaDataLoadAuthenticate(sfinfo.getOrg().substring(0, 15), accessKey, sfinfo.getUserName());
         Assert.assertTrue(nsResponseObj != null);
         Assert.assertTrue(nsResponseObj.isResult());
         Assert.assertNotNull(nsResponseObj.getData());
