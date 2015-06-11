@@ -34,6 +34,7 @@ public class FileProcessor {
 		CSVReader reader = new CSVReader(new FileReader(inputFile));
 		String[] cols;
 		int fieldIndex = -1;
+        outputFile.getParentFile().mkdir();
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext(); 
 		System.out.println(cols.length);
@@ -72,6 +73,7 @@ public class FileProcessor {
 		CSVReader reader = new CSVReader(new FileReader(inputFile));
 		String[] cols;
 		int fieldIndex = -1;
+        outputFile.getParentFile().mkdir();
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext(); 
 		System.out.println(cols.length);
@@ -110,6 +112,7 @@ public class FileProcessor {
 		CSVReader reader = new CSVReader(new FileReader(inputFile));
 		String[] cols;
 		int fieldIndex = -1;
+        outputFile.getParentFile().mkdir();
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext(); 
 		System.out.println(cols.length);
@@ -162,6 +165,7 @@ public class FileProcessor {
         }
 
         File outputFile = new File(Application.basedir+csvFormatter.getOutputFile());
+        outputFile.getParentFile().mkdir();
         CSVReader reader = new CSVReader(new FileReader(Application.basedir+csvFormatter.getInputFile()));
         CSVWriter writer = new CSVWriter(new FileWriter(outputFile), csvFormatter.getCsvProperties().getSeparator(),
                                     csvFormatter.getCsvProperties().getQuoteChar(), csvFormatter.getCsvProperties().getEscapeChar(), csvFormatter.getCsvProperties().getLineEnd());
@@ -177,6 +181,9 @@ public class FileProcessor {
 
     public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields, Date date) throws IOException {
         Log.info("Started Date Processing....");
+
+        inputFile.getParentFile().mkdir();
+        outputFile.getParentFile().mkdir();
         CSVReader reader = new CSVReader(new FileReader(inputFile));
         String[] cols;
         int fieldIndex = -1;
