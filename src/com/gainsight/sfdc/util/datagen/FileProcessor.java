@@ -182,7 +182,6 @@ public class FileProcessor {
     public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields, Date date) throws IOException {
         Log.info("Started Date Processing....");
 
-        inputFile.getParentFile().mkdir();
         outputFile.getParentFile().mkdir();
         CSVReader reader = new CSVReader(new FileReader(inputFile));
         String[] cols;
