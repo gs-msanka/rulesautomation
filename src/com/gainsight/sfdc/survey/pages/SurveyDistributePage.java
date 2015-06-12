@@ -6,6 +6,10 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyDistribution;
 import com.gainsight.testdriver.Log;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by gainsight on 05/12/14.
  */
@@ -68,14 +72,14 @@ public class SurveyDistributePage extends SurveyBasePage{
 		wait.waitTillElementDisplayed(CLICKON_CREATE_SCHEDULE, MIN_TIME, MAX_TIME);
 	}
 	
-	public void ClickingToBeContacted(){
-		
+	public void clickingToBeContacted() {
 		item.click(CLICKON_TOBECONTACTED_CIRCLE);
-		wait.waitTillElementPresent(CLICKON_SENDEMAIL_BUTTON, MIN_TIME, MAX_TIME);
-		item.click(SELECT_CONTACTS_CHECKBOX);	
+		wait.waitTillElementPresent(CLICKON_SENDEMAIL_BUTTON, MIN_TIME,
+				MAX_TIME);
+		item.click(SELECT_CONTACTS_CHECKBOX);
 	}
 
-	public int GetContactsCount(){
+	public int getContactsCount(){
 		
 		String temptext=element.getElement(By.xpath("//a[@class='numcolor-5 mininum-add']/span")).getText();
 		Log.info("String Text is  : " + temptext);
@@ -84,43 +88,50 @@ public class SurveyDistributePage extends SurveyBasePage{
 		return Count;
 	}
 	
-	public void SendEmail(){
-		
+	public void sendEmail() {
 		item.click(CLICKON_SENDEMAIL_BUTTON);
-		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME, MAX_TIME);
+		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME,
+				MAX_TIME);
 		item.click(EMAIL_CONFIRM);
-		
 	}
 	
-	public void CreateSchedule(SurveyDistribution SurveyDist){
-		
+	public void createSchedule(SurveyDistribution surveyDistribution){
 		item.click(CLICKON_CREATE_SCHEDULE);
 		wait.waitTillElementDisplayed(CREATE_SCHEDULE_DIV, MIN_TIME, MAX_TIME);
-		field.setText(SCHEDULE_NAME_TEXTAREA, SurveyDist.getScheduleName());
-		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN, SurveyDist.getScheduleType());
+		field.setText(SCHEDULE_NAME_TEXTAREA, surveyDistribution.getScheduleName());
+		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN,
+				surveyDistribution.getScheduleType());
 		item.click(SCHEDULE_DATE);
 		link.click(TODAY_LINK_IN_CALENDER);
 		item.click(CALENDER_CLICK); //Clicking somewhere on Div to disperse the calender
-		element.selectFromDropDown(SCHEDULE_TIME_HRS, SurveyDist.getHours());
-		element.selectFromDropDown(SCHEDULE_TIME_MINUTES, SurveyDist.getMinutes());
+		element.selectFromDropDown(SCHEDULE_TIME_HRS, surveyDistribution.getHours());
+		element.selectFromDropDown(SCHEDULE_TIME_MINUTES,
+				surveyDistribution.getMinutes());
 		item.click(SCHEDULE_NEXT_BUTTON);
-		CreateScheduleNext(SurveyDist);
+		createScheduleNext();
 	}
 	
-	public void CreateScheduleNext(SurveyDistribution SurveyDist){
-		
+	public void createScheduleNext() {
 		wait.waitTillElementDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
 		item.click(SCHEDULE_CHECKBOX);
-		button.click(SCHEDULE_DONE_BUTTON);	
+		button.click(SCHEDULE_DONE_BUTTON);
 	}
 
-	public int GetScheduledCount(){
+	public int getScheduledCount(){
 		Timer.sleep(9);
 		String temptext=element.getElement(By.xpath("//a[@class='numcolor-4 mininum-add']/span")).getText();
 		Log.info("String Text is  : " + temptext);
 		int Count=Integer.parseInt(temptext);
 		System.out.println(Count);
 		return Count;
+	}
+	
+	public String getCurrentDateAndTime() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		String currentTime = dateFormat.format(date);
+		Log.info(dateFormat.format(date));
+		return currentTime;
 	}
 }
 

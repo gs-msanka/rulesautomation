@@ -1,4 +1,6 @@
 Dis_Email__c,Dis_Name__c,Dis_Role__c,Account__r.Data_ExternalId__c
 athaduka@gainsight.com,Abhilash,QA,SURVEY Account 1
-jvunnam@gainsight.com,JP,SR QA,SURVEY Account 1
-ggolla@gainsight.com,Giri,SR QA,SURVEY Account 1
+jvunnam@gainsighttest.com,JP,SR QA,SURVEY Account 1
+ggolla@gainsighttest.com,Giri,SR QA,SURVEY Account 1
+ryaddanapalli@gainsighttest.com,Rajesh,SR QA,SURVEY Account 1
+spulluri@gainsighttest.com,Sai,SR QA,SURVEY Account 1

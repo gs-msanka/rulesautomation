@@ -72,7 +72,7 @@ public class BaseTest {
             packageUtil.updateWidgetLayouts(true, true, true);
         }
 
-        packageUtil.deployPermissionSetCode();
+       // packageUtil.deployPermissionSetCode();
         sfinfo = sfdc.fetchSFDCinfo();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
@@ -105,10 +105,10 @@ public class BaseTest {
         }
     }
 
-    @AfterSuite
+/*    @AfterSuite
     public void fini() {
         env.stop();
-    }
+    }*/
 
     @BeforeClass
     public void failureRecovery() {

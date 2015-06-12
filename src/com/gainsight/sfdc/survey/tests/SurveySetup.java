@@ -3,15 +3,22 @@ package com.gainsight.sfdc.survey.tests;
 import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.stringtemplate.v4.compiler.STParser.element_return;
 import org.testng.Assert;
 
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
@@ -238,33 +245,36 @@ public class SurveySetup extends BaseTest {
         Assert.assertTrue(surveyQuestionPage.verifySurveyQuestionAnswers(surQuesEle, surQues) , "Checking answers");
     }
     
-    public void Create_Custom_Obj_For_Addparticipants() throws Exception{
-    	
-        metadataClient.createCustomObject("EmailCustomObjct");
-        String TextField[]={"Dis Name", "Dis Role"};
-        String Email[]={"Dis Email"};
-        String C_Reference="C_Reference";
-        String ReferenceTo="Account";  //Reference to User Object
-        String ReleationShipName="Accountss_AutomationnS"; //Relation Name
-        String LookupFieldName[]={C_Reference} , Reference[]={ReferenceTo,ReleationShipName};
-        metadataClient.createTextFields("EmailCustomObjct__c", TextField, false, false,true, false, false);
-        metadataClient.createEmailField("EmailCustomObjct__c", Email);
-        metadataClient.createLookupField("EmailCustomObjct__c", LookupFieldName, Reference );
-        metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
-    }
+    public void create_Custom_Object_For_Addparticipants() throws Exception{
+		metadataClient.createCustomObject("EmailCustomObjct");
+		String TextField[] = { "Dis Name", "Dis Role" };
+		String Email[] = { "Dis Email" };
+		String C_Reference = "C_Reference";
+		String ReferenceTo = "Account"; // Reference to User Object
+		String ReleationShipName = "Accountss_AutomationnS"; // Relation Name
+		String LookupFieldName[] = { C_Reference }, Reference[] = {
+				ReferenceTo, ReleationShipName };
+		metadataClient.createTextFields("EmailCustomObjct__c", TextField,
+				false, false, true, false, false);
+		metadataClient.createEmailField("EmailCustomObjct__c", Email);
+		metadataClient.createLookupField("EmailCustomObjct__c",
+				LookupFieldName, Reference);
+		metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
+	}
     
-    public int GetRecordCountFromContactObject(){
-    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where isDeleted=false");
-    	Log.info("Count from Object is" + count);
-		return count;	
-    }
-    
-    public int RecordCountFromContactObjectWithFilterCond(){
-    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where  email like '%gainsight.com%'and isDeleted=false");
-    	Log.info("Count from Object is" + count);
+	public int getRecordCountFromContactObject() {
+		int count = sfdc
+				.getRecordCount("SELECT Id,name FROM Contact where isDeleted=false");
+		Log.info("Count from Object is" + count);
 		return count;
-    	
-    }
+	}
+    
+	public int getRecordCountFromContactObjectWithFilterCond() {
+		int count = sfdc
+				.getRecordCount(resolveStrNameSpace(("SELECT Id,name FROM Contact where  email like '%gainsighttest.com%'and isDeleted=false")));
+		Log.info("Count from contact object is" + count);
+		return count;
+	}
     
 	public void updateNSURLInAppSettings(String NSURL) {
 		System.out.println("setting ns url in app settings");
@@ -274,11 +284,12 @@ public class SurveySetup extends BaseTest {
 		Log.info("NS URL Updated Successfully");
 	}
 
-	public boolean getBranchingField() {
+	public boolean getBranchingField(SurveyQuestion surveyQuestion) {
 		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
 		Timer.sleep(5);
 		SObject[] jsondata = sfdc
-				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c order by createdDate asc limit 1"));
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
+		System.out.println(sfdc.getRecords("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
 		boolean result = false;
 		if (jsondata.length > 0) {
 			String sTemp = (String) jsondata[0].getField("JBCXM__HasRules__c");
@@ -434,5 +445,32 @@ public class SurveySetup extends BaseTest {
 		}
 		return publishURL;
 	}
-}
+	
+	public int getCountFromSurveyParticipantObject(SurveyProperties surveyProp) {
+		int count = sfdc
+				.getRecordCount(resolveStrNameSpace(("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+						+ setSurveyId(surveyProp) + "' and isDeleted=false")));
+		Log.info("Count from SurveyParticipant__c object is " + count);
+		return count;
+	}
 
+	public int getCountfromCustomObject() {
+		WebDriverWait wait = new WebDriverWait(Application.getDriver(), 30);
+		return wait.until(new ExpectedCondition<Integer>() {
+			@Override
+			public Integer apply(WebDriver d) {
+				return sfdc
+						.getRecordCount("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false");
+			}
+		});
+	}
+	
+/*	public int getCountFromSurveyParticipantsObject(SurveyProperties surveyProp) {
+		int count = sfdc
+				.getRecordCount(resolveStrNameSpace(("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+						+ setSurveyId(surveyProp) + "' and isDeleted=false and JBCXM__Sent__c=true")));
+		Log.info("Count from SurveyParticipant__c object is " + count);
+		return count;
+	}*/
+	
+}

@@ -274,8 +274,8 @@ public class SurveyQuestionPage extends SurveyPage {
 
         else if(surveyQuestion.getQuestionType().equals("NPS")) {
             if(surveyQuestion.getAllowedAnswers().size() ==1) {
-                surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
-                surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys(surveyQuestion.getAllowedAnswers().get(0).getAnswerText());
+              //  surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
+             //   surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys(surveyQuestion.getAllowedAnswers().get(0).getAnswerText());
             }
         }
 
