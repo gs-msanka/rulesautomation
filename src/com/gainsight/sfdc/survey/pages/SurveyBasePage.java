@@ -173,4 +173,20 @@ public class SurveyBasePage extends BasePage {
             dropDown.selectByVisibleText(option);
         }
     }
+    
+    public void selectValueInDropDownList(String value) {
+    //	List<WebElement> elelist = element.getAllElement("//div[contains(@class,'ui-multiselect-menu')]");
+    	List<WebElement> elelist = element.getAllElement("//div[contains(@class,'ui-multiselect-menu') and contains(@style,'block')]");
+    	System.out.println(elelist.size());
+        for(WebElement ele : elelist)
+            if(ele.isDisplayed()) {
+            	System.out.println(ele.isDisplayed());
+      //      	wait.waitTillElementDisplayed("//span[contains(text(), '"+value+"')]", MIN_TIME, MAX_TIME);
+            	System.out.println("//span[contains(text(), '"+value+"')]/ancestor::label");
+            	ele.findElement(By.xpath("//span[contains(text(), '"+value+"')]/ancestor::label")).click();
+                break;
+            }
+        
+    }
+    
 }
