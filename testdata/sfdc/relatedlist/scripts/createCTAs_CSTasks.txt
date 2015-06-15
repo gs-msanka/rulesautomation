@@ -7,7 +7,7 @@ List<JBCXM__CTATypes__c> ctaTypes=[select id,Name from JBCXM__CTATypes__c];
 
 List<JBCXM__PickList__c> reason = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Reason'];                        
 List<JBCXM__PickList__c> severity = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Severity'];                        
-List<JBCXM__PickList__c> status = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Status' and JBCXM__SystemName__c in ('Open','In Progress')];            
+List<JBCXM__PickList__c> status = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Alert Status' and JBCXM__SystemName__c in ('New ','Work In Progress')];
  
 User user = [select id,Name from User where Name =: userInfo.getName()];
 //Create CTAs - for last 2 quarters

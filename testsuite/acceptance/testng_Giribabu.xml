@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true">
+<suite name="Automation Project" preserve-order="true" >
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="360 Scorecard Tests" preserve-order="true">
+    <test verbose="3" name="360 AccountAttributes360 Test" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
+            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
         </classes>
     </test>
+
+    <test verbose="3" name="360 RelatedList Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+        </classes>
+    </test>
+
+    <test verbose="3" name="360 UsageTracker360 Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Customers Tab Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
+        </classes>
+    </test>
+
+
 </suite>
