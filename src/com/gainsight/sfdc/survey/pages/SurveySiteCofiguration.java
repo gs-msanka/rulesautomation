@@ -8,7 +8,7 @@ public class SurveySiteCofiguration extends BasePage {
 	private final String USERNAVBUTTON                      = "userNavButton";
 	private final String SETUP_LINK                         = "//div[@id='userNavMenu']/descendant::a[@title='Setup']";
 	private final String FORCE_COM_LINK                     ="ForceCom_font";
-	private final String SITES_LINK                         ="Sites";
+	private final String SITES_LINK                         ="//div[@class='setupLeaf']/a[contains(@id, 'CustomDomain')]";
 	private final String SITE_LABEL                         ="//th[contains(@class, 'dataCell')]/a";
 	private final String EDIT_BUTTON                        ="//div[@class='pbHeader']/descendant::td[contains(@class, 'pbButton')]/descendant::input";
 	private final String VISUAL_FORCE_PAGE_INPUT            ="//table[@class='detailList']/descendant::tr/descendant::label[contains(text(), 'Active Site')]/ancestor::th/following-sibling::td/descendant::span/input";
@@ -30,7 +30,7 @@ public class SurveySiteCofiguration extends BasePage {
 
 	public void searchSitesInSetup(){
 		field.setText("setupSearch", "Sites"); /*search input is passed here, as this never changes*/
-		link.clickLink(SITES_LINK);
+		item.click(SITES_LINK);
 		if (item.isElementPresent(SITE_LABEL)) {
 			item.click(SITE_LABEL);
 			wait.waitTillElementDisplayed(EDIT_BUTTON, MIN_TIME, MAX_TIME);

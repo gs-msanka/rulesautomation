@@ -28,7 +28,6 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 	private final String SURVEYDATA_CLEANUP= "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
 	private final String CUSTOM_OBJECT_CLEANUP ="Delete [SELECT Id FROM EmailCustomObjct__c];";
 	ObjectMapper mapper = new ObjectMapper();
-	private final String CSV = "/testdata/sfdc/survey/SurveyQues_ResponseCount.csv";
 	
 	@BeforeClass
 	public void setup() throws Exception {

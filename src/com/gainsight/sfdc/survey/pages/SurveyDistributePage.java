@@ -85,7 +85,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 		String temptext=element.getElement(By.xpath("//a[@class='numcolor-5 mininum-add']/span")).getText();
 		Log.info("String Text is  : " + temptext);
 		int Count=Integer.parseInt(temptext);
-		System.out.println(Count);
+		Log.info("Count is " +Count);
 		return Count;
 	}
 	
@@ -94,9 +94,6 @@ public class SurveyDistributePage extends SurveyBasePage{
 		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME,
 				MAX_TIME);
 		item.click(EMAIL_CONFIRM);
-		wait.waitTillElementDisplayed(String.format(
-				EMAIL_SENT_CONFIRMATION_DIV, "Emails sent successfully."),
-				MIN_TIME, MAX_TIME);
 	}
 	
 	public void createSchedule(SurveyDistribution surveyDistribution){

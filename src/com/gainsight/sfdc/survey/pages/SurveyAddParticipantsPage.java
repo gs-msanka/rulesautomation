@@ -1,9 +1,7 @@
 package com.gainsight.sfdc.survey.pages;
 
 
-import java.awt.AWTException;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchFrameException;
@@ -66,7 +64,6 @@ public class SurveyAddParticipantsPage extends SurveyPage {
 	
 	
 	private final String CONTACTS_CSV = Application.basedir+"/testdata/sfdc/survey/SurveyContactsWithIDS.csv";
-	//private final String CSV2 = "C:\\Users\\Abhilash Thaduka\\gs-automation\\testdata\\sfdc\\survey\\SurveyQues_ResponseCount.csv";
 
 	
 	public SurveyAddParticipantsPage(String  surveyName) {
