@@ -24,3 +24,9 @@ for(Account acc : [SELECT id FROM Account where name like 'SURVEY Account%']) {
 }
 
 insert custList;
+
+List<Account> accLists = new List<Account>();
+Account account = new Account(Name ='SURVEY Account 360',Data_ExternalID__c='SURVEY Account 360');
+accLists.add(account);
+insert accLists;
+

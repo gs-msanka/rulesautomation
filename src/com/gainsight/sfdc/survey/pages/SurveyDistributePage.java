@@ -64,6 +64,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 	private final String TODAY_LINK_IN_CALENDER   ="Today";
 	private final String CALENDER_CLICK           ="//div[@class='clearfix']/span[text()='Minutes']"; //Clicking somewhere on Div
 	private final String SCHEDULE_CHECKBOX        ="//div[contains(@id, 'new-schedule-participants')]/input[@class='cbox']";
+	private final String EMAIL_SENT_CONFIRMATION_DIV ="//[@class='errorMsg' and text()='%s']";
 	
 	
 	
@@ -93,20 +94,31 @@ public class SurveyDistributePage extends SurveyBasePage{
 		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME,
 				MAX_TIME);
 		item.click(EMAIL_CONFIRM);
+		wait.waitTillElementDisplayed(String.format(
+				EMAIL_SENT_CONFIRMATION_DIV, "Emails sent successfully."),
+				MIN_TIME, MAX_TIME);
 	}
 	
 	public void createSchedule(SurveyDistribution surveyDistribution){
 		item.click(CLICKON_CREATE_SCHEDULE);
 		wait.waitTillElementDisplayed(CREATE_SCHEDULE_DIV, MIN_TIME, MAX_TIME);
-		field.setText(SCHEDULE_NAME_TEXTAREA, surveyDistribution.getScheduleName());
+		field.setText(SCHEDULE_NAME_TEXTAREA,
+				surveyDistribution.getScheduleName());
 		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN,
 				surveyDistribution.getScheduleType());
 		item.click(SCHEDULE_DATE);
 		link.click(TODAY_LINK_IN_CALENDER);
-		item.click(CALENDER_CLICK); //Clicking somewhere on Div to disperse the calender
-		element.selectFromDropDown(SCHEDULE_TIME_HRS, surveyDistribution.getHours());
+		item.click(CALENDER_CLICK);
+		element.selectFromDropDown(SCHEDULE_TIME_HRS,
+				surveyDistribution.getHours());
 		element.selectFromDropDown(SCHEDULE_TIME_MINUTES,
 				surveyDistribution.getMinutes());
+		if (surveyDistribution.getScheduleType() != null
+				|| surveyDistribution.getScheduleType().equalsIgnoreCase(
+						"Resend")) {
+			element.selectFromDropDown(SCHEDULE_EMAIL_TEMPLATE_DROPDOWN,
+					surveyDistribution.getEmailTemplate());
+		}
 		item.click(SCHEDULE_NEXT_BUTTON);
 		createScheduleNext();
 	}

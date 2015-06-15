@@ -217,32 +217,21 @@ public class SurveyAddParticipantsPage extends SurveyPage {
 	}
     
     public void contactsFromCSVWithID(SurveyAddParticipants surveyParticipants){
-    	Timer.sleep(10);
-    	item.click(CSV_CONTACT_WITH_ID_RADIOBUTTON);
-    	
-    	
-    	
-    	
-/*    	item.click(CONTACT_NAME_SELECTION);
-    	Log.info("Selecting contact Name from the List");
-    	selectValueInDropDownList(surveyParticipants.getContactName());*/
-    	
-    	//item.click(ADD_TO_DISTRIBUTION_LIST);
-    	
-    	//wait.waitTillElementDisplayed(CONTACT_ID_SELECTION, MIN_TIME, MAX_TIME);
-    	
-    	item.click(CONTACT_ID_SELECTION);
-    	Log.info("Selecting contact ID from the List");
-    	
-    	selectValueInDropDownList(surveyParticipants.getContactID());
-    	
-    	item.click(CONTACT_EMAIL_SELECTION);
-    	Log.info("Selecting contact Email from the List");
-    	selectValueInDropDownList(surveyParticipants.getContactEmail());
-    	item.click(CONTACT_ROLE_SELECTION);
-    	Log.info("Selecting contact Role from the List");
-    	selectValueInDropDownList(surveyParticipants.getContactRole());
-    	
-    	waitTillNoLoadingIcon();	
+       //Timer.sleep(10);
+		item.click(CSV_CONTACT_WITH_ID_RADIOBUTTON);
+		wait.waitTillElementDisplayed(CONTACT_ID_SELECTION, MIN_TIME, MAX_TIME);
+		item.click(CONTACT_ID_SELECTION);
+		Log.info("Selecting contact ID from the List");
+		selectValueInDropDownList(surveyParticipants.getContactID());
+		item.click(CONTACT_EMAIL_SELECTION);
+		Log.info("Selecting contact Email from the List");
+		selectValueInDropDownList(surveyParticipants.getContactEmail());
+		item.click(CONTACT_ROLE_SELECTION);
+		Log.info("Selecting contact Role from the List");
+		selectValueInDropDownList(surveyParticipants.getContactRole());
+		item.click(CONTACT_NAME_SELECTION);
+		Log.info("Selecting contact Name from the List");
+		selectValueInDropDownList(surveyParticipants.getContactName());
+		item.click(ADD_TO_DISTRIBUTION_LIST);
     }
 }

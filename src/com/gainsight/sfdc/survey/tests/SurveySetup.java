@@ -446,31 +446,29 @@ public class SurveySetup extends BaseTest {
 		return publishURL;
 	}
 	
-	public int getCountFromSurveyParticipantObject(SurveyProperties surveyProp) {
-		int count = sfdc
-				.getRecordCount(resolveStrNameSpace(("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
-						+ setSurveyId(surveyProp) + "' and isDeleted=false")));
-		Log.info("Count from SurveyParticipant__c object is " + count);
-		return count;
+	public int getCountFromSurveyParticipantObject(final SurveyProperties surveyProp) {
+		WebDriverWait wait = new WebDriverWait(Application.getDriver(), 30);
+		return wait.until(new ExpectedCondition<Integer>() {
+			@Override
+			public Integer apply(WebDriver driver) {
+				int count = sfdc
+						.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+								+ setSurveyId(surveyProp)
+								+ "' and isDeleted=false"));
+				Log.info("Count from SurveyParticipant__c object is " + count);
+				return count;
+			}
+		});
 	}
 
 	public int getCountfromCustomObject() {
 		WebDriverWait wait = new WebDriverWait(Application.getDriver(), 30);
 		return wait.until(new ExpectedCondition<Integer>() {
 			@Override
-			public Integer apply(WebDriver d) {
+			public Integer apply(WebDriver driver) {
 				return sfdc
 						.getRecordCount("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false");
 			}
 		});
 	}
-	
-/*	public int getCountFromSurveyParticipantsObject(SurveyProperties surveyProp) {
-		int count = sfdc
-				.getRecordCount(resolveStrNameSpace(("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
-						+ setSurveyId(surveyProp) + "' and isDeleted=false and JBCXM__Sent__c=true")));
-		Log.info("Count from SurveyParticipant__c object is " + count);
-		return count;
-	}*/
-	
 }

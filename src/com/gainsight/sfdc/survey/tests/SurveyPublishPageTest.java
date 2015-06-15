@@ -159,6 +159,5 @@ public class SurveyPublishPageTest extends SurveySetup {
 				"Verifying Maximum Test Emails Alert Messages");
 		publishPage.closeAlertEmailDialog();
 		publishPage.closeTestEmailDialog();
-
 	}
 }
