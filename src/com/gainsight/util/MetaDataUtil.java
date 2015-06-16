@@ -26,8 +26,7 @@ public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
 	 public static final Application env = new Application();
 	public SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
-	
-	 /*  Commenting, as we created another method which is Generic on any Object "createFieldsOnObject"
+
 	   
 	   public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
@@ -126,7 +125,7 @@ public class MetaDataUtil {
 	                                    "C_Number","C_Checkbox","C_Currency","C_Email","C_Percent","C_Phone","C_Picklist","C_MultiPicklist","C_TextArea","C_EncryptedString",
 	                                    "C_URL","C_Reference"};
 	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields),sfinfo);
-	    }*/
+	    }
 	 
 	 public void createFieldsOnObject(SalesforceConnector sfdc,SFDCInfo sfinfo,String Object,ObjectFields objF) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
