@@ -24,11 +24,7 @@ public class Attributes extends Customer360Page {
 
     public boolean isNoUIViewConfMsgDisplayed() {
         String actualText = element.getText(NO_UIVIEW_CONF_INFO);
-        if(actualText.trim().equalsIgnoreCase("UI View not configured")) {
-            return true;
-        } else {
-            return false;
-        }
+        return actualText.trim().equalsIgnoreCase("UI View not configured.");
     }
 
     public boolean isFieldsDisplayedInOrder(String[] expValues) {
