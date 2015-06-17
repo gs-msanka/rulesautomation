@@ -25,7 +25,7 @@ public class CreateCTA extends RulesUtil {
 	private static final String CreateCTACustomer = rulesDir
 			+ "CreateCTACustomer.apex";
 	private static final String CleanUpForRules = Application.basedir
-			+ "/testdata/newstack/RulesEngine/CleanUpForRules.apex";
+			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
 	private static final String CreateOwnerField = rulesDir
 			+ "CreateOwnerField.apex";
 	private static final String AssignValuesToStandardFields = rulesDir
@@ -115,7 +115,7 @@ public class CreateCTA extends RulesUtil {
 
 		String LRR = sfdc
 				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ ruleId + "")[0].getChild("JBCXM__LastRunResult__c")
+						+ ruleId + "'")[0].getChild("JBCXM__LastRunResult__c")
 				.getValue().toString();
 		// Verify if CTA is Created.
 		SObject[] NewCTA_Created = sfdc
@@ -216,7 +216,7 @@ public class CreateCTA extends RulesUtil {
 
 		String LRR = sfdc
 				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ ruleId + "")[0].getChild("JBCXM__LastRunResult__c")
+						+ ruleId + "'")[0].getChild("JBCXM__LastRunResult__c")
 				.getValue().toString();
 		// Verify if CTA is Created.
 		SObject[] NewCTA_Created = sfdc

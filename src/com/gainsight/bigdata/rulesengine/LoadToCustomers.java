@@ -40,8 +40,7 @@ public class LoadToCustomers extends RulesUtil {
 		sfdc.connect();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Clean_Up_For_Rules));
         Log.info("Calling delete method");
-        //metaUtil.deleteAccountMetadata(sfdc);
-		//metaUtil.createFieldsForAccount(sfdc, sfinfo);
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		ObjectMapper mapper = new ObjectMapper();
 		dataETL=new DataETL();
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
