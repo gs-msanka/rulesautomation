@@ -232,7 +232,7 @@ public class MetaDataUtil {
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
         metadataClient.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo());
+     //   addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo());
     }
 
     /**
