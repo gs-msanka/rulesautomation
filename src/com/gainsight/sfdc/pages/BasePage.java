@@ -295,7 +295,7 @@ public class BasePage extends WebPage implements Constants {
 	
 	public  void waitTillNoLoadingIcon() {
         env.setTimeout(1);
-        wait.waitTillElementNotPresent(LOADING_ICON, MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
 
