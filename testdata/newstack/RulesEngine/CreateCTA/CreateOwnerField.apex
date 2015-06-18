@@ -24,9 +24,12 @@ if(uList.size()>0){
 	//System.debug([Select Name from User where Id =:UserId]);
   }
 else{
+    String uname='User_'+UserInfo.getOrganizationId()+'@gg.com';
+	List<User> test=[select id from User where Username=:uname and isActive=true];
+	if(test.size()==0){
 	List<User> lsUser = new List<User>();
 	active=new User();       
-	active.Username= 'DefaultUser312@gg.com';
+	active.Username= uname;
 	active.Email = 'DefaultUser312@company.com';
 	active.Lastname = 'User';
 	active.Firstname = 'Defaultxamngh';
@@ -41,6 +44,7 @@ else{
 	active.UserPermissionsMobileUser = false;
 	lsUser.add(active);
 	insert lsUser;      
+	}
 }
 
 //Assigning this Active User for "C_Reference__c" lookup field in Account Object.
