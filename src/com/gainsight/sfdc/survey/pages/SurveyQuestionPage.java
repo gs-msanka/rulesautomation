@@ -273,8 +273,7 @@ public class SurveyQuestionPage extends SurveyPage {
         }
 
         else if(surveyQuestion.getQuestionType().equals("NPS")) {
-            if(surveyQuestion.getAllowedAnswers().size() ==1) {
-            }
+        	item.click("//input[@class='header-smiley-check']");
         }
 
         else if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT")

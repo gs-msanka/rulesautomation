@@ -42,6 +42,7 @@ public class SurveySetup extends BaseTest {
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> playBook;
 	private static HashMap<String, String> surveyAns;
+	public final String SURVEYDATA_CLEANUP        = "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
 
     /**
      * Populate ths survey Id.
@@ -245,7 +246,7 @@ public class SurveySetup extends BaseTest {
         Assert.assertTrue(surveyQuestionPage.verifySurveyQuestionAnswers(surQuesEle, surQues) , "Checking answers");
     }
     
-    public void create_Custom_Object_For_Addparticipants() throws Exception{
+    public void customObjectForAddingSurveyParticipants() throws Exception{
 		metadataClient.createCustomObject("EmailCustomObjct");
 		String TextField[] = { "Dis Name", "Dis Role" };
 		String Email[] = { "Dis Email" };
@@ -259,7 +260,7 @@ public class SurveySetup extends BaseTest {
 		metadataClient.createEmailField("EmailCustomObjct__c", Email);
 		metadataClient.createLookupField("EmailCustomObjct__c",
 				LookupFieldName, Reference);
-		metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
+		metaUtil.createExtIdFieldForCustomObject(sfdc);
 	}
     
 	public int getRecordCountFromContactObject() {
@@ -286,7 +287,7 @@ public class SurveySetup extends BaseTest {
 
 	public boolean getBranchingField(SurveyQuestion surveyQuestion) {
 		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
-		Timer.sleep(5);
+		Timer.sleep(5); //Added sleep since its taking 2-3 seconds of time to retrive the data from sfdc
 		SObject[] jsondata = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
 		System.out.println(sfdc.getRecords("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
@@ -470,5 +471,19 @@ public class SurveySetup extends BaseTest {
 						.getRecordCount("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false");
 			}
 		});
+	}
+	
+	public String getSurveyDistributionID(SurveyProperties surveyProperties) {
+		Log.info("Fetching Records");
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__SurveyId__c FROM JBCXM__SurveyDistributionSchedule__c where JBCXM__SurveyId__c='"
+						+ setSurveyId(surveyProperties)
+						+ "' ORDER BY CreatedDate DESC limit 1"));
+		String temp = null;
+		if (jsondata.length > 0) {
+			String temp2 = (String) jsondata[0].getField("Id");
+			temp = temp2;
+		}
+		return temp;
 	}
 }

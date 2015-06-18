@@ -38,12 +38,12 @@ public class SurveyAddParticipantsTest extends SurveySetup {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		Log.info("Creating Custom Object to Load Contacts");
-		create_Custom_Object_For_Addparticipants();
+		customObjectForAddingSurveyParticipants();
     	DataETL dataLoader = new DataETL();
     	JobInfo loadContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_contacts_into_custom_object.txt"), JobInfo.class);
-    	JobInfo extractsContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_Rule_Survey_ExtractContats.txt"), JobInfo.class);
+        JobInfo extractsContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_Rule_Survey_ExtractContats.txt"), JobInfo.class);
     	dataLoader.execute(loadContacts);
-    	dataLoader.execute(extractsContacts);
+        dataLoader.execute(extractsContacts);
 	}
 	
 	@BeforeMethod
@@ -163,6 +163,7 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 						+ "' and isDeleted=false")));
 	}
 	
+	@TestInfo(testCaseIds = {"GS-2711", "GS-2712"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false) 
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
 	public void addParticipantsFromCSV(

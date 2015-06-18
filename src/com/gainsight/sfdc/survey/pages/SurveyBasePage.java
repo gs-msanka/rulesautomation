@@ -176,11 +176,10 @@ public class SurveyBasePage extends BasePage {
     
     public void selectValueInDropDownList(String value) {
     	List<WebElement> elelist = element.getAllElement("//div[contains(@class,'ui-multiselect-menu') and contains(@style,'block')]");
-    	System.out.println(elelist.size());
+    	Log.info("Size of list is " +elelist.size());
         for(WebElement ele : elelist)
             if(ele.isDisplayed()) {
-            	System.out.println(ele.isDisplayed());
-            	System.out.println("//span[contains(text(), '"+value+"')]/ancestor::label");
+            	Log.info("//span[contains(text(), '"+value+"')]/ancestor::label");
             	ele.findElement(By.xpath("//span[contains(text(), '"+value+"')]/ancestor::label")).click();
                 break;
             }

@@ -5,7 +5,7 @@ import com.gainsight.testdriver.Log;
 
 public class SurveySiteCofiguration extends BasePage {
 	
-	private final String USERNAVBUTTON                      = "userNavButton";
+	
 	private final String SETUP_LINK                         = "//div[@id='userNavMenu']/descendant::a[@title='Setup']";
 	private final String FORCE_COM_LINK                     ="ForceCom_font";
 	private final String SITES_LINK                         ="//div[@class='setupLeaf']/a[contains(@id, 'CustomDomain')]";

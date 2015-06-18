@@ -110,9 +110,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 				surveyDistribution.getHours());
 		element.selectFromDropDown(SCHEDULE_TIME_MINUTES,
 				surveyDistribution.getMinutes());
-		if (surveyDistribution.getScheduleType() != null
-				|| surveyDistribution.getScheduleType().equalsIgnoreCase(
-						"Resend")) {
+		if (surveyDistribution.getScheduleType().equalsIgnoreCase("Resend")) {
 			element.selectFromDropDown(SCHEDULE_EMAIL_TEMPLATE_DROPDOWN,
 					surveyDistribution.getEmailTemplate());
 		}
@@ -134,7 +132,6 @@ public class SurveyDistributePage extends SurveyBasePage{
 		System.out.println(Count);
 		return Count;
 	}
-	
 	public String getCurrentDateAndTime() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
@@ -142,5 +139,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 		Log.info(dateFormat.format(date));
 		return currentTime;
 	}
+
+	
 }
 

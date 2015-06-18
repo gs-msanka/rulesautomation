@@ -3,9 +3,11 @@ package com.gainsight.sfdc.survey.pages;
 
 import java.io.File;
 import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebElement;
+
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyAddParticipants;
 import com.gainsight.testdriver.Application;
@@ -183,7 +185,7 @@ public class SurveyAddParticipantsPage extends SurveyPage {
 
     public String getMessage(){
     	String result=element.getElement(By.xpath("//div[contains(@class, 'gs-add-participants')]/div")).getText();
-        System.out.println(result);
+        Log.info(result);
 		return result;
     }
     
@@ -202,7 +204,7 @@ public class SurveyAddParticipantsPage extends SurveyPage {
 			try {
 				Application.getDriver().switchTo().frame(2);
 			} catch (NoSuchFrameException e) {
-				e.getStackTrace();
+				throw new RuntimeException("Frame not Found");
 			}
 			File file = new File(CONTACTS_CSV);
 			String absolutePath = file.getAbsolutePath().replace("\\", "\\\\");
@@ -214,7 +216,6 @@ public class SurveyAddParticipantsPage extends SurveyPage {
 	}
     
     public void contactsFromCSVWithID(SurveyAddParticipants surveyParticipants){
-       //Timer.sleep(10);
 		item.click(CSV_CONTACT_WITH_ID_RADIOBUTTON);
 		wait.waitTillElementDisplayed(CONTACT_ID_SELECTION, MIN_TIME, MAX_TIME);
 		item.click(CONTACT_ID_SELECTION);

@@ -44,7 +44,7 @@ public class WorkFlowReportingPage extends BasePage {
 
     public WorkFlowReportingPage clickOnLeaderBoard() {
         item.click(LEADER_BOARD_TAB);
-        waitTillNoLoadingIcon();
+        waitForNoLoadingIconDisplayed();
         return this;
     }
 

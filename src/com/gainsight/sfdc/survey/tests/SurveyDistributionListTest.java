@@ -8,6 +8,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.DateUtils;
 import com.gainsight.utils.annotations.TestInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -25,7 +26,7 @@ public class SurveyDistributionListTest extends SurveySetup {
     private final String TEST_DATA_FILE            = "testdata/sfdc/survey/tests/surveytestdata.xls";
 	private final String CREATE_ACCS               = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS           = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
-	private final String SURVEYDATA_CLEANUP        = "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
+
     private ObjectMapper mapper = new ObjectMapper();
 
 	@BeforeClass
@@ -124,6 +125,7 @@ public class SurveyDistributionListTest extends SurveySetup {
     
 	@TestInfo(testCaseIds = {"GS-2728", "GS-2730", "GS-2731", "GS-2734", "GS-2736"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Distribution")
     public void testDistributionSchedule(Map<String, String> testData) throws IOException {
 		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
@@ -155,13 +157,14 @@ public class SurveyDistributionListTest extends SurveySetup {
 		SurveyDistribution surveyDistribution = mapper.readValue(
 				testData.get("Schedule"), SurveyDistribution.class);
 		surveyDistribution.setScheduleName("Scheduled at" + " "
-				+ distribution.getCurrentDateAndTime());
+				+ DateUtils.getCurrentDateAndTime("yyyy/MM/dd HH:mm:ss"));
 		distribution.createSchedule(surveyDistribution);
 		Assert.assertEquals(
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
 						+ surveyParticipants.getSearchFilter()
 						+ "' and isDeleted=false")),
-				getCountFromSurveyParticipantObject(surProp));
+				sfdc.getRecordCount("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surProp) + "'"));
 	}
 
 	@TestInfo(testCaseIds = {"GS-2715", "GS-2716", "GS-2720", "GS-2721"})
@@ -310,12 +313,13 @@ public class SurveyDistributionListTest extends SurveySetup {
 				testData.get("Schedule"), SurveyDistribution.class);
 		surveyDistribution.setScheduleType("Resend");
 		surveyDistribution.setScheduleName("ReScheduled at" + " "
-				+ distribution.getCurrentDateAndTime());
+				+ DateUtils.getCurrentDateAndTime("yyyy/MM/dd HH:mm:ss"));
 		distribution.createSchedule(surveyDistribution);
 		Assert.assertEquals(
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
 						+ surveyParticipants.getSearchFilter()
 						+ "' and isDeleted=false")),
-				getCountFromSurveyParticipantObject(surveyPropData));
+				sfdc.getRecordCount("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'"));
 	}
 }

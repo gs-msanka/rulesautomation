@@ -55,7 +55,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"})
-	@Test(enabled=true)
+	@Test()
 	public void reportForLast7Days() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -132,7 +132,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"})
-	@Test(enabled=true) 
+	@Test() 
 	public void reportForLast30Days() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -200,7 +200,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"}) 
-	@Test(enabled=true)
+	@Test()
 	public void reportForCurrentMonth() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -268,7 +268,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"}) 
-	@Test(enabled=true)
+	@Test()
 	public void reportForLastMonth() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -337,7 +337,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"})
-	@Test(enabled=true)
+	@Test()
 	public void reportForCurrentQuarter() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -407,7 +407,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3399"})
-	@Test(enabled=true) //failed
+	@Test()
 	public void reportForLastQuarter() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -463,7 +463,7 @@ public class WorkflowReportingTests extends BaseTest {
 	}
 
 	@TestInfo(testCaseIds = {"GS-3400"})
-	@Test(enabled=true)
+	@Test()
 	public void reportForCustomDateRange() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();
@@ -535,7 +535,7 @@ public class WorkflowReportingTests extends BaseTest {
 	// Case where there are no CTAs at all....should check for No CTAs found
 	// message
 	@TestInfo(testCaseIds = {"GS-3400"})
-	@Test(enabled=true) 
+	@Test() 
 	public void reportForCustomDateRange_NoData() throws IOException {
 		WorkFlowReportingPage workflowPage = basepage.clickOnWorkflowTab()
 				.clickOnReportingView().clickOnLeaderBoard();

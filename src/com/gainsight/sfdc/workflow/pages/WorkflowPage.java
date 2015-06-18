@@ -212,7 +212,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     private void waitForPageLoad() {
         Log.info("Loading Cockpit Page");
-        waitTillNoLoadingIcon();
+       // waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
         Log.info("Cockpit Page Loaded Successfully");
     }
