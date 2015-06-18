@@ -728,7 +728,7 @@ public class WorkFlowTest extends WorkflowSetup {
    //No Test case in TestLink
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
-   public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
+   public void createAndCloseCTA_ClosedSuccessStatus(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
        WorkflowPage workflowPage = workflowBasePage.clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
@@ -738,7 +738,7 @@ public class WorkFlowTest extends WorkflowSetup {
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.updateCTAStatus_toClosedLost(cta);
        cta.setClosed(true);
-       cta.setStatus("Closed Lost");
+       cta.setStatus("Closed Success");
        workflowPage = workflowBasePage.clickOnListView();
        workflowPage = workflowPage.showClosedCTA();
        workflowPage=	workflowPage.selectGroupBy("Created Date (New)");
@@ -770,7 +770,7 @@ public class WorkFlowTest extends WorkflowSetup {
     	   }
        workflowPage.closeCTA(cta, true);
        cta.setClosed(true);
-       cta.setStatus("Closed Won");
+       cta.setStatus("Closed Success");
        workflowPage = workflowBasePage.clickOnListView();
        Assert.assertFalse(workflowPage.isCTADisplayed(cta));
        workflowPage = workflowPage.showClosedCTA();
@@ -816,11 +816,11 @@ public class WorkFlowTest extends WorkflowSetup {
       workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        workflowPage = workflowPage.closeCTA(cta, false);
-       cta.setStatus("Closed Won");
+       cta.setStatus("Closed Success");
        cta.setClosed(true);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        workflowPage.openCTA(cta, false, null);
-       cta.setStatus("Open");
+       cta.setStatus("New");
        cta.setClosed(false);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        Assert.assertTrue(workflowPage.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
@@ -845,12 +845,12 @@ public class WorkFlowTest extends WorkflowSetup {
        workflowPage.addTaskToCTA(cta, tasks);
       
        workflowPage.closeCTA(cta, true);
-       cta.setStatus("Closed Won");
+       cta.setStatus("Closed Success");
        cta.setClosed(true);
        for(Task t : tasks) t.setStatus("Closed"); 
        
        workflowPage.openCTA(cta,true,tasks);
-       cta.setStatus("Open");
+       cta.setStatus("New");
        cta.setClosed(false);
        for(Task t : tasks) t.setStatus("Open");
        

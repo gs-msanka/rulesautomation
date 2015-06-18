@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gainsight.pageobject.core.Element;
 import com.gainsight.pageobject.util.Timer;
 
 import org.openqa.selenium.By;
@@ -164,6 +165,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String TO_SELECT_STATUS_IN_TASK	= "//select[@class='Status__c form-control form-select']/following-sibling::button";
     private final String SAVE_TASK		            = "//div[@class='cta-form']/div[@class='modal-footer text-center']/button[contains(text(),'Save')]";
     private final String TASK_TITLE_TO_VERIFY		= "//span[@class='title-name workflow-task-title' and contains(text(),'%s')]";
+    private final String TASK_SUBJECT_EMPTY_ALERT_MESSAGE ="//input[contains(@class, 'gs-btn btn-add btn_save saveSummary')]";
     
     //Playbook From Elements
     private final String PLAYBOOK_SELECT = "//select[@class='playbook-list']/following-sibling::button";
@@ -538,7 +540,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage updateCTAStatus_toClosedLost(CTA cta) {
         expandCTAView(cta);
         item.click(EXP_VIEW_STATUS_BUTTON);
-       selectValueInDropDown("Closed Lost");
+        selectValueInDropDown("Closed Success");
         Timer.sleep(2);
         collapseCTAView();
         return this;
@@ -665,9 +667,15 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
-        for(int i=0; i<3; i++) {
-            expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
-            expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
+		for (int i = 0; i < 3; i++) {
+			expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT)
+					.getAttribute("value"));
+			if (element.isElementPresent(TASK_SUBJECT_EMPTY_ALERT_MESSAGE)) {
+				item.click(TASK_SUBJECT_EMPTY_ALERT_MESSAGE);
+			}
+			expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT)
+					.getAttribute("value"));
+			expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
             Log.info("Expected -> Subject : " +task.getSubject() +", Priority : "+task.getPriority() +", "+task.getStatus());
             Log.info("Actual -> Subject : " +expViewTask.getSubject() +", Priority : "+expViewTask.getPriority() +", "+expViewTask.getStatus());
@@ -676,7 +684,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 Log.info("Priority not matched");
             if(!task.getStatus().equalsIgnoreCase(expViewTask.getStatus()))
                 Log.info("Status not matched");
-            if(task.getSubject().equalsIgnoreCase(expViewTask.getSubject()))
+            if(!task.getSubject().equalsIgnoreCase(expViewTask.getSubject()))
                 Log.info("Subject not matched");
 
             if(task.getPriority().equalsIgnoreCase(expViewTask.getPriority()) &&
@@ -713,19 +721,19 @@ public class WorkflowPage extends WorkflowBasePage {
                     Log.info("Expected Value : " +cta.getCustomer());
                     Log.info("Actual Value : " +expViewCta.getCustomer());
                     Log.info("Customer Name not matched.");
-                } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
+                } else if (!cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
                     Log.info("Expected Value :" +cta.getType());
                     Log.info("Actual Value :" +expViewCta.getType());
                     Log.info("Type not matched.");
-                } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
+                } else if(!cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
                     Log.info("Expected Value : " +cta.getPriority());
                     Log.info("Actual Value : " +expViewCta.getPriority());
                     Log.info("Priority not matched.");
-                } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
+                } else if(!cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
                     Log.info("Expected Value : " +cta.getStatus());
                     Log.info("Actual Value : " +expViewCta.getStatus());
                     Log.info("Status not matched.");
-                } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                } else if(!cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
                     Log.info("Expected Value : " +cta.getReason());
                     Log.info("Actual Value : " +expViewCta.getReason());
                     Log.info("Reason not matched.");
