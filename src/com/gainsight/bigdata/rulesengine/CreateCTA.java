@@ -25,7 +25,7 @@ public class CreateCTA extends RulesUtil {
 	private static final String CreateCTACustomer = rulesDir
 			+ "CreateCTACustomer.apex";
 	private static final String CleanUpForRules = Application.basedir
-			+ "/testdata/newstack/RulesEngine/scripts/CleanUpForRules.apex";
+			+ "/testdata/newstack/RulesEngine/CleanUpForRules.apex";
 	private static final String CreateOwnerField = rulesDir
 			+ "CreateOwnerField.apex";
 	private static final String AssignValuesToStandardFields = rulesDir
@@ -115,7 +115,7 @@ public class CreateCTA extends RulesUtil {
 
 		String LRR = sfdc
 				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ ruleId + "'")[0].getChild("JBCXM__LastRunResult__c")
+						+ ruleId + "")[0].getChild("JBCXM__LastRunResult__c")
 				.getValue().toString();
 		// Verify if CTA is Created.
 		SObject[] NewCTA_Created = sfdc
@@ -216,7 +216,7 @@ public class CreateCTA extends RulesUtil {
 
 		String LRR = sfdc
 				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ ruleId + "'")[0].getChild("JBCXM__LastRunResult__c")
+						+ ruleId + "")[0].getChild("JBCXM__LastRunResult__c")
 				.getValue().toString();
 		// Verify if CTA is Created.
 		SObject[] NewCTA_Created = sfdc
@@ -294,12 +294,12 @@ public class CreateCTA extends RulesUtil {
 		metaUtil.createFieldsOnAccount(sfdc, sfinfo);
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateOwnerField));// Value
-																				// to
-																				// C_Reference__c
-																				// field
-																				// is
-																				// assigned
-																				// here.
+		// to
+		// C_Reference__c
+		// field
+		// is
+		// assigned
+		// here.
 		// Assign value to Custom
 		// fields("C_Text__c","C_Number__c","C_Checkbox__c","C_Currency__c","C_Email__c","C_Percent__c","C_Phone__c","C_Picklist__c","C_MultiPicklist__c","C_TextArea__c","C_EncryptedString__c","C_URL__c")
 		// in Account Object
@@ -313,7 +313,7 @@ public class CreateCTA extends RulesUtil {
 		for (SObject r : CTAreq) {
 			String rawBody = ("{}");
 			ResponseObj result = wa.doPost(nsAppUrl
-					+ "/api/eventrule/" + r.getId(), header.getAllHeaders(),
+							+ "/api/eventrule/" + r.getId(), header.getAllHeaders(),
 					rawBody);
 			ResponseObject responseObj = RulesUtil.convertToObject(result
 					.getContent());
