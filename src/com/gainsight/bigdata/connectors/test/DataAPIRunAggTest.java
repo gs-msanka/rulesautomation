@@ -248,7 +248,7 @@ public class DataAPIRunAggTest extends NSTestBase {
 	/**
 	 * 
 	 * @param url : Run Aggregation end point
-	 * @param h : Header values
+	 * @param header : Header values
 	 * @param info : Payload for Run Aggregation
 	 * @throws Exception
 	 */
