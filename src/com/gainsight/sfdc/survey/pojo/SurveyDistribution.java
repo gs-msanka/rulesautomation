@@ -10,6 +10,15 @@ private String scheduleType;
 private String scheduleDate;
 private String hours;
 private String minutes;
+private String emailTemplate;
+
+public void setEmailTemplate(String emailTemplate) {
+	this.emailTemplate = emailTemplate;
+}
+
+public String getEmailTemplate() {
+	return emailTemplate;
+}
 
 public void setScheduleName(String scheduleName) {
 	this.scheduleName = scheduleName;

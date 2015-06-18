@@ -248,13 +248,14 @@ public class DataETL implements IJobExecutor {
                     SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(), (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()));
                 }
             } else{ //in case there is no transform part...only loading
+            	if (load!=null) {
             	if(load.getOperation().equals("upsert")) {
                     SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
                 }
             	else {
                     SfdcBulkApi.pushDataToSfdc(resolveStrNameSpace(load.getsObject()), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
                 }
-
+            	}
             }
 		}
 		catch (IOException e) {

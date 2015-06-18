@@ -317,17 +317,17 @@ public class MetaDataUtil {
         addFieldPermissionsToUsers(resolveStrNameSpace(Scorecard_Metrics), convertFieldNameToAPIName(SCMetric_ExtId), sfdc.fetchSFDCinfo());
     }
 
-    public void createExtIdFieldForCustomObject(SalesforceConnector sfdc, SFDCInfo sfinfo) throws Exception {
+    public void createExtIdFieldForCustomObject(SalesforceConnector sfdc) throws Exception {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         String EmailCustomObj = "EmailCustomObjct__c";
         String[] CusObj_ExtId = new String[]{"CusObj ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(EmailCustomObj), CusObj_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfinfo);
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfdc.fetchSFDCinfo());
         String[] Allfields = {"Dis_Email__c", "Dis_Name__c", "Dis_Role__c", "C_Reference__c"};
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfinfo);
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfdc.fetchSFDCinfo());
         String[] fields = new String[]{"Data ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfinfo);
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
     }
 
     /**
@@ -341,7 +341,7 @@ public class MetaDataUtil {
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
         metadataClient.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo());
+     //   addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo());
     }
 
     /**

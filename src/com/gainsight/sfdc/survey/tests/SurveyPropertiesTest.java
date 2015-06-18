@@ -158,6 +158,4 @@ public class SurveyPropertiesTest extends SurveySetup{
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
 				"Survey properties successfully saved.");	
 	}
-	
-
 }
