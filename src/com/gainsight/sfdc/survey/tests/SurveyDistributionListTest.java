@@ -157,7 +157,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 		SurveyDistribution surveyDistribution = mapper.readValue(
 				testData.get("Schedule"), SurveyDistribution.class);
 		surveyDistribution.setScheduleName("Scheduled at" + " "
-				+ DateUtils.getCurrentDateAndTime("yyyy/MM/dd HH:mm:ss"));
+				+ distribution.getCurrentDateAndTime());
 		distribution.createSchedule(surveyDistribution);
 		Assert.assertEquals(
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
@@ -313,7 +313,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				testData.get("Schedule"), SurveyDistribution.class);
 		surveyDistribution.setScheduleType("Resend");
 		surveyDistribution.setScheduleName("ReScheduled at" + " "
-				+ DateUtils.getCurrentDateAndTime("yyyy/MM/dd HH:mm:ss"));
+				+ distribution.getCurrentDateAndTime());
 		distribution.createSchedule(surveyDistribution);
 		Assert.assertEquals(
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
