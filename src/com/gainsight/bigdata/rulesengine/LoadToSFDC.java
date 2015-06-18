@@ -78,7 +78,7 @@ public class LoadToSFDC extends RulesUtil {
         createCustomFieldsAndAddPermissions("CustomSourceWeRules__c", fieldsMap);
         metadataClient.createPickListField("CustomSourceWeRules__c", cPicklistFields, false);
         metadataClient.createPickListField("CustomSourceWeRules__c", cMultiPicklistFields, true);
-        metaUtil.addFieldPermissionsToUsers("CustomSourceWeRules__c", customFields, sfinfo);
+        metaUtil.addFieldPermissionsToUsers("CustomSourceWeRules__c", metaUtil.convertFieldNameToAPIName(customFields), sfinfo);
 
         // Create custom object, fields and add their permissions.
         metadataClient.createCustomObject("CustomWeRules");
@@ -86,7 +86,7 @@ public class LoadToSFDC extends RulesUtil {
         metadataClient.createMasterDetailRelationField("CustomWeRules__c", "Account", "Account");
         metadataClient.createPickListField("CustomWeRules__c", cPicklistFields, false);
         metadataClient.createPickListField("CustomWeRules__c", cMultiPicklistFields, true);
-        metaUtil.addFieldPermissionsToUsers("CustomWeRules__c", customFields, sfinfo);
+        metaUtil.addFieldPermissionsToUsers("CustomWeRules__c",  metaUtil.convertFieldNameToAPIName(customFields), sfinfo);
         String configData = "{\"type\":\"SFDC\",\"objectName\":\"CustomWeRules__c\",\"objectLabel\":\"CustomWeRules Object\",\"fields\":[{\"name\":\"CBoolean1__c\",\"dataType\":\"boolean\"},{\"name\":\"CBoolean2__c\",\"dataType\":\"boolean\"},{\"name\":\"CBoolean3__c\",\"dataType\":\"boolean\"},{\"name\":\"CDate1__c\",\"dataType\":\"date\"},{\"name\":\"CDate2__c\",\"dataType\":\"date\"},{\"name\":\"CDate3__c\",\"dataType\":\"date\"},{\"name\":\"CDateTime1__c\",\"dataType\":\"dateTime\"},{\"name\":\"CDateTime2__c\",\"dataType\":\"dateTime\"},{\"name\":\"CDateTime3__c\",\"dataType\":\"dateTime\"},{\"name\":\"CNumber1__c\",\"dataType\":\"double\"},{\"name\":\"CNumber2__c\",\"dataType\":\"double\"},{\"name\":\"CNumber3__c\",\"dataType\":\"double\"},{\"name\":\"CPercent1__c\",\"dataType\":\"double\"},{\"name\":\"CText1__c\",\"dataType\":\"string\"},{\"name\":\"CText2__c\",\"dataType\":\"string\"},{\"name\":\"CText3__c\",\"dataType\":\"string\"},{\"name\":\"CTextArea1__c\",\"dataType\":\"string\"},{\"name\":\"CTextArea2__c\",\"dataType\":\"string\"},{\"name\":\"CTextArea3__c\",\"dataType\":\"string\"},{\"name\":\"Id\",\"dataType\":\"string\"},{\"name\":\"Name\",\"dataType\":\"string\"},{\"name\":\"Account__c\",\"dataType\":\"string\"},{\"name\":\"cMultiPicklist__c\",\"dataType\":\"string\"},{\"name\":\"cPicklist__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"}]}";
 
         try {

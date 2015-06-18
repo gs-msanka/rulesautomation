@@ -35,6 +35,7 @@ public class LoadToFeature extends RulesUtil {
 	@BeforeClass
 	public void beforeClass() throws Exception {
 		sfdc.connect();
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanupFeatures));
 		ObjectMapper mapper = new ObjectMapper();
