@@ -765,7 +765,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		    	   }
 		       oppWfPage.closeCTA(cta, true);
 		       cta.setClosed(true);
-		       cta.setStatus("Closed Won");
+		       cta.setStatus("Closed Success");
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();

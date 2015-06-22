@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -41,7 +42,7 @@ public class WorkFlowTest extends WorkflowSetup {
                                         "Delete [Select id from JBCXM__StatePreservation__c];"+
                                         "Delete [Select id from JBCXM__Milestone__c];";
     private final String CREATE_OPPOURTUNITIES=Application.basedir+"/testdata/sfdc/workflow/scripts/Creating_account_and_oppourtunity.txt";
-    private final String OPPOURTUNITY_CLEANUP="Delete[SELECT Id,Name FROM Opportunity where name='Opp Account - Opportunity'];";
+    private final String OPPOURTUNITY_CLEANUP="Delete[SELECT Id,Name FROM Opportunity];";
     ObjectMapper mapper                         = new ObjectMapper();
 
     @BeforeClass
@@ -1535,54 +1536,65 @@ public class WorkFlowTest extends WorkflowSetup {
     CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
     cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
     cta.setAssignee(sfinfo.getUserFullName());
-    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openCTADetailView();
     detailpage.LinkingExistingOppourtunity(cta);
-    detailpage.DelinkExistingOpportunity();
+    detailpage.delinkExistingOpportunity();
     Assert.assertTrue(detailpage.VerifyObjectDeLink(), "verifying Link to Existing Link is visible or not");
     
     }
     
-    //No Test case in TestLink
+	@TestInfo(testCaseIds={"GS-4680"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA44")
-    public void CreateOpportunity(HashMap<String, String> testData) throws IOException, InterruptedException {
-    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
-    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
-    jsondata[0].removeField("Id");
-    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
-    sfdc.updateRecords(jsondata);
-    sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
-    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_OPPOURTUNITIES));
-    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
-    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-    cta.setAssignee(sfinfo.getUserFullName());
-    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
-    detailpage.CreateNewOpportunity(cta);
-    Assert.assertTrue(detailpage.verifyDelinkIcon(), "Opportunity created, so verifying Delink icon");
-    detailpage.DelinkExistingOpportunity();
+    public void associateOpprtunityObject(HashMap<String, String> testData) throws IOException {
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+		jsondata[0].setField("JBCXM__CTA_Association_Metadata__c",
+				testData.get("AppSettings"));
+		jsondata[0].removeField("Id");
+		Log.info("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+		sfdc.updateRecords(jsondata);
+		WorkflowPage workflowPage = basepage.clickOnWorkflowTab()
+				.clickOnListView();
+		CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+		cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0,
+				false));
+		cta.setAssignee(sfinfo.getUserFullName());
+		WorkflowPage detailpage = workflowPage.createCTA(cta)
+				.openCTADetailView();
+		sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
+		detailpage.createNewOpportunity(cta);
+		Assert.assertTrue(sfdc
+				.getRecordCount("SELECT CloseDate,Name,StageName FROM Opportunity where Name='"
+						+ cta.getopportunityName()
+						+ "' and Account.Name='"
+						+ cta.getCustomer() + "' and IsDeleted=false") == 1);
+	}
     
-    }
-    
-    //No Test case in TestLink
+	@TestInfo(testCaseIds={"GS-4686"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA42")
-    public void updating_Association_Metadata(HashMap<String, String> testData) throws IOException, InterruptedException {
-    SObject[] jsondata=sfdc.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
-    jsondata[0].setField("JBCXM__CTA_Association_Metadata__c", testData.get("AppSettings"));
-    jsondata[0].removeField("Id");
-    Reporter.log("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
-    sfdc.updateRecords(jsondata);
-    WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
-    CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-    cta.setAssignee(sfinfo.getUserFullName());
-    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
-    Thread.sleep(5000);
-    Assert.assertTrue(detailpage.verifyingAccountlink(), "verifying Account link");
-    Assert.assertTrue(detailpage.verifyingctalink(), "verifying CTA link");
-
-    }
+    public void updateCTAAssociationMetadata(HashMap<String, String> testData) throws IOException, InterruptedException {
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("select id,name,JBCXM__CTA_Association_Metadata__c FROM JBCXM__ApplicationSettings__c"));
+		jsondata[0].setField("JBCXM__CTA_Association_Metadata__c",
+				testData.get("AppSettings"));
+		jsondata[0].removeField("Id");
+		Log.info("Updating JBCXM__CTA_Association_Metadata__c Field with data from Xls cell");
+		sfdc.updateRecords(jsondata);
+		WorkflowPage workFlowPage = basepage.clickOnWorkflowTab()
+				.clickOnListView();
+		CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+		cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0,
+				false));
+		cta.setAssignee(sfinfo.getUserFullName());
+		WorkflowPage detailpage = workFlowPage.createCTA(cta)
+				.openCTADetailView();
+		Assert.assertTrue(detailpage.verifyingAccountlink(),
+				"Verifying Customers Tab in CTA detail view");
+		Assert.assertTrue(detailpage.verifyingCtalink(),
+				"Verifying Call to Action Tab in CTA detail view");
+	}
     
     //No Test case in TestLink
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1599,7 +1611,7 @@ public class WorkFlowTest extends WorkflowSetup {
     CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
     cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
     cta.setAssignee(sfinfo.getUserFullName());
-    WorkflowPage detailpage= workflowPage.createCTA(cta).openctadetailview();
+    WorkflowPage detailpage= workflowPage.createCTA(cta).openCTADetailView();
     detailpage.LinkingExistingOppourtunity(cta);
     Assert.assertTrue(detailpage.verifyDelinkIcon(), "verifying DeLink Icon.");
     
