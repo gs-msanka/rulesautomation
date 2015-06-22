@@ -812,11 +812,11 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360.createCTA(cta);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       workflow360.closeCTA(cta, false);
-	       cta.setStatus("Closed Won");
+	       cta.setStatus("Closed Success");
 	       cta.setClosed(true);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       workflow360.openCTA(cta, false, null);
-	       cta.setStatus("Open");
+	       cta.setStatus("New");
 	       cta.setClosed(false);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       Assert.assertTrue(workflow360.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
