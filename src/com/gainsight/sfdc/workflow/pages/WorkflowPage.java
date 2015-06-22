@@ -806,7 +806,9 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             throw  new RuntimeException("CTA Type is mandatory");
         }
-        xPath = xPath+"/descendant::span[@class='cta-duedate'  and contains(@style, 'background:"+color+"') and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+     //   xPath = xPath+"/descendant::span[@class='cta-duedate'  and contains(@style, 'background:"+color+"') and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        
+        xPath = xPath+"/descendant::span[@class='cta-duedate']/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         if(cta.getAssignee() != null) {
             xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
             xPath = xPath+"/ancestor::div[@class='gs-cta']";

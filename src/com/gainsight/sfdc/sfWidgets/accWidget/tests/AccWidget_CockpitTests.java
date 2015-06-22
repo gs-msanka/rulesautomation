@@ -721,7 +721,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
-		   public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
+		   public void createAndCloseCTA_ClosedRiskStatus(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] accId=sfdc.getRecords("select id from Account where Name='"+cta.getCustomer()+"'");
 			    AccWidget_CockpitPage accWfPage = basepage.gotoAccountPageWithId(accId[0].getId()).switchToAccountWidget().gotoCockpitSubTab();
@@ -731,7 +731,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       Assert.assertTrue(accWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       accWfPage.updateCTAStatus_toClosedLost(cta);
 		       cta.setClosed(true);
-		       cta.setStatus("Closed Lost");
+		       cta.setStatus("Closed Risk");
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -766,7 +766,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		    	   }
 		       accWfPage.closeCTA(cta, true);
 		       cta.setClosed(true);
-		       cta.setStatus("Closed Won");
+		       cta.setStatus("Closed Success");
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -813,11 +813,11 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       accWfPage.createCTA(cta);
 		       Assert.assertTrue(accWfPage.isCTADisplayed(cta));
 		       accWfPage.closeCTA(cta, false);
-		       cta.setStatus("Closed Won");
+		       cta.setStatus("Closed Success");
 		       cta.setClosed(true);
 		       Assert.assertTrue(accWfPage.isCTADisplayed(cta));
 		       accWfPage.openCTA(cta, false, null);
-		       cta.setStatus("Open");
+		       cta.setStatus("New");
 		       cta.setClosed(false);
 		       Assert.assertTrue(accWfPage.isCTADisplayed(cta));
 		       Assert.assertTrue(accWfPage.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
