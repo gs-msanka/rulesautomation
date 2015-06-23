@@ -3,6 +3,7 @@ package com.gainsight.sfdc.workflow.pages;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.gainsight.pageobject.core.Element;
@@ -16,6 +17,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
@@ -180,16 +182,16 @@ public class WorkflowPage extends WorkflowBasePage {
     
     private final String CLICK_TO_OPEN_CTA       ="//div[@class='gs-cta-head workflow-ctaitem']";
     private final String OBJECT_ASSOCIATION_TABS ="//li[contains(@class, 'gs-cockpit-tab')]/descendant::a[text()='%s']";
-    private final String LINK_TO_EXISTING        ="//div[@id='details']/div[3]/div[5]/div[2]/div[@class='gs-cockpit-add-new pull-left gs-cockpit-associate-btn']";
-    private final String OPPORTUNITY_SEARCH     ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
-    private final String OPPORTUNITY_SEARCH_LINK="Opp Account - Opportunity";
-    private final String DELINK_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='De-Link']";
-    private final String DELINK_CONFIRMATION_BOX ="//div[@class='layout_popup ui-dialog-content ui-widget-content']/descendant::div[@class='modal_footer']/descendant::input[@class='gs-btn btn-save btn_save saveSummary']";
+    private final String LINK_TO_EXISTING        ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[contains(@class, 'gs-cockpit-associate-obj')]/div[text()='Link to an existing']";
+    private final String SEARCH_FIELD            ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
+    private final String DELINK_ICON             ="//div[@id='details']/descendant::div[contains(@class, 'section-details')]/descendant::div[contains(@class, 'show-delink')]/descendant::span[@title='De-Link']";
+    private final String DELINK_CONFIRMATION_DILOG ="//input[contains(@class, 'btn-save') and @data-action='Yes']";
     private final String CREATE_NEW_LINK         ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-add-new pull-left gs-cockpit-create-record']";
     private final String SELECT_VALUE             ="//div[@class='gs-cockpit-field-value' and @control='%s']/input";
     private final String PICKLIST_SELECTION      ="//div[@class='gs-cockpit-field-value' and @control='PICKLIST']/descendant::button";
     private final String CLICK_SAVE              ="//div[@id='details']/descendant::div[contains(@class,'section-details') and @style='']/descendant::div[@class='gs-cockpit-section-header']/div[@title='Edit']/descendant::a[@title='Save']";
     private final String EDIT_ICON_IN_DETAIL_VIEW ="//div[contains(@class, 'edit-icon') and @title='Edit']";
+    private final String EDIT_OPTIONS_ICON        ="//div[contains(@class, 'show-delink')]/descendant::div[contains(@class, 'cockpit-section-delete-options')]";
     
     public WorkflowPage() {
         waitForPageLoad();
@@ -1377,39 +1379,36 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
 
-	public boolean verifyingCtalink() {
+	public boolean verifyingCtalink(HashMap<String, String> testData) {
 		return link.verifyLinkVisible(String.format(OBJECT_ASSOCIATION_TABS,
-				"Call To Action"));
+				testData.get("DefaultObject2")));
 	}
 
-	public boolean verifyingAccountlink() {
+	public boolean verifyingAccountlink(HashMap<String, String> testData) {
 		return link.verifyLinkVisible(String.format(OBJECT_ASSOCIATION_TABS,
-				"Customers"));
+				testData.get("DefaultObject1")));
 	}
 	
-	public void LinkingExistingOppourtunity(CTA cta){
-		item.click(String.format(OBJECT_ASSOCIATION_TABS, "Opportunity"));
+	public WorkflowPage linkExistingRecord(CTA cta,
+			HashMap<String, String> testData) {
+		item.click(String.format(OBJECT_ASSOCIATION_TABS,
+				testData.get("AssociateObject")));
 		item.click(LINK_TO_EXISTING);
-		field.setText(OPPORTUNITY_SEARCH, cta.getoppourtunity());
-		link.click(OPPORTUNITY_SEARCH_LINK);
+		selectRecordToLink(cta.getoppourtunity());
+		wait.waitTillElementNotDisplayed("//div[@class='gs-section-loader']", MIN_TIME, MAX_TIME);
+		return this;
 	}
     
-	public void delinkExistingOpportunity(){
+	public WorkflowPage delinkExistingRecord() {
+		item.click(EDIT_OPTIONS_ICON);
 		item.click(DELINK_ICON);
-		item.click(DELINK_CONFIRMATION_BOX);
+		item.click(DELINK_CONFIRMATION_DILOG);
+		return this;
 	}
-	
-	public boolean verifyDelinkIcon(){
-		return link.verifyLinkVisible(DELINK_ICON);
-	}
-	
-	public boolean VerifyObjectDeLink(){
-		return link.verifyLinkVisible(LINK_TO_EXISTING);
-	}
-	
-	public void createNewOpportunity(CTA cta){
-		Log.info("Creating New opportunity");
-		item.click(String.format(OBJECT_ASSOCIATION_TABS, "Opportunity"));
+
+	public WorkflowPage createNewOpportunity(CTA cta, HashMap<String, String> testData){
+		Log.info("Creating New opportunity from CTA Detail View");
+		item.click(String.format(OBJECT_ASSOCIATION_TABS, testData.get("AssociateObject")));
 		item.click(CREATE_NEW_LINK);
 		field.setText(String.format(SELECT_VALUE, "TEXT"),
 				cta.getopportunityName());
@@ -1418,5 +1417,24 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(PICKLIST_SELECTION);
 		selectValueInDropDown("Prospecting");
 		item.click(CLICK_SAVE);
+		wait.waitTillElementNotDisplayed("//div[@class='gs-section-loader']", MIN_TIME, MAX_TIME);
+		return this;
+	}
+	
+	private void selectRecordToLink(String Name) {
+        Log.info("Selecting Record : " +Name);
+        boolean selected = false;
+        for(int i=0; i< 3; i++) {
+            item.clearAndSetText(SEARCH_FIELD, Name);
+            Application.getDriver().findElement(By.xpath(SEARCH_FIELD)).sendKeys(Keys.ENTER);
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a[text()='"+Name+"']")) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+            Timer.sleep(2);
+        }
 	}
 }
