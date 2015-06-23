@@ -1540,7 +1540,7 @@ public class WorkFlowTest extends WorkflowSetup {
 		CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0,
 				false));
-		cta.setAssignee(sfinfo.getUserFullName());
+		cta.setAssignee(sfdcInfo.getUserFullName());
 		WorkflowPage detailpage = workflowPage.createCTA(cta)
 				.openCTADetailView();
 		sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
@@ -1571,7 +1571,7 @@ public class WorkFlowTest extends WorkflowSetup {
 		CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0,
 				false));
-		cta.setAssignee(sfinfo.getUserFullName());
+		cta.setAssignee(sfdcInfo.getUserFullName());
 		WorkflowPage detailpage = workflowPage.createCTA(cta)
 				.openCTADetailView();
 		sfdc.runApexCode(resolveStrNameSpace(OPPOURTUNITY_CLEANUP));
