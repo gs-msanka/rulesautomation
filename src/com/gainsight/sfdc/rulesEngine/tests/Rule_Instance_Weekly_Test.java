@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
-import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
@@ -67,7 +66,7 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
-        metaUtil.createFieldsOnAccount(sfdc, sfdcInfo);
+        metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORE_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);

@@ -6,7 +6,6 @@ import java.net.URI;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
-import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
 
 import org.testng.Assert;
@@ -68,7 +67,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         as.enableScorecard();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         metaUtil.createFieldsOnUsageData(sfdc);
-        metaUtil.createFieldsOnAccount(sfdc, BaseTest.sfdcInfo);
+        metaUtil.createFieldsOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));

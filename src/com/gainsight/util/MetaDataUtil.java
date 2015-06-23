@@ -28,7 +28,7 @@ public class MetaDataUtil {
 	public SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
 	   
-	   public void createFieldsOnAccount(SalesforceConnector sfdc,SFDCInfo sfinfo) throws Exception {
+	   public void createFieldsOnAccount(SalesforceConnector sfdc) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 	    	String TextField[]={"C_Text"} , NumberField[]={"C_Number"} , Checkbox[]={"C_Checkbox"} , Currency[]={"C_Currency"} , Email[]={"C_Email"} , Percent[]={"C_Percent"} ,  Phone[]={"C_Phone"} , Picklist_FieldName="C_Picklist" , 
 					Picklist_Values[]={"Pvalue1","Pvalue2","Pvalue3"} , MultiPicklist_FieldName="C_MultiPicklist", MultiPicklist_Values[]={"MPvalue1","MPvalue2","MPvalue3"} , TextArea[]={"C_TextArea"} , EncryptedString[]={"C_EncryptedString"} , URL[]={"C_URL"};
@@ -124,10 +124,10 @@ public class MetaDataUtil {
 	                                    "AccPercentage", "ActiveUsers", "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime", "FNumber", "FPercent", "FText","C_Text",
 	                                    "C_Number","C_Checkbox","C_Currency","C_Email","C_Percent","C_Phone","C_Picklist","C_MultiPicklist","C_TextArea","C_EncryptedString",
 	                                    "C_URL","C_Reference"};
-	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields),sfinfo);
+	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo());
 	    }
 	 
-	 public void createFieldsOnObject(SalesforceConnector sfdc,SFDCInfo sfinfo,String Object,ObjectFields objF) throws Exception {
+	 public void createFieldsOnObject(SalesforceConnector sfdc, String Object, ObjectFields objF) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 		 List<String> permFieldsList = new ArrayList<String>();
 	    
@@ -223,7 +223,7 @@ public class MetaDataUtil {
 			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getURLs().toArray(new String[objF.getURLs().size()]), false, false, true);
 			 permFieldsList.addAll(objF.getURLs());
 		 }
-		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])),sfinfo);	    	
+		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])), sfdc.fetchSFDCinfo());
 	 }
 	 
 		 
@@ -289,7 +289,7 @@ public class MetaDataUtil {
         addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
     }
 
-    public void createFieldsOnContact(SalesforceConnector sfdc, SFDCInfo sfinfo) throws Exception {
+    public void createFieldsOnContact(SalesforceConnector sfdc) throws Exception {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         metadataClient.createTextFields("Contact", new String[]{"Contact ExternalID"}, true, true, true, false, false);
         metadataClient.createNumberField("Contact", new String[]{"NoOfReferrals", "NumForDate", "NumberField"}, false);
@@ -300,7 +300,7 @@ public class MetaDataUtil {
         metadataClient.createNumberField("Contact", new String[]{"DealCloseRate"}, true);
         String[] permField = new String[]{"Contact ExternalID", "NoOfReferrals", "NumForDate",
                 "NumberField", "Active", "InvolvedIn", "DealCloseRate"};
-        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(permField), sfinfo);
+        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(permField), sfdc.fetchSFDCinfo());
     }
 
     /**
@@ -317,17 +317,17 @@ public class MetaDataUtil {
         addFieldPermissionsToUsers(resolveStrNameSpace(Scorecard_Metrics), convertFieldNameToAPIName(SCMetric_ExtId), sfdc.fetchSFDCinfo());
     }
 
-    public void createExtIdFieldForCustomObject(SalesforceConnector sfdc, SFDCInfo sfinfo) throws Exception {
+    public void createExtIdFieldForCustomObject(SalesforceConnector sfdc) throws Exception {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         String EmailCustomObj = "EmailCustomObjct__c";
         String[] CusObj_ExtId = new String[]{"CusObj ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(EmailCustomObj), CusObj_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfinfo);
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfdc.fetchSFDCinfo());
         String[] Allfields = {"Dis_Email__c", "Dis_Name__c", "Dis_Role__c", "C_Reference__c"};
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfinfo);
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfdc.fetchSFDCinfo());
         String[] fields = new String[]{"Data ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfinfo);
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
     }
 
     /**

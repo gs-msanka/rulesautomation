@@ -241,7 +241,7 @@ public class SurveySetup extends BaseTest {
         metadataClient.createTextFields("EmailCustomObjct__c", TextField, false, false,true, false, false);
         metadataClient.createEmailField("EmailCustomObjct__c", Email);
         metadataClient.createLookupField("EmailCustomObjct__c", LookupFieldName, Reference );
-        metaUtil.createExtIdFieldForCustomObject(sfdc, sfdcInfo);
+        metaUtil.createExtIdFieldForCustomObject(sfdc);
     }
     
     public int GetRecordCountFromContactObject(){
