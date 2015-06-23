@@ -720,7 +720,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		   
 		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
-		   public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
+		   public void createAndCloseCTA_ClosedRiskStatus(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
@@ -730,7 +730,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       oppWfPage.updateCTAStatus_toClosedLost(cta);
 		       cta.setClosed(true);
-		       cta.setStatus("Closed Lost");
+		       cta.setStatus("Closed Risk");
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -765,7 +765,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		    	   }
 		       oppWfPage.closeCTA(cta, true);
 		       cta.setClosed(true);
-		       cta.setStatus("Closed Won");
+		       cta.setStatus("Closed Success");
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -812,11 +812,11 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       oppWfPage.createCTA(cta);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta));
 		       oppWfPage.closeCTA(cta, false);
-		       cta.setStatus("Closed Won");
+		       cta.setStatus("Closed Success");
 		       cta.setClosed(true);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta));
 		       oppWfPage.openCTA(cta, false, null);
-		       cta.setStatus("Open");
+		       cta.setStatus("New");
 		       cta.setClosed(false);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta));
 		       Assert.assertTrue(oppWfPage.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");

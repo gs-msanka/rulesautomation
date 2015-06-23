@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="abhilash Suite" verbose="3">
+
+<listeners>
+<listener class-name="com.gainsight.utils.AutTestListener" />
+</listeners>
+
+<test name="abhilash test" preserve-order="true">
+<classes>
+
+<class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests" />
+
+
+</classes>
+</test>
+</suite>
