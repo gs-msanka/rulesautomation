@@ -15,12 +15,12 @@
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
         </classes>
     </test>
-    <test verbose="3" name="Adoption_Account_Weekly_Test" preserve-order="true">
+    <test verbose="3" name="Adoption_Instance_Monthly_Test" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
         </classes>
     </test>
-    <test verbose="3" name="Adoption_Account_Weekly_Test" preserve-order="true">
+    <test verbose="3" name="Adoption_Instance_Weekly_Test" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
         </classes>
