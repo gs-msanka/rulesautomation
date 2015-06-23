@@ -38,9 +38,8 @@ import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
  */
 public class BasePage extends WebPage implements Constants {
 
-	private final String READY_INDICATOR    = "//div[@id='userNavButton']";
-
-    private final String LOADING_IMG            = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
+	public final String USERNAVBUTTON       = "userNavButton";
+    private final String LOADING_IMG        = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
 	private final String OPPORTUNITIES_TAB  = "//img[@title='Opportunities']";
 	private final String ALL_TABS           = "//img[@title='All Tabs']";
 	private final String ACCOUNTS_TAB       = "//a[@title='Accounts Tab']";
@@ -72,12 +71,12 @@ public class BasePage extends WebPage implements Constants {
 		field.setTextField("password", sfdcConfig.getSfdcPassword());
 		button.click("Login");
         try {
-            wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+            wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
         } catch (Exception e) {
             Log.info("Trying to clicking on continue in on schedule screen.");
             if(isTextPresent("Scheduled Maintenance Notification")) {
                 item.click("//a[@class='continue' and text()='Continue']");
-                wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+                wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
             } else {
                 Log.error("Login Failed");
                 throw new RuntimeException("Login Failed");
@@ -94,7 +93,7 @@ public class BasePage extends WebPage implements Constants {
 		field.setTextField("username", username);
 		field.setTextField("password", pwd);
 		button.click("Login");
-		wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
 		return this;
 	}
 
@@ -298,6 +297,12 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
+	
+	public void waitForNoLoadingIconDisplayed() {
+		env.setTimeout(1);
+		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
+		env.setTimeout(30);
+	}
 
     public void waitTillNoSearchIcon() {
         env.setTimeout(1);

@@ -1,13 +1,12 @@
 package com.gainsight.sfdc.survey.tests;
 
+
 import java.io.IOException;
 import java.util.Map;
-
-
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.gainsight.sfdc.survey.pages.SurveyAddParticipantsPage;
@@ -19,6 +18,7 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 
 public class SurveyAddParticipantsTest extends SurveySetup {
 
@@ -38,84 +38,144 @@ public class SurveyAddParticipantsTest extends SurveySetup {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		Log.info("Creating Custom Object to Load Contacts");
-    	Create_Custom_Obj_For_Addparticipants();
+		customObjectForAddingSurveyParticipants();
     	DataETL dataLoader = new DataETL();
     	JobInfo loadContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_contacts_into_custom_object.txt"), JobInfo.class);
+        JobInfo extractsContacts = mapper.readValue(resolveNameSpace(env.basedir+"/testdata/sfdc/survey/jobs/Job_Rule_Survey_ExtractContats.txt"), JobInfo.class);
     	dataLoader.execute(loadContacts);
+        dataLoader.execute(extractsContacts);
+	}
+	
+	@BeforeMethod
+	public void cleanUpData(){
+		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
 	}
  
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel") // Done Runned
+	@TestInfo(testCaseIds = {"GS-2732", "GS-2714"}) 
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-    public void AddPartFromCustomObjectWithFilterCond(Map<String, String> testData) throws IOException {
-        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
-        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
-        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
-        setSurveyId(surProp);
-        SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
-        SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipant"), SurveyAddParticipants.class); //survey addpart
-        addparcp.loadFromCustomObject(surveyparts);
-        addparcp.CustomFilterConditions(surveyparts);
-        Assert.assertEquals(addparcp.getMessage(), "No participants found");
+    public void addParticipantsFromCustomObjectWithFilterConditions(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage
+				.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromCustomObject(surveyParticipants);
+		surveyAddParticipant.customFilterConditions(surveyParticipants);
+		Assert.assertEquals(getCountFromSurveyParticipantObject(surProp),
+				getCountfromCustomObject());
         }
     
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel") // Done Runned
+    @TestInfo(testCaseIds = {"GS-2732"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-    public void AddPartFromCustomObjectWOFilterCond(Map<String, String> testData) throws IOException {
-        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
-        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
-        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
-        setSurveyId(surProp);
-        SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
-        SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipant"), SurveyAddParticipants.class); //survey addpart
-        addparcp.loadFromCustomObject(surveyparts);
-        addparcp.loadParticipants();
-        Assert.assertEquals(addparcp.getMessage(), "No participants found");
-        }
-
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel") //Done Runned
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-    public void AddPartFromContactObjectWithFilterCond(Map<String, String> testData) throws IOException {
-        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
-        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
-        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
-        setSurveyId(surProp);
-        SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
-        SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipantsFromStandardobj"), SurveyAddParticipants.class); //survey add
-        addparcp.loadFromContactObj(surveyparts);
-        addparcp.ContactFilterConditions(surveyparts);
-        Assert.assertEquals(addparcp.getMessage(), "No participants found");
-	}
-    
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel") //Done Runnded
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-    public void AddPartFromContactObjectWOFilterCond(Map<String, String> testData) throws IOException {
-        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
-        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
-        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
-        setSurveyId(surProp);
-        SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
-        SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipantsFromStandardobj"), SurveyAddParticipants.class); //survey add
-        addparcp.loadFromContactObj(surveyparts);
-        addparcp.loadParticipants();
-        Assert.assertEquals(addparcp.getMessage(), "No participants found");
-    }
-    
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel") 
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
-    public void AddPartFromContactObjectFilterbyEmail(Map<String, String> testData) throws IOException {
-        SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
-        SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
-        SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
-        setSurveyId(surProp);
-        SurveyAddParticipantsPage addparcp = surveyPage.clickOnAddParticipants(surProp);
-        SurveyAddParticipants surveyparts=mapper.readValue(testData.get("AddParticipantsFromStandardobjFilter"), SurveyAddParticipants.class); //survey add
-        addparcp.loadFromContactObj(surveyparts);
-        addparcp.ContactFilterConditions(surveyparts);
-        Assert.assertEquals(addparcp.getMessage(), "No participants found");
+    public void addPartcipantsFromCustomObjectWOFilterCondtions(Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage
+				.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromCustomObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false")),
+				getCountFromSurveyParticipantObject(surProp));
 	}
 
-	@Test
-	public void loadContactsThroughCSVFile() throws IOException{
+    @TestInfo(testCaseIds = {"GS-2706", "GS-2708", "GS-3456"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
+	public void addParticipantsFromContactObjectWithFilterConditons(
+			Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage
+				.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipantsFromStandardobj"),
+				SurveyAddParticipants.class); // survey add
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.filterConditions(surveyParticipants);
+		Assert.assertEquals(
+				getCountFromSurveyParticipantObject(surProp),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where contact.Account.name='"
+						+ surveyParticipants.getValue()
+						+ "' and isDeleted=false")));
+	}
+    
+	@TestInfo(testCaseIds = { "GS-2704", "GS-2707" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
+	public void addParticipantFromContactObject(
+			Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage
+				.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipantsFromStandardobj"),
+				SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		Assert.assertEquals(surveyAddParticipant.getMessage(),
+				"Selected participants are added successfully",
+				"Verifying message from UI");
+		Assert.assertEquals(
+				getCountFromSurveyParticipantObject(surProp),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='QA' and isDeleted=false")));
+	}
+    
+	@TestInfo(testCaseIds = {"GS-2706", "GS-2708", "GS-3456"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true) 
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
+	public void addParticipantsFromContactObjectWithFilterConditons2(
+			Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
+				SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage
+				.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipantsFromStandardobjFilter"),
+				SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.filterConditions(surveyParticipants);
+		Assert.assertEquals(
+				getCountFromSurveyParticipantObject(surProp),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")));
+	}
 	
-	}
+	@TestInfo(testCaseIds = {"GS-2711", "GS-2712"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false) 
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "AddParticipant_T1")
+	public void addParticipantsFromCSV(
+			Map<String, String> testData) throws IOException {
+		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surProp = mapper.readValue(testData.get("Survey"), SurveyProperties.class);
+		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
+		setSurveyId(surProp);
+		SurveyAddParticipantsPage surveyAddParticipant = surveyPage.clickOnAddParticipants(surProp);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(testData.get("ParticipantsFromCSV"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadContactsFromCSV(surveyParticipants);
+		surveyAddParticipant.contactsFromCSVWithID(surveyParticipants);
+		Assert.assertEquals(getRecordCountFromContactObject(), getCountFromSurveyParticipantObject(surProp), "Verifying survey participants count");
+    }
 }
