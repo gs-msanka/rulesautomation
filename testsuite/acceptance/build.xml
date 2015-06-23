@@ -10,7 +10,7 @@
 
 
     <!-- TestNG file name for pre and post tests -->
-	<property name="testngFileName" value="testng_Connectors.xml"/>
+	<property name="testngFileName" value="all_test.xml"/>
 
 	<property environment="env"/>
 	<property name="ivy.home" value="${basedir}/lib/ivy-2.3.0.jar"/>

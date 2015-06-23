@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.testdriver.Application;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -274,7 +275,7 @@ public class SurveySetup extends BaseTest {
 		System.out.println("setting ns url in app settings");
 		sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
-				+ "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
+                + "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
 		Log.info("NS URL Updated Successfully");
 	}
 
