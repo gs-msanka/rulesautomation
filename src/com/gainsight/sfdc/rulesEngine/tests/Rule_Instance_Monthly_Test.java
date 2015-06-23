@@ -75,20 +75,6 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
-
-        //Run all the rules one by one, Do Assertions in test cases.
-        //ExcelDataProvider.getDataFromExcel("", "");
-        /*for(int i=0; i< sheetNames.length; i++) {
-            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(Application.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
-            for(HashMap<String, String> testData : dummyList) {
-                executeRule(testData);
-                if((i+1)%5 ==0) {
-                    waitForBatchExecutionToComplete("StatefulBatchHandler");
-                }
-            }
-        }
-        //Waiting for all the rule execution to be completed.
-        waitForBatchExecutionToComplete("StatefulBatchHandler");*/
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
+import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
@@ -58,36 +60,22 @@ public class Rule_Account_Weekly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-      /*sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        createFieldsOnAccount();
-        createExtIdFieldForScoreCards();
-        createFieldsOnUsageData();
+        metaUtil.createFieldsOnAccount(sfdc);
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
+        metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));*/
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
        ruleEngineDataSetup = new RuleEngineDataSetup();
-        /*ruleEngineDataSetup.cleanDataSetup();
+        ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
-        ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);*/
-
-        //Run all the rules one by one, Do Assertions in test cases.
-        //ExcelDataProvider.getDataFromExcel("", "");
-        /*for(int i=0; i< sheetNames.length; i++) {
-            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(Application.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
-            for(HashMap<String, String> testData : dummyList) {
-                executeRule(testData);
-                if((i+1)%5 ==0) {
-                    waitForBatchExecutionToComplete("StatefulBatchHandler");
-                }
-            }
-        }
-        //Waiting for all the rule execution to be completed.
-        waitForBatchExecutionToComplete("StatefulBatchHandler");*/
+        ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, true);
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
