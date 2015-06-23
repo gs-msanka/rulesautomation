@@ -40,7 +40,7 @@ public class AdoptionDataSetup extends BaseTest {
             metaUtil.createExtIdFieldOnAccount(sfdc);
             metaUtil.createFieldsOnUsageData(sfdc);
             sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(MEASURES_FILE)));
-            dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
+            dataLoader.cleanUp("Account", "Name Like 'Adoption Test - Account%'");
         } catch (Exception e) {
             Log.error(e.getLocalizedMessage(), e);
             throw new RuntimeException("Failed to delete accounts related to adoption data");

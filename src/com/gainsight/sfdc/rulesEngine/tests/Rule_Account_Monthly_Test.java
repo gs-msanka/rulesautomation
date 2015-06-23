@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 import org.testng.Assert;
@@ -35,18 +36,18 @@ import com.sforce.ws.ConnectionException;
 public class Rule_Account_Monthly_Test extends BaseTest {
 
 
-    private static final String SET_USAGE_DATA_LEVEL_FILE = env.basedir+"/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Monthly.apex";
-    private static final String SET_USAGE_DATA_MEASURE_FILE = env.basedir+"/testdata/sfdc/rulesEngine/scripts/UsageData_Measures.apex";
+    private static final String SET_USAGE_DATA_LEVEL_FILE = Application.basedir+"/testdata/sfdc/rulesEngine/scripts/Set_Account_Level_Monthly.apex";
+    private static final String SET_USAGE_DATA_MEASURE_FILE = Application.basedir+"/testdata/sfdc/rulesEngine/scripts/UsageData_Measures.apex";
     private static final String USAGE_DATA_FILE         = "/testdata/sfdc/rulesEngine/data/Rules_UsageData_Account.csv";
     private static final String TEST_DATA_FILE          = "testdata/sfdc/rulesEngine/tests/Rule_Account_Monthly_Test.xls";
     private static final String AUTOMATED_RULE_OBJECT   = "JBCXM__AutomatedAlertrules__c";
     private static final String ALERT_CRITERIA_KEY      = "JBCXM__AlertCriteria__c";
     private static final String SCORE_CRITERIA_KEY      = "JBCXM__ScorecardCriteria__c";
-    private static final String NUMERIC_SCHEME_FILE     = env.basedir+"/apex_scripts/scorecard/Scorecard_enable_numeric.apex";
-    private static final String METRICS_CREATE_FILE     = env.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
-    private static final String SCORECARD_CLEAN_FILE    = env.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
-    private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
-    private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
+    private static final String NUMERIC_SCHEME_FILE     = Application.basedir+"/apex_scripts/scorecard/Scorecard_enable_numeric.apex";
+    private static final String METRICS_CREATE_FILE     = Application.basedir+"/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
+    private static final String SCORECARD_CLEAN_FILE    = Application.basedir+"/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private final static String JOB_ACCOUNT_LOAD        = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
+    private final static String JOB_CUSTOMER_LOAD       = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
 
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
@@ -61,7 +62,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         resty.withHeader("Content-Type", "application/json");
         uri = URI.create(sfdcInfo.getEndpoint()+"/services/data/v29.0/sobjects/"+resolveStrNameSpace(AUTOMATED_RULE_OBJECT));
         basepage.login();
-       sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
@@ -72,7 +73,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
-       ruleEngineDataSetup = new RuleEngineDataSetup();
+        ruleEngineDataSetup = new RuleEngineDataSetup();
         ruleEngineDataSetup.cleanDataSetup();
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);

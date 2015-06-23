@@ -269,6 +269,7 @@ public class DataETL implements IJobExecutor {
         if(condition !=null) {
             query = query+" Where "+condition;
         }
+        Log.info("Query : " +query);
         SfdcBulkApi.cleanUp(query);
 	}
 

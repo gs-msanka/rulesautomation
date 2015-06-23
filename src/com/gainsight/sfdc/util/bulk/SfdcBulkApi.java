@@ -37,7 +37,7 @@ public class SfdcBulkApi {
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
     static {
-        sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword(), sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
+        sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+sfdcConfig.getSfdcStoken(), sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         sfdc.connect();
         sfdcInfo = sfdc.fetchSFDCinfo();
         op = new SfdcBulkOperationImpl(sfdcInfo.getSessionId());
@@ -206,7 +206,12 @@ public class SfdcBulkApi {
 
     public static void cleanUp(String query) throws IOException {
         String temp = query.substring(query.toLowerCase().lastIndexOf("from")+4).trim();
-        String sObject = FileUtil.resolveNameSpace(temp.substring(0, temp.indexOf(" ")).trim(), sfdcConfig.getSfdcNameSpace());
+        String sObject;
+        if(temp.indexOf(" ") != -1) {
+            sObject = FileUtil.resolveNameSpace(temp.substring(0, temp.indexOf(" ")).trim(), sfdcConfig.getSfdcNameSpace());
+        } else {
+            sObject = temp;
+        }
 
         int recordCount = sfdc.getRecordCount(query);
         Log.info("Count of Records : " + recordCount);
