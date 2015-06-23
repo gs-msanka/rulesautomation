@@ -721,7 +721,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	   
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
-	   public void createAndCloseCTA_ClosedLostStatus(HashMap<String,String> testData) throws IOException{
+	   public void createAndCloseCTA_ClosedRiskStatus(HashMap<String,String> testData) throws IOException{
 	       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
 	       Customer360Page customer360Page = basepage.clickOnC360Tab().searchCustomer(cta.getCustomer(), false, false);
 		    Workflow360Page workflow360 = customer360Page.goToCockpitSection();
@@ -731,7 +731,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
 	       workflow360.updateCTAStatus_toClosedLost(cta);
 	       cta.setClosed(true);
-	       cta.setStatus("Closed Lost");
+	       cta.setStatus("Closed Risk");
 	       
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -766,7 +766,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	    	   }
 	       workflow360.closeCTA(cta, true);
 	       cta.setClosed(true);
-	       cta.setStatus("Closed Won");
+	       cta.setStatus("Closed Success");
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
 	       //Assert.assertFalse(workflowPage.isCTADisplayed(cta));
@@ -812,11 +812,11 @@ public class Workflow360Tests extends WorkflowSetup{
 	       workflow360.createCTA(cta);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       workflow360.closeCTA(cta, false);
-	       cta.setStatus("Closed Won");
+	       cta.setStatus("Closed Success");
 	       cta.setClosed(true);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       workflow360.openCTA(cta, false, null);
-	       cta.setStatus("Open");
+	       cta.setStatus("New");
 	       cta.setClosed(false);
 	       Assert.assertTrue(workflow360.isCTADisplayed(cta));
 	       Assert.assertTrue(workflow360.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
