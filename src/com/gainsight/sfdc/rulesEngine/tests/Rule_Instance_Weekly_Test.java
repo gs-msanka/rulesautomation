@@ -47,7 +47,6 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
     private final static String JOB_ACCOUNT_LOAD        = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
     private final static String JOB_CUSTOMER_LOAD       = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
 
-    private static SFDCInfo sfdcInfo = sfdc.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
     private Resty resty;
@@ -68,7 +67,7 @@ public class Rule_Instance_Weekly_Test extends BaseTest {
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
-        metaUtil.createFieldsOnAccount(sfdc, BaseTest.sfdcInfo);
+        metaUtil.createFieldsOnAccount(sfdc, sfdcInfo);
         metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORE_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);

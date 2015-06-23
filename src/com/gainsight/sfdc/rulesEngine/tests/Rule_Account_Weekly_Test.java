@@ -42,8 +42,6 @@ public class Rule_Account_Weekly_Test extends BaseTest {
     private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
     private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
 
-
-    public static SFDCInfo sfdcInfo = sfdc.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
     public Resty resty;

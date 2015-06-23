@@ -53,7 +53,6 @@ public class Rule_Survey_Test extends SurveySetup {
 	public void setUp() {
 		Log.info("Starting Survey Creation");
 		sfdc.connect();
-        sfdcInfo = sfdc.fetchSFDCinfo();
 		basepage.login();
 		SurveySiteCofiguration ss=new SurveySiteCofiguration();
 		ss.navigateToSetup();
