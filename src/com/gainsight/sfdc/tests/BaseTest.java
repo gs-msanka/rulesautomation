@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.util.PackageUtil;
 
 import com.gainsight.util.SfdcConfig;
@@ -30,7 +31,7 @@ public class BaseTest {
 	protected static BasePage basepage;
 	
 	public static SalesforceConnector sfdc;
-    public static SFDCInfo sfinfo;
+    public static SFDCInfo sfdcInfo;
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static TimeZone userTimezone;
@@ -70,10 +71,10 @@ public class BaseTest {
         }
 
         packageUtil.deployPermissionSetCode();
-        sfinfo = sfdc.fetchSFDCinfo();
+        sfdcInfo = sfdc.fetchSFDCinfo();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
-        USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+        USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
+        userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
         DateUtil.timeZone =  userTimezone;
         Log.info("Initializing Selenium Environment");
         env.start();

@@ -1,7 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -16,7 +15,6 @@ import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.testdriver.Application;
-import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 
@@ -108,7 +106,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 		Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(),
 				"Verifying Survey Status After Publishing");
 		publishPage.sendTestEmail(testData.get("Recipients").split(","),
-				sfinfo.getUserFullName());
+				sfdcInfo.getUserFullName());
 		Assert.assertEquals(publishPage.getTestEmailSuccessMsg(),
 				"Test emails sent successfully.");
 		publishPage.closeTestEmailDialog();

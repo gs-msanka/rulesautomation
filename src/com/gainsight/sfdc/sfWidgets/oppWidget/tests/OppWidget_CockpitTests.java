@@ -57,7 +57,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		 	SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 	        OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 	        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-	        cta.setAssignee(sfinfo.getUserFullName());
+	        cta.setAssignee(sfdcInfo.getUserFullName());
 	        cta.setFromCustomer360orWidgets(true);
 	        oppWfPage.createCTA(cta);
 	        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created");
@@ -70,7 +70,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created");
 		    }
@@ -82,7 +82,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		    	SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 				OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
 		    }
@@ -99,7 +99,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        List<String> dates = getDates(recurEvent);
 		        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
 		        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName()); 
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
 		        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -118,7 +118,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        List<String> dates = getDates(recurEvent);
 		        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
 		        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
 		        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -136,7 +136,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        CTA.EventRecurring recurEvent=cta.getEventRecurring();
 		        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
 		        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
 		        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -155,7 +155,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        List<String> dates = getDates(recurEvent);
 		        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
 		        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
 		        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -173,7 +173,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        CTA.EventRecurring recurEvent=cta.getEventRecurring();
 		        recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
 		        recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -190,7 +190,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        int temp = Integer.valueOf(cta.getDueDate());
 		        cta.setDueDate(getDateWithFormat(temp, 0, false));
 		        CTA.EventRecurring recurEvent=cta.getEventRecurring();
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setDueDate(getDateWithFormat(temp, 0, true));
 		        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -206,7 +206,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        int temp = Integer.valueOf(cta.getDueDate());
 		       cta.setDueDate(getDateWithFormat(temp, 0, false));
 		       CTA.EventRecurring recurEvent=cta.getEventRecurring();
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);
 		       cta.setDueDate(getDateWithFormat(temp, 0, true));
 		       Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -220,14 +220,14 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			    SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 			    cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 
 		       	oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        }
@@ -244,14 +244,14 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 
 		       	oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        }
@@ -268,13 +268,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        }
@@ -291,13 +291,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	}
@@ -313,13 +313,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
 		        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		        	task.setFromCustomer360orWidgets(true);
@@ -337,7 +337,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
 		        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -345,7 +345,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       int i=0;
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		        	task.setAssignee(users[i]); if(++i >=5) i=0;
@@ -365,13 +365,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);    
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
 		        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		            task.setFromCustomer360orWidgets(true);
@@ -387,7 +387,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
 		       for(Task task : updatedTasks) {
 		          	if(task.getAssignee()==null) {
-		                task.setAssignee(sfinfo.getUserFullName());
+		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
 		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		            task.setFromCustomer360orWidgets(true);
@@ -412,12 +412,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		            task.setFromCustomer360orWidgets(true);
 		        	}
@@ -435,12 +435,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);    
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		            task.setFromCustomer360orWidgets(true);
 		        	}
@@ -454,7 +454,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       //Replacing Playbook and verifying updated tasks
 		       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
 		       for(Task task : updatedTasks) {
-		          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		          	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		           task.setFromCustomer360orWidgets(true);
 		          	}
@@ -477,12 +477,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		       for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		            task.setFromCustomer360orWidgets(true);
 		        	}
@@ -500,12 +500,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);    
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		       for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		           task.setFromCustomer360orWidgets(true);
 		        	}
@@ -518,7 +518,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       //Replacing Playbook and verifying updated tasks
 		       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
 		       for(Task task : updatedTasks) {
-		          	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		          	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
 		           task.setFromCustomer360orWidgets(true);
 		          	}
@@ -537,7 +537,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		      oppWfPage.createMilestoneForCTA(cta);
@@ -556,7 +556,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		      oppWfPage.createMilestoneForCTA(cta);
@@ -575,7 +575,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 
 		      cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		      cta.setAssignee(sfinfo.getUserFullName());
+		      cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      oppWfPage.createMilestoneForCTA(cta);
 		      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
@@ -593,7 +593,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		      oppWfPage.createMilestoneForCTA(cta);
@@ -618,7 +618,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		      oppWfPage.createMilestoneForCTA(cta);
@@ -645,7 +645,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 
 		      cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		      cta.setAssignee(sfinfo.getUserFullName());
+		      cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      oppWfPage.createMilestoneForCTA(cta);
 		      String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
@@ -671,7 +671,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
 		       cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       oppWfPage.snoozeCTA(cta);
@@ -689,7 +689,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       oppWfPage = oppWfPage.flagCTA(cta);
@@ -704,7 +704,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		         SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			     OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 			     cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);     
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       oppWfPage.closeCTA(cta, false);
@@ -725,7 +725,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);     
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		       oppWfPage.updateCTAStatus_toClosedLost(cta);
@@ -746,12 +746,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
@@ -782,12 +782,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
@@ -808,7 +808,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			  SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta));
 		       oppWfPage.closeCTA(cta, false);
@@ -829,13 +829,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta); 
 		      
 		      CTA updatedCta=mapper.readValue(testData.get("UpdatedCTA"), CTA.class);
 		      OppWidget_CockpitPage  oppWfPage_2=basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		      if(updatedCta.getAssignee()==null)
-		    	  updatedCta.setAssignee(sfinfo.getUserFullName());
+		    	  updatedCta.setAssignee(sfdcInfo.getUserFullName());
 		      updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0, false));
 		      oppWfPage_2.updateCTADetails(cta, updatedCta);
 		      Assert.assertTrue(oppWfPage_2.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
@@ -849,7 +849,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta); 
 		      
 		       oppWfPage.deleteCTA(cta);
@@ -865,13 +865,13 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
@@ -893,12 +893,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		      
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
@@ -908,7 +908,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		           Assert.assertTrue(oppWfPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
 		       
 		       Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
-		       updatedTask.setAssignee(sfinfo.getUserFullName());
+		       updatedTask.setAssignee(sfdcInfo.getUserFullName());
 		       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0, false));
 		       oppWfPage.updateTaskDetails(tasks.get(0), updatedTask);  //assuming that we are taking only one task for updation
 		       Assert.assertTrue(oppWfPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
@@ -923,12 +923,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 			    OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		       cta.setAssignee(sfinfo.getUserFullName());
+		       cta.setAssignee(sfdcInfo.getUserFullName());
 		       oppWfPage.createCTA(cta);      
 		       Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for(Task task : tasks) {
-		        	if(task.getAssignee()==null) task.setAssignee(sfinfo.getUserFullName());
+		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
 		        	task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()),0, false));
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
@@ -938,7 +938,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		           Assert.assertTrue(oppWfPage.isTaskDisplayed(task),"Verifying the task -\""+task.getSubject()+"\" created for Risk CTA");
 		       
 		       Task updatedTask=mapper.readValue(testData.get("updatedTask"),Task.class);
-		       updatedTask.setAssignee(sfinfo.getUserFullName());
+		       updatedTask.setAssignee(sfdcInfo.getUserFullName());
 		       updatedTask.setDate(getDateWithFormat(Integer.valueOf(updatedTask.getDate()),0, false));
 		       oppWfPage.editTasks(cta, updatedTask,tasks.get(0));
 		       Assert.assertTrue(oppWfPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
@@ -955,12 +955,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -983,12 +983,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        	        
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -1016,12 +1016,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        	        
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -1047,12 +1047,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        SObject[] oppId=sfdc.getRecords("select id from Opportunity where AccountId  in (select id from Account where Name='"+cta.getCustomer()+"')");
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -1077,12 +1077,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		             
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -1112,12 +1112,12 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		     
 		        
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
 		        ArrayList<Task> tasks = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
 		        for (Task task : tasks) {
-		            if (task.getAssignee() == null) task.setAssignee(sfinfo.getUserFullName());
+		            if (task.getAssignee() == null) task.setAssignee(sfdcInfo.getUserFullName());
 		            task.setDate(getDateWithFormat(Integer.valueOf(task.getDate()), 0, false));
 		            task.setFromCustomer360orWidgets(true);
 		        }
@@ -1143,7 +1143,7 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 				 OppWidget_CockpitPage oppWfPage = basepage.gotoOpportunityPageWithId(oppId[0].getId()).switchToOppCSWidget().gotoCockpitSubTab();
 		     
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
-		        cta.setAssignee(sfinfo.getUserFullName());
+		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        oppWfPage.createCTA(cta);
 		        cta.setOverDue(true);
 		        Assert.assertTrue(oppWfPage.isOverDueCTADisplayed(cta), "Verifying risk CTA is created - which is overdue");

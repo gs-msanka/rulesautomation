@@ -7,7 +7,7 @@ import com.gainsight.util.PropertyReader;
  */
 public interface NSURLs {
 
-    String NS_URL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion;
-    String NS_ADMIN_URL = PropertyReader.nsAdminUrl+"/"+PropertyReader.nsApiVersion;
+    public String NS_URL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion;
+    public String NS_ADMIN_URL = PropertyReader.nsAdminUrl+"/"+PropertyReader.nsApiVersion;
 
 }

@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Log;
@@ -31,7 +32,6 @@ import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.sforce.soap.partner.DescribeSObjectResult;

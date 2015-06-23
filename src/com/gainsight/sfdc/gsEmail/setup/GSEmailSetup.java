@@ -10,9 +10,8 @@ import com.gainsight.http.WebAction;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.MongoUtil;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.mongodb.ServerAddress;
@@ -39,7 +38,7 @@ public class GSEmailSetup extends BaseTest {
 			integ.clickOnEnableGSMDP();
 			Timer.sleep(2);
 			Timer.sleep(2);
-			integ.clickOnAuthorize();
+			integ.authorizeMDA();
 			return integ;
 		} catch (ElementNotFoundException ex) {
 			ex.printStackTrace();
@@ -54,7 +53,7 @@ public class GSEmailSetup extends BaseTest {
 
 	public boolean validateOAuthEnabled() {
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
@@ -102,7 +101,7 @@ public class GSEmailSetup extends BaseTest {
 /*		sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir
 				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));*/ /*Commented for now as the script doesn't exists*/
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
@@ -168,7 +167,7 @@ public class GSEmailSetup extends BaseTest {
 
 		// send test email to contact : /api/email/template
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();

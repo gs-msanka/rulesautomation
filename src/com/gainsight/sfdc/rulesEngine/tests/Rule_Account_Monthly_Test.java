@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.HashMap;
 
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
 
 import org.testng.Assert;
@@ -20,8 +21,6 @@ import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
@@ -50,8 +49,6 @@ public class Rule_Account_Monthly_Test extends BaseTest {
     private final static String JOB_ACCOUNT_LOAD        = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
     private final static String JOB_CUSTOMER_LOAD       = env.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
 
-
-    private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
     private Resty resty;
@@ -71,7 +68,7 @@ public class Rule_Account_Monthly_Test extends BaseTest {
         as.enableScorecard();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         metaUtil.createFieldsOnUsageData(sfdc);
-        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
+        metaUtil.createFieldsOnAccount(sfdc, BaseTest.sfdcInfo);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));

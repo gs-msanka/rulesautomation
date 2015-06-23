@@ -1,26 +1,19 @@
 package com.gainsight.sfdc.survey.tests;
 
-import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.WebElement;
-import org.stringtemplate.v4.compiler.STParser.element_return;
 import org.testng.Assert;
 
-import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
-import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -28,8 +21,6 @@ public class SurveySetup extends BaseTest {
 	
 	private final static String PICK_LIST_QUERY  = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
 	private final static String CTA_TYPES_QUERY  = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
-	private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
-	private RuleEngineDataSetup ruleEngineDataSetup;
 	private static HashMap<String, String> suveyQus;
 	private static HashMap<String, String> ctaTypesMap;
 	private static HashMap<String, String> PickListMap;
@@ -250,7 +241,7 @@ public class SurveySetup extends BaseTest {
         metadataClient.createTextFields("EmailCustomObjct__c", TextField, false, false,true, false, false);
         metadataClient.createEmailField("EmailCustomObjct__c", Email);
         metadataClient.createLookupField("EmailCustomObjct__c", LookupFieldName, Reference );
-        metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
+        metaUtil.createExtIdFieldForCustomObject(sfdc, sfdcInfo);
     }
     
     public int GetRecordCountFromContactObject(){
