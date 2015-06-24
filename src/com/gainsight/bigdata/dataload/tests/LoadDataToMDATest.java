@@ -308,7 +308,7 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.close();
 
         DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        metadata.setCollectionName(collectionName);
 
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
         dataLoadManager.waitForDataLoadJobComplete(jobId);
@@ -337,7 +337,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertEquals(0, diffData.size());
 
         DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        metadata.setCollectionName(collectionName);
 
         String tempFilePath = Application.basedir + "/resources/datagen/process/GS-3857.csv";
 
