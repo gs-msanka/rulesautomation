@@ -136,8 +136,8 @@ public class ReportManager extends NSTestBase {
         if(keyToUpdate.size()>0) {
            for(Map<String, String> data : dataList ) {
                for(String key : keyToUpdate) {
-                   if(data.containsKey(key)) {
-                       data.put(key, String.valueOf(data.get(key)==null || data.get(key)=="" ? false : Boolean.valueOf(data.get(key))));
+                   if(data.containsKey(key) && data.get(key)!= null && !data.get(key).equals("") && !data.get(key).isEmpty()) {
+                       data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
                    }
                }
            }

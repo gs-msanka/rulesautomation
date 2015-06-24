@@ -1,6 +1,7 @@
 package com.gainsight.bigdata;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -53,6 +54,7 @@ public class NSTestBase {
     MetadataConnection metadataConnection;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
+    public Calendar calendar = Calendar.getInstance();
 
     @BeforeSuite
     public void init() throws Exception {
