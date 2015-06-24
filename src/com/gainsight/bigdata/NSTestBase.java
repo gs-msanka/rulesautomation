@@ -18,6 +18,7 @@ import com.sforce.soap.metadata.MetadataConnection;
 import org.apache.http.HttpStatus;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 
 import com.gainsight.http.ResponseObj;
@@ -63,7 +64,7 @@ public class NSTestBase {
         //Initializing SFDC Connection
         sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
-        sfdc.connect();
+        Assert.assertTrue(sfdc.connect(), "Failed to Login, check your credentials.");
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         sfinfo = sfdc.fetchSFDCinfo();
 
