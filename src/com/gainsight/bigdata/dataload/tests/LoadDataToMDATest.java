@@ -454,7 +454,8 @@ public class LoadDataToMDATest extends NSTestBase {
         CSVReader expectedReader = new CSVReader(new FileReader(expectedDataFile));
 
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
-        expectedData = reportManager.populateDefaultBooleanValue(expectedData, collectionInfo);
+        //Implementation changed as default boolean value population approached is removed.
+        //expectedData = reportManager.populateDefaultBooleanValue(expectedData, collectionInfo);
         DataLoadManager.trimStringDataColumns(expectedData, collectionInfo);
 
         Log.info("Expected Data : " + mapper.writeValueAsString(expectedData));
