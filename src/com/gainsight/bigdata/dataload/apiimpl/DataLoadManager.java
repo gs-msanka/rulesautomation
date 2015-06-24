@@ -448,7 +448,7 @@ public class DataLoadManager extends NSTestBase {
         String jobId = null;
         try {
             headers.removeHeader("Content-Type");
-            System.out.println(mapper.writeValueAsString(metadata));
+            Log.info(mapper.writeValueAsString(metadata));
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             StringBody value = new StringBody(mapper.writeValueAsString(metadata), ContentType.APPLICATION_JSON);
             builder.addPart("metadata", value);

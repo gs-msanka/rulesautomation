@@ -54,7 +54,6 @@ public class NSTestBase {
     MetadataConnection metadataConnection;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
-    public Calendar calendar = Calendar.getInstance();
 
     @BeforeSuite
     public void init() throws Exception {
