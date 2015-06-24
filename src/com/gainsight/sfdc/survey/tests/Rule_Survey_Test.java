@@ -29,8 +29,6 @@ import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.survey.pojo.SurveyResponseAns;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -48,7 +46,6 @@ public class Rule_Survey_Test extends SurveySetup {
 	private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
     private String SURVEY_ID = null;
-    private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private ObjectMapper mapper = new ObjectMapper();
     
 
@@ -250,7 +247,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyPage s = new SurveyPage();
 		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
 		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
-		cta.setAssignee(sfinfo.getUserFullName());
+		cta.setAssignee(sfdcInfo.getUserFullName());
 		SurveyCTARule surveyCTARule = mapper.readValue(
 				testData.get("SurveyCTARule"), SurveyCTARule.class);
 		surveyCTARule.setCta(cta);
@@ -272,7 +269,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
 				SurveyProperties.class);
-		surProp.setDefaultAddress(sfinfo.getUserFullName());
+		surProp.setDefaultAddress(sfdcInfo.getUserFullName());
 		SurveyPage surveyPage = surveyBasePage.createSurvey(surProp, true);
 		setSurveyId(surProp);
 		SurveyQuestionPage surveyQuestionPage = surveyPage
@@ -316,7 +313,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyPage s = new SurveyPage();
 		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
 		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
-		cta.setAssignee(sfinfo.getUserFullName());
+		cta.setAssignee(sfdcInfo.getUserFullName());
 		SurveyCTARule surveyCTARule = mapper.readValue(
 				testData.get("SurveyCTARule"), SurveyCTARule.class);
 		surveyCTARule.setCta(cta);
@@ -353,7 +350,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyPage s = new SurveyPage();
 		SurveySetCTAPage surveySetCTAPage = s.clickOnSetCta(surProp);
 		CTA cta = mapper.readValue(testData.get("cta"), CTA.class);
-		cta.setAssignee(sfinfo.getUserFullName());
+		cta.setAssignee(sfdcInfo.getUserFullName());
 		SurveyCTARule surveyCTARule = mapper.readValue(
 				testData.get("CTAAdvanceLogic"), SurveyCTARule.class);
 		surveyCTARule.setCta(cta);

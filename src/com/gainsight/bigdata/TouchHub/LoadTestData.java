@@ -129,7 +129,7 @@ public class LoadTestData extends NSTestBase{
 		URL.add("p_c_URL");
 		objField.setURLs(URL);
 		
-		md.createFieldsOnObject(sfdc, sfinfo, "JBCXM__CustomerInfo__c", objField);
+		md.createFieldsOnObject(sfdc, "JBCXM__CustomerInfo__c", objField);
 		
 	}
 	

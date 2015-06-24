@@ -9,7 +9,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
@@ -25,7 +24,6 @@ public class SurveyPropertiesTest extends SurveySetup{
 	private final String TEST_DATA_FILE = "testdata/sfdc/survey/tests/SurveyProperties_Test.xls";
 	private final String SURVEYDATA_CLEANUP = "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
 	private final String CREATE_ACCS=env.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_For_CompleteAnonymousSurvey.txt";
-	public SFDCInfo sfinfo;
 	ObjectMapper mapper = new ObjectMapper();
 	GSEmailSetup gs=new GSEmailSetup();
 	NSTestBase ns=new NSTestBase();

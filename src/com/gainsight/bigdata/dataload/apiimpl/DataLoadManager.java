@@ -115,8 +115,8 @@ public class DataLoadManager extends NSTestBase {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             }
         } catch (Exception e) {
-            Log.error("Failed to created subject area", e);
-            throw new RuntimeException("Failed to created subject area" + e.getLocalizedMessage());
+            Log.error("Failed to create subject area ", e);
+            throw new RuntimeException("Failed to create subject area " + e.getLocalizedMessage());
         }
         Log.info("Returning after subject create.");
         return nsResponseObj;

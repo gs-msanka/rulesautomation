@@ -3,20 +3,14 @@ package com.gainsight.bigdata.rulesengine;
 import java.util.HashMap;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Application;
-import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
-import com.sforce.soap.partner.sobject.SObject;
 
 public class CreateCTA extends RulesUtil {
 
@@ -175,7 +169,7 @@ public class CreateCTA extends RulesUtil {
 		metadataClient.deleteFields("Account", FieldsToDelete);
 		metadataClient.deleteFields("Account", FieldsToDelete1);
 		// Create Custom Fields
-		metaUtil.createFieldsOnAccount(sfdc, sfinfo);
+		metaUtil.createFieldsOnAccount(sfdc);
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateOwnerField));
 		// Assign value to Custom

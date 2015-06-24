@@ -19,8 +19,6 @@ import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.ws.ConnectionException;
@@ -46,7 +44,6 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
     private final static String JOB_ACCOUNT_LOAD        = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Accounts.txt";
     private final static String JOB_CUSTOMER_LOAD       = Application.basedir + "/testdata/sfdc/rulesEngine/jobs/Job_Customers.txt";
 
-    private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
     private RuleEngineDataSetup ruleEngineDataSetup;
     private DataETL dataETL;
     private Resty resty;
@@ -66,7 +63,7 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         AdministrationBasePage adm = basepage.clickOnAdminTab();
         AdminScorecardSection as = adm.clickOnScorecardSection();
         as.enableScorecard();
-        metaUtil.createFieldsOnAccount(sfdc,sfinfo);
+        metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
@@ -78,20 +75,6 @@ public class Rule_Instance_Monthly_Test extends BaseTest {
         dataETL = new DataETL();
         ruleEngineDataSetup.loadAccountsAndCustomers(dataETL, JOB_ACCOUNT_LOAD, JOB_CUSTOMER_LOAD);
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
-
-        //Run all the rules one by one, Do Assertions in test cases.
-        //ExcelDataProvider.getDataFromExcel("", "");
-        /*for(int i=0; i< sheetNames.length; i++) {
-            List<HashMap<String, String>> dummyList = ExcelDataProvider.getDataFromExcel(Application.basedir + "/" + TEST_DATA_FILE, sheetNames[i]);
-            for(HashMap<String, String> testData : dummyList) {
-                executeRule(testData);
-                if((i+1)%5 ==0) {
-                    waitForBatchExecutionToComplete("StatefulBatchHandler");
-                }
-            }
-        }
-        //Waiting for all the rule execution to be completed.
-        waitForBatchExecutionToComplete("StatefulBatchHandler");*/
     }
 
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")

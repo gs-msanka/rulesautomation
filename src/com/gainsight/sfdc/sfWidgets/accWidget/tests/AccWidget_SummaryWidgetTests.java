@@ -8,9 +8,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.customer360.pages.Customer360SummaryWidget;
-import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccWidget_FeaturesPage;
 import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccWidget_SummaryWidgetPage;
 import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccountPage;
 import com.gainsight.sfdc.tests.BaseTest;
@@ -37,7 +34,7 @@ public void setUp() throws Exception {
     metadataClient.createCurrencyField("Account", new String[]{"CurrencyField"});
     metadataClient.createNumberField("Account", new String[]{"AccPercentage"}, true);
     String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive", "CurrencyField", "AccPercentage"};
-     metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(addFieldsPerm),sfinfo);
+     metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(addFieldsPerm), sfdcInfo);
 
     metadataClient.createNumberField("JBCXM__CustomerInfo__c", new String[]{"CustPercentage"}, true);
     HashMap<String, String[]> fields = new HashMap<String, String[]>();
@@ -46,7 +43,7 @@ public void setUp() throws Exception {
     metadataClient.createCurrencyField("JBCXM__CustomerInfo__c", new String[]{"CurrencyField"});
     metadataClient.createFields("JBCXM__CustomerInfo__c", new String[]{"IsActive"}, true, false, false);
     String[] addCustFields = new String[]{"CustPercentage", "InRegions", "CurrencyField","IsActive"};
-   metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace("JBCXM__CustomerInfo__c"), metaUtil.convertFieldNameToAPIName(addCustFields),sfinfo);
+   metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace("JBCXM__CustomerInfo__c"), metaUtil.convertFieldNameToAPIName(addCustFields), sfdcInfo);
    
    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCNT_CASES_SCRIPT));
    sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_SUMMARY_WIDGET1)); 

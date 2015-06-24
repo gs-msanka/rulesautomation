@@ -44,7 +44,6 @@ public class LoadDataToMDATest extends NSTestBase {
 
     @BeforeClass
     public void setup() {
-        tenantManager.deleteTenant(sfinfo.getOrg(), null);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
@@ -54,7 +53,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
     public void insertCommaSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -67,7 +66,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
     public void insertCommaSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -80,7 +79,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
     public void insertSpaceSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -93,7 +92,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
     public void insertSpaceSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -106,7 +105,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
     public void insertTabSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -119,7 +118,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
     public void insertTabSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -132,7 +131,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
     public void insertSemiColonSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -145,7 +144,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T9")
     public void insertSemiColonSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -159,7 +158,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
     public void loadDataWithExtraFieldCreatedFromTenantManagement(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName")+"1";
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -197,7 +196,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
     public void loadDataWithJavaScriptAndHtmlCode(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -215,7 +214,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T12")
     public void loadDataWithNoColumnInformation(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -228,7 +227,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T13")
     public void deleteAllCollectionData(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -251,7 +250,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T14")
     public void deleteCollectionDataWithDateField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -285,7 +284,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
     public void deleteCollectionDataWithDateAccountField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
@@ -356,7 +355,7 @@ public class LoadDataToMDATest extends NSTestBase {
      * @throws IOException
      */
     private void dataInsertAndUpdate(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+calendar.getTimeInMillis();;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);

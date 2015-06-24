@@ -114,7 +114,7 @@ public class NSTestBase {
      */
     public String getTenantAuthToken() {
         if (accessKey == null || sfinfo == null || sfinfo.getUserName() == null) {
-            throw new RuntimeException("Access Key , sfinfo details are mandatory.");
+            throw new RuntimeException("Access Key , sfdcInfo details are mandatory.");
         }
         header.addHeader("accessKey", accessKey);
         header.addHeader("loginName", sfinfo.getUserName());

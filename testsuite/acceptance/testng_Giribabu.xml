@@ -5,27 +5,24 @@
         <listener class-name="com.gainsight.utils.AutTestListener" />
     </listeners>
 
-    <test verbose="3" name="360 AccountAttributes360 Test" preserve-order="true">
+    <test verbose="3" name="Adoption_Account_Monthly_Test" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
         </classes>
     </test>
-
-    <test verbose="3" name="360 RelatedList Tests" preserve-order="true">
+    <test verbose="3" name="Adoption_Account_Weekly_Test" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
         </classes>
     </test>
-
-    <test verbose="3" name="360 UsageTracker360 Tests" preserve-order="true">
+    <test verbose="3" name="Adoption_Instance_Monthly_Test" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
         </classes>
     </test>
-
-    <test verbose="3" name="Customers Tab Tests" preserve-order="true">
+    <test verbose="3" name="Adoption_Instance_Weekly_Test" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
         </classes>
     </test>
 

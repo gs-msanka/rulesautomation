@@ -1,12 +1,12 @@
 package com.gainsight.sfdc.survey.tests;
 
-import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.testdriver.Application;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -16,7 +16,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.stringtemplate.v4.compiler.STParser.element_return;
 import org.testng.Assert;
 
-import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
@@ -25,9 +24,6 @@ import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.sforce.soap.partner.sobject.SObject;
 
@@ -35,8 +31,6 @@ public class SurveySetup extends BaseTest {
 	
 	private final static String PICK_LIST_QUERY  = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
 	private final static String CTA_TYPES_QUERY  = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
-	private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
-	private RuleEngineDataSetup ruleEngineDataSetup;
 	private static HashMap<String, String> suveyQus;
 	private static HashMap<String, String> ctaTypesMap;
 	private static HashMap<String, String> PickListMap;
@@ -281,7 +275,7 @@ public class SurveySetup extends BaseTest {
 		System.out.println("setting ns url in app settings");
 		sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
-				+ "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
+                + "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
 		Log.info("NS URL Updated Successfully");
 	}
 
