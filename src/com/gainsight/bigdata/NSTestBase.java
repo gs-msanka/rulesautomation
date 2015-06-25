@@ -1,5 +1,6 @@
 package com.gainsight.bigdata;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
+import com.gainsight.sfdc.util.PackageUtil;
 import com.gainsight.util.ConfigLoader;
 import com.gainsight.util.SfdcConfig;
 import com.sforce.soap.metadata.MetadataConnection;
@@ -51,9 +53,9 @@ public class NSTestBase {
     public static String accessKey;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    MetadataConnection metadataConnection;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
+    public static PackageUtil packageUtil;
 
     @BeforeSuite
     public void init() throws Exception {
@@ -79,6 +81,24 @@ public class NSTestBase {
         //Assert.assertTrue(tenantAutoProvision());
         //accessKey = getDataLoadAccessKey();
 
+        packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
+        //Uninstall Application.
+        if(Boolean.valueOf(sfdcConfig.getSfdcUnInstallApp())) {
+            packageUtil.unInstallApplication();
+        }
+        //Install Application.
+        if(Boolean.valueOf(sfdcConfig.getSfdcInstallApp())) {
+            packageUtil.installApplication(sfdcConfig.getSfdcPackageVersionNumber(), sfdcConfig.getSfdcPackagePassword());
+        }
+        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
+        if(isPackage) {
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+        }
+
+        if(Boolean.valueOf(sfdcConfig.getSfdcUpdateWidgetLayouts())) {
+            packageUtil.updateWidgetLayouts(true, true, true);
+        }
+        packageUtil.deployPermissionSetCode();
     }
 
     /**
