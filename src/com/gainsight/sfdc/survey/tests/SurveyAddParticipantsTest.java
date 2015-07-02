@@ -24,7 +24,7 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 
 	private final String CREATE_ACCS=env.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS=env.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
-	private final String TEST_DATA_FILE         = "testdata/sfdc/Survey/tests/surveytestdata.xls";
+	private final String TEST_DATA_FILE         = "testdata/sfdc/survey/tests/surveytestdata.xls";
 	private final String SURVEYDATA_CLEANUP= "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
 	private final String CUSTOM_OBJECT_CLEANUP ="Delete [SELECT Id FROM EmailCustomObjct__c];";
 	ObjectMapper mapper = new ObjectMapper();
