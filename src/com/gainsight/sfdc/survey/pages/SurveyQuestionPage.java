@@ -117,6 +117,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     public WebElement getPageElement(SurveyQuestion surveyQuestion) {
+    	env.setTimeout(30);	
         WebElement surQuestionsPageEle = element.getElement(String.format(PAGE_BLOCK, surveyQuestion.getPageId(), surveyQuestion.getPageId()));
         return surQuestionsPageEle;
     }
