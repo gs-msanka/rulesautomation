@@ -8,9 +8,12 @@
 <test name="abhilash test" preserve-order="true">
 <classes>
 
-<class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests" />
-
-
+<class name="com.gainsight.sfdc.survey.tests.Rule_Survey_Test" />
+ <methods>
+              <include name="testAdvanceLogic" />
+              <include name="testDeleteCTA" />
+              <include name="testSetCTA" />
+ </methods>
 </classes>
 </test>
 </suite>
