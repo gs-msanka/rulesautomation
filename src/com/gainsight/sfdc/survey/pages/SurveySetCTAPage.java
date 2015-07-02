@@ -4,6 +4,7 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.workflow.pojos.CTA;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -11,8 +12,12 @@ import org.openqa.selenium.WebElement;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyRuleProperties;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +53,7 @@ public class SurveySetCTAPage extends SurveyPage {
     private final String SET_CTA_COMMENTS       = ".//div[@class='form-control alertComment']";
 
     //Save Rule
-    private final String SAVE_RULE      = ".//input[@class='gs-btn btn-save save-editmode' and @value='Save']";
+    private final String SAVE_RULE      = "//input[@class='gs-btn btn-save save-editmode' and @value='Save']";
     private final String CANCEL_RULE    = ".//input[@class='gs-btn btn-cancel cancel-editmode' and @value='Cancel']";
 
     //Question And Answers Area
@@ -128,6 +133,9 @@ public class SurveySetCTAPage extends SurveyPage {
         ruleEle.findElement(By.xpath(SET_CTA_SECTION_HEADER)).click();
         ruleEle.findElement(By.xpath(SET_CTA_PRIORITY_DD)).click();
         selectValueInDropDown(cta.getPriority());
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", element.getElement(SAVE_RULE)); 
+   // 	Timer.sleep(10);
+        Log.info("scrolled");
         ruleEle.findElement(By.xpath(SET_CTA_STATUS_DD)).click();
         selectValueInDropDown(cta.getStatus());
         ruleEle.findElement(By.xpath(SET_CTA_REASON_DD)).click();
