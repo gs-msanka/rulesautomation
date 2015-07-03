@@ -1403,6 +1403,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(EDIT_OPTIONS_ICON);
 		item.click(DELINK_ICON);
 		item.click(DELINK_CONFIRMATION_DILOG);
+		wait.waitTillElementNotDisplayed("//div[@class='gs-section-loader']", MIN_TIME, MAX_TIME);
 		return this;
 	}
 

@@ -1,8 +1,8 @@
 List<JBCXM__Playbook__c> defaultPlayBookList = new List<JBCXM__Playbook__c>();
     JBCXM__Playbook__c p1 = new JBCXM__Playbook__c();
-    p1.Name = 'Drop in Usage';
+    p1.Name = 'Collections';
     p1.JBCXM__PlayBookType__c = 'Risk';
-    p1.JBCXM__Tasks_Count__c = 4;
+    p1.JBCXM__Tasks_Count__c = 6;
 
 defaultPlayBookList.add(p1);
 
@@ -50,12 +50,14 @@ JBCXM__Playbook__c p8 = new JBCXM__Playbook__c();
 defaultPlayBookList.add(p8);
 insert 	defaultPlayBookList;
 
-List<String> taskList = new List<String>{'Check Adoption usage and analytics',
-								'Schedule call with Admin and/or Power User to identify reason for drop',
-								'Schedule best practices training',
-								'Update Product and Sales Teams with customer feedback'};
-List<String> priority = new List<String>{ 'High', 'High','Medium', 'Medium'};
-List<Integer> days = new List<Integer>{3, 7, 10, 10};
+List<String> taskList = new List<String>{'Check with Finance on T&C's',
+								'Check 360 View for usage, latest NPS score, & open cases',
+								'Reach out to customer regarding delay',
+								'Escalate to Business Owner/Exec Sponsor (if needed)',
+								'Follow up with Finance to confirm payment commitment',
+								'Confirm payment received'};
+List<String> priority = new List<String>{ 'Medium', 'low','Medium', 'Medium', 'Medium', 'High'};
+List<Integer> days = new List<Integer>{2, 2, 4, 7, '10, 15};
 List<JBCXM__PlaybookTasks__c> pbTasks =  new List<JBCXM__PlaybookTasks__c>();
 pbTasks.addAll(createTasks(taskList,p1.id,priority,days));
 
