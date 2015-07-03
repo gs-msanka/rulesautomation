@@ -103,9 +103,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 				surveyDistribution.getScheduleName());
 		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN,
 				surveyDistribution.getScheduleType());
-		item.click(SCHEDULE_DATE);
-		link.click(TODAY_LINK_IN_CALENDER);
-		item.click(CALENDER_CLICK);
+		field.clearAndSetText(SCHEDULE_DATE, surveyDistribution.getScheduleDate());
 		element.selectFromDropDown(SCHEDULE_TIME_HRS,
 				surveyDistribution.getHours());
 		element.selectFromDropDown(SCHEDULE_TIME_MINUTES,
@@ -120,8 +118,10 @@ public class SurveyDistributePage extends SurveyBasePage{
 	
 	public void createScheduleNext() {
 		wait.waitTillElementDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
+		wait.waitTillElementDisplayed(SCHEDULE_CHECKBOX, MIN_TIME, MAX_TIME);
 		item.click(SCHEDULE_CHECKBOX);
 		button.click(SCHEDULE_DONE_BUTTON);
+		wait.waitTillElementNotDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
 	}
 
 	public int getScheduledCount(){

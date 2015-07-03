@@ -15,7 +15,6 @@ import com.gainsight.sfdc.survey.pojo.SurveyRuleProperties;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.JavascriptExecutor;
 
@@ -133,9 +132,8 @@ public class SurveySetCTAPage extends SurveyPage {
         ruleEle.findElement(By.xpath(SET_CTA_SECTION_HEADER)).click();
         ruleEle.findElement(By.xpath(SET_CTA_PRIORITY_DD)).click();
         selectValueInDropDown(cta.getPriority());
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", element.getElement(SAVE_RULE)); 
-   // 	Timer.sleep(10);
-        Log.info("scrolled");
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(SAVE_RULE)); 
+        Log.info("scrolled till end of page");
         ruleEle.findElement(By.xpath(SET_CTA_STATUS_DD)).click();
         selectValueInDropDown(cta.getStatus());
         ruleEle.findElement(By.xpath(SET_CTA_REASON_DD)).click();
