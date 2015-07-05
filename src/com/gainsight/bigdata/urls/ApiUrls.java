@@ -42,6 +42,9 @@ public interface ApiUrls extends NSURLs {
 
     //DataLoad API End Points.
     public final String DATA_API_GET            = NS_URL + "/api/accounts/integrations/DATA_API";
+    
+    //Copilot
+    public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
 
 
 }

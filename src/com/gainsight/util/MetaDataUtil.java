@@ -130,6 +130,11 @@ public class MetaDataUtil {
 	 public void createFieldsOnObject(SalesforceConnector sfdc, String Object, ObjectFields objF) throws Exception {
 		 metadataClient= SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
 		 List<String> permFieldsList = new ArrayList<String>();
+		 
+		 if(objF.getExternalID_Text().size() > 0){
+			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getExternalID_Text().toArray(new String[objF.getExternalID_Text().size()]), true, true, true, false, false);
+			 permFieldsList.addAll(objF.getExternalID_Text());
+		 }
 	    
 		 if(objF.getLookups().size() > 0){
 			 for (HashMap<String,String> hm : objF.getLookups()){

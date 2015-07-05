@@ -23,6 +23,11 @@
       "sfdc.username" : "marvels@gsautomation.com",
       "sfdc.password" : "Gainsight1234",
       "sfdc.stoken" : "H1SOLcR5rVcrsWIuk7jlZDaDj"
+    },
+    "copilot" : {
+      "sfdc.username" : "pparthi@gain2.com",
+      "sfdc.password" : "1234gain2",
+      "sfdc.stoken" : "5O5Kh1hH7cv6LoXCcKVCHgG7"
     }
   }
 }
