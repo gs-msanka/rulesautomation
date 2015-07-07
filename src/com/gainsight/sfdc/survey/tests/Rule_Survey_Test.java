@@ -283,7 +283,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp);
 		publishPage.updatePublishDetails(surProp);
 		surProp.setStatus("Publish");
-		Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(),
+		Assert.assertEquals(publishPage.getSurveyStatus(surProp), surProp.getStatus(),
 				"Verifying Survey Status");
 		basepage.clickOnSurveyTab();
 		surveyBasePage.openSurveyFromPublished(surProp).clickOnSetCta(surProp);
