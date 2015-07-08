@@ -43,7 +43,7 @@ public class PlainEmailConnector {
 	 *            - details that need to be validated basing on the receipient
 	 *            Email and subject...Will add more checkpoints as per the
 	 *            reqmnt
-	 * @return true if all emails are marked as Seen
+	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
 	public boolean isMailDelivered(String host, String userName,

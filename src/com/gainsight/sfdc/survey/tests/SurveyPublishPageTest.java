@@ -274,5 +274,96 @@ public class SurveyPublishPageTest extends SurveySetup {
 				env.getProperty("em.password"), env.getProperty("em.inbox"),
 				msgDetails));
 	}
+	
+	@TestInfo(testCaseIds={"GS-2703"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
+    public void publishSurveyWithQuestionsAndGSEmail2(Map<String, String> testData) throws IOException {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		publishPage.sendTestEmails(testData.get("Recipients").split(","));
+		Assert.assertEquals(publishPage.getMaxTestEmailsAletMsg(),
+				"You can send only 10 test emails at a time.",
+				"Verifying Maximum Test Emails Alert Messages");
+		publishPage.closeAlertEmailDialog();
+		publishPage.closeTestEmailDialog();
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2696" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
+	public void publishSurveyWithGSEmailAndWithoutQuestions(Map<String, String> testData)
+			throws IOException {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		publishPage.clickOnPublishSurvey();
+		Assert.assertEquals(publishPage.getErrorMessage(),
+				"* Fields are Mandatory.", "Verifying Error Message");
+	}
+	
+	@TestInfo(testCaseIds={"GS-2698"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
+    public void sendTestEmailsWithGSEmail(Map<String, String> testData) throws IOException {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		Assert.assertEquals(
+				publishPage.getErrorMessage(),
+				"There are no active questions in the survey and you cannot publish this survey. Please add at least one active question before publishing.",
+				"Verifying Error Message");
+	}
 
 }
