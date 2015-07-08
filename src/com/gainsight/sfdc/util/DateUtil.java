@@ -18,6 +18,8 @@ import com.gainsight.testdriver.Log;
 public class DateUtil {
 
     public static TimeZone timeZone = TimeZone.getTimeZone("GMT");
+    public static final String DEFAULT_UTC_DATE_FORMAT = "yyyy-MM-dd'T'00:00:00.000";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 	/**
 	 * Increment or decrement months and also fetch the date in the required format.
@@ -127,6 +129,25 @@ public class DateUtil {
         return cal;
     }
 
+    public static String getFormattedDate(Date date, String format) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return  dateFormat.format(date);
+    }
+
+    public static String getWeekLabelDate(Date date, String weekDay, boolean usesEndDate, String format) {
+        Calendar cal = Calendar.getInstance();
+        int amount = daysBetween(cal.getTime(), date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format ==null ? DEFAULT_DATE_FORMAT : format);
+        String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone,  amount, usesEndDate).getTime());
+        Log.info("Formatted Date : " +sDate);
+        return sDate;
+    }
+
+    public static int daysBetween(Date d1, Date d2){
+        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+
     /**
      * This parameter returns the String with comprises of yyyy|mm|dd format.
      *
@@ -145,6 +166,7 @@ public class DateUtil {
 
     public static Calendar getWeekLabelDate(String weekDay, TimeZone timeZone, int amount, boolean usesEndDate) {
         Calendar cal = Calendar.getInstance(timeZone);
+        cal.add(Calendar.DATE, amount);
         Map<String, Integer> days = new HashMap<String, Integer>();
         days.put("Sun", 1);
         days.put("Mon", 2);
@@ -153,7 +175,6 @@ public class DateUtil {
         days.put("Thu", 5);
         days.put("Fri", 6);
         days.put("Sat", 7);
-        System.out.println(cal.getTime());
         if(usesEndDate) {
             int weekDate = days.get(weekDay);
             int calLabel = cal.get(Calendar.DAY_OF_WEEK);
@@ -170,7 +191,6 @@ public class DateUtil {
                 cal.add(Calendar.DATE, -7);
             }
         }
-        cal.add(Calendar.DATE, amount);
         Log.info("Final Week Label Date : "+cal.getTime());
         return cal;
     }
@@ -348,6 +368,97 @@ public class DateUtil {
         String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)];
         Log.info("Day Name : " +dayName);
         return dayName;
+    }
+
+    public static String getMonthFirstDate(Calendar calendar) {
+        calendar.set(Calendar.DATE, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public static String getMonthFirstDate(Date date, String format) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DATE, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format==null ? DEFAULT_DATE_FORMAT : format);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public static String getMonthFirstDate(String dateStr) throws ParseException {
+        SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        Date formattedDate = dateFmt.parse(dateStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(formattedDate);
+        calendar.set(Calendar.DATE, 1);
+        return dateFmt.format(calendar.getTime());
+    }
+
+    public static String getMonthFirstDate(String dateStr, String format) throws ParseException {
+        SimpleDateFormat dateFmt =  new SimpleDateFormat(format);
+        Date formattedDate = dateFmt.parse(dateStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(formattedDate);
+        calendar.set(Calendar.DATE, 1);
+        return dateFmt.format(calendar.getTime());
+    }
+
+    public static String getQuarterFirstDate(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        month = getQuarterOfMonth(month);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public static String getQuarterFirstDate(Date date, String format) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int month = calendar.get(Calendar.MONTH);
+        month = getQuarterOfMonth(month);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format ==null ? DEFAULT_DATE_FORMAT : format);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public static String getQuarterFirstDate(String dateStr) throws ParseException {
+        SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        Date date = dateFmt.parse(dateStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int month = calendar.get(Calendar.MONTH);
+        month = getQuarterOfMonth(month);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, 1);
+        return dateFmt.format(calendar.getTime());
+    }
+
+    public static int getYear(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static int getYear(String dateStr) throws ParseException {
+        SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        Date date = dateFmt.parse(dateStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    private static int getQuarterOfMonth(int currentMonth) {
+        if(currentMonth < 3) {
+            currentMonth = 0;
+        } else if(currentMonth < 6) {
+            currentMonth = 3;
+        } else if(currentMonth < 9) {
+            currentMonth = 6;
+        } else {
+            currentMonth = 9;
+        }
+        return currentMonth;
     }
 
 }

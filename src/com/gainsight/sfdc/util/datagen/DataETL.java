@@ -131,13 +131,14 @@ public class DataETL implements IJobExecutor {
 			//Extraction Code
 			SfdcExtract pull = jobInfo.getExtractionRule();
 			if(pull != null && !pull.toString().contains("null")) {
+                pull = mapper.readValue(FileUtil.resolveNameSpace(mapper.writeValueAsString(pull), sfdcConfig.getSfdcManagedPackage() ?  sfdcConfig.getSfdcNameSpace() : null), SfdcExtract.class);
 				String query = QueryBuilder.buildSOQLQuery(pull.getTable(), pull.getFields());
 				SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, userDir+pull.getOutputFileLoc());
 			}
 			else {
 				System.out.println("Nothing to extract. Check the Job Details");
             }
-			//Mapping and Transformation Code.
+			//mapping and Transformation Code.
 			Transform transform = jobInfo.getTransformationRule();
 			File transFile = null;
             File pushFile  = null;
@@ -149,6 +150,9 @@ public class DataETL implements IJobExecutor {
 					transFile = new File(userDir+transform.getOutputFileLoc());
 					ArrayList<TableInfo> tables = transform.getTableInfo();
 					for(TableInfo tableInfo : tables) {
+                        if(tableInfo.isResolveNameSpace()) {
+                            tableInfo = mapper.readValue(FileUtil.resolveNameSpace(mapper.writeValueAsString(tableInfo), sfdcConfig.getSfdcManagedPackage() ?  sfdcConfig.getSfdcNameSpace() : null), TableInfo.class);
+                        }
 						db.executeStmt(dropTableQuery + tableInfo.getTable());
 						String createTableFromCSv = "CREATE TABLE " + tableInfo.getTable() + " AS SELECT * FROM CSVREAD('"+ userDir+tableInfo.getCsvFile() +"')";
 						db.executeStmt(createTableFromCSv);
@@ -198,23 +202,21 @@ public class DataETL implements IJobExecutor {
 			}
 			
 			//Load the Data back to SFDC
-			if(transform!=null) {
+			if(transform!=null && load !=null) {
                 if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcNameSpace()), load.getOperation(),
+                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcManagedPackage() ? sfdcConfig.getSfdcNameSpace(): null), load.getOperation(),
                             (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir + load.getFile()), load.getExternalIDField());
                 } else{
-                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcNameSpace()), load.getOperation(),
+                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcManagedPackage() ? sfdcConfig.getSfdcNameSpace(): null), load.getOperation(),
                             (transform.isPicklist() ) ? pushFile : resolveNameSpace(userDir+load.getFile()));
                 }
-            } else{ //in case there is no transform part...only loading
-            	if (load!=null) {
-            	if(load.getOperation().equals("upsert")) {
-                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcNameSpace()), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
+            } else if(load!=null) { //in case there is no transform part...only loading
+                if(load.getOperation().equals("upsert")) {
+                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcManagedPackage() ? sfdcConfig.getSfdcNameSpace(): null), load.getOperation(),resolveNameSpace(userDir+load.getFile()),load.getExternalIDField());
                 }
-            	else {
-                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcNameSpace()), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
+                else {
+                    SfdcBulkApi.pushDataToSfdc(FileUtil.resolveNameSpace(load.getsObject(), sfdcConfig.getSfdcManagedPackage() ? sfdcConfig.getSfdcNameSpace(): null), load.getOperation(),resolveNameSpace(userDir+load.getFile()));
                 }
-            	}
             }
 		}
 		catch (IOException e) {

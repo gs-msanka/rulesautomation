@@ -30,7 +30,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.SfdcConfig;
 import com.sforce.soap.metadata.*;
+import com.sforce.soap.metadata.Error;
+import com.sforce.ws.ConnectionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,6 +56,56 @@ public class PackageUtil {
 	}
 
     public PackageUtil() {}
+
+
+    public void setupGainsightApplicationAndTabs(boolean managePackage, String nameSpace) throws ConnectionException {
+        Profile profile = new Profile();
+        profile.setFullName("Admin");
+
+        ProfileApplicationVisibility appVisibility = new ProfileApplicationVisibility();
+        appVisibility.setDefault(true);
+        appVisibility.setVisible(true);
+        appVisibility.setApplication(FileUtil.resolveNameSpace("JBCXM__JBara", managePackage? nameSpace : null));
+
+
+        profile.setTabVisibilities(getTabVisibility(managePackage,nameSpace, new String[]{"JBCXM__Administration", "JBCXM__Churn", "JBCXM__Cockpit", "JBCXM__Customers",
+                "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption", "JBCXM__Gainsight", "JBCXM__GainsightMobile", "JBCXM__Insights", "JBCXM__NPS", "JBCXM__Survey"}));
+        profile.setApplicationVisibilities(new ProfileApplicationVisibility[]{appVisibility});
+
+        SaveResult[]  saveResults = metadataConnection.updateMetadata(new Metadata[]{profile});
+
+        boolean success = true;
+        for(SaveResult saveResult : saveResults) {
+            if(!saveResult.isSuccess()) {
+                success = false;
+                for(Error error : saveResult.getErrors()) {
+                    Log.error(error.getMessage());
+                    Log.error(error.getStatusCode().toString());
+                }
+            }
+        }
+        if(!success) {
+            Log.error("Seems Some error while setting up gainsight application.");
+            throw new RuntimeException("Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
+        }
+        Log.info("Gainsight Application/Tabs setup done.");
+    }
+
+
+    private ProfileTabVisibility[] getTabVisibility(boolean managePackage, String nameSpace, String[] tabs) {
+        if(tabs ==null || tabs.length ==0) {
+            Log.error("Please send tab info.");
+            throw new RuntimeException("Please send tab info.");
+        }
+        ProfileTabVisibility[] tabVisibilities = new ProfileTabVisibility[tabs.length];
+        for(int i=0; i < tabs.length; i++) {
+            ProfileTabVisibility tabVisibility = new ProfileTabVisibility();
+            tabVisibility.setVisibility(TabVisibility.DefaultOn);
+            tabVisibility.setTab(FileUtil.resolveNameSpace(tabs[i], managePackage ? nameSpace : null));
+            tabVisibilities[i] = tabVisibility;
+        }
+        return tabVisibilities;
+    }
 
     /**
      * This method updates the widget layouts.

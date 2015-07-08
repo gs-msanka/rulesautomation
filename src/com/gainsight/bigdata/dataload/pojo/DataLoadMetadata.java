@@ -15,12 +15,12 @@ public class DataLoadMetadata {
     private String dataLoadOperation;
     private String clearOperation;
     private String[] keyFields;
-    private String sourceType;
-    private String targetType;
+    private String sourceType = "FILE";
+    private String targetType = "MONGO";
     private boolean headerRow = true;
-    private Character fieldSeparator;
-    private Character escapeCharacter;
-    private Character quoteCharacter;
+    private Character fieldSeparator = ',';
+    private Character escapeCharacter = '\\';
+    private Character quoteCharacter = '\"';
     private boolean dbNameUsed = false;
     @JsonProperty("mapping")
     private List<Mapping> mappings;
