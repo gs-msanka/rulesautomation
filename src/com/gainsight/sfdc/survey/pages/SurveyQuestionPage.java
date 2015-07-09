@@ -318,6 +318,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
     
 	public String getSectionAttribute() {
+		wait.waitTillElementDisplayed(SECTION_HEADER_TEXTINPUT, MIN_TIME, MAX_TIME);
 		String attribute = element.getElement(SECTION_HEADER_TEXTINPUT)
 				.getAttribute("value");
 		Log.info("Attribute value is" + attribute);

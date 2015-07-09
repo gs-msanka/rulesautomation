@@ -12,6 +12,7 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -19,24 +20,21 @@ import javax.mail.search.AndTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
 
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 
 /**
  * Utility class to connect to a mail box and perform email validations, for the
  * emails sent via Gainsight Email Services.
  * 
  */
-public class PlainEmailConnector {
+public class PlainEmailConnector implements Constants{
+	
+	protected Store store;
 
 	/**
-	 * The method takes some
-	 * 
-	 * @param host
-	 *            - imap/pop2 etc
-	 * @param emailId
-	 *            - mailBox userName
-	 * @param pwd
-	 *            - mailBox password
 	 * @param folderName
 	 *            - which folder to check the mail for
 	 * @param msgDetails
@@ -46,16 +44,10 @@ public class PlainEmailConnector {
 	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
-	public boolean isMailDelivered(String host, String userName,
-			String password, String folderName,
-			HashMap<String, String> msgDetails) throws Exception {
-		HashMap<String, String> msg = new HashMap<String, String>();
-		boolean result = false;
-		Properties properties = System.getProperties();
-		Session session = Session.getDefaultInstance(properties);
-		Store store = session.getStore("imap");
-		store.connect(host, userName, password);
-		Log.info("Connecting to the Imap Store...");
+	public boolean isMailDelivered(String folderName,
+			final HashMap<String, String> msgDetails) throws Exception {
+		final HashMap<String, String> msg = new HashMap<String, String>();
+		boolean result = false;;
 		Folder folder = store.getFolder(folderName);
 		folder.open(Folder.READ_WRITE);
 		// search for all "unseen" messages
@@ -66,7 +58,7 @@ public class PlainEmailConnector {
 		FlagTerm recentFlagTerm = new FlagTerm(recent, true);
 		Message[] foundMessages = folder.search(unseenFlagTerm);
 		if (foundMessages.length == 0) {
-			Log.error("No messages found.");
+			Log.error("No messages found, Please Check.");
 			return result;
 		} else {
 			Log.info("Total number of messages:" + foundMessages.length);
@@ -79,12 +71,20 @@ public class PlainEmailConnector {
 						tempToAddress.lastIndexOf("<") + 1,
 						tempToAddress.lastIndexOf(">"));
 				Log.info("In MailBox, Receipient email Address is " + toAddress);
+				Log.info("Sender email is" +foundMessages[i].getFrom());
 				msg.put(toAddress.trim(), foundMessages[i].getSubject().trim());
 			}
 			for (Entry<String, String> entry : msg.entrySet()) {
 				Log.info("Key : " + entry.getKey() + " Value : "
 						+ entry.getValue());
 			}
+			CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+					new ExpectedCommonWaitCondition<Boolean>() {
+						@Override
+						public Boolean apply() {
+							return msg.equals(msgDetails);
+						}
+					});
 			Log.info("comparision value is" + msg.equals(msgDetails));
 			if (msg.equals(msgDetails)) {
 				result = true;
@@ -96,28 +96,15 @@ public class PlainEmailConnector {
 	}
 	
 		/**
-		 * The method takes some
-		 * 
-		 * @param host
-		 *            - imap/pop2 etc
-		 * @param emailId
-		 *            - mailBox userName
-		 * @param pwd
-		 *            - mailBox password
 		 * @param folderName
 		 *            - which folder to check the mail for            
 		 * @return true if all messages are marked as Read/Seen
+		 * 
 		 * @throws Exception
 		 */
 	  
-	public boolean isAllEmailsSeen(String host, String userName, String password,
-			String folderName) throws Exception {
+	public boolean isAllEmailsSeen(String folderName) throws Exception {
 		boolean result = false;
-		Properties properties = System.getProperties();
-		Session session = Session.getDefaultInstance(properties);
-		Store store = session.getStore("imap");
-		store.connect(host, userName, password);
-		Log.info("Connecting to Store...");
 		Folder folder = store.getFolder(folderName);
 		folder.open(Folder.READ_WRITE);
 		// search for all "unseen" messages
@@ -135,6 +122,33 @@ public class PlainEmailConnector {
 			result = true;
 		}
 		return result;
+	}
+	
+	/**
+	 * @param host
+	 *            - imap/pop2 etc
+	 * @param emailId
+	 *            - mailBox userName
+	 * @param pwd
+	 *            - mailBox password
+	 */
+	
+	public PlainEmailConnector(String host, String userName, String password){
+		Properties properties = System.getProperties();
+		Session session = Session.getDefaultInstance(properties);
+		Store storeConnection = null;
+		try {
+			storeConnection = session.getStore("imap");
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		}
+		try {
+			storeConnection.connect(host, userName, password);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		Log.info("Connecting to Store...");
+		store=storeConnection;
 	}
 }
 	

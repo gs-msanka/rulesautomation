@@ -33,9 +33,10 @@ public class SurveyPublishPageTest extends SurveySetup {
     private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
     private ObjectMapper mapper = new ObjectMapper();
-    PlainEmailConnector plainEmailConnector=new PlainEmailConnector();
-	
-    
+	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
+			env.getProperty("em.host"), env.getProperty("em.userName"),
+			env.getProperty("em.password"));
+ 
 	@BeforeClass
 	public void setUp() {
 		sfdc.connect();
@@ -47,9 +48,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 	
 	@BeforeMethod
 	public void cleanup() throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.host"),
-				env.getProperty("em.userName"), env.getProperty("em.password"),
-				env.getProperty("em.inbox"));
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 	}
 	
 	@TestInfo(testCaseIds = { "GS-2696" })
@@ -267,12 +266,8 @@ public class SurveyPublishPageTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Timer.sleep(10); // Added timer since, email which is sent takes 5-10
-							// seconds to reach the mail box
 		Assert.assertTrue(plainEmailConnector.isMailDelivered(
-				env.getProperty("em.host"), env.getProperty("em.userName"),
-				env.getProperty("em.password"), env.getProperty("em.inbox"),
-				msgDetails));
+				env.getProperty("em.inbox"), msgDetails));
 	}
 	
 	@TestInfo(testCaseIds={"GS-2703"})
@@ -305,12 +300,15 @@ public class SurveyPublishPageTest extends SurveySetup {
 		surveySiteURL();
 		surveyPropData.setSiteURL(surveySiteURL());
 		publishPage.updatePublishDetails(surveyPropData);
-		publishPage.sendTestEmails(testData.get("Recipients").split(","));
-		Assert.assertEquals(publishPage.getMaxTestEmailsAletMsg(),
-				"You can send only 10 test emails at a time.",
-				"Verifying Maximum Test Emails Alert Messages");
-		publishPage.closeAlertEmailDialog();
-		publishPage.closeTestEmailDialog();
+		try {
+			publishPage.sendTestEmails(testData.get("Recipients").split(","));
+			Assert.assertEquals(publishPage.getMaxTestEmailsAletMsg(),
+					"You can send only 10 test emails at a time.",
+					"Verifying Maximum Test Emails Alert Messages");
+		} finally {
+			publishPage.closeAlertEmailDialog();
+			publishPage.closeTestEmailDialog();
+		}
 	}
 	
 	@TestInfo(testCaseIds = { "GS-2696" })

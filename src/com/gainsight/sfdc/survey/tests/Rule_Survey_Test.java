@@ -80,7 +80,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
+	public void testsurveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
@@ -130,7 +130,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
-	public void surveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
+	public void testsurveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
