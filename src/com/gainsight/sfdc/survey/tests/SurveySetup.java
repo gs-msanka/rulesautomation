@@ -26,6 +26,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
@@ -509,4 +510,21 @@ public class SurveySetup extends BaseTest implements Constants{
 		}
 		return temp;
 	}
+	
+	public boolean QuestionCount(CTA cta){
+		boolean result=false;
+		SObject[] sObject=sfdc.getRecords(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				+ cta.getPriority()
+				+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+				+ cta.getReason()
+				+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+				+ cta.getType()
+				+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+				+ cta.getStatus() + "'))"));
+		if (sObject.length>0) {
+			result=true;	
+		}
+		return result;
+	}
+	
 }

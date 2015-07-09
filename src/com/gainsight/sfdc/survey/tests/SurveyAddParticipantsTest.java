@@ -33,7 +33,7 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 	public void setup() throws Exception {
 		sfdc.connect();
 		basepage.login();
-		sfdc.runApexCode(resolveStrNameSpace(CUSTOM_OBJECT_CLEANUP));
+	//	sfdc.runApexCode(resolveStrNameSpace(CUSTOM_OBJECT_CLEANUP)); // commented for now as the bulk job is not executing
         sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
