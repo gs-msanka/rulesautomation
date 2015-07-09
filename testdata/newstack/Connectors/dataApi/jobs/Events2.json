@@ -1,0 +1,116 @@
+{
+  "jobName": "EventProcess",
+  "jobType": "EventProcess",
+  "namespacePrefix": "JBCXM",
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/connectors/dataApi/data/Events.csv",
+    "outputFile" : "/testdata/newstack/connectors/dataApi/process/Date_Processed_RawEventsData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "fieldName" : "EventTimeStamp"
+      }
+    ]
+  },
+  "transform": {
+    "query" : "",
+    "useQuery" : false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/AccountContactBridge.csv",
+        "table": "TempContactBridge",
+        "joinColumnName": "Contact_ExternalId__c",
+        "columns": [
+          {
+            "name": "AccountId",
+            "alias": "AccountId"
+          },
+          {
+            "name": "Data_ExternalId__c",
+            "alias": "Data_ExternalId__c"
+          },
+          {
+            "name": "Id",
+            "alias": "ContactId"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/Date_Processed_RawEventsData.csv",
+        "table": "RawEvents",
+        "joinColumnName": "Contact_ExternalId__c",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "AccountName"
+          },
+          {
+            "name": "LastName",
+            "alias": "LastName"
+          },
+          {
+            "name": "FirstName",
+            "alias": "FirstName"
+          },
+          {
+            "name": "ContactName",
+            "alias": "ContactName"
+          },
+          {
+            "name": "Email",
+            "alias": "Email"
+          },
+          {
+            "name": "Contact_ExternalId__c",
+            "alias": "Contact_ExternalId__c"
+          },
+          {
+            "name": "Event",
+            "alias": "Event"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "EventTimeStamp",
+            "alias": "EventTimeStamp"
+          },
+          {
+            "name": "Logins",
+            "alias": "Logins"
+          },
+          {
+            "name": "UniqueLogins",
+            "alias": "UniqueLogins"
+          },
+          {
+            "name": "PageLoadTime",
+            "alias": "PageLoadTime"
+          },
+          {
+            "name": "FileSize",
+            "alias": "FileSize"
+          },
+          {
+            "name": "Price",
+            "alias": "Price"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/Final_RawEventsData.csv"
+  }
+}

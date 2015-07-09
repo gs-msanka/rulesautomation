@@ -1,0 +1,78 @@
+{
+  "jobName": "EventProcess",
+  "jobType": "EventProcess",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Contact",
+    "fields": [
+      "Id",
+      "AccountId",
+      "Contact_ExternalId__c",
+      "Name",
+      "LastName",
+      "FirstName",
+      "Email"
+    ],
+    "output": "/testdata/newstack/connectors/dataApi/process/Contacts.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+
+      {
+        "resolveNameSpace": false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv",
+        "table": "TempAccount",
+        "joinColumnName": "Id",
+        "columns": [
+          {
+            "name": "Name",
+            "alias": "AccountName"
+          },
+          {
+            "name": "Data_ExternalId__c",
+            "alias": "Data_ExternalId__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
+        "table": "ConnCustomers",
+        "joinColumnName": "AccountId",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "AccountId"
+          },
+          {
+            "name": "Name",
+            "alias": "ContactName"
+          },
+          {
+            "name": "Contact_ExternalId__c",
+            "alias": "Contact_ExternalId__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/AccountContactBridge.csv"
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "JBCXM__CustomerInfo__c",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "Id",
+    "file": "/testdata/newstack/connectors/dataApi/process/AccountContactBridge.csv"
+  }
+}
