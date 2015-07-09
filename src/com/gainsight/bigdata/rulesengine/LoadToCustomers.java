@@ -22,7 +22,6 @@ import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 import org.codehaus.jackson.map.ObjectMapper;
 import com.gainsight.sfdc.util.datagen.DataETL;
@@ -46,7 +45,7 @@ public class LoadToCustomers extends RulesUtil {
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
-		updateNSURLInAppSettings(PropertyReader.nsAppUrl);
+		updateNSURLInAppSettings(nsConfig.getNsURl());
 
 
             List<HashMap<String, String>> testDataList = ExcelDataProvider.getDataFromExcel(Application.basedir+TEST_DATA_FILE, "loadToCustomers1");

@@ -12,7 +12,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.gainsight.http.ResponseObj;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 
 public class LoadToUsageData extends RulesUtil {
@@ -45,10 +44,10 @@ public class LoadToUsageData extends RulesUtil {
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                nsConfig.getNsURl() + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsConfig.getNsURl() + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -79,10 +78,10 @@ public class LoadToUsageData extends RulesUtil {
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                nsConfig.getNsURl() + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsConfig.getNsURl() + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
