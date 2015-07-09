@@ -77,6 +77,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 		item.click(CLICKON_TOBECONTACTED_CIRCLE);
 		wait.waitTillElementPresent(CLICKON_SENDEMAIL_BUTTON, MIN_TIME,
 				MAX_TIME);
+		wait.waitTillElementDisplayed(SELECT_CONTACTS_CHECKBOX, MIN_TIME, MAX_TIME);
 		item.click(SELECT_CONTACTS_CHECKBOX);
 	}
 
