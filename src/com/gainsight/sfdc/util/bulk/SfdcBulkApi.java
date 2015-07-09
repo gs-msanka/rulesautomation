@@ -188,7 +188,11 @@ public class SfdcBulkApi {
 			Log.info("OUTPUT:\n" + output);
 			try {
 				//Save the file to the respective destination
-				FileOutputStream fos = new FileOutputStream(filePath);
+                File tempFile = new File(filePath);
+                tempFile.getParentFile().mkdirs();
+
+				FileOutputStream fos = new FileOutputStream(tempFile);
+
 				fos.write(output.getBytes());
 				fos.close();
 				op.setJobState(async_job_status_url, "Closed");

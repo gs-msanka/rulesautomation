@@ -19,7 +19,8 @@ global without sharing class GSAutomationRestAPI {
         }
         System.debug(parameters);
 
-        moduleName = String.valueOf(parameters.get('modulename'));
+        moduleName = String.valueOf(parameters.get('moduleName'));
+        Boolean isObjectPermissionReq = Boolean.valueOf(parameters.get('objectPermissionReq'));
         system.debug('Module Name ' +moduleName);
         if(modulename !=null && modulename == 'GS_Auto_Permissions') {
             List<Object> objectPerm = (List<Object>)(parameters.get('data'));
@@ -36,7 +37,7 @@ global without sharing class GSAutomationRestAPI {
             }
             system.debug('ObjectFieldMap ' +objectFieldMap);
             if(objectFieldMap.size() >0 ) {
-                resObj = createObjectFieldPermission(objectFieldMap, true);
+                resObj = createObjectFieldPermission(objectFieldMap, isObjectPermissionReq);
             }
 
 
@@ -54,12 +55,8 @@ global without sharing class GSAutomationRestAPI {
         try {
             System.debug('Giving Permissions...');
             if(objectFieldsMap != null && !objectFieldsMap.isEmpty()) {
-                String APP_NAMESPACE_PREFIX = 'JBCXM';
-                System.debug(APP_NAMESPACE_PREFIX);
-                //To get all the users those are assigned to JBCXM Package.
-                
-                Set<String> userIds = new Set<String>();
-                
+            
+                Set<String> userIds = new Set<String>();            
                 List<ObjectPermissions> objectPermissionList    = new List<ObjectPermissions>();
                 List<FieldPermissions> fieldPermissionList      = new List<FieldPermissions>();
                 List<PermissionSetAssignment> assignmentList    = new List<PermissionSetAssignment>();
@@ -67,133 +64,93 @@ global without sharing class GSAutomationRestAPI {
                 FieldPermissions fldPermission;
                 PermissionSetAssignment perAssignment;
                 PermissionSet permissonSet;
+                
 
                 //check if custom permission set is present or not
                 List<PermissionSet> existingPermission = [SELECT Id FROM PermissionSet WHERE Label = 'GS_Automation_Permission' AND Name = 'GS_Automation_Permission' ];
                 
                 if(existingPermission.size() == 0) { 
+                    Set<String> standObjects = new Set<String>{'account', 'contact', 'opportunity', 'case'};
+                    Set<String> existingFieldPermissions    = new Set<String>();
                     //Nothing is there. Create everything new
                     permissonSet = new PermissionSet(Description = 'To give rights on Gainsight components', Label = 'GS_Automation_Permission', Name = 'GS_Automation_Permission');
                     insert permissonSet;
                     System.debug('Permission set created.');
-                    //loop through each object and fields sent
-                    for(String objectName : objectFieldsMap.keySet()) {
-                        if(isObjectPermissionReq) { //do not give permission to object
-                            if(objectName != 'Account' && objectName != 'Contact' && objectName !='Opportunity') {
-                                objectPermission = new ObjectPermissions(SobjectType = objectName,
-                                                                        PermissionsRead = true,
-                                                                        PermissionsEdit = true,
-                                                                        PermissionsCreate = true,
-                                                                        ParentId = permissonSet.Id);
-                            objectPermissionList.add(objectPermission);
-                            }
-                        }
-                        SObjectType accountType                 = Schema.getGlobalDescribe().get(objectName);
-                        Map<String,Schema.SObjectField> mfields = accountType.getDescribe().fields.getMap();
+                } else {
+                    permissonSet = existingPermission.get(0);
+                }
 
-                        for(String fieldName : objectFieldsMap.get(objectName)) {
-                            Schema.SObjectField field               = mfields.get(fieldName);
-                            Schema.DescribeFieldResult fieldDes     = field.getDescribe();                            
-                            
-                            fieldName = objectName+'.'+fieldName;
-                            System.debug('Created Field Permissions : ' +fieldName);
+                Set<String> existingObjectPermissions   = new Set<String>();
+                Set<String> existingFieldPermissions    = new Set<String>();
+                Set<String> existingAssigedUserIds      = new Set<String>();
+
+                //Get all the existing object permissions.
+                if(isObjectPermissionReq) {
+                    for(ObjectPermissions objPermission : [SELECT SobjectType FROM ObjectPermissions WHERE ParentId =: permissonSet.Id AND SobjectType IN: objectFieldsMap.keySet()]) {
+                        existingObjectPermissions.add(objPermission.SobjectType.toLowerCase());
+                    }
+                }
+                //Get all the existing field permissions.
+                for(FieldPermissions fieldPermissions : [SELECT Field FROM FieldPermissions WHERE ParentId =: permissonSet.Id AND SobjectType IN: objectFieldsMap.keySet()]) {
+                    System.debug('Field :' +fieldPermissions.Field);
+                    existingFieldPermissions.add(String.valueOf(fieldPermissions.Field).toLowerCase());
+                }
+
+                for(String objectName : objectFieldsMap.keySet()) {
+                    
+                    SObjectType sObjectDes                      = Schema.getGlobalDescribe().get(objectName);
+                    DescribeSObjectResult describeSObjResult    = sObjectDes.getDescribe();                    
+                    if(isObjectPermissionReq){
+                        if(!existingObjectPermissions.contains(objectName.toLowerCase())) {
+                            System.debug('Creating Object Permissions : ' +objectName);                            
+                            objectPermission = new ObjectPermissions(SobjectType = objectName, PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, ParentId = permissonSet.Id);
+                            objectPermissionList.add(objectPermission);
+                            existingObjectPermissions.add(objectName.toLowerCase());    
+                        } else {
+                            System.debug('Object Permission exists already : '+objectName);
+                        }
+                    } else {
+                        System.debug('Skipping object permission : '+objectName);
+                    }                        
+                        
+                    Map<String,Schema.SObjectField> sOjectFieldDescribeMap = sObjectDes.getDescribe().fields.getMap();
+                    
+                    for(String fieldName : objectFieldsMap.get(objectName)) {  
+                        String tempField = fieldName.trim();                      
+                        fieldName = (objectName+'.'+fieldName).trim();                        
+                        if(!existingFieldPermissions.contains(fieldName.toLowerCase())) {
+                            System.debug('Creating Field Permissions : ' +fieldName);
+                            if(!sOjectFieldDescribeMap.containsKey(tempField)) {
+                                System.debug('Skipping Field Permission for  ' +fieldName);
+                                continue;
+                            }
+                            Schema.SObjectField field = sOjectFieldDescribeMap.get(tempField);
+                            Schema.DescribeFieldResult fieldDes = field.getDescribe();
+                            System.debug('isCalulated :' +fieldDes.isCalculated());
+                            System.debug('isAutonumber :' +fieldDes.isAutoNumber());
                             System.debug('Permissions Edit : ' +fieldDes.isUpdateable());
-                            if(fieldDes.isPermissionable()) {
+                            if(fieldDes.isPermissionable() && !fieldDes.isRestrictedPicklist()) {
                                 fldPermission = new FieldPermissions(ParentId           = permissonSet.Id,
                                                                     Field           = fieldName,
                                                                     SobjectType     = objectName,
-                                                                    PermissionsEdit = fieldDes.isCalculated() || fieldDes.isAutoNumber() ? false : true,
+                                                                    PermissionsEdit = (fieldDes.isCalculated() || fieldDes.isAutoNumber()) ? false : true,
                                                                     PermissionsRead = true);
                                 fieldPermissionList.add(fldPermission);                            
-                            }
+                                existingFieldPermissions.add(fieldName.toLowerCase());
+                            }                                 
+                        } else {
+                            System.debug('Field Permissions exists for : ' +fieldName);
                         }
                     }
-                    //Account Object Permissions Are Manditory.
-                    objectPermission = new ObjectPermissions(SobjectType = 'Account',
-                                                                PermissionsRead = true,
-                                                                PermissionsEdit = true,
-                                                                PermissionsCreate = true,
-                                                                ParentId = permissonSet.Id);
+                }
 
-                    insert objectPermission;
-                    //Contact Object Permission are added by default.
-                    objectPermission = new ObjectPermissions(SobjectType = 'Contact',
-                                                                PermissionsRead = true,
-                                                                PermissionsEdit = true,
-                                                                PermissionsCreate = true,
-                                                                ParentId = permissonSet.Id);
-
-                    insert objectPermission;
-                    //Opportunity Object Permission are added by default.
-                    objectPermission = new ObjectPermissions(SobjectType = 'Opportunity',
-                                                                PermissionsRead = true,
-                                                                PermissionsEdit = true,
-                                                                PermissionsCreate = true,
-                                                                ParentId = permissonSet.Id);
-
-                    insert objectPermission;                
+                //Get the users to whom permission set is assigned.    
+                List<PermissionSetAssignment> userPermSetAssign = [SELECT AssigneeId FROM PermissionSetAssignment WHERE PermissionSetId =: permissonSet.Id AND AssigneeId =: UserInfo.getUserId()];
+                if(userPermSetAssign.size() == 0) {
                     perAssignment = new PermissionSetAssignment( PermissionSetId = permissonSet.Id, AssigneeId = UserInfo.getUserId());
-                    assignmentList.add(perAssignment);                                        
-                } else {
-                    Set<String> existingObjectPermissions   = new Set<String>();
-                    Set<String> existingFieldPermissions    = new Set<String>();
-                    Set<String> existingAssigedUserIds      = new Set<String>();
-
-                    permissonSet = existingPermission.get(0);
-
-                    //check if for sent objects, Object Permissions exists already
-                    if(isObjectPermissionReq) {
-                        for(ObjectPermissions objPermission : [SELECT SobjectType FROM ObjectPermissions WHERE ParentId =: permissonSet.Id AND SobjectType IN: objectFieldsMap.keySet()]) {
-                            existingObjectPermissions.add(objPermission.SobjectType.toLowerCase());
-                        }
-                    }
-                    for(FieldPermissions fieldPermissions : [SELECT Field FROM FieldPermissions WHERE ParentId =: permissonSet.Id AND SobjectType IN: objectFieldsMap.keySet()]) {
-                        System.debug('Field :' +fieldPermissions.Field);
-                        existingFieldPermissions.add(String.valueOf(fieldPermissions.Field).toLowerCase());
-                    }
-
-                    for(String objectName : objectFieldsMap.keySet()) {
-                        //do not create duplicate object permission
-                        if(isObjectPermissionReq){
-                            if(!existingObjectPermissions.contains(objectName.toLowerCase())) {
-                                objectPermission = new ObjectPermissions(SobjectType = objectName, PermissionsRead = true, PermissionsEdit = true, PermissionsCreate = true, ParentId = permissonSet.Id);
-                                objectPermissionList.add(objectPermission);
-                                existingObjectPermissions.add(objectName.toLowerCase());
-                            }
-                        }                        
-                        SObjectType accountType                 = Schema.getGlobalDescribe().get(objectName);
-                        Map<String,Schema.SObjectField> mfields = accountType.getDescribe().fields.getMap();
-                        for(String fieldName : objectFieldsMap.get(objectName)) {
-                            String f1 = fieldName.trim();
-                            fieldName = (objectName+'.'+fieldName).trim();
-                            System.debug('Created Field Permissions : ' +fieldName);
-                            if(!existingFieldPermissions.contains(fieldName.toLowerCase())) {
-
-                                Schema.SObjectField field = mfields.get(f1);
-                                Schema.DescribeFieldResult fieldDes = field.getDescribe();
-                                System.debug('isCalulated :' +fieldDes.isCalculated());
-                                System.debug('isAutonumber :' +fieldDes.isAutoNumber());
-                                System.debug('Permissions Edit : ' +fieldDes.isUpdateable());
-                                if(fieldDes.isPermissionable()) {
-                                    fldPermission = new FieldPermissions(ParentId           = permissonSet.Id,
-                                                                        Field           = fieldName,
-                                                                        SobjectType     = objectName,
-                                                                        PermissionsEdit = (fieldDes.isCalculated() || fieldDes.isAutoNumber()) ? false : true,
-                                                                        PermissionsRead = true);
-                                    fieldPermissionList.add(fldPermission);                            
-                                    existingFieldPermissions.add(fieldName.toLowerCase());
-                                }                                 
-                            }
-                        }
-                    }
-
-                    //Get the users to whom permission set is assigned.    
-                    List<PermissionSetAssignment> userPermSetAssign = [SELECT AssigneeId FROM PermissionSetAssignment WHERE PermissionSetId =: permissonSet.Id AND AssigneeId =: UserInfo.getUserId()];
-                    if(userPermSetAssign.size() == 0) {
-                        perAssignment = new PermissionSetAssignment( PermissionSetId = permissonSet.Id, AssigneeId = UserInfo.getUserId());
-                        assignmentList.add(perAssignment);
-                    }    
-                } 
+                    assignmentList.add(perAssignment);
+                }    
+                 
 
                 if(isObjectPermissionReq && objectPermissionList.size() > 0) {
                     System.debug('Insert Object Permissions...');

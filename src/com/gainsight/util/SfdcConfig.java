@@ -49,14 +49,6 @@ public class SfdcConfig  {
         return getConfigValue(ISfdcProperties.sfdcStoken);
     }
 
-    public String getSfdcAppurl() {
-        return getConfigValue(ISfdcProperties.sfdcAppurl);
-    }
-
-    public String getSfdcDeleteRecords() {
-        return getConfigValue(ISfdcProperties.sfdcDeleteRecords);
-    }
-
     public boolean getSfdcManagedPackage() {
         String value = getConfigValue(ISfdcProperties.sfdcManagedPackage);
         boolean managedPackage = false;
@@ -65,28 +57,40 @@ public class SfdcConfig  {
         return managedPackage;
     }
 
-    public String getSfdcSetDefaultApp() {
-        return getConfigValue(ISfdcProperties.sfdcSetDefaultApp);
-    }
-
-    public String getSfdcLoadDefaultData() {
-        return getConfigValue(ISfdcProperties.sfdcLoadDefaultData);
+    public Boolean getSfdcSetupGainsightApp() {
+        String value = getConfigValue(ISfdcProperties.sfdcSetupGainsightApp);
+        boolean setupApp = false;
+        if(value.equalsIgnoreCase("true"))
+            setupApp = true;
+        return setupApp;
     }
 
     public String getSfdcNameSpace() {
         return getConfigValue(ISfdcProperties.sfdcNameSpace);
     }
 
-    public String getSfdcUpdateWidgetLayouts() {
-        return getConfigValue(ISfdcProperties.sfdcUpdateWidgetLayouts);
+    public Boolean getSfdcUpdateWidgetLayouts() {
+        String value = getConfigValue(ISfdcProperties.sfdcUpdateWidgetLayouts);
+        boolean update = false;
+        if(value.equalsIgnoreCase("true"))
+            update = true;
+        return update;
     }
 
-    public String getSfdcUnInstallApp() {
-        return getConfigValue(ISfdcProperties.sfdcUnInstallApp);
+    public Boolean getSfdcUnInstallApp() {
+        String value = getConfigValue(ISfdcProperties.sfdcUnInstallApp);
+        boolean unInstallApp = false;
+        if(value.equalsIgnoreCase("true"))
+            unInstallApp = true;
+        return unInstallApp;
     }
 
-    public String getSfdcInstallApp() {
-        return getConfigValue(ISfdcProperties.sfdcInstallApp);
+    public Boolean getSfdcInstallApp() {
+        String value = getConfigValue(ISfdcProperties.sfdcInstallApp);
+        boolean installApp = false;
+        if(value.equalsIgnoreCase("true"))
+            installApp = true;
+        return installApp;
     }
 
     public String getSfdcPackageVersionNumber() {
@@ -116,22 +120,19 @@ public class SfdcConfig  {
     }
 
     private interface ISfdcProperties {
-        public static final String sfdcUsername = "sfdc.username";
-        public static final String sfdcPassword = "sfdc.password";
-        public static final String sfdcStoken = "sfdc.stoken";
-        public static final String sfdcAppurl = "sfdc.appurl";
-        public static final String sfdcDeleteRecords = "sfdc.deleteRecords";
-        public static final String sfdcManagedPackage = "sfdc.managedPackage";
-        public static final String sfdcSetDefaultApp = "sfdc.setDefaultApp";
-        public static final String sfdcLoadDefaultData = "sfdc.loadDefaultData";
-        public static final String sfdcNameSpace = "sfdc.nameSpace";
-        public static final String sfdcUpdateWidgetLayouts= "sfdc.updateWidgetLayouts" ;
-        public static final String sfdcUnInstallApp= "sfdc.unInstallApp";
-        public static final String sfdcInstallApp = "sfdc.installApp";
-        public static final String sfdcPackageVersionNumber="sfdc.packageVersionNumber";
-        public static final String sfdcPackagePassword="sfdc.packagePassword";
-        public static final String sfdcPartnerUrl="sfdc.partnerUrl";
-        public static final String sfdcSiteCustomURL="sfdc.siteCustomURL";
-        public static final String sfdcApiVersion ="sfdc.apiVersion";
+        public static final String sfdcUsername = "sfdc_username";
+        public static final String sfdcPassword = "sfdc_password";
+        public static final String sfdcStoken = "sfdc_stoken";
+        public static final String sfdcManagedPackage = "sfdc_managedPackage";
+        public static final String sfdcSetupGainsightApp = "sfdc_setupGainsightApp";
+        public static final String sfdcNameSpace = "sfdc_nameSpace";
+        public static final String sfdcUpdateWidgetLayouts= "sfdc_updateWidgetLayouts" ;
+        public static final String sfdcUnInstallApp= "sfdc_unInstallApp";
+        public static final String sfdcInstallApp = "sfdc_installApp";
+        public static final String sfdcPackageVersionNumber="sfdc_packageVersionNumber";
+        public static final String sfdcPackagePassword="sfdc_packagePassword";
+        public static final String sfdcPartnerUrl="sfdc_partnerUrl";
+        public static final String sfdcSiteCustomURL="sfdc_siteCustomURL";
+        public static final String sfdcApiVersion ="sfdc_apiVersion";
     }
 }
