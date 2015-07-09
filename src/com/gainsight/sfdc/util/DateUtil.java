@@ -134,6 +134,15 @@ public class DateUtil {
         return  dateFormat.format(date);
     }
 
+    /**
+     * Returns the week label with the specified format.
+     *
+     * @param date Date
+     * @param weekDay - Expected values - Sun, Mon, Tue, Wed, Thu, Fri, Sat
+     * @param usesEndDate - true / false
+     * @param format - Date format is null then uses default date format.
+     * @return String - Formatted date string.
+     */
     public static String getWeekLabelDate(Date date, String weekDay, boolean usesEndDate, String format) {
         Calendar cal = Calendar.getInstance();
         int amount = daysBetween(cal.getTime(), date);
@@ -164,6 +173,15 @@ public class DateUtil {
         return sDate;
     }
 
+    /**
+     * Get the week label date calendr
+     *
+     * @param weekDay - Expected values Sun, Mon, Tue, Wed, Thu, Fri, Sat.
+     * @param timeZone - Time Zone on which the calculations should be performed.
+     * @param amount - no of days to add/subtract.
+     * @param usesEndDate - true if week label is based on end date of week.
+     * @return Calendar
+     */
     public static Calendar getWeekLabelDate(String weekDay, TimeZone timeZone, int amount, boolean usesEndDate) {
         Calendar cal = Calendar.getInstance(timeZone);
         cal.add(Calendar.DATE, amount);
@@ -361,21 +379,37 @@ public class DateUtil {
         return dateFmt.format(c.getTime());
     }
 
+    /**
+     * Returns Week Day Short Name.
+     * @param cal
+     * @return
+     */
     public static String getShortWeekDayName(Calendar cal) {
         cal.setTimeZone(timeZone);
         DateFormatSymbols symbols = new DateFormatSymbols(new Locale("en"));
         String[] dayNames = symbols.getShortWeekdays();
         String dayName = dayNames[cal.get(Calendar.DAY_OF_WEEK)];
-        Log.info("Day Name : " +dayName);
+        Log.info("Day Name : " + dayName);
         return dayName;
     }
 
+    /**
+     * Returns First day of month as date.
+     * @param calendar
+     * @return
+     */
     public static String getMonthFirstDate(Calendar calendar) {
         calendar.set(Calendar.DATE, 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns First day of month as date.
+     * @param date
+     * @param format
+     * @return
+     */
     public static String getMonthFirstDate(Date date, String format) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -384,6 +418,12 @@ public class DateUtil {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns First day of month as date.
+     * @param dateStr
+     * @return
+     * @throws ParseException
+     */
     public static String getMonthFirstDate(String dateStr) throws ParseException {
         SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         Date formattedDate = dateFmt.parse(dateStr);
@@ -393,6 +433,13 @@ public class DateUtil {
         return dateFmt.format(calendar.getTime());
     }
 
+    /**
+     * Returns First day of month as date String with format specified.
+     * @param dateStr
+     * @param format
+     * @return
+     * @throws ParseException
+     */
     public static String getMonthFirstDate(String dateStr, String format) throws ParseException {
         SimpleDateFormat dateFmt =  new SimpleDateFormat(format);
         Date formattedDate = dateFmt.parse(dateStr);
@@ -402,6 +449,11 @@ public class DateUtil {
         return dateFmt.format(calendar.getTime());
     }
 
+    /**
+     * Returns the first day of quarter as date string.
+     * @param calendar
+     * @return
+     */
     public static String getQuarterFirstDate(Calendar calendar) {
         int month = calendar.get(Calendar.MONTH);
         month = getQuarterOfMonth(month);
@@ -411,6 +463,12 @@ public class DateUtil {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns the first day of quarter as date string  of the date supplied.
+     * @param date
+     * @param format
+     * @return
+     */
     public static String getQuarterFirstDate(Date date, String format) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -422,6 +480,12 @@ public class DateUtil {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns the first day of quarter as date string  of the date supplied.
+     * @param dateStr
+     * @return
+     * @throws ParseException
+     */
     public static String getQuarterFirstDate(String dateStr) throws ParseException {
         SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         Date date = dateFmt.parse(dateStr);
@@ -434,12 +498,24 @@ public class DateUtil {
         return dateFmt.format(calendar.getTime());
     }
 
+    /**
+     * Returns year in date.
+     * @param date
+     * @return
+     */
     public static int getYear(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
     }
 
+    /**
+     * Return year in a date String
+     *
+     * @param dateStr
+     * @return
+     * @throws ParseException
+     */
     public static int getYear(String dateStr) throws ParseException {
         SimpleDateFormat dateFmt =  new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         Date date = dateFmt.parse(dateStr);
@@ -448,6 +524,11 @@ public class DateUtil {
         return calendar.get(Calendar.YEAR);
     }
 
+    /**
+     * Return the quarter of the month.
+     * @param currentMonth
+     * @return
+     */
     private static int getQuarterOfMonth(int currentMonth) {
         if(currentMonth < 3) {
             currentMonth = 0;

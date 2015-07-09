@@ -96,12 +96,6 @@ public class BaseTest {
         }
     }
 
-
-    @Test
-    public void sample() {
-        System.out.println("*************************");
-    }
-
     @AfterSuite
     public void fini() {
         env.stop();

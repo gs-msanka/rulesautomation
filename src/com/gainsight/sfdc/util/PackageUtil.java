@@ -58,6 +58,12 @@ public class PackageUtil {
     public PackageUtil() {}
 
 
+    /**
+     * Adds Gainsight as default app for a profile, Adds tabs to gainsight application
+     * @param managePackage
+     * @param nameSpace
+     * @throws ConnectionException
+     */
     public void setupGainsightApplicationAndTabs(boolean managePackage, String nameSpace) throws ConnectionException {
         Profile profile = new Profile();
         profile.setFullName("Admin");
@@ -91,7 +97,13 @@ public class PackageUtil {
         Log.info("Gainsight Application/Tabs setup done.");
     }
 
-
+    /**
+     * Returns the profile tab visibility
+     * @param managePackage
+     * @param nameSpace
+     * @param tabs
+     * @return
+     */
     private ProfileTabVisibility[] getTabVisibility(boolean managePackage, String nameSpace, String[] tabs) {
         if(tabs ==null || tabs.length ==0) {
             Log.error("Please send tab info.");
@@ -108,7 +120,12 @@ public class PackageUtil {
     }
 
     /**
-     * This method updates the widget layouts.
+     * Updates the Widget layouts.
+     * @param accLayout
+     * @param oppLayout
+     * @param caseLayout
+     *
+     * Know issue - if layout is already updated, it fails.
      */
     public void updateWidgetLayouts(boolean accLayout, boolean oppLayout, boolean caseLayout)  {
         Log.info("Started to deploy widget layouts");

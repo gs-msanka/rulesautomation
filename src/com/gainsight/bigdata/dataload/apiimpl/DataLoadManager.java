@@ -13,9 +13,12 @@ import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
@@ -35,6 +38,7 @@ import java.util.*;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.*;
 
 /**
  * Created by Giribabu on 13/05/15.
@@ -156,29 +160,40 @@ public class DataLoadManager extends NSTestBase {
      *
      * @param jobId - JobId/StatusId to wait for its completion i.e status != IN_PROGRESS.
      */
-    public void waitForDataLoadJobComplete(String jobId) {
+    public boolean waitForDataLoadJobComplete(final String jobId) {
         Log.info("Wait for the "+jobId + " to complete...");
-        DataLoadStatusInfo statusInfo = null;
-        for (int i = 0; i < MAX_NO_OF_REQUESTS; i++) {
-             statusInfo = getDataLoadJobStatus(jobId);
-            if (statusInfo != null) {
-                if (statusInfo.getStatusType().equals(DataLoadStatusType.IN_PROGRESS)) {
-                    Log.info("Data Load Under Progress...");
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    Timer.sleep(30); //Sleep for 10 seconds and try again.
-                } else {
-                    Log.info("Data Load Status :" + statusInfo.getStatusType());
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    break;
-                }
-            } else {
-                Log.error("Wait for data load failed for Job Id : " + jobId);
-                throw new RuntimeException("Wait for data load for Job Id - " + jobId + " failed.");
+        boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+            @Override
+            public Boolean apply() {
+                return isdataLoadJobComplete(jobId);
             }
+        });
+        return result;
+    }
+
+    /**
+     * Returns true id job is completed, failed, partial success else false.
+     * @param jobId - Job Id to check the status.
+     * @return
+     */
+    public boolean isdataLoadJobComplete(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
         }
-        if(statusInfo.getStatusType().equals(DataLoadStatusType.IN_PROGRESS)) {
-           throw new RuntimeException("Data Load Job is still running, Check status after some time.");
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.FAILED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.PARTIAL_SUCCESS)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
         }
+        if(!result) {
+            Log.info("Data Load Job status is not completed : " +jobId);
+            Log.info(("Status of Job : " +statusInfo.getStatusType()));
+        }
+
+        return result;
     }
 
     /**
@@ -562,6 +577,11 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Clears all the data in the collection & deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionsIdsToDelete - Collection Id to delete.
+     */
     public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId) {
         Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
         Map<String, CollectionInfo.CollectionDetails> collectionInfoMap = new HashMap<>();
@@ -580,6 +600,12 @@ public class DataLoadManager extends NSTestBase {
         Log.info("Deleted all collection data & collections");
     }
 
+
+    /**
+     * Clears all the data in the collection & deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionDetailList - CollectionDetails.
+     */
     public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList) {
         Log.info("Total no of collection to delete : " + collectionDetailList.size());
         if(tenantId == null || collectionDetailList == null) {
@@ -587,12 +613,20 @@ public class DataLoadManager extends NSTestBase {
         }
         for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
                 String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
-                waitForDataLoadJobComplete(jobId);
-                tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                if(waitForDataLoadJobComplete(jobId)) {
+                    tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                } else {
+                    throw new RuntimeException("Data deleting is not completed. i.e. data load job is still running then the max wait time. ");
+                }
             }
         Log.info("Deleted all collection data & collections");
     }
 
+    /**
+     * Returns the metadata that to be used for loading the data via data load api.
+     * @param collectionInfo - CollectionInfo Pojo class
+     * @return metadata to be used while loading data.
+     */
     public DataLoadMetadata getDefaultDataLoadMetaData(CollectionInfo collectionInfo) {
         DataLoadMetadata metadata = new DataLoadMetadata();
         metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
@@ -611,6 +645,12 @@ public class DataLoadManager extends NSTestBase {
         return metadata;
     }
 
+    /**
+     * Returns the first column matched with display order.
+     * @param collectionInfo - CollectionMaster
+     * @param displayName -  Column Display Name.
+     * @return
+     */
     public CollectionInfo.Column getColumnByDisplayName(CollectionInfo collectionInfo, String displayName) {
         for(CollectionInfo.Column col : collectionInfo.getColumns()) {
             if(displayName.equals(col.getDisplayName())) {

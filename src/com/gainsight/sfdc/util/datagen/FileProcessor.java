@@ -279,6 +279,13 @@ public class FileProcessor {
         }
     }
 
+    /**
+     * Returns the date String with all the properties supplied in dataproperties.
+     * @param dateProperties
+     * @param amount
+     * @param date
+     * @return
+     */
     private static String getDate(MDADateProcessor.DateColumnProperties dateProperties, int amount, Date date) {
         String formattedDate = "";
         Date actualDate = DateUtils.addDays(date, amount);
@@ -297,6 +304,13 @@ public class FileProcessor {
     }
 
 
+    /**
+     * Explicitly used for MDA Aggregation expected file generator with WeekLabel, Month, Quarter & Year.
+     * @param mdaDateProcessor
+     * @param date
+     * @return
+     * @throws IOException
+     */
     public static File getDateProcessedFile(MDADateProcessor mdaDateProcessor, Date date) throws IOException {
         Log.info("Started Date Processing....");
 
