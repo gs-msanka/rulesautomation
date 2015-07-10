@@ -140,12 +140,12 @@ public class PlainEmailConnector implements Constants{
 		try {
 			storeConnection = session.getStore("imap");
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			throw new RuntimeException("No such imap provider, Please check");
 		}
 		try {
 			storeConnection.connect(host, userName, password);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Please check authentication details, Please check");
 		}
 		Log.info("Connecting to Store...");
 		store=storeConnection;

@@ -141,9 +141,7 @@ public class SurveyQuestionsTest extends SurveySetup {
 		surQues.setSurveyProperties(surProp);
 		surveyQuestionPage.addSection(surQues);
 		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
-		verifyQuestionDisplayed(surveyQuestionPage, surQues);
-		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
-				surQues.getSectionHeaders());
+		verifyQuestionDisplayed(surveyQuestionPage, surQues); //Assertion is done inside this method
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)

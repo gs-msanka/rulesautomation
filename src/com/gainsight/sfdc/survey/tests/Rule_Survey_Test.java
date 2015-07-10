@@ -82,7 +82,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
-	public void testsurveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
+	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
@@ -125,6 +125,13 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return QuestionCount(cta);
+					}
+				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -139,7 +146,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
-	public void testsurveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
+	public void surveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
