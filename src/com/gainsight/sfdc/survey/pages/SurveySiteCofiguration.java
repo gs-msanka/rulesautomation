@@ -29,7 +29,7 @@ public class SurveySiteCofiguration extends BasePage {
 	}
 
 	public void searchSitesInSetup(){
-		field.setText("setupSearch", "Sites"); /*search input is passed here, as this never changes*/
+		field.clearAndSetText("setupSearch", "Sites"); /*search input is passed here, as this never changes*/
 		item.click(SITES_LINK);
 		if (item.isElementPresent(SITE_LABEL)) {
 			item.click(SITE_LABEL);

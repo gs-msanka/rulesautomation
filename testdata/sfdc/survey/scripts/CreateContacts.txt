@@ -4,7 +4,7 @@ delete [select id from case];
 delete [SELECT Id FROM Opportunity];
 delete [SELECT Id,Name,Title FROM Contact];
 List<Account> acctID = [Select ID from ACCOUNT where NAME like 'SURVEY Account%' limit 1];
-List<String> emailIDs = new List<String>{'athaduka@gainsight.com','jvunnam@gainsighttest.com','ggolla@gainsighttest.com','srallapalli@gainsighttest.com','ryaddanapalli@gainsighttest.com','spulluri@gainsighttest.com','snasika@gainsighttest.com','rkalisipudi@gainsighttest.com','abhilash@gainsighttest.com','spadmanabhan@gainsighttest.com'};
+List<String> emailIDs = new List<String>{'athaduka1@gainsighttest.com','jvunnam@gainsighttest.com','ggolla@gainsighttest.com','srallapalli@gainsighttest.com','ryaddanapalli@gainsighttest.com','spulluri@gainsighttest.com','snasika@gainsighttest.com','rkalisipudi@gainsighttest.com','abhilash@gainsighttest.com','spadmanabhan@gainsighttest.com'};
 List<Contact> contacts = new List<Contact>();
 for(Integer i = 0; i < 10; i++){
 

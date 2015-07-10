@@ -7,6 +7,9 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion.SurveyAllowedAnswer;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+import com.sforce.soap.partner.sobject.SObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -129,8 +132,15 @@ public class SurveyQuestionPage extends SurveyPage {
         return getWebElement(By.xpath(PAGE_TITLE_PATH));
     }
 
-    public WebElement getQuestionElement(SurveyQuestion surveyQuestion) {
+    public WebElement getQuestionElement(final SurveyQuestion surveyQuestion) {
         WebElement surveyQuestionEle;
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isQuestionExists(surveyQuestion);
+					}
+				});
         try {
             surveyQuestionEle= getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
         } catch (Exception e) {
@@ -138,6 +148,19 @@ public class SurveyQuestionPage extends SurveyPage {
         }
         return surveyQuestionEle;
     }
+    
+	public boolean isQuestionExists(SurveyQuestion surveyQuestion) {
+		boolean result = false;
+		WebElement surveyQuestionEle = getPageElement(surveyQuestion)
+				.findElement(
+						By.xpath(String.format(QUESTION_BLOCK,
+								surveyQuestion.getQuestionId())));
+		if (surveyQuestionEle.isDisplayed()) {
+			result = true;
+		}
+		surveyQuestionEle.isDisplayed();
+		return result;
+	}
 
     public SurveyQuestionPage clickOnAddNewQuestion(SurveyQuestion surveyQuestion) {
         WebElement surQuestionsPageEle = getPageElement(surveyQuestion);
@@ -318,6 +341,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
     
 	public String getSectionAttribute() {
+		wait.waitTillElementDisplayed(SECTION_HEADER_TEXTINPUT, MIN_TIME, MAX_TIME);
 		String attribute = element.getElement(SECTION_HEADER_TEXTINPUT)
 				.getAttribute("value");
 		Log.info("Attribute value is" + attribute);

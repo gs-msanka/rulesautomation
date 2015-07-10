@@ -5,7 +5,9 @@ import java.util.Set;
 
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.pages.Constants;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
 
 public class AdminIntegrationPage extends BasePage {
@@ -62,7 +64,7 @@ public class AdminIntegrationPage extends BasePage {
      * Authorizes MDA - Matrix Data Platform.
      */
     public AdminIntegrationPage authorizeMDA(){
-		if(!isElementPresentAndDisplay(By.xpath(AUTHORIZE_DISABLED))) {
+		if(!item.isElementPresent(AUTHORIZE_DISABLED)) {
             item.click(AUTHORIZE);
             sleep(STALE_PAUSE);
             Set<String> windowId = driver.getWindowHandles();    // get  window id of current window
