@@ -65,7 +65,7 @@ public class Workflow360Tests extends WorkflowSetup{
          Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created");
     }
 	  
-        //There are no separate test cases for different kinds of CTAs in Test-link - but the same is handled in Automation suite
+        @TestInfo(testCaseIds={"GS-2083","GS-2084","GS-2087","GS-2086"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA2")
 	    public void createNonRecurringEventCTA_in360(HashMap<String, String> testData) throws IOException {
@@ -322,7 +322,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.isTaskDisplayedUnderCTA(cta,task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
 	   }
 	   
-	   //There are no cases in test-link for creating a CTA with Playbook!
+	   @TestInfo(testCaseIds={"GS-5554"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA14")
 	   public void createRiskCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
@@ -347,7 +347,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	   }
 	   
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5555"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA41")
 	   public void createRiskCTAWithPlaybook_DifferentAssignees_in360(HashMap<String,String> testData) throws IOException{
@@ -376,7 +376,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	   }
 	   
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5555"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA15")
 	   public void createAndReplacePlaybook_RiskCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -423,7 +423,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	    }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5555"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA16")
 	   public void createOpportunityCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
@@ -448,7 +448,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	   }
 	   
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5555"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA17")
 	   public void createAndReplacePlaybook_OpporCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -491,7 +491,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	    }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5554"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA18")
 	   public void createEventCTAWithPlaybook_in360(HashMap<String,String> testData) throws IOException{
@@ -515,7 +515,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	   }
        
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5555"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA19")
 	   public void createAndReplacePlaybook_EventCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -553,7 +553,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       }
 	    }
 	   
-	 //Didn't find any cases for CTA -milestones in test link
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
 	   public void createMilestoneForRiskCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -573,7 +573,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
 	   
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
 	   public void createMilestoneForOpportunityCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -593,7 +593,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
 	   
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
 	   public void createMilestoneForEventCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -612,7 +612,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      Assert.assertTrue(milestones[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA20")
 	   public void createMilestoneForRiskCTA_Resolved_in360(HashMap<String,String> testData) throws IOException{
@@ -639,7 +639,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	     
 	   }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA21")
 	   public void createMilestoneForOpportunityCTA_Won_in360(HashMap<String,String> testData) throws IOException{
@@ -666,7 +666,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5556"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA22")
 	   public void createMilestoneForEventCTA_Completed_in360(HashMap<String,String> testData) throws IOException{
@@ -693,8 +693,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	      Assert.assertTrue(milestonesAfterClose[0].getField(resolveStrNameSpace("JBCXM__Comment__c")).equals("Name: " + cta.getSubject() + ", Reason: " + cta.getReason()));
 	   }
 	   
-	   //No test cases in test-link related to snooze functionality
-	   //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5557"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
 	   public void snoozeRiskCTA_in360(HashMap<String,String> testData) throws IOException{
@@ -732,7 +731,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying the CTA has been set under Important CTAs");
 	   }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5558"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
 	   public void createAndCloseCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
@@ -752,7 +751,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflowPage.isCTADisplayed(cta));
 	   }
 	   
-	 //No Test case in TestLink
+	   @TestInfo(testCaseIds={"GS-5558"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
 	   public void createAndCloseCTA_ClosedRiskStatus(HashMap<String,String> testData) throws IOException{
@@ -810,6 +809,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflowPage.verifyClosedCTA(cta, true, tasks), "Verified that the CTA and all the corresponding tasks are closed");
 	   }
 	   
+	   @TestInfo(testCaseIds={"GS-5558"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA26")
 	   public void createCTA_WithTasks_AndCloseTasks(HashMap<String,String> testData) throws IOException{
@@ -837,7 +837,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	    	   }   		
 	   }
 	   
-	 //No such test case in test-link
+	   @TestInfo(testCaseIds={"GS-5558"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA25")
 	   public void create_CloseAndRe_OpenCTANoOpenTasks(HashMap<String,String> testData) throws IOException{
@@ -859,7 +859,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	       Assert.assertTrue(workflow360.verifyCTADetails(cta), "Verifying the CTA has been set under Closed CTAs");
 	   }
 	   
-	   
+	   @TestInfo(testCaseIds={"GS-5559"})
 	   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA27")
 	   public void createAndUpdateCTA(HashMap<String,String> testData) throws IOException{
@@ -1045,7 +1045,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        Assert.assertEquals(1, sfTask);
 	    }
 	    
-	 //No such test case in test-link
+	   @TestInfo(testCaseIds={"GS-2125"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
 	    public void deSyncTaskFromSFAndDeleteTask_Manual(HashMap<String, String> testData) throws IOException {
@@ -1077,7 +1077,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task desynced from SF and SF task is deleted too");
 	    }
 	    
-	    //No such test case in test-link
+	    @TestInfo(testCaseIds={"GS-5561"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
 	    public void syncTaskToSF_AutoSync(HashMap<String, String> testData) throws IOException {
@@ -1106,7 +1106,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        disableSFAutoSync();
 	    }
 	    
-	    //No such test case in test-link
+	    @TestInfo(testCaseIds={"GS-5562"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
 	    public void deSyncTaskFromSFButKeepTask_AutoSync(HashMap<String, String> testData) throws IOException {
@@ -1140,7 +1140,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        disableSFAutoSync();
 	    }
 	    
-	    //No such test case in test-link
+	    @TestInfo(testCaseIds={"GS-5563"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
 	    public void deSyncTaskFromSFAndDeleteTask_AutoSync(HashMap<String, String> testData) throws IOException {
@@ -1175,7 +1175,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        disableSFAutoSync();
 	    }
 	    
-	    //No such test case in test-link
+	    @TestInfo(testCaseIds={"GS-5560"})
 	    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA30")
 	    public void createRiskCTA_Overdue(HashMap<String, String> testData) throws IOException {
