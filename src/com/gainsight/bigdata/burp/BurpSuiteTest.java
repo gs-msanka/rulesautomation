@@ -21,14 +21,13 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 public class BurpSuiteTest extends NSTestBase {
 	
 	String tenantName = "AutTenant";
 	CollectionInfo cinfo;
 	List<Column> colList = new ArrayList<Column>();
-	String nsAppUrl = PropertyReader.nsAppUrl;
+	String nsAppUrl = "PropertyReader.nsAppUrl";
 	@BeforeClass
 	public void setUp() throws Exception {
 		// Need to fix this after functional test cases are up and running

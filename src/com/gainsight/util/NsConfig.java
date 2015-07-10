@@ -53,8 +53,8 @@ public class NsConfig {
         public static final String nsAppUrl = "ns_appUrl";
         public static final String nsAdminUrl = "ns_adminUrl";
         public static final String nsVersion = "ns_version";
-        public static final String sfdcUsername = "sfdc_username";
-        public static final String sfdcPassword = "sfdc_password";
-        public static final String sfdcStoken = "sfdc_stoken";
+        public static final String sfdcUsername = "ns_sfdc_username";
+        public static final String sfdcPassword = "ns_sfdc_password";
+        public static final String sfdcStoken = "ns_sfdc_stoken";
     }
 }

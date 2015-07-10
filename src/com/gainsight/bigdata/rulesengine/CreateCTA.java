@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Application;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 
 public class CreateCTA extends RulesUtil {
@@ -28,11 +27,11 @@ public class CreateCTA extends RulesUtil {
 			+ "AssignValuesToCustomFields.apex";
 	ResponseObj result = null;
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/CreateCTA/CreateCTAs.xls";
-	String nsAppUrl = PropertyReader.nsAppUrl;
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));

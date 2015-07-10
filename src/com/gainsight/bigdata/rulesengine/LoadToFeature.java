@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import com.gainsight.http.ResponseObj;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 
 public class LoadToFeature extends RulesUtil {
@@ -34,7 +33,8 @@ public class LoadToFeature extends RulesUtil {
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
 		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanupFeatures));
@@ -43,7 +43,7 @@ public class LoadToFeature extends RulesUtil {
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
-		updateNSURLInAppSettings(PropertyReader.nsAppUrl);
+		updateNSURLInAppSettings(nsConfig.getNsURl());
 		List<HashMap<String, String>> testDataList = ExcelDataProvider.getDataFromExcel(Application.basedir + TEST_DATA_FILE1, "loadToCustomers1");
 		if(testDataList.size()>0) {
 			loadToCustomers(testDataList.get(0));

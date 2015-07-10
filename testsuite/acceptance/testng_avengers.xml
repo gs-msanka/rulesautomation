@@ -81,13 +81,5 @@
         </classes>
     </test>
 
-    <!--
-    Need to be fixed.
-<test verbose="3" name="Avengers Test Suite - 360 Test cases" preserve-order="true">
-<classes>
-    <class name="com.gainsight.sfdc.transactions.tests.TransactionsTest"/>
-        </classes>
-    </test>
-    -->
 
 </suite>

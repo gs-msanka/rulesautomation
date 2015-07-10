@@ -5,14 +5,14 @@
 
   "profiles" : {
     "test" : {
-      "sfdc_username" : "snasika@ns.com",
-      "sfdc_password" : "gainsight.12345",
-      "sfdc_stoken"   : "qwrUoPm557jvV9TnYdH6IYww"
+      "ns_sfdc_username" : "snasika@ns.com",
+      "ns_sfdc_password" : "gainsight.12345",
+      "ns_sfdc_stoken"   : "qwrUoPm557jvV9TnYdH6IYww"
     },
     "dev" : {
-      "sfdc_username" : "rkumar@devref.com",
-      "sfdc_password" : "jbara123456",
-      "sfdc_stoken"   : ""
+      "ns_sfdc_username" : "rkumar@devref.com",
+      "ns_sfdc_password" : "jbara123456",
+      "ns_sfdc_stoken"   : ""
     }
   }
 }
