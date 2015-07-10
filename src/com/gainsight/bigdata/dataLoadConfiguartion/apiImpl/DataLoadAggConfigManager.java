@@ -2,9 +2,9 @@ package com.gainsight.bigdata.dataLoadConfiguartion.apiImpl;
 
 
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.dataLoadConfiguartion.pojo.AccountDetail;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.DataAggProcessJobStatus;
 import com.gainsight.bigdata.dataLoadConfiguartion.enums.DataAggProcessStatusType;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.AccountDetail;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.pages.Constants;

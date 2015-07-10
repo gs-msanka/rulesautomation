@@ -34,6 +34,7 @@ public class LoadToSFDC extends RulesUtil {
 
     @BeforeClass
     public void beforeClass() throws Exception {
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         sfdc.connect();
         sfinfo = sfdc.fetchSFDCinfo();
 

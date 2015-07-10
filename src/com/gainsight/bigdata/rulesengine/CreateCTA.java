@@ -30,7 +30,8 @@ public class CreateCTA extends RulesUtil {
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));

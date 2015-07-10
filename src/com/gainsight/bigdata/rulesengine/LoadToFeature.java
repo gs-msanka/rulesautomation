@@ -33,7 +33,8 @@ public class LoadToFeature extends RulesUtil {
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
 		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanupFeatures));

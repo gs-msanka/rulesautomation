@@ -5,7 +5,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataLoadConfiguartion.mapping.IdentifierMapper;
 import com.gainsight.bigdata.dataLoadConfiguartion.apiImpl.DataLoadAggConfigManager;
 import com.gainsight.bigdata.dataLoadConfiguartion.enums.AccountActionType;
-import com.gainsight.bigdata.dataLoadConfiguartion.pojo.AccountDetail;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.*;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
@@ -103,32 +103,32 @@ public class DataLoadConfigAggTest extends NSTestBase {
         HashMap<String, String> timeIdMap = mapper.readValue(testData.get("TimeIdentifier"), HashMap.class);
         HashMap<String, String> measureIdMap = mapper.readValue(testData.get("MeasureIdentifier"), HashMap.class);
 
-        AccountDetail.Identifier  accIdentifier = IdentifierMapper.getAccountIdentifier(dataLoadManager.getColumnByDisplayName(collectionInfo, accIdMap.get("column")), accIdMap.get("targetDisplayName"), accIdProp, Boolean.valueOf(accIdMap.get("directLookUp")), Boolean.valueOf(accIdMap.get("digitConversionEnable")));
-        AccountDetail.Identifier timeIdentifier = IdentifierMapper.getTimeIdentifier(dataLoadManager.getColumnByDisplayName(collectionInfo, timeIdMap.get("column")), timeIdMap.get("targetDisplayName"));
-        AccountDetail.Mapping  measure          = IdentifierMapper.getMeasureMapping(dataLoadManager.getColumnByDisplayName(collectionInfo, measureIdMap.get("column")), measureIdMap.get("targetDisplayName"), measureIdMap.get("aggFunction"));
+        Identifier accIdentifier = IdentifierMapper.getAccountIdentifier(dataLoadManager.getColumnByDisplayName(collectionInfo, accIdMap.get("column")), accIdMap.get("targetDisplayName"), accIdProp, Boolean.valueOf(accIdMap.get("directLookUp")), Boolean.valueOf(accIdMap.get("digitConversionEnable")));
+        Identifier timeIdentifier = IdentifierMapper.getTimeIdentifier(dataLoadManager.getColumnByDisplayName(collectionInfo, timeIdMap.get("column")), timeIdMap.get("targetDisplayName"));
+        Mapping measure          = IdentifierMapper.getMeasureMapping(dataLoadManager.getColumnByDisplayName(collectionInfo, measureIdMap.get("column")), measureIdMap.get("targetDisplayName"), measureIdMap.get("aggFunction"));
 
-        AccountDetail.AccountDetailProperties accDetailProp = new AccountDetail.AccountDetailProperties();
+        AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
         accDetailProp.setTimeZone(testData.get("TimeZone"));
 
         AccountDetail accountDetail = new AccountDetail();
-        AccountDetail.GlobalMapping globalMapping = new AccountDetail.GlobalMapping();
+        GlobalMapping globalMapping = new GlobalMapping();
         globalMapping.setAccountIdentifier(accIdentifier);
         globalMapping.setTimestampIdentifier(timeIdentifier);
-        globalMapping.setMeasures(Arrays.asList(new AccountDetail.Mapping[]{measure}));
+        globalMapping.setMeasures(Arrays.asList(new Mapping[]{measure}));
         globalMapping.setSystemDefined(IdentifierMapper.getSFSystemDefined());
-        globalMapping.setEventIdentifier(new AccountDetail.Identifier());
-        globalMapping.setUserIdentifier(new AccountDetail.Identifier());
-        globalMapping.setCustom(new ArrayList<AccountDetail.Mapping>());
+        globalMapping.setEventIdentifier(new Identifier());
+        globalMapping.setUserIdentifier(new Identifier());
+        globalMapping.setCustom(new ArrayList<Mapping>());
 
         accountDetail.setGlobalMapping(globalMapping);
-        accountDetail.setUsageConfiguration(new AccountDetail.UsageConfiguration());
+        accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setProperties(accDetailProp);
         accountDetail.setAccountType(testData.get("AccountType"));
         accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
-        accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), AccountDetail.NotificationDetails.class));
+        accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
 
-        AccountDetail.RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), AccountDetail.RunNowDetails.class);
+        RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
         runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 

@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.mapping;
 
-import com.gainsight.bigdata.dataLoadConfiguartion.pojo.AccountDetail;
+import com.gainsight.bigdata.connectors.mapping.SysDefFieldInfo;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.*;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.testdriver.Log;
 
@@ -28,12 +29,12 @@ public class IdentifierMapper {
      * @param digitConversionEnable
      * @return
      */
-    public static AccountDetail.Identifier getAccountIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean directLookup, boolean digitConversionEnable) {
+    public static Identifier getAccountIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean directLookup, boolean digitConversionEnable) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Identifier accountIdentifier= new AccountDetail.Identifier();
+        Identifier accountIdentifier= new Identifier();
         setSource(column.getDisplayName(), column.getDbName(), accountIdentifier);
         setTarget(targetDisplayName, ACCOUNT_IDENTIFIER_DB_NAME, new HashMap<String, String>(), accountIdentifier);
         accountIdentifier.setProperties(properties);
@@ -48,8 +49,8 @@ public class IdentifierMapper {
      * @param dbName
      * @param identifier
      */
-    public static void setSource(String displayName, String dbName, AccountDetail.Identifier identifier) {
-        AccountDetail.Source source = new AccountDetail.Source();
+    public static void setSource(String displayName, String dbName, Identifier identifier) {
+        Source source = new Source();
         source.setDisplayName(displayName);
         source.setDbName(dbName);
         identifier.setSource(source);
@@ -64,8 +65,8 @@ public class IdentifierMapper {
      * @param properties
      * @return
      */
-    public static AccountDetail.Source getSource(String displayName, String dbName, String type, String objectName, HashMap<String, String> properties ) {
-        AccountDetail.Source source = new AccountDetail.Source();
+    public static Source getSource(String displayName, String dbName, String type, String objectName, HashMap<String, String> properties ) {
+        Source source = new Source();
         source.setDisplayName(displayName);
         source.setDbName(dbName);
         source.setType(type);
@@ -81,8 +82,8 @@ public class IdentifierMapper {
      * @param properties
      * @return
      */
-    public static AccountDetail.Target getTarget(String displayName, String dbName, HashMap<String, String> properties ) {
-        AccountDetail.Target target = new AccountDetail.Target();
+    public static Target getTarget(String displayName, String dbName, HashMap<String, String> properties ) {
+        Target target = new Target();
         target.setDisplayName(displayName);
         target.setDbName(dbName);
         target.setProperties(properties);
@@ -96,8 +97,8 @@ public class IdentifierMapper {
      * @param properties
      * @param identifier
      */
-    public static void setTarget(String displayName, String dbName, HashMap<String, String> properties, AccountDetail.Identifier identifier) {
-        AccountDetail.Target target = new AccountDetail.Target();
+    public static void setTarget(String displayName, String dbName, HashMap<String, String> properties, Identifier identifier) {
+        Target target = new Target();
         target.setDisplayName(displayName);
         target.setDbName(dbName);
         target.setProperties(properties);
@@ -114,12 +115,12 @@ public class IdentifierMapper {
      * @param digitConversionEnable
      * @return
      */
-    public static AccountDetail.Identifier getUserIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean lookup, boolean directLookup, boolean digitConversionEnable) {
+    public static Identifier getUserIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean lookup, boolean directLookup, boolean digitConversionEnable) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Identifier userIdentifier= new AccountDetail.Identifier();
+        Identifier userIdentifier= new Identifier();
         setSource(column.getDisplayName(), column.getDbName(), userIdentifier);
         setTarget(targetDisplayName, USER_IDENTIFIER_DB_NAME, new HashMap<String, String>(), userIdentifier);
         userIdentifier.setProperties(properties);
@@ -135,12 +136,12 @@ public class IdentifierMapper {
      * @param targetDisplayName
      * @return
      */
-    public static AccountDetail.Identifier getEventIdentifier(CollectionInfo.Column column, String targetDisplayName) {
+    public static Identifier getEventIdentifier(CollectionInfo.Column column, String targetDisplayName) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Identifier accountIdentifier= new AccountDetail.Identifier();
+        Identifier accountIdentifier= new Identifier();
         setSource(column.getDisplayName(), column.getDbName(), accountIdentifier);
         setTarget(targetDisplayName, EVENT_IDENTIFIER_DB_NAME, new HashMap<String, String>(), accountIdentifier);
         return accountIdentifier;
@@ -152,12 +153,12 @@ public class IdentifierMapper {
      * @param targetDisplayName
      * @return
      */
-    public static AccountDetail.Identifier getTimeIdentifier(CollectionInfo.Column column, String targetDisplayName) {
+    public static Identifier getTimeIdentifier(CollectionInfo.Column column, String targetDisplayName) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Identifier accountIdentifier= new AccountDetail.Identifier();
+        Identifier accountIdentifier= new Identifier();
         setSource(column.getDisplayName(), column.getDbName(), accountIdentifier);
         setTarget(targetDisplayName, TIME_IDENTIFIER_DB_NAME, new HashMap<String, String>(), accountIdentifier);
         return accountIdentifier;
@@ -170,12 +171,12 @@ public class IdentifierMapper {
      * @param aggFunc
      * @return
      */
-    public static AccountDetail.Mapping getMeasureMapping(CollectionInfo.Column column, String targetDisplayName, String aggFunc) {
+    public static Mapping getMeasureMapping(CollectionInfo.Column column, String targetDisplayName, String aggFunc) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Mapping mapping = new AccountDetail.Mapping();
+        Mapping mapping = new Mapping();
         mapping.setSource(getSource(column.getDisplayName(), column.getDbName(), null, null, new HashMap<String, String>()));
 
         HashMap<String, String> properties = new HashMap<>();
@@ -192,12 +193,12 @@ public class IdentifierMapper {
      * @param targetDBName
      * @return
      */
-    public static AccountDetail.Mapping getCustomMapping(CollectionInfo.Column column, String targetDisplayName, String targetDBName) {
+    public static Mapping getCustomMapping(CollectionInfo.Column column, String targetDisplayName, String targetDBName) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
         }
-        AccountDetail.Mapping mapping = new AccountDetail.Mapping();
+        Mapping mapping = new Mapping();
         mapping.setSource(getSource(column.getDisplayName(), column.getDbName(), "USAGE_FEED", "", new HashMap<String, String>()));
         mapping.setTarget(getTarget(targetDisplayName, targetDBName, new HashMap<String, String>()));
         return mapping;
@@ -207,19 +208,19 @@ public class IdentifierMapper {
      * Returns the default SFSystemDefined Mappings.
      * @return
      */
-    public static List<AccountDetail.Mapping> getSFSystemDefined() {
-        List<AccountDetail.Mapping> systemDefined = new ArrayList<>();
-        AccountDetail.Mapping accNameMapping = new AccountDetail.Mapping();
+    public static List<Mapping> getSFSystemDefined() {
+        List<Mapping> systemDefined = new ArrayList<>();
+        Mapping accNameMapping = new Mapping();
         accNameMapping.setSource(getSource("Account Name", "Name", "SFDC", "account", new HashMap<String, String>()));
         accNameMapping.setTarget(getTarget("Account Name", "gsaccountname", new HashMap<String, String>()));
         systemDefined.add(accNameMapping);
 
-        AccountDetail.Mapping userNameMapping = new AccountDetail.Mapping();
+        Mapping userNameMapping = new Mapping();
         userNameMapping.setSource(getSource("Contact Name", "Name", "SFDC", "contact", new HashMap<String, String>()));
         userNameMapping.setTarget(getTarget("User Name", "gsusername", new HashMap<String, String>()));
         systemDefined.add(userNameMapping);
 
-        AccountDetail.Mapping userEmailMapping = new AccountDetail.Mapping();
+        Mapping userEmailMapping = new Mapping();
         userEmailMapping.setSource(getSource("Email", "Email", "SFDC", "contact", new HashMap<String, String>()));
         userEmailMapping.setTarget(getTarget("User Email", "gsuseremail", new HashMap<String, String>()));
         systemDefined.add(userEmailMapping);
@@ -230,8 +231,8 @@ public class IdentifierMapper {
      * Returns Default GSMappings.
      * @return
      */
-    public static AccountDetail.Mapping getGSDefinedMapping() {
-        AccountDetail.Mapping mapping = new AccountDetail.Mapping();
+    public static Mapping getGSDefinedMapping() {
+        Mapping mapping = new Mapping();
         mapping.setSource(getSource("gssfdcaccountid", "gssfdcaccountid", "GS_DEFINED", "", new HashMap<String, String>()));
         mapping.setTarget(getTarget("gssfdcaccountid", "gssfdcaccountid", new HashMap<String, String>()));
         return mapping;
@@ -243,8 +244,8 @@ public class IdentifierMapper {
      * @param failureRecipients
      * @return
      */
-    public static AccountDetail.NotificationDetails getNotificationDetails(String[] successRecipients, String[] failureRecipients) {
-        AccountDetail.NotificationDetails notificationDetails = new AccountDetail.NotificationDetails();
+    public static NotificationDetails getNotificationDetails(String[] successRecipients, String[] failureRecipients) {
+        NotificationDetails notificationDetails = new NotificationDetails();
         notificationDetails.setFailureRecipients(failureRecipients!=null ? failureRecipients : new String[0]);
         notificationDetails.setSuccessRecipients(successRecipients!=null ? successRecipients : new String[0]);
         return notificationDetails;
@@ -259,9 +260,9 @@ public class IdentifierMapper {
      * @param flippedMeasureDbName
      * @return
      */
-    public static AccountDetail.EventMeasureMapping getEventMeasureMapping(String event, String aggregationFunction, String aggregationKey,
+    public static EventMeasureMapping getEventMeasureMapping(String event, String aggregationFunction, String aggregationKey,
                                                                            String flippedMeasureDisplayName, String flippedMeasureDbName) {
-        AccountDetail.EventMeasureMapping measureMapping = new AccountDetail.EventMeasureMapping();
+        EventMeasureMapping measureMapping = new EventMeasureMapping();
         measureMapping.setEvent(event);
         measureMapping.setAggregationFunction(aggregationFunction);
         measureMapping.setAggregationKey(aggregationKey);
