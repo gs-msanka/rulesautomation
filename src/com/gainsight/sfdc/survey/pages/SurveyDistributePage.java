@@ -89,6 +89,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 	}
 	
 	public void sendEmail() {
+		item.click(SELECT_CONTACTS_CHECKBOX);
 		item.click(CLICKON_SENDEMAIL_BUTTON);
 		wait.waitTillElementDisplayed(EMAIL_CONFIRM, MIN_TIME,
 				MAX_TIME);
