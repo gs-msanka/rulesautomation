@@ -137,9 +137,11 @@ public class SurveyQuestionsTest extends SurveySetup {
 				.clickOnQuestions(surProp);
 		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
 				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
 		surveyQuestionPage.addSection(surQues);
-		SurveyQuestionPage surveyQuestionPages = surveyPage
-				.clickOnQuestions(surProp);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
 		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
 				surQues.getSectionHeaders());
 	}
