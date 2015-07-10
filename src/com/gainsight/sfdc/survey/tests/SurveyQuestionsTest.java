@@ -138,6 +138,8 @@ public class SurveyQuestionsTest extends SurveySetup {
 		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
 				SurveyQuestion.class);
 		surveyQuestionPage.addSection(surQues);
+		SurveyQuestionPage surveyQuestionPages = surveyPage
+				.clickOnQuestions(surProp);
 		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
 				surQues.getSectionHeaders());
 	}

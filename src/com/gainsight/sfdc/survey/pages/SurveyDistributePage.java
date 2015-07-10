@@ -90,9 +90,10 @@ public class SurveyDistributePage extends SurveyBasePage{
 	
 	public void sendEmail() {
 		item.click(CLICKON_SENDEMAIL_BUTTON);
-		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME,
+		wait.waitTillElementDisplayed(EMAIL_CONFIRM, MIN_TIME,
 				MAX_TIME);
 		item.click(EMAIL_CONFIRM);
+		wait.waitTillElementDisplayed("//div[@class='tab-pane active container-schedule']/descendant::div[@id='errorMsg']", MIN_TIME, MAX_TIME);
 	}
 	
 	public void createSchedule(SurveyDistribution surveyDistribution){
