@@ -137,9 +137,11 @@ public class SurveyQuestionsTest extends SurveySetup {
 				.clickOnQuestions(surProp);
 		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
 				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surProp));
+		surQues.setSurveyProperties(surProp);
 		surveyQuestionPage.addSection(surQues);
-		Assert.assertEquals(surveyQuestionPage.getSectionAttribute(),
-				surQues.getSectionHeaders());
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues); //Assertion is done inside this method
 	}
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)

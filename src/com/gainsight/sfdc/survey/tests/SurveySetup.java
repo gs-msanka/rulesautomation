@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.gainsight.testdriver.Application;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -18,16 +19,20 @@ import org.testng.Assert;
 
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.SalesforceConnector;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
 
-public class SurveySetup extends BaseTest {
+public class SurveySetup extends BaseTest implements Constants{
 	
 	private final static String PICK_LIST_QUERY  = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
 	private final static String CTA_TYPES_QUERY  = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
@@ -73,21 +78,46 @@ public class SurveySetup extends BaseTest {
         return pageId;
     }
 
-    public String getRecentAddedQuestionId(SurveyQuestion surQues) {
-        String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where " +
-                "JBCXM__SurveyMaster__c='"+surQues.getSurveyProperties().getsId()+"' order by createdDate desc limit 1 ");
-        Log.info("Query to get survey question ID : "+query);
-        SObject[] sObjects = sfdc.getRecords(query);
-        Log.info("No of records returned : "+sObjects.length);
-        String questId;
-        if(sObjects.length >=1) {
-            questId = sObjects[0].getId();
-            Log.info("Question Id : "+questId);
-        } else {
-            throw new RuntimeException("No Survey Question Found with this name : " +surQues.getQuestionText());
-        }
-        return questId;
-    }
+    public String getRecentAddedQuestionId(final SurveyQuestion surQues) {
+		String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where "
+				+ "JBCXM__SurveyMaster__c='"
+				+ surQues.getSurveyProperties().getsId()
+				+ "' order by createdDate desc limit 1 ");
+		Log.info("Query to get survey question ID : " + query);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isQuestionExists(surQues);
+					}
+				});
+		SObject[] sObjects = sfdc.getRecords(query);
+		Log.info("No of records returned : " + sObjects.length);
+		String questId;
+		if (sObjects.length >= 1) {
+			questId = sObjects[0].getId();
+			Log.info("Question Id : " + questId);
+		} else {
+			throw new RuntimeException(
+					"No Survey Question Found with this name : "
+							+ surQues.getQuestionText());
+		}
+		return questId;
+	}
+    
+    public boolean isQuestionExists(SurveyQuestion surQues){
+		boolean result = false;
+		String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where "
+				+ "JBCXM__SurveyMaster__c='"
+				+ surQues.getSurveyProperties().getsId()
+				+ "' order by createdDate desc limit 1 ");
+		SObject[] sObjects = sfdc.getRecords(query);
+		Log.info("No of records returned : " + sObjects.length);
+		if (sObjects.length >= 1) {
+			result = true;
+		}
+		return result;
+	}
 
     public String getQuestionType(SurveyQuestion surveyQuestion) {
         String expectedQuestionType = null;
@@ -480,4 +510,21 @@ public class SurveySetup extends BaseTest {
 		}
 		return temp;
 	}
+	
+	public boolean QuestionCount(CTA cta){
+		boolean result=false;
+		SObject[] sObject=sfdc.getRecords(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				+ cta.getPriority()
+				+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+				+ cta.getReason()
+				+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+				+ cta.getType()
+				+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+				+ cta.getStatus() + "'))"));
+		if (sObject.length>0) {
+			result=true;	
+		}
+		return result;
+	}
+	
 }

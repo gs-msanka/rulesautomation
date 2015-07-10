@@ -1,8 +1,8 @@
 List<JBCXM__Playbook__c> defaultPlayBookList = new List<JBCXM__Playbook__c>();
     JBCXM__Playbook__c p1 = new JBCXM__Playbook__c();
-    p1.Name = 'Drop in Usage';
+    p1.Name = 'Collections';
     p1.JBCXM__PlayBookType__c = 'Risk';
-    p1.JBCXM__Tasks_Count__c = 4;
+    p1.JBCXM__Tasks_Count__c = 6;
 
 defaultPlayBookList.add(p1);
 
@@ -31,9 +31,9 @@ JBCXM__Playbook__c p5 = new JBCXM__Playbook__c();
 defaultPlayBookList.add(p5);
 
 JBCXM__Playbook__c p6 = new JBCXM__Playbook__c();
-    p6.Name = 'High Survey Rating (NPS Promoter)';
+    p6.Name = 'NPS Promoter';
     p6.JBCXM__PlayBookType__c = 'Opportunity';
-    p6.JBCXM__Tasks_Count__c = 5;
+    p6.JBCXM__Tasks_Count__c = 3;
 defaultPlayBookList.add(p6);
 
 JBCXM__Playbook__c p7 = new JBCXM__Playbook__c();
@@ -43,19 +43,20 @@ JBCXM__Playbook__c p7 = new JBCXM__Playbook__c();
 defaultPlayBookList.add(p7);
 
 JBCXM__Playbook__c p8 = new JBCXM__Playbook__c();
-    p8.Name = 'Executive Business Review (EBR)';
+    p8.Name = 'Annual Review';
     p8.JBCXM__PlayBookType__c = 'Event';
     p8.JBCXM__Tasks_Count__c = 6;
 
 defaultPlayBookList.add(p8);
 insert 	defaultPlayBookList;
-
-List<String> taskList = new List<String>{'Check Adoption usage and analytics',
-								'Schedule call with Admin and/or Power User to identify reason for drop',
-								'Schedule best practices training',
-								'Update Product and Sales Teams with customer feedback'};
-List<String> priority = new List<String>{ 'High', 'High','Medium', 'Medium'};
-List<Integer> days = new List<Integer>{3, 7, 10, 10};
+List<String> taskList = new List<String>{'Check with Finance on T&C\'s',
+								'Check 360 View for usage, latest NPS score, & open cases',
+								'Reach out to customer regarding delay',
+								'Escalate to Business Owner/Exec Sponsor (if needed)',
+								'Follow up with Finance to confirm payment commitment',
+								'Confirm payment received'};
+List<String> priority = new List<String>{ 'Medium', 'low','Medium', 'Medium', 'Medium', 'High'};
+List<Integer> days = new List<Integer>{2, 2, 4, 7, 10, 15};
 List<JBCXM__PlaybookTasks__c> pbTasks =  new List<JBCXM__PlaybookTasks__c>();
 pbTasks.addAll(createTasks(taskList,p1.id,priority,days));
 
@@ -103,11 +104,9 @@ pbTasks.addAll(createTasks(taskList, p5.id, priority, days));
 
 taskList = new List<String>{ 'Review NPS comments',
 					'Verify role of person in organization',
-					'Contact Promoter to discuss survey - verify if they are referenceable',
-					'If customer agrees to be a reference, add to reference database',
 					'Nuture based on role: (a) user/admin=invite to user group (b) exec=request marketing activity quote, case study, or press release)' };
-priority = new List<String>{ 'High','Medium','High','Medium','Low'};
-days = new List<Integer>{2, 2, 3, 4, 7};
+priority = new List<String>{ 'High','High','High'};
+days = new List<Integer>{2, 2, 7};
 pbTasks.addAll(createTasks(taskList,p6.id, priority, days));
 
 
@@ -153,16 +152,3 @@ public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String
 private static String getJSON(String name, Integer days2, String priority2){
     return '[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"'+name+'","value":"'+name+'"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"'+days2+'","value":"'+days2+'"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Medium","value":"Medium"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"'+priority2+'","value":"'+priority2+'"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Open","value":"Open"},{"key":"Closed","value":"Closed"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Open","value":"Open"}]}]';
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

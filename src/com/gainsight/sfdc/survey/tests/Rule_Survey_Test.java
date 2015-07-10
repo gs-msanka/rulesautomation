@@ -10,6 +10,8 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -85,12 +87,19 @@ public class Rule_Survey_Test extends SurveySetup {
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
-		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		final CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return QuestionCount(cta);
+					}
+				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -110,12 +119,19 @@ public class Rule_Survey_Test extends SurveySetup {
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
-		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		final CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return QuestionCount(cta);
+					}
+				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -135,12 +151,19 @@ public class Rule_Survey_Test extends SurveySetup {
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
-		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		final CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return QuestionCount(cta);
+					}
+				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -283,7 +306,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp);
 		publishPage.updatePublishDetails(surProp);
 		surProp.setStatus("Publish");
-		Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(),
+		Assert.assertEquals(publishPage.getSurveyStatus(surProp), surProp.getStatus(),
 				"Verifying Survey Status");
 		basepage.clickOnSurveyTab();
 		surveyBasePage.openSurveyFromPublished(surProp).clickOnSetCta(surProp);
