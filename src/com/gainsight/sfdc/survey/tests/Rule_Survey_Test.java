@@ -119,7 +119,7 @@ public class Rule_Survey_Test extends SurveySetup {
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
-		CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
+		final CTA cta = mapper.readValue(testData.get("CTACriteria"), CTA.class);
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
