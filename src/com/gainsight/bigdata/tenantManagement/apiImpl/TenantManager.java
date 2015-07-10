@@ -13,7 +13,6 @@ import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.NsConfig;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
 import org.apache.http.HttpStatus;

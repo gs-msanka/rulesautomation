@@ -584,6 +584,10 @@ public class DataLoadManager extends NSTestBase {
      */
     public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId) {
         Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
+        if(collectionsIdsToDelete == null || collectionsIdsToDelete.size() ==0) {
+            Log.info("No Collections To Delete");
+            return;
+        }
         Map<String, CollectionInfo.CollectionDetails> collectionInfoMap = new HashMap<>();
         for(CollectionInfo collectionInfo : getAllCollections() ) {
             collectionInfoMap.put(collectionInfo.getCollectionDetails().getCollectionId(), collectionInfo.getCollectionDetails());

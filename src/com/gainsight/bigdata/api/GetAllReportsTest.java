@@ -11,7 +11,6 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 public class GetAllReportsTest extends NSTestBase {
 
@@ -19,7 +18,7 @@ public class GetAllReportsTest extends NSTestBase {
 
 	@BeforeClass
 	public void setUp() throws Exception {
-		baseuri = PropertyReader.nsAppUrl + ApiUrl.REPORT_GET_ALL;
+		baseuri = nsConfig.getNsURl()+ ApiUrl.REPORT_GET_ALL;
 	}
 
 	@Test

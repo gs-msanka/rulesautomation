@@ -16,7 +16,6 @@ import com.gainsight.bigdata.util.DynamicHeadersTestData;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 public class AdminAuthTest extends NSTestBase {
 
@@ -30,7 +29,7 @@ public class AdminAuthTest extends NSTestBase {
 	@BeforeClass
 	public void setUp(@Optional("") String version) throws Exception {
 		this.version = version;
-		host = PropertyReader.nsAppUrl;
+		host = nsConfig.getNsURl();
 		AdminUrl.loadAdminUrls();
 		invalidHeadersList = headerTestData.getHeadersInvalid(header);
 		validHeadersList = headerTestData.getHeadersValid(header);
