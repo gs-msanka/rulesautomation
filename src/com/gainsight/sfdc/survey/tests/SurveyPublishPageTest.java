@@ -46,11 +46,6 @@ public class SurveyPublishPageTest extends SurveySetup {
 		basepage.login();
 	}
 	
-	@BeforeMethod
-	public void cleanup() throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
-	}
-	
 	@TestInfo(testCaseIds = { "GS-2696" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S3")
@@ -243,6 +238,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 		surveyPropData.setSiteURL(surveySiteURL());
 		publishPage.updatePublishDetails(surveyPropData);
 		surveyPropData.setStatus("Publish");
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
 				surveyPropData.getStatus(),
 				"Verifying Survey Status After Publishing");
