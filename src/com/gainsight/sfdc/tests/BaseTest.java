@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.util.PackageUtil;
 
 import com.gainsight.util.SfdcConfig;
@@ -42,6 +41,8 @@ public class BaseTest {
     public static PackageUtil packageUtil;
 
     public static MetaDataUtil metaUtil=new MetaDataUtil();
+    public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
+
 
     @BeforeSuite
     public void init() throws Exception {
@@ -49,29 +50,35 @@ public class BaseTest {
     	sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
     			sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
     	
-    	Assert.assertTrue(sfdc.connect(), "SFDC Connection established successfully!");
+    	Assert.assertTrue(sfdc.connect(), "SFDC Connection Failed..., Check credentials.");
+
     	//MetadataClient is initialized
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
-        if(Boolean.valueOf(sfdcConfig.getSfdcUnInstallApp())) {
+        if(sfdcConfig.getSfdcUnInstallApp()) {
             packageUtil.unInstallApplication();
         }
         //Install Application.
-        if(Boolean.valueOf(sfdcConfig.getSfdcInstallApp())) {
+        if(sfdcConfig.getSfdcInstallApp()) {
             packageUtil.installApplication(sfdcConfig.getSfdcPackageVersionNumber(), sfdcConfig.getSfdcPackagePassword());
         }
+
+        if(sfdcConfig.getSfdcUpdateWidgetLayouts()) {
+            packageUtil.updateWidgetLayouts(true, true, true);
+        }
+        if(sfdcConfig.getSfdcSetupGainsightApp()) {
+            packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
+            sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+        }
+
         //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
         if(sfdcConfig.getSfdcManagedPackage()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
         }
-
-        if(Boolean.valueOf(sfdcConfig.getSfdcUpdateWidgetLayouts())) {
-            packageUtil.updateWidgetLayouts(true, true, true);
-        }
-
         packageUtil.deployPermissionSetCode();
         sfdcInfo = sfdc.fetchSFDCinfo();
+        metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
@@ -79,26 +86,12 @@ public class BaseTest {
         Log.info("Initializing Selenium Environment");
         env.start();
         try {
-            String setAsDefaultApp = sfdcConfig.getSfdcSetDefaultApp();
-            String loadDefaultData = sfdcConfig.getSfdcLoadDefaultData();
             env.launchBrower();
             basepage = new BasePage();
             Log.info("Initializing Base Page : " + basepage);
-            if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
-                basepage.login();
-                if ((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
-                    basepage.setDefaultApplication("Gainsight");
-                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight, Transactions, Cockpit, Gainsight, Actions");
-                }
-                if (loadDefaultData != null && loadDefaultData.equals("true")) {
-                    basepage.loadDefaultData();
-                }
-                basepage.logout();
-            }
         } catch (Exception e) {
             env.stop();
-            Log.info(e.getLocalizedMessage());
-            e.printStackTrace();
+            Log.error(e.getLocalizedMessage(), e);
             throw e;
         }
     }

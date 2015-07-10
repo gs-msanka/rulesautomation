@@ -19,7 +19,6 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 
@@ -428,43 +427,43 @@ public void setupRule(HashMap<String,String> testData){
 				String fieldType = (String) pair.getKey();
 				if ("DATE".equalsIgnoreCase(fieldType)) {
 					metadataClient.createDateField(object, fieldsMap.get(fieldType), false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("DATETIME".equalsIgnoreCase(fieldType)){
 					metadataClient.createDateField(object, fieldsMap.get(fieldType), true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("BOOLEAN".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), true, false, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("PHONE".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), false, true, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("URL".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), false, false, true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("NUMBER".equalsIgnoreCase(fieldType)){
 					metadataClient.createNumberField(object, fieldsMap.get(fieldType), false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("PERCENT".equalsIgnoreCase(fieldType)){
 					metadataClient.createNumberField(object, fieldsMap.get(fieldType), true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("EMAIL".equalsIgnoreCase(fieldType)){
 					metadataClient.createEmailField(object, fieldsMap.get(fieldType));
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("TEXT".equalsIgnoreCase(fieldType)){
 					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, false, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("TEXTAREA".equalsIgnoreCase(fieldType)){
 					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, true, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else{
 

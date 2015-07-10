@@ -1,28 +1,45 @@
 {
-  "sfdc.appurl" : "https://login.salesforce.com",
-  "sfdc.deleteRecords" : "false",
-  "sfdc.managedPackage" : "true",
-  "sfdc.setDefaultApp" : "false",
-  "sfdc.loadDefaultData" : "false",
-  "sfdc.nameSpace" : "JBCXM",
-  "sfdc.updateWidgetLayouts" : "false",
-  "sfdc.unInstallApp" : "false",
-  "sfdc.installApp" : "false",
-  "sfdc.packageVersionNumber" : "4.27",
-  "sfdc.packagePassword" : "JBCXM__Install4.27",
-  "sfdc.partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
-  "sfdc.siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
-  "sfdc.apiVersion" : "32.0",
+  "sfdc_managedPackage" : "true",
+  "sfdc_setupGainsightApp" : "false",
+  "sfdc_nameSpace" : "JBCXM",
+  "sfdc_updateWidgetLayouts" : "false",
+  "sfdc_unInstallApp" : "false",
+  "sfdc_installApp" : "false",
+  "sfdc_packageVersionNumber" : "4.29",
+  "sfdc_packagePassword" : "JBCXM__Install4.29",
+  "sfdc_partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
+  "sfdc_siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
+  "sfdc_apiVersion" : "32.0",
   "profiles" : {
     "default" : {
-      "sfdc.username" : "pdalal@36demo.com",
-      "sfdc.password" : "gainsight1234567",
-      "sfdc.stoken" : "QGoH5XTfDBoAIyfSWdGVqrEm"
+      "sfdc_username" : "gs-ggolla@testing1.com",
+      "sfdc_password" : "1234567g",
+      "sfdc_stoken"   : "i4kNNt584jDIslzc2fOY7u0Gn"
     },
     "marvels" : {
-      "sfdc.username" : "marvels@gsautomation.com",
-      "sfdc.password" : "Gainsight1234",
-      "sfdc.stoken" : "H1SOLcR5rVcrsWIuk7jlZDaDj"
+      "sfdc_username" : "marvels@gsautomation.com",
+      "sfdc_password" : "Gainsight12345",
+      "sfdc_stoken" : "Mpsjf2ds28VSasOrFbsVfpFE"
+    },
+    "connectors" : {
+      "sfdc_username" : "connectors@gsautomation.com",
+      "sfdc_password" : "connect@15",
+      "sfdc_stoken" : "H6iIEnV7Try9q2lWX40tIlXX"
+    },
+    "weRules" : {
+      "sfdc_username" : "connectors@gsautomation.com",
+      "sfdc_password" : "connect@15",
+      "sfdc_stoken" : "H6iIEnV7Try9q2lWX40tIlXX"
+    },
+    "avengers" : {
+      "sfdc_username" : "avengers@gsautomation.com",
+      "sfdc_password" : "1234567jbr",
+      "sfdc_stoken" : "C4oWom5GUkQ9HG6dhqerfRR9"
+    },
+    "11Demo" : {
+      "sfdc_username" : "ggolla@11demo.com",
+      "sfdc_password" : "1234567jbr",
+      "sfdc_stoken" : "WM5pd6SXwI9k4uwhIOMbfnJH"
     }
   }
 }

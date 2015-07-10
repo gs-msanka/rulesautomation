@@ -16,9 +16,16 @@
 	<property name="ivy.home" value="${basedir}/lib/ivy-2.3.0.jar"/>
 	<property name="ivy.settings.file" value="${basedir}/ivy-settings.xml"/>
 
-	<propertyset id="sfdc-command-line-properties">
-		<propertyref prefix="sfdc."/>
-	</propertyset>
+    <propertyset id="sfdc-properties">
+        <propertyref prefix="sfdc_"/>
+    </propertyset>
+    <propertyset id="ns-properties">
+        <propertyref prefix="ns_"/>
+    </propertyset>
+    <propertyset id="command-line-properties">
+        <propertyset refid="sfdc-properties"/>
+        <propertyset refid="ns-properties"/>
+    </propertyset>
 
 	<taskdef resource="org/apache/ivy/ant/antlib.xml"
 			 uri="antlib:org.apache.ivy.ant">
@@ -67,7 +74,7 @@
 		<testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
 			<sysproperty key="run" value="BAT" />
 			<sysproperty key="basedir" value="${basedir}" />
-			<propertyset refid = "sfdc-command-line-properties"/>
+			<propertyset refid = "command-line-properties"/>
 
 			<xmlfileset dir="testsuite/acceptance" includes="${testngFileName}"/>
 		</testng>
@@ -78,7 +85,7 @@
         <testng haltonfailure="no" classpathref="main.classpath" outputDir="${result.dir}" useDefaultListeners="true" configFailurePolicy="continue">
             <sysproperty key="run" value="BAT" />
             <sysproperty key="basedir" value="${basedir}" />
-			<propertyset refid = "sfdc-command-line-properties"/>
+			<propertyset refid = "command-line-properties"/>
             <xmlfileset dir="/var/lib/jenkins" includes="${testngFileName}"/>
         </testng>
     </target>

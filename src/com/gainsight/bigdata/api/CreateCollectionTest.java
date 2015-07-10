@@ -74,7 +74,7 @@ public class CreateCollectionTest extends NSTestBase {
 
 	@Test
 	public void createCollectionWithDummyTenantId() throws Exception {
-		String uri = sfdcConfig.getSfdcAppurl()
+		String uri = "sfdcConfig.getSfdcAppurl()"
 				+ "/createcollection/DummyTenantID/AutCollection1";
 
 		ObjectMapper mapper = new ObjectMapper();
