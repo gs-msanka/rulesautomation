@@ -41,7 +41,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
              metaUtil.createExtIdFieldOnAccount(sfdc);
              sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
              metaUtil.createExtIdFieldOnUser(sfdc);
-          //   sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
+             sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
              cleanPlaybooksData();
              loadDefaultPlaybooks();
 	   }
