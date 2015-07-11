@@ -1,5 +1,6 @@
 package com.gainsight.bigdata;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,8 +13,11 @@ import com.gainsight.bigdata.rulesengine.ResponseObject;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
+import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
+import com.gainsight.sfdc.util.PackageUtil;
 import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.sforce.soap.metadata.MetadataConnection;
 import org.apache.http.HttpStatus;
@@ -35,6 +39,7 @@ import com.sforce.soap.partner.sobject.SObject;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.*;
 
 public class NSTestBase {
 
@@ -51,10 +56,12 @@ public class NSTestBase {
     public static String accessKey;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    MetadataConnection metadataConnection;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
-    public Calendar calendar = Calendar.getInstance();
+    public static PackageUtil packageUtil;
+    public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
+
 
     @BeforeSuite
     public void init() throws Exception {
@@ -80,6 +87,32 @@ public class NSTestBase {
         //Assert.assertTrue(tenantAutoProvision());
         //accessKey = getDataLoadAccessKey();
 
+        packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
+        //Uninstall Application.
+        if(sfdcConfig.getSfdcUnInstallApp()) {
+            packageUtil.unInstallApplication();
+        }
+        //Install Application.
+        if(sfdcConfig.getSfdcInstallApp()) {
+            packageUtil.installApplication(sfdcConfig.getSfdcPackageVersionNumber(), sfdcConfig.getSfdcPackagePassword());
+        }
+
+        if(sfdcConfig.getSfdcUpdateWidgetLayouts()) {
+            packageUtil.updateWidgetLayouts(true, true, true);
+        }
+
+        if(sfdcConfig.getSfdcSetupGainsightApp()) {
+          sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+        }
+
+        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
+        if(isPackage) {
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+        }
+        //Deploy Custom permission set code
+        packageUtil.deployPermissionSetCode();
+        //Providing permissions to standard objects.
+        metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
     }
 
     /**
@@ -266,5 +299,10 @@ public class NSTestBase {
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
         }
         return result;
+    }
+
+    public ResponseObj revokeMDAAuthorization() throws Exception {
+        ResponseObj responseObj = wa.doDelete(ApiUrls.MDA_AUTH_REVOKE, header.getAllHeaders());
+        return responseObj;
     }
 }

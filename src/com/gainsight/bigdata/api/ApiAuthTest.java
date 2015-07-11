@@ -16,7 +16,6 @@ import com.gainsight.bigdata.util.DynamicHeadersTestData;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 public class ApiAuthTest extends NSTestBase {
 
@@ -30,7 +29,7 @@ public class ApiAuthTest extends NSTestBase {
 	@BeforeClass
 	public void setUp(@Optional("") String version) throws Exception {
 		this.version = version;
-		host = PropertyReader.nsAppUrl;
+		host = nsConfig.getNsURl();
 		init();
 		ApiUrl.loadApiUrls();
 		invalidHeadersList = headerTestData.getHeadersInvalid(header);

@@ -18,7 +18,6 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 
 public class CreateCollectionTest extends NSTestBase {
@@ -32,7 +31,7 @@ public class CreateCollectionTest extends NSTestBase {
 	public void setUp() throws Exception {
 		header.addHeader("contextTenantId", "ad0ea8a1-049d-4f52-8a10-2bb2c99a9176");
 		long epoch = System.currentTimeMillis();
-		baseuri = PropertyReader.nsAppUrl + "/admin/collections";
+		baseuri = nsConfig.getNsURl() + "/admin/collections";
 
 		cinfo = new CollectionInfo();
 		CollectionDetails colDetails = new CollectionInfo.CollectionDetails();
@@ -74,7 +73,7 @@ public class CreateCollectionTest extends NSTestBase {
 
 	@Test
 	public void createCollectionWithDummyTenantId() throws Exception {
-		String uri = sfdcConfig.getSfdcAppurl()
+		String uri = "sfdcConfig.getSfdcAppurl()"
 				+ "/createcollection/DummyTenantID/AutCollection1";
 
 		ObjectMapper mapper = new ObjectMapper();

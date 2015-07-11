@@ -14,10 +14,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Giribabu on 22/05/15.
@@ -32,6 +29,10 @@ public class ReportManager extends NSTestBase {
      * @return - Payload for running a tabular report.
      */
     public String createDynamicTabularReport(CollectionInfo collectionInfo) {
+        return createTabularReport(collectionInfo, null);
+    }
+
+    public String createTabularReport(CollectionInfo collectionInfo, String[] columns) {
         Log.info("Started Creating a report with all the columns in the collection...");
         String report = null;
 
@@ -39,23 +40,31 @@ public class ReportManager extends NSTestBase {
         reportInfo.setSchemaName(collectionInfo.getCollectionDetails().getCollectionName());
         reportInfo.setCollectionID(collectionInfo.getCollectionDetails().getCollectionId());
 
+        Set<String> tempColumns = new HashSet<>();
+        if(columns != null) {
+            tempColumns.addAll(Arrays.asList(columns));
+        }
+
         List<ReportInfo.Dimension> dimensionList = new ArrayList<>();
         ReportInfo.Dimension dimension;
         for (CollectionInfo.Column column : collectionInfo.getColumns()) {
-            dimension = new ReportInfo.Dimension();
-            dimension.setCol(column.getDbName());
-            dimension.setAxis("measure");
-            dimension.setType(column.getColumnAttributeType());
-            dimension.setDataType(column.getDatatype());
-            dimension.setAgg_func("count");
-            dimension.setFieldDisplayName(column.getDisplayName());
-            dimensionList.add(dimension);
+            if(columns != null && columns.length > 0 && !tempColumns.contains(column.getDisplayName())) {
+                continue;
+            }
+                dimension = new ReportInfo.Dimension();
+                dimension.setCol(column.getDbName());
+                dimension.setAxis("measure");
+                dimension.setType(column.getColumnAttributeType());
+                dimension.setDataType(column.getDatatype());
+                dimension.setAgg_func("count");
+                dimension.setFieldDisplayName(column.getDisplayName());
+                dimensionList.add(dimension);
         }
         reportInfo.setDimensions(dimensionList);
 
         ReportMaster reportMaster = new ReportMaster();
         reportMaster.setNewReport(true);
-        reportMaster.setReportMasterRequired(true);
+        reportMaster.setReportMasterRequired(false);
         reportMaster.setFormat("JSON");
 
         List<ReportInfo> reportInfoList = new ArrayList<>();

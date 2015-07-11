@@ -1,0 +1,45 @@
+{
+  "jobName": "Connectors Customers Insert",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv",
+        "table": "TempAccount",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "JBCXM__Account__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/data/CustomerInfo.csv",
+        "table": "TempCustomers",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "JBCXM__Status__c",
+            "alias": "JBCXM__Status__r.JBCXM__SystemName__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/Customers.csv"
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "JBCXM__CustomerInfo__c",
+    "operation": "insert",
+    "contentType": "CSV",
+    "file": "/testdata/newstack/connectors/dataApi/process/Customers.csv"
+  }
+}

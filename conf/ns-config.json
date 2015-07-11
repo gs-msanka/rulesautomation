@@ -1,0 +1,18 @@
+{
+  "ns_appUrl"   : "https://test-router.herokuapp.com",
+  "ns_adminUrl" : "https://test-router.herokuapp.com",
+  "ns_version"  : "v1.0",
+
+  "profiles" : {
+    "test" : {
+      "ns_sfdc_username" : "snasika@ns.com",
+      "ns_sfdc_password" : "gainsight.12345",
+      "ns_sfdc_stoken"   : "qwrUoPm557jvV9TnYdH6IYww"
+    },
+    "dev" : {
+      "ns_sfdc_username" : "rkumar@devref.com",
+      "ns_sfdc_password" : "jbara123456",
+      "ns_sfdc_stoken"   : ""
+    }
+  }
+}
