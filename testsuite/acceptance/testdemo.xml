@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Survey Automation Suite" verbose="3">
+
+<listeners>
+<listener class-name="com.gainsight.utils.AutTestListener" />
+</listeners>
+
+<test name="Survey Automation Suite" preserve-order="true">
+    <classes>
+       <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest">
+        <methods>
+        <include name="snoozeRiskCTA" />
+        <include name="verifyHeaderShowFilter" />
+      </methods>
+       </class>
+       
+        <class name="com.gainsight.sfdc.sfWidgets.accWidget.tests.AccWidget_CockpitTests">
+        <methods>
+        <include name="snoozeRiskCTA" />
+      </methods>
+       </class>
+       
+        <class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests">
+        <methods>
+        <include name="snoozeRiskCTA" />
+      </methods>
+       </class>
+       
+         <class name="com.gainsight.sfdc.customer360.test.Workflow360Tests">
+        <methods>
+        <include name="createRecurringEventCTA_Yearly_ByMonth_in360" />
+         <include name="snoozeRiskCTA_in360" />
+      </methods>
+       </class>
+       
+    </classes>
+</test>
+</suite>

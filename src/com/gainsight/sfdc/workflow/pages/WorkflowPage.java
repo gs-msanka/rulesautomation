@@ -446,7 +446,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	selectValueInDropDown(cta.getSnoozeReason());
     	item.click(EXP_VIEW_HEADER); //click somewhere else
-        Timer.sleep(5);
+        Timer.sleep(10);
         return this;
     }
 
