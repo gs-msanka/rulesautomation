@@ -441,9 +441,13 @@ public class WorkflowPage extends WorkflowBasePage {
     
     public WorkflowPage snoozeCTA(CTA cta){
     	expandCTAView(cta);
+    	Timer.sleep(5);
     	item.click(EXP_VIEW_SNOOZE);
+    	Timer.sleep(5);
     	item.clearAndSetText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
+    	Timer.sleep(5);
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
+    	Timer.sleep(5);
     	selectValueInDropDown(cta.getSnoozeReason());
     //	item.click(EXP_VIEW_HEADER); //click somewhere else
         Timer.sleep(5);
