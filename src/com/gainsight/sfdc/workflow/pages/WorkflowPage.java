@@ -444,7 +444,7 @@ public class WorkflowPage extends WorkflowBasePage {
     	Timer.sleep(5);
     	item.click(EXP_VIEW_SNOOZE);
     	Timer.sleep(5);
-    	item.clearAndSetText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
+    	item.setText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
     	Timer.sleep(5);
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
     	Timer.sleep(5);
