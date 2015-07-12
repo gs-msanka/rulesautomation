@@ -3,13 +3,10 @@ package com.gainsight.bigdata.copilot.apiImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.ObjectFields;
-//import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.testdriver.Application;
 import com.gainsight.util.MetaDataUtil;
@@ -18,24 +15,35 @@ public class LoadTestData extends NSTestBase{
 
 	MetaDataUtil md=new MetaDataUtil();
 	
-	private static final String CoPilotDir = Application.basedir
-			+ "/testdata/newstack/CoPilot";
-	private static final String CleanUp = CoPilotDir
-			+ "/CleanUps/CleanUpDatas.apex";
-	private static final String Job_C_ContactObject2 = CoPilotDir
-			+ "/Job/job_C_ContactObject2.txt";
-	private static final String Job_Account = CoPilotDir
-			+ "/Job/job_Account.txt";
-	private static final String Job_CustomerInfo = CoPilotDir
-			+ "/Job/job_CustomerInfo.txt";
-	private static final String Job_Contact = CoPilotDir
-			+ "/Job/job_Contact.txt";
-	private static final String Job_Case = CoPilotDir
-	+ "/Job/job_Case.txt";
-	private static final String Job_C_ContactObject1 = CoPilotDir
-			+ "/Job/job_C_ContactObject1.txt";
-	/*private static final String Scorecard_Enable = CoPilotDir
-			+ "/Job/job_C_ContactObject1.txt";*/
+	private static final String copilotDir = Application.basedir
+			+ "/testdata/newstack/copilot";
+	private static final String CleanUp = copilotDir
+			+ "/cleanUps/CleanUpDatas.apex";
+	private static final String Job_C_ContactObject2 = copilotDir
+			+ "/job/job_C_ContactObject2.txt";
+	private static final String Job_Account = copilotDir
+			+ "/job/job_Account.txt";
+	private static final String Job_CustomerInfo = copilotDir
+			+ "/job/job_CustomerInfo.txt";
+	private static final String Job_Contact = copilotDir
+			+ "/job/job_Contact.txt";
+	private static final String Job_Case = copilotDir
+	+ "/job/job_Case.txt";
+	private static final String Job_C_ContactObject1 = copilotDir
+			+ "/job/job_C_ContactObject1.txt";
+	private static final String Scorecard_Enable = copilotDir
+			+ "/apexScripts/Scorecard_Enable.apex";
+	private static final String Scorecard_PopulateDatas = copilotDir
+			+ "/apexScripts/Scorecard_PopulateDatas.apex";
+	private static final String job_accountInit = copilotDir
+			+ "/job/job_Account-Init.txt";
+	private static final String job_customerInfoInit = copilotDir
+			+ "/job/job_CustomerInfo-Init.txt";
+	private static final String job_contactInit = copilotDir
+			+ "/job/job_Contact-Init.txt";
+	private static final String job_caseInit = copilotDir
+			+ "/job/job_Case-Init.txt";
+	
 	
 	private DataETL dataETL;
 	
@@ -44,9 +52,9 @@ public class LoadTestData extends NSTestBase{
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
 	}
 	
-	@Test
+	
 	public void createCustomFields() throws Exception {
-		
+			
 		ObjectFields objField=new ObjectFields();
 		
 		//createCustomObject
@@ -151,6 +159,14 @@ public class LoadTestData extends NSTestBase{
 		md.createFieldsOnObject(sfdc, "Contact", objField);
 		md.createFieldsOnObject(sfdc, "Case", objField);
 		
+		//Create Only ExternalID for "C_ContactObject2__c"
+		ObjectFields objField_ContactObj2=new ObjectFields();
+		List<String> externalID_Text_ContactObj2 = new ArrayList<String>();
+		externalID_Text_ContactObj2.add("p_c_ExternalID");
+		objField_ContactObj2.setExternalID_Text(externalID_Text_ContactObj2);
+		md.createFieldsOnObject(sfdc, "C_ContactObject2__c", objField_ContactObj2);
+		
+		//Create Lookups for Customer Object
 		
 		ObjectFields Customer_ObjectFields=new ObjectFields();
 		
@@ -176,8 +192,8 @@ public class LoadTestData extends NSTestBase{
 			Customer_lookupListMap2.put("ReleationShipName", "User_Automation31");
 		Customer_lookupList.add(Customer_lookupListMap2);
 		HashMap<String, String> Customer_lookupListMap3=new HashMap<String, String>();
-			Customer_lookupListMap3.put("Name", "p_c_customobj_contact");		
-			Customer_lookupListMap3.put("ReferenceTo", "C_ContactObject__c");
+			Customer_lookupListMap3.put("Name", "p_c_customobj_contact2");		
+			Customer_lookupListMap3.put("ReferenceTo", "C_ContactObject2__c");
 			Customer_lookupListMap3.put("ReleationShipName", "ContactObject_Automation31");
 		Customer_lookupList.add(Customer_lookupListMap3);		
 		HashMap<String, String> Customer_lookupListMap4=new HashMap<String, String>();
@@ -189,6 +205,7 @@ public class LoadTestData extends NSTestBase{
 		Customer_ObjectFields.setLookups(Customer_lookupList);
 		md.createFieldsOnObject(sfdc, "JBCXM__CustomerInfo__c", Customer_ObjectFields);
 		
+		//Create Lookups for Contact Object
 		
 		ObjectFields C_ContactObject_ObjectFields=new ObjectFields();
 		
@@ -222,6 +239,7 @@ public class LoadTestData extends NSTestBase{
 	C_ContactObject_ObjectFields.setLookups(C_ContactObject_lookupList);
 	md.createFieldsOnObject(sfdc, "C_ContactObject__c", C_ContactObject_ObjectFields);
 	
+	//Create Lookups for Account Object
 	
 	ObjectFields Account_ObjectFields=new ObjectFields();
 	
@@ -237,8 +255,8 @@ public class LoadTestData extends NSTestBase{
 		Account_lookupListMap2.put("ReleationShipName", "User_Automation1");
 	Account_lookupList.add(Account_lookupListMap2);	
 	HashMap<String, String> Account_lookupListMap4=new HashMap<String, String>();
-		Account_lookupListMap4.put("Name", "p_c_customobj_contact");		
-		Account_lookupListMap4.put("ReferenceTo", "C_ContactObject__c");
+		Account_lookupListMap4.put("Name", "p_c_customobj_contact2");		
+		Account_lookupListMap4.put("ReferenceTo", "C_ContactObject2__c");
 		Account_lookupListMap4.put("ReleationShipName", "ContactObject_Automation1");
 	Account_lookupList.add(Account_lookupListMap4);		
 	HashMap<String, String> Account_lookupListMap5=new HashMap<String, String>();
@@ -249,6 +267,8 @@ public class LoadTestData extends NSTestBase{
 
 	Account_ObjectFields.setLookups(Account_lookupList);
 	md.createFieldsOnObject(sfdc, "Account", Account_ObjectFields);
+	
+	//Create Lookups for Contact Object
 	
 	ObjectFields Contact_ObjectFields=new ObjectFields();
 	
@@ -264,8 +284,8 @@ public class LoadTestData extends NSTestBase{
 		Contact_lookupListMap3.put("ReleationShipName", "Case_Automation4");
 	Contact_lookupList.add(Contact_lookupListMap3);
 	HashMap<String, String> Contact_lookupListMap4=new HashMap<String, String>();
-		Contact_lookupListMap4.put("Name", "p_c_customobj_contact");		
-		Contact_lookupListMap4.put("ReferenceTo", "C_ContactObject__c");
+		Contact_lookupListMap4.put("Name", "p_c_customobj_contact2");		
+		Contact_lookupListMap4.put("ReferenceTo", "C_ContactObject2__c");
 		Contact_lookupListMap4.put("ReleationShipName", "ContactObject_Automation4");
 	Contact_lookupList.add(Contact_lookupListMap4);		
 	HashMap<String, String> Contact_lookupListMap5=new HashMap<String, String>();
@@ -276,6 +296,8 @@ public class LoadTestData extends NSTestBase{
 
 	Contact_ObjectFields.setLookups(Contact_lookupList);
 	md.createFieldsOnObject(sfdc, "Contact", Contact_ObjectFields);
+	
+	//Create Lookups for Case Object
 	
 	ObjectFields Case_ObjectFields=new ObjectFields();
 	
@@ -291,8 +313,8 @@ public class LoadTestData extends NSTestBase{
 		Case_lookupListMap2.put("ReleationShipName", "User_Automation5");
 	Case_lookupList.add(Case_lookupListMap2);
 	HashMap<String, String> Case_lookupListMap4=new HashMap<String, String>();
-		Case_lookupListMap4.put("Name", "p_c_customobj_contact");		
-		Case_lookupListMap4.put("ReferenceTo", "C_ContactObject__c");
+		Case_lookupListMap4.put("Name", "p_c_customobj_contact2");		
+		Case_lookupListMap4.put("ReferenceTo", "C_ContactObject2__c");
 		Case_lookupListMap4.put("ReleationShipName", "ContactObject_Automation5");
 	Case_lookupList.add(Case_lookupListMap4);		
 	HashMap<String, String> Case_lookupListMap5=new HashMap<String, String>();
@@ -302,18 +324,35 @@ public class LoadTestData extends NSTestBase{
 	Case_lookupList.add(Case_lookupListMap5);		
 
 	Case_ObjectFields.setLookups(Case_lookupList);
-	md.createFieldsOnObject(sfdc, "Case", Case_ObjectFields);		
+	md.createFieldsOnObject(sfdc, "Case", Case_ObjectFields);
+	
+	//Enabling Scorecard and Populating datas	
+	sfdc.runApexCode(getNameSpaceResolvedFileContents(Scorecard_Enable));
+	sfdc.runApexCode(getNameSpaceResolvedFileContents(Scorecard_PopulateDatas));
+	
 	}
 
-	@Test
 	public void generateData() throws Exception {
 		CopilotDataSetup dataSetup = new CopilotDataSetup();
 		dataETL = new DataETL();
 		dataSetup.loadToObject(dataETL, Job_C_ContactObject2);
+		//Initializing Account,Customer Info,Case,Contact
+		dataSetup.loadToObject(dataETL, job_accountInit);
+		dataSetup.loadToObject(dataETL, job_customerInfoInit);
+		dataSetup.loadToObject(dataETL, job_contactInit);
+		dataSetup.loadToObject(dataETL, job_caseInit);
+		//Updating Account,Customer Info,Case,Contact
 		dataSetup.loadToObject(dataETL, Job_Account);
 		dataSetup.loadToObject(dataETL, Job_CustomerInfo);
 		dataSetup.loadToObject(dataETL, Job_Contact);
 		dataSetup.loadToObject(dataETL, Job_Case);
 		dataSetup.loadToObject(dataETL, Job_C_ContactObject1);
 	}
+	
+	@BeforeClass
+	public void generateFieldsAndData() throws Exception {
+		createCustomFields();
+		generateData();		
+	}
+	
 }

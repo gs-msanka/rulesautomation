@@ -1,11 +1,17 @@
-JBCXM__ScorecardConfig__c sc= [SELECT Id,IsDeleted,JBCXM__CustomerRollup__c,JBCXM__HistoryTrackingFrequency__c,JBCXM__IsHistoryEnabled__c,JBCXM__OverrideCustomer__c,JBCXM__ScorecardEnabled__c,JBCXM__TrackHistory__c,Name FROM JBCXM__ScorecardConfig__c];
-    if( sc.Id <> null && sc.Name== 'SCORECARD CONFIGURATION'){
-        //System.debug([Select Name from JBCXM__ScorecardConfig__c]);
-		sc.IsDeleted='false';
-		sc.JBCXM__CustomerRollup__c='DISABLED';
-		sc.JBCXM__HistoryTrackingFrequency__c='12.0';
-		sc.JBCXM__IsHistoryEnabled__c='false';
-		sc.JBCXM__OverrideCustomer__c='true';
-		sc.JBCXM__ScorecardEnabled__c='true';
-		sc.JBCXM__TrackHistory__c='false'
-     }
+JBCXM__ScorecardConfig__c score = new JBCXM__ScorecardConfig__c();
+List<JBCXM__ScorecardConfig__c> scConfigList = [Select Id from JBCXM__ScorecardConfig__c where Name = 'SCORECARD CONFIGURATION' limit 1];
+score = (scConfigList.size() > 0) ? scConfigList[0] : score;
+if(score != null && score.Id != null) {
+score.JBCXM__ScorecardEnabled__c=true;
+update score;
+}
+else {
+score.NAME='SCORECARD CONFIGURATION';
+score.JBCXM__CustomerRollup__c='DISABLED';
+score.JBCXM__HistoryTrackingFrequency__c = 12;
+score.JBCXM__IsHistoryEnabled__c=false;
+score.JBCXM__OverrideCustomer__c=true;
+score.JBCXM__ScorecardEnabled__c=true;
+score.JBCXM__TrackHistory__c=false;
+insert score;
+}

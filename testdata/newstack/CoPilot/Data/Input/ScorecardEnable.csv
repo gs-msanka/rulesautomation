@@ -1,2 +1,0 @@
-Name,IsDeleted,JBCXM__CustomerRollup__c,JBCXM__HistoryTrackingFrequency__c,JBCXM__IsHistoryEnabled__c,JBCXM__OverrideCustomer__c,JBCXM__ScorecardEnabled__c,JBCXM__TrackHistory__c,
-SCORECARD CONFIGURATION,FALSE,DISABLED,12,FALSE,TRUE,TRUE,FALSE,

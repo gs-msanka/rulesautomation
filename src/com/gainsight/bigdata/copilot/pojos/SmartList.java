@@ -1,6 +1,5 @@
 package com.gainsight.bigdata.copilot.pojos;
 
-import java.util.ArrayList;
 
 public class SmartList {
 	
@@ -65,7 +64,7 @@ public class SmartList {
 		this.dataSourceType = dataSourceType;
 	}
 	
-	public static class Stats{
+	/*public static class Stats{
     	private String contactCount;
     	private String customerCount;
     	
@@ -82,15 +81,14 @@ public class SmartList {
 			this.customerCount = customerCount;
 		}
 		
-    }
+    }*/
 	
-	 public static class AutomatedRule{
+	/* public static class AutomatedRule{
 	    	private String relatedId;
 	    	private String ruleType;
 	    	private String description;
 	    	private String triggerCriteria;
 	    	private String sourceType;
-	    	//private String[] actionDetails;
 	    	private ArrayList<ActionDetails> actionDetails;
 	    	private String triggerUsageOn;
 	    	
@@ -141,7 +139,7 @@ public class SmartList {
 				this.triggerUsageOn = triggerUsageOn;
 			}
 			
-	    }
+	    }*/
 	
 
 }
