@@ -21,6 +21,7 @@ import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -41,6 +42,7 @@ public class LoadDataToMDATest extends NSTestBase {
     private ReportManager reportManager = new ReportManager();
     private DataLoadManager dataLoadManager;
     private Calendar calendar = Calendar.getInstance();
+    private List<String> collectionsToDelete = new ArrayList<>();
 
     @BeforeClass
     public void setup() {
@@ -58,11 +60,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo));
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4790"})
@@ -74,11 +77,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3688"})
@@ -90,11 +94,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4791"})
@@ -106,11 +111,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3687"})
@@ -122,11 +128,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4792"})
@@ -138,11 +145,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3686"})
@@ -154,11 +162,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4793"})
@@ -170,11 +179,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
 
@@ -187,7 +197,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
 
@@ -198,7 +208,7 @@ public class LoadDataToMDATest extends NSTestBase {
 
         jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
 
         List<Map<String, String>> expectedData = getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo);
@@ -206,6 +216,7 @@ public class LoadDataToMDATest extends NSTestBase {
         List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     private CollectionInfo addColumnsToCollectionViaTenantMgt(String tenantId, String collectionId, CollectionInfo.Column[] columns) throws IOException {
@@ -228,7 +239,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
@@ -237,6 +248,7 @@ public class LoadDataToMDATest extends NSTestBase {
         List<String> failedRecords = dataLoadManager.getFailedRecords(jobId);
         Assert.assertNotNull(failedRecords);
         Assert.assertEquals(failedRecords.size() - 1, Integer.parseInt(testData.get("FailedRecordCount")));
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
 
     }
 
@@ -249,11 +261,12 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3646"})
@@ -265,7 +278,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
@@ -273,7 +286,7 @@ public class LoadDataToMDATest extends NSTestBase {
 
         jobId = dataLoadManager.clearAllCollectionData(collectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
         Assert.assertNotNull(jobId, "Job Id (or) status id is null.");
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
 
         Assert.assertEquals(statusInfo.getMessage(), "Data truncated successfully");
@@ -291,7 +304,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
@@ -311,13 +324,14 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setCollectionName(collectionName);
 
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
         Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
         diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
 
     }
 
@@ -330,7 +344,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
@@ -350,13 +364,14 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.close();
 
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
         Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
         diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4799", "GS-4801"})
@@ -406,7 +421,7 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
@@ -420,6 +435,7 @@ public class LoadDataToMDATest extends NSTestBase {
         diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     /**
@@ -524,5 +540,24 @@ public class LoadDataToMDATest extends NSTestBase {
         actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
         Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
         return actualData;
+    }
+
+    @AfterClass
+    public void tearDown() {
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+    }
+
+    /**
+     * Just in case used method to delete all the collections.
+     */
+    public void deleteAllCollection() {
+        String collectionName = "GS";
+        List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
+        for(CollectionInfo collectionInfo : dataLoadManager.getAllCollections() ) {
+            if(collectionInfo.getCollectionDetails().getCollectionName().contains(collectionName)) {
+                colList.add(collectionInfo.getCollectionDetails());
+            }
+        }
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
     }
 }

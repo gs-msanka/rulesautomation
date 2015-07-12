@@ -233,7 +233,7 @@ public class SurveyAcceptanceTests extends SurveySetup {
         SurveyPublishPage publishPage = surveyPage.clickOnPublish(surProp);
         publishPage.updatePublishDetails(surProp);
         surProp.setStatus("Publish");
-        Assert.assertEquals(publishPage.getSurveyStatus(), surProp.getStatus(), "Verifying Survey Status");
+        Assert.assertEquals(publishPage.getSurveyStatus(surProp), surProp.getStatus(), "Verifying Survey Status");
         publishPage.sendTestEmail(testData.get("Recipients").split(","), sfdcInfo.getUserFullName());
         Assert.assertEquals(publishPage.getTestEmailSuccessMsg(), "Test emails sent successfully.");
         publishPage.closeTestEmailDialog();

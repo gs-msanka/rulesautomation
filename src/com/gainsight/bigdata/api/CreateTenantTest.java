@@ -14,13 +14,12 @@ import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 
 public class CreateTenantTest extends NSTestBase {
 
 	String uri;
 	String tenantName = "AutTenant";
-	String nsAppUrl = PropertyReader.nsAppUrl;
+	String nsAppUrl = nsConfig.getNsURl();
 	
 	@BeforeClass
 	public void setUp() throws Exception {

@@ -12,7 +12,7 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
+import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
 import org.apache.http.HttpStatus;
@@ -38,12 +38,13 @@ public class TenantManager {
     private WebAction wa = new WebAction();
     private ObjectMapper mapper = new ObjectMapper();
     private SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    private NsConfig nsConfig = ConfigLoader.getNsConfig();
 
     /**
      * Logs in to tenant Management SFDC org & sets up the default headers required.
      */
     public TenantManager() {
-        sfConnector = new SalesforceConnector(PropertyReader.tenantMgtUserName, PropertyReader.tenantMgtPassword + PropertyReader.tenantMgtSecurityToken,
+        sfConnector = new SalesforceConnector(nsConfig.getSfdcUsername(), nsConfig.getSfdcPassword() + nsConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         if (!sfConnector.connect()) {
             throw new RuntimeException("Failed to Connect to salesforce - Check your admin credentials.");
@@ -240,8 +241,7 @@ public class TenantManager {
                 if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                     NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                     if (nsResponseObj.isResult()) {
-                        List<TenantDetails> tenantDetails = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<TenantDetails>>() {
-                        });
+                        List<TenantDetails> tenantDetails = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<TenantDetails>>() {});
                         for (TenantDetails tD : tenantDetails) {
                             if (tD.getExternalTenantID() != null && tD.getExternalTenantID().equals(sfOrgId)) {
                                 tenantDetail = tD;

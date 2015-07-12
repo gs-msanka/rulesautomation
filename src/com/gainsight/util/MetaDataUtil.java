@@ -2,14 +2,11 @@ package com.gainsight.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-
-import sun.util.logging.resources.logging;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -124,7 +121,7 @@ public class MetaDataUtil {
 	                                    "AccPercentage", "ActiveUsers", "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime", "FNumber", "FPercent", "FText","C_Text",
 	                                    "C_Number","C_Checkbox","C_Currency","C_Email","C_Percent","C_Phone","C_Picklist","C_MultiPicklist","C_TextArea","C_EncryptedString",
 	                                    "C_URL","C_Reference"};
-	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo());
+	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
 	    }
 	 
 	 public void createFieldsOnObject(SalesforceConnector sfdc, String Object, ObjectFields objF) throws Exception {
@@ -228,13 +225,35 @@ public class MetaDataUtil {
 			 metadataClient.createFields(resolveStrNameSpace(Object), objF.getURLs().toArray(new String[objF.getURLs().size()]), false, false, true);
 			 permFieldsList.addAll(objF.getURLs());
 		 }
-		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])), sfdc.fetchSFDCinfo());
+		 addFieldPermissionsToUsers(resolveStrNameSpace(Object), convertFieldNameToAPIName(permFieldsList.toArray(new String[permFieldsList.size()])), sfdc.fetchSFDCinfo(), true);
 	 }
+
+    /**
+     * Provides fields, object permissions to standard fields/objects, please add any other standard fields here in case required.
+     *
+     * @param sfdcInfo
+     * @throws Exception - RunTime Exception if failed to provide field permissions
+     */
+    public void setupPermissionsToStandardObjectAndFields(SFDCInfo sfdcInfo) throws Exception {
+        String[] standObjects = new String[]{"Account", "Opportunity", "Case", "Contact"};
+        String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description", "DunsNumber",
+                                                    "NumberOfEmployees", "Fax", "Industry", "NaicsCode", "NaicsDesc", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
+                                                    "TickerSymbol", "Tradestyle","Type", "Website", "YearStarted"};
+        String[] oppObjectFields = new String[]{"Amount", "Description", "LeadSource", "NextStep", "IsPrivate", "Probability", "Type"};
+        String[] caseObjectFields = new String[]{"Origin", "Reason", "IsSelfServiceClosed",
+                                                        "Description", "IsEscalated", "Priority", "Subject", "Type", "IsVisibleInSelfService",
+                                                        "SuppliedCompany", "SuppliedEmail", "SuppliedName", "SuppliedPhone"};
+        String[] contactObjectFields = new String[]{ "AssistantName", "AssistantPhone", "Birthdate", "Department", "Description", "DoNotCall",
+                                                    "Email", "HasOptedOutOfEmail", "Fax", "HasOptedOutOfFax", "HomePhone", "LeadSource", "MailingAddress",
+                                                        "MobilePhone", "OtherAddress", "OtherPhone", "Phone", "ReportsTo", "Title"};
+        addFieldPermissionsToUsers(standObjects[0], accObjectFields, sfdcInfo, true);
+        addFieldPermissionsToUsers(standObjects[1], oppObjectFields, sfdcInfo, true);
+        addFieldPermissionsToUsers(standObjects[2], caseObjectFields, sfdcInfo, true);
+        addFieldPermissionsToUsers(standObjects[3], contactObjectFields, sfdcInfo, true);
+    }
 	 
 		 
-		 
-		 
-	    //metadataClient.createTextFields("Account", TextField, false, false, true, false, false);
+
 
     /**
      * Creates a permission set on the org with name "GS_Automation_Permission" & assigns to all the system admins & licensed users.
@@ -242,28 +261,32 @@ public class MetaDataUtil {
      * Please check out ----- packageUtil.deployPermissionSetCode();
      *
      * Issues : if NULL POINTER Exception is found then the Fields send may not be found is SFDC (or) check the field API Name.
+     * Issues : Avoids giving field permissions & proceeds if field is not found in SObject describe.
      *
      * @param object - Full Object API Name
      * @param fields - Array of fields.
+     * @param objectPermissionRequired - Special cases like "User" object, we can't sent object permission, so it should be null.
      * @throws Exception - Connection exception, Runtime Exception if status is failed.
+     *
      */
-    public void addFieldPermissionsToUsers(String object, String[] fields, SFDCInfo sfinfo) throws Exception {
+    public void addFieldPermissionsToUsers(String object, String[] fields, SFDCInfo sfdcInfo, boolean objectPermissionRequired) throws Exception {
         WebAction webAction = new WebAction();
         Header header = new Header();
-        header.addHeader("Authorization", "Bearer " + sfinfo.getSessionId());
+        header.addHeader("Authorization", "Bearer " + sfdcInfo.getSessionId());
         header.addHeader("Content-Type", "application/json");
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String[]> objMap = new HashMap<>();
         objMap.put(object, fields);
         Map<String, Object> payLoad1 = new HashMap<>();
-        payLoad1.put("modulename", "GS_Auto_Permissions");
+        payLoad1.put("moduleName", "GS_Auto_Permissions");
+        payLoad1.put("objectPermissionReq", String.valueOf(objectPermissionRequired));
         List<Object> tmp = new ArrayList<Object>();
         tmp.add(objMap);
         payLoad1.put("data", tmp);
         Map<String, Object> payLoad = new HashMap<>();
         payLoad.put("params", mapper.writeValueAsString(payLoad1));
         Log.info(mapper.writeValueAsString(payLoad));
-        ResponseObj responseObj = webAction.doPost(sfinfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
+        ResponseObj responseObj = webAction.doPost(sfdcInfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
         Map<String, Object> resContent = new HashMap<>();
         resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
         if (!resContent.get("status").toString().equalsIgnoreCase("Success")) {
@@ -278,7 +301,7 @@ public class MetaDataUtil {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         String[] fields = new String[]{"Data ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
     }
 
     /**
@@ -291,7 +314,7 @@ public class MetaDataUtil {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         String[] fields = new String[]{"Contact ExternalId"};
         metadataClient.createTextFields("Contact", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
     }
 
     public void createFieldsOnContact(SalesforceConnector sfdc) throws Exception {
@@ -305,7 +328,7 @@ public class MetaDataUtil {
         metadataClient.createNumberField("Contact", new String[]{"DealCloseRate"}, true);
         String[] permField = new String[]{"Contact ExternalID", "NoOfReferrals", "NumForDate",
                 "NumberField", "Active", "InvolvedIn", "DealCloseRate"};
-        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(permField), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(permField), sfdc.fetchSFDCinfo(), true);
     }
 
     /**
@@ -319,7 +342,7 @@ public class MetaDataUtil {
         String Scorecard_Metrics = "JBCXM__ScorecardMetric__c";
         String[] SCMetric_ExtId = new String[]{"SCMetric ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(Scorecard_Metrics), SCMetric_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(Scorecard_Metrics), convertFieldNameToAPIName(SCMetric_ExtId), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(resolveStrNameSpace(Scorecard_Metrics), convertFieldNameToAPIName(SCMetric_ExtId), sfdc.fetchSFDCinfo(), true);
     }
 
     public void createExtIdFieldForCustomObject(SalesforceConnector sfdc) throws Exception {
@@ -327,12 +350,12 @@ public class MetaDataUtil {
         String EmailCustomObj = "EmailCustomObjct__c";
         String[] CusObj_ExtId = new String[]{"CusObj ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(EmailCustomObj), CusObj_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfdc.fetchSFDCinfo(), true);
         String[] Allfields = {"Dis_Email__c", "Dis_Name__c", "Dis_Role__c", "C_Reference__c"};
-        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfdc.fetchSFDCinfo(), true);
         String[] fields = new String[]{"Data ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
     }
 
     /**
@@ -346,7 +369,7 @@ public class MetaDataUtil {
         String UserObj = "User";
         String[] user_ExtId = new String[]{"User ExternalId"};
         metadataClient.createTextFields(resolveStrNameSpace(UserObj), user_ExtId, true, true, true, false, false);
-     //   addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(UserObj, convertFieldNameToAPIName(user_ExtId), sfdc.fetchSFDCinfo(), false);
     }
 
     /**
@@ -360,7 +383,7 @@ public class MetaDataUtil {
         String CtaObj = "JBCXM__CTA__c";
         String[] Cta_ExtId = new String[]{"CTA ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(CtaObj), Cta_ExtId, true, true, true, false, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(CtaObj), convertFieldNameToAPIName(Cta_ExtId), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(resolveStrNameSpace(CtaObj), convertFieldNameToAPIName(Cta_ExtId), sfdc.fetchSFDCinfo(), true);
     }
 
     /**
@@ -376,7 +399,7 @@ public class MetaDataUtil {
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)), sfdc.fetchSFDCinfo());
+        addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)), sfdc.fetchSFDCinfo(), true);
     }
 
     //same method is used by rules engine test cases also.
@@ -408,7 +431,7 @@ public class MetaDataUtil {
 			String[] targetArray = ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(numberField, currency), checkbox), date), dateTime), email), percent), url);
 			targetArray = ArrayUtils.addAll(targetArray, pick.keySet().toArray(new String[pick.keySet().size()]));
 			targetArray = ArrayUtils.addAll(targetArray, multipickList.keySet().toArray(new String[multipickList.keySet().size()]));
-			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(targetArray), sfinfo);
+			addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(targetArray), sfinfo, true);
 
 		}
 

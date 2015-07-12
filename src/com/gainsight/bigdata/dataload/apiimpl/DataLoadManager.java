@@ -3,6 +3,7 @@ package com.gainsight.bigdata.dataload.apiimpl;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
@@ -12,9 +13,12 @@ import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
@@ -34,6 +38,7 @@ import java.util.*;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.*;
 
 /**
  * Created by Giribabu on 13/05/15.
@@ -155,25 +160,40 @@ public class DataLoadManager extends NSTestBase {
      *
      * @param jobId - JobId/StatusId to wait for its completion i.e status != IN_PROGRESS.
      */
-    public void waitForDataLoadJobComplete(String jobId) {
+    public boolean waitForDataLoadJobComplete(final String jobId) {
         Log.info("Wait for the "+jobId + " to complete...");
-        for (int i = 0; i < MAX_NO_OF_REQUESTS; i++) {
-            DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
-            if (statusInfo != null) {
-                if (statusInfo.getStatusType().equals(DataLoadStatusType.IN_PROGRESS)) {
-                    Log.info("Data Load Under Progress...");
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    Timer.sleep(10); //Sleep for 10 seconds and try again.
-                } else {
-                    Log.info("Data Load Status :" + statusInfo.getStatusType());
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    break;
-                }
-            } else {
-                Log.error("Wait for data load failed for Job Id : " + jobId);
-                throw new RuntimeException("Wait for data load for Job Id - " + jobId + " failed.");
+        boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+            @Override
+            public Boolean apply() {
+                return isdataLoadJobComplete(jobId);
             }
+        });
+        return result;
+    }
+
+    /**
+     * Returns true id job is completed, failed, partial success else false.
+     * @param jobId - Job Id to check the status.
+     * @return
+     */
+    public boolean isdataLoadJobComplete(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
         }
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.FAILED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.PARTIAL_SUCCESS)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
+        }
+        if(!result) {
+            Log.info("Data Load Job status is not completed : " +jobId);
+            Log.info(("Status of Job : " +statusInfo.getStatusType()));
+        }
+
+        return result;
     }
 
     /**
@@ -268,7 +288,7 @@ public class DataLoadManager extends NSTestBase {
         } finally {
             headers.addHeader("Content-Type","application/json");
         }
-        Log.info("Data Load Successful, returning job Id" +jobId);
+        Log.info("Data Load Successful, returning job Id " +jobId);
         return jobId;
     }
 
@@ -354,7 +374,7 @@ public class DataLoadManager extends NSTestBase {
      * @return - Subject/Collection schema.
      */
     public CollectionInfo getCollection(String subjectAreaName) {
-        Log.info("Getting Single Collection...");
+        Log.info("Getting Single Collection..." +subjectAreaName);
         if(subjectAreaName ==null && subjectAreaName.equals("")) {
             throw new RuntimeException("Subject Area is Required.");
         }
@@ -557,6 +577,95 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Clears all the data in the collection & deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionsIdsToDelete - Collection Id to delete.
+     */
+    public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId) {
+        Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
+        if(collectionsIdsToDelete == null || collectionsIdsToDelete.size() ==0) {
+            Log.info("No Collections To Delete");
+            return;
+        }
+        Map<String, CollectionInfo.CollectionDetails> collectionInfoMap = new HashMap<>();
+        for(CollectionInfo collectionInfo : getAllCollections() ) {
+            collectionInfoMap.put(collectionInfo.getCollectionDetails().getCollectionId(), collectionInfo.getCollectionDetails());
+        }
+        for(String colId : collectionsIdsToDelete) {
+            if(collectionInfoMap.containsKey(colId)) {
+                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
+                waitForDataLoadJobComplete(jobId);
+                tenantManager.deleteSubjectArea(tenantId, colId);
+            } else {
+                Log.error("Collection Id Doesn't Exists to delete : " +colId);
+            }
+        }
+        Log.info("Deleted all collection data & collections");
+    }
 
+
+    /**
+     * Clears all the data in the collection & deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionDetailList - CollectionDetails.
+     */
+    public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList) {
+        Log.info("Total no of collection to delete : " + collectionDetailList.size());
+        if(tenantId == null || collectionDetailList == null) {
+            throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
+        }
+        for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
+                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
+                if(waitForDataLoadJobComplete(jobId)) {
+                    tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                } else {
+                    throw new RuntimeException("Data deleting is not completed. i.e. data load job is still running then the max wait time. ");
+                }
+            }
+        Log.info("Deleted all collection data & collections");
+    }
+
+    /**
+     * Returns the metadata that to be used for loading the data via data load api.
+     * @param collectionInfo - CollectionInfo Pojo class
+     * @return metadata to be used while loading data.
+     */
+    public DataLoadMetadata getDefaultDataLoadMetaData(CollectionInfo collectionInfo) {
+        DataLoadMetadata metadata = new DataLoadMetadata();
+        metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setDataLoadOperation(DataLoadOperationType.INSERT.name());
+
+
+        List<DataLoadMetadata.Mapping> mappings = new ArrayList<>();
+        DataLoadMetadata.Mapping mapping = null;
+        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
+            mapping = new DataLoadMetadata.Mapping();
+            mapping.setSource(column.getDisplayName());
+            mapping.setTarget(column.getDisplayName());
+            mappings.add(mapping);
+        }
+        metadata.setMappings(mappings);
+        return metadata;
+    }
+
+    /**
+     * Returns the first column matched with display order.
+     * @param collectionInfo - CollectionMaster
+     * @param displayName -  Column Display Name.
+     * @return
+     */
+    public CollectionInfo.Column getColumnByDisplayName(CollectionInfo collectionInfo, String displayName) {
+        for(CollectionInfo.Column col : collectionInfo.getColumns()) {
+            if(displayName.equals(col.getDisplayName())) {
+                return col;
+            }
+        }
+        throw new RuntimeException("Column details not found in collection info supplied for the displayName : "+displayName);
+    }
 
 }
+
+
+
+

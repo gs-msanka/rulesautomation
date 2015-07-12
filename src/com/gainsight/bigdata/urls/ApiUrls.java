@@ -19,7 +19,8 @@ public interface ApiUrls extends NSURLs {
     public final String MDA_AUTH_REVOKE                     = NS_URL + "/api/accounts/sfdc?accountType=SFDC";
     public final String SFDC_EXITS_GET                      = NS_URL + "/api/accounts/SFDC/exits";
     public final String CREATE_CONNECTORS_PROJECT           = NS_URL + "/api/tokens/v2";
-    public final String ACCOUNT_DETAIL_GET                  = NS_URL + "/api/accounts/";       //Append Account Id to get account details.
+    public final String API_TOKENS_EXISTS_GET               = NS_URL + "/api/tokens/exists";    //Check if access key is present for the system.
+    public final String ACCOUNT_DETAIL_GET                  = NS_URL + "/api/accounts/";        //Append Account Id to get account details.
     public final String COLLECTION_MASTER_GET               = NS_URL + "/api/collections/";       //Append Collection Id to get Collection Master details.
     public final String ACCOUNT_DELETE                      = NS_URL + "/api/accounts/accountId/";
 
@@ -41,10 +42,11 @@ public interface ApiUrls extends NSURLs {
     public final String GA_PROPERTIES_GET       = NS_URL + "/api/googleanalytics/";
 
     //DataLoad API End Points.
-    public final String DATA_API_GET            = NS_URL + "/api/accounts/integrations/DATA_API";
-    
+    public final String DATA_API_GET                    = NS_URL + "/api/accounts/integrations/DATA_API";       //All the project s configured in data load api.
+    public final String DATA_API_ALL_COLLECTIONS_GET    = NS_URL + "/api/collections/consumers/DATA_API";       //All the collections for the tenant,
+    public final String DATA_API_PROJECT_UPDATE_PUT     = NS_URL + "/api/accounts/%s/update?version=v1.0";      //Update the account / project(data api)
+
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
-
 
 }

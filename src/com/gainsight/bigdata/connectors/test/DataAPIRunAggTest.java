@@ -21,12 +21,11 @@ import com.gainsight.bigdata.util.ApiUrl;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 
 public class DataAPIRunAggTest extends NSTestBase {
 
-	String nsAppUrl = PropertyReader.nsAppUrl;
+	String nsAppUrl = "PropertyReader.nsAppUrl";
 	final String TEST_DATA_FILE = "testdata/newstack/connectors/DataAPIExpectedOutput.xls";
 	String dataSyncUrl = nsAppUrl + ApiUrl.ACC_SYNC;
 	String syncStatusUrl = nsAppUrl + ApiUrl.ACC_SYNC_STATUS;
