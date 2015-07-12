@@ -6,14 +6,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import com.gainsight.sfdc.util.DateUtil;
-import com.gainsight.testdriver.Application;
-import com.gainsight.testdriver.Log;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
-import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -22,10 +17,13 @@ import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest;
 import com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest;
 import com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests;
+import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowPage;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
@@ -673,7 +671,7 @@ public class WorkFlowTest extends WorkflowSetup {
    }
    
     @TestInfo(testCaseIds={"GS-5557"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
    public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
@@ -1316,7 +1314,7 @@ public class WorkFlowTest extends WorkflowSetup {
     }
 
     @TestInfo(testCaseIds={"GS-2063"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA34")
     public void verifyHeaderShowFilter(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();

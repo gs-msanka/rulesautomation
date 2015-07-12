@@ -34,7 +34,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 		sfdc.connect();
 		basepage.login();
 		sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
-		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
+		updateNSURLInAppSettings(env.getProperty("ns.appUrl"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		ns.init();
 		ns.tenantAutoProvision();

@@ -696,7 +696,7 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		   }
 		   
 		   @TestInfo(testCaseIds={"GS-5557"})
-		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+		   @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
 		   @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
 		   public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
 		       CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
