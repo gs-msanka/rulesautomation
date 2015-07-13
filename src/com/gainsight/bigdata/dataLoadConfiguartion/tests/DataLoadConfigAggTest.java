@@ -75,7 +75,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/jobs/Events2.json"), JobInfo.class);
         dataETL.execute(jobInfo);
 
-        CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/T1/CollectionInfo.json"), CollectionInfo.class);
+        CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t1/CollectionInfo.json"), CollectionInfo.class);
 
         String collectionName = testData.get("CollectionName")+"_"+cal.getTimeInMillis();
         Log.info("Collection Name : " + collectionName);
@@ -144,6 +144,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Assert.assertNotNull(statusId, "Status Id should not be null");
 
         Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " +endCollectionName);
