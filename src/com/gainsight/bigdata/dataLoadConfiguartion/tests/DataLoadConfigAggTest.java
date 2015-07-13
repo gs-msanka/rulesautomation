@@ -144,6 +144,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Assert.assertNotNull(statusId, "Status Id should not be null");
 
         Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " +endCollectionName);
