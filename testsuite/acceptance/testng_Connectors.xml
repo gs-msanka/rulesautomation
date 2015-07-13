@@ -10,7 +10,7 @@
 
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
-            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
+            <!-- <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" /> -->
 
         </classes>
     </test>
