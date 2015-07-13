@@ -16,6 +16,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
 
 public class CreateCTA extends RulesUtil {
@@ -46,6 +47,7 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, No Playbook, No Token, No Owner Field.
+	@TestInfo(testCaseIds="{GS-5572}")
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
 	public void Rule1(HashMap<String, String> testData) throws Exception {
@@ -61,6 +63,7 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, Yes Playbook, No Token, No Owner Field.
+	@TestInfo(testCaseIds="{GS-5573}")
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
 	public void Rule2(HashMap<String, String> testData) throws Exception {
@@ -76,6 +79,7 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, Yes Playbook, No Token, Yes Owner Field.
+	@TestInfo(testCaseIds="{GS-5574}")
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
 	public void Rule3(HashMap<String, String> testData) throws Exception {
@@ -98,6 +102,7 @@ public class CreateCTA extends RulesUtil {
 
 	// Create CTA : No Advance Criteria, Yes Playbook, Yes Token(Standard Object), No Owner Field.
 	// Tokens considered are: Id, Name, Type, Fax, Website, AnnualRevenue,NumberOfEmployees, Description, OwnerId. (Token are only Standard fields from Account Object are taken here)
+	@TestInfo(testCaseIds="{GS-5575,GS-4259}")
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
 	public void Rule4(HashMap<String, String> testData) throws Exception {
@@ -162,6 +167,7 @@ public class CreateCTA extends RulesUtil {
 	// Tokens considered are: Id, Name, Type, Fax, Website, AnnualRevenue,
 	// NumberOfEmployees, Description, OwnerId. (Token are only Standard fields
 	// from Account Object are taken here)
+	@TestInfo(testCaseIds="{GS-5576}")
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
 	public void Rule5(HashMap<String, String> testData) throws Exception {
