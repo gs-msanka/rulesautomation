@@ -1,8 +1,11 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 /**
  * Created by gainsight on 10/07/15.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AccountDetail {
 
     private String createdBy;

@@ -200,6 +200,28 @@ public class DataLoadAggConfigManager extends NSTestBase {
     }
 
     /**
+     * Return true if aggregation is completed
+     * @param statusId
+     * @return
+     */
+    public boolean isDataAggregationCompleteWithSuccess(String statusId) {
+        boolean result = false;
+        NsResponseObj nsResponseObj = null;
+        try {
+            nsResponseObj = getAggregationJobStatus(statusId);
+        } catch (Exception e) {
+            Log.error("Failed to get Aggregation Job details " + statusId, e);
+            throw new RuntimeException("Failed to get Aggregation Job details " + statusId, e);
+        }
+        DataAggProcessJobStatus jobStatus = mapper.convertValue(nsResponseObj.getData(), DataAggProcessJobStatus.class);
+        if (jobStatus != null && jobStatus.getStatus() != null
+                && (jobStatus.getStatus().equals(DataAggProcessStatusType.COMPLETED.name()))) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
      * Gets the aggregation job status.
      * @param statusId
      * @return
