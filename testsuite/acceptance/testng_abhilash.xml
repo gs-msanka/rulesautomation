@@ -1,16 +1,46 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <suite name="abhilash Suite" verbose="3">
-
-<listeners>
-<listener class-name="com.gainsight.utils.AutTestListener" />
-</listeners>
-
-<test name="abhilash test" preserve-order="true">
-<classes>
-
-<class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests" />
-
-
-</classes>
-</test>
+   <listeners>
+      <listener class-name="com.gainsight.utils.AutTestListener" />
+   </listeners>
+   <test name="Survey Automation Suite" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.survey.tests.SurveyPropertiesTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyQuestionsTest" />
+         <class name="com.gainsight.sfdc.survey.tests.Rule_Survey_Test" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyPublishPageTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyAddParticipantsTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyDistributionListTest" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - Tab Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - Reporting Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - Playbook Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - 360 Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.customer360.test.Workflow360Tests" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - Account Widget Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.sfWidgets.accWidget.tests.AccWidget_CockpitTests" />
+      </classes>
+   </test>
+   <test verbose="3" name="Workflow - Opportunity Tests" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests" />
+      </classes>
+   </test>
 </suite>

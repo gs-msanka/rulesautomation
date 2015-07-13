@@ -192,6 +192,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String CLICK_SAVE              ="//div[@id='details']/descendant::div[contains(@class,'section-details') and @style='']/descendant::div[@class='gs-cockpit-section-header']/div[@title='Edit']/descendant::a[@title='Save']";
     private final String EDIT_ICON_IN_DETAIL_VIEW ="//div[contains(@class, 'edit-icon') and @title='Edit']";
     private final String EDIT_OPTIONS_ICON        ="//div[contains(@class, 'show-delink')]/descendant::div[contains(@class, 'cockpit-section-delete-options')]";
+    private final String LOADING_ICON_IN_DETAIL_VIEW = "//div[@class='gs-cockpit-section-header show-delink']/following-sibling::div[@class='gs-section-loader']";
     
     public WorkflowPage() {
         waitForPageLoad();
@@ -1395,7 +1396,7 @@ public class WorkflowPage extends WorkflowBasePage {
 				testData.get("AssociateObject")));
 		item.click(LINK_TO_EXISTING);
 		selectRecordToLink(cta.getoppourtunity());
-		wait.waitTillElementNotDisplayed("//div[@class='gs-section-loader']", MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotDisplayed(LOADING_ICON_IN_DETAIL_VIEW, MIN_TIME, MAX_TIME);
 		return this;
 	}
     
@@ -1403,6 +1404,7 @@ public class WorkflowPage extends WorkflowBasePage {
 		item.click(EDIT_OPTIONS_ICON);
 		item.click(DELINK_ICON);
 		item.click(DELINK_CONFIRMATION_DILOG);
+		wait.waitTillElementNotDisplayed(LOADING_ICON_IN_DETAIL_VIEW, MIN_TIME, MAX_TIME);
 		return this;
 	}
 

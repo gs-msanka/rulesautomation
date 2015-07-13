@@ -21,7 +21,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 	private final String CLICKON_RESPONDED_CIRCLE = "//p[@class='sc-responded icon-select active' and @data-action='Responded']";
 	private final String CLICKON_NOTRESPONDED_CIRCLE = "//p[@class='notresponded icon-select' and @data-action='Contacted']";
 	private final String CLICKON_SCHEDULED_CIRCLE = "//p[@class='scheduled icon-select' and @data-action='Inschedule']";
-	private final String CLICKON_TOBECONTACTED_CIRCLE = "//p[@class='to-be-contacted icon-select' and @data-action='Notcontacted']";
+	private final String CLICKON_TOBECONTACTED_CIRCLE = "//p[contains(@class, 'to-be-contacted icon-select') and @data-action='Notcontacted']";
 	private final String CLICKON_UNDELIVERED_CIRCLE = "//div[@class='undelivered icon-select' and @data-action='Undelivered']";
 	private final String CLICKON_SENDEMAIL_BUTTON ="//input[@class='gs-btn btn-add email-sent-btn' and @type='button' and @value='Send Email']";
 	private final String CLICKON_EXPORT_BUTTON ="//li[@class='export-participants']/a[@class='export-icon custom-tt']";
@@ -75,8 +75,8 @@ public class SurveyDistributePage extends SurveyBasePage{
 	
 	public void clickingToBeContacted() {
 		item.click(CLICKON_TOBECONTACTED_CIRCLE);
-		wait.waitTillElementPresent(CLICKON_SENDEMAIL_BUTTON, MIN_TIME,
-				MAX_TIME);
+		wait.waitTillElementDisplayed(CLICKON_TOBECONTACTED_CIRCLE, MIN_TIME, MAX_TIME);
+		Timer.sleep(5); // Added since in linux box its not recognizing particular webelement.
 		item.click(SELECT_CONTACTS_CHECKBOX);
 	}
 
@@ -91,9 +91,10 @@ public class SurveyDistributePage extends SurveyBasePage{
 	
 	public void sendEmail() {
 		item.click(CLICKON_SENDEMAIL_BUTTON);
-		wait.waitTillElementDisplayed(EMAIL_CONFIRM_DILOG_TEXT, MIN_TIME,
+		wait.waitTillElementDisplayed(EMAIL_CONFIRM, MIN_TIME,
 				MAX_TIME);
 		item.click(EMAIL_CONFIRM);
+		wait.waitTillElementDisplayed("//div[@class='tab-pane active container-schedule']/descendant::div[@id='errorMsg']", MIN_TIME, MAX_TIME);
 	}
 	
 	public void createSchedule(SurveyDistribution surveyDistribution){
@@ -103,9 +104,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 				surveyDistribution.getScheduleName());
 		element.selectFromDropDown(SCHEDULE_TYPE_DROPDOWN,
 				surveyDistribution.getScheduleType());
-		item.click(SCHEDULE_DATE);
-		link.click(TODAY_LINK_IN_CALENDER);
-		item.click(CALENDER_CLICK);
+		field.clearAndSetText(SCHEDULE_DATE, surveyDistribution.getScheduleDate());
 		element.selectFromDropDown(SCHEDULE_TIME_HRS,
 				surveyDistribution.getHours());
 		element.selectFromDropDown(SCHEDULE_TIME_MINUTES,
@@ -120,8 +119,10 @@ public class SurveyDistributePage extends SurveyBasePage{
 	
 	public void createScheduleNext() {
 		wait.waitTillElementDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
+		wait.waitTillElementDisplayed(SCHEDULE_CHECKBOX, MIN_TIME, MAX_TIME);
 		item.click(SCHEDULE_CHECKBOX);
 		button.click(SCHEDULE_DONE_BUTTON);
+		wait.waitTillElementNotDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
 	}
 
 	public int getScheduledCount(){

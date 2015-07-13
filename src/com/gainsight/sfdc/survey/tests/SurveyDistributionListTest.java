@@ -156,6 +156,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				.clickOnDistribute(surProp);
 		SurveyDistribution surveyDistribution = mapper.readValue(
 				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
 		surveyDistribution.setScheduleName("Scheduled at" + " "
 				+ distribution.getCurrentDateAndTime());
 		distribution.createSchedule(surveyDistribution);
@@ -311,6 +312,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 		distribution.sendEmail();
 		SurveyDistribution surveyDistribution = mapper.readValue(
 				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
 		surveyDistribution.setScheduleType("Resend");
 		surveyDistribution.setScheduleName("ReScheduled at" + " "
 				+ distribution.getCurrentDateAndTime());
