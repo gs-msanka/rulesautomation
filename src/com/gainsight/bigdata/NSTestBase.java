@@ -300,9 +300,4 @@ public class NSTestBase {
         }
         return result;
     }
-
-    public ResponseObj revokeMDAAuthorization() throws Exception {
-        ResponseObj responseObj = wa.doDelete(ApiUrls.MDA_AUTH_REVOKE, header.getAllHeaders());
-        return responseObj;
-    }
 }
