@@ -31,10 +31,7 @@ public class MDAIntegrationImpl extends NSTestBase {
             if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
-                    HashMap<String, String> resultData = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
-                    if(resultData.containsKey("accessKeyExists") && resultData.get("accessKeyExists")!= null && resultData.get("accessKeyExists").equalsIgnoreCase("TRUE")) {
-                        result = true;
-                    }
+                    result = true;
                 } else {
                     Log.info(nsResponseObj.getErrorCode());
                     Log.info(nsResponseObj.getErrorDesc());
