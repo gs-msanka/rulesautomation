@@ -165,7 +165,7 @@ public class MDAIntegrationImpl extends NSTestBase {
             env.launchBrower();
             BasePage basePage = new BasePage();
             Log.info("Initializing Base Page : " + basePage);
-            basePage.login().clickOnAdminTab();
+            basePage.login().selectGainsightApplication().clickOnAdminTab();
             uri = new URI(Application.getDriver().getCurrentUrl());
             String hostName = "https://" + uri.getHost();
             Application.getDriver().get(hostName + "/apex/Integration");
