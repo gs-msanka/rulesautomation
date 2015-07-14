@@ -111,6 +111,7 @@ public class NSTestBase {
         }
         //Deploy Custom permission set code
         packageUtil.deployPermissionSetCode();
+        packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         //Providing permissions to standard objects.
         metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
     }
