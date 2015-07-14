@@ -21,7 +21,7 @@
 		<dependency>
             <groupId>com.gainsight</groupId>
             <artifactId>testdriver</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
 		<dependency>
 			<groupId>us.monoid.web</groupId>
@@ -47,6 +47,11 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
 		</dependency>
     </dependencies>
 
