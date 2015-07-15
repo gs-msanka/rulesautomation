@@ -33,7 +33,7 @@ public class AdminIntegrationPage extends BasePage {
     private static final String GENERATE_CURL           = "//input[@type='button' and @value='Generate cURL']";
 
 
-    public void AdminIntegrationPage() {
+    public AdminIntegrationPage() {
         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 

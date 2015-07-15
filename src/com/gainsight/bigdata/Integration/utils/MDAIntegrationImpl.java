@@ -22,7 +22,7 @@ public class MDAIntegrationImpl extends NSTestBase {
 
     /**
      * Check if the tenant is authorised on MDA (i.e OAuth enabled.)
-     * @return
+     * @return true if already MDA is authorised already.
      */
     public boolean isMDAAuthorized() {
         boolean result = false;
@@ -47,10 +47,10 @@ public class MDAIntegrationImpl extends NSTestBase {
 
     /**
      * Revokes MDA Authorization & deactivates all the connectors.
-     * @return
+     * @return true - on successful revoke of MDA.
      */
     public boolean revokeMDAAuthorization() {
-        boolean result = true;
+        boolean result = false;
         NsResponseObj nsResponseObj = null;
         try {
             Log.info("Revoking MDA Authorization...");
@@ -73,7 +73,7 @@ public class MDAIntegrationImpl extends NSTestBase {
 
     /**
      * Deactivates Google Analytics Connector.
-     * @return
+     * @return true on successful de-activation of Google analytics connector..
      */
     public boolean deActivateGoogleAnalyticsConnector() {
         Log.info("Disabling Google Analytics Connector...");
@@ -98,7 +98,7 @@ public class MDAIntegrationImpl extends NSTestBase {
 
     /**
      * Deactivates SegmentIO Connector.
-     * @return
+     * @return true on successful de-activation of SegmentIO connector.
      */
     public boolean deActivateSegmentIOConnector() {
         Log.info("Disabling SegmentIO Connector...");
@@ -123,7 +123,7 @@ public class MDAIntegrationImpl extends NSTestBase {
 
     /**
      * Deactivates MixPanel Connector.
-     * @return
+     * @return true on successful de-activation of MixPanel Connector.
      */
     public boolean deActivateMixPanelConnector() {
         Log.info("Disabling MixPanel Connector...");
