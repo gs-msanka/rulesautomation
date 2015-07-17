@@ -54,7 +54,7 @@ public class GSEmailSetup extends BaseTest {
 	public boolean validateOAuthEnabled() {
 		Header hdrs = new Header();
 		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
@@ -102,7 +102,7 @@ public class GSEmailSetup extends BaseTest {
 				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));*/ /*Commented for now as the script doesn't exists*/
 		Header hdrs = new Header();
 		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
@@ -168,7 +168,7 @@ public class GSEmailSetup extends BaseTest {
 		// send test email to contact : /api/email/template
 		Header hdrs = new Header();
 		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
