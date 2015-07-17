@@ -206,7 +206,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 	}
 	
 	@TestInfo(testCaseIds={"GS-2701","GS-2702"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=false)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
     public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {	
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();

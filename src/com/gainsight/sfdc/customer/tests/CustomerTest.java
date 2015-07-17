@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.annotations.TestInfo;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,6 +31,7 @@ public class CustomerTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(UI_VIEW_SETUP_SCRIPT));
     }
 
+    @TestInfo(testCaseIds={"GS-58"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-1")
     public  void addCustomer(HashMap<String, String> testData) {
@@ -41,6 +43,7 @@ public class CustomerTest extends BaseTest {
                 testData.get("Comments")), "Checking Customer add successfully.");
     }
 
+    @TestInfo(testCaseIds={"GS-64"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-2")
     public  void editCustomer(HashMap<String, String> testData) {
@@ -56,6 +59,7 @@ public class CustomerTest extends BaseTest {
                 customerUpdatedData.get("Comments")), "Checking is customer details are updated.");
     }
 
+    @TestInfo(testCaseIds={"GS-66"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-3")
     public  void deleteCustomer(HashMap<String, String> testData) {
@@ -71,6 +75,7 @@ public class CustomerTest extends BaseTest {
 
     }
 
+    @TestInfo(testCaseIds={"GS-5096"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-4")
     public  void applySingleTagToCustomer(HashMap<String, String> testData) {
@@ -81,6 +86,7 @@ public class CustomerTest extends BaseTest {
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
     }
 
+    @TestInfo(testCaseIds={"GS-5097"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-5")
     public  void applyMultipleTagToCustomer(HashMap<String, String> testData) {
@@ -91,6 +97,7 @@ public class CustomerTest extends BaseTest {
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
     }
 
+    @TestInfo(testCaseIds={"GS-5098"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC-6")
     public  void updateTagToCustomer(HashMap<String, String> testData) {
@@ -101,13 +108,6 @@ public class CustomerTest extends BaseTest {
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
         customersPage = customersPage.applyTags(testData.get("Customer"), testData.get("UpdatedTags").split("\\|"));
         Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(testData.get("UpdatedTags").split("\\|"))));
-    }
-
-    //@Test
-    public void dataExportMessageCheck() {
-        CustomersPage customersPage = basepage.clickOnCustomersTab().clickOnCustomersSubTab();
-        customersPage = customersPage.selectUIView("Standard View");
-
     }
 
 
