@@ -206,9 +206,10 @@ public class SurveyPublishPageTest extends SurveySetup {
 	}
 	
 	@TestInfo(testCaseIds={"GS-2701","GS-2702"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=false)
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
-    public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {	
+    public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -238,7 +239,6 @@ public class SurveyPublishPageTest extends SurveySetup {
 		surveyPropData.setSiteURL(surveySiteURL());
 		publishPage.updatePublishDetails(surveyPropData);
 		surveyPropData.setStatus("Publish");
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
 				surveyPropData.getStatus(),
 				"Verifying Survey Status After Publishing");

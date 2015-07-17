@@ -90,8 +90,8 @@ public class PlainEmailConnector implements Constants{
 				result = true;
 			}
 		}
-		folder.close(true);
-		store.close();
+	//	folder.close(true);
+	//	store.close();
 		return result;
 	}
 	

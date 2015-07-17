@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.survey.tests;
 
+import com.gainsight.bigdata.Integration.utils.PlainEmailConnector;
 import com.gainsight.sfdc.survey.pages.*;
 import com.gainsight.sfdc.survey.pojo.SurveyAddParticipants;
 import com.gainsight.sfdc.survey.pojo.SurveyDistribution;
@@ -10,6 +11,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.DateUtils;
 import com.gainsight.utils.annotations.TestInfo;
+import com.sforce.soap.partner.sobject.SObject;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
@@ -28,6 +30,9 @@ public class SurveyDistributionListTest extends SurveySetup {
 	private final String CREATE_CONTACTS           = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
 
     private ObjectMapper mapper = new ObjectMapper();
+	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
+			env.getProperty("em.host"), env.getProperty("em.userName"),
+			env.getProperty("em.password"));
 
 	@BeforeClass
 	public void setUp() throws Exception {
@@ -324,4 +329,520 @@ public class SurveyDistributionListTest extends SurveySetup {
 				sfdc.getRecordCount("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
 						+ getSurveyDistributionID(surveyPropData) + "'"));
 	}
+	
+	@TestInfo(testCaseIds = { "GS-2665","GS-2715", "GS-2716", "GS-2720", "GS-2721" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "NonAnonymousUsingGSEmail")
+	public void distributeNonAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		distribution.clickingToBeContacted();
+		distribution.sendEmail();
+		SObject[] contacts = sfdc
+				.getRecords(resolveStrNameSpace("select Id, JBCXM__Email__c FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+						+ setSurveyId(surveyPropData)
+						+ "' and JBCXM__Undelivered__c=false and isDeleted=false"));
+		SObject[] emailTemplates = sfdc
+				.getRecords(resolveStrNameSpace("select Id,Name,Subject from EmailTemplate where 	Name='"
+						+ surveyPropData.getEmailTemplate() + "'"));
+		String emailSubject = (String) emailTemplates[0].getField("Subject");
+		Log.info("length of records is" + contacts.length);
+		HashMap<String, String> msgDetails = new HashMap<String, String>();
+		if (contacts.length > 0) {
+			for (int i = 0; i < contacts.length; i++) {
+				String temp1 = (String) contacts[i].getField("JBCXM__Email__c");
+				msgDetails.put(temp1.trim(), emailSubject);
+			}
+		}
+		Assert.assertTrue(plainEmailConnector.isMailDelivered(
+				env.getProperty("em.inbox"), msgDetails),
+				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2665","GS-2667", "GS-2716", "GS-2720", "GS-2721" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "PartialAnonymousUsingGSEmail")
+	public void distributePartialAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		distribution.clickingToBeContacted();
+		distribution.sendEmail();
+		SObject[] contacts = sfdc
+				.getRecords(resolveStrNameSpace("select Id, JBCXM__Email__c FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+						+ setSurveyId(surveyPropData)
+						+ "' and JBCXM__Undelivered__c=false and isDeleted=false"));
+		SObject[] emailTemplates = sfdc
+				.getRecords(resolveStrNameSpace("select Id,Name,Subject from EmailTemplate where 	Name='"
+						+ surveyPropData.getEmailTemplate() + "'"));
+		String emailSubject = (String) emailTemplates[0].getField("Subject");
+		Log.info("length of records is" + contacts.length);
+		HashMap<String, String> msgDetails = new HashMap<String, String>();
+		if (contacts.length > 0) {
+			for (int i = 0; i < contacts.length; i++) {
+				String temp1 = (String) contacts[i].getField("JBCXM__Email__c");
+				msgDetails.put(temp1.trim(), emailSubject);
+			}
+		}
+		Assert.assertTrue(plainEmailConnector.isMailDelivered(
+				env.getProperty("em.inbox"), msgDetails),
+				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2665","GS-2667", "GS-2716", "GS-2720", "GS-2721" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CompleteAnonymousUsingGSEmail")
+	public void distributeCompleteAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		distribution.clickingToBeContacted();
+		distribution.sendEmail();
+		SObject[] contacts = sfdc
+				.getRecords(resolveStrNameSpace("select Id, JBCXM__Email__c FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+						+ setSurveyId(surveyPropData)
+						+ "' and JBCXM__Undelivered__c=false and isDeleted=false"));
+		SObject[] emailTemplates = sfdc
+				.getRecords(resolveStrNameSpace("select Id,Name,Subject from EmailTemplate where 	Name='"
+						+ surveyPropData.getEmailTemplate() + "'"));
+		String emailSubject = (String) emailTemplates[0].getField("Subject");
+		Log.info("length of records is" + contacts.length);
+		HashMap<String, String> msgDetails = new HashMap<String, String>();
+		if (contacts.length > 0) {
+			for (int i = 0; i < contacts.length; i++) {
+				String temp1 = (String) contacts[i].getField("JBCXM__Email__c");
+				msgDetails.put(temp1.trim(), emailSubject);
+			}
+		}
+		Assert.assertTrue(
+				plainEmailConnector.isMailDelivered(
+						env.getProperty("em.inbox"), msgDetails),
+				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
+	}
+	
+	@TestInfo(testCaseIds = {"GS-2728", "GS-2730", "GS-2731", "GS-2734", "GS-2736", "GS-3200"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ScheduleNonAnonymousUsingGS")
+	public void ScheduleNonAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		SurveyDistribution surveyDistribution = mapper.readValue(
+				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
+		surveyDistribution.setScheduleName("Scheduled at" + " "
+				+ distribution.getCurrentDateAndTime());
+		distribution.createSchedule(surveyDistribution);
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
+	}
+	
+	@TestInfo(testCaseIds = {"GS-2728", "GS-2730", "GS-2731", "GS-2734", "GS-2736", "GS-3200"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "SchedulePartialAnonymousUsingGS")
+	public void SchedulePartialAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		SurveyDistribution surveyDistribution = mapper.readValue(
+				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
+		surveyDistribution.setScheduleName("Scheduled at" + " "
+				+ distribution.getCurrentDateAndTime());
+		distribution.createSchedule(surveyDistribution);
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
+	}
+	
+	@TestInfo(testCaseIds = {"GS-2728", "GS-2730", "GS-2731", "GS-2734", "GS-2736", "GS-3200"})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ScheduleCompletAnonymousUsingGS")
+	public void ScheduleCompleteAnonymousSurveyUsingGSEmail(
+			Map<String, String> testData) throws Exception {
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		SurveyDistribution surveyDistribution = mapper.readValue(
+				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
+		surveyDistribution.setScheduleName("Scheduled at" + " "
+				+ distribution.getCurrentDateAndTime());
+		distribution.createSchedule(surveyDistribution);
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
+	}
+	
+	
+	
+	
+	@TestInfo(testCaseIds = { "GS-2665","GS-2715","GS-2728","GS-2738","GS-2731",})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "NonAnonymousUsingGSEmail")
+	public void ReSendNonAnonymousSurveyUsingGSEmailAndSchedule(
+			Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		distribution.clickingToBeContacted();
+		distribution.sendEmail();
+		SurveyDistribution surveyDistribution = mapper.readValue(
+				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
+		surveyDistribution.setScheduleType("Resend");
+		surveyDistribution.setScheduleName("ReScheduled at" + " "
+				+ distribution.getCurrentDateAndTime());
+		distribution.createSchedule(surveyDistribution);
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
+	}
+	
+	@TestInfo(testCaseIds = { "GS-2665","GS-2715","GS-2728","GS-2738","GS-2731",})
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "PartialAnonymousUsingGSEmail")
+	public void ReSendPartialAnonymousSurveyUsingGSEmailAndSchedule(
+			Map<String, String> testData) throws Exception {
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
+		SurveyProperties surveyPropData = mapper.readValue(
+				testData.get("Survey"), SurveyProperties.class);
+		surveyPropData.setStartDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getStartDate()), 0, false));
+		surveyPropData.setEndDate(getDateWithFormat(
+				Integer.valueOf(surveyPropData.getEndDate()), 0, false));
+		SurveyPropertiesPage surPropPage = surBasePage.createSurvey(
+				surveyPropData, true);
+		surPropPage.updateSurveyProperties(surveyPropData);
+		Assert.assertEquals(surPropPage.getPropertiesMessage(),
+				"Survey properties successfully saved.");
+		setSurveyId(surveyPropData);
+		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
+		SurveyQuestionPage surveyQuestionPage = surPropPage
+				.clickOnQuestions(surveyPropData);
+		SurveyQuestion surQues = mapper.readValue(testData.get("Question1"),
+				SurveyQuestion.class);
+		surQues.setPageId(getRecentAddedPageId(surveyPropData));
+		surQues.setSurveyProperties(surveyPropData);
+		surveyQuestionPage = createSurveyQuestion(surQues, surveyQuestionPage);
+		verifyQuestionDisplayed(surveyQuestionPage, surQues);
+		SurveyPublishPage publishPage = surPropPage
+				.clickOnPublish(surveyPropData);
+		surveySiteURL();
+		surveyPropData.setSiteURL(surveySiteURL());
+		publishPage.updatePublishDetails(surveyPropData);
+		surveyPropData.setStatus("Publish");
+		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
+				surveyPropData.getStatus(),
+				"Verifying Survey Status After Publishing");
+		SurveyAddParticipantsPage surveyAddParticipant = surveyQuestionPage
+				.clickOnAddParticipants(surveyPropData);
+		SurveyAddParticipants surveyParticipants = mapper.readValue(
+				testData.get("AddParticipant"), SurveyAddParticipants.class);
+		surveyAddParticipant.loadFromContactObject(surveyParticipants);
+		surveyAddParticipant.loadParticipants();
+		SurveyDistributePage distribution = surveyQuestionPage
+				.clickOnDistribute(surveyPropData);
+		distribution.clickingToBeContacted();
+		distribution.sendEmail();
+		SurveyDistribution surveyDistribution = mapper.readValue(
+				testData.get("Schedule"), SurveyDistribution.class);
+		surveyDistribution.setScheduleDate(getDateWithFormat(Integer.valueOf(surveyDistribution.getScheduleDate()), 0, false));
+		surveyDistribution.setScheduleType("Resend");
+		surveyDistribution.setScheduleName("ReScheduled at" + " "
+				+ distribution.getCurrentDateAndTime());
+		distribution.createSchedule(surveyDistribution);
+		Assert.assertEquals(
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
+						+ surveyParticipants.getSearchFilter()
+						+ "' and isDeleted=false")),
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
+	}
+	
+	
 }
