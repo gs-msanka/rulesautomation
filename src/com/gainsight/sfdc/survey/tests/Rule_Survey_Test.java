@@ -80,7 +80,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	}
     
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false	)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
 	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
@@ -112,7 +112,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
 	public void surveyRuleMatixSingleQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
@@ -123,7 +123,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyCTARule surveyCTARule = mapper.readValue(testData.get("Type"),
 				SurveyCTARule.class);
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
-		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
+		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"),
+				SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
 		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
 				new ExpectedCommonWaitCondition<Boolean>() {
