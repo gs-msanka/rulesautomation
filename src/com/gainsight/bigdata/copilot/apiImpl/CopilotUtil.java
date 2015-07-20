@@ -23,6 +23,7 @@ public class CopilotUtil extends NSTestBase {
 	public JsonNode createSmartList(HashMap<String, String> testData)
 			throws Exception {
 
+		String automatedRule=null;
 		SmartList smList = new SmartList();
 
 		smList.setName(testData.get("name"));
@@ -33,7 +34,11 @@ public class CopilotUtil extends NSTestBase {
 		Stats stats = mapper.readValue(testData.get("stats"),
 				Stats.class);
 		smList.setStats(stats);
-		smList.setAutomatedRule(mapper.readValue(testData.get("automatedRule"),
+		
+		automatedRule=testData.get("automatedRule1") + testData.get("automatedRule2");
+		/*smList.setAutomatedRule(mapper.readValue(testData.get("automatedRule"),
+				AutomatedRule.class));*/
+		smList.setAutomatedRule(mapper.readValue(automatedRule,
 				AutomatedRule.class));
 		Log.info("automatedRule json is " + smList.getAutomatedRule());
 		smList.setRefreshList(testData.get("refreshList"));

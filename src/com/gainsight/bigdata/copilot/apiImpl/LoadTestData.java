@@ -3,8 +3,11 @@ package com.gainsight.bigdata.copilot.apiImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.sfdc.util.datagen.DataETL;
@@ -33,6 +36,8 @@ public class LoadTestData extends NSTestBase{
 			+ "/job/job_C_ContactObject1.txt";
 	private static final String Scorecard_Enable = copilotDir
 			+ "/apexScripts/Scorecard_Enable.apex";
+	private static final String Scorecard_Cleanup = copilotDir
+					+ "/apexScripts/Scorecard_Cleanup.apex";
 	private static final String Scorecard_PopulateDatas = copilotDir
 			+ "/apexScripts/Scorecard_PopulateDatas.apex";
 	private static final String job_accountInit = copilotDir
@@ -49,12 +54,12 @@ public class LoadTestData extends NSTestBase{
 	
 	@BeforeTest
 	public void cleanUp() {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
+	  sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
 	}
 	
 	
 	public void createCustomFields() throws Exception {
-			
+		
 		ObjectFields objField=new ObjectFields();
 		
 		//createCustomObject
@@ -328,6 +333,7 @@ public class LoadTestData extends NSTestBase{
 	
 	//Enabling Scorecard and Populating datas	
 	sfdc.runApexCode(getNameSpaceResolvedFileContents(Scorecard_Enable));
+	sfdc.runApexCode(getNameSpaceResolvedFileContents(Scorecard_Cleanup));
 	sfdc.runApexCode(getNameSpaceResolvedFileContents(Scorecard_PopulateDatas));
 	
 	}
@@ -335,24 +341,24 @@ public class LoadTestData extends NSTestBase{
 	public void generateData() throws Exception {
 		CopilotDataSetup dataSetup = new CopilotDataSetup();
 		dataETL = new DataETL();
-		dataSetup.loadToObject(dataETL, Job_C_ContactObject2);
+			dataSetup.loadToObject(dataETL, Job_C_ContactObject2);
 		//Initializing Account,Customer Info,Case,Contact
-		dataSetup.loadToObject(dataETL, job_accountInit);
-		dataSetup.loadToObject(dataETL, job_customerInfoInit);
-		dataSetup.loadToObject(dataETL, job_contactInit);
-		dataSetup.loadToObject(dataETL, job_caseInit);
+			dataSetup.loadToObject(dataETL, job_accountInit);
+			dataSetup.loadToObject(dataETL, job_customerInfoInit);
+			dataSetup.loadToObject(dataETL, job_contactInit);
+			dataSetup.loadToObject(dataETL, job_caseInit);
 		//Updating Account,Customer Info,Case,Contact
-		dataSetup.loadToObject(dataETL, Job_Account);
-		dataSetup.loadToObject(dataETL, Job_CustomerInfo);
-		dataSetup.loadToObject(dataETL, Job_Contact);
-		dataSetup.loadToObject(dataETL, Job_Case);
-		dataSetup.loadToObject(dataETL, Job_C_ContactObject1);
+			dataSetup.loadToObject(dataETL, Job_Account);
+			dataSetup.loadToObject(dataETL, Job_CustomerInfo);
+			dataSetup.loadToObject(dataETL, Job_Contact);
+			dataSetup.loadToObject(dataETL, Job_Case);
+			dataSetup.loadToObject(dataETL, Job_C_ContactObject1);
 	}
 	
 	@BeforeClass
 	public void generateFieldsAndData() throws Exception {
-		createCustomFields();
-		generateData();		
+	    createCustomFields();
+		generateData();
 	}
 	
 }

@@ -23,7 +23,7 @@ public class TestCase extends LoadTestData {
 	String StatsString = null;
 	SmartList smList = new SmartList();
 	String smartListID = null;
-
+	
 	@TestInfo(testCaseIds = { "GS-4610" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC1")
@@ -355,6 +355,39 @@ public class TestCase extends LoadTestData {
 
 		// Targeting 2 Accounts, 2 same contact emails.
 		// Expected : Contact Count :1 , Customer Count : 2
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts")); // Contact Count
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers")); // Customer Count
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4618" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC11")
+	public void createList11(HashMap<String, String> testData) throws Exception {
+
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeData = nodeContent.get("data");
+
+		// Verifying Response
+		smartListID = nodeData.get("smartListId").asText();
+
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		// Verify the Stats : Contact Count and Customer Count
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+
+		// Targeting 1 Contact , 1 Case
+		// Expected : Contact Count :1 , Customer Count : 1
 		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
 				testData.get("numberOfContacts")); // Contact Count
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
