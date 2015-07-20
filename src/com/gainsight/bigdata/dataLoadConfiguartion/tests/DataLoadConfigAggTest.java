@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.tests;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.gainsight.bigdata.Integration.utils.MDAIntegrationImpl;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataLoadConfiguartion.mapping.IdentifierMapper;
 import com.gainsight.bigdata.dataLoadConfiguartion.apiImpl.DataLoadAggConfigManager;
@@ -23,6 +24,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -54,6 +56,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager();
+        MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl();
+        integrationImpl.authorizeMDA();
         metaUtil.createExtIdFieldOnAccount(sfdc);
         metaUtil.createExtIdFieldOnContacts(sfdc);
         dataETL.cleanUp(resolveStrNameSpace("JBCXM__CustomerInfo__c"), null);
@@ -144,6 +148,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Assert.assertNotNull(statusId, "Status Id should not be null");
 
         Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " +endCollectionName);
@@ -154,15 +159,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t1/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
 
-
         CollectionInfo aggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
 
         List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(aggCollectionInfo)));
         com.gainsight.testdriver.Log.info("ActualData Size : " + actualData.size());
         actualData = reportManager.getProcessedReportData(actualData, aggCollectionInfo);
         Log.info("Actual Data : " + mapper.writeValueAsString(actualData));
-
-
 
         CSVReader expectedReader = new CSVReader(new FileReader(Application.basedir+jobInfo.getTransformationRule().getOutputFileLoc()));
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
@@ -172,6 +174,20 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("Un-Matched Records " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(diffData.size(), 0, "No of unmatched records should be zero.");
 
+        accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
+
+        Assert.assertNotNull(accountDetail, "Account Detail Should not be null...");
+
+        Assert.assertTrue(dataLoadAggConfigManager.deleteAccount(accountDetail.getAccountId()), "Project delete failed...");
+    }
+
+    //To Delete All the projects of a tenant.
+    private void deleteAllProjects() {
+        NsResponseObj nsResponseObj = dataLoadAggConfigManager.getAllDataAPIProjects();
+        List<AccountDetail> accountDetailList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<AccountDetail>>() {});
+        for(AccountDetail accountDetail : accountDetailList) {
+            System.out.println(dataLoadAggConfigManager.deleteAccount(accountDetail.getAccountId()));
+        }
     }
 
 }

@@ -1,10 +1,13 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.util.Map;
 
 /**
  * Created by Giribabu on 06/07/15.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DataAggProcessJobStatus {
     private String createdBy;
     private String createdByName;
@@ -27,7 +30,16 @@ public class DataAggProcessJobStatus {
     private String errorCode;
     private String createdDateStr;
     private String modifiedDateStr;
+    private int retryCount;
     private Map<String, String> parameters;
+
+    public int getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+    }
 
     public Map<String, String> getParameters() {
         return parameters;

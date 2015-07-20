@@ -1,10 +1,12 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * Created by Giribabu on 10/07/15.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AccountDetailProperties {
     private String collectionId;
     private String timeZone;

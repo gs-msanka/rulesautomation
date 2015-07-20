@@ -1,6 +1,6 @@
 {
   "inputFilePath": "/testdata/newstack/connectors/dataApi/tests/t1/ExpectedData.csv",
-  "outputFilePath": "/testdata/newstack/connectors/dataApi/process/t1_ExpectedData.csv",
+  "outputFilePath": "/testdata/newstack/connectors/dataApi/process/T1_ExpectedData.csv",
   "dateColumnProperties": [
     {
       "dateFormat": "MM-dd-yyyy",

@@ -31,13 +31,18 @@ public class DataLoadAggConfigManager extends NSTestBase {
      * @return
      * @throws Exception
      */
-    public NsResponseObj getAllDataAPIProjects() throws Exception {
-        ResponseObj responseObj = wa.doGet(DATA_API_GET, header.getAllHeaders());
+    public NsResponseObj getAllDataAPIProjects()  {
+        Log.info("Getting all the data api projects...");
         NsResponseObj nsResponseObj = null;
-        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        } else {
-            throw new RuntimeException("Failed to get all data api projects");
+        try {
+            ResponseObj responseObj = wa.doGet(DATA_API_GET, header.getAllHeaders());
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            } else {
+                throw new RuntimeException("Failed to get all data api projects");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return nsResponseObj;
     }
@@ -49,6 +54,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
      * @return
      */
     public AccountDetail getAccountDetailByProjectName(String projectName) {
+        Log.info("Fetching Account details by project name.. " +projectName);
         if (projectName == null || projectName.equals("")) {
             throw new IllegalArgumentException("Project Name is Mandatory.");
         }
@@ -74,19 +80,25 @@ public class DataLoadAggConfigManager extends NSTestBase {
      * @return
      * @throws Exception
      */
-    public NsResponseObj deleteAccount(String accountId) throws Exception {
+    public boolean deleteAccount(String accountId) {
+        Log.error("Deleting the account : " +accountId);
+        NsResponseObj nsResponseObj = null;
         if (accountId == null || accountId.equals("")) {
             Log.error("Account Id should not be null.");
             throw new IllegalArgumentException("Account Id should not be null.");
         }
-        ResponseObj responseObj = wa.doDelete(ACCOUNT_DELETE + accountId, header.getAllHeaders());
-        NsResponseObj nsResponseObj = null;
-        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        } else {
+        try {
+            ResponseObj responseObj = wa.doDelete(ACCOUNT_DELETE + accountId, header.getAllHeaders());
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            } else {
+                throw new RuntimeException("Failed to get all data api projects");
+            }
+        } catch (Exception e) {
             throw new RuntimeException("Failed to get all data api projects");
         }
-        return nsResponseObj;
+        Log.info("Final Status : " +nsResponseObj.isResult());
+        return nsResponseObj.isResult();
     }
 
     /**
@@ -96,6 +108,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
      * @throws Exception
      */
     public NsResponseObj getAccountDetail(String accountId) throws Exception {
+        Log.info("Fetching Account details...   " +accountId);
         if (accountId == null || accountId.equals("")) {
             Log.error("Account Id should not be null.");
             throw new IllegalArgumentException("Account Id should not be null.");
@@ -194,6 +207,28 @@ public class DataLoadAggConfigManager extends NSTestBase {
         DataAggProcessJobStatus jobStatus = mapper.convertValue(nsResponseObj.getData(), DataAggProcessJobStatus.class);
         if (jobStatus != null && jobStatus.getStatus() != null
                 && (jobStatus.getStatus().equals(DataAggProcessStatusType.COMPLETED.name()) || jobStatus.getStatus().equals(DataAggProcessStatusType.FAILED_WHILE_PROCESSING.name()))) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Return true if aggregation is completed
+     * @param statusId
+     * @return
+     */
+    public boolean isDataAggregationCompleteWithSuccess(String statusId) {
+        boolean result = false;
+        NsResponseObj nsResponseObj = null;
+        try {
+            nsResponseObj = getAggregationJobStatus(statusId);
+        } catch (Exception e) {
+            Log.error("Failed to get Aggregation Job details " + statusId, e);
+            throw new RuntimeException("Failed to get Aggregation Job details " + statusId, e);
+        }
+        DataAggProcessJobStatus jobStatus = mapper.convertValue(nsResponseObj.getData(), DataAggProcessJobStatus.class);
+        if (jobStatus != null && jobStatus.getStatus() != null
+                && (jobStatus.getStatus().equals(DataAggProcessStatusType.COMPLETED.name()))) {
             result = true;
         }
         return result;
