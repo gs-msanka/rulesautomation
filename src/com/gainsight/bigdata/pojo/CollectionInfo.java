@@ -256,7 +256,7 @@ public class CollectionInfo {
 
     }
 
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Column {
         private String name;
         boolean hidden = false;

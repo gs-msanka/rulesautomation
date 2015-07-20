@@ -1,10 +1,13 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import java.util.List;
 
 /**
- * Created by gainsight on 10/07/15.
+ * Created by Giribabu on 10/07/15.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class GlobalMapping {
     private List<Mapping> systemDefined;
     private List<Mapping> gsDefined;
