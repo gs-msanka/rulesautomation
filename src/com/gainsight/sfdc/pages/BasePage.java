@@ -39,6 +39,7 @@ import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 public class BasePage extends WebPage implements Constants {
 
 	public final String USERNAVBUTTON       = "userNavButton";
+    private final String APP_DROPDOWN       = "tsidLabel";
     private final String LOADING_IMG        = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
 	private final String OPPORTUNITIES_TAB  = "//img[@title='Opportunities']";
 	private final String ALL_TABS           = "//img[@title='All Tabs']";
@@ -107,6 +108,18 @@ public class BasePage extends WebPage implements Constants {
 	public void beInMainWindow() {
 		element.switchToMainWindow();
 	}
+
+    public BasePage selectGainsightApplication() {
+        String appName = "Gainsight";
+        if(appName.equals(element.getText(APP_DROPDOWN).trim())) {
+            Log.info("Gainsight App is selected already...");
+        } else {
+            item.click(APP_DROPDOWN);
+            item.click("//a[@class='menuButtonMenuLink' and contains(text(), '"+appName+"')]");
+            Log.info("Gainsight App Selected.");
+        }
+        return this;
+    }
 	
 
 	public OpportunityPage gotoOpportunityPageWithId(String Id){

@@ -16,6 +16,7 @@ public interface ApiUrls extends NSURLs {
     public final String APP_API_GET_COLLECTION              = NS_URL + "/api/collections/";
     public final String APP_API_ASYNC_STATUS			    = NS_URL + "/api/async/process/";
 
+    public final String MDA_SFDC_ACCOUNT_EXISTS             = NS_URL + "/api/accounts/SFDC/exists";
     public final String MDA_AUTH_REVOKE                     = NS_URL + "/api/accounts/sfdc?accountType=SFDC";
     public final String SFDC_EXITS_GET                      = NS_URL + "/api/accounts/SFDC/exits";
     public final String CREATE_CONNECTORS_PROJECT           = NS_URL + "/api/tokens/v2";

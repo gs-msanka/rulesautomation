@@ -65,6 +65,31 @@ public class PackageUtil {
      * @throws ConnectionException
      */
     public void setupGainsightApplicationAndTabs(boolean managePackage, String nameSpace) throws ConnectionException {
+        CustomApplication application = new CustomApplication();
+        application.setFullName(FileUtil.resolveNameSpace("JBCXM__JBara", managePackage? nameSpace : null));
+        application.setTab(new String[]{"JBCXM__Gainsight", "JBCXM__Customers", "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption",
+                "JBCXM__Survey", "JBCXM__Administration",  "JBCXM__Cockpit" ,
+                "JBCXM__GainsightMobile", "JBCXM__Insights", "JBCXM__NPS","JBCXM__Churn" });
+
+        application.setLabel("Gainsight");
+
+        SaveResult[]  saveResults = metadataConnection.updateMetadata(new Metadata[]{application});
+
+        boolean success = true;
+        for(SaveResult saveResult : saveResults) {
+            if(!saveResult.isSuccess()) {
+                success = false;
+                for(Error error : saveResult.getErrors()) {
+                    Log.error(error.getMessage());
+                    Log.error(error.getStatusCode().toString());
+                }
+            }
+        }
+        if(!success) {
+            Log.error("Seems Some error while setting up gainsight application.");
+            throw new RuntimeException("Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
+        }
+
         Profile profile = new Profile();
         profile.setFullName("Admin");
 
@@ -78,9 +103,9 @@ public class PackageUtil {
                 "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption", "JBCXM__Gainsight", "JBCXM__GainsightMobile", "JBCXM__Insights", "JBCXM__NPS", "JBCXM__Survey"}));
         profile.setApplicationVisibilities(new ProfileApplicationVisibility[]{appVisibility});
 
-        SaveResult[]  saveResults = metadataConnection.updateMetadata(new Metadata[]{profile});
+        saveResults = metadataConnection.updateMetadata(new Metadata[]{profile});
 
-        boolean success = true;
+        success = true;
         for(SaveResult saveResult : saveResults) {
             if(!saveResult.isSuccess()) {
                 success = false;

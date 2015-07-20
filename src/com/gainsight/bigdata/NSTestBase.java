@@ -111,6 +111,7 @@ public class NSTestBase {
         }
         //Deploy Custom permission set code
         packageUtil.deployPermissionSetCode();
+        packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         //Providing permissions to standard objects.
         metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
     }
@@ -299,10 +300,5 @@ public class NSTestBase {
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
         }
         return result;
-    }
-
-    public ResponseObj revokeMDAAuthorization() throws Exception {
-        ResponseObj responseObj = wa.doDelete(ApiUrls.MDA_AUTH_REVOKE, header.getAllHeaders());
-        return responseObj;
     }
 }
