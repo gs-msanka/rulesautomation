@@ -1,4 +1,4 @@
-package com.gainsight.bigdata.copilot.pojos;
+package com.gainsight.bigdata.copilot.smartlist.pojos;
 
 
 public class SmartList {

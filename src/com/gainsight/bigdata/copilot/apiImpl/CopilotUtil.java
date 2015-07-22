@@ -7,9 +7,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.copilot.pojos.AutomatedRule;
-import com.gainsight.bigdata.copilot.pojos.SmartList;
-import com.gainsight.bigdata.copilot.pojos.Stats;
+import com.gainsight.bigdata.copilot.smartlist.pojos.*;
 import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
@@ -36,11 +34,10 @@ public class CopilotUtil extends NSTestBase {
 		smList.setStats(stats);
 		
 		automatedRule=testData.get("automatedRule1") + testData.get("automatedRule2");
-		/*smList.setAutomatedRule(mapper.readValue(testData.get("automatedRule"),
-				AutomatedRule.class));*/
 		smList.setAutomatedRule(mapper.readValue(automatedRule,
 				AutomatedRule.class));
 		Log.info("automatedRule json is " + smList.getAutomatedRule());
+		
 		smList.setRefreshList(testData.get("refreshList"));
 		smList.setDataSourceType(testData.get("dataSourceType"));
 

@@ -1,13 +1,15 @@
 package com.gainsight.bigdata.copilot.tests;
 
 import java.util.HashMap;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import com.gainsight.bigdata.copilot.apiImpl.CopilotUtil;
 import com.gainsight.bigdata.copilot.apiImpl.LoadTestData;
-import com.gainsight.bigdata.copilot.pojos.SmartList;
+import com.gainsight.bigdata.copilot.smartlist.pojos.SmartList;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
