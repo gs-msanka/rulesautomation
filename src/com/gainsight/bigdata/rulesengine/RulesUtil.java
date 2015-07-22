@@ -31,6 +31,7 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
 	private static HashMap<String,String> playbookMap;
+	private static HashMap<String,String> milestoneMap;
 	public DataETL dataETL;
 	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
@@ -138,6 +139,7 @@ public void setupRule(HashMap<String,String> testData){
 				"JBCXM__SystemName__c", "PL");
 		emailTemplateMap = getMapFromObject("EmailTemplate", "Name", "EML");
 		playbookMap=getMapFromObject("JBCXM__Playbook__c","Name","PB");
+		milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c","Name","ML","JBCXM__Category__c", "Milestones");
 	}
 
 	/**
@@ -145,12 +147,12 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return - the string where Ids are replaced with values - like system names
 	 */
 	private String getIdResolvedString(String string) {
-		string = replaceSystemNameInRule(
+		string = replaceSystemNameInRule(replaceSystemNameInRule(
 				replaceSystemNameInRule(
 						replaceSystemNameInRule(
 								replaceSystemNameInRule(replaceSystemNameInRule(string,
 										emailTemplateMap), featuresMap),
-						ctaTypesMap), PickListMap),playbookMap);
+						ctaTypesMap), PickListMap),playbookMap),milestoneMap);
 		return string;
 	}
 

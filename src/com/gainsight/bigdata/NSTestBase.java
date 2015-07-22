@@ -192,6 +192,25 @@ public class NSTestBase {
         return objMap;
     }
 
+
+    /**
+     * @param objName   = the object from which we need the map
+     * @param fieldName = the field name that needs to be queried for - it will be the key in the HashMap
+     * @param shortCut  = the shortCut for each object will be unique.in the test data we need to prepend the key with the shortcut
+     * @return
+     */
+    public HashMap<String, String> getMapFromObjectUsingFilter(String objName, String fieldName, String shortCut, String filterField, String filterValue) {
+        String Query = "SELECT Id," + fieldName + " from " + objName + " WHERE " + filterField + " =  '" + filterValue + "'";
+        HashMap<String, String> objMap = new HashMap<String, String>();
+        SObject[] objRecords = sfdc.getRecords(resolveStrNameSpace(Query));
+        Log.info("Total Piclist Records : " + objRecords.length);
+        for (SObject sObject : objRecords) {
+            Log.info("ObjectName:" + objName + "..FieldName : " + sObject.getField(resolveStrNameSpace(fieldName)) + " - With Id : " + sObject.getId());
+            objMap.put(shortCut + "." + sObject.getField(fieldName).toString(), sObject.getId());
+        }
+        return objMap;
+    }
+
     /**
      * Method to remove the name space from the string "JBCXM__".
      *
