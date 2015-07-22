@@ -122,7 +122,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 		wait.waitTillElementDisplayed(SCHEDULE_CHECKBOX, MIN_TIME, MAX_TIME);
 		item.click(SCHEDULE_CHECKBOX);
 		button.click(SCHEDULE_DONE_BUTTON);
-		wait.waitTillElementNotDisplayed(SCHEDULE_DONE_BUTTON, MIN_TIME, MAX_TIME);
+		wait.waitTillElementNotDisplayed("//div[contains(@class, ' ui-corner-all ui-front ui-draggable')]", MIN_TIME, MAX_TIME);
 	}
 
 	public int getScheduledCount(){

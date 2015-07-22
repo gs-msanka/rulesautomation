@@ -98,9 +98,7 @@ public class SurveySetup extends BaseTest implements Constants{
 			questId = sObjects[0].getId();
 			Log.info("Question Id : " + questId);
 		} else {
-			throw new RuntimeException(
-					"No Survey Question Found with this name : "
-							+ surQues.getQuestionText());
+			Log.info("No Survey Question Found with this name");
 		}
 		return questId;
 	}
@@ -246,6 +244,7 @@ public class SurveySetup extends BaseTest implements Constants{
 	
     public SurveyQuestionPage createSurveyQuestion(SurveyQuestion surveyQuestion, SurveyQuestionPage surveyQuestionPage) {
         surveyQuestionPage.clickOnAddNewQuestion(surveyQuestion);
+        Timer.sleep(5);
         surveyQuestion.setQuestionId(getRecentAddedQuestionId(surveyQuestion));
         surveyQuestionPage.fillQuestionFormInfo(surveyQuestion);
         surveyQuestionPage = surveyQuestionPage.clickOnSaveQuestion(surveyQuestionPage.getQuestionElement(surveyQuestion));

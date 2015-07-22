@@ -12,14 +12,14 @@
   "sfdc_apiVersion" : "32.0",
   "profiles" : {
     "default" : {
-      "sfdc_username" : "gs-ggolla@testing1.com",
-      "sfdc_password" : "1234567g",
-      "sfdc_stoken"   : "i4kNNt584jDIslzc2fOY7u0Gn"
+      "sfdc_username" : "athaduka@58demo.com",
+      "sfdc_password" : "Abhilash1@",
+      "sfdc_stoken"   : "XvCBS25MEetS8g5hOCnktwH9"
     },
     "marvels" : {
-      "sfdc_username" : "marvels@gsautomation.com",
-      "sfdc_password" : "Gainsight12345",
-      "sfdc_stoken" : "Mpsjf2ds28VSasOrFbsVfpFE"
+      "sfdc_username" : "athaduka@58demo.com",
+      "sfdc_password" : "Abhilash1@",
+      "sfdc_stoken"   : "XvCBS25MEetS8g5hOCnktwH9"
     },
     "connectors" : {
       "sfdc_username" : "connectors@gsautomation.com",

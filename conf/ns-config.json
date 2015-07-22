@@ -7,7 +7,7 @@
     "test" : {
       "ns_sfdc_username" : "snasika@ns.com",
       "ns_sfdc_password" : "gainsight.12345",
-      "ns_sfdc_stoken"   : "qwrUoPm557jvV9TnYdH6IYww"
+      "ns_sfdc_stoken"   : "es2P6GD8qSOXGZ1zL0HVH45E6"
     },
     "dev" : {
       "ns_sfdc_username" : "rkumar@devref.com",

@@ -133,7 +133,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     public WebElement getQuestionElement(final SurveyQuestion surveyQuestion) {
-        WebElement surveyQuestionEle;
+		WebElement surveyQuestionEle;
 		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
 				new ExpectedCommonWaitCondition<Boolean>() {
 					@Override
@@ -141,12 +141,10 @@ public class SurveyQuestionPage extends SurveyPage {
 						return isQuestionExists(surveyQuestion);
 					}
 				});
-        try {
-            surveyQuestionEle= getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to find survey Question");
-        }
-        return surveyQuestionEle;
+		surveyQuestionEle = getPageElement(surveyQuestion).findElement(
+				By.xpath(String.format(QUESTION_BLOCK,
+						surveyQuestion.getQuestionId())));
+		return surveyQuestionEle;
     }
     
 	public boolean isQuestionExists(SurveyQuestion surveyQuestion) {
