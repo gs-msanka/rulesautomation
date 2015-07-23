@@ -35,7 +35,6 @@ public class LoadToMilestone extends RulesUtil {
         JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
         LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
-        updateNSURLInAppSettings(nsConfig.getNsURl());
         List<HashMap<String, String>> testDataList = ExcelDataProvider.getDataFromExcel(Application.basedir + TEST_DATA_FILE1, "loadToCustomers1");
         if(testDataList.size()>0) {
             loadToCustomers(testDataList.get(0));
