@@ -28,11 +28,9 @@ public class LoadToMilestone extends RulesUtil {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         sfdc.connect();
         metaUtil.createFieldsForAccount(sfdc, sfinfo);
         LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
-        ObjectMapper mapper = new ObjectMapper();
         dataETL=new DataETL();
         JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -43,7 +41,7 @@ public class LoadToMilestone extends RulesUtil {
             loadToCustomers(testDataList.get(0));
         }
         else {
-            throw new RuntimeException("Do it again...");
+            throw new RuntimeException("Data is not present in LoadToCustomers.xls,please validate the excel for data");
         }
         populateObjMaps();
 
@@ -68,13 +66,13 @@ public class LoadToMilestone extends RulesUtil {
         Assert.assertNotNull(responseObj.getRequestId());
         waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-                        + RuleName + "'")[0]
+                .getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'"))[0]
                 .getChild("JBCXM__LastRunResult__c").getValue().toString();
         Assert.assertEquals("SUCCESS", LRR);
-        int rules1 = sfdc.getRecordCount("Select Name, Boolean_Auto1__c, Id, PickList_Auto__c, Percent_Auto__c, Date_Auto__c, DateTime_Auto__c, MultiPicklist_Auto__c From Account Where ((Name LIKE 'F%') AND ((Boolean_Auto1__c = true) OR (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) OR (Percent_Auto__c != 0))) AND JBCXM__CustomerInfo__c != null");
+        int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Name, Boolean_Auto1__c, Id, PickList_Auto__c, Percent_Auto__c, Date_Auto__c, DateTime_Auto__c, MultiPicklist_Auto__c From Account Where ((Name LIKE 'F%') AND ((Boolean_Auto1__c = true) OR (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) OR (Percent_Auto__c != 0))) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
-        int rules2 = sfdc.getRecordCount("SELECT Id, Name, JBCXM__Account__c, JBCXM__Comment__c, JBCXM__CreatedDate__c, JBCXM__Customer__c, JBCXM__Date__c, JBCXM__Milestone__r.name FROM JBCXM__Milestone__c where JBCXM__Milestone__r.name='Training'");
+        int rules2 = sfdc.getRecordCount(resolveStrNameSpace("SELECT Id, Name, JBCXM__Account__c, JBCXM__Comment__c, JBCXM__CreatedDate__c, JBCXM__Customer__c, JBCXM__Date__c, JBCXM__Milestone__r.name FROM JBCXM__Milestone__c where JBCXM__Milestone__r.name='Training'"));
         Log.info(""+rules2);
         Assert.assertEquals(rules1,rules2);
 
