@@ -9,9 +9,10 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 import com.gainsight.sfdc.util.PackageUtil;
-
+import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
+
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -39,7 +40,7 @@ public class BaseTest {
     public static final String NAMESPACE = sfdcConfig.getSfdcNameSpace();
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
-
+    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
     public static MetaDataUtil metaUtil=new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
 

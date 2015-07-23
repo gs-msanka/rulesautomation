@@ -30,7 +30,7 @@ public class AccountAttributes360Test extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
     }
 
-    @TestInfo(testCaseIds={"GS-5013"})
+    @TestInfo(testCaseIds={"GS-5103"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ACC_ATT_1")
     public void uiViewNotConfMsgVerification(HashMap<String, String> testData) {

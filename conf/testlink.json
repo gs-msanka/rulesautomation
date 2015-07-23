@@ -1,0 +1,8 @@
+{
+  "tl_enabled" : false,
+  "tl_url" : "http://codereview.gainsight.com/testlink/lib/api/xmlrpc/v1/xmlrpc.php",
+  "tl_apiKey" : "71099f31579ec9ea8ed0939d9460c950",
+  "tl_projectName" : "Gainsight",
+  "tl_planName" : "Automation Test Plan",
+  "tl_overwrite" : false
+}
