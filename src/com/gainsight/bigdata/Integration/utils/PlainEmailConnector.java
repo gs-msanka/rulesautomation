@@ -47,7 +47,7 @@ public class PlainEmailConnector implements Constants{
 	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
-	public static boolean isMailDelivered(String folderName,
+	public static boolean isMailDelivered(final String folderName,
 			final HashMap<String, String> msgDetails) throws Exception {
 		final HashMap<String, String> msg = new HashMap<String, String>();
 		boolean result = false;;
@@ -81,13 +81,20 @@ public class PlainEmailConnector implements Constants{
 				Log.info("Key : " + entry.getKey() + " Value : "
 						+ entry.getValue());
 			}
-			CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
-					new ExpectedCommonWaitCondition<Boolean>() {
-						@Override
-						public Boolean apply() {
-							return msg.equals(msgDetails);
+			CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
+				@Override
+				public Boolean apply() {
+					if (!msg.equals(msgDetails)) {
+						try {
+							isMailDelivered(folderName, msgDetails);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-					});
+					}
+					return msg.equals(msgDetails);
+				}
+			});	
 			Log.info("comparision value is" + msg.equals(msgDetails));
 			if (msg.equals(msgDetails)) {
 				result = true;
