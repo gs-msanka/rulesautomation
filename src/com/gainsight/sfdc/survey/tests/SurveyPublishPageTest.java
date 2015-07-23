@@ -33,9 +33,7 @@ public class SurveyPublishPageTest extends SurveySetup {
     private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
     private ObjectMapper mapper = new ObjectMapper();
-	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
-			env.getProperty("em.host"), env.getProperty("em.userName"),
-			env.getProperty("em.password"));
+
  
 	@BeforeClass
 	public void setUp() {
@@ -44,6 +42,9 @@ public class SurveyPublishPageTest extends SurveySetup {
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		basepage.login();
+		PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
+				env.getProperty("em.host"), env.getProperty("em.userName"),
+				env.getProperty("em.password"));
 	}
 	
 	@TestInfo(testCaseIds = { "GS-2696" })
@@ -209,7 +210,8 @@ public class SurveyPublishPageTest extends SurveySetup {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
     public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -262,7 +264,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(plainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
 				env.getProperty("em.inbox"), msgDetails));
 	}
 	

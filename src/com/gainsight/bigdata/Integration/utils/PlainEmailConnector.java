@@ -32,7 +32,7 @@ import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
  */
 public class PlainEmailConnector implements Constants{
 	
-	protected Store store;
+	protected static Store store;
 
 	/**
 	 * @param folderName
@@ -44,7 +44,7 @@ public class PlainEmailConnector implements Constants{
 	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
-	public boolean isMailDelivered(String folderName,
+	public static boolean isMailDelivered(String folderName,
 			final HashMap<String, String> msgDetails) throws Exception {
 		final HashMap<String, String> msg = new HashMap<String, String>();
 		boolean result = false;;
@@ -103,7 +103,7 @@ public class PlainEmailConnector implements Constants{
 		 * @throws Exception
 		 */
 	  
-	public boolean isAllEmailsSeen(String folderName) throws Exception {
+	public static boolean isAllEmailsSeen(String folderName) throws Exception {
 		boolean result = false;
 		Folder folder = store.getFolder(folderName);
 		folder.open(Folder.READ_WRITE);
