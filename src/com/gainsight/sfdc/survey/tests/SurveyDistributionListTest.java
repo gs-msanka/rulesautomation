@@ -46,6 +46,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@BeforeMethod
 	public void cleanUpData(){
 		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
+		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyDistributionSchedule__c];"); // Deleting survey schedules since, we cannot schedule more than 10 surveys per day
 	}
 
 	@TestInfo(testCaseIds = {"GS-2715", "GS-2716", "GS-2720", "GS-2721"})
@@ -335,7 +336,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "NonAnonymousUsingGSEmail")
 	public void distributeNonAnonymousSurveyUsingGSEmail(
 			Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -394,7 +395,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(plainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
 				env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -404,7 +405,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "PartialAnonymousUsingGSEmail")
 	public void distributePartialAnonymousSurveyUsingGSEmail(
 			Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -463,7 +464,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(plainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
 				env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -473,7 +474,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CompleteAnonymousUsingGSEmail")
 	public void distributeCompleteAnonymousSurveyUsingGSEmail(
 			Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -533,7 +534,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 			}
 		}
 		Assert.assertTrue(
-				plainEmailConnector.isMailDelivered(
+				PlainEmailConnector.isMailDelivered(
 						env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -723,7 +724,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "NonAnonymousUsingGSEmail")
 	public void ReSendNonAnonymousSurveyUsingGSEmailAndSchedule(
 			Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -786,7 +787,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "PartialAnonymousUsingGSEmail")
 	public void ReSendPartialAnonymousSurveyUsingGSEmailAndSchedule(
 			Map<String, String> testData) throws Exception {
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
