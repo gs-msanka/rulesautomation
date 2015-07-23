@@ -93,8 +93,6 @@ public class PlainEmailConnector implements Constants{
 				result = true;
 			}
 		}
-	//	folder.close(true);
-	//	store.close();
 		return result;
 	}
 	
@@ -145,28 +143,25 @@ public class PlainEmailConnector implements Constants{
 		} catch (NoSuchProviderException e) {
 			throw new RuntimeException("No such provider, Please check");
 		}
-			CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
-				@Override
-				public Boolean apply() {
-					return connectToEmail(storeConnection, host, userName, password);
-				}
-			});
-			
-		
+		CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
+			@Override
+			public Boolean apply() {
+				return connectToEmail(storeConnection, host, userName, password);
+			}
+		});
 		Log.info("Connecting to Store...");
-		store=storeConnection;
+		store = storeConnection;
 	}
 	
 	public boolean connectToEmail(Store storeConnection, String host, String userName, String password) {
 		try {
 			storeConnection.connect(host, userName, password);
 			return true;
-		} catch(MessagingException e) {
-			Log.error("Failed to Connect" , e);
+		} catch (MessagingException e) {
+			Log.error("Failed to Connect", e);
 			return false;
 		}
 	}
-	
 }
 	
 
