@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.Integration.utils;
 
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -19,6 +20,8 @@ import javax.mail.Store;
 import javax.mail.search.AndTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
+
+import org.testng.annotations.ExpectedExceptions;
 
 import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.testdriver.Log;
@@ -133,23 +136,37 @@ public class PlainEmailConnector implements Constants{
 	 *            - mailBox password
 	 */
 	
-	public PlainEmailConnector(String host, String userName, String password){
+	public PlainEmailConnector(final String host, final String userName, final String password){
 		Properties properties = System.getProperties();
 		Session session = Session.getDefaultInstance(properties);
-		Store storeConnection = null;
+		final Store storeConnection;
 		try {
 			storeConnection = session.getStore("imap");
 		} catch (NoSuchProviderException e) {
 			throw new RuntimeException("No such provider, Please check");
 		}
-		try {
-			storeConnection.connect(host, userName, password);
-		} catch (MessagingException e) {
-			throw new RuntimeException("Please check authentication details");
-		}
+			CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
+				@Override
+				public Boolean apply() {
+					return connectToEmail(storeConnection, host, userName, password);
+				}
+			});
+			
+		
 		Log.info("Connecting to Store...");
 		store=storeConnection;
 	}
+	
+	public boolean connectToEmail(Store storeConnection, String host, String userName, String password) {
+		try {
+			storeConnection.connect(host, userName, password);
+			return true;
+		} catch(MessagingException e) {
+			Log.error("Failed to Connect" , e);
+			return false;
+		}
+	}
+	
 }
 	
 
