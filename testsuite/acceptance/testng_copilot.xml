@@ -7,7 +7,7 @@
 
     <test verbose="3" name="Copilot Application Test Suite" preserve-order="true">
         <classes>
-            <class name="com.gainsight.bigdata.copilot.tests.PowerListTest" />
+            <class name="com.gainsight.bigdata.copilot.tests.SmartListTest" />
         </classes>
     </test>
 	
