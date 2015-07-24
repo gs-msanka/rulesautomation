@@ -122,8 +122,7 @@ public class CreateCTA {
      * Make sure not more than 10 objects are referenced in one call - salesforce limitation.
      * @param objName
      * @param fields
-     * @throws com.sforce.ws.ConnectionException
-     * @throws InterruptedException
+      *
      */
     public void deleteFields(String objName, String[] fields) {
         try {

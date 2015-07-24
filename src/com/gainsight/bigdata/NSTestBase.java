@@ -248,8 +248,12 @@ public class NSTestBase {
     public void updateNSURLInAppSettings(String nsURL) {
         Log.info("Setting NS URL in Application Settings");
         if (sfdc.getRecordCount(resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")) > 0) {
-            String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, JBCXM__ISNSEnabled__c from JBCXM__Applicationsettings__c];" +
+            String apexCode = "List<JBCXM__ApplicationSettings__c> appSettings = [select Id, Name, JBCXM__NSURL__C, " +
+                    "JBCXM__ISNSEnabled__c, JBCXM__IsNSExportEnabled__c, JBCXM__IsNSReportsEnabled__c from JBCXM__Applicationsettings__c];" +
                     "appSettings.get(0).JBCXM__NSURL__C = '" + nsURL + "';" +
+                    "appSettings.get(0).JBCXM__ISNSEnabled__c = true ;" +
+                    "appSettings.get(0).JBCXM__IsNSExportEnabled__c = true; " +
+                    "appSettings.get(0).JBCXM__IsNSReportsEnabled__c = true; " +
                     "update appSettings;";
             sfdc.runApexCode(resolveStrNameSpace(apexCode));
             Log.info("NS URL Updated Successfully");
@@ -298,6 +302,9 @@ public class NSTestBase {
         } catch (Exception e) {
             Log.error("Failed tenant auto provision ", e);
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
+        }
+        if(result) {
+            updateNSURLInAppSettings(nsConfig.getNsURl());
         }
         return result;
     }
