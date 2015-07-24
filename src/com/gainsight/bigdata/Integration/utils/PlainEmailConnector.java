@@ -47,10 +47,11 @@ public class PlainEmailConnector implements Constants{
 	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
-	public static boolean isMailDelivered(final String folderName,
-			final HashMap<String, String> msgDetails) throws Exception {
+	public static boolean isMailDelivered(String folderName,
+			 HashMap<String, String> msgDetails) {
 		final HashMap<String, String> msg = new HashMap<String, String>();
-		boolean result = false;;
+		boolean result = false;
+		try {
 		Folder folder = store.getFolder(folderName);
 		folder.open(Folder.READ_WRITE);
 		// search for all "unseen" messages
@@ -81,25 +82,24 @@ public class PlainEmailConnector implements Constants{
 				Log.info("Key : " + entry.getKey() + " Value : "
 						+ entry.getValue());
 			}
-			CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
-				@Override
-				public Boolean apply() {
-					if (!msg.equals(msgDetails)) {
-						try {
-							isMailDelivered(folderName, msgDetails);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					return msg.equals(msgDetails);
-				}
-			});	
-			Log.info("comparision value is" + msg.equals(msgDetails));
-			if (msg.equals(msgDetails)) {
-				result = true;
-			}
+			result = msg.equals(msgDetails);					
 		}
+		} catch(Exception e) {
+			Log.error(e.getLocalizedMessage(), e);
+		}
+		return result;
+	}
+	
+	public static boolean isEmailPresent(final String folderName,
+			final HashMap<String, String> msgDetails) {
+		boolean result = false;
+		result = CommonWait.waitForCondition(1000 * 60 * 2, 1000 * 5,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isMailDelivered(folderName, msgDetails);
+					}
+				});
 		return result;
 	}
 	

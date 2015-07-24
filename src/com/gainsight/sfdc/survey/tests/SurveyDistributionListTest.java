@@ -395,7 +395,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isEmailPresent(
 				env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -464,7 +464,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isEmailPresent(
 				env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -534,7 +534,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 			}
 		}
 		Assert.assertTrue(
-				PlainEmailConnector.isMailDelivered(
+				PlainEmailConnector.isEmailPresent(
 						env.getProperty("em.inbox"), msgDetails),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}

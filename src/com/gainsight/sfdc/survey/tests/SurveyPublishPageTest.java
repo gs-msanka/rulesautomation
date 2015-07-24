@@ -264,7 +264,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(PlainEmailConnector.isMailDelivered(
+		Assert.assertTrue(PlainEmailConnector.isEmailPresent(
 				env.getProperty("em.inbox"), msgDetails));
 	}
 	

@@ -30,7 +30,7 @@ public class SurveyAnalyzePage extends SurveyPage{
 	public void mouseOnToAnalyzeCharts(SurveyAnalyze surveyAnalyzeDetails) {
 		List<WebElement> allGraphs = element.getAllElement(String.format(
 				BARGRAPH_XPATH, surveyAnalyzeDetails.getColorCode()));
-		Log.info("Count is" + allGraphs.size());
+		Log.info("Size is" + allGraphs.size());
 		Actions action = new Actions(Application.getDriver());
 		for (WebElement singleChart : allGraphs) {
 			action.moveToElement(singleChart).build().perform();
