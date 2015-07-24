@@ -177,6 +177,7 @@ public class SurveyQuestionPage extends SurveyPage {
 	} */
 
 	public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
+		Timer.sleep(5); // This is required since Survey page is inconsistent, kindof disturbed UI
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
         Log.info("Entering Question Title");
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();

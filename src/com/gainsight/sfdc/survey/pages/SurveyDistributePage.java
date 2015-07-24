@@ -50,13 +50,8 @@ public class SurveyDistributePage extends SurveyBasePage{
 	private final String CALENDARVIEW_PREVIOUS_ARROWMARK ="//button[@class='fc-prev-button fc-button fc-state-default fc-corner-left']";
 	private final String CALENDARVIEW_NEXT_ARROWMARK ="//button[@class='fc-next-button fc-button fc-state-default fc-corner-right']";
 	private final String CLICKON_CREATE_SCHEDULE ="//div[@class='col-md-2']/input[@value='+ Create Schedule']";
-	private final String CLICKON_EDIT_SCHEDULE ="";
-	private final String CLICKON_DELETE_SCHEDULE ="";
-	private final String CLICKON_ALLOWINTERNAL_SUBMISSION ="";
 	private final String CLICKON_VIEW_SURVEYRESPONSE ="//span[@class='surveyParticipantResponsePreview']";
-	private final String SELECT_PARTICIPANTS_FROMGRID ="";
-	private final String SELECT_ALLPARTICIPANTS_FROMGRID ="";
-	private final String REMOVE_PARTICIPANTS_FROMSCHEDULE ="";
+    private final String CONFIRMATION_MESSAGE_DIV  ="//div[@class='tab-pane active container-schedule']/descendant::div[@id='errorMsg']";
 	private final String SELECT_CONTACTS_CHECKBOX ="//input[@id='cb_add-participants-tbl']";
 	private final String EMAIL_CONFIRM_DILOG_TEXT ="//div[@class='modal_body']/div[@class='layout_popup_text']";
 	private final String EMAIL_CONFIRM            ="//div[@class='modal_footer']/descendant::input[contains(@class, 'saveSummary')]";
@@ -80,23 +75,25 @@ public class SurveyDistributePage extends SurveyBasePage{
 		item.click(SELECT_CONTACTS_CHECKBOX);
 	}
 
-	public int getContactsCount(){
-		
-		String temptext=element.getElement(By.xpath("//a[@class='numcolor-5 mininum-add']/span")).getText();
+	public int getContactsCount() {
+		String temptext = element.getElement(
+				By.xpath("//a[@class='numcolor-5 mininum-add']/span"))
+				.getText();
 		Log.info("String Text is  : " + temptext);
-		int Count=Integer.parseInt(temptext);
-		Log.info("Count is " +Count);
+		int Count = Integer.parseInt(temptext);
+		Log.info("Count is " + Count);
 		return Count;
 	}
-	
+
 	public void sendEmail() {
+		Timer.sleep(5);
 		item.click(CLICKON_SENDEMAIL_BUTTON);
-		wait.waitTillElementDisplayed(EMAIL_CONFIRM, MIN_TIME,
-				MAX_TIME);
+		wait.waitTillElementDisplayed(EMAIL_CONFIRM, MIN_TIME, MAX_TIME);
 		item.click(EMAIL_CONFIRM);
-		wait.waitTillElementDisplayed("//div[@class='tab-pane active container-schedule']/descendant::div[@id='errorMsg']", MIN_TIME, MAX_TIME);
+		wait.waitTillElementDisplayed(CONFIRMATION_MESSAGE_DIV, MIN_TIME,
+				MAX_TIME);
 	}
-	
+
 	public void createSchedule(SurveyDistribution surveyDistribution){
 		item.click(CLICKON_CREATE_SCHEDULE);
 		wait.waitTillElementDisplayed(CREATE_SCHEDULE_DIV, MIN_TIME, MAX_TIME);
