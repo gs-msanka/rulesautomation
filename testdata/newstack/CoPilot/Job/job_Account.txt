@@ -1,0 +1,33 @@
+{
+    "jobName": "Load Datas to Account Object",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+	"dateProcess" : {
+            "inputFile" : "/testdata/newstack/CoPilot/Data/Input/Account.csv",
+            "outputFile" : "/testdata/newstack/CoPilot/Data/Output/Account-output.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "P_C_DATE__C"
+
+                },
+                {
+                    "weekly" : true,
+                    "daily"  : false,
+                    "dateTime" : true,
+                    "fieldName" : "P_C_DATETIME__C"
+                }
+            ]
+        },
+    "load": {
+        "target": "sfdc",
+        "sObject": "Account",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+		"externalIDField": "Data_ExternalId__c",
+        "file": "/testdata/newstack/CoPilot/Data/Output/Account-output.csv"
+    }
+}

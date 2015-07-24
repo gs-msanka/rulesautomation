@@ -1,0 +1,14 @@
+{
+    "jobName": "Load Datas For C_ContactObject2",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+    "load": {
+        "target": "sfdc",
+        "sObject": "C_ContactObject2__c",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+		"externalIDField": "p_c_ExternalID__c",
+        "file": "/testdata/newstack/CoPilot/Data/Input/C_ContactObject2.csv"
+    }
+}
