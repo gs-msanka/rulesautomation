@@ -17,8 +17,10 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
 import javax.mail.search.AndTerm;
 import javax.mail.search.FlagTerm;
+import javax.mail.search.FromTerm;
 import javax.mail.search.SearchTerm;
 
 import org.testng.annotations.ExpectedExceptions;
@@ -48,7 +50,7 @@ public class PlainEmailConnector implements Constants{
 	 * @throws Exception
 	 */
 	public static boolean isMailDelivered(String folderName,
-			 HashMap<String, String> msgDetails) {
+			 HashMap<String, String> msgDetails, String fromEmail) {
 		final HashMap<String, String> msg = new HashMap<String, String>();
 		boolean result = false;
 		try {
@@ -60,7 +62,9 @@ public class PlainEmailConnector implements Constants{
 		// search for all "Recent" messages
 		Flags recent = new Flags(Flags.Flag.RECENT);
 		FlagTerm recentFlagTerm = new FlagTerm(recent, true);
-		Message[] foundMessages = folder.search(unseenFlagTerm);
+		SearchTerm sender = new FromTerm(new InternetAddress(fromEmail));	
+		SearchTerm searchTerm = new AndTerm(unseenFlagTerm, sender);	
+		Message[] foundMessages = folder.search(searchTerm);
 		if (foundMessages.length == 0) {
 			Log.error("No messages found, Please Check.");
 			return result;
@@ -75,7 +79,7 @@ public class PlainEmailConnector implements Constants{
 						tempToAddress.lastIndexOf("<") + 1,
 						tempToAddress.lastIndexOf(">"));
 				Log.info("In MailBox, Receipient email Address is " + toAddress);
-				Log.info("Sender email is" +foundMessages[i].getFrom());
+				Log.info("Sender email is" +foundMessages[i].getFrom());				
 				msg.put(toAddress.trim(), foundMessages[i].getSubject().trim());
 			}
 			for (Entry<String, String> entry : msg.entrySet()) {
@@ -91,13 +95,13 @@ public class PlainEmailConnector implements Constants{
 	}
 	
 	public static boolean isEmailPresent(final String folderName,
-			final HashMap<String, String> msgDetails) {
+			final HashMap<String, String> msgDetails, final String fromEmail) {
 		boolean result = false;
-		result = CommonWait.waitForCondition(1000 * 60 * 2, 1000 * 5,
+		result = CommonWait.waitForCondition(1000 * 60 * 5, 1000 * 5,
 				new ExpectedCommonWaitCondition<Boolean>() {
 					@Override
 					public Boolean apply() {
-						return isMailDelivered(folderName, msgDetails);
+						return isMailDelivered(folderName, msgDetails, fromEmail);
 					}
 				});
 		return result;

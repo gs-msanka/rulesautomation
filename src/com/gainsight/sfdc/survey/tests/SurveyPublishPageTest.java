@@ -264,8 +264,9 @@ public class SurveyPublishPageTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
+		Log.info("UserEmail is" +sfdcInfo.getUserEmail());
 		Assert.assertTrue(PlainEmailConnector.isEmailPresent(
-				env.getProperty("em.inbox"), msgDetails));
+				env.getProperty("em.inbox"), msgDetails, sfdcInfo.getUserEmail()));
 	}
 	
 	@TestInfo(testCaseIds={"GS-2703"})
