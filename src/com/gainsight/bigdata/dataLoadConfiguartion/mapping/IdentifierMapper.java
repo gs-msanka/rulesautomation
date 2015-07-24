@@ -26,10 +26,10 @@ public class IdentifierMapper {
      * @param targetDisplayName - Target displayName
      * @param properties
      * @param directLookup
-     * @param digitConversionEnable
-     * @return
+     * @param lookup
+     *@param digitConversionEnable  @return
      */
-    public static Identifier getAccountIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean directLookup, boolean digitConversionEnable) {
+    public static Identifier getAccountIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean directLookup, boolean lookup, boolean digitConversionEnable) {
         if(column == null) {
             Log.error("Column Should not be NULL");
             throw new RuntimeException("Column Should not be NULL");
@@ -39,6 +39,7 @@ public class IdentifierMapper {
         setTarget(targetDisplayName, ACCOUNT_IDENTIFIER_DB_NAME, new HashMap<String, String>(), accountIdentifier);
         accountIdentifier.setProperties(properties);
         accountIdentifier.setDirectLookup(directLookup);
+        accountIdentifier.setLookup(lookup);
         accountIdentifier.setDigitConversionEnable(digitConversionEnable);
         return accountIdentifier;
     }
@@ -199,8 +200,8 @@ public class IdentifierMapper {
             throw new RuntimeException("Column Should not be NULL");
         }
         Mapping mapping = new Mapping();
-        mapping.setSource(getSource(column.getDisplayName(), column.getDbName(), "USAGE_FEED", "", new HashMap<String, String>()));
-        mapping.setTarget(getTarget(targetDisplayName, targetDBName, new HashMap<String, String>()));
+        mapping.setSource(getSource(column.getDisplayName(), column.getDbName(), "USAGE_FEED", null, new HashMap<String, String>()));
+        mapping.setTarget(getTarget(targetDisplayName, targetDBName ==null ? "" : targetDBName, new HashMap<String, String>()));
         return mapping;
     }
 

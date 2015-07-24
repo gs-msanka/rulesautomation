@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
 public class Utilities {
 
 	/**
-	 * @getRandomString method generates a unique random string
+	 * getRandomString method generates a unique random string
 	 * @return
 	 */
 	public static String getRandomString() {

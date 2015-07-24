@@ -71,8 +71,10 @@ public class AdminFeaturesSubTab extends BasePage{
 		refreshPage();
 		return this;
 	}
-		/** If product name exists, then this will select the existing product name   
-	 * @param if product name doesn't exists, then it will create the product name.
+
+    /**
+     * If product name exists, then this will select the existing product name
+	 * @param  productName doesn't exists, then it will create the product name.
 	 */
 	public AdminFeaturesSubTab productSelection(String productName ) {
 		

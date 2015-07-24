@@ -305,7 +305,7 @@ public class FileProcessor {
 
 
     /**
-     * Explicitly used for MDA Aggregation expected file generator with WeekLabel, Month, Quarter & Year.
+     * Explicitly used for MDA Aggregation expected file generator with WeekLabel, Month, Quarter and Year.
      * @param mdaDateProcessor
      * @param date
      * @return

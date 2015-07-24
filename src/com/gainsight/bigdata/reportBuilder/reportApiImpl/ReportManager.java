@@ -84,7 +84,7 @@ public class ReportManager extends NSTestBase {
     }
 
     /**
-     * Runs the report on servers & returns the data returned from server.
+     * Runs the report on servers and returns the data returned from server.
      *
      * @param reportMaster - Report payload.
      * @return - Report data.
@@ -178,7 +178,7 @@ public class ReportManager extends NSTestBase {
      *
      * @param dataList - The Report data.
      * @param collectionInfo - Collection Schema.
-     * @return List<Map> with replaced system names/DB names with display name.
+     * @return List of Map of String, String  with replaced system names/DB names with display name.
      */
     public static List<Map<String, String>> getProcessedReportData(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
         Log.info("Started changing DB names with display Names...");

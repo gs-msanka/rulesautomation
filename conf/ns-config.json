@@ -1,6 +1,6 @@
 {
-  "ns_appUrl"   :   "https://api-router.herokuapp.com", //"https://test-router.herokuapp.com", "https://app.gainsight.com",
-  "ns_adminUrl" :  "https://api-router.herokuapp.com", //"https://test-router.herokuapp.com",
+  "ns_appUrl"   :   "https://test-router.herokuapp.com",
+  "ns_adminUrl" :  "https://test-router.herokuapp.com",
   "ns_version"  : "v1.0",
 
   "profiles" : {
