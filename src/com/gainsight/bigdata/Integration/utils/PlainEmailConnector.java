@@ -54,8 +54,13 @@ public class PlainEmailConnector implements Constants{
 		final HashMap<String, String> msg = new HashMap<String, String>();
 		boolean result = false;
 		try {
-		Folder folder = store.getFolder(folderName);
-		folder.open(Folder.READ_WRITE);
+		final Folder folder = store.getFolder(folderName);
+		CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
+			@Override
+			public Boolean apply() {
+				return isFolderOpen(folder);
+			}
+		});
 		// search for all "unseen" messages
 		Flags seen = new Flags(Flags.Flag.SEEN);
 		FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
@@ -94,6 +99,17 @@ public class PlainEmailConnector implements Constants{
 		return result;
 	}
 	
+	/**
+	 * @param folderName
+	 *            - which folder to check the mail for
+	 * @param msgDetails
+	 *            - details that need to be validated basing on the receipient
+	 *            Email and subject...Will add more checkpoints as per the
+	 *            reqmnt
+	 * @return true if both map objects are equal
+	 * @throws Exception
+	 */
+
 	public static boolean isEmailPresent(final String folderName,
 			final HashMap<String, String> msgDetails, final String fromEmail) {
 		boolean result = false;
@@ -117,8 +133,13 @@ public class PlainEmailConnector implements Constants{
 	  
 	public static boolean isAllEmailsSeen(String folderName) throws Exception {
 		boolean result = false;
-		Folder folder = store.getFolder(folderName);
-		folder.open(Folder.READ_WRITE);
+		final Folder folder = store.getFolder(folderName);
+		CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
+			@Override
+			public Boolean apply() {
+				return isFolderOpen(folder);
+			}
+		});
 		// search for all "unseen" messages
 		Flags seen = new Flags(Flags.Flag.SEEN);
 		FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
@@ -134,6 +155,21 @@ public class PlainEmailConnector implements Constants{
 			result = true;
 		}
 		return result;
+	}
+	
+    /**
+     * Checks whether folder is opened in Read/Write mode
+     * @param Folder class reference
+     *
+     */
+	public static boolean isFolderOpen(Folder folder) {
+		try {
+			folder.open(Folder.READ_WRITE);
+			return true;
+		} catch (MessagingException e) {
+			Log.error("Failed to Connect", e);
+			return false;
+		}
 	}
 	
 	/**
@@ -164,6 +200,16 @@ public class PlainEmailConnector implements Constants{
 		store = storeConnection;
 	}
 	
+	/**
+	 * @param store
+	 *            - store reference
+	 * @param host
+	 *            - imap/pop2 etc
+	 * @param emailId
+	 *            - mailBox userName
+	 * @param pwd
+	 *            - mailBox password
+	 */
 	public boolean connectToEmail(Store storeConnection, String host, String userName, String password) {
 		try {
 			storeConnection.connect(host, userName, password);
