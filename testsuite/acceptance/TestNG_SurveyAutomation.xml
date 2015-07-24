@@ -1,20 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <suite name="Survey Automation Suite" verbose="3">
-
-<listeners>
-<listener class-name="com.gainsight.utils.AutTestListener" />
-</listeners>
-
-<test name="Survey Automation Suite" preserve-order="true">
-<classes>
-
-<class name="com.gainsight.sfdc.survey.tests.SurveyPropertiesTest" />
-<class name="com.gainsight.sfdc.survey.tests.SurveyQuestionsTest" />
-<class name="com.gainsight.sfdc.survey.tests.Rule_Survey_Test" />
-<class name="com.gainsight.sfdc.survey.tests.SurveyPublishPageTest" />
-<class name="com.gainsight.sfdc.survey.tests.SurveyAddParticipantsTest" />
-<class name="com.gainsight.sfdc.survey.tests.SurveyDistributionListTest" />
-
-</classes>
-</test>
+   <listeners>
+      <listener class-name="com.gainsight.utils.AutTestListener" />
+   </listeners>
+   <test name="Survey Automation Suite" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.sfdc.survey.tests.SurveyPropertiesTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyQuestionsTest" />
+         <class name="com.gainsight.sfdc.survey.tests.Rule_Survey_Test" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyPublishPageTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyAddParticipantsTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyDistributionListTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyAnalyzeTest" />
+      </classes>
+   </test>
 </suite>
