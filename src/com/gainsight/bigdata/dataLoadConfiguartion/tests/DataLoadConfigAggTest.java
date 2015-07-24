@@ -43,8 +43,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
     DataLoadManager dataLoadManager;
     DataLoadAggConfigManager dataLoadAggConfigManager;
-    Calendar cal = Calendar.getInstance();
-    Date date = cal.getTime();
+    Date date = Calendar.getInstance().getTime();
     TenantDetails tenantDetails;
     DataETL dataETL;
     ReportManager reportManager;
@@ -63,6 +62,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager();
+
         MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl();
         integrationImpl.authorizeMDA();
         metaUtil.createExtIdFieldOnAccount(sfdc);
@@ -75,8 +75,9 @@ public class DataLoadConfigAggTest extends NSTestBase {
         dataETL.execute(contactJobInfo);
         JobInfo customerJobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/jobs/Customers.json"), JobInfo.class);
         dataETL.execute(customerJobInfo);
-        JobInfo eventsJobInfo =  mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/jobs/Events.json"), JobInfo.class);
+        eventsJobInfo =  mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/jobs/Events.json"), JobInfo.class);
         dataETL.execute(eventsJobInfo);
+
     }
 
     @TestInfo(testCaseIds = {"GS-3886"})
@@ -110,8 +111,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -126,7 +127,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " +endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t1/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t1/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -161,15 +162,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
         accDetailProp.setTimeZone(testData.get("TimeZone"));
         accountDetail.setProperties(accDetailProp);
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -184,7 +185,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " +endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t2/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t2/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -219,7 +220,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -227,8 +228,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -243,7 +244,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t3/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t3/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -278,15 +279,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
         accDetailProp.setTimeZone(testData.get("TimeZone"));
         accountDetail.setProperties(accDetailProp);
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -301,7 +302,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t4/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t4/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -336,15 +337,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setTimeZone(testData.get("TimeZone"));
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
         accountDetail.setProperties(accDetailProp);
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -359,7 +360,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName : " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t5/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t5/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -394,7 +395,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -402,8 +403,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -418,7 +419,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName : " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t6/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t6/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -453,7 +454,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -461,8 +462,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -476,7 +477,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " +endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t7/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t7/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -511,7 +512,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -519,8 +520,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -534,7 +535,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor = mapper.readValue(new File(Application.basedir + "/testdata/newstack/connectors/dataApi/tests/t8/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor, cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/connectors/dataApi/tests/t8/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -569,7 +570,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -577,8 +578,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -592,7 +593,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t9/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t9/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -627,7 +628,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -635,8 +636,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -650,7 +651,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t10/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t10/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -686,7 +687,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -694,8 +695,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -709,7 +710,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t11/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t11/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -746,7 +747,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -754,8 +755,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -769,7 +770,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t12/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t12/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -804,7 +805,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -812,8 +813,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -827,7 +828,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t13/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t13/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -862,7 +863,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -870,8 +871,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -885,7 +886,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t14/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t14/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -921,7 +922,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -929,8 +930,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -944,7 +945,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t15/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t15/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -981,7 +982,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -989,8 +990,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -1004,7 +1005,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t16/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t16/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -1040,7 +1041,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -1048,8 +1049,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -1063,7 +1064,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t17/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t17/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -1098,7 +1099,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
@@ -1106,8 +1107,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setProperties(accDetailProp);
 
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);
@@ -1121,7 +1122,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t18/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,cal.getTime());
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
 
         JobInfo jobInfo = mapper.readValue(new File(Application.basedir+"/testdata/newstack/connectors/dataApi/tests/t18/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -1159,15 +1160,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.setGlobalMapping(globalMapping);
         accountDetail.setUsageConfiguration(new UsageConfiguration());
         accountDetail.setAccountType(testData.get("AccountType"));
-        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + cal.getTimeInMillis());
+        accountDetail.setDisplayName(testData.get("ProjectName") + "_" + date.getTime());
         accountDetail.setNotificationDetails(mapper.readValue(testData.get("NotificationDetails"), NotificationDetails.class));
         AccountDetailProperties accDetailProp = new AccountDetailProperties();
         accDetailProp.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
         accDetailProp.setTimeZone(testData.get("TimeZone"));
         accountDetail.setProperties(accDetailProp);
         RunNowDetails runNowDetails = mapper.readValue(testData.get("RunNowDetails"), RunNowDetails.class);
-        runNowDetails.setStartDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
-        runNowDetails.setEndDate(DateUtil.addDays(cal.getTime(), Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setStartDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        runNowDetails.setEndDate(DateUtil.addDays(date, Integer.valueOf(runNowDetails.getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
         accountDetail.setRunNowDetails(runNowDetails);
 
         String accountDetailsJson = mapper.writeValueAsString(accountDetail);

@@ -27,7 +27,8 @@ public class IdentifierMapper {
      * @param properties
      * @param directLookup
      * @param lookup
-     *@param digitConversionEnable  @return
+     * @param digitConversionEnable
+     * @return  - Account Identifier Identifier
      */
     public static Identifier getAccountIdentifier(CollectionInfo.Column column, String targetDisplayName, HashMap<String, String> properties, boolean directLookup, boolean lookup, boolean digitConversionEnable) {
         if(column == null) {
