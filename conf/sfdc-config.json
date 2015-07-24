@@ -41,6 +41,11 @@
       "sfdc_password" : "1234567jbr",
       "sfdc_stoken" : "WM5pd6SXwI9k4uwhIOMbfnJH"
     },
+    "copilot" : {
+      "sfdc_username" : "pparthi@gain2.com",
+      "sfdc_password" : "1234gain2",
+      "sfdc_stoken" : "5O5Kh1hH7cv6LoXCcKVCHgG7"
+    },
     "Ugesh10Demo" : {
       "sfdc_username" : "ugesh@10demo.com",
       "sfdc_password" : "jbara12345",
@@ -48,4 +53,3 @@
     }
   }
 }
-

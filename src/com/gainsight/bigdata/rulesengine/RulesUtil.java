@@ -31,6 +31,7 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
 	private static HashMap<String,String> playbookMap;
+	private static HashMap<String,String> milestoneMap;
 	public DataETL dataETL;
 	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
@@ -61,15 +62,15 @@ public class RulesUtil extends NSTestBase {
 		RulesUtil.waitForCompletion(ruleId, wa, header);
 
 		String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
 				.getChild("JBCXM__LastRunResult__c").getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
 
-		int rules1 = sfdc.getRecordCount("Select Id, IsDeleted From Account Where ((IsDeleted = false))");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, IsDeleted From Account Where ((IsDeleted = false))"));
 		Log.info(""+rules1);
 		int rules2 = sfdc
-				.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+				.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 		Log.info(""+rules2);
 		Assert.assertEquals(rules1, rules2);
 	}
@@ -130,14 +131,14 @@ public void setupRule(HashMap<String,String> testData){
 	 * Method to generate the static maps which contains the Ids to be replaced for tokens, in the test data
 	 */
 	public void populateObjMaps() {
-		featuresMap = getMapFromObject("JBCXM__Features__c",
-				"JBCXM__Feature__c", "FT");
+		featuresMap = getMapFromObject("JBCXM__Features__c","JBCXM__Feature__c","FT");
 		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
 				"CT");
 		PickListMap = getMapFromObject("JBCXM__PickList__c",
 				"JBCXM__SystemName__c", "PL");
 		emailTemplateMap = getMapFromObject("EmailTemplate", "Name", "EML");
 		playbookMap=getMapFromObject("JBCXM__Playbook__c","Name","PB");
+		milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c","Name","ML","JBCXM__Category__c", "Milestones");
 	}
 
 	/**
@@ -145,12 +146,12 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return - the string where Ids are replaced with values - like system names
 	 */
 	private String getIdResolvedString(String string) {
-		string = replaceSystemNameInRule(
+		string = replaceSystemNameInRule(replaceSystemNameInRule(
 				replaceSystemNameInRule(
 						replaceSystemNameInRule(
 								replaceSystemNameInRule(replaceSystemNameInRule(string,
 										emailTemplateMap), featuresMap),
-						ctaTypesMap), PickListMap),playbookMap);
+						ctaTypesMap), PickListMap),playbookMap),milestoneMap);
 		return string;
 	}
 

@@ -47,6 +47,7 @@ public interface ApiUrls extends NSURLs {
     public final String DATA_API_ALL_COLLECTIONS_GET    = NS_URL + "/api/collections/consumers/DATA_API";       //All the collections for the tenant,
     public final String DATA_API_PROJECT_UPDATE_PUT     = NS_URL + "/api/accounts/%s/update?version=v1.0";      //Update the account / project(data api)
 
-
+    //Copilot
+    public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
 
 }
