@@ -2,6 +2,21 @@
   "jobName": "EventProcess",
   "jobType": "EventProcess",
   "namespacePrefix": "JBCXM",
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Contact",
+    "fields": [
+      "Id",
+      "AccountId",
+      "Contact_ExternalId__c",
+      "Name",
+      "LastName",
+      "FirstName",
+      "Email"
+    ],
+    "output": "/testdata/newstack/connectors/dataApi/process/Contacts.csv"
+  },
   "dateProcess" : {
     "inputFile" : "/testdata/newstack/connectors/dataApi/data/Events.csv",
     "outputFile" : "/testdata/newstack/connectors/dataApi/process/Date_Processed_RawEventsData.csv",
@@ -27,21 +42,33 @@
     "useQuery" : false,
     "tableInfo": [
       {
-        "file": "/testdata/newstack/connectors/dataApi/process/AccountContactBridge.csv",
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
         "table": "TempContactBridge",
         "joinColumnName": "Contact_ExternalId__c",
         "columns": [
           {
-            "name": "AccountId",
-            "alias": "AccountId"
-          },
-          {
-            "name": "Data_ExternalId__c",
-            "alias": "Data_ExternalId__c"
-          },
-          {
             "name": "Id",
-            "alias": "ContactId"
+            "alias": "GSA_ContactID"
+          },
+          {
+            "name": "AccountId",
+            "alias": "GSA_AccountID"
+          },
+          {
+            "name": "LastName",
+            "alias": "GSA_LastName"
+          },
+          {
+            "name": "FirstName",
+            "alias": "GSA_FirstName"
+          },
+          {
+            "name": "Name",
+            "alias": "GSA_ContactName"
+          },
+          {
+            "name": "Email",
+            "alias": "GSA_Email"
           }
         ]
       },
@@ -52,31 +79,19 @@
         "columns": [
           {
             "name": "AccountName",
-            "alias": "AccountName"
+            "alias": "GSA_AccountName"
           },
           {
-            "name": "LastName",
-            "alias": "LastName"
-          },
-          {
-            "name": "FirstName",
-            "alias": "FirstName"
-          },
-          {
-            "name": "ContactName",
-            "alias": "ContactName"
-          },
-          {
-            "name": "Email",
-            "alias": "Email"
+            "name": "Account_ExternalId__c",
+            "alias": "GSA_Account_ExternalId__c"
           },
           {
             "name": "Contact_ExternalId__c",
-            "alias": "Contact_ExternalId__c"
+            "alias": "GSA_Contact_ExternalId__c"
           },
           {
             "name": "Event",
-            "alias": "Event"
+            "alias": "GSA_Event"
           },
           {
             "name": "Date",
