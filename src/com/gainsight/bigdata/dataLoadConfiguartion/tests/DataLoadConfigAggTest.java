@@ -58,7 +58,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @BeforeClass
     public void setup() throws Exception {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-        //tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
+        tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager     = new DataLoadManager();
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
