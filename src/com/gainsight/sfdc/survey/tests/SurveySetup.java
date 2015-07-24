@@ -244,7 +244,6 @@ public class SurveySetup extends BaseTest implements Constants{
 	
     public SurveyQuestionPage createSurveyQuestion(SurveyQuestion surveyQuestion, SurveyQuestionPage surveyQuestionPage) {
         surveyQuestionPage.clickOnAddNewQuestion(surveyQuestion);
-        Timer.sleep(5);
         surveyQuestion.setQuestionId(getRecentAddedQuestionId(surveyQuestion));
         surveyQuestionPage.fillQuestionFormInfo(surveyQuestion);
         surveyQuestionPage = surveyQuestionPage.clickOnSaveQuestion(surveyQuestionPage.getQuestionElement(surveyQuestion));

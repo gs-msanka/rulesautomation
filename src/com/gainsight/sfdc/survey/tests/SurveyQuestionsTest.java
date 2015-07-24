@@ -146,7 +146,7 @@ public class SurveyQuestionsTest extends SurveySetup {
 	
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "S1")
-    public void surveyAllQuestionTypes1(Map<String, String> testData) throws IOException {
+    public void surveyAllQuestionTypes(Map<String, String> testData) throws IOException {
 		SurveyBasePage surveyBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surProp = mapper.readValue(testData.get("Survey"),
 				SurveyProperties.class);
