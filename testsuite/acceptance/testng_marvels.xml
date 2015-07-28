@@ -3,6 +3,7 @@
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
     </listeners>
 
 
