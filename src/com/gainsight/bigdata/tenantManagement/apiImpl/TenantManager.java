@@ -12,9 +12,11 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.NsConfig;
-import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.config.NSConfigProvider;
+import com.gainsight.util.config.NsConfig;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -37,8 +39,8 @@ public class TenantManager {
     private Header header = new Header();
     private WebAction wa = new WebAction();
     private ObjectMapper mapper = new ObjectMapper();
-    private SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
-    private NsConfig nsConfig = ConfigLoader.getNsConfig();
+    private SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+    private NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
 
     /**
      * Logs in to tenant Management SFDC org & sets up the default headers required.

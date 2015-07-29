@@ -2,7 +2,6 @@ package com.gainsight.bigdata;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -13,13 +12,13 @@ import com.gainsight.bigdata.rulesengine.ResponseObject;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
-import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
 import com.gainsight.sfdc.util.PackageUtil;
-import com.gainsight.util.ConfigLoader;
-import com.gainsight.util.NsConfig;
-import com.gainsight.util.SfdcConfig;
-import com.sforce.soap.metadata.MetadataConnection;
+import com.gainsight.util.config.NSConfigProvider;
+import com.gainsight.util.config.NsConfig;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.http.HttpStatus;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,7 +38,6 @@ import com.sforce.soap.partner.sobject.SObject;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
-import static com.gainsight.sfdc.pages.Constants.*;
 
 public class NSTestBase {
 
@@ -56,8 +54,8 @@ public class NSTestBase {
     public static String accessKey;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
-    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static PackageUtil packageUtil;
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";

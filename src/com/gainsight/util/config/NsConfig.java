@@ -1,4 +1,4 @@
-package com.gainsight.util;
+package com.gainsight.util.config;
 
 import com.gainsight.testdriver.Log;
 import com.google.gson.JsonObject;

@@ -1,7 +1,5 @@
 package com.gainsight.sfdc.pages;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,11 +11,10 @@ import com.gainsight.sfdc.sfWidgets.oppWidget.pages.OpportunityPage;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
-import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.ConfigLoader;
-import org.openqa.selenium.WebDriver;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
@@ -62,7 +59,7 @@ public class BasePage extends WebPage implements Constants {
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
-    SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);;
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){

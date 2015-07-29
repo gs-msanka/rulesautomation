@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gainsight.sfdc.SalesforceConnector;
-import com.gainsight.sfdc.beans.*;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
-import com.gainsight.sfdc.util.db.QueryBuilder;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.ConfigLoader;
-import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 
 /**
  * Standalone class for SFDC push/pull mechanism 
@@ -34,7 +33,7 @@ public class SfdcBulkApi {
 	static SfdcBulkOperationImpl op;
     static SFDCInfo sfdcInfo;
     static SalesforceConnector sfdc;
-    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);;
 
     static {
         sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+sfdcConfig.getSfdcStoken(), sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());

@@ -12,13 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.gainsight.sfdc.SalesforceConnector;
-import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -28,7 +26,6 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.gainsight.sfdc.util.bulk.SfdcBulkApi;
-import com.gainsight.sfdc.util.bulk.SfdcBulkOperationImpl;
 import com.gainsight.sfdc.util.datagen.JobInfo.PreProcess;
 import com.gainsight.sfdc.util.datagen.JobInfo.SfdcExtract;
 import com.gainsight.sfdc.util.datagen.JobInfo.SfdcLoad;
@@ -50,7 +47,7 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
 
-	public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+	public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
 
 
 	/**

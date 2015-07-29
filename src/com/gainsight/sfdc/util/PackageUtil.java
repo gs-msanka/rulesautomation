@@ -30,7 +30,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.SfdcConfig;
 import com.sforce.soap.metadata.*;
 import com.sforce.soap.metadata.Error;
 import com.sforce.ws.ConnectionException;
