@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.ObjectFields;
@@ -19,35 +18,35 @@ public class LoadTestData extends NSTestBase{
 	MetaDataUtil md=new MetaDataUtil();
 	
 	private static final String copilotDir = Application.basedir
-			+ "/testdata/newstack/copilot";
+			+ "/testdata/newstack/CoPilot";
 	private static final String CleanUp = copilotDir
-			+ "/cleanUps/CleanUpDatas.apex";
+			+ "/CleanUps/CleanUpDatas.apex";
 	private static final String Job_C_ContactObject2 = copilotDir
-			+ "/job/job_C_ContactObject2.txt";
+			+ "/Job/job_C_ContactObject2.txt";
 	private static final String Job_Account = copilotDir
-			+ "/job/job_Account.txt";
+			+ "/Job/job_Account.txt";
 	private static final String Job_CustomerInfo = copilotDir
-			+ "/job/job_CustomerInfo.txt";
+			+ "/Job/job_CustomerInfo.txt";
 	private static final String Job_Contact = copilotDir
-			+ "/job/job_Contact.txt";
+			+ "/Job/job_Contact.txt";
 	private static final String Job_Case = copilotDir
-	+ "/job/job_Case.txt";
+	+ "/Job/job_Case.txt";
 	private static final String Job_C_ContactObject1 = copilotDir
-			+ "/job/job_C_ContactObject1.txt";
+			+ "/Job/job_C_ContactObject1.txt";
 	private static final String Scorecard_Enable = copilotDir
-			+ "/apexScripts/Scorecard_Enable.apex";
+			+ "/ApexScripts/Scorecard_Enable.apex";
 	private static final String Scorecard_Cleanup = copilotDir
-					+ "/apexScripts/Scorecard_Cleanup.apex";
+					+ "/ApexScripts/Scorecard_Cleanup.apex";
 	private static final String Scorecard_PopulateDatas = copilotDir
-			+ "/apexScripts/Scorecard_PopulateDatas.apex";
+			+ "/ApexScripts/Scorecard_PopulateDatas.apex";
 	private static final String job_accountInit = copilotDir
-			+ "/job/job_Account-Init.txt";
+			+ "/Job/job_Account-Init.txt";
 	private static final String job_customerInfoInit = copilotDir
-			+ "/job/job_CustomerInfo-Init.txt";
+			+ "/Job/job_CustomerInfo-Init.txt";
 	private static final String job_contactInit = copilotDir
-			+ "/job/job_Contact-Init.txt";
+			+ "/Job/job_Contact-Init.txt";
 	private static final String job_caseInit = copilotDir
-			+ "/job/job_Case-Init.txt";
+			+ "/Job/job_Case-Init.txt";
 	
 	
 	private DataETL dataETL;
