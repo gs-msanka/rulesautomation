@@ -211,7 +211,7 @@ public class SurveyPublishPageTest extends SurveySetup {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
     public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {
 		
-		PlainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);

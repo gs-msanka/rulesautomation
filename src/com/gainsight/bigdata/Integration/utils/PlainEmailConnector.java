@@ -37,7 +37,7 @@ import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
  */
 public class PlainEmailConnector implements Constants{
 	
-	protected static Store store;
+	protected Store store;
 
 	/**
 	 * @param folderName
@@ -131,7 +131,7 @@ public class PlainEmailConnector implements Constants{
 		 * @throws Exception
 		 */
 	  
-	public static boolean isAllEmailsSeen(String folderName) throws Exception {
+	public boolean isAllEmailsSeen(String folderName) throws Exception {
 		boolean result = false;
 		final Folder folder = store.getFolder(folderName);
 		CommonWait.waitForCondition(new ExpectedCommonWaitCondition<Boolean>() {
@@ -162,7 +162,7 @@ public class PlainEmailConnector implements Constants{
      * @param Folder class reference
      *
      */
-	public static boolean isFolderOpen(Folder folder) {
+	public boolean isFolderOpen(Folder folder) {
 		try {
 			folder.open(Folder.READ_WRITE);
 			return true;
