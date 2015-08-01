@@ -33,6 +33,9 @@ public class SurveyPublishPageTest extends SurveySetup {
     private final String CREATE_ACCS = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
     private ObjectMapper mapper = new ObjectMapper();
+	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
+			env.getProperty("em.host"), env.getProperty("em.userName"),
+			env.getProperty("em.password"));
 
  
 	@BeforeClass
@@ -42,9 +45,6 @@ public class SurveyPublishPageTest extends SurveySetup {
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		basepage.login();
-		PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
-				env.getProperty("em.host"), env.getProperty("em.userName"),
-				env.getProperty("em.password"));
 	}
 	
 	@TestInfo(testCaseIds = { "GS-2696" })
@@ -265,7 +265,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 			}
 		}
 		Log.info("UserEmail is" +sfdcInfo.getUserEmail());
-		Assert.assertTrue(PlainEmailConnector.isEmailPresent(
+		Assert.assertTrue(plainEmailConnector.isEmailPresent(
 				env.getProperty("em.inbox"), msgDetails, sfdcInfo.getUserEmail()));
 	}
 	

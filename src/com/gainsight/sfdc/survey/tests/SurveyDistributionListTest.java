@@ -28,6 +28,7 @@ public class SurveyDistributionListTest extends SurveySetup {
     private final String TEST_DATA_FILE            = "testdata/sfdc/survey/tests/surveytestdata.xls";
 	private final String CREATE_ACCS               = Application.basedir+"/testdata/sfdc/survey/scripts/Create_Accounts_Customers_For_Survey.txt";
 	private final String CREATE_CONTACTS           = Application.basedir+"/testdata/sfdc/survey/scripts/CreateContacts.txt";
+	
 
     private ObjectMapper mapper = new ObjectMapper();
 	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
@@ -396,7 +397,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 			}
 		}
 		Assert.assertTrue(
-				PlainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
+				plainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
 						msgDetails, sfdcInfo.getUserEmail()),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -466,7 +467,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 			}
 		}
 		Assert.assertTrue(
-				PlainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
+				plainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
 						msgDetails, sfdcInfo.getUserEmail()),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -536,7 +537,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 			}
 		}
 		Assert.assertTrue(
-				PlainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
+				plainEmailConnector.isEmailPresent(env.getProperty("em.inbox"),
 						msgDetails, sfdcInfo.getUserEmail()),
 				"Verifying Emails sent Vs Emails received in Inbox using GainSight Email Services");
 	}
@@ -846,6 +847,4 @@ public class SurveyDistributionListTest extends SurveySetup {
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
 						+ getSurveyDistributionID(surveyPropData) + "'")));
 	}
-	
-	
 }

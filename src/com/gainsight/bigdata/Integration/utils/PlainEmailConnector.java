@@ -49,7 +49,7 @@ public class PlainEmailConnector implements Constants{
 	 * @return true if both map objects are equal
 	 * @throws Exception
 	 */
-	public static boolean isMailDelivered(String folderName,
+	public boolean isMailDelivered(String folderName,
 			 HashMap<String, String> msgDetails, String fromEmail) {
 		final HashMap<String, String> msg = new HashMap<String, String>();
 		boolean result = false;
@@ -110,7 +110,7 @@ public class PlainEmailConnector implements Constants{
 	 * @throws Exception
 	 */
 
-	public static boolean isEmailPresent(final String folderName,
+	public boolean isEmailPresent(final String folderName,
 			final HashMap<String, String> msgDetails, final String fromEmail) {
 		boolean result = false;
 		result = CommonWait.waitForCondition(1000 * 60 * 5, 1000 * 5,
