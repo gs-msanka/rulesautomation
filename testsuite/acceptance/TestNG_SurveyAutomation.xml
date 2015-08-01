@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="Survey Automation Suite" verbose="3">
+ <suite name="Survey Automation Suite" verbose="3">
    <listeners>
       <listener class-name="com.gainsight.utils.AutTestListener" />
       <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
