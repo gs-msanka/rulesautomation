@@ -1,0 +1,12 @@
+List<Case> CaseList=[Select Id from Case where AccountId in (select Id from Account where Name like 'Copilot_Auto%')];
+Delete CaseList;
+List<Contact> conList=[Select Id from Contact where AccountId in (select Id from Account where Name like 'Copilot_Auto%')];
+Delete conList;
+List<JBCXM__UsageData__c> UsageList=[Select Id from JBCXM__UsageData__c];
+Delete UsageList;
+List<C_ContactObject__c> ContList=[Select Id from C_ContactObject__c];
+Delete ContList;
+List<C_ContactObject2__c> ContList2=[Select Id from C_ContactObject2__c];
+Delete ContList2;
+List<Account> AccList=[Select Id from Account where Name like 'Copilot_Auto%'];
+Delete AccList;
