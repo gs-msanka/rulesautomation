@@ -2,7 +2,6 @@
  <suite name="Survey Automation Suite" verbose="3">
    <listeners>
       <listener class-name="com.gainsight.utils.AutTestListener" />
-      <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
    </listeners>
    <test name="Survey Automation Suite" preserve-order="true">
       <classes>
@@ -12,6 +11,7 @@
          <class name="com.gainsight.sfdc.survey.tests.SurveyPublishPageTest" />
          <class name="com.gainsight.sfdc.survey.tests.SurveyAddParticipantsTest" />
          <class name="com.gainsight.sfdc.survey.tests.SurveyDistributionListTest" />
+         <class name="com.gainsight.sfdc.survey.tests.SurveyAnalyzeTest" />
       </classes>
    </test>
 </suite>
