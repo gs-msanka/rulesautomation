@@ -28,7 +28,7 @@ import static com.gainsight.bigdata.urls.AdminURLs.*;
 
 /**
  * Created by Giribabu on 07/05/15.
- * Create, Update, Delete of Tenants & Subject Areas.
+ * Create, Update, Delete of Tenants and Subject Areas.
  */
 public class TenantManager {
 
@@ -41,7 +41,7 @@ public class TenantManager {
     private NsConfig nsConfig = ConfigLoader.getNsConfig();
 
     /**
-     * Logs in to tenant Management SFDC org & sets up the default headers required.
+     * Logs in to tenant Management SFDC org and sets up the default headers required.
      */
     public TenantManager() {
         sfConnector = new SalesforceConnector(nsConfig.getSfdcUsername(), nsConfig.getSfdcPassword() + nsConfig.getSfdcStoken(),
@@ -211,11 +211,11 @@ public class TenantManager {
     }
 
     /**
-     * Gets all the tenants if SFOrgId is present & gets the with tenant id, gets all other tenant related information.
+     * Gets all the tenants if SFOrgId is present and gets the with tenant id, gets all other tenant related information.
      *
      * @param sfOrgId  - Salesforce Organization Id.
      * @param tenantId - MDA environment tenant Id.
-     * @return TenantDetails if tenant exists & NULL if tenant doesn't exits.
+     * @return TenantDetails if tenant exists and NULL if tenant doesn't exits.
      */
     public TenantDetails getTenantDetail(String sfOrgId, String tenantId) {
         TenantDetails tenantDetail = null;

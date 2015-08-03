@@ -114,7 +114,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * SurveyQuestion+SurveyAnswer as Key & Id as value.
+     * SurveyQuestion+SurveyAnswer as Key and Id as value.
      * @param surveyCode
      * @return
      */
@@ -165,7 +165,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Loads account's & Customer's
+     * Loads account's and Customer's
      * @param dataETL
      * @throws IOException
      */
@@ -552,7 +552,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Verifies Account's metric score & comments.
+     * Verifies Account's metric score and comments.
      * @param account
      * @param action
      * @return
@@ -597,7 +597,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Verifies the account score & scorecard summary/comments.
+     * Verifies the account score and scorecard summary/comments.
      * @param account
      * @param score
      * @param comments

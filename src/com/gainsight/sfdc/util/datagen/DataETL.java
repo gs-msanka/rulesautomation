@@ -264,7 +264,7 @@ public class DataETL implements IJobExecutor {
 	/**
 	 * Simple Clean Up Operation, It queries the ID by pull mechanism and uses the same to delete the id with push mechanism
 	 * @param objectName - Name of the object where data should be deleted.
-     * @param condition - Where condition need to be supplied - {Ex: JBCXM__Stage__r.Name = 'New Business' (or) JBCXM__ASV__c > 2000}
+     * @param condition - Where condition need to be supplied - {Ex: JBCXM__Stage__r.Name = 'New Business' (or) JBCXM__ASV__c (gt) 2000}
 	 * @throws IOException
 	 */
 	public void cleanUp(String objectName, String condition) throws IOException {
@@ -291,9 +291,9 @@ public class DataETL implements IJobExecutor {
     /**
      * Resolves Name Space for only the header row.
      *
-     * @param fileName
-     * @return
-     * @throws IOException
+     * @param fileName - filePath
+     * @return - NameSpace resolved file will be returned.
+     * @throws IOException - File not found / failed to read the file.
      */
     public File resolveNameSpace(String  fileName) throws IOException {
         boolean isPackage = sfdcConfig.getSfdcManagedPackage();

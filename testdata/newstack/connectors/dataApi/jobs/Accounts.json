@@ -38,8 +38,8 @@
             "alias": "Name"
           },
           {
-            "name": "Data_ExternalId__c",
-            "alias": "Data_ExternalId__c"
+            "name": "Account_ExternalId__c",
+            "alias": "Account_ExternalId__c"
           }
         ]
       }

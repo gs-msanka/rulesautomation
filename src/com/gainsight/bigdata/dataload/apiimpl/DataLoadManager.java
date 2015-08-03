@@ -62,7 +62,7 @@ public class DataLoadManager extends NSTestBase {
      * @param sfOrgId - Salesforce Organisation ID - 15 (or) 18 digits.
      * @param accessKey - AccessKey to load data.
      * @param loginName - Salesforce User Login Name.
-     * @return NSResponseObj - if authentication is successful with the given params & NULL on failure.
+     * @return NSResponseObj - if authentication is successful with the given params and NULL on failure.
      */
     public NsResponseObj mdaDataLoadAuthenticate(String sfOrgId, String accessKey, String loginName) {
         NsResponseObj nsResponseObj = null;
@@ -161,6 +161,9 @@ public class DataLoadManager extends NSTestBase {
      * @param jobId - JobId/StatusId to wait for its completion i.e status != IN_PROGRESS.
      */
     public boolean waitForDataLoadJobComplete(final String jobId) {
+        if(jobId == "" || jobId.equals("")) {
+            throw new IllegalArgumentException("Job Id should not be null");
+        }
         Log.info("Wait for the "+jobId + " to complete...");
         boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
             @Override
@@ -293,7 +296,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Exports all the failed records as string with new line as line separator & with headers.
+     * Exports all the failed records as string with new line as line separator and with headers.
      *
      * @param statusId - The StatusId(JobId) to retrieve the failed records
      * @return StringContent returned by server.
@@ -407,7 +410,7 @@ public class DataLoadManager extends NSTestBase {
             }
         } catch (Exception e) {
             Log.error("Failed to get collection schema..."+e.getLocalizedMessage());
-            throw new RuntimeException("Failed to get collection schema..."+e.getLocalizedMessage());
+            throw new RuntimeException("Failed to get collection schema...", e);
         }
         return null;
     }
@@ -416,7 +419,7 @@ public class DataLoadManager extends NSTestBase {
      * Fetches the failed records for the job id.
      *
      * @param jobId - Job Id to get failed records.
-     * @return - List<String></> data rows.
+     * @return - List of String - data rows.
      */
     public List<String> getFailedRecords(String jobId) {
         Log.info("Fetching Failed records...");
@@ -493,7 +496,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Verifies the Collection Columns, Column Data Type & checks DB Name is not null in actual collection.
+     * Verifies the Collection Columns, Column Data Type and checks DB Name is not null in actual collection.
      *
      * @param expected - Expected Collection Info.
      * @param actual - Actual Collection Info.
@@ -547,7 +550,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Trims the string fields to 250 characters & appends "...".
+     * Trims the string fields to 250 characters and appends "...".
      * @param dataList - Data List to trim.
      * @param collectionInfo
      */
@@ -578,7 +581,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Clears all the data in the collection & deletes the collection.
+     * Clears all the data in the collection and deletes the collection.
      * @param tenantId - Tenant Id
      * @param collectionsIdsToDelete - Collection Id to delete.
      */
@@ -606,7 +609,7 @@ public class DataLoadManager extends NSTestBase {
 
 
     /**
-     * Clears all the data in the collection & deletes the collection.
+     * Clears all the data in the collection and deletes the collection.
      * @param tenantId - Tenant Id
      * @param collectionDetailList - CollectionDetails.
      */

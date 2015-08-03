@@ -78,8 +78,7 @@ public class AdoptionDataSetup extends BaseTest {
      * @param usesEndDate - Week label is based on start of week or end of week.
      * @param weekStartsOn - Week starts on Sun, Mon, Tue
      * @param noOfPeriods - No of weeks/months to run aggregation.  {Good to send multiples of 5}
-     * @throws java.io.IOException
-     * @throws InterruptedException
+     *
      */
     public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean usesEndDate, String weekStartsOn) {
         try {
