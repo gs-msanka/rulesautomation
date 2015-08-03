@@ -83,7 +83,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3886"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
-    public void AccountIdDateMappedAndMeasureAsSum(HashMap<String, String> testData) throws IOException {
+    public void accountIdDateMappedAndMeasureAsSum(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -142,7 +142,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3887"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
-    public void AccountIdDateMappedAndMeasureAsAvg(HashMap<String, String> testData) throws IOException {
+    public void accountIdDateMappedAndMeasureAsAvg(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -200,7 +200,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3888"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
-    public void AccountIdDateMappedAndMeasureAsCount(HashMap<String, String> testData) throws IOException {
+    public void accountIdDateMappedAndMeasureAsCount(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -259,7 +259,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3889"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
-    public void AccountIdContactIdDateMappedAndMeasuresAsSumAndAvg(HashMap<String, String> testData) throws IOException {
+    public void accountIdContactIdDateMappedAndMeasuresAsSumAndAvg(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -317,7 +317,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3891"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
-    public void AccountExtIdContactExtIdDateMappedAndMeasuresAsSumAndAvg(HashMap<String, String> testData) throws IOException {
+    public void accountExtIdContactExtIdDateMappedAndMeasuresAsSumAndAvg(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -667,7 +667,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3909"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
-    public void AccountIdTimeStampMappedAndMeasureAsSum(HashMap<String, String> testData) throws IOException {
+    public void accountIdTimeStampMappedAndMeasureAsSum(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -726,7 +726,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @TestInfo(testCaseIds = {"GS-3910"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T12")
-    public void AccountIdContactIdTimeStampMeasureSum(HashMap<String, String> testData) throws IOException {
+    public void accountIdContactIdTimeStampMeasureSum(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         String collectionName = testData.get("CollectionName") + "_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -1227,7 +1227,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
     //To Delete All the projects of a tenant - - Run This test case to delete all the accounts in a project..
-    @Test
+    //@Test
     private void deleteAllProjects() {
         String projectName = ""; // empty.
         NsResponseObj nsResponseObj = dataLoadAggConfigManager.getAllDataAPIProjects();
@@ -1360,17 +1360,4 @@ public class DataLoadConfigAggTest extends NSTestBase {
         globalMapping.setCustom(customFieldList);
         Log.info(i + " Custom Field's are add to project");
     }
-
-    private void removeCustomField(GlobalMapping globalMapping, String customFieldDisplayeName) {
-
-    }
-
-
-
-
-
-
-
-
-
 }
