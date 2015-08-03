@@ -291,7 +291,7 @@ public class SfdcBulkApi {
         List<String> batchIds = new ArrayList<String>();
         BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
         File tmpFile =  new File(basedir+"/resources/datagen/process/tempFile.csv");
-      //  tmpFile.mkdirs();
+        tmpFile.getParentFile().mkdirs();
         // read the CSV header row
         byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;
