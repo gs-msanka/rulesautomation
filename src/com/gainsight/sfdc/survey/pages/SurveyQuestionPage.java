@@ -44,7 +44,7 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String PAGE_EDIT_FORM_CANCEL_BUTTON   = "//button[@class='gs-btn btn-cancel' and text()='Cancel']";
 
     //Question Edit View Selectors
-    private final String QUESTION_BLOCK                 = ".//div[contains(@class, 'qtn-div') and @data-id='%s']";
+    private final String QUESTION_BLOCK                 = "//div[contains(@class, 'qtn-div') and @data-id='%s']";
     private final String QUESTION_TEXT_INPUT            = ".//div[contains(@id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
     private final String SECTION_TITLE_INPUT            = ".//h3[@class='section-title drag-handle']/input[@class='form-control']";
     private final String SECTION_TITLE_VIEW             = ".//h3[@class='section-title drag-handle']";
@@ -133,7 +133,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
 
     public WebElement getQuestionElement(final SurveyQuestion surveyQuestion) {
-        WebElement surveyQuestionEle;
+		WebElement surveyQuestionEle;
 		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
 				new ExpectedCommonWaitCondition<Boolean>() {
 					@Override
@@ -141,12 +141,10 @@ public class SurveyQuestionPage extends SurveyPage {
 						return isQuestionExists(surveyQuestion);
 					}
 				});
-        try {
-            surveyQuestionEle= getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to find survey Question");
-        }
-        return surveyQuestionEle;
+		surveyQuestionEle = getPageElement(surveyQuestion).findElement(
+				By.xpath(String.format(QUESTION_BLOCK,
+						surveyQuestion.getQuestionId())));
+		return surveyQuestionEle;
     }
     
 	public boolean isQuestionExists(SurveyQuestion surveyQuestion) {
@@ -155,10 +153,10 @@ public class SurveyQuestionPage extends SurveyPage {
 				.findElement(
 						By.xpath(String.format(QUESTION_BLOCK,
 								surveyQuestion.getQuestionId())));
-		if (surveyQuestionEle.isDisplayed()) {
+		if (surveyQuestionEle.isEnabled()) {
 			result = true;
 		}
-		surveyQuestionEle.isDisplayed();
+	//	surveyQuestionEle.isDisplayed();
 		return result;
 	}
 
@@ -179,6 +177,7 @@ public class SurveyQuestionPage extends SurveyPage {
 	} */
 
 	public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
+		Timer.sleep(5); // This is required since Survey page is inconsistent, kindof disturbed UI
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
         Log.info("Entering Question Title");
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();

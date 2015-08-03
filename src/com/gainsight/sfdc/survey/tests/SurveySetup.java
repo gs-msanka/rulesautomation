@@ -93,14 +93,12 @@ public class SurveySetup extends BaseTest implements Constants{
 				});
 		SObject[] sObjects = sfdc.getRecords(query);
 		Log.info("No of records returned : " + sObjects.length);
-		String questId;
+		String questId = null;
 		if (sObjects.length >= 1) {
 			questId = sObjects[0].getId();
 			Log.info("Question Id : " + questId);
 		} else {
-			throw new RuntimeException(
-					"No Survey Question Found with this name : "
-							+ surQues.getQuestionText());
+			Log.info("No Survey Question Found with this name");
 		}
 		return questId;
 	}

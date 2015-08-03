@@ -12,7 +12,7 @@ import org.openqa.selenium.By;
 
 public class AdminIntegrationPage extends BasePage {
 	
-	private static final String READY_INDICATOR     = "//a[contains(@text,'Gainsight Matrix Data Platform')]";
+	private static final String READY_INDICATOR     = "//a[contains(text(),'Gainsight Matrix Data')]";
 	private static final String SIDE_SECTION        = "//div[contains(@class, 'main-cnt')]";
     private static final String MDA_AUTH_SEC_TITLE  = "//div[@class='title md-platform-title']/div[@class='mda-title' and text()='Authorize MDA']";
 	private static final String OAUTH_ENABLE        = "//input[@id='MA-Salesforce-myonoffswitch']/following-sibling::label";
@@ -66,7 +66,7 @@ public class AdminIntegrationPage extends BasePage {
      * Authorizes MDA - Matrix Data Platform.
      */
     public AdminIntegrationPage authorizeMDA() {
-        if (element.getElement(By.id(REVOKE)).isDisplayed()) {
+        if (!element.getElement(By.id(REVOKE)).isDisplayed()) {
             item.click(AUTHORIZE);
             sleep(15);      // This is required as there's no element available in the pop-up UI as ready indicator.
             Set<String> windowId = driver.getWindowHandles();    // get  window id of current window

@@ -36,6 +36,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 	PlainEmailConnector plainEmailConnector = new PlainEmailConnector(
 			env.getProperty("em.host"), env.getProperty("em.userName"),
 			env.getProperty("em.password"));
+
  
 	@BeforeClass
 	public void setUp() {
@@ -206,9 +207,11 @@ public class SurveyPublishPageTest extends SurveySetup {
 	}
 	
 	@TestInfo(testCaseIds={"GS-2701","GS-2702"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=false)
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel",enabled=true)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Surveypublish1")
-    public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {	
+    public void publishSurveyAndSendTestEmailUsingGSEmailServices(Map<String, String> testData) throws Exception {
+		
+		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		SurveyBasePage surBasePage = basepage.clickOnSurveyTab();
 		SurveyProperties surveyPropData = mapper.readValue(
 				testData.get("Survey"), SurveyProperties.class);
@@ -238,7 +241,6 @@ public class SurveyPublishPageTest extends SurveySetup {
 		surveyPropData.setSiteURL(surveySiteURL());
 		publishPage.updatePublishDetails(surveyPropData);
 		surveyPropData.setStatus("Publish");
-		plainEmailConnector.isAllEmailsSeen(env.getProperty("em.inbox"));
 		Assert.assertEquals(publishPage.getSurveyStatus(surveyPropData),
 				surveyPropData.getStatus(),
 				"Verifying Survey Status After Publishing");
@@ -262,8 +264,9 @@ public class SurveyPublishPageTest extends SurveySetup {
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
-		Assert.assertTrue(plainEmailConnector.isMailDelivered(
-				env.getProperty("em.inbox"), msgDetails));
+		Log.info("UserEmail is" +sfdcInfo.getUserEmail());
+		Assert.assertTrue(plainEmailConnector.isEmailPresent(
+				env.getProperty("em.inbox"), msgDetails, sfdcInfo.getUserEmail()));
 	}
 	
 	@TestInfo(testCaseIds={"GS-2703"})

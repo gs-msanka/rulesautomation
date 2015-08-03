@@ -12,6 +12,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyResponseAns;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
 import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.pageobject.util.Timer;
 
 import static com.gainsight.sfdc.pages.Constants.*;
 
@@ -87,6 +88,7 @@ public class SurveyResponsePage extends WebPage {
 			}
 		}
 		item.click(SURVEY_FORM_SUBMIT_BUTTON);
+		Timer.sleep(5);
 		wait.waitTillElementDisplayed(SURVEY_RESPONSE_MESSAGE_DIV, MIN_TIME, MAX_TIME);
 		URL = homePageURL;
 		open(); /*Navigating back to the Gainsight home page*/
