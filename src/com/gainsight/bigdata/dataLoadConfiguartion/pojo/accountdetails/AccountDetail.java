@@ -1,11 +1,14 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * Created by gainsight on 10/07/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDetail {
 
     private String createdBy;
@@ -17,6 +20,7 @@ public class AccountDetail {
     private String accountId;
     private String accountType; //SFDC / GOOGLE_ANALYTICS / SEGMENT_IO / MIXPANEL / DATA_API
     private String displayName;
+    @JsonIgnore
     private boolean defaultAccount;
     private String status;  //AUTHORIZED, IN_COMPLETE, REVOKED, COMPELTED
     private String masterSyncInfoId;
@@ -27,8 +31,18 @@ public class AccountDetail {
     private NotificationDetails notificationDetails;
     private RunNowDetails runNowDetails;
     private AccountDetailProperties properties;
+    @JsonIgnore
     private boolean deleted;
+    private boolean writeToSFDC = false;
 
+
+    public boolean isWriteToSFDC() {
+        return writeToSFDC;
+    }
+
+    public void setWriteToSFDC(boolean writeToSFDC) {
+        this.writeToSFDC = writeToSFDC;
+    }
 
     public String getCreatedBy() {
         return createdBy;

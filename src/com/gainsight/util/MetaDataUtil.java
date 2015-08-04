@@ -256,12 +256,12 @@ public class MetaDataUtil {
 
 
     /**
-     * Creates a permission set on the org with name "GS_Automation_Permission" & assigns to all the system admins & licensed users.
+     * Creates a permission set on the org with name "GS_Automation_Permission" and assigns to all the system admins and licensed users.
      * Code deployment is done for this feature to work.
      * Please check out ----- packageUtil.deployPermissionSetCode();
      *
      * Issues : if NULL POINTER Exception is found then the Fields send may not be found is SFDC (or) check the field API Name.
-     * Issues : Avoids giving field permissions & proceeds if field is not found in SObject describe.
+     * Issues : Avoids giving field permissions and proceeds if field is not found in SObject describe.
      *
      * @param object - Full Object API Name
      * @param fields - Array of fields.
@@ -299,13 +299,13 @@ public class MetaDataUtil {
 
     public void createExtIdFieldOnAccount(SalesforceConnector sfdc) throws Exception {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
-        String[] fields = new String[]{"Data ExternalId"};
+        String[] fields = new String[]{"Data ExternalId", "Account ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
         addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
     }
 
     /**
-     * Creates field on Contact object  & Assigns permissions to those fields.
+     * Creates field on Contact object  and Assigns permissions to those fields.
      *
      * @param sfdc - Salesforce Connector.
      * @throws Exception - When failed to create fields / add permissions to the created fields.
@@ -332,7 +332,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * Creates fields on ScorecardMetric__c & Assigns permissions to those fields.
+     * Creates fields on ScorecardMetric__c and Assigns permissions to those fields.
      *
      * @param sfdc - Salesforce Connector.
      * @throws Exception - When failed to create fields / add permissions to the created fields.
@@ -359,7 +359,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * Creates Fields on USER Object & Assigns permissions to those fields.
+     * Creates Fields on USER Object and Assigns permissions to those fields.
      *
      * @param sfdc - Salesforce Connector.
      * @throws Exception - When failed to create fields / add permissions to the created fields.
@@ -373,7 +373,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * Creates Fields on CTA__c Object  & Assigns permissions to those fields.
+     * Creates Fields on CTA__c Object  and Assigns permissions to those fields.
      *
      * @param sfdc - Salesforce Connection.
      * @throws Exception - When failed to create fields / add permissions to the created fields.
@@ -387,7 +387,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * Created Fields on UsageData__c Object & Assigns permissions to those fields.
+     * Created Fields on UsageData__c Object and Assigns permissions to those fields.
      *
      * @param sfdc - Salesforce Connector
      * @throws Exception - When failed to create fields / add permissions to the created fields.
@@ -466,7 +466,7 @@ public class MetaDataUtil {
      * Generates API names for the fields supplied by replacing space with "_" * appending __c at end.
      *
      * @param args - List of fields to be converted to API names.
-     * @return - Field API names by replacing all the spaces with _ & appending __c.
+     * @return - Field API names by replacing all the spaces with _ and appending __c.
      */
     public String[] convertFieldNameToAPIName(String[] args) {
         Log.info("Converting Field Names to API names....");

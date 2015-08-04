@@ -2,9 +2,12 @@ package com.gainsight.bigdata.dataLoadConfiguartion.apiImpl;
 
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.connectors.GlobalMapping;
+import com.gainsight.bigdata.dataLoadConfiguartion.mapping.IdentifierMapper;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.DataAggProcessJobStatus;
 import com.gainsight.bigdata.dataLoadConfiguartion.enums.DataAggProcessStatusType;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.AccountDetail;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.Identifier;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.pages.Constants;
@@ -12,9 +15,13 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpStatus;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
+import org.testng.Assert;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.gainsight.bigdata.urls.ApiUrls.*;
@@ -28,8 +35,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
     /**
      * Gets all the DataLoad API Projects.
      *
-     * @return
-     * @throws Exception
+     * @return - NsResponseObj
      */
     public NsResponseObj getAllDataAPIProjects()  {
         Log.info("Getting all the data api projects...");
@@ -61,27 +67,28 @@ public class DataLoadAggConfigManager extends NSTestBase {
         try {
             NsResponseObj nsResponseObj = getAllDataAPIProjects();
             if (nsResponseObj != null) {
-                List<AccountDetail> accountDetailList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<AccountDetail>>() {
-                });
+                List<AccountDetail> accountDetailList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<AccountDetail>>() {});
                 for (AccountDetail accountDetail : accountDetailList) {
-                    return accountDetail;
+                    if(accountDetail.getDisplayName().equals(projectName)) {
+                        Log.info("Account Id : " +accountDetail.getAccountId());
+                        return accountDetail;
+                    }
                 }
             }
         } catch (Exception e) {
             Log.error("Failed to get All the projects. ", e);
             throw new RuntimeException("Failed to get All the projects. ", e);
         }
-        return null;
+        throw new RuntimeException("Project Name Not found : " +projectName);
     }
 
     /**
      * Delete the account / Data Load Project.
      * @param accountId
-     * @return
-     * @throws Exception
+     * @return - True on successful delete of account.
      */
     public boolean deleteAccount(String accountId) {
-        Log.error("Deleting the account : " +accountId);
+        Log.info("Deleting the account : " +accountId);
         NsResponseObj nsResponseObj = null;
         if (accountId == null || accountId.equals("")) {
             Log.error("Account Id should not be null.");
@@ -107,20 +114,48 @@ public class DataLoadAggConfigManager extends NSTestBase {
      * @return
      * @throws Exception
      */
-    public NsResponseObj getAccountDetail(String accountId) throws Exception {
+    public AccountDetail getAccountDetail(String accountId) {
         Log.info("Fetching Account details...   " +accountId);
         if (accountId == null || accountId.equals("")) {
             Log.error("Account Id should not be null.");
             throw new IllegalArgumentException("Account Id should not be null.");
         }
-        ResponseObj responseObj = wa.doGet(ACCOUNT_DETAIL_GET + accountId, header.getAllHeaders());
-        NsResponseObj nsResponseObj = null;
-        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        } else {
-            throw new RuntimeException("Failed to get all data api projects");
+        AccountDetail accountDetail = null;
+        try {
+            ResponseObj responseObj = wa.doGet(ACCOUNT_DETAIL_GET + accountId, header.getAllHeaders());
+            if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                accountDetail = mapper.convertValue(nsResponseObj.getData(), AccountDetail.class);
+            } else {
+                throw new RuntimeException("Failed to get all data api projects");
+            }
+        } catch (Exception e) {
+            Log.error("", e);
+            throw new RuntimeException(e);
         }
-        return nsResponseObj;
+        return accountDetail;
+    }
+
+    /**
+     * Creating/updating the data-load aggregation project.
+     *
+     * @param payload
+     * @param actionType
+     * @param accountId
+     * @return
+     */
+    public String manageDataLoadApiProject(String payload, String actionType, String accountId) {
+        NsResponseObj nsResponseObj = manageDataApiProject(payload, actionType, accountId);
+        String statusId = null;
+        if(nsResponseObj.isResult()) {
+            HashMap<String, String> response = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+            statusId = response.get("statusId");
+        } else {
+            Log.error("Data Load Failed");
+            throw new RuntimeException("Data Load Failed.");
+        }
+        Log.info("Status Id : " +statusId);
+        return statusId;
     }
 
     /**
@@ -166,6 +201,17 @@ public class DataLoadAggConfigManager extends NSTestBase {
     }
 
     /**
+     * Updates the existing account detail / project.
+     * @param payload
+     * @param actionType
+     * @param accountId
+     * @return
+     */
+    public String updateDataLoadApiProject(String payload, String actionType, String accountId) {
+        return manageDataLoadApiProject(payload, actionType, accountId);
+    }
+
+    /**
      * Creates a new data load aggregated project
      * @param payload
      * @param actionType
@@ -173,6 +219,16 @@ public class DataLoadAggConfigManager extends NSTestBase {
      */
     public NsResponseObj createDataApiProject(String payload, String actionType) {
         return manageDataApiProject(payload, actionType, "new");
+    }
+
+    /**
+     * Creates a new data load aggregated project
+     * @param payload
+     * @param actionType
+     * @return
+     */
+    public String createDataLoadApiProject(String payload, String actionType) {
+        return manageDataLoadApiProject(payload, actionType, "new");
     }
 
     /**
@@ -250,6 +306,8 @@ public class DataLoadAggConfigManager extends NSTestBase {
         }
         return nsResponseObj;
     }
+
+
 
 
 }

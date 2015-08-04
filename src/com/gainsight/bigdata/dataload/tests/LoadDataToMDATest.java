@@ -554,7 +554,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = "GS";
         List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
         for(CollectionInfo collectionInfo : dataLoadManager.getAllCollections() ) {
-            if(collectionInfo.getCollectionDetails().getCollectionName().contains(collectionName)) {
+            if(collectionInfo.getCollectionDetails().getCollectionName().startsWith(collectionName)) {
                 colList.add(collectionInfo.getCollectionDetails());
             }
         }

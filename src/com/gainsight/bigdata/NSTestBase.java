@@ -324,6 +324,9 @@ public class NSTestBase {
             Log.error("Failed tenant auto provision ", e);
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
         }
+        if(result) {
+            updateNSURLInAppSettings(nsConfig.getNsURl());
+        }
         return result;
     }
 }

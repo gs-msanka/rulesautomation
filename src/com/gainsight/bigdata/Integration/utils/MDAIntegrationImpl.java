@@ -46,7 +46,7 @@ public class MDAIntegrationImpl extends NSTestBase {
     }
 
     /**
-     * Revokes MDA Authorization & deactivates all the connectors.
+     * Revokes MDA Authorization and deactivates all the connectors.
      * @return true - on successful revoke of MDA.
      */
     public boolean revokeMDAAuthorization() {
