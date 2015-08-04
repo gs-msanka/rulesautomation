@@ -1138,7 +1138,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
 
     @TestInfo(testCaseIds = {"GS-3896"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled = false)
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T19")
     public void accExtIdContactExtIdTimeStampEventMeasureSumAvgAndCutomFields(HashMap<String, String> testData) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
