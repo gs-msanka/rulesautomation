@@ -18,7 +18,7 @@
             "alias": "Account Id"
           },
           {
-            "name": "Data_ExternalId__c",
+            "name": "Account_ExternalId__c",
             "alias": "Source Account Id"
           }
         ]
