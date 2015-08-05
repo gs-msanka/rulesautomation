@@ -1,0 +1,74 @@
+{
+  "jobName": "Connectors Customers Insert",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv",
+        "table": "TempAccount",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "Account Id"
+          },
+          {
+            "name": "Account_ExternalId__c",
+            "alias": "Source Account Id"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/T8_ExpectedData.csv",
+        "table": "TempData",
+        "joinColumnName": "AccountName",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "Account Name"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "Event",
+            "alias": "Event"
+          },
+          {
+            "name": "EventCount",
+            "alias": "Event Count"
+          },
+          {
+            "name": "Count_UniqueLogins",
+            "alias": "Count_UniqueLogins"
+          },
+          {
+            "name": "Week",
+            "alias": "Week"
+          },
+          {
+            "name": "Month",
+            "alias": "Month"
+          },
+          {
+            "name": "Quarter",
+            "alias": "Quarter"
+          },
+          {
+            "name": "Year",
+            "alias": "Year"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/T8_Final_ExpectedData.csv"
+  }
+}

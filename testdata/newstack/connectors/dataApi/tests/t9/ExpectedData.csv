@@ -1,0 +1,232 @@
+AccountName,UserName,Date,Event,EventCount,Avg_PageLoadTime,Count_UniqueLogins,GS_SumofLogins,MAX_FileSize,MIN_Price,Month,Quarter,Week,Year
+Abberley Kooiman,Raja Abberley  Kuditipudi,0,360 Page,8,14,8,302,269,14,0,0,0,0
+Abberley Kooiman,Raja Abberley  Kuditipudi,-1,360 Page,6,12,6,158,257,23,-1,-1,-1,-1
+Abberley Kooiman,Raja Abberley  Kuditipudi,-2,360 Page,10,14,10,194,256,16,-2,-2,-2,-2
+Abberley Kooiman,Raja Abberley  Kuditipudi,-3,360 Page,7,12,7,112,296,17,-3,-3,-3,-3
+Abberley Kooiman,Raja Abberley  Kuditipudi,-4,360 Page,4,12,4,95,176,34,-4,-4,-4,-4
+Abberley Kooiman,Raja Abberley  Kuditipudi,-5,360 Page,8,13,8,244,276,8,-5,-5,-5,-5
+Abberley Kooiman,Raja Abberley  Kuditipudi,-6,360 Page,10,11,10,228,268,12,-6,-6,-6,-6
+Abberley Kooiman,Raja Abberley  Kuditipudi,-7,360 Page,8,14,8,228,269,21,-7,-7,-7,-7
+Abberley Kooiman,Raja Abberley  Kuditipudi,-8,360 Page,6,19,6,58,266,10,-8,-8,-8,-8
+Abberley Kooiman,Raja Abberley  Kuditipudi,-9,360 Page,8,22,8,282,280,8,-9,-9,-9,-9
+Abberley Kooiman,Raja Abberley  Kuditipudi,-10,360 Page,4,16,4,157,264,9,-10,-10,-10,-10
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,0,OutReach Schedule Triggered,10,12,10,193,289,7,0,0,0,0
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-1,OutReach Schedule Triggered,5,15,5,161,295,16,-1,-1,-1,-1
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-2,OutReach Schedule Triggered,5,15,5,184,278,35,-2,-2,-2,-2
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-3,OutReach Schedule Triggered,8,17,8,178,249,7,-3,-3,-3,-3
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-4,OutReach Schedule Triggered,8,12,8,269,186,9,-4,-4,-4,-4
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-5,OutReach Schedule Triggered,7,13,7,272,294,15,-5,-5,-5,-5
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-6,OutReach Schedule Triggered,9,10,9,173,230,8,-6,-6,-6,-6
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-7,OutReach Schedule Triggered,7,16,7,160,201,2,-7,-7,-7,-7
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-8,OutReach Schedule Triggered,7,11,7,143,250,11,-8,-8,-8,-8
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-9,OutReach Schedule Triggered,6,14,6,139,150,5,-9,-9,-9,-9
+Abberley Kooiman,Ranjith Kumar Abberley  Gurram,-10,OutReach Schedule Triggered,3,25,3,71,292,62,-10,-10,-10,-10
+Abberley Kooiman,Prashanthi Abberley  Mendu,0,Outreach Triggered,7,16,7,164,239,16,0,0,0,0
+Abberley Kooiman,Prashanthi Abberley  Mendu,-1,Outreach Triggered,4,10,4,74,241,39,-1,-1,-1,-1
+Abberley Kooiman,Prashanthi Abberley  Mendu,-2,Outreach Triggered,4,24,4,97,236,0,-2,-2,-2,-2
+Abberley Kooiman,Prashanthi Abberley  Mendu,-3,Outreach Triggered,8,20,8,223,272,9,-3,-3,-3,-3
+Abberley Kooiman,Prashanthi Abberley  Mendu,-4,Outreach Triggered,8,18,8,269,285,40,-4,-4,-4,-4
+Abberley Kooiman,Prashanthi Abberley  Mendu,-5,Outreach Triggered,12,17,12,400,287,6,-5,-5,-5,-5
+Abberley Kooiman,Prashanthi Abberley  Mendu,-6,Outreach Triggered,8,16,8,218,274,3,-6,-6,-6,-6
+Abberley Kooiman,Prashanthi Abberley  Mendu,-7,Outreach Triggered,8,15,8,159,300,2,-7,-7,-7,-7
+Abberley Kooiman,Prashanthi Abberley  Mendu,-8,Outreach Triggered,5,14,5,96,263,5,-8,-8,-8,-8
+Abberley Kooiman,Prashanthi Abberley  Mendu,-9,Outreach Triggered,5,17,5,63,273,5,-9,-9,-9,-9
+Abberley Kooiman,Prashanthi Abberley  Mendu,-10,Outreach Triggered,6,20,6,213,239,9,-10,-10,-10,-10
+Abberley Kooiman,Pulimi Abberley  Avinash,0,PDF Exported,4,19,4,121,289,25,0,0,0,0
+Abberley Kooiman,Pulimi Abberley  Avinash,-1,PDF Exported,14,16,14,343,287,1,-1,-1,-1,-1
+Abberley Kooiman,Pulimi Abberley  Avinash,-2,PDF Exported,4,16,4,66,284,51,-2,-2,-2,-2
+Abberley Kooiman,Pulimi Abberley  Avinash,-3,PDF Exported,7,12,7,79,232,58,-3,-3,-3,-3
+Abberley Kooiman,Pulimi Abberley  Avinash,-4,PDF Exported,9,16,9,282,280,13,-4,-4,-4,-4
+Abberley Kooiman,Pulimi Abberley  Avinash,-5,PDF Exported,9,15,9,170,300,16,-5,-5,-5,-5
+Abberley Kooiman,Pulimi Abberley  Avinash,-6,PDF Exported,10,15,10,285,253,22,-6,-6,-6,-6
+Abberley Kooiman,Pulimi Abberley  Avinash,-7,PDF Exported,5,14,5,107,240,0,-7,-7,-7,-7
+Abberley Kooiman,Pulimi Abberley  Avinash,-8,PDF Exported,9,14,9,245,254,1,-8,-8,-8,-8
+Abberley Kooiman,Pulimi Abberley  Avinash,-9,PDF Exported,10,21,10,221,300,11,-9,-9,-9,-9
+Abberley Kooiman,Pulimi Abberley  Avinash,-10,PDF Exported,6,18,6,154,233,27,-10,-10,-10,-10
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,0,Rule Run,9,11,9,207,296,3,0,0,0,0
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-1,Rule Run,3,4,3,86,249,30,-1,-1,-1,-1
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-2,Rule Run,8,15,8,134,230,29,-2,-2,-2,-2
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-3,Rule Run,9,14,9,276,201,4,-3,-3,-3,-3
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-4,Rule Run,10,11,10,214,222,9,-4,-4,-4,-4
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-5,Rule Run,8,17,8,156,252,19,-5,-5,-5,-5
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-6,Rule Run,7,18,7,209,285,4,-6,-6,-6,-6
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-7,Rule Run,7,13,7,188,300,8,-7,-7,-7,-7
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-8,Rule Run,4,14,4,91,194,9,-8,-8,-8,-8
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-9,Rule Run,4,14,4,125,244,12,-9,-9,-9,-9
+Abberley Kooiman,Rajesh Abberley  Yaddanapalli,-10,Rule Run,7,16,7,136,289,9,-10,-10,-10,-10
+Abberley Kooiman,Ramesh Abberley  Bankuru,0,Rule Schedule Run,7,19,7,145,283,9,0,0,0,0
+Abberley Kooiman,Ramesh Abberley  Bankuru,-1,Rule Schedule Run,3,13,3,85,282,60,-1,-1,-1,-1
+Abberley Kooiman,Ramesh Abberley  Bankuru,-2,Rule Schedule Run,7,7,7,151,231,8,-2,-2,-2,-2
+Abberley Kooiman,Ramesh Abberley  Bankuru,-3,Rule Schedule Run,7,9,7,152,255,1,-3,-3,-3,-3
+Abberley Kooiman,Ramesh Abberley  Bankuru,-4,Rule Schedule Run,11,17,11,330,291,1,-4,-4,-4,-4
+Abberley Kooiman,Ramesh Abberley  Bankuru,-5,Rule Schedule Run,10,12,10,269,279,4,-5,-5,-5,-5
+Abberley Kooiman,Ramesh Abberley  Bankuru,-6,Rule Schedule Run,7,15,7,221,238,13,-6,-6,-6,-6
+Abberley Kooiman,Ramesh Abberley  Bankuru,-7,Rule Schedule Run,7,11,7,185,284,22,-7,-7,-7,-7
+Abberley Kooiman,Ramesh Abberley  Bankuru,-8,Rule Schedule Run,5,16,5,158,300,9,-8,-8,-8,-8
+Abberley Kooiman,Ramesh Abberley  Bankuru,-9,Rule Schedule Run,10,13,10,318,279,31,-9,-9,-9,-9
+Abberley Kooiman,Ramesh Abberley  Bankuru,-10,Rule Schedule Run,5,9,5,135,265,22,-10,-10,-10,-10
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,0,CTA Created,5,22,5,98,293,11,0,0,0,0
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,0,CTA Created,4,10,4,136,215,12,0,0,0,0
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-1,CTA Created,7,18,7,162,279,6,-1,-1,-1,-1
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-1,CTA Created,1,24,1,40,124,56,-1,-1,-1,-1
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-2,CTA Created,8,13,8,257,240,23,-2,-2,-2,-2
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-2,CTA Created,8,18,8,152,279,1,-2,-2,-2,-2
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-3,CTA Created,10,16,10,234,295,11,-3,-3,-3,-3
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-3,CTA Created,13,11,13,378,286,15,-3,-3,-3,-3
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-4,CTA Created,5,14,5,174,262,29,-4,-4,-4,-4
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-4,CTA Created,6,20,6,112,299,23,-4,-4,-4,-4
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-5,CTA Created,8,7,8,230,284,1,-5,-5,-5,-5
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-5,CTA Created,8,23,8,199,290,28,-5,-5,-5,-5
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-6,CTA Created,11,13,11,316,242,4,-6,-6,-6,-6
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-6,CTA Created,4,6,4,38,184,7,-6,-6,-6,-6
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-7,CTA Created,7,20,7,216,277,4,-7,-7,-7,-7
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-7,CTA Created,9,12,9,227,240,1,-7,-7,-7,-7
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-8,CTA Created,7,13,7,193,242,7,-8,-8,-8,-8
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-8,CTA Created,4,10,4,137,243,5,-8,-8,-8,-8
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-9,CTA Created,7,14,7,271,244,17,-9,-9,-9,-9
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-9,CTA Created,9,10,9,216,193,1,-9,-9,-9,-9
+IBM Corp Data Systems Div,Sandy IBM  Dontharaju,-10,CTA Created,6,10,6,139,266,7,-10,-10,-10,-10
+IBM Corp Data Systems Div,Sri Vidya IBM  Rallapalli,-10,CTA Created,13,20,13,378,299,2,-10,-10,-10,-10
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,0,CTA Updated,9,12,9,214,288,2,0,0,0,0
+IBM Corp Data Systems Div,Santa IBM  Thounajam,0,CTA Updated,6,7,6,137,253,24,0,0,0,0
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-1,CTA Updated,8,13,8,206,300,3,-1,-1,-1,-1
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-1,CTA Updated,11,16,11,244,292,6,-1,-1,-1,-1
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-2,CTA Updated,7,20,7,218,288,4,-2,-2,-2,-2
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-2,CTA Updated,12,18,12,125,286,13,-2,-2,-2,-2
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-3,CTA Updated,7,13,7,227,281,0,-3,-3,-3,-3
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-3,CTA Updated,8,12,8,217,293,17,-3,-3,-3,-3
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-4,CTA Updated,3,13,3,119,142,49,-4,-4,-4,-4
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-4,CTA Updated,6,8,6,148,284,6,-4,-4,-4,-4
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-5,CTA Updated,7,12,7,151,287,11,-5,-5,-5,-5
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-5,CTA Updated,9,16,9,154,279,12,-5,-5,-5,-5
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-6,CTA Updated,9,13,9,245,274,4,-6,-6,-6,-6
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-6,CTA Updated,4,15,4,85,299,7,-6,-6,-6,-6
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-7,CTA Updated,4,14,4,114,275,48,-7,-7,-7,-7
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-7,CTA Updated,6,23,6,166,290,19,-7,-7,-7,-7
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-8,CTA Updated,6,16,6,158,294,2,-8,-8,-8,-8
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-8,CTA Updated,10,16,10,326,299,2,-8,-8,-8,-8
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-9,CTA Updated,12,16,12,274,267,11,-9,-9,-9,-9
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-9,CTA Updated,7,14,7,189,291,10,-9,-9,-9,-9
+IBM Corp Data Systems Div,Santa IBM  Thounajam,-10,CTA Updated,9,14,9,257,273,12,-10,-10,-10,-10
+IBM Corp Data Systems Div,Srinivas IBM  Pulagam,-10,CTA Updated,12,11,12,316,297,21,-10,-10,-10,-10
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,0,File Downloaded,6,8,6,180,297,19,0,0,0,0
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-1,File Downloaded,9,14,9,194,290,3,-1,-1,-1,-1
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-2,File Downloaded,9,19,9,218,298,39,-2,-2,-2,-2
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-3,File Downloaded,10,17,10,247,299,1,-3,-3,-3,-3
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-4,File Downloaded,6,9,6,80,269,19,-4,-4,-4,-4
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-5,File Downloaded,9,10,9,271,298,3,-5,-5,-5,-5
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-6,File Downloaded,9,15,9,240,291,8,-6,-6,-6,-6
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-7,File Downloaded,6,9,6,171,296,11,-7,-7,-7,-7
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-8,File Downloaded,8,14,8,145,267,4,-8,-8,-8,-8
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-9,File Downloaded,8,9,8,144,292,0,-9,-9,-9,-9
+IBM Corp Data Systems Div,Sandeep IBM  Dugar,-10,File Downloaded,9,17,9,171,294,21,-10,-10,-10,-10
+IBM Corp Data Systems Div,Renetha IBM  Ravela,0,File Uploaded,9,13,9,189,257,10,0,0,0,0
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-1,File Uploaded,5,18,5,99,185,40,-1,-1,-1,-1
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-2,File Uploaded,7,14,7,172,253,10,-2,-2,-2,-2
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-3,File Uploaded,9,18,9,201,173,18,-3,-3,-3,-3
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-4,File Uploaded,5,19,5,122,283,12,-4,-4,-4,-4
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-5,File Uploaded,5,19,5,118,278,5,-5,-5,-5,-5
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-6,File Uploaded,10,12,10,239,298,0,-6,-6,-6,-6
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-7,File Uploaded,10,17,10,194,300,16,-7,-7,-7,-7
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-8,File Uploaded,10,11,10,268,292,2,-8,-8,-8,-8
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-9,File Uploaded,6,16,6,132,215,12,-9,-9,-9,-9
+IBM Corp Data Systems Div,Renetha IBM  Ravela,-10,File Uploaded,10,14,10,224,291,1,-10,-10,-10,-10
+IBM Corp Data Systems Div,Sneha IBM  Jha,0,Success Snapshot Exported,9,10,9,157,276,0,0,0,0,0
+IBM Corp Data Systems Div,Sneha IBM  Jha,-1,Success Snapshot Exported,8,13,8,227,220,22,-1,-1,-1,-1
+IBM Corp Data Systems Div,Sneha IBM  Jha,-2,Success Snapshot Exported,5,16,5,61,232,1,-2,-2,-2,-2
+IBM Corp Data Systems Div,Sneha IBM  Jha,-3,Success Snapshot Exported,8,15,8,177,263,21,-3,-3,-3,-3
+IBM Corp Data Systems Div,Sneha IBM  Jha,-4,Success Snapshot Exported,6,14,6,87,198,3,-4,-4,-4,-4
+IBM Corp Data Systems Div,Sneha IBM  Jha,-5,Success Snapshot Exported,10,20,10,255,296,5,-5,-5,-5,-5
+IBM Corp Data Systems Div,Sneha IBM  Jha,-6,Success Snapshot Exported,10,11,10,242,271,8,-6,-6,-6,-6
+IBM Corp Data Systems Div,Sneha IBM  Jha,-7,Success Snapshot Exported,7,20,7,185,274,6,-7,-7,-7,-7
+IBM Corp Data Systems Div,Sneha IBM  Jha,-8,Success Snapshot Exported,9,14,9,206,281,11,-8,-8,-8,-8
+IBM Corp Data Systems Div,Sneha IBM  Jha,-9,Success Snapshot Exported,6,15,6,173,297,47,-9,-9,-9,-9
+IBM Corp Data Systems Div,Sneha IBM  Jha,-10,Success Snapshot Exported,12,18,12,363,297,3,-10,-10,-10,-10
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,0,Survey Created,8,12,8,146,278,14,0,0,0,0
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-1,Survey Created,12,12,12,343,253,30,-1,-1,-1,-1
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-2,Survey Created,7,15,7,107,281,8,-2,-2,-2,-2
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-3,Survey Created,8,16,8,227,267,4,-3,-3,-3,-3
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-4,Survey Created,7,14,7,181,269,17,-4,-4,-4,-4
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-5,Survey Created,5,12,5,132,288,4,-5,-5,-5,-5
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-6,Survey Created,5,21,5,166,246,24,-6,-6,-6,-6
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-7,Survey Created,7,23,7,254,297,17,-7,-7,-7,-7
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-8,Survey Created,4,12,4,60,243,4,-8,-8,-8,-8
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-9,Survey Created,11,13,11,300,297,3,-9,-9,-9,-9
+IBM Corp Data Systems Div,Santosh IBM  Chikoti,-10,Survey Created,5,14,5,164,268,15,-10,-10,-10,-10
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,0,Survey Schedule Triggered,7,10,7,160,280,3,0,0,0,0
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-1,Survey Schedule Triggered,8,16,8,195,270,13,-1,-1,-1,-1
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-2,Survey Schedule Triggered,3,5,3,74,249,43,-2,-2,-2,-2
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-3,Survey Schedule Triggered,10,15,10,206,238,16,-3,-3,-3,-3
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-4,Survey Schedule Triggered,4,15,4,104,254,36,-4,-4,-4,-4
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-5,Survey Schedule Triggered,8,16,8,186,292,3,-5,-5,-5,-5
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-6,Survey Schedule Triggered,9,20,9,291,230,5,-6,-6,-6,-6
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-7,Survey Schedule Triggered,8,18,8,272,293,6,-7,-7,-7,-7
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-8,Survey Schedule Triggered,5,15,5,134,294,5,-8,-8,-8,-8
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-9,Survey Schedule Triggered,9,17,9,230,237,7,-9,-9,-9,-9
+IBM Corp Data Systems Div,Siva Prasad IBM  Nasika,-10,Survey Schedule Triggered,8,11,8,111,274,27,-10,-10,-10,-10
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,0,Survey Triggered,5,15,5,149,266,3,0,0,0,0
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-1,Survey Triggered,5,18,5,183,183,0,-1,-1,-1,-1
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-2,Survey Triggered,6,13,6,196,249,9,-2,-2,-2,-2
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-3,Survey Triggered,11,14,11,282,299,3,-3,-3,-3,-3
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-4,Survey Triggered,3,12,3,65,275,15,-4,-4,-4,-4
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-5,Survey Triggered,6,18,6,163,249,1,-5,-5,-5,-5
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-6,Survey Triggered,7,18,7,253,275,0,-6,-6,-6,-6
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-7,Survey Triggered,9,13,9,222,296,0,-7,-7,-7,-7
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-8,Survey Triggered,7,19,7,215,191,4,-8,-8,-8,-8
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-9,Survey Triggered,9,13,9,188,293,0,-9,-9,-9,-9
+IBM Corp Data Systems Div,Siddhartha IBM  Gutha,-10,Survey Triggered,7,16,7,223,246,1,-10,-10,-10,-10
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,0,EmailTemplate Created,13,15,13,326,287,3,0,0,0,0
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-1,EmailTemplate Created,9,15,9,202,285,4,-1,-1,-1,-1
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-2,EmailTemplate Created,15,13,15,300,298,2,-2,-2,-2,-2
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-3,EmailTemplate Created,8,10,8,168,285,7,-3,-3,-3,-3
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-4,EmailTemplate Created,9,12,9,246,286,0,-4,-4,-4,-4
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-5,EmailTemplate Created,2,12,2,55,221,41,-5,-5,-5,-5
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-6,EmailTemplate Created,6,12,6,184,214,19,-6,-6,-6,-6
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-7,EmailTemplate Created,2,9,2,14,295,37,-7,-7,-7,-7
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-8,EmailTemplate Created,6,15,6,182,278,26,-8,-8,-8,-8
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-9,EmailTemplate Created,5,18,5,185,191,4,-9,-9,-9,-9
+UniAmerica Inc,Akhila UniAmerica  Kotagiri,-10,EmailTemplate Created,5,16,5,110,146,11,-10,-10,-10,-10
+UniAmerica Inc,Ankit UniAmerica  Jain,0,Outreach Created,9,18,9,334,247,12,0,0,0,0
+UniAmerica Inc,Ankit UniAmerica  Jain,-1,Outreach Created,13,20,13,410,213,0,-1,-1,-1,-1
+UniAmerica Inc,Ankit UniAmerica  Jain,-2,Outreach Created,9,16,9,236,216,0,-2,-2,-2,-2
+UniAmerica Inc,Ankit UniAmerica  Jain,-3,Outreach Created,3,5,3,54,282,15,-3,-3,-3,-3
+UniAmerica Inc,Ankit UniAmerica  Jain,-4,Outreach Created,6,15,6,143,285,1,-4,-4,-4,-4
+UniAmerica Inc,Ankit UniAmerica  Jain,-5,Outreach Created,5,21,5,150,262,43,-5,-5,-5,-5
+UniAmerica Inc,Ankit UniAmerica  Jain,-6,Outreach Created,7,19,7,203,283,0,-6,-6,-6,-6
+UniAmerica Inc,Ankit UniAmerica  Jain,-7,Outreach Created,10,15,10,261,286,3,-7,-7,-7,-7
+UniAmerica Inc,Ankit UniAmerica  Jain,-8,Outreach Created,6,14,6,153,297,1,-8,-8,-8,-8
+UniAmerica Inc,Ankit UniAmerica  Jain,-9,Outreach Created,6,18,6,144,294,17,-9,-9,-9,-9
+UniAmerica Inc,Ankit UniAmerica  Jain,-10,Outreach Created,4,17,4,88,181,14,-10,-10,-10,-10
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,0,Report Created,8,9,8,218,294,47,0,0,0,0
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-1,Report Created,3,6,3,79,173,1,-1,-1,-1,-1
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-2,Report Created,7,18,7,182,258,12,-2,-2,-2,-2
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-3,Report Created,5,16,5,104,273,13,-3,-3,-3,-3
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-4,Report Created,14,19,14,394,262,4,-4,-4,-4,-4
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-5,Report Created,8,9,8,195,285,17,-5,-5,-5,-5
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-6,Report Created,6,22,6,143,186,9,-6,-6,-6,-6
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-7,Report Created,7,9,7,155,300,22,-7,-7,-7,-7
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-8,Report Created,5,13,5,108,240,13,-8,-8,-8,-8
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-9,Report Created,7,12,7,233,298,7,-9,-9,-9,-9
+UniAmerica Inc,Naveen Ithapu UniAmerica  Ithapu,-10,Report Created,7,15,7,207,285,21,-10,-10,-10,-10
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,0,Report Run,8,16,8,244,275,9,0,0,0,0
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-1,Report Run,6,12,6,171,270,7,-1,-1,-1,-1
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-2,Report Run,8,13,8,187,277,47,-2,-2,-2,-2
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-3,Report Run,9,14,9,251,300,1,-3,-3,-3,-3
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-4,Report Run,9,14,9,251,207,19,-4,-4,-4,-4
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-5,Report Run,7,16,7,206,295,13,-5,-5,-5,-5
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-6,Report Run,3,21,3,90,300,13,-6,-6,-6,-6
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-7,Report Run,6,15,6,218,291,25,-7,-7,-7,-7
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-8,Report Run,8,23,8,183,278,18,-8,-8,-8,-8
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-9,Report Run,6,14,6,162,257,45,-9,-9,-9,-9
+UniAmerica Inc,Sandeep Kumar UniAmerica  Kumar,-10,Report Run,9,12,9,220,276,1,-10,-10,-10,-10
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,0,SmartList Created,5,20,5,119,267,2,0,0,0,0
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-1,SmartList Created,7,12,7,205,278,1,-1,-1,-1,-1
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-2,SmartList Created,10,11,10,331,264,6,-2,-2,-2,-2
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-3,SmartList Created,8,14,8,264,249,17,-3,-3,-3,-3
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-4,SmartList Created,13,17,13,324,292,3,-4,-4,-4,-4
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-5,SmartList Created,7,18,7,132,254,6,-5,-5,-5,-5
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-6,SmartList Created,2,28,2,29,275,46,-6,-6,-6,-6
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-7,SmartList Created,3,15,3,39,191,39,-7,-7,-7,-7
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-8,SmartList Created,10,17,10,292,285,6,-8,-8,-8,-8
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-9,SmartList Created,3,17,3,102,210,32,-9,-9,-9,-9
+UniAmerica Inc,Ahmed Jamal UniAmerica  Maaz,-10,SmartList Created,3,8,3,46,232,19,-10,-10,-10,-10

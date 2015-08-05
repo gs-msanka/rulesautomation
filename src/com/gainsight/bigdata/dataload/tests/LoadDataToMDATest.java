@@ -327,7 +327,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
+        Assert.assertEquals(statusInfo.getSuccessCount(), 5);
         diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
@@ -367,7 +367,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
+        Assert.assertEquals(statusInfo.getSuccessCount(), 6);
         diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
         Log.info("Diff : " +mapper.writeValueAsString(diffData));
         Assert.assertEquals(0, diffData.size());
@@ -407,6 +407,11 @@ public class LoadDataToMDATest extends NSTestBase {
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T20")
     public void upsertToInsertAllRecordsSingleKey(HashMap<String, String> testData) throws IOException {
         dataInsertAndUpdate(testData);
+    }
+
+    @Test
+    public void aGiribabu() {
+        dataLoadManager.waitForDataLoadJobComplete("e47bd5ba-34e1-49fb-885a-69f043b766ce");
     }
 
     /**
