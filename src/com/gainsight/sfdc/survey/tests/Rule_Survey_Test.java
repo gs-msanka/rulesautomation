@@ -56,8 +56,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		Log.info("Starting Survey Creation");
 		sfdc.connect();
 		basepage.login();
-/*		SurveySiteCofiguration ss=new SurveySiteCofiguration();
-		ss.navigateToSetup();*/
+		SurveySiteCofiguration ss=new SurveySiteCofiguration();
+		ss.navigateToSetup();
 		sfdc.runApexCode(resolveStrNameSpace(QUERY));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
