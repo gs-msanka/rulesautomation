@@ -423,7 +423,7 @@ public class SurveySetup extends BaseTest implements Constants{
 	public void populateObjMaps() {
 		suveyQus = getMapFromObject("JBCXM__SurveyQuestion__c",
 				"JBCXM__Title__c", "SQ");
-		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
+		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "Name",
 				"CT");
 		PickListMap = getMapFromObject("JBCXM__PickList__c",
 				"JBCXM__SystemName__c", "PL");

@@ -56,8 +56,8 @@ public class Rule_Survey_Test extends SurveySetup {
 		Log.info("Starting Survey Creation");
 		sfdc.connect();
 		basepage.login();
-		SurveySiteCofiguration ss=new SurveySiteCofiguration();
-		ss.navigateToSetup();
+/*		SurveySiteCofiguration ss=new SurveySiteCofiguration();
+		ss.navigateToSetup();*/
 		sfdc.runApexCode(resolveStrNameSpace(QUERY));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
@@ -80,7 +80,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	}
     
 	@TestInfo(testCaseIds={"GS-2690","GS-2691","GS-2694"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false	)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
 	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
@@ -93,13 +93,6 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
-				new ExpectedCommonWaitCondition<Boolean>() {
-					@Override
-					public Boolean apply() {
-						return QuestionCount(cta);
-					}
-				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -112,7 +105,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	}
 	
 	@TestInfo(testCaseIds={"GS-2690","GS-2691"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
 	public void surveyRuleMatixSingleQuestionType(HashMap<String, String> testData) throws Exception {
 		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
@@ -126,13 +119,6 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"),
 				SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
-				new ExpectedCommonWaitCondition<Boolean>() {
-					@Override
-					public Boolean apply() {
-						return QuestionCount(cta);
-					}
-				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
@@ -158,13 +144,6 @@ public class Rule_Survey_Test extends SurveySetup {
 		SurveyResponsePage surveyResponse = new SurveyResponsePage();
 		SurveyResponseAns surveyAns = mapper.readValue(testData.get("Answers"), SurveyResponseAns.class);
 		surveyResponse.openSurveyForm(surveyCTARule, testData, surveyAns);
-		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
-				new ExpectedCommonWaitCondition<Boolean>() {
-					@Override
-					public Boolean apply() {
-						return QuestionCount(cta);
-					}
-				});
 		Assert.assertTrue(sfdc
 				.getRecordCount(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
 						+ cta.getPriority()
