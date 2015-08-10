@@ -21,7 +21,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 
@@ -108,7 +107,7 @@ public class TestDataUtils {
 		if (db != null) {
 			return db;
 		}
-		String client = "kahana.mongohq.com";
+		/*String client = "kahana.mongohq.com";
 		int port = 10085;
 		String dbName = "test_automation";
 		String user = "mani";
@@ -129,7 +128,7 @@ public class TestDataUtils {
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}
+		} */
 		return db;
 
 	}
