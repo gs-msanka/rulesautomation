@@ -1,14 +1,12 @@
 {
-  "sfdc_managedPackage" : "true",                 //If its a managed package.
-  "sfdc_setupGainsightApp" : "false",             //To Setup Gainsight application - Loadsetupdata, add tabs to gainsight app,
-                                                  //make gainsight app as default to system admin, assign permission sets, default permissions to account,
-                                                  //opportunity, cases object, deplpoyment of permission sets used by automation, Make this false we you are re-running locally.
+  "sfdc_managedPackage" : "true",
+  "sfdc_setupGainsightApp" : "false",
   "sfdc_nameSpace" : "JBCXM",
-  "sfdc_updateWidgetLayouts" : "false",           //To Update account, case, oppportunity widget.
-  "sfdc_unInstallApp" : "false",                  //Un - installs the application.
-  "sfdc_installApp" : "false",                    //Installs the application.
-  "sfdc_packageVersionNumber" : "4.31",           //Package to install.
-  "sfdc_packagePassword" : "JBCXM__Install4.31",  //Empty should be provided in case of beta package.
+  "sfdc_updateWidgetLayouts" : "false",
+  "sfdc_unInstallApp" : "false",
+  "sfdc_installApp" : "false",
+  "sfdc_packageVersionNumber" : "4.31",
+  "sfdc_packagePassword" : "JBCXM__Install4.31",
   "sfdc_partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
   "sfdc_siteCustomURL" : "https://testingmulticurrency-developer-edition.na15.force.com",
   "sfdc_apiVersion" : "32.0",

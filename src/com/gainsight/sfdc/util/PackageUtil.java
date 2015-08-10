@@ -349,6 +349,7 @@ public class PackageUtil {
             }
         } catch (Exception e) {
             Log.error("Failed to update layout file : " + parentFile, e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -376,6 +377,7 @@ public class PackageUtil {
             }
         } catch (Exception e) {
             Log.error("Failed to update layout file : " + parentFile, e);
+            throw new RuntimeException(e);
         }
         return result;
     }
@@ -401,6 +403,7 @@ public class PackageUtil {
             transformer.transform(source, result);
         } catch (Exception e) {
             Log.error("Failed to update layout file : " + parentFile, e);
+            throw new RuntimeException(e);
         }
     }
 
