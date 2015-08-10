@@ -42,7 +42,7 @@ public class SurveyDistributionListTest extends SurveySetup {
         sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
-		sfdc.runApexCode(resolveStrNameSpace("List<JBCXM__SurveyDistributionSchedule__c> distribution = [SELECT Id, JBCXM__Status__c FROM JBCXM__SurveyDistributionSchedule__c];for(JBCXM__SurveyDistributionSchedule__c acct :distribution){acct.JBCXM__Status__c = 'completed';}update distribution;"));
+		sfdc.runApexCode(resolveStrNameSpace("List<JBCXM__SurveyDistributionSchedule__c> distribution = [SELECT Id, JBCXM__Status__c FROM JBCXM__SurveyDistributionSchedule__c];for(JBCXM__SurveyDistributionSchedule__c acct :distribution){acct.JBCXM__Status__c = 'Completed';}update distribution;"));
 	}
 	
 	@BeforeMethod
