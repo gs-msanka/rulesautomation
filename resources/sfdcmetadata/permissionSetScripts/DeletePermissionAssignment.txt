@@ -1,0 +1,12 @@
+List<Id> permissionSetId = new List<Id>();
+
+for(PermissionSet permSet : [SELECT Id FROM PermissionSet WHERE Name IN  ('GS_Automation_Permission', 'Gainsight_Admin', 'Gainsight_Special', 'Gainsight_Standard', 'Gainsight_View_Only')]) {
+	permissionSetId.add(permSet.Id);
+}
+
+if(permissionSetId.size() >0) {
+	List<PermissionSetAssignment> assignment = [SELECT AssigneeId FROM PermissionSetAssignment WHERE PermissionSetId IN : permissionSetId];
+	if(assignment.size() > 0) {
+		Delete assignment;
+	}
+}

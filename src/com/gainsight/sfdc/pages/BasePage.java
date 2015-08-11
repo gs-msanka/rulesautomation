@@ -39,6 +39,7 @@ import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 public class BasePage extends WebPage implements Constants {
 
 	public final String USERNAVBUTTON       = "userNavButton";
+    public final String SETUP_LINK          = "//a[@title='Setup' and text()='Setup']";
     private final String APP_DROPDOWN       = "tsidLabel";
     private final String LOADING_IMG        = "//div[contains(text(), 'gs-loadingMsg gs-loader-container')]";
 	private final String OPPORTUNITIES_TAB  = "//img[@title='Opportunities']";
@@ -163,7 +164,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
 	 public AccountPage gotoAccountPageWithId(String accID){
-	        driver.get(env.getDefaultUrl()+"/"+accID);
+	        driver.get(env.getDefaultUrl() + "/" + accID);
 	        return new AccountPage();
 	    }
 
@@ -261,6 +262,23 @@ public class BasePage extends WebPage implements Constants {
         if(selected != true) {
             throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
         }
+    }
+
+    public BasePage setSiteActiveHomePage(String siteActiveHomePage) {
+        item.click(USERNAVBUTTON);
+        item.click(SETUP_LINK);
+        wait.waitTillElementDisplayed("DevToolsIntegrate_icon", MIN_TIME, MAX_TIME);
+        item.click("DevToolsIntegrate_icon");
+        wait.waitTillElementDisplayed("CustomDomain_font", MIN_TIME, MAX_TIME);
+        item.click("CustomDomain_font");
+        wait.waitTillElementDisplayed("//a[@class='actionLink' and contains(@title, 'Edit') and text()='Edit']", MIN_TIME, MAX_TIME);
+        item.click("//a[@class='actionLink' and contains(@title, 'Edit') and text()='Edit']");
+        wait.waitTillElementDisplayed("thePage:theForm:thePageBlock:thePageBlockSection:IndexPageSec:IndexPage", MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed("thePage:theForm:thePageBlock:thePageBlockButtons:bottom:save", MIN_TIME, MAX_TIME);
+        field.clearAndSetText("thePage:theForm:thePageBlock:thePageBlockSection:IndexPageSec:IndexPage", siteActiveHomePage);
+        item.click("thePage:theForm:thePageBlock:thePageBlockButtons:bottom:save");
+        wait.waitTillElementDisplayed("thePage:form:thePageBlock:pageBlockButtons:edit", MIN_TIME, MAX_TIME);
+        return this;
     }
     
 	public static void open(String url) {

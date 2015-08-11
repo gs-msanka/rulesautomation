@@ -2,24 +2,21 @@ package com.gainsight.bigdata;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
-
 import com.gainsight.bigdata.rulesengine.ResponseObject;
-
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
-import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
+import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.PackageUtil;
 import com.gainsight.util.ConfigLoader;
 import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
-import com.sforce.soap.metadata.MetadataConnection;
+import com.sforce.ws.ConnectionException;
 import org.apache.http.HttpStatus;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,7 +36,6 @@ import com.sforce.soap.partner.sobject.SObject;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
-import static com.gainsight.sfdc.pages.Constants.*;
 
 public class NSTestBase {
 
@@ -90,7 +86,9 @@ public class NSTestBase {
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
         if(sfdcConfig.getSfdcUnInstallApp()) {
-            packageUtil.unInstallApplication();
+            setSiteActiveHomePageToInMaintenance();
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
+            packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
         //Install Application.
         if(sfdcConfig.getSfdcInstallApp()) {
@@ -98,22 +96,18 @@ public class NSTestBase {
         }
 
         if(sfdcConfig.getSfdcUpdateWidgetLayouts()) {
-            packageUtil.updateWidgetLayouts(true, true, true);
+            packageUtil.updateWidgetLayouts(true, true, true, sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
 
         if(sfdcConfig.getSfdcSetupGainsightApp()) {
-          sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+            packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
+            sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+            if(sfdcConfig.getSfdcManagedPackage()) {
+                sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            }
+            packageUtil.deployPermissionSetCode();
+            metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
         }
-
-        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
-        if(isPackage) {
-            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
-        }
-        //Deploy Custom permission set code
-        packageUtil.deployPermissionSetCode();
-        packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
-        //Providing permissions to standard objects.
-        metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
     }
 
     /**
@@ -328,5 +322,26 @@ public class NSTestBase {
             updateNSURLInAppSettings(nsConfig.getNsURl());
         }
         return result;
+    }
+
+    /**
+     * Sets sites active home page to in-maintainance.
+     */
+    public void setSiteActiveHomePageToInMaintenance() {
+        Application env = new Application();
+        BasePage basePage;
+        env.start();
+        try {
+            env.launchBrower();
+            basePage = new BasePage();
+            Log.info("Initializing Base Page : " + basePage);
+            basePage = basePage.login();
+            basePage = basePage.setSiteActiveHomePage("InMaintenance");
+            basePage.logout();
+        } catch (Exception e) {
+            env.stop();
+            Log.error(e.getLocalizedMessage(), e);
+            throw e;
+        }
     }
 }

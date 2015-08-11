@@ -59,7 +59,8 @@ public class BaseTest {
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
         if(sfdcConfig.getSfdcUnInstallApp()) {
-            packageUtil.unInstallApplication();
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
+            packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
         //Install Application.
         if(sfdcConfig.getSfdcInstallApp()) {
@@ -67,20 +68,20 @@ public class BaseTest {
         }
 
         if(sfdcConfig.getSfdcUpdateWidgetLayouts()) {
-            packageUtil.updateWidgetLayouts(true, true, true);
+            packageUtil.updateWidgetLayouts(true, true, true, sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
+
         if(sfdcConfig.getSfdcSetupGainsightApp()) {
             packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
             sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+            if(sfdcConfig.getSfdcManagedPackage()) {
+                sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            }
+            packageUtil.deployPermissionSetCode();
+            metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         }
 
-        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
-        if(sfdcConfig.getSfdcManagedPackage()) {
-            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
-        }
-        packageUtil.deployPermissionSetCode();
         sfdcInfo = sfdc.fetchSFDCinfo();
-        metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
