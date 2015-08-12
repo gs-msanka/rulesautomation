@@ -64,7 +64,7 @@ public class RulesUtil extends NSTestBase {
 		String LRR = sfdc
 				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
 						+ RuleName + "'"))[0]
-				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+				.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
 
 		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, IsDeleted From Account Where ((IsDeleted = false))"));
@@ -132,7 +132,7 @@ public void setupRule(HashMap<String,String> testData){
 	 */
 	public void populateObjMaps() {
 		featuresMap = getMapFromObject("JBCXM__Features__c","JBCXM__Feature__c","FT");
-		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
+		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "Name",
 				"CT");
 		PickListMap = getMapFromObject("JBCXM__PickList__c",
 				"JBCXM__SystemName__c", "PL");

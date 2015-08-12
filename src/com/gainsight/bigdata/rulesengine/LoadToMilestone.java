@@ -67,7 +67,7 @@ public class LoadToMilestone extends RulesUtil {
         String LRR = sfdc
                 .getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
                         + RuleName + "'"))[0]
-                .getChild("JBCXM__LastRunResult__c").getValue().toString();
+                .getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
         Assert.assertEquals("SUCCESS", LRR);
         int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Name, Boolean_Auto1__c, Id, PickList_Auto__c, Percent_Auto__c, Date_Auto__c, DateTime_Auto__c, MultiPicklist_Auto__c From Account Where ((Name LIKE 'F%') AND ((Boolean_Auto1__c = true) OR (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) OR (Percent_Auto__c != 0))) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
