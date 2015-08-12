@@ -54,7 +54,7 @@ public class LoadToCustomers extends RulesUtil {
                 loadToCustomers(testDataList.get(0));
             }
             else {
-                throw new RuntimeException("Do it again...");
+                throw new RuntimeException("Data is not present in LoadToCustomers.xls,please validate the excel for data");
             }
         populateObjMaps();
 
@@ -81,13 +81,13 @@ public class LoadToCustomers extends RulesUtil {
 		waitForCompletion(ruleId, wa, header);
 
 		String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
 				.getChild("JBCXM__LastRunResult__c").getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood')))");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood')))"));
         Log.info(""+rules1);
-		int rules2 = sfdc.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false and JBCXM__ASV__c=989898");
+		int rules2 = sfdc.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false and JBCXM__ASV__c=989898"));
         Log.info(""+rules2);
 		Assert.assertEquals(rules1,rules2);
 	}
@@ -111,13 +111,13 @@ public class LoadToCustomers extends RulesUtil {
         Assert.assertNotNull(responseObj.getRequestId());
         waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-                        + RuleName + "'")[0]
+                .getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'"))[0]
                 .getChild("JBCXM__LastRunResult__c").getValue().toString();
         Assert.assertEquals("SUCCESS", LRR);
-        int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100))");
+        int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100))"));
         Log.info(""+rules1);
-        int rules2 = sfdc.getRecordCount("SELECT Id,JBCXM__Stage__r.Name FROM JBCXM__CustomerInfo__c WHERE JBCXM__Stage__c != null AND isdeleted=false and JBCXM__Stage__r.Name = 'Expert'");
+        int rules2 = sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__Stage__r.Name FROM JBCXM__CustomerInfo__c WHERE JBCXM__Stage__c != null AND isdeleted=false and JBCXM__Stage__r.Name = 'Expert'"));
         Log.info(""+rules2);
         Assert.assertEquals(rules1, rules2);
 
@@ -142,13 +142,13 @@ public class LoadToCustomers extends RulesUtil {
         Assert.assertNotNull(responseObj.getRequestId());
         waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-                        + RuleName + "'")[0]
+                .getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'"))[0]
                 .getChild("JBCXM__LastRunResult__c").getValue().toString();
         Assert.assertEquals("SUCCESS", LRR);
-        int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100) AND (Date_Auto__c !=YESTERDAY))");
+        int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Boolean_Auto1__c, IsDeleted, Name From Account Where ((IsDeleted = false) AND (PickList_Auto__c IN ('Excellent','Vgood','Good','Average','Poor','Vpoor')) AND (Name LIKE 'A%') AND (Number_Auto__c > 100) AND (Date_Auto__c !=YESTERDAY))"));
         Log.info(""+rules1);
-        int rules2 = sfdc.getRecordCount("SELECT JBCXM__Comments__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__OneTimeRevenue__c=123");
+        int rules2 = sfdc.getRecordCount(resolveStrNameSpace("SELECT JBCXM__Comments__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__OneTimeRevenue__c=123"));
         Log.info(""+rules2);
         Assert.assertEquals(rules1, rules2);
 
@@ -195,13 +195,13 @@ public class LoadToCustomers extends RulesUtil {
         Assert.assertNotNull(responseObj.getRequestId());
         waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-                .getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-                        + RuleName + "'")[0]
+                .getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+                        + RuleName + "'"))[0]
                 .getChild("JBCXM__LastRunResult__c").getValue().toString();
         Assert.assertEquals("SUCCESS", LRR);
-        int rules1 = sfdc.getRecordCount("Select Id, Name, IsDeleted, CreatedDate, Boolean_Auto__c, DateTime_Auto__c, Email_Auto__c, PickList_Auto__c, URL_Auto__c, Boolean_Auto1__c From Account Where ((Id != null) AND ((Name LIKE 'A%') OR (Name LIKE 'B%')) AND (IsDeleted = false)) AND JBCXM__CustomerInfo__c != null");
+        int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Name, IsDeleted, CreatedDate, Boolean_Auto__c, DateTime_Auto__c, Email_Auto__c, PickList_Auto__c, URL_Auto__c, Boolean_Auto1__c From Account Where ((Id != null) AND ((Name LIKE 'A%') OR (Name LIKE 'B%')) AND (IsDeleted = false)) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
-        int rules2 = sfdc.getRecordCount("SELECT JBCXM__MRR__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__MRR__c=22222");
+        int rules2 = sfdc.getRecordCount(resolveStrNameSpace("SELECT JBCXM__MRR__c FROM JBCXM__CustomerInfo__c where isdeleted=false and JBCXM__MRR__c=22222"));
         Log.info(""+rules2);
         Assert.assertEquals(rules1, rules2);
 
