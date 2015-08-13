@@ -241,16 +241,19 @@ public class GSEmailSetup extends BaseTest {
 	public boolean getEmailActivityLogfromMongo(String campaignId)
 			throws UnknownHostException {
 		MongoUtil mUtil = new MongoUtil();
-		mUtil.createConnection(new ServerAddress("dharma.mongohq.com", 10089));
-		mUtil.checkIfCollectionExist("EmailActivityLog");
-		HashMap records = new HashMap<String, String>();
-		records.put("campaignId", campaignId);
-		records.put("useCase", "survey");
-		ArrayList<String[]> op = new ArrayList<String[]>();
-		String op1[] = { "emailActivityList", "$size", "1" };
-		op.add(op1);
-		return mUtil.checkIfDocExists("EmailActivityLog", records);
-
+		try {
+			mUtil.createConnection("dharma.mongohq.com", 10089, "mani", "jbara123", "multi_tenant_gstenantdb");
+			mUtil.checkIfCollectionExist("EmailActivityLog");
+			HashMap records = new HashMap<String, String>();
+			records.put("campaignId", campaignId);
+			records.put("useCase", "survey");
+			ArrayList<String[]> op = new ArrayList<String[]>();
+			String op1[] = { "emailActivityList", "$size", "1" };
+			op.add(op1);
+			return mUtil.checkIfDocExists("EmailActivityLog", records);
+		} finally {
+			mUtil.closeConnection();
+		}
 	}
 
 	public boolean checkSubAccountInMandrill(String AccessKey, String TenantId,
