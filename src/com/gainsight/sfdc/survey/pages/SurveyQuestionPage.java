@@ -52,7 +52,7 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String NPS_SHOW_HEADERS_CHECKBOX_CSS  = "input[id$=_show_header_check][type=checkbox]";
     private final String NPS_HEADER_SELECT_CSS          = "select[class*='form-control header-type-select']";
     private final String RATING_SELECT              = ".//div[contains(@id, 'ans_entry')]/select[@class='form-control']";
-    private final String SHORT_TEXT_SIZE_SELECT     = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-size show']";
+    private final String SHORT_TEXT_SIZE_SELECT     = "//div[contains(@id, 'ans_entry')]/div/select[contains(@class, 'selectstyle select-size')]";
     private final String LONG_TEXT_ROWS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-rows show']";
     private final String LONG_TEXT_COLS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-cols show']";
     private final String QUESTION_SURVEY_BRANCHING      = "a[class=qtn-link-a]";
