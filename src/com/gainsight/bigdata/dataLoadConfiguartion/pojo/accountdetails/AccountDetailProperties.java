@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -7,6 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * Created by Giribabu on 10/07/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDetailProperties {
     private String collectionId;
     private String timeZone;
