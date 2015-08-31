@@ -42,7 +42,7 @@ public class BaseTest {
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
     public static NsConfig nsConfig = ConfigLoader.getNsConfig();
-    public static MetaDataUtil metaUtil=new MetaDataUtil();
+    public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
 
 
@@ -58,6 +58,8 @@ public class BaseTest {
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
+        sfdcInfo = sfdc.fetchSFDCinfo();
+
         if(sfdcConfig.getSfdcUnInstallApp()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
             packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
@@ -81,7 +83,6 @@ public class BaseTest {
             metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         }
 
-        sfdcInfo = sfdc.fetchSFDCinfo();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
