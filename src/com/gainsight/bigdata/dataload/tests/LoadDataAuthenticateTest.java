@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Created by gainsight on 24/05/15.
+ * Created by Giribabu on 24/05/15.
  */
 public class LoadDataAuthenticateTest extends NSTestBase {
     private TenantDetails tenantDetails;
@@ -28,11 +28,6 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
-    }
-
-    @Test
-    public void a() {
-        Assert.assertTrue(false);
     }
 
     @TestInfo(testCaseIds = {"GS-3626"})

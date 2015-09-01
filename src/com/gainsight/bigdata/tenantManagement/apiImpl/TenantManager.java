@@ -12,6 +12,7 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
@@ -219,7 +220,6 @@ public class TenantManager {
      */
     public TenantDetails getTenantDetail(String sfOrgId, String tenantId) {
         TenantDetails tenantDetail = null;
-        sfOrgId = NSUtil.convertSFID_15TO18(sfOrgId);
         String url = ADMIN_TENANTS;
 
         if (tenantId != null) {
@@ -235,6 +235,10 @@ public class TenantManager {
                 throw new RuntimeException("Failed to get Tenant Information");
             }
         } else {
+            if(sfOrgId ==null || sfOrgId == "") {
+                throw new IllegalArgumentException("Salesforce Org Id should not be null.");
+            }
+            sfOrgId = NSUtil.convertSFID_15TO18(sfOrgId);
             try {
                 Log.info("Getting All Tenant Details to get one Tenant Detail...");
                 ResponseObj responseObj = wa.doGet(url, header.getAllHeaders());
@@ -254,8 +258,8 @@ public class TenantManager {
                 throw new RuntimeException("Failed to get Tenant Details " +e.getLocalizedMessage());
             }
         }
-        Log.info("Tenant ID :" +tenantDetail.getTenantId());
-        Log.info("Org Id :" +tenantDetail.getExternalTenantID());
+        Log.info("Tenant ID : " +tenantDetail.getTenantId());
+        Log.info("Org Id : " +tenantDetail.getExternalTenantID());
         return tenantDetail;
     }
 
@@ -339,8 +343,7 @@ public class TenantManager {
             ResponseObj responseObj = wa.doPost(ADMIN_POST_COLLECTIONS_LIST, header.getAllHeaders(), fieldsToQuery);
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-                List<CollectionInfo> collectionInfoList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<CollectionInfo>>() {
-                });
+                List<CollectionInfo> collectionInfoList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<CollectionInfo>>() {});
                 Log.info("No of Subject Areas Retrieved : " + collectionInfoList.size());
                 return collectionInfoList;
             }
@@ -451,6 +454,129 @@ public class TenantManager {
         }
         return result;
     }
+
+    /**
+     * Checks the DB details & returns the success   / failure.
+     *
+     * @param dbDetail - DBDetail Pojo - Data base details.
+     * @param dbDetailName - type of db - schemadb, datadb, redshift, postgres.
+     * @return true on connection test success.
+     * @throws Exception
+     */
+    public boolean testDBDetails(TenantDetails.DBDetail dbDetail, String dbDetailName) {
+        boolean result = false;
+        try {
+            ResponseObj responseObj = wa.doPost(ADMIN_TEST_CONNECTION, header.getAllHeaders(),  "{\""+dbDetailName+"\": "+mapper.writeValueAsString(dbDetail)+"}");
+            if(responseObj !=null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                if(nsResponseObj.isResult()) {
+                    List<HashMap<String, Object>> resultSet = mapper.convertValue(nsResponseObj.getData(),   new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+                    if(resultSet != null && resultSet.size() > 0 && Boolean.valueOf(resultSet.get(0).get("success").toString())) {
+                        result = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.error("Parsing failed ", e);
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks the redshift data base details for the correctness.
+     *
+     * @param dbDetail - Data base details to check if they are correct.
+     * @return -  true if the provided details are valid.
+     * @throws Exception - unable to contact server
+     */
+    public boolean testRedShiftDBDetails(TenantDetails.DBDetail dbDetail) {
+        return testDBDetails(dbDetail, "redshiftDBDetail");
+    }
+
+    /**
+     * Checks the Postgres DB data base details for the correctness.
+     *
+     * @param dbDetail - Data base details to check if they are correct.
+     * @return -  true if the provided details are valid.
+     * @throws Exception - unable to contact server
+     */
+    public boolean testPostgresDBDetails(TenantDetails.DBDetail dbDetail) {
+        return testDBDetails(dbDetail, "postgresDBDetail");
+    }
+
+    /**
+     * Checks the Mongo Schema DB data base details for the correctness.
+     *
+     * @param dbDetail - Data base details to check if they are correct.
+     * @return -  true if the provided details are valid.
+     * @throws Exception - unable to contact server
+     */
+    public boolean testSchemaDBDetails(TenantDetails.DBDetail dbDetail) {
+        return testDBDetails(dbDetail, "schemaDBDetail");
+    }
+
+    /**
+     * Checks the Mongo Data DB data base details for the correctness.
+     *
+     * @param dbDetail - Data base details to check if they are correct.
+     * @return -  true if the provided details are valid.
+     * @throws Exception - unable to contact server
+     */
+    public boolean testDataDBDetails(TenantDetails.DBDetail dbDetail) {
+        return testDBDetails(dbDetail, "dataDBDetail");
+    }
+
+    /**
+     * if useExisting is true reads the exists tenant DB details and test the db details,
+     * if they are correct, updates the tenant details,
+     * else checks the newly passed credentials & updates the tenant details.
+     *
+     * @param tenantDetails - Tenant Details for which the data base details need to be updated.
+     * @param dbDetail - DBDetails that need to be updated.
+     * @return - true in case of successful db tenant db details update else false.
+     */
+    public boolean enableRedShift(TenantDetails tenantDetails, TenantDetails.DBDetail dbDetail) {
+        boolean result = false;
+        tenantDetails.setRedshiftEnabled(true);
+        if(dbDetail !=null && testRedShiftDBDetails(dbDetail)) {
+            tenantDetails.setRedshiftDBDetail(dbDetail);
+            result = updateTenant(tenantDetails);
+        } else {
+            TenantDetails.DBDetail existingDBDetail = null;
+            MongoDBDAO mongoDBDAO = null;
+            try {
+                mongoDBDAO   = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+
+                existingDBDetail = mongoDBDAO.getRedShiftDBDetail(tenantDetails.getTenantId());
+            } finally {
+                mongoDBDAO.mongoUtil.closeConnection();
+            }
+
+            if(existingDBDetail != null && testRedShiftDBDetails(existingDBDetail)) {
+                tenantDetails.setRedshiftDBDetail(existingDBDetail);
+                result = updateTenant(tenantDetails);
+            } else {
+                Log.error("DB Details are not correct, please correct them.");
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Disable redshift for the tenant.
+     *
+     * @param tenantDetails
+     * @return
+     */
+    public boolean disableRedShift(TenantDetails tenantDetails) {
+        tenantDetails.setRedshiftEnabled(false);
+        return updateTenant(tenantDetails);
+    }
+
+
 
     //TODO
     /**
