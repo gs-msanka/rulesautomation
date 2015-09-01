@@ -41,13 +41,13 @@ public class SurveyDistributionListTest extends SurveySetup {
 		basepage.login();
         sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
-    }
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
+		sfdc.runApexCode(resolveStrNameSpace("List<JBCXM__SurveyDistributionSchedule__c> distribution = [SELECT Id, JBCXM__Status__c FROM JBCXM__SurveyDistributionSchedule__c];for(JBCXM__SurveyDistributionSchedule__c acct :distribution){acct.JBCXM__Status__c = 'Completed';}update distribution;"));
+	}
 	
 	@BeforeMethod
 	public void cleanUpData(){
 		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
-		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyDistributionSchedule__c];"); // Deleting survey schedules since, we cannot schedule more than 10 surveys per day
 	}
 
 	@TestInfo(testCaseIds = {"GS-2715", "GS-2716", "GS-2720", "GS-2721"})
