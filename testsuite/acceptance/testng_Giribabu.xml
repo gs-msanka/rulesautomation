@@ -1,30 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-    <listeners>
-        <listener class-name="com.gainsight.utils.AutTestListener" />
-    </listeners>
+<suite name="Suite1">
+    <test name="test1">
 
-    <test verbose="3" name="Adoption_Account_Monthly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Monthly_Test"/>
-        </classes>
-    </test>
-    <test verbose="3" name="Adoption_Account_Weekly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test"/>
-        </classes>
-    </test>
-    <test verbose="3" name="Adoption_Instance_Monthly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Monthly_Test"/>
-        </classes>
-    </test>
-    <test verbose="3" name="Adoption_Instance_Weekly_Test" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test"/>
-        </classes>
-    </test>
+        <parameter name="myName" value="manisha"/>
 
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
+        </classes>
 
+    </test>
 </suite>

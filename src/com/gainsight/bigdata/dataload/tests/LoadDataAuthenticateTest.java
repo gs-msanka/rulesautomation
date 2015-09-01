@@ -30,6 +30,11 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         dataLoadManager = new DataLoadManager();
     }
 
+    @Test
+    public void a() {
+        Assert.assertTrue(false);
+    }
+
     @TestInfo(testCaseIds = {"GS-3626"})
     @Test
     public void mdaAuthorizeCheckingWithValidDetails() {
