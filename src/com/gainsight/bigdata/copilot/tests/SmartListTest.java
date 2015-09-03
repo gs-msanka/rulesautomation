@@ -1,20 +1,61 @@
 package com.gainsight.bigdata.copilot.tests;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.JsonMappingException;
+
+import com.gainsight.bigdata.pojo.CollectionInfo;
+
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.apiImpl.CopilotUtil;
 import com.gainsight.bigdata.copilot.apiImpl.LoadTestData;
+import com.gainsight.bigdata.copilot.apiImpl.SmartListSetup;
+import com.gainsight.bigdata.copilot.pojos.ActionDetails;
+import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo;
+import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.ExternalIdentifier;
+import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Query;
+import com.gainsight.bigdata.copilot.smartlist.pojos.AutomatedRule;
+import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema.Column;
 import com.gainsight.bigdata.copilot.smartlist.pojos.SmartList;
+import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria;
+import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.Select;
+import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
+import com.gainsight.bigdata.dataload.tests.LoadDataToMDATest;
+import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
+import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartListTest extends LoadTestData {
@@ -25,6 +66,27 @@ public class SmartListTest extends LoadTestData {
 	String StatsString = null;
 	SmartList smList = new SmartList();
 	String smartListID = null;
+	private TenantDetails tenantDetails;
+	private DataLoadManager dataLoadManager;
+    LoadDataToMDATest loadData=new LoadDataToMDATest();
+	private Calendar calendar = Calendar.getInstance();
+	private DataETL dataLoad = new DataETL();
+	private CopilotUtil CoUtil = new CopilotUtil();
+	private final String CREATE_ACCS=env.basedir+"/testdata/newstack/CoPilot/ApexScripts/Create_Accounts_Customers_For_CoPilot.txt";
+	private String collectionRecord=null;
+	private CollectionSchema schema=null;
+	private SmartListSetup smartListSetup=new SmartListSetup();
+	private String requestPayload=null;
+	private String collectionName=null;
+
+	
+    @BeforeClass
+    public void setup() throws  IOException {
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
+        dataLoadManager = new DataLoadManager();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
+    }
 	
 	@TestInfo(testCaseIds = { "GS-4610" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -32,7 +94,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList1(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -67,7 +129,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList2(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -102,7 +164,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList3(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -136,7 +198,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList4(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -170,7 +232,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList5(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -204,7 +266,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList6(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -237,7 +299,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList7(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -270,7 +332,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList8(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -303,7 +365,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList9(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -336,7 +398,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList10(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -369,7 +431,8 @@ public class SmartListTest extends LoadTestData {
 	public void createList11(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
+		String requestPayload=null;
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -395,5 +458,597 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers")); // Customer Count
 	}
+	
+	
+	
+	
+	
+	
+	@TestInfo(testCaseIds = { "GS-4637" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC12")
+	public void accountStrategyPowerListUsingMongoSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(new FileReader(Application.basedir
+						+ "/testdata/newstack/CoPilot/Job/demoload.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		 collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
 
+	@TestInfo(testCaseIds = { "GS-4637" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC13")
+	public void accountStrategyPowerListUsingPostgresSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(
+						new FileReader(
+								Application.basedir
+										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -postgres-etl.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4637" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC14")
+	public void accountStrategyPowerListUsingRedShiftSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(
+						new FileReader(
+								Application.basedir
+										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -RedShift-etl.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4639" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC15")
+	public void emailStrategyPowerListUsingMongoSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(new FileReader(Application.basedir
+						+ "/testdata/newstack/CoPilot/Job/demoload.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4639" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC16")
+	public void emailStrategyPowerListUsingPostgresSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(
+						new FileReader(
+								Application.basedir
+										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -postgres-etl.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4639" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC17")
+	public void emailStrategyPowerListUsingRedShiftSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper
+				.readValue(
+						new FileReader(
+								Application.basedir
+										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -RedShift-etl.txt"),
+						JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4638" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC18")
+	public void contactStrategyPowerListUsingMongoSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper.readValue(new FileReader(Application.basedir
+				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
+				JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4638" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC19")
+	public void contactStrategyPowerListUsingPostgresSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper.readValue(new FileReader(Application.basedir
+				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
+				JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+
+	@TestInfo(testCaseIds = { "GS-4638" })
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC20")
+	public void contactStrategyPowerListUsingRedShiftSubjectArea(
+			HashMap<String, String> testData) throws Exception {
+		JobInfo load = mapper.readValue(new FileReader(Application.basedir
+				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
+				JobInfo.class);
+		dataLoad.execute(load);
+		collectionName = testData.get("CollectionName") + "-"
+				+ calendar.getTimeInMillis();
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
+				testData.get("CollectionSchema"), collectionName,
+				dataLoadManager);
+		String jobId = loadData.loadDataToCollection(
+				testData.get("ActualDataLoadJob"),
+				testData.get("DataLoadMetadata"), collectionName,
+				dataLoadManager);
+		Assert.assertNotNull(jobId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
+				"Wait for the data load complete failed.");
+		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName);
+		getCollectionSchema(collectionRecord);
+		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
+				schema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+		AutomatedRule automatedRule = mapper.readValue(
+				testData.get("automatedRule1"), AutomatedRule.class);
+		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
+			actionDetails.setActionInfo(actionCriteria);
+		}
+		automatedRule.setTriggerCriteria(trigerCriteria);
+		String requestPayload = mapper.writeValueAsString(automatedRule);
+		Log.info("Automated rule payload is "
+				+ mapper.writeValueAsString(automatedRule));
+		CopilotUtil CoUtil = new CopilotUtil();
+		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeData = nodeContent.get("data");
+		smartListID = nodeData.get("smartListId").asText();
+		if (smartListID != null
+				&& nodeContent.get("result").toString()
+						.equalsIgnoreCase("true"))
+			Log.info("SmartList is created. ID is " + smartListID);
+		RulesUtil.waitForCompletion(smartListID, wa, header);
+		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
+				.get("smartListId").asText());
+		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
+		Log.info("CustomerCount is "
+				+ jsonNodeStats.get("customerCount").asInt());
+		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
+				testData.get("numberOfContacts"), "Verifying Contacts Count");
+		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
+				testData.get("numberOfCustomers"), "Verifying Customers Count");
+	}
+	    
+	    /**
+	     * Creates a Mongo instance based on a (single) mongodb node
+	     * @param database's host address
+	     * @param port on which the database is running
+	     * @param name of the database to retrieve
+	     * @param name of the collection
+	     * @param CollectionName value
+	     * @throws Exception
+	     */
+	 private void getCollectionFromMongo(String mongoHost, int mongoPort,String mongodb, String mongoCollection, String CollectionName) throws Exception {
+		String collectionDetailsProperty="CollectionDetails.CollectionName";
+		MongoClient mongoClient = new MongoClient(mongoHost, mongoPort);
+		DB db = mongoClient.getDB(mongodb);
+		DBCollection collection = db.getCollection(mongoCollection);
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put(collectionDetailsProperty, collectionName);
+		DBCursor dbCursor = collection.find(whereQuery)
+				.sort(new BasicDBObject("createdDate", -1)).limit(1);
+		Log.info("Count of records is " + dbCursor.count());
+		String temp = null;
+		while (dbCursor.hasNext()) {
+			DBObject object = dbCursor.next();
+			temp = object.toString();
+			collectionRecord = temp;
+			Log.info("CollectionMaster record is " + temp);
+		}
+		mongoClient.close();
+	}
+	 
+	 
+	    /**
+	     * @param CollectionSchema
+	     * @throws Exception
+	     */
+	private void getCollectionSchema(String collectionRecord) throws Exception {
+		CollectionSchema collectionSchema = mapper.readValue(collectionRecord,
+				CollectionSchema.class);
+		schema = collectionSchema;
+		Log.info(schema.getCollectionDetails().getCollectionId());
+		Log.info("CollectionSchema record is"
+				+ mapper.writeValueAsString(schema));
+	}
 }

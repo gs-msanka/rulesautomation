@@ -1,0 +1,44 @@
+delete [select id from Account where name like 'COPILOT Account%'];
+//if required delete contacts from contact object where name like COPILOT
+
+//Create Accounts
+List<Account> accList = new List<Account>();
+for(integer i=1; i<10 ; i++) {
+   Account acc = new Account(Name ='COPILOT Account ' +i,Data_ExternalID__c='COPILOT Account ' +i);
+   accList.add(acc);
+}
+
+insert accList;
+
+//Add Accounts to Customers
+List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
+                                 JBCXM__SystemName__c = 'ActiveCustomer'];
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+JBCXM__CustomerInfo__c cust = null;
+for(Account acc : [SELECT id FROM Account where name like 'COPILOT Account%']) {
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = acc.id, JBCXM__Status__c  = (pkList.get(0)).id);
+			custList.add(cust);
+    
+}
+
+insert custList;
+
+
+//Get the Account names prefixed with Copolit
+//Deleting all the contacts where name like '%FName%'
+delete [SELECT Id,Name,Title FROM Contact where name like '%FName%'];
+List<Account> acctID = [Select ID from ACCOUNT where NAME like 'COPILOT Account%' limit 1];
+List<String> emailIDs = new List<String>{'athaduka1@gainsighttest.com','jvunnam@gainsighttest.com','ggolla@gainsighttest.com','srallapalli@gainsighttest.com','ryaddanapalli@gainsighttest.com','spulluri@gainsighttest.com','snasika@gainsighttest.com','rkalisipudi@gainsighttest.com','abhilash@gainsighttest.com','spadmanabhan@gainsighttest.com'};
+List<Contact> contacts = new List<Contact>();
+for(Integer i = 0; i < 10; i++){
+
+Contact c1 = new Contact();
+c1.AccountId = acctID[0].ID;
+c1.FirstName = 'FName'+i;
+c1.LastName = 'LName'+i; 
+c1.Title = 'QA' ;  
+c1.Email = emailIDs[i];
+contacts.add(c1);
+}
+insert(contacts);
+

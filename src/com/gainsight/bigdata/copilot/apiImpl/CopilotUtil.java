@@ -18,25 +18,27 @@ public class CopilotUtil extends NSTestBase {
 	ResponseObj resp;
 	String req = null;
 
-	public JsonNode createSmartList(HashMap<String, String> testData)
+	public JsonNode createSmartList(HashMap<String, String> testData,String automatedRulePayLoad)
 			throws Exception {
 
-		String automatedRule=null;
+		String automatedRule = null;
 		SmartList smList = new SmartList();
-
 		smList.setName(testData.get("name"));
 		smList.setDescription(testData.get("description"));
 		smList.setType(testData.get("type"));
 		smList.setStatus(testData.get("status"));
-
-		Stats stats = mapper.readValue(testData.get("stats"),
-				Stats.class);
+		Stats stats = mapper.readValue(testData.get("stats"), Stats.class);
 		smList.setStats(stats);
-		
-		automatedRule=testData.get("automatedRule1") + testData.get("automatedRule2");
-		smList.setAutomatedRule(mapper.readValue(automatedRule,
-				AutomatedRule.class));
-		Log.info("automatedRule json is " + smList.getAutomatedRule());
+		if (automatedRulePayLoad != null && !automatedRulePayLoad.isEmpty()) {
+			smList.setAutomatedRule(mapper.readValue(automatedRulePayLoad,
+					AutomatedRule.class));
+		} else {
+			automatedRule = testData.get("automatedRule1")
+					+ testData.get("automatedRule2");
+			smList.setAutomatedRule(mapper.readValue(automatedRule,
+					AutomatedRule.class));
+		}
+		Log.info("automatedRule json is " + mapper.writeValueAsString(smList));
 		
 		smList.setRefreshList(testData.get("refreshList"));
 		smList.setDataSourceType(testData.get("dataSourceType"));
@@ -54,6 +56,7 @@ public class CopilotUtil extends NSTestBase {
 		resp = wa.doGet(ApiUrls.API_CREATE_SMARTLIST + SmartListId,
 				header.getAllHeaders());
 		JsonNode jsonNode = mapper.readTree(resp.getContent());
+		Log.info("Response is " +jsonNode);
 		JsonNode Data = jsonNode.get("data");
 		List<JsonNode> JsonNodeList = Data.findValues("stats");
 		return JsonNodeList.get(0);
