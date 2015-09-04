@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Giribabu on 03/09/15.
  */
 public class ReportAdvanceFilter {
-    @JsonProperty("Filters")
+    @JsonProperty("filters")
     private List<ReportFilter> reportFilters;
     private String expression;
 
