@@ -1,7 +1,6 @@
 package com.gainsight.bigdata.reportBuilder.reportApiImpl;
 
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportInfo;
@@ -32,7 +31,34 @@ public class ReportManager extends NSTestBase {
         return createTabularReport(collectionInfo, null);
     }
 
+    /**
+     * Creates tabular report with all the columns specified in the columns argument.
+     *
+     * @param collectionInfo - CollectionInfo Schema.
+     * @param columns - Null - includes all the columns in the collectioninfo, includes only the columns that are specified in the columns array.
+     * @return - report master string which can be used to create a report.
+     */
     public String createTabularReport(CollectionInfo collectionInfo, String[] columns) {
+        String report = null;
+        try {
+            report = mapper.writeValueAsString(createTabularReportMaster(collectionInfo, columns));
+            Log.info("Report JSON :" + report);
+
+        } catch (Exception e) {
+            Log.error("Failed to de-serialize report master." + e.getLocalizedMessage() + ", " + e.getMessage());
+            throw new RuntimeException("Failed to create report master" + e.getLocalizedMessage() + ", " + e.getMessage());
+        }
+        Log.info("Report Creating Completed...");
+        return report;
+    }
+
+    /**
+     * Creates a report master pojo so that can be used to create a new report -its a falt report with all the columns included in show me.
+     * @param collectionInfo - CollectionInfo Schema.
+     * @param columns - Null - includes all the columns in the collectioninfo, includes only the columns that are specified in the columns array.
+     * @return - report master string which can be used to create a report.
+     */
+    public ReportMaster createTabularReportMaster(CollectionInfo collectionInfo, String[] columns) {
         Log.info("Started Creating a report with all the columns in the collection...");
         String report = null;
 
@@ -41,24 +67,25 @@ public class ReportManager extends NSTestBase {
         reportInfo.setCollectionID(collectionInfo.getCollectionDetails().getCollectionId());
 
         Set<String> tempColumns = new HashSet<>();
-        if(columns != null) {
+        if (columns != null) {
             tempColumns.addAll(Arrays.asList(columns));
         }
 
         List<ReportInfo.Dimension> dimensionList = new ArrayList<>();
         ReportInfo.Dimension dimension;
         for (CollectionInfo.Column column : collectionInfo.getColumns()) {
-            if(columns != null && columns.length > 0 && !tempColumns.contains(column.getDisplayName())) {
+            if (columns != null && columns.length > 0 && !tempColumns.contains(column.getDisplayName())) {
                 continue;
             }
-                dimension = new ReportInfo.Dimension();
-                dimension.setCol(column.getDbName());
-                dimension.setAxis("measure");
-                dimension.setType(column.getColumnAttributeType());
-                dimension.setDataType(column.getDatatype());
-                dimension.setAgg_func("count");
-                dimension.setFieldDisplayName(column.getDisplayName());
-                dimensionList.add(dimension);
+            dimension = new ReportInfo.Dimension();
+            dimension.setCol(column.getDbName());
+            dimension.setAxis("measure");
+            dimension.setType(column.getColumnAttributeType());
+            dimension.setDataType(column.getDatatype());
+            dimension.setAgg_func("count");
+            dimension.setFieldDisplayName(column.getDisplayName());
+            dimension.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
+            dimensionList.add(dimension);
         }
         reportInfo.setDimensions(dimensionList);
 
@@ -70,17 +97,8 @@ public class ReportManager extends NSTestBase {
         List<ReportInfo> reportInfoList = new ArrayList<>();
         reportInfoList.add(reportInfo);
         reportMaster.setReportInfo(reportInfoList);
-
-        try {
-            report = mapper.writeValueAsString(reportMaster);
-            Log.info("Report JSON :" +report);
-
-        } catch (Exception e) {
-            Log.error("Failed to de-serialize report master." +e.getLocalizedMessage()+ ", " +e.getMessage());
-            throw new RuntimeException("Failed to create report master" +e.getLocalizedMessage()+", "+e.getMessage());
-        }
         Log.info("Report Creating Completed...");
-        return report;
+        return reportMaster;
     }
 
     /**
@@ -92,17 +110,17 @@ public class ReportManager extends NSTestBase {
     public String runReport(String reportMaster) {
         Log.info("Started Running the report on server...");
         try {
-            ResponseObj responseObj =  wa.doPost(ApiUrls.API_REPORT_RUN, header.getAllHeaders(), reportMaster);
-            if(responseObj!=null && responseObj.getStatusCode()== HttpStatus.SC_OK) {
+            ResponseObj responseObj = wa.doPost(ApiUrls.API_REPORT_RUN, header.getAllHeaders(), reportMaster);
+            if (responseObj != null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 Log.info("Report Ran Successfully...");
                 return responseObj.getContent();
             } else {
-                Log.error("Server Status returned :" +responseObj.getStatusCode());
-                throw new RuntimeException("Failed to runReport, server returned status code - "+responseObj.getStatusCode());
+                Log.error("Server Status returned :" + responseObj.getStatusCode());
+                throw new RuntimeException("Failed to runReport, server returned status code - " + responseObj.getStatusCode());
             }
         } catch (Exception e) {
-            Log.error("Failed to Run Report..." ,e);
-            throw new RuntimeException("Failed Run Report..." +e.getLocalizedMessage());
+            Log.error("Failed to Run Report...", e);
+            throw new RuntimeException("Failed Run Report..." + e.getLocalizedMessage());
         }
     }
 
@@ -114,14 +132,15 @@ public class ReportManager extends NSTestBase {
      */
     public List<Map<String, String>> convertReportData(String reportData) {
         Log.info("Converting String as List<> of Map<>...");
-        List<Map<String,String>> dataList = new ArrayList<>();
+        List<Map<String, String>> dataList = new ArrayList<>();
         try {
             JsonNode node = mapper.readTree(reportData);
             node = node.findPath("data");
-            dataList  = mapper.readValue(node.toString(), new TypeReference<List<Map<String,String>>>() {});
+            dataList = mapper.readValue(node.toString(), new TypeReference<List<Map<String, String>>>() {
+            });
         } catch (IOException e) {
-            Log.error("Failed to process data." ,e);
-            throw new RuntimeException("Failed to process data." +e.getLocalizedMessage());
+            Log.error("Failed to process data.", e);
+            throw new RuntimeException("Failed to process data." + e.getLocalizedMessage());
         }
         Log.info("Data Conversion Done...");
         return dataList;
@@ -130,26 +149,26 @@ public class ReportManager extends NSTestBase {
     /**
      * Populates default value for boolean in the data list.
      *
-     * @param dataList - The data in which boolean fields default values need to be populated.
+     * @param dataList       - The data in which boolean fields default values need to be populated.
      * @param collectionInfo - The Collection Info.
      * @return
      */
     public static List<Map<String, String>> populateDefaultBooleanValue(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
         Log.info("Started populating default boolean values for empty value... ");
         List<String> keyToUpdate = new ArrayList<>();
-        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
-            if(column.getDatatype()!=null && column.getDatatype().equals("boolean")) {
+        for (CollectionInfo.Column column : collectionInfo.getColumns()) {
+            if (column.getDatatype() != null && column.getDatatype().equals("boolean")) {
                 keyToUpdate.add(column.getDisplayName());
             }
         }
-        if(keyToUpdate.size()>0) {
-           for(Map<String, String> data : dataList ) {
-               for(String key : keyToUpdate) {
-                   if(data.containsKey(key) && data.get(key)!= null && !data.get(key).equals("") && !data.get(key).isEmpty()) {
-                       data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
-                   }
-               }
-           }
+        if (keyToUpdate.size() > 0) {
+            for (Map<String, String> data : dataList) {
+                for (String key : keyToUpdate) {
+                    if (data.containsKey(key) && data.get(key) != null && !data.get(key).equals("") && !data.get(key).isEmpty()) {
+                        data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
+                    }
+                }
+            }
         }
         Log.info("Returning the boolean processed results...");
         return dataList;
@@ -159,14 +178,14 @@ public class ReportManager extends NSTestBase {
      * Adds empty keys to the data list provided.
      *
      * @param dataList - DataList i.e. report data as key, values pairs.
-     * @param keys - Array of keys to be added to data list.
+     * @param keys     - Array of keys to be added to data list.
      */
     public static void addKeysWithEmptyValues(List<Map<String, String>> dataList, String[] keys) {
-        if(dataList ==null || keys==null || keys.length == 0) {
-            throw new IllegalArgumentException("DataList, Keys Should Not be Null & Keys length should be at-least 1" );
+        if (dataList == null || keys == null || keys.length == 0) {
+            throw new IllegalArgumentException("DataList, Keys Should Not be Null & Keys length should be at-least 1");
         }
-        for(Map<String, String> data : dataList) {
-            for(String key : keys) {
+        for (Map<String, String> data : dataList) {
+            for (String key : keys) {
                 data.put(key, "");
             }
         }
@@ -176,7 +195,7 @@ public class ReportManager extends NSTestBase {
     /**
      * Replaces the system names with display names.
      *
-     * @param dataList - The Report data.
+     * @param dataList       - The Report data.
      * @param collectionInfo - Collection Schema.
      * @return List of Map of String, String  with replaced system names/DB names with display name.
      */
@@ -184,17 +203,17 @@ public class ReportManager extends NSTestBase {
         Log.info("Started changing DB names with display Names...");
         HashMap<String, String> dbDisplayNamesMap = new HashMap<>();
 
-        for(CollectionInfo.Column c :collectionInfo.getColumns()) {
+        for (CollectionInfo.Column c : collectionInfo.getColumns()) {
             dbDisplayNamesMap.put(c.getDbName(), c.getDisplayName());
         }
 
         List<Map<String, String>> processedData = new ArrayList<>();
 
         HashMap<String, String> temp;
-        for(Map<String, String> data : dataList) {
+        for (Map<String, String> data : dataList) {
             temp = new HashMap<>();
-            for(String a : data.keySet()) {
-                if(dbDisplayNamesMap.get(a)!=null) {
+            for (String a : data.keySet()) {
+                if (dbDisplayNamesMap.get(a) != null) {
                     temp.put(dbDisplayNamesMap.get(a), (data.get(a) == null) ? "" : data.get(a));
                 }
             }
@@ -202,6 +221,73 @@ public class ReportManager extends NSTestBase {
         }
         Log.info("Changed DB Names to Display Names & returning...");
         return processedData;
+    }
+
+    /**
+     * Creates a report & returns the report ID on successful creation of report.
+     *
+     * @param reportMasterPayLoad
+     * @return NsResponseObj.
+     */
+    public NsResponseObj saveReport(String reportMasterPayLoad) {
+        NsResponseObj nsResponseObj = null;
+        try {
+            ResponseObj responseObj = wa.doPut(ApiUrls.API_REPORT_PUT, reportMasterPayLoad, header.getAllHeaders());
+            if (responseObj != null && (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST)) {
+                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            }
+        } catch (Exception e) {
+            Log.error("Report Creation failed, " + e);
+            throw new RuntimeException(e);
+        }
+        return nsResponseObj;
+    }
+
+
+
+    /**
+     * Creates a report & returns the report ID on successful creation of report.
+     *
+     * @param reportMaster - ReportMaster POJO with which report need to be created.
+     * @return - NsResponseObj.
+     * @throws IOException - Failed to parse the report master.
+     */
+    public NsResponseObj saveReport(ReportMaster reportMaster) throws IOException {
+        return saveReport(mapper.writeValueAsString(reportMaster));
+    }
+
+    /**
+     * Creates a report & returns the report ID on successful creation of report.
+     *
+     * @param reportMasterPayLoad - reportMasterPayLoad with which report need to be created.
+     * @return - reportId on success, null on failure.
+     */
+    public String saveReportMaster(String reportMasterPayLoad) {
+        String reportId = null;
+        try {
+            ResponseObj responseObj = wa.doPut(ApiUrls.API_REPORT_PUT, reportMasterPayLoad, header.getAllHeaders());
+            if (responseObj != null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                if(nsResponseObj.isResult()) {
+                    HashMap<String, String> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+                    reportId = resultSet.get("ReportId");
+                }
+            }
+        } catch (Exception e) {
+            Log.error("Report Creation failed, " + e);
+            throw new RuntimeException(e);
+        }
+        return reportId;
+    }
+
+    /**
+     * Creates a report & returns the report ID on successful creation of report.
+     * @param reportMaster - ReportMaster to create report needed.
+     * @return reportId on success, null on failure.
+     * @throws IOException - failed while processing.
+     */
+    public String saveReportMaster(ReportMaster reportMaster) throws IOException {
+        return saveReportMaster(mapper.writeValueAsString(reportMaster));
     }
 
 

@@ -143,6 +143,15 @@ public class ReportInfo {
         private String dataType;
         private String agg_func;
         private String fieldDisplayName;
+        private String collectionId;
+
+        public String getCollectionId() {
+            return collectionId;
+        }
+
+        public void setCollectionId(String collectionId) {
+            this.collectionId = collectionId;
+        }
 
         public String getCol() {
             return col;

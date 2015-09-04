@@ -1207,10 +1207,6 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
     }
 
-    @Test
-    public void getstatus() throws Exception {
-        dataLoadAggConfigManager.waitForAggregationJobToComplete("27d5a15b-9a27-4d34-bc44-5c1c509f16c7");
-    }
 
     @AfterSuite
     public void tearDown() {
@@ -1224,6 +1220,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
                 }
             }
         }
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
     }
 
     //To Delete All the projects of a tenant - - Run This test case to delete all the accounts in a project..

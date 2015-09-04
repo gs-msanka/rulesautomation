@@ -30,6 +30,17 @@ public class CollectionInfo {
     @JsonProperty("Columns")
     private List<Column> columns;
 
+    @JsonProperty("CollectionDescription")
+    private String collectionDescription;
+
+    public String getCollectionDescription() {
+        return collectionDescription;
+    }
+
+    public void setCollectionDescription(String collectionDescription) {
+        this.collectionDescription = collectionDescription;
+    }
+
     public List<Column> getColumns() {
         return columns;
     }

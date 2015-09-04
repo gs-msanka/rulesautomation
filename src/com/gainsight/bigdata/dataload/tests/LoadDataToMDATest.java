@@ -409,11 +409,6 @@ public class LoadDataToMDATest extends NSTestBase {
         dataInsertAndUpdate(testData);
     }
 
-    @Test
-    public void aGiribabu() {
-        dataLoadManager.waitForDataLoadJobComplete("e47bd5ba-34e1-49fb-885a-69f043b766ce");
-    }
-
     /**
      * Load the data to MDA i.e. a test case.
      *
