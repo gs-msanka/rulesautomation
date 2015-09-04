@@ -3,9 +3,9 @@ package com.gainsight.bigdata.reportBuilder.reportApiImpl;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.reportBuilder.pojos.ReportFilter;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
-import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
 import org.apache.http.HttpStatus;
@@ -14,6 +14,8 @@ import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 import java.util.*;
+
+import static com.gainsight.bigdata.urls.ApiUrls.*;
 
 /**
  * Created by Giribabu on 22/05/15.
@@ -57,6 +59,8 @@ public class ReportManager extends NSTestBase {
      * @param collectionInfo - CollectionInfo Schema.
      * @param columns - Null - includes all the columns in the collectioninfo, includes only the columns that are specified in the columns array.
      * @return - report master string which can be used to create a report.
+     *
+     * IMP Note - if your collection has more than 17 columns then please dont add all the columns to show me fields this is limitation on reporting.
      */
     public ReportMaster createTabularReportMaster(CollectionInfo collectionInfo, String[] columns) {
         Log.info("Started Creating a report with all the columns in the collection...");
@@ -93,6 +97,7 @@ public class ReportManager extends NSTestBase {
         reportMaster.setNewReport(true);
         reportMaster.setReportMasterRequired(false);
         reportMaster.setFormat("JSON");
+        reportMaster.setDisplayType("GRID");
 
         List<ReportInfo> reportInfoList = new ArrayList<>();
         reportInfoList.add(reportInfo);
@@ -101,28 +106,6 @@ public class ReportManager extends NSTestBase {
         return reportMaster;
     }
 
-    /**
-     * Runs the report on servers and returns the data returned from server.
-     *
-     * @param reportMaster - Report payload.
-     * @return - Report data.
-     */
-    public String runReport(String reportMaster) {
-        Log.info("Started Running the report on server...");
-        try {
-            ResponseObj responseObj = wa.doPost(ApiUrls.API_REPORT_RUN, header.getAllHeaders(), reportMaster);
-            if (responseObj != null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                Log.info("Report Ran Successfully...");
-                return responseObj.getContent();
-            } else {
-                Log.error("Server Status returned :" + responseObj.getStatusCode());
-                throw new RuntimeException("Failed to runReport, server returned status code - " + responseObj.getStatusCode());
-            }
-        } catch (Exception e) {
-            Log.error("Failed to Run Report...", e);
-            throw new RuntimeException("Failed Run Report..." + e.getLocalizedMessage());
-        }
-    }
 
     /**
      * Converts the report data to list of map that can be easily used.
@@ -224,71 +207,322 @@ public class ReportManager extends NSTestBase {
     }
 
     /**
-     * Creates a report & returns the report ID on successful creation of report.
+     * Runs the report on servers and returns the data returned from server.
      *
-     * @param reportMasterPayLoad
-     * @return NsResponseObj.
+     * @param reportMaster - Report payload.
+     * @return - Report data.
      */
-    public NsResponseObj saveReport(String reportMasterPayLoad) {
-        NsResponseObj nsResponseObj = null;
+    public String runReport(String reportMaster) {
+        Log.info("Started Running the report on server...");
         try {
-            ResponseObj responseObj = wa.doPut(ApiUrls.API_REPORT_PUT, reportMasterPayLoad, header.getAllHeaders());
-            if (responseObj != null && (responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST)) {
-                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            ResponseObj responseObj = wa.doPost(API_REPORT_RUN, header.getAllHeaders(), reportMaster);
+            if (responseObj != null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                Log.info("Report Ran Successfully...");
+                return responseObj.getContent();
+            } else {
+                Log.error("Server Status returned :" + responseObj.getStatusCode());
+                throw new RuntimeException("Failed to runReport, server returned status code - " + responseObj.getStatusCode());
             }
         } catch (Exception e) {
-            Log.error("Report Creation failed, " + e);
-            throw new RuntimeException(e);
+            Log.error("Failed to Run Report...", e);
+            throw new RuntimeException("Failed Run Report..." + e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Runs the links preparation report.
+     *
+     * @param reportMaster - Reportmaster that's required to run the report.
+     * @return - List of hash map of report data, null if there's no data present.
+     * @throws Exception
+     */
+    public List<Map<String, String>> runReportLinksAndGetData(String reportMaster) throws Exception {
+        Log.info("Started Running the report on server...");
+        NsResponseObj nsResponseObj = runReportLinksGetNsResponse(reportMaster);
+        List<Map<String, String>> data = null;
+        if(nsResponseObj.isResult()) {
+            HashMap<String, Object> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+            if(resultSet.containsKey("data")) {
+                data = mapper.convertValue(resultSet.get("data"), new TypeReference<List<Map<String, String>>>(){});
+            }
+        }
+        return data;
+    }
+
+    /**
+     * Replaces the display names with DB names in the report master.
+     *
+     * @param reportMaster - Report master
+     * @param collectionInfo - Collection Master.
+     * @return - report master - with display names replaced with db names.
+     */
+    public ReportMaster getDBNamesPopulatedReportMaster(ReportMaster reportMaster, CollectionInfo collectionInfo) {
+        HashMap<String, String> displayDBNamesMap = getDisplayAndDBNamesMap(collectionInfo);
+        ReportInfo reportInfo = reportMaster.getReportInfo().get(0);
+        if(reportInfo == null) {
+            throw new IllegalArgumentException("Report info can't be null.");
+        }
+        if(collectionInfo ==null || collectionInfo.getColumns() == null
+                || collectionInfo.getCollectionDetails() ==null || collectionInfo.getCollectionDetails().getCollectionId() == null) {
+            throw new IllegalArgumentException("Collection info can't be null");
+        }
+
+        String collectionId = collectionInfo.getCollectionDetails().getCollectionId();
+        Log.info("Collection ID : " + collectionId);
+
+        reportInfo.setCollectionID(collectionId);
+
+
+        if(reportInfo.getDimensions() !=null) {
+            Log.info("Updating DB Names for dimensions...");
+            for (ReportInfo.Dimension dimension : reportInfo.getDimensions()) {
+                if (displayDBNamesMap.containsKey(dimension.getCol()) && displayDBNamesMap.get(dimension.getCol()) != null) {
+                    String dbName = displayDBNamesMap.get(dimension.getCol());
+                    dimension.setCol(dbName);
+                    dimension.setCollectionId(collectionId);
+                } else {
+                    throw new RuntimeException(dimension.getCol() + " is not found in displayDBNamesMap.");
+                }
+            }
+        }
+
+        if(reportInfo.getDrillDownReportDimensions() != null) {
+            Log.info("Updating DB Names for Drill Down Dimensions...");
+            for (ReportInfo.Dimension dimension : reportInfo.getDrillDownReportDimensions()) {
+                if (displayDBNamesMap.containsKey(dimension.getCol()) && displayDBNamesMap.get(dimension.getCol()) != null) {
+                    String dbName = displayDBNamesMap.get(dimension.getCol());
+                    dimension.setCol(dbName);
+                    dimension.setCollectionId(collectionId);
+                } else {
+                    throw new RuntimeException(dimension.getCol() + " is not found in displayDBNamesMap.");
+                }
+            }
+        }
+
+        if(reportInfo.getWhereAdvanceFilter() != null) {
+            Log.info("Updating DB Names for Where Advanced Filter...");
+            for(ReportFilter reportFilter : reportInfo.getWhereAdvanceFilter().getReportFilters()) {
+                if (reportFilter.getDbName() != null && displayDBNamesMap.containsKey(reportFilter.getDbName()) && displayDBNamesMap.get(reportFilter.getDbName()) != null) {
+                    String dbName = displayDBNamesMap.get(reportFilter.getDbName());
+                    reportFilter.setDbName(dbName);
+                    reportFilter.setCollectionId(collectionId);
+                } else {
+                    throw new RuntimeException(reportFilter.getDbName() + " is not found in displayDBNamesMap.");
+                }
+            }
+        }
+
+        if(reportInfo.getHavingAdvanceFilter() != null) {
+            Log.info("Updating DB Names for Having Advanced Filter...");
+            for(ReportFilter reportFilter : reportInfo.getHavingAdvanceFilter().getReportFilters()) {
+                if (reportFilter.getDbName() != null && displayDBNamesMap.containsKey(reportFilter.getDbName()) && displayDBNamesMap.get(reportFilter.getDbName()) != null) {
+                    String dbName = displayDBNamesMap.get(reportFilter.getDbName());
+                    reportFilter.setDbName(dbName);
+                    reportFilter.setCollectionId(collectionId);
+                } else {
+                    throw new RuntimeException(reportFilter.getDbName() + " is not found in displayDBNamesMap.");
+                }
+            }
+        }
+        return reportMaster;
+    }
+
+    /**
+     * Return the hash map of display names and db names of a collection columns.
+     *
+     * @param collectionInfo - Collection master of a subject area.
+     * @return - Hash Map with display names as keys and db names has values.
+     */
+    public HashMap<String, String> getDisplayAndDBNamesMap(CollectionInfo collectionInfo) {
+        if(collectionInfo == null || collectionInfo.getColumns() == null) {
+            throw new IllegalArgumentException("Collection info & Columns List can't be null");
+        }
+        HashMap<String, String> resultMap = new HashMap<>();
+        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
+            resultMap.put(column.getDisplayName(), column.getDbName());
+        }
+
+        Log.info("Result Map : " +resultMap);
+        return resultMap;
+    }
+
+
+    /**
+     * Run Report with links (joins).
+     * @param reportMaster
+     * @return ResponseObj - returned from server.
+     * @throws Exception
+     */
+    public ResponseObj runReportLinksGetResponseObj(String reportMaster) throws Exception {
+        Log.info("Running Links Report...");
+        ResponseObj responseObj = wa.doPost(API_REPORT_RUN_LINKS, header.getAllHeaders(), reportMaster);
+        return responseObj;
+    }
+
+    /**
+     * Run Report with links.
+     *
+     * @param reportMaster
+     * @return - NsResponseObj - if the http request is 200 ok then nsreponse obj is returned.
+     * @throws Exception
+     */
+    public NsResponseObj runReportLinksGetNsResponse(String reportMaster) throws Exception {
+        ResponseObj responseObj = runReportLinksGetResponseObj(reportMaster);
+        NsResponseObj nsResponseObj = null;
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        } else {
+            throw new RuntimeException("Status Code is not 200 / 400, Check above...");
         }
         return nsResponseObj;
     }
 
-
-
     /**
-     * Creates a report & returns the report ID on successful creation of report.
+     * Save a report master - Creates a new report / updates the existing report.
      *
-     * @param reportMaster - ReportMaster POJO with which report need to be created.
-     * @return - NsResponseObj.
-     * @throws IOException - Failed to parse the report master.
+     * @param reportMaster - Report to be created.
+     * @return
+     * @throws Exception
      */
-    public NsResponseObj saveReport(ReportMaster reportMaster) throws IOException {
-        return saveReport(mapper.writeValueAsString(reportMaster));
-    }
-
-    /**
-     * Creates a report & returns the report ID on successful creation of report.
-     *
-     * @param reportMasterPayLoad - reportMasterPayLoad with which report need to be created.
-     * @return - reportId on success, null on failure.
-     */
-    public String saveReportMaster(String reportMasterPayLoad) {
+    public String saveReport(String reportMaster) throws Exception {
         String reportId = null;
-        try {
-            ResponseObj responseObj = wa.doPut(ApiUrls.API_REPORT_PUT, reportMasterPayLoad, header.getAllHeaders());
-            if (responseObj != null && responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-                if(nsResponseObj.isResult()) {
-                    HashMap<String, String> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
-                    reportId = resultSet.get("ReportId");
-                }
-            }
-        } catch (Exception e) {
-            Log.error("Report Creation failed, " + e);
-            throw new RuntimeException(e);
+        NsResponseObj nsResponseObj = saveReportGetNsResponse(reportMaster);
+        if(nsResponseObj.isResult()) {
+            HashMap<String, String> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+            reportId = resultSet.get("ReportId");
         }
+        Log.info("Report Id : " +reportId);
         return reportId;
     }
 
     /**
-     * Creates a report & returns the report ID on successful creation of report.
-     * @param reportMaster - ReportMaster to create report needed.
-     * @return reportId on success, null on failure.
-     * @throws IOException - failed while processing.
+     * Save a report master - Creates a new report / updates the existing report.
+     *
+     * @param reportMaster - Report to be created.
+     * @return
+     * @throws Exception
      */
-    public String saveReportMaster(ReportMaster reportMaster) throws IOException {
-        return saveReportMaster(mapper.writeValueAsString(reportMaster));
+    public ResponseObj saveReportGetResponsObj(String reportMaster) throws Exception {
+        Log.info("Saving Report...");
+        ResponseObj responseObj = wa.doPut(API_REPORT_PUT, reportMaster, header.getAllHeaders());
+        return responseObj;
     }
 
+    /**
+     * Save a report master - Creates a new report / updates the existing report.
+     *
+     * @param reportMaster
+     * @return
+     * @throws Exception
+     */
+    public NsResponseObj saveReportGetNsResponse(String reportMaster) throws Exception {
+        ResponseObj responseObj = saveReportGetResponsObj(reportMaster);
+        NsResponseObj nsResponseObj =null;
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
+            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        } else {
+            throw new RuntimeException("Status Code is not 200 / 400, Check above...");
+        }
+        return nsResponseObj;
+    }
 
+    /**
+     * Fetches all the collection master records with out collection info.
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<CollectionInfo> getAllCollectionsLite() throws Exception {
+        ResponseObj responseObj = wa.doGet(API_COLLECTION_ALL_LITE, header.getAllHeaders());
+        List<CollectionInfo> data = null;
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if(nsResponseObj.isResult()) {
+                HashMap<String, Object> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+                if(resultSet.containsKey("Collections")) {
+                    data = mapper.convertValue(resultSet.get("Collections"), new TypeReference<List<CollectionInfo>>(){});
+                }
+            }
+        }
+        return data;
+    }
+
+    /**
+     * Deletes a report.
+     *
+     * @param reportId - report id to delete.
+     * @return true on success & false on failure
+     */
+    public boolean deleteReport(String reportId) {
+        boolean result = false;
+        if(reportId == null) {
+            throw new IllegalArgumentException("Report Id Can't be null");
+        }
+        try {
+            ResponseObj responseObj = wa.doDelete(API_REPORT_DELETE+reportId, header.getAllHeaders());
+            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+                result = nsResponseObj.isResult();
+            }
+        } catch (Exception e) {
+            Log.error("Failed While deleting report ", e);
+        }
+        return result;
+    }
+
+    /**
+     * Get the colleciton master tree structure usually used to fetch joins.
+     *
+     * @param collectionId - Collection ID.
+     * @return
+     * @throws Exception
+     */
+    public NsResponseObj getCollectionTreeNsResponse(String collectionId) throws Exception {
+        if(collectionId != null) {
+            throw new RuntimeException("Collection Id Can't be null.");
+        }
+        ResponseObj responseObj = wa.doGet(String.format(API_COLLECTION_TREE, collectionId), header.getAllHeaders());
+        NsResponseObj nsResponseObj = null;
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        } else {
+            throw new RuntimeException("Failed while getting collection tree.");
+        }
+        return nsResponseObj;
+    }
+
+    /**
+     * Fetch all the reports that are configured.
+     *
+     * @return
+     * @throws Exception
+     */
+    public NsResponseObj getAllReportsNsResponse() throws Exception {
+        ResponseObj responseObj = wa.doGet(API_REPORT_GET_ALL, header.getAllHeaders());
+        NsResponseObj nsResponseObj = null;
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        } else {
+            throw new RuntimeException("Failed while getting collection tree.");
+        }
+        return nsResponseObj;
+    }
+
+    /**
+     * Fetch all the report that are configured.
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<ReportMaster> getAllReports() throws Exception {
+        NsResponseObj nsResponseObj = getAllReportsNsResponse();
+        List<ReportMaster> reportMasters = null;
+        if(nsResponseObj.isResult()) {
+            HashMap<String, Object> resutlSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
+            if(resutlSet.containsKey("Reports")) {
+                reportMasters = mapper.convertValue(resutlSet.get("Reports"), new TypeReference<List<ReportMaster>>(){});
+            }
+        }
+        return reportMasters;
+    }
 }

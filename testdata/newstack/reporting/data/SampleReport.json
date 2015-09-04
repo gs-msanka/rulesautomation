@@ -1,0 +1,182 @@
+{
+  "ReportInfo": [
+    {
+      "SchemaName": "",
+      "CollectionID": "",
+      "limit": 500,
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Active",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "ProductCode",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of ProductCode",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "ProductName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of ProductName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "No of Schedules Created",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of No of Schedules Created",
+          "collectionId": "",
+          "decimalPlaces": 3,
+          "agg_func": "sum"
+        }
+      ],
+      "drillDownReportDimensions": [
+        {
+          "col": "ProductCode",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of ProductCode",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "ProductName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of ProductName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "No of Schedules Created",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of No of Schedules Created",
+          "collectionId": "",
+          "decimalPlaces": 3,
+          "agg_func": "sum"
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Active",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000,
+      "ReportId": 0,
+      "reportName": "New Report",
+      "nonAggregatedResult": false,
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "A",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "filterValues": [
+              "abb"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "filterValues": [
+              "AAR"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A OR B"
+      },
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "ProductCode",
+            "alias": "1",
+            "dataType": "string",
+            "filterOperator": "EQ",
+            "aggregateFunction": "count",
+            "filterValues": [
+              4
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "No of Schedules Created",
+            "alias": "2",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              90
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "1 OR 2"
+      }
+    }
+  ],
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "reportOptions": {},
+  "displayType": "GRID"
+}

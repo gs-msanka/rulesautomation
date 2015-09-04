@@ -1,7 +1,9 @@
 package com.gainsight.bigdata.reportBuilder.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 
@@ -20,16 +22,49 @@ public class ReportInfo {
     private String type = "adhoc";
     @JsonProperty("Dimensions")
     private List<Dimension> dimensions;
-    private List<String> drillDownReportDimensions;
+    private List<Dimension> drillDownReportDimensions;
     @JsonProperty("ReportReadLimit")
     private int reportReadLimit = 1000;
     @JsonProperty("DimensionBrowserReadLimit")
     private int dimensionBrowserReadLimit = 1000;
     @JsonProperty("ReportId")
-    private int reportId = 0;
+    private String reportId;
     private String reportName;
-    private boolean nonAggregatedResult = true;
     private String assetType;
+    private boolean nonAggregatedResult = true;
+    @JsonProperty("whereAdvanceFilter")
+    private ReportAdvanceFilter whereAdvanceFilter;
+
+    @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+    @JsonProperty("havingAdvanceFilter")
+    private ReportAdvanceFilter havingAdvanceFilter;
+
+    public ReportAdvanceFilter getHavingAdvanceFilter() {
+        return havingAdvanceFilter;
+    }
+
+    public void setHavingAdvanceFilter(ReportAdvanceFilter havingAdvanceFilter) {
+        this.havingAdvanceFilter = havingAdvanceFilter;
+    }
+
+    public ReportAdvanceFilter getWhereAdvanceFilter() {
+        return whereAdvanceFilter;
+    }
+
+    public void setWhereAdvanceFilter(ReportAdvanceFilter whereAdvanceFilter) {
+        this.whereAdvanceFilter = whereAdvanceFilter;
+    }
+
+    @JsonIgnore
+    public String getAssetType() {
+        return assetType;
+    }
+
+    @JsonProperty("assetType")
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
     private int skip;
 
     public String getSchemaName() {
@@ -72,11 +107,11 @@ public class ReportInfo {
         this.dimensions = dimensions;
     }
 
-    public List<String> getDrillDownReportDimensions() {
+    public List<Dimension> getDrillDownReportDimensions() {
         return drillDownReportDimensions;
     }
 
-    public void setDrillDownReportDimensions(List<String> drillDownReportDimensions) {
+    public void setDrillDownReportDimensions(List<Dimension> drillDownReportDimensions) {
         this.drillDownReportDimensions = drillDownReportDimensions;
     }
 
@@ -96,11 +131,11 @@ public class ReportInfo {
         this.dimensionBrowserReadLimit = dimensionBrowserReadLimit;
     }
 
-    public int getReportId() {
+    public String getReportId() {
         return reportId;
     }
 
-    public void setReportId(int reportId) {
+    public void setReportId(String reportId) {
         this.reportId = reportId;
     }
 
@@ -120,13 +155,6 @@ public class ReportInfo {
         this.nonAggregatedResult = nonAggregatedResult;
     }
 
-    public String getAssetType() {
-        return assetType;
-    }
-
-    public void setAssetType(String assetType) {
-        this.assetType = assetType;
-    }
 
     public int getSkip() {
         return skip;
@@ -136,14 +164,24 @@ public class ReportInfo {
         this.skip = skip;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Dimension {
         private String col;
         private String axis;
         private int type;
         private String dataType;
+        private int decimalPlaces = 0;
         private String agg_func;
         private String fieldDisplayName;
         private String collectionId;
+
+        public int getDecimalPlaces() {
+            return decimalPlaces;
+        }
+
+        public void setDecimalPlaces(int decimalPlaces) {
+            this.decimalPlaces = decimalPlaces;
+        }
 
         public String getCollectionId() {
             return collectionId;
