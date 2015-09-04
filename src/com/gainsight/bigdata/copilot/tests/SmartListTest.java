@@ -1,19 +1,11 @@
 package com.gainsight.bigdata.copilot.tests;
-
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.JsonMappingException;
 
 import com.gainsight.bigdata.pojo.CollectionInfo;
 
@@ -26,28 +18,21 @@ import com.gainsight.bigdata.copilot.apiImpl.CopilotUtil;
 import com.gainsight.bigdata.copilot.apiImpl.LoadTestData;
 import com.gainsight.bigdata.copilot.apiImpl.SmartListSetup;
 import com.gainsight.bigdata.copilot.pojos.ActionDetails;
-import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo;
-import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.ExternalIdentifier;
-import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Query;
 import com.gainsight.bigdata.copilot.smartlist.pojos.AutomatedRule;
-import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema.Column;
 import com.gainsight.bigdata.copilot.smartlist.pojos.SmartList;
-import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria;
-import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.Select;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.tests.LoadDataToMDATest;
 import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
-import com.gainsight.http.Header;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.Comparator;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.DataProviderArguments;
-import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -55,7 +40,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartListTest extends LoadTestData {
@@ -78,16 +62,20 @@ public class SmartListTest extends LoadTestData {
 	private SmartListSetup smartListSetup=new SmartListSetup();
 	private String requestPayload=null;
 	private String collectionName=null;
+	MongoDBDAO mongoDBDAO   = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+            nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
 
 	
     @BeforeClass
     public void setup() throws  IOException {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
+/*        boolean isenabled= tenantManager.enableRedShift(tenantDetails, mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId()));
+        System.out.println(isenabled);*/
         dataLoadManager = new DataLoadManager();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
     }
-	
+   
 	@TestInfo(testCaseIds = { "GS-4610" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC1")
@@ -480,10 +468,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));		
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -542,10 +530,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -605,10 +593,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -665,10 +653,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -727,10 +715,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -789,10 +777,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -848,10 +836,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -907,10 +895,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -966,10 +954,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
-		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
+		DBDetail dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		String collectionRecords=getCollectionFromMongo(nsConfig.getGlobalDBHost(),
+				Integer.parseInt(nsConfig.getGlobalDBPort()),dbDetail.getDbName(),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));	
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
