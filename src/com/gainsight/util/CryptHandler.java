@@ -2,6 +2,7 @@ package com.gainsight.util;
 
 
 
+import com.gainsight.testdriver.Log;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -38,7 +39,8 @@ public class CryptHandler {
             PBEKeySpec keySpec = new PBEKeySpec(encriptionKey.toCharArray(), " crypt_salt".getBytes(CharEncoding.UTF_8), ITERATION_COUNT, KEY_LENGTH);
             secretKeySpec = new SecretKeySpec(factory.generateSecret(keySpec).getEncoded(), KEY_SPEC_ALGORITHM);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(e.getLocalizedMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
