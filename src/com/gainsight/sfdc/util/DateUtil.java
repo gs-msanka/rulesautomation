@@ -148,7 +148,7 @@ public class DateUtil {
         int amount = daysBetween(cal.getTime(), date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format ==null ? DEFAULT_DATE_FORMAT : format);
         String sDate = simpleDateFormat.format(getWeekLabelDate(weekDay, timeZone,  amount, usesEndDate).getTime());
-        Log.info("Formatted Date : " +sDate);
+        //Log.info("Formatted Date : " +sDate);
         return sDate;
     }
 
@@ -209,7 +209,7 @@ public class DateUtil {
                 cal.add(Calendar.DATE, -7);
             }
         }
-        Log.info("Final Week Label Date : "+cal.getTime());
+        //Log.info("Final Week Label Date : "+cal.getTime());
         return cal;
     }
 

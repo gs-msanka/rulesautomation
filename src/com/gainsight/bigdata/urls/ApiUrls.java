@@ -1,8 +1,10 @@
 package com.gainsight.bigdata.urls;
 
 /**
- * Created by gainsight on 08/05/15.
+ * Created by Giribabu on 08/05/15.
+ *
  */
+
 public interface ApiUrls extends NSURLs {
 
     public final String SEND_GRID_SETTINGS                  = NS_URL + "/api/sendgrid/settings";
@@ -11,7 +13,11 @@ public interface ApiUrls extends NSURLs {
     public final String APP_API_DATA_LOAD_COLLECTIONS       = NS_URL + "/api/dataload/collections";
     public final String APP_API_EVENTRULE                   = NS_URL + "/api/eventrule";
     public final String APP_API_RULES_LOADABLE_OBJECT       = NS_URL + "/api/rulesloadableobject";
+
+    //Reporting API
     public final String API_REPORT_RUN                      = NS_URL + "/api/reports/run/preparation";
+    public final String API_REPORT_PUT                      = NS_URL + "/api/reports";
+
     public final String API_RULE_RUN                        = NS_URL + "/api/eventrule";
     public final String APP_API_GET_COLLECTION              = NS_URL + "/api/collections/";
     public final String APP_API_ASYNC_STATUS			    = NS_URL + "/api/async/process/";
@@ -46,6 +52,12 @@ public interface ApiUrls extends NSURLs {
     public final String DATA_API_GET                    = NS_URL + "/api/accounts/integrations/DATA_API";       //All the project s configured in data load api.
     public final String DATA_API_ALL_COLLECTIONS_GET    = NS_URL + "/api/collections/consumers/DATA_API";       //All the collections for the tenant,
     public final String DATA_API_PROJECT_UPDATE_PUT     = NS_URL + "/api/accounts/%s/update?version=v1.0";      //Update the account / project(data api)
+
+    //Custom Object Management
+    public final String COLLECTION_DETAILS_POST         = NS_URL + "/api/collections/details";
+    public final String COLLECTION_DATA_VALIDATE        = NS_URL + "/api/dataload/validate";
+    public final String COLLECTION_DATA_LOAD            = NS_URL + "/api/dataload/load";
+    public final String COLLECTION_DATA_MAPPING         = NS_URL + "/api/dataload/mapping";
 
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";

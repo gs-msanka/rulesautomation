@@ -599,7 +599,11 @@ public class DataLoadManager extends NSTestBase {
             if(collectionInfoMap.containsKey(colId)) {
                 String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
                 waitForDataLoadJobComplete(jobId);
-                tenantManager.deleteSubjectArea(tenantId, colId);
+                if(tenantManager.deleteSubjectArea(tenantId, colId)) {
+                    Log.info("Collection Deleted Successfully " +colId);
+                } else {
+                    Log.error("Failed to delete collection id : "+colId);
+                }
             } else {
                 Log.error("Collection Id Doesn't Exists to delete : " +colId);
             }

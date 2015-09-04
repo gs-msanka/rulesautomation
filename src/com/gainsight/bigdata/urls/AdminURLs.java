@@ -14,8 +14,7 @@ public interface AdminURLs extends NSURLs {
     public final String ADMIN_POST_COLLECTIONS_LIST   = ADMIN_COLLECTIONS+"/list";
     public final String ADMIN_TOKENS                  = NS_ADMIN_URL+"/admin/tokens";
     public final String ADMIN_ACTIVITIES              = NS_ADMIN_URL+"/admin/activities";
-    public final String ADMIN_TEST_CONNECTION         = NS_ADMIN_URL+"/admin/test/connection";
-
+    public final String ADMIN_TEST_CONNECTION         = NS_ADMIN_URL+"/admin/tenants/test/connection";
 
     public final String ADMIN_DATA_LOAD_AUTHENTICATE      = NS_URL+"/admin/dataload/authenticate";
     public final String ADMIN_GET_COLLECTIONS_ALL         = NS_URL+"/admin/collections/ALL";
