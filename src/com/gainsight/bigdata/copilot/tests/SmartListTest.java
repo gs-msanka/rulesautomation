@@ -66,6 +66,7 @@ public class SmartListTest extends LoadTestData {
 	String StatsString = null;
 	SmartList smList = new SmartList();
 	String smartListID = null;
+	private String subjectAreaName;
 	private TenantDetails tenantDetails;
 	private DataLoadManager dataLoadManager;
     LoadDataToMDATest loadData=new LoadDataToMDATest();
@@ -74,7 +75,6 @@ public class SmartListTest extends LoadTestData {
 	private CopilotUtil CoUtil = new CopilotUtil();
 	private final String CREATE_ACCS=env.basedir+"/testdata/newstack/CoPilot/ApexScripts/Create_Accounts_Customers_For_CoPilot.txt";
 	private String collectionRecord=null;
-	private CollectionSchema schema=null;
 	private SmartListSetup smartListSetup=new SmartListSetup();
 	private String requestPayload=null;
 	private String collectionName=null;
@@ -474,12 +474,16 @@ public class SmartListTest extends LoadTestData {
 						+ "/testdata/newstack/CoPilot/Job/demoload.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		 collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -487,14 +491,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -542,6 +542,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -549,14 +553,11 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -604,6 +605,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -611,14 +616,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -664,6 +665,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -671,14 +676,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -726,6 +727,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -733,14 +738,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -788,6 +789,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -795,14 +800,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -847,6 +848,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -854,14 +859,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -906,6 +907,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -913,14 +918,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -965,6 +966,10 @@ public class SmartListTest extends LoadTestData {
 		CollectionInfo collectionInfo = loadData.createAndVerifyCollection(
 				testData.get("CollectionSchema"), collectionName,
 				dataLoadManager);
+		String collectionRecords=getCollectionFromMongo(env.getProperty("ns.mongoHost"),
+				Integer.parseInt(env.getProperty("ns.mongoPort")),
+				env.getProperty("ns.mongoGlobalDB"),
+				env.getProperty("ns.MongoCollectionMaster"), collectionName, testData.get("CollectionName"));
 		String jobId = loadData.loadDataToCollection(
 				testData.get("ActualDataLoadJob"),
 				testData.get("DataLoadMetadata"), collectionName,
@@ -972,14 +977,10 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertNotNull(jobId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
 				"Wait for the data load complete failed.");
-		getCollectionFromMongo(env.getProperty("ns.mongoHost"),
-				Integer.parseInt(env.getProperty("ns.mongoPort")),
-				env.getProperty("ns.mongoGlobalDB"),
-				env.getProperty("ns.MongoCollectionMaster"), collectionName);
-		getCollectionSchema(collectionRecord);
+		CollectionSchema collectionSchema=getCollectionSchema(collectionRecords);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				schema);
-		String actionCriteria = smartListSetup.getActionInfo(testData, schema);
+				collectionSchema);
+		String actionCriteria = smartListSetup.getActionInfo(testData, collectionSchema);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -1008,7 +1009,7 @@ public class SmartListTest extends LoadTestData {
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
 	}
-	    
+	
 	    /**
 	     * Creates a Mongo instance based on a (single) mongodb node
 	     * @param database's host address
@@ -1016,39 +1017,45 @@ public class SmartListTest extends LoadTestData {
 	     * @param name of the database to retrieve
 	     * @param name of the collection
 	     * @param CollectionName value
+	     * @param string 
+	     * @return collectionmaster record as a string
 	     * @throws Exception
 	     */
-	 private void getCollectionFromMongo(String mongoHost, int mongoPort,String mongodb, String mongoCollection, String CollectionName) throws Exception {
-		String collectionDetailsProperty="CollectionDetails.CollectionName";
+	 private String getCollectionFromMongo(String mongoHost, int mongoPort,String mongodb, String mongoCollection, String CollectionName, String subjectArea) throws Exception {
 		MongoClient mongoClient = new MongoClient(mongoHost, mongoPort);
 		DB db = mongoClient.getDB(mongodb);
 		DBCollection collection = db.getCollection(mongoCollection);
-		BasicDBObject whereQuery = new BasicDBObject();
-		whereQuery.put(collectionDetailsProperty, collectionName);
-		DBCursor dbCursor = collection.find(whereQuery)
+		BasicDBObject newDocument = new BasicDBObject();
+		newDocument.append("$set", new BasicDBObject().append(
+				"CollectionDetails.dataStoreType", subjectArea));
+		BasicDBObject searchQuery = new BasicDBObject().append(
+				"CollectionDetails.CollectionName", CollectionName);
+		collection.update(searchQuery, newDocument);
+		DBCursor dbCursor = collection.find(searchQuery)
 				.sort(new BasicDBObject("createdDate", -1)).limit(1);
 		Log.info("Count of records is " + dbCursor.count());
-		String temp = null;
+		String collectionRecords = null;
 		while (dbCursor.hasNext()) {
 			DBObject object = dbCursor.next();
-			temp = object.toString();
-			collectionRecord = temp;
-			Log.info("CollectionMaster record is " + temp);
+			collectionRecords = object.toString();
+			Log.info("CollectionMaster record is " + collectionRecords);
 		}
 		mongoClient.close();
+		return collectionRecords;
 	}
 	 
 	 
 	    /**
-	     * @param CollectionSchema
+	     * @param Collectionmaster record
+	     * @return CollectionSchema
 	     * @throws Exception
 	     */
-	private void getCollectionSchema(String collectionRecord) throws Exception {
+	private CollectionSchema  getCollectionSchema(String collectionRecord) throws Exception {
 		CollectionSchema collectionSchema = mapper.readValue(collectionRecord,
 				CollectionSchema.class);
-		schema = collectionSchema;
-		Log.info(schema.getCollectionDetails().getCollectionId());
+		Log.info(collectionSchema.getCollectionDetails().getCollectionId());
 		Log.info("CollectionSchema record is"
-				+ mapper.writeValueAsString(schema));
+				+ mapper.writeValueAsString(collectionSchema));
+		return collectionSchema;
 	}
 }
