@@ -11,6 +11,7 @@ import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.util.NsConfig;
@@ -33,6 +34,7 @@ import static com.gainsight.bigdata.urls.AdminURLs.*;
  */
 public class TenantManager {
 
+    private final Application env = new Application();
     public SFDCInfo sfdcInfo;
     private SalesforceConnector sfConnector;
     private Header header = new Header();
@@ -526,6 +528,26 @@ public class TenantManager {
      */
     public boolean testDataDBDetails(TenantDetails.DBDetail dbDetail) {
         return testDBDetails(dbDetail, "dataDBDetail");
+    }
+
+    /**
+     * Enables redshift for the tenant by reading the properties file.
+     *
+     * @param tenantDetails - Tenant Details of a tenant.
+     * @throws IOException - If some thing fails.
+     */
+    public void enabledRedShiftWithDBDetails(TenantDetails tenantDetails) throws IOException {
+        TenantDetails.DBDetail db = new TenantDetails.DBDetail();
+        db.setDbName(env.getProperty("ns_redshift_dbName"));
+        db.setSslEnabled(Boolean.valueOf("ns_redshift_sslEnabled"));
+        TenantDetails.DBServerDetail serverDetail = new TenantDetails.DBServerDetail();
+        serverDetail.setHost(env.getProperty("ns_redshift_host"));
+        serverDetail.setUserName(env.getProperty("ns_redshift_userName"));
+        serverDetail.setPassword(env.getProperty("ns_redshift_password"));
+        List<TenantDetails.DBServerDetail> dbl = new ArrayList<>();
+        dbl.add(serverDetail);
+        db.setDbServerDetails(dbl);
+        enableRedShift(tenantDetails, db);
     }
 
     /**
