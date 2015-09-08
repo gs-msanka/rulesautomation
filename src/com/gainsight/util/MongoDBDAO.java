@@ -29,12 +29,13 @@ public class MongoDBDAO  {
 
     //Just in case to test locally.
     public static void main(String[] args) {
-        MongoDBDAO mongoDBDAO = new  MongoDBDAO("54.204.251.136", 27017, "mdaqa02", "fgFByS5D", "multi_tenant_gsdatadb_1");
+        MongoDBDAO mongoDBDAO = new  MongoDBDAO("54.204.251.136", 27017, "mdaqa02", "fgFByS5D", "test_gsglobaldb");
         //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
         //MongoDBDAO mongoDBDAO = new  MongoDBDAO("52.0.148.18", 27017, "gsuser", "T4Fa36Hr", "gsglobaldb");
         //mongoDBDAO.updateCollectionDBStoreType("e5a05708-4337-4d04-821e-82f454b1a746", "99281caf-e4cd-4a85-b2f0-4b07a9a49e9b", DBStoreType.POSTGRES);
-
     }
+    
+    
 
     /**
      * Updated the tenant details with the DB details of tenant, Schema, Data, Postgres, RedShift.
@@ -48,7 +49,7 @@ public class MongoDBDAO  {
         tenantDetails.setSchemaDBDetail(getSchemaDBDetail(tenantId));
         tenantDetails.setDataDBDetail(getDataDBDetail(tenantId));
         tenantDetails.setPostgresDBDetail(getPostgresDetail(tenantId));
-        tenantDetails.setRedshiftDBDetail(getPostgresDetail(tenantId));
+        tenantDetails.setRedshiftDBDetail(getRedShiftDBDetail(tenantId));
 
         Log.info("Updated all db details.");
         return  tenantDetails;

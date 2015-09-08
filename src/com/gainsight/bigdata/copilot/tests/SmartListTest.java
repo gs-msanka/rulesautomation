@@ -70,11 +70,11 @@ public class SmartListTest extends LoadTestData {
     public void setup() throws  IOException {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-/*        boolean isenabled= tenantManager.enableRedShift(tenantDetails, mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId()));
-        System.out.println(isenabled);*/
         dataLoadManager = new DataLoadManager();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
+        tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
     }
+    
    
 	@TestInfo(testCaseIds = { "GS-4610" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
