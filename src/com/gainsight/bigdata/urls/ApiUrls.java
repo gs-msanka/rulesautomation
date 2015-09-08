@@ -16,7 +16,12 @@ public interface ApiUrls extends NSURLs {
 
     //Reporting API
     public final String API_REPORT_RUN                      = NS_URL + "/api/reports/run/preparation";
+    public final String API_REPORT_RUN_LINKS                = NS_URL + "/api/reports/run/preparation/links";
     public final String API_REPORT_PUT                      = NS_URL + "/api/reports";
+    public final String API_REPORT_DELETE                   = NS_URL + "/api/reports/"; //Append Report ID.
+    public final String API_REPORT_GET_ALL                  = NS_URL + "/api/reports/reporting_v2";
+    public final String API_COLLECTION_ALL_LITE             = NS_URL + "/api/collections/all/lite";
+    public final String API_COLLECTION_TREE                 = NS_URL + "/api/collections/%s/collectionTree";
 
     public final String API_RULE_RUN                        = NS_URL + "/api/eventrule";
     public final String APP_API_GET_COLLECTION              = NS_URL + "/api/collections/";

@@ -128,6 +128,22 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
+     * Creates a collection and returns the collection Id.
+     *
+     * @param collectionInfo - Collection to be created.
+     * @return collection id on success, null on failure.
+     */
+    public String createSubjectAreaAndGetId(CollectionInfo collectionInfo ){
+        String collectionId = null;
+        NsResponseObj nsResponseObj = createSubjectArea(collectionInfo);
+        if(nsResponseObj.isResult()) {
+            CollectionInfo.CollectionDetails colDetails = getCollectionDetail(nsResponseObj.getData());
+            collectionId = colDetails.getCollectionId();
+        }
+        return collectionId;
+    }
+
+    /**
      * Gets the data load job details.
      *
      * @param jobId - JobId/StatusId - to check the status.

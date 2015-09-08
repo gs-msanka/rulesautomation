@@ -3,11 +3,11 @@
 
 <suite name="Suite1">
     <test name="test1">
-
-        <parameter name="myName" value="manisha"/>
-
         <classes>
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
+            <class name="com.gainsight.bigdata.reportBuilder.tests.ReportBuilderTest" />
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
         </classes>
 
     </test>
