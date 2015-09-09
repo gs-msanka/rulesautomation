@@ -59,8 +59,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertCommaSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -76,8 +76,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertCommaSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo =createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo =createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -93,8 +93,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertSpaceSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -110,8 +110,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertSpaceSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -127,8 +127,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertTabSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -144,8 +144,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertTabSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -161,8 +161,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertSemiColonSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId =loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId =loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -178,8 +178,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertSemiColonSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -196,8 +196,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void loadDataWithExtraFieldCreatedFromTenantManagement(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -208,7 +208,7 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo = addColumnsToCollectionViaTenantMgt(tenantDetails.getTenantId(),
                collectionInfo.getCollectionDetails().getCollectionId(), new CollectionInfo.Column[]{col1, col2});
 
-        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName, dataLoadManager);
+        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -238,8 +238,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void loadDataWithJavaScriptAndHtmlCode(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -260,8 +260,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void loadDataWithNoColumnInformation(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -277,8 +277,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void deleteAllCollectionData(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -303,8 +303,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void deleteCollectionDataWithDateField(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -343,8 +343,8 @@ public class LoadDataToMDATest extends NSTestBase {
     public void deleteCollectionDataWithDateAccountField(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -420,8 +420,8 @@ public class LoadDataToMDATest extends NSTestBase {
     private void dataInsertAndUpdate(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);;
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName, dataLoadManager);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName, dataLoadManager);
+        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -430,7 +430,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertEquals(0, diffData.size());
 
         ////Update Records..
-        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName, dataLoadManager);
+        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
         Assert.assertNotNull(jobId);
         dataLoadManager.waitForDataLoadJobComplete(jobId);
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount1")), Integer.valueOf(testData.get("FailedRecordCount1")));
@@ -486,7 +486,7 @@ public class LoadDataToMDATest extends NSTestBase {
         dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
     }
     
-    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName, DataLoadManager dataLoadManager) throws IOException {
+    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
@@ -515,7 +515,7 @@ public class LoadDataToMDATest extends NSTestBase {
      * @return JOB id of the submitted request.
      * @throws IOException
      */
-    public String loadDataToCollection(String jobFile, String DLMetadata, String collectionName, DataLoadManager dataLoadManager) throws IOException {
+    private String loadDataToCollection(String jobFile, String DLMetadata, String collectionName) throws IOException {
         DataLoadMetadata metadata = mapper.readValue(DLMetadata, DataLoadMetadata.class);
         metadata.setCollectionName(collectionName);
         Log.info("Metadata : " +mapper.writeValueAsString(metadata));

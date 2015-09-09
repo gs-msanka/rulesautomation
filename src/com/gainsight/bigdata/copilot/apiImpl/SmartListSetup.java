@@ -9,7 +9,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo;
 import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria;
 import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Query;
-import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.Select;
+import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.SmartListSelect;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
@@ -35,26 +35,26 @@ public class SmartListSetup extends NSTestBase{
 			if (column.getDisplayName().equalsIgnoreCase("CreatedDateTime")) {
 				createdDateTime = column.getDbName();
 			}
-			if (column.getDisplayName().equalsIgnoreCase("ID")) {
+			else if (column.getDisplayName().equalsIgnoreCase("ID")) {
 				idDbName = column.getDbName();
 			}
-			if (column.getDisplayName().equalsIgnoreCase("Name")) {
+			else if (column.getDisplayName().equalsIgnoreCase("Name")) {
 				nameDbName = column.getDbName();
 			}
-			if (column.getDisplayName().equalsIgnoreCase("Email")) {
+			else if (column.getDisplayName().equalsIgnoreCase("Email")) {
 				emailDbName = column.getDbName();
 			}
-			if (column.getDisplayName().equalsIgnoreCase("ContactID")) {
+			else if (column.getDisplayName().equalsIgnoreCase("ContactID")) {
 				contactDbName = column.getDbName();
 			}
 		}
-		List<Select> select = null;
+		List<SmartListSelect> select = null;
 		for (TriggerCriteria tg : triggerCriteria) {
 			tg.setTimeIdentifier(createdDateTime);
 			tg.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
 			select = tg.getSelect();
 		}
-		for (Select temp : select) {
+		for (SmartListSelect temp : select) {
 			if (temp.getLabel().equalsIgnoreCase("ID")) {
 				temp.setField(idDbName);
 				temp.setFieldName(idDbName);
@@ -66,7 +66,7 @@ public class SmartListSetup extends NSTestBase{
 			}
 		}
 
-		for (Select name : select) {
+		for (SmartListSelect name : select) {
 			if (name.getLabel().equalsIgnoreCase("Name")) {
 				name.setField(nameDbName);
 				name.setFieldName(nameDbName);
@@ -77,7 +77,7 @@ public class SmartListSetup extends NSTestBase{
 						.getCollectionId());
 			}
 		}
-		for (Select email : select) {
+		for (SmartListSelect email : select) {
 			if (email.getLabel().equalsIgnoreCase("Email")) {
 				email.setField(emailDbName);
 				email.setFieldName(emailDbName);
@@ -88,7 +88,7 @@ public class SmartListSetup extends NSTestBase{
 						.getCollectionId());
 			}
 		}
-		for (Select contactID : select) {
+		for (SmartListSelect contactID : select) {
 			if (contactID.getLabel().equalsIgnoreCase("ContactID")) {
 				contactID.setField(contactDbName);
 				contactID.setFieldName(contactDbName);
@@ -119,11 +119,11 @@ public class SmartListSetup extends NSTestBase{
 				dbName = column.getDbName();
 				Log.info(column.getDbName());
 			}
-			if (column.getDisplayName().equalsIgnoreCase("Email")) {
+			else if (column.getDisplayName().equalsIgnoreCase("Email")) {
 				emailDbName = column.getDbName();
 
 			}
-			if (column.getDisplayName().equalsIgnoreCase("ContactID")) {
+			else if (column.getDisplayName().equalsIgnoreCase("ContactID")) {
 				contactDbName = column.getDbName();
 
 			}

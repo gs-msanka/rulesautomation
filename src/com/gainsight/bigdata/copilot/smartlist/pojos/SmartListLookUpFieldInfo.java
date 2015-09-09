@@ -3,13 +3,13 @@ package com.gainsight.bigdata.copilot.smartlist.pojos;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Properties;
+import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.SmartListProperties;
 
 @JsonPropertyOrder({ "type", "field", "fieldName", "entity", "valueType",
 	"dataType", "fieldType", "groupable", "objectName", "label",
 	"alias", "aggregation", "properties", "meta", "isExternalCriteria",
 	"isReferenceField", "isJoinField" })
-public class LookUpFieldInfo {
+public class SmartListLookUpFieldInfo {
 
 @JsonProperty("type")
 private String type;
@@ -36,9 +36,9 @@ private String alias;
 @JsonProperty("aggregation")
 private String aggregation;
 @JsonProperty("properties")
-private Properties properties;
+private SmartListProperties properties;
 @JsonProperty("meta")
-private Meta meta;
+private SmartListMeta meta;
 @JsonProperty("isExternalCriteria")
 private Boolean isExternalCriteria;
 @JsonProperty("isReferenceField")
@@ -171,22 +171,22 @@ public void setAggregation(String aggregation) {
 }
 
 @JsonProperty("properties")
-public Properties getProperties() {
+public SmartListProperties getProperties() {
 	return properties;
 }
 
 @JsonProperty("properties")
-public void setProperties(Properties properties) {
+public void setProperties(SmartListProperties properties) {
 	this.properties = properties;
 }
 
 @JsonProperty("meta")
-public Meta getMeta() {
+public SmartListMeta getMeta() {
 	return meta;
 }
 
 @JsonProperty("meta")
-public void setMeta(Meta meta) {
+public void setMeta(SmartListMeta meta) {
 	this.meta = meta;
 }
 

@@ -15,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 public class ActionInfo {
 
 	@JsonProperty("params")
-	private Params params;
+	private SmartListParams params;
 	@JsonProperty("actionType")
 	private String actionType;
 	@JsonProperty("recipientStrategy")
@@ -28,12 +28,12 @@ public class ActionInfo {
 	private String recipientFieldName;
 
 	@JsonProperty("params")
-	public Params getParams() {
+	public SmartListParams getParams() {
 		return params;
 	}
 
 	@JsonProperty("params")
-	public void setParams(Params params) {
+	public void setParams(SmartListParams params) {
 		this.params = params;
 	}
 
@@ -88,7 +88,7 @@ public class ActionInfo {
 	}
 
 	
-	public static class Params {
+	public static class SmartListParams {
 
 		@JsonProperty("areaName")
 		private String areaName;
@@ -105,7 +105,7 @@ public class ActionInfo {
 	}
 
 	@JsonPropertyOrder({ "SFDC" })
-	public static class Properties {
+	public static class SmartListProperties {
 
 		@JsonProperty("SFDC")
 		private SFDC SFDC;
@@ -126,41 +126,41 @@ public class ActionInfo {
 	public static class Query {
 
 		@JsonProperty("externalIdentifier")
-		private ExternalIdentifier externalIdentifier;
+		private SmartListExternalIdentifier externalIdentifier;
 		@JsonProperty("lookUpFieldInfos")
-		private List<LookUpFieldInfo> lookUpFieldInfos = new ArrayList<LookUpFieldInfo>();
+		private List<SmartListLookUpFieldInfo> lookUpFieldInfos = new ArrayList<SmartListLookUpFieldInfo>();
 		@JsonProperty("identifier")
-		private Identifier identifier;
+		private SmartListExternalIdentifier identifier;
 		@JsonProperty("query")
 		private String query;
 
 		@JsonProperty("externalIdentifier")
-		public ExternalIdentifier getExternalIdentifier() {
+		public SmartListExternalIdentifier getExternalIdentifier() {
 			return externalIdentifier;
 		}
 
 		@JsonProperty("externalIdentifier")
-		public void setExternalIdentifier(ExternalIdentifier externalIdentifier) {
+		public void setExternalIdentifier(SmartListExternalIdentifier externalIdentifier) {
 			this.externalIdentifier = externalIdentifier;
 		}
 
 		@JsonProperty("lookUpFieldInfos")
-		public List<LookUpFieldInfo> getLookUpFieldInfos() {
+		public List<SmartListLookUpFieldInfo> getLookUpFieldInfos() {
 			return lookUpFieldInfos;
 		}
 
 		@JsonProperty("lookUpFieldInfos")
-		public void setLookUpFieldInfos(List<LookUpFieldInfo> lookUpFieldInfos) {
+		public void setLookUpFieldInfos(List<SmartListLookUpFieldInfo> lookUpFieldInfos) {
 			this.lookUpFieldInfos = lookUpFieldInfos;
 		}
 
 		@JsonProperty("identifier")
-		public Identifier getIdentifier() {
+		public SmartListExternalIdentifier getIdentifier() {
 			return identifier;
 		}
 
 		@JsonProperty("identifier")
-		public void setIdentifier(Identifier identifier) {
+		public void setIdentifier(SmartListExternalIdentifier identifier) {
 			this.identifier = identifier;
 		}
 

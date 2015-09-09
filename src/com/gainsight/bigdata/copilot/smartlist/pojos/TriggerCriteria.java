@@ -12,7 +12,7 @@ public class TriggerCriteria {
 	private String refField;
 	private String timeIdentifier;
 	@JsonProperty("select")
-	private List<Select> select;
+	private List<SmartListSelect> select;
 	private String calculatedFields[];
 	private String collectionId;
 	private String criteria[];
@@ -65,16 +65,16 @@ public class TriggerCriteria {
 		this.criteria = criteria;
 	}
 
-	public List<Select> getSelect() {
+	public List<SmartListSelect> getSelect() {
 		return select;
 	}
 
-	public void setSelect(List<Select> select) {
+	public void setSelect(List<SmartListSelect> select) {
 		this.select = select;
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Select {
+	public static class SmartListSelect {
 		private String type;
 		private String field;
 		private String fieldName;
@@ -90,7 +90,7 @@ public class TriggerCriteria {
 		@JsonProperty("properties")
 		private Properties properties;
 		@JsonProperty("meta")
-		private Meta meta;
+		private SmartListsMeta meta;
 		@JsonProperty("isAccountIdRelatedField")
 		private Boolean isAccountIdRelatedField;
 		@JsonProperty("collectionId")
@@ -98,20 +98,20 @@ public class TriggerCriteria {
 
 
 
-		private Select() {
+		private SmartListSelect() {
 			super();
 		}
 
-		public Meta getMeta() {
+		public SmartListsMeta getMeta() {
 			return meta;
 		}
 
-		public void setMeta(Meta meta) {
+		public void setMeta(SmartListsMeta meta) {
 			this.meta = meta;
 		}
 
 		@JsonIgnoreProperties(ignoreUnknown = true)
-		private static class Meta {
+		private static class SmartListsMeta {
 			@JsonProperty("isAccessible")
 			private Boolean isAccessible;
 			@JsonProperty("isFilterable")

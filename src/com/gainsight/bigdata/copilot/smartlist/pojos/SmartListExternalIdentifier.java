@@ -3,7 +3,7 @@ package com.gainsight.bigdata.copilot.smartlist.pojos;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ExternalIdentifier {
+public class SmartListExternalIdentifier {
 
 	@JsonProperty("type")
 	private String type;

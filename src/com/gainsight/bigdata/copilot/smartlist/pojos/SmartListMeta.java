@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 	"isGroupable", "originalDataType", "isCreateable", "precision",
 	"relationshipName" })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Meta {
+public class SmartListMeta {
 
 @JsonProperty("isAccessible")
 private Boolean isAccessible;

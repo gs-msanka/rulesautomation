@@ -66,6 +66,7 @@ public class SmartListTest extends LoadTestData {
 	MongoDBDAO mongoDBDAO   = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
             nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
 	ReportManager reportManager=new ReportManager();
+	private CopilotUtil CoUtil = new CopilotUtil();
 	
 
 	
@@ -504,7 +505,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -598,7 +598,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -691,7 +690,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -782,7 +780,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -875,7 +872,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -967,7 +963,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -1057,7 +1052,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -1147,7 +1141,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -1237,7 +1230,6 @@ public class SmartListTest extends LoadTestData {
 		String requestPayload = mapper.writeValueAsString(automatedRule);
 		Log.info("Automated rule payload is "
 				+ mapper.writeValueAsString(automatedRule));
-		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
 		JsonNode nodeData = nodeContent.get("data");
 		smartListID = nodeData.get("smartListId").asText();
@@ -1278,7 +1270,7 @@ public class SmartListTest extends LoadTestData {
 	}
 
 	
-    public void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
+    private void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
         Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
