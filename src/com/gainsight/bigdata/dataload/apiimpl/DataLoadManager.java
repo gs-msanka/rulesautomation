@@ -2,6 +2,7 @@ package com.gainsight.bigdata.dataload.apiimpl;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
@@ -15,17 +16,19 @@ import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -46,6 +49,7 @@ import static com.gainsight.sfdc.pages.Constants.*;
 public class DataLoadManager extends NSTestBase {
 
     public Header headers = new Header();
+    private Calendar calendar = Calendar.getInstance();
 
     public DataLoadManager() {
         accessKey = getDataLoadAccessKey();
@@ -685,6 +689,52 @@ public class DataLoadManager extends NSTestBase {
             }
         }
         throw new RuntimeException("Column details not found in collection info supplied for the displayName : "+displayName);
+    }
+    
+    
+    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName, DataLoadManager dataLoadManager) throws IOException {
+        CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
+
+        NsResponseObj nsResponseObj = dataLoadManager.createSubjectArea(collectionInfo);
+        Assert.assertNotNull(nsResponseObj);
+        Assert.assertTrue(nsResponseObj.isResult());
+
+        CollectionInfo.CollectionDetails colDetails = dataLoadManager.getCollectionDetail(nsResponseObj.getData());
+        Assert.assertNotNull(colDetails.getDbCollectionName());
+        Assert.assertNotNull(colDetails.getCollectionId());
+
+        CollectionInfo actualCollection = dataLoadManager.getCollectionInfo(colDetails.getCollectionId());
+        Assert.assertNotNull(actualCollection);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollection));
+
+       return actualCollection;
+    }
+
+    /**
+     * Loads the dataFile to MDA & returns the job Id.
+     *
+     * @param jobFile
+     * @param DLMetadata
+     * @param collectionName
+     * @return JOB id of the submitted request.
+     * @throws IOException
+     */
+    public String loadDataToCollection(String jobFile, String DLMetadata, String collectionName, DataLoadManager dataLoadManager) throws IOException {
+        DataLoadMetadata metadata = mapper.readValue(DLMetadata, DataLoadMetadata.class);
+        metadata.setCollectionName(collectionName);
+        Log.info("Metadata : " +mapper.writeValueAsString(metadata));
+
+        JobInfo actualJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
+
+        File dataLoadFile = FileProcessor.getDateProcessedFile(actualJobInfo, calendar.getTime());
+        if(actualJobInfo.getCsvFormatter()!=null) {
+            dataLoadFile = FileProcessor.getFormattedCSVFile(actualJobInfo.getCsvFormatter());
+        }
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
+        return jobId;
     }
 
 }

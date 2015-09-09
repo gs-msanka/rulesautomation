@@ -10,6 +10,7 @@ import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria;
 import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Query;
 import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema.Column;
 import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.Select;
+import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.testdriver.Log;
 
 public class SmartListSetup extends NSTestBase{
@@ -18,7 +19,7 @@ public class SmartListSetup extends NSTestBase{
 	private String trigerCriteria=null;
 	
 	public String getTrigerCriteria(HashMap<String, String> testData,
-			CollectionSchema schema) throws Exception {
+			CollectionInfo collectionInfo) throws Exception {
 		TriggerCriteria[] triggerCriteria = mapper.readValue(
 				testData.get("triggerCriteria"), TriggerCriteria[].class);
 		String createdDateTime = null;
@@ -26,7 +27,7 @@ public class SmartListSetup extends NSTestBase{
 		String nameDbName = null;
 		String emailDbName = null;
 		String contactDbName = null;
-		for (Column column : schema.getColumns()) {
+		for (com.gainsight.bigdata.pojo.CollectionInfo.Column column : collectionInfo.getColumns()) {
 			if (column.getDisplayName().equalsIgnoreCase("CreatedDateTime")) {
 				createdDateTime = column.getDbName();
 			}
@@ -46,17 +47,17 @@ public class SmartListSetup extends NSTestBase{
 		List<Select> select = null;
 		for (TriggerCriteria tg : triggerCriteria) {
 			tg.setTimeIdentifier(createdDateTime);
-			tg.setCollectionId(schema.getCollectionDetails().getCollectionId());
+			tg.setCollectionId(collectionInfo.getCollectionDetails().getCollectionId());
 			select = tg.getSelect();
 		}
 		for (Select temp : select) {
 			if (temp.getLabel().equalsIgnoreCase("ID")) {
 				temp.setField(idDbName);
 				temp.setFieldName(idDbName);
-				temp.setEntity(schema.getCollectionDetails().getCollectionId());
-				temp.setObjectName(schema.getCollectionDetails()
+				temp.setEntity(collectionInfo.getCollectionDetails().getCollectionId());
+				temp.setObjectName(collectionInfo.getCollectionDetails()
 						.getCollectionId());
-				temp.setCollectionId(schema.getCollectionDetails()
+				temp.setCollectionId(collectionInfo.getCollectionDetails()
 						.getCollectionId());
 			}
 		}
@@ -65,10 +66,10 @@ public class SmartListSetup extends NSTestBase{
 			if (name.getLabel().equalsIgnoreCase("Name")) {
 				name.setField(nameDbName);
 				name.setFieldName(nameDbName);
-				name.setEntity(schema.getCollectionDetails().getCollectionId());
-				name.setObjectName(schema.getCollectionDetails()
+				name.setEntity(collectionInfo.getCollectionDetails().getCollectionId());
+				name.setObjectName(collectionInfo.getCollectionDetails()
 						.getCollectionId());
-				name.setCollectionId(schema.getCollectionDetails()
+				name.setCollectionId(collectionInfo.getCollectionDetails()
 						.getCollectionId());
 			}
 		}
@@ -76,10 +77,10 @@ public class SmartListSetup extends NSTestBase{
 			if (email.getLabel().equalsIgnoreCase("Email")) {
 				email.setField(emailDbName);
 				email.setFieldName(emailDbName);
-				email.setEntity(schema.getCollectionDetails().getCollectionId());
-				email.setObjectName(schema.getCollectionDetails()
+				email.setEntity(collectionInfo.getCollectionDetails().getCollectionId());
+				email.setObjectName(collectionInfo.getCollectionDetails()
 						.getCollectionId());
-				email.setCollectionId(schema.getCollectionDetails()
+				email.setCollectionId(collectionInfo.getCollectionDetails()
 						.getCollectionId());
 			}
 		}
@@ -87,11 +88,11 @@ public class SmartListSetup extends NSTestBase{
 			if (contactID.getLabel().equalsIgnoreCase("ContactID")) {
 				contactID.setField(contactDbName);
 				contactID.setFieldName(contactDbName);
-				contactID.setEntity(schema.getCollectionDetails()
+				contactID.setEntity(collectionInfo.getCollectionDetails()
 						.getCollectionId());
-				contactID.setObjectName(schema.getCollectionDetails()
+				contactID.setObjectName(collectionInfo.getCollectionDetails()
 						.getCollectionId());
-				contactID.setCollectionId(schema.getCollectionDetails()
+				contactID.setCollectionId(collectionInfo.getCollectionDetails()
 						.getCollectionId());
 			}
 		}
@@ -103,13 +104,13 @@ public class SmartListSetup extends NSTestBase{
 	}
 
 	public String getActionInfo(HashMap<String, String> testData,
-			CollectionSchema schema) throws Exception {
+			CollectionInfo collectionInfo) throws Exception {
 		ActionInfo actionInfo = mapper.readValue(testData.get("ActionInfo"),
 				ActionInfo.class);
 		String dbName = null;
 		String emailDbName = null;
 		String contactDbName = null;
-		for (Column column : schema.getColumns()) {
+		for (com.gainsight.bigdata.pojo.CollectionInfo.Column column : collectionInfo.getColumns()) {
 			if (column.getDisplayName().equalsIgnoreCase("ID")) {
 				dbName = column.getDbName();
 				Log.info(column.getDbName());
@@ -133,9 +134,9 @@ public class SmartListSetup extends NSTestBase{
 				query.getExternalIdentifier().setUniqueName(dbName);
 			}
 			query.getExternalIdentifier().setEntity(
-					schema.getCollectionDetails().getCollectionId());
+					collectionInfo.getCollectionDetails().getCollectionId());
 			query.getExternalIdentifier().setParentObj(
-					schema.getCollectionDetails().getCollectionId());
+					collectionInfo.getCollectionDetails().getCollectionId());
 
 		}
 		// For Email strategy powerlist
