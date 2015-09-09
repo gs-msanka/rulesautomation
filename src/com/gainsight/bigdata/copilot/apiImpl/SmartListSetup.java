@@ -3,13 +3,16 @@ package com.gainsight.bigdata.copilot.apiImpl;
 import java.util.HashMap;
 import java.util.List;
 
+import org.testng.Assert;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo;
-import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema;
 import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria;
 import com.gainsight.bigdata.copilot.smartlist.pojos.ActionInfo.Query;
-import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema.Column;
 import com.gainsight.bigdata.copilot.smartlist.pojos.TriggerCriteria.Select;
+import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
+import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
+import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.testdriver.Log;
 
@@ -17,6 +20,7 @@ public class SmartListSetup extends NSTestBase{
 	
 	private String actionCriteria=null;
 	private String trigerCriteria=null;
+	private DataLoadManager dataLoadManager;
 	
 	public String getTrigerCriteria(HashMap<String, String> testData,
 			CollectionInfo collectionInfo) throws Exception {
@@ -149,5 +153,4 @@ public class SmartListSetup extends NSTestBase{
 		actionCriteria = mapper.writeValueAsString(actionInfo);
 		return actionCriteria;
 	}
-
 }

@@ -10,14 +10,14 @@
                 "weekly" : false,
                 "daily"  : true,
                 "dateTime" : false,
-                "dateFormat" : "MM/d/yyyy",
+                "dateFormat" : "MM-dd-yyyy",
                 "fieldName" : "Date"
             },
             {
                 "weekly" : false,
                 "daily"  : true,
                 "dateTime" : true,
-                "dateFormat" : "MM/dd/yyyy HH:mm",
+                "dateFormat" : "MM-dd-yyyy HH:mm:ss",
                 "fieldName" : "CreatedDateTime"
             }
         ]

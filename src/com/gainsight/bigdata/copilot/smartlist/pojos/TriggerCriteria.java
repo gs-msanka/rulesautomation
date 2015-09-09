@@ -6,8 +6,6 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema.Column;
-
 public class TriggerCriteria {
 
 	private String whereLogic;

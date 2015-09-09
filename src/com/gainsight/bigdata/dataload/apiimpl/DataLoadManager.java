@@ -10,6 +10,7 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -20,6 +21,7 @@ import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 
@@ -50,6 +52,7 @@ public class DataLoadManager extends NSTestBase {
 
     public Header headers = new Header();
     private Calendar calendar = Calendar.getInstance();
+    private ReportManager reportManager = new ReportManager();
 
     public DataLoadManager() {
         accessKey = getDataLoadAccessKey();
@@ -692,51 +695,6 @@ public class DataLoadManager extends NSTestBase {
     }
     
     
-    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName, DataLoadManager dataLoadManager) throws IOException {
-        CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
-        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
-        Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
-
-        NsResponseObj nsResponseObj = dataLoadManager.createSubjectArea(collectionInfo);
-        Assert.assertNotNull(nsResponseObj);
-        Assert.assertTrue(nsResponseObj.isResult());
-
-        CollectionInfo.CollectionDetails colDetails = dataLoadManager.getCollectionDetail(nsResponseObj.getData());
-        Assert.assertNotNull(colDetails.getDbCollectionName());
-        Assert.assertNotNull(colDetails.getCollectionId());
-
-        CollectionInfo actualCollection = dataLoadManager.getCollectionInfo(colDetails.getCollectionId());
-        Assert.assertNotNull(actualCollection);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollection));
-
-       return actualCollection;
-    }
-
-    /**
-     * Loads the dataFile to MDA & returns the job Id.
-     *
-     * @param jobFile
-     * @param DLMetadata
-     * @param collectionName
-     * @return JOB id of the submitted request.
-     * @throws IOException
-     */
-    public String loadDataToCollection(String jobFile, String DLMetadata, String collectionName, DataLoadManager dataLoadManager) throws IOException {
-        DataLoadMetadata metadata = mapper.readValue(DLMetadata, DataLoadMetadata.class);
-        metadata.setCollectionName(collectionName);
-        Log.info("Metadata : " +mapper.writeValueAsString(metadata));
-
-        JobInfo actualJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
-
-        File dataLoadFile = FileProcessor.getDateProcessedFile(actualJobInfo, calendar.getTime());
-        if(actualJobInfo.getCsvFormatter()!=null) {
-            dataLoadFile = FileProcessor.getFormattedCSVFile(actualJobInfo.getCsvFormatter());
-        }
-
-        String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
-        return jobId;
-    }
-
 }
 
 

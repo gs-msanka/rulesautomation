@@ -1,11 +1,16 @@
 package com.gainsight.bigdata.copilot.tests;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.gainsight.bigdata.pojo.CollectionInfo;
 
@@ -21,25 +26,24 @@ import com.gainsight.bigdata.copilot.pojos.ActionDetails;
 import com.gainsight.bigdata.copilot.smartlist.pojos.AutomatedRule;
 import com.gainsight.bigdata.copilot.smartlist.pojos.SmartList;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
-import com.gainsight.bigdata.copilot.smartlist.pojos.CollectionSchema;
+import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
+import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
+import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmartListTest extends LoadTestData {
@@ -61,6 +65,7 @@ public class SmartListTest extends LoadTestData {
 	private String requestPayload=null;
 	MongoDBDAO mongoDBDAO   = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
             nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+	ReportManager reportManager=new ReportManager();
 	
 
 	
@@ -81,7 +86,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList1(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -116,7 +121,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList2(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -151,7 +156,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList3(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -185,7 +190,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList4(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -219,7 +224,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList5(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -253,7 +258,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList6(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -286,7 +291,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList7(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -319,7 +324,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList8(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -352,7 +357,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList9(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -385,7 +390,7 @@ public class SmartListTest extends LoadTestData {
 	public void createList10(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -419,7 +424,7 @@ public class SmartListTest extends LoadTestData {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		String requestPayload=null;
-		JsonNode nodeContent = CoUtil.createSmartList(testData, requestPayload);
+		JsonNode nodeContent = CoUtil.createSmartList(testData);
 		JsonNode nodeData = nodeContent.get("data");
 
 		// Verifying Response
@@ -447,10 +452,7 @@ public class SmartListTest extends LoadTestData {
 	}
 	
 	
-	
-	
-	
-	
+    
 	@TestInfo(testCaseIds = { "GS-4637" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC12")
@@ -464,20 +466,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -505,8 +522,29 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
-
+	
+	
 	@TestInfo(testCaseIds = { "GS-4637" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC13")
@@ -522,20 +560,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -563,6 +616,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4637" })
@@ -580,20 +653,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -621,6 +709,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4639" })
@@ -636,20 +744,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -677,6 +800,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4639" })
@@ -694,20 +837,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -735,7 +893,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
-	}
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);	}
 
 	@TestInfo(testCaseIds = { "GS-4639" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -752,20 +929,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 9, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -793,6 +985,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4638" })
@@ -807,20 +1019,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.MONGO);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 10, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -848,6 +1075,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID","ContactID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4638" })
@@ -862,20 +1109,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.POSTGRES);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 10, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -903,6 +1165,26 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID","ContactID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
 
 	@TestInfo(testCaseIds = { "GS-4638" })
@@ -917,20 +1199,35 @@ public class SmartListTest extends LoadTestData {
 		collectionName = testData.get("CollectionName") + "-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = dataLoadManager.createAndVerifyCollection(
-				testData.get("CollectionSchema"), collectionName,
-				dataLoadManager);
-		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
-		String jobId = dataLoadManager.loadDataToCollection(
-				testData.get("ActualDataLoadJob"),
-				testData.get("DataLoadMetadata"), collectionName,
-				dataLoadManager);
-		Assert.assertNotNull(jobId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId),
-				"Wait for the data load complete failed.");
+		CollectionInfo collectionInfo = mapper.readValue(
+				testData.get("CollectionSchema"), CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager
+				.createSubjectAreaAndGetId(collectionInfo);
+		mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(
+				tenantDetails.getTenantId(), collectionName, DBStoreType.REDSHIFT);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager
+				.getCollectionInfo(collectionId);
+		String jobFile = testData.get("ActualDataLoadJob");
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir
+				+ jobFile), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,
+				calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager
+				.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails()
+				.getCollectionName());
+		String statusId = dataLoadManager
+				.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		verifyJobDetails(statusId, actualCollectionInfo
+				.getCollectionDetails().getCollectionName(), 10, 0);
 		String trigerCriteria = smartListSetup.getTrigerCriteria(testData,
-				collectionInfo);
-		String actionCriteria = smartListSetup.getActionInfo(testData, collectionInfo);
+				actualCollectionInfo);
+		String actionCriteria = smartListSetup.getActionInfo(testData,
+				actualCollectionInfo);
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
@@ -958,56 +1255,37 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfContacts"), "Verifying Contacts Count");
 		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
 				testData.get("numberOfCustomers"), "Verifying Customers Count");
+		String list[] = { "ID","ContactID", "Name", "Description", "LongTextArea", "Date",
+				"CreatedDateTime", "Email" };
+		List<Map<String, String>> actualData = ReportManager
+				.getProcessedReportData(
+						reportManager
+								.runReportLinksAndGetData(reportManager
+										.createTabularReport(
+												actualCollectionInfo, list)),
+						actualCollectionInfo);
+		List<Map<String, String>> expData = Comparator
+				.getParsedCsvData(new CSVReader(new FileReader(
+						Application.basedir
+								+ loadTransform.getDateProcess()
+										.getOutputFile())));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expData));
+		List<Map<String, String>> diffData = Comparator.compareListData(
+				expData, actualData);
+		Log.info("Diff : " + mapper.writeValueAsString(diffData));
+		Assert.assertEquals(diffData.size(), 0);
 	}
+
 	
-	    /**
-	     * Creates a Mongo instance based on a (single) mongodb node
-	     * @param database's host address
-	     * @param port on which the database is running
-	     * @param name of the database to retrieve
-	     * @param name of the collection
-	     * @param CollectionName value
-	     * @param string 
-	     * @return collectionmaster record as a string
-	     * @throws Exception
-	     */
-	 private String getCollectionFromMongo(String mongoHost, int mongoPort,String mongodb, String mongoCollection, String CollectionName, String subjectArea) throws Exception {
-		MongoClient mongoClient = new MongoClient(mongoHost, mongoPort);
-		DB db = mongoClient.getDB(mongodb);
-		DBCollection collection = db.getCollection(mongoCollection);
-		BasicDBObject newDocument = new BasicDBObject();
-		newDocument.append("$set", new BasicDBObject().append(
-				"CollectionDetails.dataStoreType", subjectArea));
-		BasicDBObject searchQuery = new BasicDBObject().append(
-				"CollectionDetails.CollectionName", CollectionName);
-		collection.update(searchQuery, newDocument);
-		DBCursor dbCursor = collection.find(searchQuery)
-				.sort(new BasicDBObject("createdDate", -1)).limit(1);
-		Log.info("Count of records is " + dbCursor.count());
-		String collectionRecords = null;
-		while (dbCursor.hasNext()) {
-			DBObject object = dbCursor.next();
-			collectionRecords = object.toString();
-			Log.info("CollectionMaster record is " + collectionRecords);
-		}
-		mongoClient.close();
-		return collectionRecords;
-	}
-	 
-	 
-	    /**
-	     * @param Collectionmaster record
-	     * @return CollectionSchema
-	     * @throws Exception
-	     */
-	private CollectionSchema  getCollectionSchema(String collectionRecord) throws Exception {
-		CollectionSchema collectionSchema = mapper.readValue(collectionRecord,
-				CollectionSchema.class);
-		Log.info(collectionSchema.getCollectionDetails().getCollectionId());
-		Log.info("CollectionSchema record is"
-				+ mapper.writeValueAsString(collectionSchema));
-		return collectionSchema;
-	}
+    public void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
+        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
+        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
+        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
+        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
+        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
+    }
+    
 	
 	@AfterClass
 	public void tearDown(){
