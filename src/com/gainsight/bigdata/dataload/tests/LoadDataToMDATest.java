@@ -3,6 +3,7 @@ package com.gainsight.bigdata.dataload.tests;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
@@ -20,6 +21,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -74,7 +76,7 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertCommaSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        CollectionInfo collectionInfo =createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
@@ -160,7 +162,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
         Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+        String jobId =loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
@@ -446,7 +448,45 @@ public class LoadDataToMDATest extends NSTestBase {
      * @return Collection Schema.
      * @throws IOException
      */
-    private CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
+   
+
+
+
+
+    /**
+     * Creates a flat report, runs the report, changes the DBNames with Display Names & dos date processing.
+     * @param collectionInfo - Collection Schema
+     * @return List<Map> - Table data as list of key values.
+     * @throws IOException
+     */
+    private List<Map<String, String>> getFlatCollectionData(CollectionInfo collectionInfo) throws IOException {
+        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(collectionInfo)));
+        Log.info("ActualData Size : " + actualData.size());
+        actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
+        Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
+        return actualData;
+    }
+
+    @AfterClass
+    public void tearDown() {
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+    }
+
+    /**
+     * Just in case used method to delete all the collections.
+     */
+    public void deleteAllCollection() {
+        String collectionName = "GS";
+        List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
+        for(CollectionInfo collectionInfo : dataLoadManager.getAllCollections() ) {
+            if(collectionInfo.getCollectionDetails().getCollectionName().startsWith(collectionName)) {
+                colList.add(collectionInfo.getCollectionDetails());
+            }
+        }
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
+    }
+    
+    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
@@ -490,23 +530,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         return jobId;
     }
-
-    /**
-     * Verifies the Async Job details.
-     *
-     * @param jobId - JobId to verify the details.
-     * @param collectionName - Collection Name
-     * @param successCount - Number of success records.
-     * @param failedCount - Number of Failed records.
-     */
-    private void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
-        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
-        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
-        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
-        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
-        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-    }
-
+    
     /**
      * Reads the csv file, does date processing, populated default boolean values, trims the text columns to the size specified.
      *
@@ -515,7 +539,7 @@ public class LoadDataToMDATest extends NSTestBase {
      * @return List of key values i.e. table data parsed as json.
      * @throws IOException
      */
-    private List<Map<String,String>>  getExpectedData(String jobFile, CollectionInfo collectionInfo) throws IOException {
+    public List<Map<String,String>>  getExpectedData(String jobFile, CollectionInfo collectionInfo) throws IOException {
         JobInfo expectedJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
         File expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, calendar.getTime());
         CSVReader expectedReader = new CSVReader(new FileReader(expectedDataFile));
@@ -529,35 +553,18 @@ public class LoadDataToMDATest extends NSTestBase {
     }
 
     /**
-     * Creates a flat report, runs the report, changes the DBNames with Display Names & dos date processing.
-     * @param collectionInfo - Collection Schema
-     * @return List<Map> - Table data as list of key values.
-     * @throws IOException
+     * Verifies the Async Job details.
+     *
+     * @param jobId - JobId to verify the details.
+     * @param collectionName - Collection Name
+     * @param successCount - Number of success records.
+     * @param failedCount - Number of Failed records.
      */
-    private List<Map<String, String>> getFlatCollectionData(CollectionInfo collectionInfo) throws IOException {
-        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(collectionInfo)));
-        Log.info("ActualData Size : " + actualData.size());
-        actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
-        Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
-        return actualData;
-    }
-
-    @AfterClass
-    public void tearDown() {
-        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
-    }
-
-    /**
-     * Just in case used method to delete all the collections.
-     */
-    public void deleteAllCollection() {
-        String collectionName = "GS";
-        List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
-        for(CollectionInfo collectionInfo : dataLoadManager.getAllCollections() ) {
-            if(collectionInfo.getCollectionDetails().getCollectionName().startsWith(collectionName)) {
-                colList.add(collectionInfo.getCollectionDetails());
-            }
-        }
-        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
+    public void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
+        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
+        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
+        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
+        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
+        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
     }
 }

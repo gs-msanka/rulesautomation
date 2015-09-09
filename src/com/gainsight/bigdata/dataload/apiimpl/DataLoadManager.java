@@ -2,6 +2,7 @@ package com.gainsight.bigdata.dataload.apiimpl;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
@@ -9,23 +10,27 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -46,6 +51,8 @@ import static com.gainsight.sfdc.pages.Constants.*;
 public class DataLoadManager extends NSTestBase {
 
     public Header headers = new Header();
+    private Calendar calendar = Calendar.getInstance();
+    private ReportManager reportManager = new ReportManager();
 
     public DataLoadManager() {
         accessKey = getDataLoadAccessKey();
@@ -686,7 +693,8 @@ public class DataLoadManager extends NSTestBase {
         }
         throw new RuntimeException("Column details not found in collection info supplied for the displayName : "+displayName);
     }
-
+    
+    
 }
 
 
