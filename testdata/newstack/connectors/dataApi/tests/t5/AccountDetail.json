@@ -1,0 +1,167 @@
+{
+  "accountType": "DATA_API",
+  "displayName": "GS_DATA_API_5",
+  "globalMapping": {
+    "systemDefined": [
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "Name",
+          "displayName": "Account Name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsaccountname",
+          "displayName": "Account Name",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "contact",
+          "dbName": "Name",
+          "displayName": "Contact Name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsusername",
+          "displayName": "User Name",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "contact",
+          "dbName": "Email",
+          "displayName": "Email",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsuseremail",
+          "displayName": "User Email",
+          "properties": {}
+        }
+      }
+    ],
+    "custom": [],
+    "measures": [
+      {
+        "source": {
+          "dbName": "",
+          "displayName": "Logins",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "",
+          "displayName": "GS_SumofLogins",
+          "properties": {
+            "aggregationFunction": "SUM"
+          }
+        }
+      },
+      {
+        "source": {
+          "dbName": "",
+          "displayName": "PageLoadTime",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "",
+          "displayName": "Avg_PageLoadTime",
+          "properties": {
+            "aggregationFunction": "AVG"
+          }
+        }
+      }
+    ],
+    "accountIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "GSA_Account_ExternalId__c"
+      },
+      "target": {
+        "dbName": "gsaccountid",
+        "displayName": "GSA Account ExternalId",
+        "properties": {}
+      },
+      "lookup": true,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": {
+        "lookupObject": "Account",
+        "lookupKey": "Account_ExternalId__c",
+        "key": "Id"
+      }
+    },
+    "userIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "GSA_Contact_ExternalId__c"
+      },
+      "target": {
+        "dbName": "gsuserid",
+        "displayName": "GSA Contact ExternalId",
+        "properties": {}
+      },
+      "lookup": true,
+      "directLookup": true,
+      "digitConversionEnable": false,
+      "properties": {
+        "lookupObject": "Contact",
+        "lookupKey": "Id",
+        "key": "Contact_ExternalId__c"
+      }
+    },
+    "eventIdentifier": {
+      "source": null,
+      "target": null,
+      "lookup": false,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": null
+    },
+    "timestampIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "Date"
+      },
+      "target": {
+        "dbName": "gstimestamp",
+        "displayName": "Date",
+        "properties": {}
+      },
+      "lookup": false,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": null
+    }
+  },
+  "usageConfiguration": {
+    "configType": "ACCOUNTLEVEL",
+    "frequency": "MONTHLY",
+    "day": "MONDAY",
+    "weekType": "START"
+  },
+  "notificationDetails": {
+    "successRecipients": [
+      "ggolla@gainsight.com"
+    ],
+    "failureRecipients": [
+      "ggolla@gainsight.com",
+      "snasika@gainsight.com"
+    ]
+  },
+  "runNowDetails": {
+    "type": "RUN_NOW",
+    "startDate": "-10",
+    "endDate": "0"
+  },
+  "properties": {
+    "collectionId": "",
+    "timeZone": "UTC"
+  },
+  "writeToSFDC": false
+}
