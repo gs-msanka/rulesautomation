@@ -78,7 +78,8 @@ public class SurveyPropertiesPage extends SurveyPage {
 					field.setText(ANONYMOUS_ACCOUNT_INPUT,
 							surveyProp.getAnonymousAccount());
 					Log.info("Selecting Account");
-					link.click("SURVEY Account 1");
+					link.click(surveyProp.getAnonymousAccount());
+
 				}
 			}
 		}

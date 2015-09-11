@@ -21,7 +21,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import com.gainsight.http.ResponseObj;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 
 public class LoadToFeature extends RulesUtil {
@@ -34,7 +33,9 @@ public class LoadToFeature extends RulesUtil {
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
+		metaUtil.createFieldsForAccount(sfdc, sfinfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanupFeatures));
 		ObjectMapper mapper = new ObjectMapper();
@@ -42,7 +43,7 @@ public class LoadToFeature extends RulesUtil {
 		JobInfo jobInfo= mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
 		LastRunResultFieldName = resolveStrNameSpace(LastRunResultFieldName);
-		updateNSURLInAppSettings(PropertyReader.nsAppUrl);
+		updateNSURLInAppSettings(nsConfig.getNsURl());
 		List<HashMap<String, String>> testDataList = ExcelDataProvider.getDataFromExcel(Application.basedir + TEST_DATA_FILE1, "loadToCustomers1");
 		if(testDataList.size()>0) {
 			loadToCustomers(testDataList.get(0));
@@ -73,13 +74,13 @@ public class LoadToFeature extends RulesUtil {
 		Assert.assertNotNull(responseObj.getRequestId());
 		waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
 				.getChild("JBCXM__LastRunResult__c").getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
-		int rules2 = sfdc.getRecordCount("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=true and JBCXM__Licensed__c=true");
+		int rules2 = sfdc.getRecordCount(resolveStrNameSpace("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=true and JBCXM__Licensed__c=true"));
         Log.info(""+rules2);
         Assert.assertEquals(rules1,rules2);
 
@@ -104,13 +105,13 @@ public class LoadToFeature extends RulesUtil {
 		Assert.assertNotNull(responseObj.getRequestId());
 		waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
-				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
+				.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
-		int rules2 = sfdc.getRecordCount("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=true and JBCXM__Licensed__c=false");
+		int rules2 = sfdc.getRecordCount(resolveStrNameSpace("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=true and JBCXM__Licensed__c=false"));
         Log.info(""+rules2);
 		Assert.assertEquals(rules1,rules2);
 
@@ -135,13 +136,13 @@ public class LoadToFeature extends RulesUtil {
 		Assert.assertNotNull(responseObj.getRequestId());
 		waitForCompletion(ruleId, wa, header);
         String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
-				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
+				.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null"));
         Log.info(""+rules1);
-		int rules2 = sfdc.getRecordCount("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=false and JBCXM__Licensed__c=false");
+		int rules2 = sfdc.getRecordCount(resolveStrNameSpace("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=false and JBCXM__Licensed__c=false"));
         Log.info(""+rules1);
 		Assert.assertEquals(rules1,rules2);
 
@@ -167,13 +168,13 @@ public class LoadToFeature extends RulesUtil {
 		waitForCompletion(ruleId, wa, header);
 
 		String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
-				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
+				.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
-		int rules1 = sfdc.getRecordCount("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, Boolean_Auto__c, Name From Account Where ((Boolean_Auto__c = false) AND (Currency_Auto__c > 1000) AND (Name LIKE 'A%')) AND JBCXM__CustomerInfo__c != null"));
 		Log.info(""+rules1);
-		int rules2 = sfdc.getRecordCount("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=false and JBCXM__Licensed__c=false");
+		int rules2 = sfdc.getRecordCount(resolveStrNameSpace("Select JBCXM__Account__c,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Licensed__c from JBCXM__CustomerFeatures__c where JBCXM__Features__r.JBCXM__Feature__c='One' and JBCXM__Features__r.JBCXM__Product__c='One' and JBCXM__Enabled__c=false and JBCXM__Licensed__c=false"));
 		Log.info(""+rules2);
 		Assert.assertEquals(rules1,rules2);
 

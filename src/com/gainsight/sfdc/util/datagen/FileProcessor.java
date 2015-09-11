@@ -9,9 +9,11 @@ import java.util.List;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import org.apache.commons.lang3.time.DateUtils;
 
 public class FileProcessor {
 
@@ -34,7 +36,7 @@ public class FileProcessor {
 		CSVReader reader = new CSVReader(new FileReader(inputFile));
 		String[] cols;
 		int fieldIndex = -1;
-        outputFile.getParentFile().mkdir();
+        outputFile.getParentFile().mkdirs();
 		CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
 		cols = reader.readNext(); 
 		System.out.println(cols.length);
@@ -182,7 +184,7 @@ public class FileProcessor {
     public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields, Date date) throws IOException {
         Log.info("Started Date Processing....");
 
-        outputFile.getParentFile().mkdir();
+        outputFile.getParentFile().mkdirs();
         CSVReader reader = new CSVReader(new FileReader(inputFile));
         String[] cols;
         int fieldIndex = -1;
@@ -276,5 +278,94 @@ public class FileProcessor {
             }
         }
     }
+
+    /**
+     * Returns the date String with all the properties supplied in dataproperties.
+     * @param dateProperties
+     * @param amount
+     * @param date
+     * @return
+     */
+    private static String getDate(MDADateProcessor.DateColumnProperties dateProperties, int amount, Date date) {
+        String formattedDate = "";
+        Date actualDate = DateUtils.addDays(date, amount);
+        if(dateProperties.isMonth()) {
+            formattedDate = DateUtil.getMonthFirstDate(actualDate, dateProperties.getDateFormat());
+        } else if(dateProperties.isQuarter()) {
+            formattedDate = DateUtil.getQuarterFirstDate(actualDate, dateProperties.getDateFormat());
+        } else if(dateProperties.isYear()) {
+            formattedDate = String.valueOf(DateUtil.getYear(actualDate));
+        } else if(dateProperties.isWeekLabel()) {
+           formattedDate = DateUtil.getWeekLabelDate(actualDate,dateProperties.getWeekStartsOn(), dateProperties.isUsersEndDate(), dateProperties.getDateFormat());
+        } else {
+            formattedDate = DateUtil.getFormattedDate(actualDate, dateProperties.getDateFormat());
+        }
+        return formattedDate;
+    }
+
+
+    /**
+     * Explicitly used for MDA Aggregation expected file generator with WeekLabel, Month, Quarter and Year.
+     * @param mdaDateProcessor
+     * @param date
+     * @return
+     * @throws IOException
+     */
+    public static File getDateProcessedFile(MDADateProcessor mdaDateProcessor, Date date) throws IOException {
+        Log.info("Started Date Processing....");
+
+        File outputFile = new File(Application.basedir+mdaDateProcessor.getOutputFilePath());
+        outputFile.getParentFile().mkdirs();
+        CSVReader reader = new CSVReader(new FileReader(new File(Application.basedir+mdaDateProcessor.getInputFilePath())));
+
+        String[] cols;
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
+        cols = reader.readNext();
+        Log.info("No of Columns Found : " +cols.length);
+        writer.writeNext(cols);
+        writer.flush();
+        for(String str : cols) {
+            Log.info("Column : " +str);
+        }
+
+        if(mdaDateProcessor.getDateColumnProperties()!=null) {
+            for(MDADateProcessor.DateColumnProperties dateProperties : mdaDateProcessor.getDateColumnProperties()) {
+                for(int i=0; i < cols.length ; i++) {
+                    if(cols[i].trim().equalsIgnoreCase(dateProperties.getFieldName())) {
+                        dateProperties.setFieldIndex(i);
+                    }
+                }
+                if(!(dateProperties.getFieldIndex() > -1)) {
+                    throw new RuntimeException("Field not present in the file supplied " +dateProperties.getFieldName());
+                }
+            }
+        }
+
+        cols = reader.readNext();
+        while(cols != null) {
+            if(mdaDateProcessor.getDateColumnProperties()!=null) {
+                for(MDADateProcessor.DateColumnProperties dateProperties : mdaDateProcessor.getDateColumnProperties()) {
+                    try {
+                        String val = cols[dateProperties.getFieldIndex()];
+                        if (val == null || val == "") {
+                            Log.info("No field Value..., just skipping date/datetime conversion...");
+                        } else {
+                            int value = Integer.parseInt(cols[dateProperties.getFieldIndex()]);
+                            cols[dateProperties.getFieldIndex()] = getDate(dateProperties, value, date);
+                        }
+
+                    } catch (NumberFormatException e) {
+                        Log.error("Unable to do date formatting" , e);
+                    }
+                }
+            }
+            writer.writeNext(cols);
+            writer.flush();
+            cols = reader.readNext();
+        }
+        Log.info("Completed Date Processing.");
+        return outputFile;
+    }
+
 
 }

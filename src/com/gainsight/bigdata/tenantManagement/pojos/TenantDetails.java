@@ -35,6 +35,8 @@ public class TenantDetails {
     private DBDetail dataDBDetail;
     @JsonProperty("postgresDBDetail")
     private DBDetail postgresDBDetail;
+    @JsonProperty("redshiftDBDetail")
+    private DBDetail redshiftDBDetail;
     private boolean disabled = false;
     private String tenantType = "OTHERS";
     private boolean systemDefined = false;
@@ -207,6 +209,14 @@ public class TenantDetails {
         public void setPassword(String password) {
             this.password = password;
         }
+    }
+
+    public DBDetail getRedshiftDBDetail() {
+        return redshiftDBDetail;
+    }
+
+    public void setRedshiftDBDetail(DBDetail redshiftDBDetail) {
+        this.redshiftDBDetail = redshiftDBDetail;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

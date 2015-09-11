@@ -1,0 +1,82 @@
+{
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "User Id"
+          },
+          {
+            "name": "Id",
+            "alias": "Source User Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "Source Account Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "Account Id"
+          },
+          {
+            "name": "Email",
+            "alias": "User Email"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/T12_ExpectedData.csv",
+        "table": "TempData",
+        "joinColumnName": "UserName",
+        "columns": [
+          {
+            "name": "UserName",
+            "alias": "User Name"
+          },
+          {
+            "name": "AccountName",
+            "alias": "Account Name"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "GS_SumofLogins",
+            "alias": "GS_SumofLogins"
+          },
+          {
+            "name": "Week",
+            "alias": "Week"
+          },
+          {
+            "name": "Month",
+            "alias": "Month"
+          },
+          {
+            "name": "Quarter",
+            "alias": "Quarter"
+          },
+          {
+            "name": "Year",
+            "alias": "Year"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/T12_Final_ExpectedData.csv"
+  }
+}

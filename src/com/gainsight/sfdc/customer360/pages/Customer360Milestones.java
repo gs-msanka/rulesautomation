@@ -122,7 +122,7 @@ public class Customer360Milestones extends Customer360Page {
     }
 
     /**
-     * Edits the milestone & validates if form data is correctly loaded & then update with new info
+     * Edits the milestone and validates if form data is correctly loaded and then update with new info
      * @param oldTestData - Milestone to edit.
      * @param newTestData - Milestone updated information.
      * throws run time exception is form data is not correct.

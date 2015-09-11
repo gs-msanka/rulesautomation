@@ -1,0 +1,232 @@
+AccountName,UserExternalId,Event,Week,Quarter,Month,Date,Year,MIN_Price,MAX_FileSize,EventCount,Count_UniqueLogins,Avg_PageLoadTime
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,0,0,0,0,0,2,267,5,5,20
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,0,0,0,0,0,47,294,8,8,9
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,0,0,0,0,0,9,275,8,8,16
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,0,0,0,0,0,3,287,13,13,15
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,0,0,0,0,0,12,247,9,9,18
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,0,0,0,0,0,9,283,7,7,19
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,0,0,0,0,0,25,289,4,4,19
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,0,0,0,0,0,16,239,7,7,16
+Abberley Kooiman,0031a000002kj04AAA,360 Page,0,0,0,0,0,14,269,8,8,14
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,0,0,0,0,0,3,296,9,9,11
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,0,0,0,0,0,7,289,10,10,12
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,0,0,0,0,0,10,257,9,9,13
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,0,0,0,0,0,24,253,6,6,7
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,0,0,0,0,0,3,266,5,5,15
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,0,0,0,0,0,0,276,9,9,10
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,0,0,0,0,0,3,280,7,7,10
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,0,0,0,0,0,19,297,6,6,8
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,0,0,0,0,0,11,293,5,5,22
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,0,0,0,0,0,2,288,9,9,12
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,0,0,0,0,0,14,278,8,8,12
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,0,0,0,0,0,12,215,4,4,10
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-1,-1,-1,-1,-1,1,278,7,7,12
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-1,-1,-1,-1,-1,1,173,3,3,6
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-1,-1,-1,-1,-1,7,270,6,6,12
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-1,-1,-1,-1,-1,4,285,9,9,15
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-1,-1,-1,-1,-1,0,213,13,13,20
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-1,-1,-1,-1,-1,1,287,14,14,16
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-1,-1,-1,-1,-1,60,282,3,3,13
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-1,-1,-1,-1,-1,39,241,4,4,10
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-1,-1,-1,-1,-1,30,249,3,3,4
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-1,-1,-1,-1,-1,23,257,6,6,12
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-1,-1,-1,-1,-1,16,295,5,5,15
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-1,-1,-1,-1,-1,40,185,5,5,18
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-1,-1,-1,-1,-1,0,183,5,5,18
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-1,-1,-1,-1,-1,6,292,11,11,16
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-1,-1,-1,-1,-1,3,290,9,9,14
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-1,-1,-1,-1,-1,6,279,7,7,18
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-1,-1,-1,-1,-1,22,220,8,8,13
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-1,-1,-1,-1,-1,13,270,8,8,16
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-1,-1,-1,-1,-1,3,300,8,8,13
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-1,-1,-1,-1,-1,30,253,12,12,12
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-1,-1,-1,-1,-1,56,124,1,1,24
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-2,-2,-2,-2,-2,12,258,7,7,18
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-2,-2,-2,-2,-2,6,264,10,10,11
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-2,-2,-2,-2,-2,0,216,9,9,16
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-2,-2,-2,-2,-2,2,298,15,15,13
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-2,-2,-2,-2,-2,47,277,8,8,13
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-2,-2,-2,-2,-2,0,236,4,4,24
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-2,-2,-2,-2,-2,16,256,10,10,14
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-2,-2,-2,-2,-2,8,231,7,7,7
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-2,-2,-2,-2,-2,51,284,4,4,16
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-2,-2,-2,-2,-2,35,278,5,5,15
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-2,-2,-2,-2,-2,29,230,8,8,15
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-2,-2,-2,-2,-2,13,286,12,12,18
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-2,-2,-2,-2,-2,39,298,9,9,19
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-2,-2,-2,-2,-2,23,240,8,8,13
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-2,-2,-2,-2,-2,1,232,5,5,16
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-2,-2,-2,-2,-2,43,249,3,3,5
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-2,-2,-2,-2,-2,9,249,6,6,13
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-2,-2,-2,-2,-2,4,288,7,7,20
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-2,-2,-2,-2,-2,10,253,7,7,14
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-2,-2,-2,-2,-2,8,281,7,7,15
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-2,-2,-2,-2,-2,1,279,8,8,18
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-3,-3,-3,-3,-3,1,300,9,9,14
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-3,-3,-3,-3,-3,7,285,8,8,10
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-3,-3,-3,-3,-3,15,282,3,3,5
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-3,-3,-3,-3,-3,13,273,5,5,16
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-3,-3,-3,-3,-3,17,249,8,8,14
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-3,-3,-3,-3,-3,7,249,8,8,17
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-3,-3,-3,-3,-3,1,255,7,7,9
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-3,-3,-3,-3,-3,58,232,7,7,12
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-3,-3,-3,-3,-3,9,272,8,8,20
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-3,-3,-3,-3,-3,17,296,7,7,12
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-3,-3,-3,-3,-3,4,201,9,9,14
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-3,-3,-3,-3,-3,4,267,8,8,16
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-3,-3,-3,-3,-3,11,295,10,10,16
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-3,-3,-3,-3,-3,0,281,7,7,13
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-3,-3,-3,-3,-3,3,299,11,11,14
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-3,-3,-3,-3,-3,16,238,10,10,15
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-3,-3,-3,-3,-3,21,263,8,8,15
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-3,-3,-3,-3,-3,15,286,13,13,11
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-3,-3,-3,-3,-3,1,299,10,10,17
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-3,-3,-3,-3,-3,17,293,8,8,12
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-3,-3,-3,-3,-3,18,173,9,9,18
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-4,-4,-4,-4,-4,4,262,14,14,19
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-4,-4,-4,-4,-4,0,286,9,9,12
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-4,-4,-4,-4,-4,19,207,9,9,14
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-4,-4,-4,-4,-4,1,285,6,6,15
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-4,-4,-4,-4,-4,3,292,13,13,17
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-4,-4,-4,-4,-4,34,176,4,4,12
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-4,-4,-4,-4,-4,40,285,8,8,18
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-4,-4,-4,-4,-4,9,186,8,8,12
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-4,-4,-4,-4,-4,1,291,11,11,17
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-4,-4,-4,-4,-4,13,280,9,9,16
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-4,-4,-4,-4,-4,9,222,10,10,11
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-4,-4,-4,-4,-4,6,284,6,6,8
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-4,-4,-4,-4,-4,29,262,5,5,14
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-4,-4,-4,-4,-4,12,283,5,5,19
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-4,-4,-4,-4,-4,17,269,7,7,14
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-4,-4,-4,-4,-4,49,142,3,3,13
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-4,-4,-4,-4,-4,15,275,3,3,12
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-4,-4,-4,-4,-4,3,198,6,6,14
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-4,-4,-4,-4,-4,36,254,4,4,15
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-4,-4,-4,-4,-4,19,269,6,6,9
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-4,-4,-4,-4,-4,23,299,6,6,20
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-5,-5,-5,-5,-5,43,262,5,5,21
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-5,-5,-5,-5,-5,6,254,7,7,18
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-5,-5,-5,-5,-5,13,295,7,7,16
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-5,-5,-5,-5,-5,41,221,2,2,12
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-5,-5,-5,-5,-5,17,285,8,8,9
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-5,-5,-5,-5,-5,19,252,8,8,17
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-5,-5,-5,-5,-5,16,300,9,9,15
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-5,-5,-5,-5,-5,4,279,10,10,12
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-5,-5,-5,-5,-5,15,294,7,7,13
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-5,-5,-5,-5,-5,6,287,12,12,17
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-5,-5,-5,-5,-5,8,276,8,8,13
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-5,-5,-5,-5,-5,3,292,8,8,16
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-5,-5,-5,-5,-5,5,296,10,10,20
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-5,-5,-5,-5,-5,3,298,9,9,10
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-5,-5,-5,-5,-5,28,290,8,8,23
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-5,-5,-5,-5,-5,12,279,9,9,16
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-5,-5,-5,-5,-5,1,249,6,6,18
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-5,-5,-5,-5,-5,5,278,5,5,19
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-5,-5,-5,-5,-5,4,288,5,5,12
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-5,-5,-5,-5,-5,1,284,8,8,7
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-5,-5,-5,-5,-5,11,287,7,7,12
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-6,-6,-6,-6,-6,9,186,6,6,22
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-6,-6,-6,-6,-6,46,275,2,2,28
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-6,-6,-6,-6,-6,0,283,7,7,19
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-6,-6,-6,-6,-6,19,214,6,6,12
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-6,-6,-6,-6,-6,13,300,3,3,21
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-6,-6,-6,-6,-6,3,274,8,8,16
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-6,-6,-6,-6,-6,12,268,10,10,11
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-6,-6,-6,-6,-6,13,238,7,7,15
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-6,-6,-6,-6,-6,22,253,10,10,15
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-6,-6,-6,-6,-6,8,230,9,9,10
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-6,-6,-6,-6,-6,4,285,7,7,18
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-6,-6,-6,-6,-6,7,299,4,4,15
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-6,-6,-6,-6,-6,8,291,9,9,15
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-6,-6,-6,-6,-6,7,184,4,4,6
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-6,-6,-6,-6,-6,5,230,9,9,20
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-6,-6,-6,-6,-6,8,271,10,10,11
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-6,-6,-6,-6,-6,0,275,7,7,18
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-6,-6,-6,-6,-6,4,274,9,9,13
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-6,-6,-6,-6,-6,24,246,5,5,21
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-6,-6,-6,-6,-6,0,298,10,10,12
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-6,-6,-6,-6,-6,4,242,11,11,13
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-7,-7,-7,-7,-7,37,295,2,2,9
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-7,-7,-7,-7,-7,25,291,6,6,15
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-7,-7,-7,-7,-7,3,286,10,10,15
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-7,-7,-7,-7,-7,22,300,7,7,9
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-7,-7,-7,-7,-7,39,191,3,3,15
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-7,-7,-7,-7,-7,2,201,7,7,16
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-7,-7,-7,-7,-7,0,240,5,5,14
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-7,-7,-7,-7,-7,22,284,7,7,11
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-7,-7,-7,-7,-7,2,300,8,8,15
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-7,-7,-7,-7,-7,8,300,7,7,13
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-7,-7,-7,-7,-7,21,269,8,8,14
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-7,-7,-7,-7,-7,17,297,7,7,23
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-7,-7,-7,-7,-7,4,277,7,7,20
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-7,-7,-7,-7,-7,0,296,9,9,13
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-7,-7,-7,-7,-7,48,275,4,4,14
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-7,-7,-7,-7,-7,11,296,6,6,9
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-7,-7,-7,-7,-7,1,240,9,9,12
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-7,-7,-7,-7,-7,6,293,8,8,18
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-7,-7,-7,-7,-7,6,274,7,7,20
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-7,-7,-7,-7,-7,19,290,6,6,23
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-7,-7,-7,-7,-7,16,300,10,10,17
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-8,-8,-8,-8,-8,18,278,8,8,23
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-8,-8,-8,-8,-8,26,278,6,6,15
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-8,-8,-8,-8,-8,6,285,10,10,17
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-8,-8,-8,-8,-8,1,297,6,6,14
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-8,-8,-8,-8,-8,13,240,5,5,13
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-8,-8,-8,-8,-8,11,250,7,7,11
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-8,-8,-8,-8,-8,1,254,9,9,14
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-8,-8,-8,-8,-8,9,300,5,5,16
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-8,-8,-8,-8,-8,9,194,4,4,14
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-8,-8,-8,-8,-8,10,266,6,6,19
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-8,-8,-8,-8,-8,5,263,5,5,14
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-8,-8,-8,-8,-8,7,242,7,7,13
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-8,-8,-8,-8,-8,4,243,4,4,12
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-8,-8,-8,-8,-8,4,191,7,7,19
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-8,-8,-8,-8,-8,4,267,8,8,14
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-8,-8,-8,-8,-8,5,243,4,4,10
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-8,-8,-8,-8,-8,5,294,5,5,15
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-8,-8,-8,-8,-8,11,281,9,9,14
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-8,-8,-8,-8,-8,2,299,10,10,16
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-8,-8,-8,-8,-8,2,292,10,10,11
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-8,-8,-8,-8,-8,2,294,6,6,16
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-9,-9,-9,-9,-9,4,191,5,5,18
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-9,-9,-9,-9,-9,45,257,6,6,14
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-9,-9,-9,-9,-9,17,294,6,6,18
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-9,-9,-9,-9,-9,32,210,3,3,17
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-9,-9,-9,-9,-9,7,298,7,7,12
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-9,-9,-9,-9,-9,5,150,6,6,14
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-9,-9,-9,-9,-9,31,279,10,10,13
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-9,-9,-9,-9,-9,11,300,10,10,21
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-9,-9,-9,-9,-9,8,280,8,8,22
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-9,-9,-9,-9,-9,12,244,4,4,14
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-9,-9,-9,-9,-9,5,273,5,5,17
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-9,-9,-9,-9,-9,17,244,7,7,14
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-9,-9,-9,-9,-9,3,297,11,11,13
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-9,-9,-9,-9,-9,0,293,9,9,13
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-9,-9,-9,-9,-9,47,297,6,6,15
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-9,-9,-9,-9,-9,7,237,9,9,17
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-9,-9,-9,-9,-9,1,193,9,9,10
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-9,-9,-9,-9,-9,0,292,8,8,9
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-9,-9,-9,-9,-9,10,291,7,7,14
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-9,-9,-9,-9,-9,12,215,6,6,16
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-9,-9,-9,-9,-9,11,267,12,12,16
+UniAmerica Inc,0031a000001h0mPAAQ,Report Created,-10,-10,-10,-10,-10,21,285,7,7,15
+UniAmerica Inc,0031a000001h0mSAAQ,Outreach Created,-10,-10,-10,-10,-10,14,181,4,4,17
+UniAmerica Inc,0031a000001h0mQAAQ,SmartList Created,-10,-10,-10,-10,-10,19,232,3,3,8
+UniAmerica Inc,0031a000001h0mOAAQ,Report Run,-10,-10,-10,-10,-10,1,276,9,9,12
+UniAmerica Inc,0031a000001h0mRAAQ,EmailTemplate Created,-10,-10,-10,-10,-10,11,146,5,5,16
+Abberley Kooiman,0031a000002kj04AAA,360 Page,-10,-10,-10,-10,-10,9,264,4,4,16
+Abberley Kooiman,0031a000002kj02AAA,Outreach Triggered,-10,-10,-10,-10,-10,9,239,6,6,20
+Abberley Kooiman,0031a000002kj06AAA,Rule Schedule Run,-10,-10,-10,-10,-10,22,265,5,5,9
+Abberley Kooiman,0031a000002kj03AAA,PDF Exported,-10,-10,-10,-10,-10,27,233,6,6,18
+Abberley Kooiman,0031a000002kj07AAA,OutReach Schedule Triggered,-10,-10,-10,-10,-10,62,292,3,3,25
+Abberley Kooiman,0031a000002kj05AAA,Rule Run,-10,-10,-10,-10,-10,9,289,7,7,16
+IBM Corp Data Systems Div,0031a000002kj0HAAQ,CTA Updated,-10,-10,-10,-10,-10,21,297,12,12,11
+IBM Corp Data Systems Div,0031a000002kj0BAAQ,CTA Updated,-10,-10,-10,-10,-10,12,273,9,9,14
+IBM Corp Data Systems Div,0031a000002kj0DAAQ,Survey Triggered,-10,-10,-10,-10,-10,1,246,7,7,16
+IBM Corp Data Systems Div,0031a000002kj0GAAQ,CTA Created,-10,-10,-10,-10,-10,2,299,13,13,20
+IBM Corp Data Systems Div,0031a000002kj0CAAQ,Survey Created,-10,-10,-10,-10,-10,15,268,5,5,14
+IBM Corp Data Systems Div,0031a000002kj08AAA,File Uploaded,-10,-10,-10,-10,-10,1,291,10,10,14
+IBM Corp Data Systems Div,0031a000002kj0FAAQ,Success Snapshot Exported,-10,-10,-10,-10,-10,3,297,12,12,18
+IBM Corp Data Systems Div,0031a000002kj0EAAQ,Survey Schedule Triggered,-10,-10,-10,-10,-10,27,274,8,8,11
+IBM Corp Data Systems Div,0031a000002kj0AAAQ,CTA Created,-10,-10,-10,-10,-10,7,266,6,6,10
+IBM Corp Data Systems Div,0031a000002kj09AAA,File Downloaded,-10,-10,-10,-10,-10,21,294,9,9,17

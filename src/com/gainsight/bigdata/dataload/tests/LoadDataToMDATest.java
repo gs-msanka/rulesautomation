@@ -3,6 +3,7 @@ package com.gainsight.bigdata.dataload.tests;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
@@ -20,7 +21,9 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
+
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -41,10 +44,10 @@ public class LoadDataToMDATest extends NSTestBase {
     private ReportManager reportManager = new ReportManager();
     private DataLoadManager dataLoadManager;
     private Calendar calendar = Calendar.getInstance();
+    private List<String> collectionsToDelete = new ArrayList<>();
 
     @BeforeClass
     public void setup() {
-        tenantManager.deleteTenant(sfinfo.getOrg(), null);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
@@ -54,104 +57,136 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
     public void insertCommaSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4790"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
     public void insertCommaSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
+        CollectionInfo collectionInfo =createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3688"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
     public void insertSpaceSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4791"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
     public void insertSpaceSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3687"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
     public void insertTabSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4792"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
     public void insertTabSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3686"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
     public void insertSemiColonSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+        String jobId =loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4793"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T9")
     public void insertSemiColonSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
 
@@ -159,11 +194,12 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
     public void loadDataWithExtraFieldCreatedFromTenantManagement(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName")+"1";
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
         Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
 
@@ -174,12 +210,15 @@ public class LoadDataToMDATest extends NSTestBase {
 
         jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
 
         List<Map<String, String>> expectedData = getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo);
         List<Map<String, String>> actualData = getFlatCollectionData(collectionInfo);
-        Assert.assertEquals(0, Comparator.compareListData(expectedData, actualData).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
+        Log.info("Diff : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     private CollectionInfo addColumnsToCollectionViaTenantMgt(String tenantId, String collectionId, CollectionInfo.Column[] columns) throws IOException {
@@ -197,17 +236,21 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
     public void loadDataWithJavaScriptAndHtmlCode(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
         List<String> failedRecords = dataLoadManager.getFailedRecords(jobId);
         Assert.assertNotNull(failedRecords);
         Assert.assertEquals(failedRecords.size() - 1, Integer.parseInt(testData.get("FailedRecordCount")));
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
 
     }
 
@@ -215,30 +258,37 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T12")
     public void loadDataWithNoColumnInformation(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3646"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T13")
     public void deleteAllCollectionData(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
         jobId = dataLoadManager.clearAllCollectionData(collectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertNotNull(jobId, "Job Id (or) status id is null.");
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
 
         Assert.assertEquals(statusInfo.getMessage(), "Data truncated successfully");
@@ -251,33 +301,39 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T14")
     public void deleteCollectionDataWithDateField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
-        File file = new File(Application.basedir + "/resources/datagen/process/GS-3858.csv");
+       String tempFilePath = Application.basedir + "/resources/datagen/process/GS-3858.csv";
 
-        CSVWriter writer = new CSVWriter(new FileWriter(file), ',', '"', '\\', "\n");
+        CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date"});
-        allLines.add(new String[]{DateUtil.addDays(Calendar.getInstance(), -1, "yyyy-MM-dd")});
+        allLines.add(new String[]{DateUtil.addDays(calendar.getTime(), -1, "yyyy-MM-dd")});
         writer.writeAll(allLines);
         writer.flush();
         writer.close();
 
         DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        metadata.setCollectionName(collectionName);
 
-        jobId = dataLoadManager.dataLoadManage(metadata, file);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertEquals(statusInfo.getSuccessCount(), 5);
+        diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
 
     }
 
@@ -285,19 +341,23 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
     public void deleteCollectionDataWithDateAccountField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
         DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        metadata.setCollectionName(collectionName);
 
-        File file = new File(Application.basedir + "/resources/datagen/process/GS-3857.csv");
-        CSVWriter writer = new CSVWriter(new FileWriter(file), ',', '"', '\\', "\n");
+        String tempFilePath = Application.basedir + "/resources/datagen/process/GS-3857.csv";
+
+        CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date", "AccountName"});
         allLines.add(new String[]{DateUtil.addDays(calendar.getTime(), -2, "yyyy-MM-dd"), "A and T unlimit Limited"});
@@ -305,13 +365,15 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.flush();
         writer.close();
 
-        jobId = dataLoadManager.dataLoadManage(metadata, file);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
-
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertEquals(statusInfo.getSuccessCount(), 6);
+        diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4799", "GS-4801"})
@@ -356,20 +418,26 @@ public class LoadDataToMDATest extends NSTestBase {
      * @throws IOException
      */
     private void dataInsertAndUpdate(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
+        String collectionName = testData.get("CollectionName")+"-"+calendar.getTimeInMillis();
+        Log.info("Collection Name : " +collectionName);;
         CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
         String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        List<Map<String, String>> diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
         ////Update Records..
         jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
         Assert.assertNotNull(jobId);
         dataLoadManager.waitForDataLoadJobComplete(jobId);
         verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount1")), Integer.valueOf(testData.get("FailedRecordCount1")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        diffData = Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo), getFlatCollectionData(collectionInfo));
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
     /**
@@ -380,7 +448,45 @@ public class LoadDataToMDATest extends NSTestBase {
      * @return Collection Schema.
      * @throws IOException
      */
-    private CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
+   
+
+
+
+
+    /**
+     * Creates a flat report, runs the report, changes the DBNames with Display Names & dos date processing.
+     * @param collectionInfo - Collection Schema
+     * @return List<Map> - Table data as list of key values.
+     * @throws IOException
+     */
+    private List<Map<String, String>> getFlatCollectionData(CollectionInfo collectionInfo) throws IOException {
+        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(collectionInfo)));
+        Log.info("ActualData Size : " + actualData.size());
+        actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
+        Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
+        return actualData;
+    }
+
+    @AfterClass
+    public void tearDown() {
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+    }
+
+    /**
+     * Just in case used method to delete all the collections.
+     */
+    public void deleteAllCollection() {
+        String collectionName = "GS";
+        List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
+        for(CollectionInfo collectionInfo : dataLoadManager.getAllCollections() ) {
+            if(collectionInfo.getCollectionDetails().getCollectionName().startsWith(collectionName)) {
+                colList.add(collectionInfo.getCollectionDetails());
+            }
+        }
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
+    }
+    
+    public CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
@@ -424,23 +530,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         return jobId;
     }
-
-    /**
-     * Verifies the Async Job details.
-     *
-     * @param jobId - JobId to verify the details.
-     * @param collectionName - Collection Name
-     * @param successCount - Number of success records.
-     * @param failedCount - Number of Failed records.
-     */
-    private void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
-        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
-        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
-        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
-        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
-        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-    }
-
+    
     /**
      * Reads the csv file, does date processing, populated default boolean values, trims the text columns to the size specified.
      *
@@ -449,7 +539,7 @@ public class LoadDataToMDATest extends NSTestBase {
      * @return List of key values i.e. table data parsed as json.
      * @throws IOException
      */
-    private List<Map<String,String>>  getExpectedData(String jobFile, CollectionInfo collectionInfo) throws IOException {
+    public List<Map<String,String>>  getExpectedData(String jobFile, CollectionInfo collectionInfo) throws IOException {
         JobInfo expectedJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
         File expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, calendar.getTime());
         CSVReader expectedReader = new CSVReader(new FileReader(expectedDataFile));
@@ -463,16 +553,18 @@ public class LoadDataToMDATest extends NSTestBase {
     }
 
     /**
-     * Creates a flat report, runs the report, changes the DBNames with Display Names & dos date processing.
-     * @param collectionInfo - Collection Schema
-     * @return List<Map> - Table data as list of key values.
-     * @throws IOException
+     * Verifies the Async Job details.
+     *
+     * @param jobId - JobId to verify the details.
+     * @param collectionName - Collection Name
+     * @param successCount - Number of success records.
+     * @param failedCount - Number of Failed records.
      */
-    private List<Map<String, String>> getFlatCollectionData(CollectionInfo collectionInfo) throws IOException {
-        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(collectionInfo)));
-        Log.info("ActualData Size : " + actualData.size());
-        actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
-        Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
-        return actualData;
+    public void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
+        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
+        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
+        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
+        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
+        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
     }
 }

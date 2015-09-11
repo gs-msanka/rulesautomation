@@ -29,8 +29,8 @@ public class AccountAttributes360Test extends BaseTest {
         basepage.login();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
     }
-    
-    
+
+    @TestInfo(testCaseIds={"GS-5103"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ACC_ATT_1")
     public void uiViewNotConfMsgVerification(HashMap<String, String> testData) {
@@ -40,6 +40,7 @@ public class AccountAttributes360Test extends BaseTest {
         Assert.assertTrue(att.isNoUIViewConfMsgDisplayed(), "Verifying No UI configured message displayed");
     }
 
+    @TestInfo(testCaseIds={"GS-947"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ACC_ATT_2")
     public void accAttributesFieldsOrder(HashMap<String, String> testData) {
@@ -50,6 +51,7 @@ public class AccountAttributes360Test extends BaseTest {
         Assert.assertTrue(att.isFieldsDisplayedInOrder(expValues), "Verifying the order of fields Displayed");
     }
 
+    @TestInfo(testCaseIds={"GS-947"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "ACC_ATT_3")
     public void accAttributesFieldValues(HashMap<String, String> testData) {
@@ -60,10 +62,6 @@ public class AccountAttributes360Test extends BaseTest {
         Assert.assertTrue(att.isValuesForAccountAttDisplayed(fieldDataMap), "Checking the account attribute values");
     }
 
-    @AfterMethod
-    public void refresh() {
-        basepage.refreshPage();
-    }
     @AfterClass
     public void tearDown(){
         basepage.logout();

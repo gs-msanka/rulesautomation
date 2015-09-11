@@ -173,4 +173,15 @@ public class SurveyBasePage extends BasePage {
             dropDown.selectByVisibleText(option);
         }
     }
+    
+    public void selectValueInDropDownList(String value) {
+    	List<WebElement> elelist = element.getAllElement("//div[contains(@class,'ui-multiselect-menu') and contains(@style,'block')]");
+    	Log.info("Size of list is " +elelist.size());
+        for(WebElement ele : elelist)
+            if(ele.isDisplayed()) {
+            	Log.info("//span[contains(text(), '"+value+"')]/ancestor::label");
+            	ele.findElement(By.xpath("//span[contains(text(), '"+value+"')]/ancestor::label")).click();
+                break;
+            }
+    }  
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.utils.annotations.TestInfo;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,6 +40,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         dataSetup.runAdoptionAggregation(1, false, false, null);
     }
 
+    @TestInfo(testCaseIds={"GS-4962"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T1")
     public void T1_AccMonth_1Measure1PeriodCurrentPeriod(Map<String, String> testData) {
@@ -58,6 +60,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4963"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
     public void T2_AccMonth_1Measure1PeriodPreviousPeriod(Map<String, String> testData) {
@@ -77,6 +80,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4964"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
     public void T3_AccMonth_1MeasureNPeriodsCurrentPeriod(Map<String, String> testData) {
@@ -96,6 +100,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4965"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
     public void T4_AccMonth_1MeasureNPeriodsPreviousPeriod(Map<String, String> testData) {
@@ -115,6 +120,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4966"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
     public void T5_AccMonth_NMeasures1PeriodCurrentPeriod(Map<String, String> testData) {
@@ -134,6 +140,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4967"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
     public void T6_AccMonth_NMeasures1PeriodPreviousPeriod(Map<String, String> testData) {
@@ -153,6 +160,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-502"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
     public void T7_AccMonth_NMeasuresNPeriodsExportMessageCheck(Map<String, String> testData) {
@@ -170,6 +178,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.exportGrid());
     }
 
+    @TestInfo(testCaseIds={"GS-2744"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
     public void T8_AccMonth_GSUtilCalc1Period(Map<String, String> testData) {
@@ -190,6 +199,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-5504"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T9")
     public void T9_AccMonth_GSUtilCalcNPeriod(Map<String, String> testData) {
@@ -210,6 +220,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         //Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-4975"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
     public void T10_AccMonth_UsageByMeasure1Period(Map<String, String> testData) {
@@ -230,6 +241,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-5503"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
     public void T11_AccMonth_UsageByMeasureNPeriods(Map<String, String> testData) {
@@ -250,6 +262,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-2761"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T12")
     public void T12_AccMonth_UsersInEngagementGrid(Map<String, String> testData) {
@@ -269,6 +282,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
     }
 
+    @TestInfo(testCaseIds={"GS-499","GS-2762"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T13")
     public void T13_AccMonth_NoUsersInEngagementGrid(Map<String, String> testData) {
@@ -286,6 +300,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertFalse(usage.isGridHeaderMapped(testData.get("Header1")));
     }
 
+    @TestInfo(testCaseIds={"GS-2761"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T14")
     public void T14_AccMonth_UsersInTrendGrid(Map<String, String> testData) {
@@ -302,7 +317,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
     }
 
-
+    @TestInfo(testCaseIds={"GS-1053"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
     public void T15_AccMonth_Trend_1Measure12PeriodsCurrentPeriod(Map<String, String> testData) {
@@ -318,6 +333,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
     }
 
+    @TestInfo(testCaseIds={"GS-5502"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T16")
     public void T16_AccMonth_Trend_1Measure6PeriodsPreviousPeriod(Map<String, String> testData) {
@@ -333,6 +349,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
     }
 
+    @TestInfo(testCaseIds={"GS-4976"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T17")
     public void T17_AccMonth_Trend_NMeasure6PeriodsCurrentPeriod(Map<String, String> testData) {
@@ -356,6 +373,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data9")));
     }
 
+    @TestInfo(testCaseIds={"GS-2763"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T18")
     public void T18_AccMonth_NoUsagePercentageAndUsersInGrid(Map<String, String> testData) {

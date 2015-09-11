@@ -9,10 +9,8 @@ import com.gainsight.http.WebAction;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
-import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.testdriver.Log;
 
 public class SponsorTracking extends BaseTest {
@@ -55,24 +53,23 @@ public class SponsorTracking extends BaseTest {
 		integ.clickOnEnableGSMDP();
 		Timer.sleep(2);
 		Timer.sleep(2);
-		integ.clickOnAuthorize();
+		integ.authorizeMDA();
 	}
 
 	public boolean validateOAuthEnabled() {
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
-		String sessionid = sfinfo.getSessionId();
-		String orgId = sfinfo.getOrg();
-		String userId = sfinfo.getUserId();
+		String sessionid = sfdcInfo.getSessionId();
+		String orgId = sfdcInfo.getOrg();
+		String userId = sfdcInfo.getUserId();
 		try {
 
 			hdrs.addHeader("Content-Type", "application/json");
 			hdrs.addHeader("appOrgId", orgId);
 			hdrs.addHeader("appUserId", userId);
 			hdrs.addHeader("appSessionId", sessionid);
-			System.out.println("endpoint:" + sfinfo.getEndpoint());
-			String SFInstance=sfinfo.getEndpoint().split("https://")[1].split("\\.")[0];
+			System.out.println("endpoint:" + sfdcInfo.getEndpoint());
+			String SFInstance=sfdcInfo.getEndpoint().split("https://")[1].split("\\.")[0];
 			String OriginHeader="";
 			if(isPackaged)
 			OriginHeader	="https://jbcxm."+SFInstance+".visual.force.com";
@@ -99,7 +96,7 @@ public class SponsorTracking extends BaseTest {
 	public Boolean SearchAPI(HashMap<String,Object> ReqParam) {
 		
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
 		String endPoint = env.getProperty("ns.appurl");
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();

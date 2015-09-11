@@ -5,8 +5,9 @@
     "load": {
         "target": "sfdc",
         "sObject": "EmailCustomObjct__c",
-        "operation": "insert",
+        "operation": "upsert",
         "contentType": "CSV",
+	"externalIDField": "CusObj_ExternalID__c",
         "file": "/testdata/sfdc/survey/data/Contacts_into_custom_obj_forAddParticipants.csv"
     }
 }

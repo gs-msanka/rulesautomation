@@ -1,0 +1,32 @@
+{
+    "jobName": "Load Datas to Case Object",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+    "dateProcess": {
+        "inputFile": "/testdata/newstack/CoPilot/Data/Input/Case.csv",
+        "outputFile": "/testdata/newstack/CoPilot/Data/Output/Case-output.csv",
+        "fields": [
+            {
+                "weekly": false,
+                "daily": true,
+                "dateTime": false,
+                "fieldName": "P_C_DATE__C"
+            },
+            {
+                "weekly": true,
+                "daily": false,
+                "dateTime": true,
+                "fieldName": "P_C_DATETIME__C"
+            }
+        ]
+    },
+    "load": {
+        "target": "sfdc",
+        "sObject": "Case",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+        "externalIDField": "p_c_ExternalID__c",
+        "file": "/testdata/newstack/CoPilot/Data/Output/Case-output.csv"
+    }
+}

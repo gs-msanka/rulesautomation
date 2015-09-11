@@ -10,9 +10,8 @@ import com.gainsight.http.WebAction;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.MongoUtil;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.mongodb.ServerAddress;
@@ -39,7 +38,7 @@ public class GSEmailSetup extends BaseTest {
 			integ.clickOnEnableGSMDP();
 			Timer.sleep(2);
 			Timer.sleep(2);
-			integ.clickOnAuthorize();
+			integ.authorizeMDA();
 			return integ;
 		} catch (ElementNotFoundException ex) {
 			ex.printStackTrace();
@@ -54,8 +53,8 @@ public class GSEmailSetup extends BaseTest {
 
 	public boolean validateOAuthEnabled() {
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
@@ -102,8 +101,8 @@ public class GSEmailSetup extends BaseTest {
 /*		sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir
 				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));*/ /*Commented for now as the script doesn't exists*/
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
@@ -168,8 +167,8 @@ public class GSEmailSetup extends BaseTest {
 
 		// send test email to contact : /api/email/template
 		Header hdrs = new Header();
-		SFDCInfo sfinfo = SFDCUtil.fetchSFDCinfo();
-		String endPoint = env.getProperty("ns.appurl");
+		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
+		String endPoint = nsConfig.getNsURl();
 		String sessionid = sfinfo.getSessionId();
 		String orgId = sfinfo.getOrg();
 		String userId = sfinfo.getUserId();
@@ -242,16 +241,19 @@ public class GSEmailSetup extends BaseTest {
 	public boolean getEmailActivityLogfromMongo(String campaignId)
 			throws UnknownHostException {
 		MongoUtil mUtil = new MongoUtil();
-		mUtil.createConnection(new ServerAddress("dharma.mongohq.com", 10089));
-		mUtil.checkIfCollectionExist("EmailActivityLog");
-		HashMap records = new HashMap<String, String>();
-		records.put("campaignId", campaignId);
-		records.put("useCase", "survey");
-		ArrayList<String[]> op = new ArrayList<String[]>();
-		String op1[] = { "emailActivityList", "$size", "1" };
-		op.add(op1);
-		return mUtil.checkIfDocExists("EmailActivityLog", records);
-
+		try {
+			mUtil.createConnection("dharma.mongohq.com", 10089, "mani", "jbara123", "multi_tenant_gstenantdb");
+			mUtil.checkIfCollectionExist("EmailActivityLog");
+			HashMap records = new HashMap<String, String>();
+			records.put("campaignId", campaignId);
+			records.put("useCase", "survey");
+			ArrayList<String[]> op = new ArrayList<String[]>();
+			String op1[] = { "emailActivityList", "$size", "1" };
+			op.add(op1);
+			return mUtil.checkIfDocExists("EmailActivityLog", records);
+		} finally {
+			mUtil.closeConnection();
+		}
 	}
 
 	public boolean checkSubAccountInMandrill(String AccessKey, String TenantId,
