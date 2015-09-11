@@ -386,7 +386,15 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 5);
-        verifyData(actualCollectionInfo, expFile);
+        List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo)), actualCollectionInfo);
+        List<Map<String, String>> expData = ReportManager.truncateStringData(ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo), actualCollectionInfo);
+        Log.info("Actual     : " + mapper.writeValueAsString(actualData));
+        Log.info("Expected  : " + mapper.writeValueAsString(expData));
+        Assert.assertEquals(actualData.size(), expData.size());
+
+        List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 

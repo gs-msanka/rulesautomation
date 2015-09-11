@@ -55,7 +55,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        //Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager     = new DataLoadManager();
         dataETL             = new DataETL();
@@ -73,7 +73,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         }
 
         eventsJobInfo =  mapper.readValue(new File(testDataFiles+"/jobs/Events.json"), JobInfo.class);
-        if(false) {  //to run multiple times locally.
+        if(true) {  //to run multiple times locally.
             MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl();
             integrationImpl.authorizeMDA();
             metaUtil.createExtIdFieldOnAccount(sfdc);
@@ -86,8 +86,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
             dataETL.execute(contactJobInfo);
             JobInfo customerJobInfo = mapper.readValue(new File(testDataFiles+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
-            dataETL.execute(eventsJobInfo);
         }
+        dataETL.execute(eventsJobInfo);
     }
 
     @TestInfo(testCaseIds = {"GS-3886"})
