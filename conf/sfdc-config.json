@@ -38,13 +38,18 @@
     },
     "11Demo" : {
       "sfdc_username" : "ggolla@11demo.com",
-      "sfdc_password" : "1234567jbr",
-      "sfdc_stoken" : "WM5pd6SXwI9k4uwhIOMbfnJH"
+      "sfdc_password" : "1234567Gain",
+      "sfdc_stoken"   : "8Ql80Qz2nPi7gk3yJEmSz3u6"
     },
     "copilot" : {
       "sfdc_username" : "pparthi@gain2.com",
       "sfdc_password" : "1234gain2",
       "sfdc_stoken" : "5O5Kh1hH7cv6LoXCcKVCHgG7"
+    },
+    "ugesh" : {
+      "sfdc_username" : "ugesh@64demo.com",
+      "sfdc_password" : "jbara12345",
+      "sfdc_stoken" : "oZMDy6jzBuoDhq4YVyXp0rW6F"
     }
   }
 }
