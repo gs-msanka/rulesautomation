@@ -176,6 +176,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
         try {
             header.addHeader("actionType", actionType);
             ResponseObj responseObj = wa.doPut(String.format(DATA_API_PROJECT_UPDATE_PUT, accountId), payload, header.getAllHeaders());
+            Log.info("ResponseObj :" +responseObj.getContent());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             } else {

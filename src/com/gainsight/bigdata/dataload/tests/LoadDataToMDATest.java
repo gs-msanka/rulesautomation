@@ -22,6 +22,7 @@ import com.gainsight.utils.annotations.TestInfo;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 
 import java.io.File;
 import java.io.FileReader;
@@ -58,7 +59,7 @@ public class LoadDataToMDATest extends NSTestBase {
         }
     }
 
-    @TestInfo(testCaseIds = {"GS-4760", "GS-3655", "GS-3681"})
+    @TestInfo(testCaseIds = {"GS-4760", "GS-3655", "GS-3681", "GS-4373", "GS-4372", "GS-4369", "GS-3634", "GS-4368"})
     @Test
     public void insertCommaSeparatedCSVFileWithDoubleQuote() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
@@ -433,7 +434,7 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @TestInfo(testCaseIds = {"GS-3858"})
+    @TestInfo(testCaseIds = {"GS-3858", "GS-4370"})
     @Test
     public void deleteCollectionDataWithDateField() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t12/CollectionInfo.json"), CollectionInfo.class);
@@ -829,8 +830,33 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    @TestInfo(testCaseIds = {"GS-4398"})
+    @Test
+    public void failedRecordsFetchForInvalidDataTypes() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
-    @AfterClass
+
+        File dataLoadFile = new File(testDataFiles+"/tests/t21/CollectionData.csv");
+
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 4, 11);
+
+        List<String> actualData = dataLoadManager.getFailedRecords(statusId);
+
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+
+    //@AfterClass
     public void tearDown() {
         dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
     }

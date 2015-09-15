@@ -901,8 +901,57 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    @Test
+    public void accountAndContactExternalWithCustomFieldsAndMeasuresWithAllAggregationTypes() throws IOException {
 
-    @AfterSuite
+        CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T19_" + date.getTime());
+
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
+
+        AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t19/AccountDetail.json"), AccountDetail.class);
+        HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
+
+        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
+        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+
+        accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
+        accountDetail.getProperties().setCollectionId(collectionId);
+        accountDetail.getRunNowDetails().setStartDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getStartDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+        accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
+
+        String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
+        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
+
+        String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
+        Log.info("endCollectionName: " + endCollectionName);
+
+        MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t19/DateProcess.json"), MDADateProcessor.class);
+        FileProcessor.getDateProcessedFile(dateProcessor,date);
+
+        JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t19/Transform.json"), JobInfo.class);
+        dataETL.execute(jobInfo);
+
+        CollectionInfo aggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
+        verifyCollectionData(aggCollectionInfo,jobInfo.getTransformationRule().getOutputFileLoc());
+
+        accountIdsToDelete.add(accountDetail.getAccountId());
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+
+
+
+    @AfterClass
     public void tearDown() {
         if(accountIdsToDelete.size() > 0) {
             Log.info("Deleting Accounts...");

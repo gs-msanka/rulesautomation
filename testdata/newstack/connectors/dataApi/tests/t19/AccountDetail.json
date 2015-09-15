@@ -1,7 +1,194 @@
 {
-  "accountType": "DATA_API",
-  "displayName": "GS_DATA_API_19",
   "globalMapping": {
+    "accountIdentifier": {
+      "source": {
+        "displayName": "GSA_Account_ExternalId__c",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "GSA_Account_ExternalId__c",
+        "dbName": "gsaccountid",
+        "properties": {
+          "sfdcmapping": "account"
+        }
+      },
+      "lookup": true,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": {
+        "lookupKey": "Account_ExternalId__c",
+        "lookupObject": "Account",
+        "key": "Id"
+      }
+    },
+    "userIdentifier": {
+      "source": {
+        "displayName": "GSA_Contact_ExternalId__c",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "GSA_Contact_ExternalId__c",
+        "dbName": "gsuserid",
+        "properties": {
+          "sfdcmapping": "user"
+        }
+      },
+      "lookup": true,
+      "directLookup": true,
+      "digitConversionEnable": false,
+      "properties": {
+        "lookupKey": "Id",
+        "lookupObject": "Contact",
+        "key": "Contact_ExternalId__c"
+      }
+    },
+    "timestampIdentifier": {
+      "source": {
+        "displayName": "Date",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "Date",
+        "dbName": "gstimestamp",
+        "properties": {
+          "sfdcmapping": "date"
+        }
+      },
+      "lookup": true,
+      "directLookup": true
+    },
+    "eventIdentifier": {
+      "source": {
+        "displayName": "GSA_Event",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "GSA_Event",
+        "dbName": "gsevent",
+        "properties": {
+          "sfdcmapping": "event"
+        }
+      },
+      "lookup": true,
+      "directLookup": true
+    },
+    "custom": [
+      {
+        "source": {
+          "type": "USAGE_FEED",
+          "displayName": "GSA_AccountName",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "GSA_AccountName",
+          "dbName": "",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "USAGE_FEED",
+          "displayName": "GSA_ContactName",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "GSA_ContactName",
+          "dbName": "",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "USAGE_FEED",
+          "displayName": "GSA_Email",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "GSA_Email",
+          "dbName": "",
+          "properties": {}
+        }
+      }
+    ],
+    "measures": [
+      {
+        "source": {
+          "displayName": "FileSize",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "AVG_FileSize",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "AVG"
+          }
+        }
+      },
+      {
+        "source": {
+          "displayName": "Logins",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "SUM_Logins",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "SUM"
+          }
+        }
+      },
+      {
+        "source": {
+          "displayName": "PageLoadTime",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "MAX_PageLoadTime",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "MAX"
+          }
+        }
+      },
+      {
+        "source": {
+          "displayName": "Price",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "MIN_Price",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "MIN"
+          }
+        }
+      },
+      {
+        "source": {
+          "displayName": "UniqueLogins",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "COUNT_UniqueLogins",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "COUNT"
+          }
+        }
+      }
+    ],
     "systemDefined": [
       {
         "source": {
@@ -20,23 +207,9 @@
       {
         "source": {
           "type": "SFDC",
-          "objectName": "contact",
-          "dbName": "Name",
-          "displayName": "Contact Name",
-          "properties": {}
-        },
-        "target": {
-          "dbName": "gsusername",
-          "displayName": "User Name",
-          "properties": {}
-        }
-      },
-      {
-        "source": {
-          "type": "SFDC",
-          "objectName": "contact",
-          "dbName": "Email",
-          "displayName": "Email",
+          "objectName": "account",
+          "dbName": "gsidentify_email",
+          "displayName": "Identify $email",
           "properties": {}
         },
         "target": {
@@ -44,148 +217,22 @@
           "displayName": "User Email",
           "properties": {}
         }
-      }
-    ],
-    "custom": [
-      {
-        "source": {
-          "type": "USAGE_FEED",
-          "dbName": "",
-          "displayName": "GSA_AccountID",
-          "properties": {}
-        },
-        "target": {
-          "dbName": "",
-          "displayName": "GSA_AccountID",
-          "properties": {}
-        }
       },
       {
         "source": {
-          "type": "USAGE_FEED",
-          "dbName": "",
-          "displayName": "GSA_Email",
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "gsidentify_name",
+          "displayName": "Identify $name",
           "properties": {}
         },
         "target": {
-          "dbName": "",
-          "displayName": "GSA_Email",
+          "dbName": "gsusername",
+          "displayName": "User Name",
           "properties": {}
         }
       }
-    ],
-    "gsDefined": [
-      {
-        "source": {
-          "type": "GS_DEFINED",
-          "objectName": "",
-          "dbName": "gssfdcaccountid",
-          "displayName": "gssfdcaccountid",
-          "properties": {}
-        },
-        "target": {
-          "dbName": "gssfdcaccountid",
-          "displayName": "gssfdcaccountid",
-          "properties": {}
-        }
-      }
-    ],
-    "measures": [
-      {
-        "source": {
-          "dbName": "",
-          "displayName": "Logins",
-          "properties": {}
-        },
-        "target": {
-          "dbName": "",
-          "displayName": "GS_SumofLogins",
-          "properties": {
-            "aggregationFunction": "SUM"
-          }
-        }
-      },
-      {
-        "source": {
-          "dbName": "",
-          "displayName": "PageLoadTime",
-          "properties": {}
-        },
-        "target": {
-          "dbName": "",
-          "displayName": "Avg_PageLoadTime",
-          "properties": {
-            "aggregationFunction": "AVG"
-          }
-        }
-      }
-    ],
-    "accountIdentifier": {
-      "source": {
-        "dbName": "",
-        "displayName": "GSA_Account_ExternalId__c"
-      },
-      "target": {
-        "dbName": "gsaccountid",
-        "displayName": "GSA Account ExternalId",
-        "properties": {}
-      },
-      "lookup": true,
-      "directLookup": false,
-      "digitConversionEnable": false,
-      "properties": {
-        "lookupObject": "Account",
-        "lookupKey": "Account_ExternalId__c",
-        "key": "Id"
-      }
-    },
-    "userIdentifier": {
-      "source": {
-        "dbName": "",
-        "displayName": "GSA_Contact_ExternalId__c"
-      },
-      "target": {
-        "dbName": "gsuserid",
-        "displayName": "GSA Contact ExternalId",
-        "properties": {}
-      },
-      "lookup": true,
-      "directLookup": true,
-      "digitConversionEnable": false,
-      "properties": {
-        "lookupObject": "Contact",
-        "lookupKey": "Id",
-        "key": "Contact_ExternalId__c"
-      }
-    },
-    "eventIdentifier": {
-      "source": {
-        "dbName": "",
-        "displayName": "GSA_Event"
-      },
-      "target": {
-        "dbName": "gsevent",
-        "displayName": "EventName",
-        "properties": {}
-      },
-      "lookup": true,
-      "directLookup": true
-    },
-    "timestampIdentifier": {
-      "source": {
-        "dbName": "",
-        "displayName": "EventTimeStamp"
-      },
-      "target": {
-        "dbName": "gstimestamp",
-        "displayName": "Date",
-        "properties": {}
-      },
-      "lookup": false,
-      "directLookup": false,
-      "digitConversionEnable": false,
-      "properties": null
-    }
+    ]
   },
   "usageConfiguration": {
     "configType": "ACCOUNTLEVEL",
@@ -211,5 +258,7 @@
     "collectionId": "SET_AT_RUN_TIME",
     "timeZone": "UTC"
   },
-  "writeToSFDC": false
+  "writeToSFDC": false,
+  "accountType": "DATA_API",
+  "displayName": "GS_DATA_API_19"
 }
