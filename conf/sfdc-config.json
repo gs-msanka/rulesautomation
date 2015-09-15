@@ -41,15 +41,15 @@
       "sfdc_password" : "1234567Gain",
       "sfdc_stoken"   : "8Ql80Qz2nPi7gk3yJEmSz3u6"
     },
-    "copilot" : {
-      "sfdc_username" : "pparthi@gain2.com",
-      "sfdc_password" : "1234gain2",
-      "sfdc_stoken" : "5O5Kh1hH7cv6LoXCcKVCHgG7"
+    "58Demo" : {
+      "sfdc_username" : "athaduka@58demo.com",
+      "sfdc_password" : "1234567Gain",
+      "sfdc_stoken"   : "8Ql80Qz2nPi7gk3yJEmSz3u6"
     },
-    "ugesh" : {
-      "sfdc_username" : "ugesh@64demo.com",
-      "sfdc_password" : "jbara12345",
-      "sfdc_stoken" : "oZMDy6jzBuoDhq4YVyXp0rW6F"
+    "copilot" : {
+      "sfdc_username" : "copilot@gsautomation.com",
+      "sfdc_password" : "gainsight123",
+      "sfdc_stoken" : "F5aFyBg1zzGM891NcizPtySZ"
     }
   }
 }
