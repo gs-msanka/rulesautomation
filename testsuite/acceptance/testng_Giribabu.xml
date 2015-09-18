@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-
-<suite name="Suite1">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Connectors Project" preserve-order="true">
     <test name="test1">
         <classes>
-            <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
-            <class name="com.gainsight.bigdata.reportBuilder.tests.ReportBuilderTest" />
-            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
-            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
-        </classes>
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" >
+                <methods>
+                    <include name="accountContactExternalIDAndCustomFieldsAndMeasuresWithAllSupportedMeasureAggregation" />
+                </methods>
+            </class>
 
+        </classes>
     </test>
+
 </suite>

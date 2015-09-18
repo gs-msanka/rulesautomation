@@ -11,6 +11,15 @@ public class SchedulerDetails {
     private String periodValue;
     private String cronExpression;
     private boolean recursive;
+    private String timeZoneName;
+
+    public String getTimeZoneName() {
+        return timeZoneName;
+    }
+
+    public void setTimeZoneName(String timeZoneName) {
+        this.timeZoneName = timeZoneName;
+    }
 
     public String getType() {
         return type;

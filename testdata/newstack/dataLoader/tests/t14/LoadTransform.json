@@ -1,0 +1,25 @@
+{
+  "jobName": "T1",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/tests/t14/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t14/Load_CollectionData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "yyyyMMdd",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "MM-d-yyyy HH:mm",
+        "fieldName" : "CreatedDateTime"
+      }
+    ]
+  }
+}

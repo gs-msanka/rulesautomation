@@ -1,0 +1,25 @@
+{
+  "jobName": "GS-3688",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/tests/t9/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t9/CollectionData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "M/dd/yyyy",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "M/dd/yyyy HH:mm",
+        "fieldName" : "EventTimeStamp"
+      }
+    ]
+  }
+}

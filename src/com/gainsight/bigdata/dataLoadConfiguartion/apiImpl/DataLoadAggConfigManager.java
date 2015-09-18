@@ -15,6 +15,7 @@ import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpStatus;
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -175,6 +176,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
         try {
             header.addHeader("actionType", actionType);
             ResponseObj responseObj = wa.doPut(String.format(DATA_API_PROJECT_UPDATE_PUT, accountId), payload, header.getAllHeaders());
+            Log.info("ResponseObj :" +responseObj.getContent());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             } else {
@@ -230,6 +232,18 @@ public class DataLoadAggConfigManager extends NSTestBase {
     public String createDataLoadApiProject(String payload, String actionType) {
         return manageDataLoadApiProject(payload, actionType, "new");
     }
+
+    /**
+     * Creates a new data load aggregated project
+     * @param accountDetail
+     * @param actionType
+     * @return
+     */
+    public String createDataLoadApiProject(AccountDetail accountDetail, String actionType) throws IOException {
+        return manageDataLoadApiProject(mapper.writeValueAsString(accountDetail), actionType, "new");
+    }
+
+
 
     /**
      * waits for the aggregation job to complete until the max wait time .

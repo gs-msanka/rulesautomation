@@ -1,0 +1,35 @@
+{
+  "jobName": "MDA Loader 1",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/global/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t2/CollectionData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "MM-d-yy",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yy HH:mm",
+        "fieldName" : "EventTimeStamp"
+      }
+    ]
+  },
+  "csvFormatter" : {
+    "inputFile": "/testdata/newstack/dataLoader/process/t2/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t2/Load_CollectionData.csv",
+    "csvProperties" : {
+      "separator" : ",",
+      "quoteChar" : "'",
+      "escapeChar" : "\\",
+      "lineEnd" : "\n"
+    }
+  }
+}

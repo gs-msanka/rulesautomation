@@ -180,7 +180,6 @@ public class TenantManager {
         try {
             ResponseObj responseObj = wa.doGet(ADMIN_TENANTS, header.getAllHeaders());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                System.out.println(responseObj.getContent());
                 org.apache.http.Header[] headers = responseObj.getAllHeaders();
                 for (org.apache.http.Header h : headers) {
                     if (h.getName() != null && h.getName().equals("Authtoken")) {
