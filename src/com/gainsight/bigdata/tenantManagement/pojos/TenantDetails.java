@@ -147,14 +147,22 @@ public class TenantDetails {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DBDetail {
         private String dbName;
         @JsonProperty("sslEnabled")
         private boolean sslEnabled;
         @JsonProperty("dbServerDetails")
         private List<DBServerDetail> dbServerDetails;
-        //private List<HashMap<String, String>> dbDetails;
+        private String uriWithoutPassword;
 
+        public String getUriWithoutPassword() {
+            return uriWithoutPassword;
+        }
+
+        public void setUriWithoutPassword(String uriWithoutPassword) {
+            this.uriWithoutPassword = uriWithoutPassword;
+        }
 
         public List<DBServerDetail> getDbServerDetails() {
             return dbServerDetails;
@@ -181,10 +189,20 @@ public class TenantDetails {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DBServerDetail {
         private String host;
         private String userName;
         private String password;
+        private String uriWithoutPassword;
+
+        public String getUriWithoutPassword() {
+            return uriWithoutPassword;
+        }
+
+        public void setUriWithoutPassword(String uriWithoutPassword) {
+            this.uriWithoutPassword = uriWithoutPassword;
+        }
 
         public String getHost() {
             return host;
