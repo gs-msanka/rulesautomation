@@ -834,7 +834,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @Test
     public void failedRecordsFetchForInvalidDataTypes() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
-        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "21_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
@@ -848,15 +848,16 @@ public class LoadDataToMDATest extends NSTestBase {
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
-        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 4, 11);
+        //Failed records should be 12 & Success records should be 2.
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 3, 11);
 
-        List<String> actualData = dataLoadManager.getFailedRecords(statusId);
+        List<String> failedRecords = dataLoadManager.getFailedRecords(statusId);
 
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
 
-    //@AfterClass
+    @AfterClass
     public void tearDown() {
         dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
     }

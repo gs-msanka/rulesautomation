@@ -3,7 +3,7 @@
   "namespacePrefix" : "JBCXM",
   "useNameSpace" : false,
   "dateProcess" : {
-    "inputFile" : "/testdata/newstack/dataLoader/tests/t17/CollectionData1.csv",
+    "inputFile" : "/testdata/newstack/dataLoader/tests/t17/CollectionData_1.csv",
     "outputFile" : "/testdata/newstack/dataLoader/process/t17/ExpectedData.csv",
     "fields" :[
       {

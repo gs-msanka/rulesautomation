@@ -23,8 +23,8 @@
     ]
   },
   "csvFormatter" : {
-    "inputFile": "/testdata/newstack/dataLoader/process/t17/CollectionData1.csv",
-    "outputFile" : "/testdata/newstack/dataLoader/process/t17/Update_CollectionData1.csv",
+    "inputFile": "/testdata/newstack/dataLoader/process/t17/CollectionData_1.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t17/Update_CollectionData_1.csv",
     "csvProperties" : {
       "separator" : ";",
       "quoteChar" : "\"",
