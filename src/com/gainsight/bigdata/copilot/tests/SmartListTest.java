@@ -33,6 +33,7 @@ import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBServerDetail;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
@@ -67,17 +68,36 @@ public class SmartListTest extends LoadTestData {
             nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
 	ReportManager reportManager=new ReportManager();
 	private CopilotUtil CoUtil = new CopilotUtil();
-	
+	String[] dataBaseDetail = null;
+	 private String host = null;
+	 private String port = null;
+	 private String userName = null;
+	 private String passWord = null;
+	 private String collectionDBName=null;
+
+
 
 	
     @BeforeClass
     public void setup() throws  IOException {
-        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+    	Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
         dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+        List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
+        for (DBServerDetail dbServerDetail : dbDetails) {
+            dataBaseDetail = dbServerDetail.getHost().split(":");
+            host = dataBaseDetail[0];
+            port = dataBaseDetail[1];
+            userName=dbServerDetail.getUserName();
+            passWord=dbServerDetail.getPassword();
+        }
+        Log.info("Host is" + host + " and Port is " + port);
+        dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+        mongoDBDAO   = new  MongoDBDAO(host, Integer.valueOf(port),
+                userName, passWord, dbDetail.getDbName());
     }
     
    

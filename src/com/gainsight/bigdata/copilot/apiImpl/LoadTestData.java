@@ -52,12 +52,6 @@ public class LoadTestData extends NSTestBase{
 	
 	private DataETL dataETL;
 	
-	/*@BeforeTest
-	public void cleanUp() {
-	  sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
-	}*/
-	
-	
 	public void createCustomFields() throws Exception {
 		
 		ObjectFields objField=new ObjectFields();
