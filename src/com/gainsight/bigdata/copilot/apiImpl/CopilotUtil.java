@@ -8,16 +8,19 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.smartlist.pojos.*;
+import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
+import com.sforce.soap.partner.sobject.SObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CopilotUtil extends NSTestBase {
 
 	ResponseObj resp;
 	String req = null;
-
+	private static HashMap<String,String> userMap;
+	
 	public JsonNode createSmartList(HashMap<String, String> testData,String automatedRulePayLoad)
 			throws Exception {
 
@@ -58,6 +61,8 @@ public class CopilotUtil extends NSTestBase {
 		smList.setStats(stats);
 		automatedRule = testData.get("automatedRule1")
 				+ testData.get("automatedRule2");
+		RulesUtil ru=new RulesUtil();
+		automatedRule = getResolvedCriteria(automatedRule);
 		smList.setAutomatedRule(mapper.readValue(automatedRule,
 				AutomatedRule.class));
 		Log.info("automatedRule json is " + mapper.writeValueAsString(smList));
@@ -72,6 +77,16 @@ public class CopilotUtil extends NSTestBase {
 		JsonNode jsonNode = mapper.readTree(resp.getContent());
 
 		return jsonNode;
+	}
+
+	//Temporary util to replace the USER_NAMES and USER_EMAILS in the trigger criteria.
+	//Need to make it more robust to support not just usernames...but any type of customizations
+	private String getResolvedCriteria(String string) {
+		String Username = sfinfo.getUserFullName();
+		String UserEmail = sfinfo.getUserEmail();
+		string=string.replace("#USERNAME#", Username);
+		string=string.replace("#USEREMAIL#", UserEmail);
+		return string;
 	}
 
 	public JsonNode getListStats(String SmartListId) throws Exception {

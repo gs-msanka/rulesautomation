@@ -4,7 +4,7 @@ delete [select id from Account where name like 'COPILOT Account%'];
 //Create Accounts
 List<Account> accList = new List<Account>();
 for(integer i=1; i<10 ; i++) {
-   Account acc = new Account(Name ='COPILOT Account ' +i,Data_ExternalID__c='COPILOT Account ' +i);
+   Account acc = new Account(Name ='COPILOT Account ' +i,p_c_ExternalID__c='COPILOT Account ' +i);
    accList.add(acc);
 }
 

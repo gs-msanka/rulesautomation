@@ -1,4 +1,4 @@
-Account.Data_ExternalId__c,lastname,p_c_ExternalID__c
+Account.p_c_ExternalID__c,lastname,p_c_ExternalID__c
 Copilot_Auto000,Copilot_Contact1,Con.Copilot_Auto000
 Copilot_Auto001,Copilot_Contact2,Con.Copilot_Auto001
 Copilot_Auto002,Copilot_Contact3,Con.Copilot_Auto002
