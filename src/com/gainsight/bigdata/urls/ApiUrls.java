@@ -29,7 +29,6 @@ public interface ApiUrls extends NSURLs {
 
     public final String MDA_SFDC_ACCOUNT_EXISTS             = NS_URL + "/api/accounts/SFDC/exists";
     public final String MDA_AUTH_REVOKE                     = NS_URL + "/api/accounts/sfdc?accountType=SFDC";
-    public final String SFDC_EXITS_GET                      = NS_URL + "/api/accounts/SFDC/exits";
     public final String CREATE_CONNECTORS_PROJECT           = NS_URL + "/api/tokens/v2";
     public final String API_TOKENS_EXISTS_GET               = NS_URL + "/api/tokens/exists";    //Check if access key is present for the system.
     public final String ACCOUNT_DETAIL_GET                  = NS_URL + "/api/accounts/";        //Append Account Id to get account details.
@@ -49,20 +48,22 @@ public interface ApiUrls extends NSURLs {
     public final String SEGMENT_ACCESS_KEY_GET          = NS_URL + "/api/tokens/integrations/SEGMENT_IO/projects/"; //Append Account ID to get access-key for segmentIO project.
 
 
-    public final String GA_DEACTIVATE_PUT       = NS_URL + "/api/accounts/accountType/GOOGLE_ANALYTICS/default/false";
-    public final String GA_PROJECT_GET          = NS_URL + "/api/accounts/integrations/GOOGLE_ANALYTICS";
-    public final String GA_PROPERTIES_GET       = NS_URL + "/api/googleanalytics/";
+    public final String GA_DEACTIVATE_PUT               = NS_URL + "/api/accounts/accountType/GOOGLE_ANALYTICS/default/false";
+    public final String GA_PROJECT_GET                  = NS_URL + "/api/accounts/integrations/GOOGLE_ANALYTICS";
+    public final String GA_PROPERTIES_GET               = NS_URL + "/api/googleanalytics/";
 
-    //DataLoad API End Points.
+    //DataLoad Agg API End Points.
     public final String DATA_API_GET                    = NS_URL + "/api/accounts/integrations/DATA_API";       //All the project s configured in data load api.
     public final String DATA_API_ALL_COLLECTIONS_GET    = NS_URL + "/api/collections/consumers/DATA_API";       //All the collections for the tenant,
     public final String DATA_API_PROJECT_UPDATE_PUT     = NS_URL + "/api/accounts/%s/update?version=v1.0";      //Update the account / project(data api)
 
     //Custom Object Management
-    public final String COLLECTION_DETAILS_POST         = NS_URL + "/api/collections/details";
+    public final String COLLECTION_DETAILS_POST         = NS_URL + "/api/collections/details";    //total records count.
     public final String COLLECTION_DATA_VALIDATE        = NS_URL + "/api/dataload/validate";
     public final String COLLECTION_DATA_LOAD            = NS_URL + "/api/dataload/load";
     public final String COLLECTION_DATA_MAPPING         = NS_URL + "/api/dataload/mapping";
+    public final String COLLECTION_DEPENDENCY_DETAIL    = NS_URL + "/api/collections/collectionDetail";
+    public final String COLLECTION_DATA_ASYNC_IMPORT    = NS_URL + "/api/dataload/import";
 
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
