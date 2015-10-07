@@ -47,15 +47,10 @@ public class LoadTestData extends NSTestBase{
 			+ "/Job/job_Contact-Init.txt";
 	private static final String job_caseInit = copilotDir
 			+ "/Job/job_Case-Init.txt";
+	private static final String updateUserNames= copilotDir+"/ApexScripts/updateUserNames.txt";
 	
 	
 	private DataETL dataETL;
-	
-	@BeforeTest
-	public void cleanUp() {
-	  sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
-	}
-	
 	
 	public void createCustomFields() throws Exception {
 		
@@ -352,10 +347,13 @@ public class LoadTestData extends NSTestBase{
 			dataSetup.loadToObject(dataETL, Job_Contact);
 			dataSetup.loadToObject(dataETL, Job_Case);
 			dataSetup.loadToObject(dataETL, Job_C_ContactObject1);
+			String code=getNameSpaceResolvedFileContents(updateUserNames).replace("%USERNAME%", sfinfo.getUserFullName());
+			sfdc.runApexCode(code);
 	}
 	
 	@BeforeClass
 	public void generateFieldsAndData() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUp));
 	    createCustomFields();
 		generateData();
 	}

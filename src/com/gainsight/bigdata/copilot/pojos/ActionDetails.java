@@ -1,5 +1,8 @@
 package com.gainsight.bigdata.copilot.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActionDetails {
 	
 	private String actionType;
