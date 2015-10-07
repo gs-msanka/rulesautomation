@@ -42,7 +42,7 @@ public class NSTestBase {
     public static WebAction wa;
     public static Header header;
     public static String basedir;
-    public static String testDataBasePath;
+    public static String testDataBasePath = Application.basedir + "/testdata/newstack";
     public static ObjectMapper mapper = new ObjectMapper();
     public static SalesforceMetadataClient metadataClient;
     public static SalesforceConnector sfdc;
@@ -61,7 +61,6 @@ public class NSTestBase {
     @BeforeSuite
     public void init() throws Exception {
         tenantManager = new TenantManager();
-        testDataBasePath = Application.basedir + "/testdata/newstack";
         //Initializing Headers
         header = new Header();
         wa = new WebAction();

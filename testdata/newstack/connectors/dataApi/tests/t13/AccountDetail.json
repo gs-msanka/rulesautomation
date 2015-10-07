@@ -1,0 +1,181 @@
+{
+  "accountType": "DATA_API",
+  "displayName": "GS_DATA_API_13",
+  "globalMapping": {
+    "systemDefined": [
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "Name",
+          "displayName": "Account Name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsaccountname",
+          "displayName": "Account Name",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "contact",
+          "dbName": "Name",
+          "displayName": "Contact Name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsusername",
+          "displayName": "User Name",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "contact",
+          "dbName": "Email",
+          "displayName": "Email",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsuseremail",
+          "displayName": "User Email",
+          "properties": {}
+        }
+      }
+    ],
+    "custom": [],
+    "measures": [
+      {
+        "source": {
+          "dbName": "",
+          "displayName": "Logins",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "",
+          "displayName": "GS_SumofLogins",
+          "properties": {
+            "aggregationFunction": "SUM"
+          }
+        }
+      },
+      {
+        "source": {
+          "dbName": "",
+          "displayName": "PageLoadTime",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "",
+          "displayName": "Avg_PageLoadTime",
+          "properties": {
+            "aggregationFunction": "AVG"
+          }
+        }
+      },
+      {
+        "source": {
+          "dbName": "",
+          "displayName": "UniqueLogins",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "",
+          "displayName": "Count_UniqueLogins",
+          "properties": {
+            "aggregationFunction": "COUNT"
+          }
+        }
+      }
+    ],
+    "accountIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "GSA_ContactID"
+      },
+      "target": {
+        "dbName": "gsaccountid",
+        "displayName": "GSA ContactID",
+        "properties": {}
+      },
+      "lookup": true,
+      "directLookup": false,
+      "digitConversionEnable": true,
+      "properties": {
+        "lookupObject": "Contact",
+        "lookupKey": "Id",
+        "key": "AccountId"
+      }
+    },
+    "userIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "GSA_ContactID"
+      },
+      "target": {
+        "dbName": "gsuserid",
+        "displayName": "GSA ContactID",
+        "properties": {}
+      },
+      "lookup": true,
+      "directLookup": true,
+      "digitConversionEnable": true,
+      "properties": {
+        "lookupObject": "Contact",
+        "lookupKey": "Id",
+        "key": "Id"
+      }
+    },
+    "eventIdentifier": {
+      "source": null,
+      "target": null,
+      "lookup": false,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": null
+    },
+    "timestampIdentifier": {
+      "source": {
+        "dbName": "",
+        "displayName": "Date"
+      },
+      "target": {
+        "dbName": "gstimestamp",
+        "displayName": "Date",
+        "properties": {}
+      },
+      "lookup": false,
+      "directLookup": false,
+      "digitConversionEnable": false,
+      "properties": null
+    }
+  },
+  "usageConfiguration": {
+    "configType": "ACCOUNTLEVEL",
+    "frequency": "MONTHLY",
+    "day": "MONDAY",
+    "weekType": "START"
+  },
+  "notificationDetails": {
+    "successRecipients": [
+      "ggolla@gainsight.com"
+    ],
+    "failureRecipients": [
+      "ggolla@gainsight.com",
+      "snasika@gainsight.com"
+    ]
+  },
+  "runNowDetails": {
+    "type": "RUN_NOW",
+    "startDate": "-10",
+    "endDate": "0"
+  },
+  "properties": {
+    "collectionId": "SET_AT_RUN_TIME",
+    "timeZone": "UTC"
+  },
+  "writeToSFDC": false
+}

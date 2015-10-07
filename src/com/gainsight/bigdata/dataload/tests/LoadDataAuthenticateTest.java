@@ -30,7 +30,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         dataLoadManager = new DataLoadManager();
     }
 
-    @TestInfo(testCaseIds = {"GS-3626"})
+    @TestInfo(testCaseIds = {"GS-3626", "GS-3631"})
     @Test
     public void mdaAuthorizeCheckingWithValidDetails() {
         NsResponseObj nsResponseObj = dataLoadManager.mdaDataLoadAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName());

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Connectors Project" preserve-order="true">
+
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+    </listeners>
+
+    <test verbose="3" name="Load To MDA Authenticate Test cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
+        </classes>
+    </test>
+
+    <test verbose="3" name="Load To MDA MONGO" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo"/>
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
+        </classes>
+    </test>
+
+    <test verbose="3" name="Load To MDA REDSHIFT" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift"/>
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
+        </classes>
+    </test>
+
+    <test verbose="3" name="Load To MDA MONGO AND AGG" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo"/>
+        <classes>
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
+        </classes>
+    </test>
+
+    <test verbose="3" name="Load To MDA REDSHIFT AND AGG" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift"/>
+        <classes>
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
+        </classes>
+    </test>
+</suite>

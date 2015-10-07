@@ -6,6 +6,7 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportFilter;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
+import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
 import org.apache.http.HttpStatus;
@@ -44,7 +45,7 @@ public class ReportManager extends NSTestBase {
         String report = null;
         try {
             report = mapper.writeValueAsString(createTabularReportMaster(collectionInfo, columns));
-            Log.info("Report JSON :" + report);
+            //Log.info("Report JSON :" + report);
 
         } catch (Exception e) {
             Log.error("Failed to de-serialize report master." + e.getLocalizedMessage() + ", " + e.getMessage());
@@ -149,6 +150,32 @@ public class ReportManager extends NSTestBase {
                 for (String key : keyToUpdate) {
                     if (data.containsKey(key) && data.get(key) != null && !data.get(key).equals("") && !data.get(key).isEmpty()) {
                         data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
+                    }
+                }
+            }
+        }
+        Log.info("Returning the boolean processed results...");
+        return dataList;
+    }
+
+
+    public static List<Map<String, String>> truncateStringData(List<Map<String, String>> dataList, CollectionInfo collectionInfo) {
+        Log.info("Started truncating string data... ");
+        List<String> keyToUpdate = new ArrayList<>();
+        for (CollectionInfo.Column column : collectionInfo.getColumns()) {
+            if (column.getDatatype() != null && column.getDatatype().equalsIgnoreCase("string")) {
+                keyToUpdate.add(column.getDisplayName());
+            }
+        }
+        HashMap<String, CollectionInfo.Column> displayColumnMap = CollectionUtil.getDisplayNameColumnsMap(collectionInfo);
+        if (keyToUpdate.size() > 0) {
+            for (Map<String, String> data : dataList) {
+                for (String key : keyToUpdate) {
+                    if (data.containsKey(key) && data.get(key) != null
+                            && !data.get(key).isEmpty()
+                            && displayColumnMap.containsKey(key)    //Note here if the field is not present in the collection master, data will not be truncated, will be ignored.
+                            && data.get(key).length() > displayColumnMap.get(key).getMaxLength()) {
+                        data.put(key, data.get(key).substring(0, displayColumnMap.get(key).getMaxLength()-3)+"..."); //This is done has we are not accepting strings that are not accepting strings more than 250 characters.
                     }
                 }
             }
@@ -333,7 +360,7 @@ public class ReportManager extends NSTestBase {
      * @param collectionInfo - Collection master of a subject area.
      * @return - Hash Map with display names as keys and db names has values.
      */
-    public HashMap<String, String> getDisplayAndDBNamesMap(CollectionInfo collectionInfo) {
+    public static HashMap<String, String> getDisplayAndDBNamesMap(CollectionInfo collectionInfo) {
         if(collectionInfo == null || collectionInfo.getColumns() == null) {
             throw new IllegalArgumentException("Collection info & Columns List can't be null");
         }

@@ -1,0 +1,22 @@
+{
+  "collectionName": "Col-Name",
+  "clearOperation": "CLEAR_SELECTED_DATA",
+  "keyFields": [
+    "Date"
+  ],
+  "mapping": [
+    {
+      "source": "Date",
+      "sourceDateFormat": null,
+      "sourceNumberFormat": null,
+      "target": "Date"
+    }
+  ],
+  "sourceType": "FILE",
+  "targetType": "MONGO",
+  "headerRow": true,
+  "fieldSeparator": ",",
+  "escapeCharacter": "\\",
+  "quoteCharacter": "\"",
+  "dbNameUsed": false
+}

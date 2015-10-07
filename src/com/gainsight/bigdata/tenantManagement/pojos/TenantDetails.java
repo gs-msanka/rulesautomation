@@ -1,6 +1,5 @@
 package com.gainsight.bigdata.tenantManagement.pojos;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -147,6 +146,7 @@ public class TenantDetails {
             this.company = company;
         }
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DBDetail {
         private String dbName;
@@ -154,11 +154,15 @@ public class TenantDetails {
         private boolean sslEnabled;
         @JsonProperty("dbServerDetails")
         private List<DBServerDetail> dbServerDetails;
-        
-        @JsonIgnore
         private String uriWithoutPassword;
-        //private List<HashMap<String, String>> dbDetails;
 
+        public String getUriWithoutPassword() {
+            return uriWithoutPassword;
+        }
+
+        public void setUriWithoutPassword(String uriWithoutPassword) {
+            this.uriWithoutPassword = uriWithoutPassword;
+        }
 
         public List<DBServerDetail> getDbServerDetails() {
             return dbServerDetails;
@@ -183,14 +187,6 @@ public class TenantDetails {
         public void setSslEnabled(boolean sslEnabled) {
             this.sslEnabled = sslEnabled;
         }
-        
-        public String getUriWithoutPassword() {
-			return uriWithoutPassword;
-		}
-
-		public void setUriWithoutPassword(String uriWithoutPassword) {
-			this.uriWithoutPassword = uriWithoutPassword;
-		}
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -198,11 +194,17 @@ public class TenantDetails {
         private String host;
         private String userName;
         private String password;
-        
-        @JsonIgnore
         private String uriWithoutPassword;
-        
-		public String getHost() {
+
+        public String getUriWithoutPassword() {
+            return uriWithoutPassword;
+        }
+
+        public void setUriWithoutPassword(String uriWithoutPassword) {
+            this.uriWithoutPassword = uriWithoutPassword;
+        }
+
+        public String getHost() {
             return host;
         }
 

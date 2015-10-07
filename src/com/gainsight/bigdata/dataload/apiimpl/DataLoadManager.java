@@ -1,8 +1,6 @@
 package com.gainsight.bigdata.dataload.apiimpl;
 
-import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
@@ -10,33 +8,22 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.pageobject.util.Timer;
-import com.gainsight.sfdc.pages.Constants;
-import com.gainsight.sfdc.util.DateUtil;
-import com.gainsight.sfdc.util.datagen.FileProcessor;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.Comparator;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+
 import org.codehaus.jackson.type.TypeReference;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -51,8 +38,6 @@ import static com.gainsight.sfdc.pages.Constants.*;
 public class DataLoadManager extends NSTestBase {
 
     public Header headers = new Header();
-    private Calendar calendar = Calendar.getInstance();
-    private ReportManager reportManager = new ReportManager();
 
     public DataLoadManager() {
         accessKey = getDataLoadAccessKey();
@@ -147,6 +132,7 @@ public class DataLoadManager extends NSTestBase {
             CollectionInfo.CollectionDetails colDetails = getCollectionDetail(nsResponseObj.getData());
             collectionId = colDetails.getCollectionId();
         }
+        Log.info("Collection Id : " +collectionId);
         return collectionId;
     }
 
@@ -191,7 +177,7 @@ public class DataLoadManager extends NSTestBase {
         boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
             @Override
             public Boolean apply() {
-                return isdataLoadJobComplete(jobId);
+                return isdataLoadJobDone(jobId);
             }
         });
         return result;
@@ -202,7 +188,7 @@ public class DataLoadManager extends NSTestBase {
      * @param jobId - Job Id to check the status.
      * @return
      */
-    public boolean isdataLoadJobComplete(String jobId) {
+    public boolean isdataLoadJobDone(String jobId) {
         boolean result = false;
         DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
         if(statusInfo == null) {
@@ -221,6 +207,25 @@ public class DataLoadManager extends NSTestBase {
 
         return result;
     }
+
+    public boolean isdataLoadJobCompleted(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
+        }
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
+        }
+        if(!result) {
+            Log.info("Data Load Job status is not Success : " +jobId);
+            Log.info("Status of Job : " +statusInfo.getStatusType());
+            Log.info("Error Message : " +statusInfo.getMessage());
+        }
+        return result;
+    }
+
 
     /**
      * Load the CSV file by using the metadata information provided.
@@ -693,8 +698,7 @@ public class DataLoadManager extends NSTestBase {
         }
         throw new RuntimeException("Column details not found in collection info supplied for the displayName : "+displayName);
     }
-    
-    
+
 }
 
 
