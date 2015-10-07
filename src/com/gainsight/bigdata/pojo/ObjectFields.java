@@ -28,7 +28,17 @@ public class ObjectFields {
 	List<String>  textArea_Long = new ArrayList<String>();
 	List<String>  textArea_Rich = new ArrayList<String>();
 	List<HashMap<String, String>> FormulaFieldsList= new ArrayList<HashMap<String, String>>();
+	List<String>  externalID_Text = new ArrayList<String>();
+	List<String>  externalID_TextArea = new ArrayList<String>();
+	List<String>  externalID_TextAreaRich = new ArrayList<String>();
 	
+	
+	public List<String> getExternalID_Text() {
+		return externalID_Text;
+	}
+	public void setExternalID_Text(List<String> externalID_Text) {
+		this.externalID_Text = externalID_Text;
+	}	
 	
 	public List<HashMap<String, String[]>> getMultiPickLists() {
 		return multiPickLists;
@@ -53,6 +63,10 @@ public class ObjectFields {
 	}
 	public void setFormulaFieldsList(List<HashMap<String, String>> formulaFieldsList) {
 		FormulaFieldsList = formulaFieldsList;
+	}
+	public void clearFormulaFieldsList() {
+		if(FormulaFieldsList != null)
+			FormulaFieldsList.clear();
 	}
 	public List<String> getTextArea_Long() {
 		return textArea_Long;

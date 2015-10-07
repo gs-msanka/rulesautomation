@@ -2,26 +2,35 @@ package com.gainsight.bigdata.dataload.apiimpl;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -34,6 +43,7 @@ import java.util.*;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.*;
 
 /**
  * Created by Giribabu on 13/05/15.
@@ -41,6 +51,8 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 public class DataLoadManager extends NSTestBase {
 
     public Header headers = new Header();
+    private Calendar calendar = Calendar.getInstance();
+    private ReportManager reportManager = new ReportManager();
 
     public DataLoadManager() {
         accessKey = getDataLoadAccessKey();
@@ -57,7 +69,7 @@ public class DataLoadManager extends NSTestBase {
      * @param sfOrgId - Salesforce Organisation ID - 15 (or) 18 digits.
      * @param accessKey - AccessKey to load data.
      * @param loginName - Salesforce User Login Name.
-     * @return NSResponseObj - if authentication is successful with the given params & NULL on failure.
+     * @return NSResponseObj - if authentication is successful with the given params and NULL on failure.
      */
     public NsResponseObj mdaDataLoadAuthenticate(String sfOrgId, String accessKey, String loginName) {
         NsResponseObj nsResponseObj = null;
@@ -115,11 +127,27 @@ public class DataLoadManager extends NSTestBase {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             }
         } catch (Exception e) {
-            Log.error("Failed to created subject area", e);
-            throw new RuntimeException("Failed to created subject area" + e.getLocalizedMessage());
+            Log.error("Failed to create subject area ", e);
+            throw new RuntimeException("Failed to create subject area " + e.getLocalizedMessage());
         }
         Log.info("Returning after subject create.");
         return nsResponseObj;
+    }
+
+    /**
+     * Creates a collection and returns the collection Id.
+     *
+     * @param collectionInfo - Collection to be created.
+     * @return collection id on success, null on failure.
+     */
+    public String createSubjectAreaAndGetId(CollectionInfo collectionInfo ){
+        String collectionId = null;
+        NsResponseObj nsResponseObj = createSubjectArea(collectionInfo);
+        if(nsResponseObj.isResult()) {
+            CollectionInfo.CollectionDetails colDetails = getCollectionDetail(nsResponseObj.getData());
+            collectionId = colDetails.getCollectionId();
+        }
+        return collectionId;
     }
 
     /**
@@ -155,25 +183,43 @@ public class DataLoadManager extends NSTestBase {
      *
      * @param jobId - JobId/StatusId to wait for its completion i.e status != IN_PROGRESS.
      */
-    public void waitForDataLoadJobComplete(String jobId) {
-        Log.info("Wait for the "+jobId + " to complete...");
-        for (int i = 0; i < MAX_NO_OF_REQUESTS; i++) {
-            DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
-            if (statusInfo != null) {
-                if (statusInfo.getStatusType().equals(DataLoadStatusType.IN_PROGRESS)) {
-                    Log.info("Data Load Under Progress...");
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    Timer.sleep(10); //Sleep for 10 seconds and try again.
-                } else {
-                    Log.info("Data Load Status :" + statusInfo.getStatusType());
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    break;
-                }
-            } else {
-                Log.error("Wait for data load failed for Job Id : " + jobId);
-                throw new RuntimeException("Wait for data load for Job Id - " + jobId + " failed.");
-            }
+    public boolean waitForDataLoadJobComplete(final String jobId) {
+        if(jobId == "" || jobId.equals("")) {
+            throw new IllegalArgumentException("Job Id should not be null");
         }
+        Log.info("Wait for the "+jobId + " to complete...");
+        boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+            @Override
+            public Boolean apply() {
+                return isdataLoadJobComplete(jobId);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * Returns true id job is completed, failed, partial success else false.
+     * @param jobId - Job Id to check the status.
+     * @return
+     */
+    public boolean isdataLoadJobComplete(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
+        }
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.FAILED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.PARTIAL_SUCCESS)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
+        }
+        if(!result) {
+            Log.info("Data Load Job status is not completed : " +jobId);
+            Log.info(("Status of Job : " +statusInfo.getStatusType()));
+        }
+
+        return result;
     }
 
     /**
@@ -268,12 +314,12 @@ public class DataLoadManager extends NSTestBase {
         } finally {
             headers.addHeader("Content-Type","application/json");
         }
-        Log.info("Data Load Successful, returning job Id" +jobId);
+        Log.info("Data Load Successful, returning job Id " +jobId);
         return jobId;
     }
 
     /**
-     * Exports all the failed records as string with new line as line separator & with headers.
+     * Exports all the failed records as string with new line as line separator and with headers.
      *
      * @param statusId - The StatusId(JobId) to retrieve the failed records
      * @return StringContent returned by server.
@@ -354,7 +400,7 @@ public class DataLoadManager extends NSTestBase {
      * @return - Subject/Collection schema.
      */
     public CollectionInfo getCollection(String subjectAreaName) {
-        Log.info("Getting Single Collection...");
+        Log.info("Getting Single Collection..." +subjectAreaName);
         if(subjectAreaName ==null && subjectAreaName.equals("")) {
             throw new RuntimeException("Subject Area is Required.");
         }
@@ -387,7 +433,7 @@ public class DataLoadManager extends NSTestBase {
             }
         } catch (Exception e) {
             Log.error("Failed to get collection schema..."+e.getLocalizedMessage());
-            throw new RuntimeException("Failed to get collection schema..."+e.getLocalizedMessage());
+            throw new RuntimeException("Failed to get collection schema...", e);
         }
         return null;
     }
@@ -396,7 +442,7 @@ public class DataLoadManager extends NSTestBase {
      * Fetches the failed records for the job id.
      *
      * @param jobId - Job Id to get failed records.
-     * @return - List<String></> data rows.
+     * @return - List of String - data rows.
      */
     public List<String> getFailedRecords(String jobId) {
         Log.info("Fetching Failed records...");
@@ -448,7 +494,7 @@ public class DataLoadManager extends NSTestBase {
         String jobId = null;
         try {
             headers.removeHeader("Content-Type");
-            System.out.println(mapper.writeValueAsString(metadata));
+            Log.info(mapper.writeValueAsString(metadata));
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             StringBody value = new StringBody(mapper.writeValueAsString(metadata), ContentType.APPLICATION_JSON);
             builder.addPart("metadata", value);
@@ -473,7 +519,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Verifies the Collection Columns, Column Data Type & checks DB Name is not null in actual collection.
+     * Verifies the Collection Columns, Column Data Type and checks DB Name is not null in actual collection.
      *
      * @param expected - Expected Collection Info.
      * @param actual - Actual Collection Info.
@@ -527,7 +573,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Trims the string fields to 250 characters & appends "...".
+     * Trims the string fields to 250 characters and appends "...".
      * @param dataList - Data List to trim.
      * @param collectionInfo
      */
@@ -557,6 +603,100 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Clears all the data in the collection and deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionsIdsToDelete - Collection Id to delete.
+     */
+    public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId) {
+        Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
+        if(collectionsIdsToDelete == null || collectionsIdsToDelete.size() ==0) {
+            Log.info("No Collections To Delete");
+            return;
+        }
+        Map<String, CollectionInfo.CollectionDetails> collectionInfoMap = new HashMap<>();
+        for(CollectionInfo collectionInfo : getAllCollections() ) {
+            collectionInfoMap.put(collectionInfo.getCollectionDetails().getCollectionId(), collectionInfo.getCollectionDetails());
+        }
+        for(String colId : collectionsIdsToDelete) {
+            if(collectionInfoMap.containsKey(colId)) {
+                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
+                waitForDataLoadJobComplete(jobId);
+                if(tenantManager.deleteSubjectArea(tenantId, colId)) {
+                    Log.info("Collection Deleted Successfully " +colId);
+                } else {
+                    Log.error("Failed to delete collection id : "+colId);
+                }
+            } else {
+                Log.error("Collection Id Doesn't Exists to delete : " +colId);
+            }
+        }
+        Log.info("Deleted all collection data & collections");
+    }
 
 
+    /**
+     * Clears all the data in the collection and deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionDetailList - CollectionDetails.
+     */
+    public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList) {
+        Log.info("Total no of collection to delete : " + collectionDetailList.size());
+        if(tenantId == null || collectionDetailList == null) {
+            throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
+        }
+        for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
+                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
+                if(waitForDataLoadJobComplete(jobId)) {
+                    tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                } else {
+                    throw new RuntimeException("Data deleting is not completed. i.e. data load job is still running then the max wait time. ");
+                }
+            }
+        Log.info("Deleted all collection data & collections");
+    }
+
+    /**
+     * Returns the metadata that to be used for loading the data via data load api.
+     * @param collectionInfo - CollectionInfo Pojo class
+     * @return metadata to be used while loading data.
+     */
+    public DataLoadMetadata getDefaultDataLoadMetaData(CollectionInfo collectionInfo) {
+        DataLoadMetadata metadata = new DataLoadMetadata();
+        metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setDataLoadOperation(DataLoadOperationType.INSERT.name());
+
+
+        List<DataLoadMetadata.Mapping> mappings = new ArrayList<>();
+        DataLoadMetadata.Mapping mapping = null;
+        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
+            mapping = new DataLoadMetadata.Mapping();
+            mapping.setSource(column.getDisplayName());
+            mapping.setTarget(column.getDisplayName());
+            mappings.add(mapping);
+        }
+        metadata.setMappings(mappings);
+        return metadata;
+    }
+
+    /**
+     * Returns the first column matched with display order.
+     * @param collectionInfo - CollectionMaster
+     * @param displayName -  Column Display Name.
+     * @return
+     */
+    public CollectionInfo.Column getColumnByDisplayName(CollectionInfo collectionInfo, String displayName) {
+        for(CollectionInfo.Column col : collectionInfo.getColumns()) {
+            if(displayName.equals(col.getDisplayName())) {
+                return col;
+            }
+        }
+        throw new RuntimeException("Column details not found in collection info supplied for the displayName : "+displayName);
+    }
+    
+    
 }
+
+
+
+

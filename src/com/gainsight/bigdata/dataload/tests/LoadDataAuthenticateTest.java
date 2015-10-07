@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Created by gainsight on 24/05/15.
+ * Created by Giribabu on 24/05/15.
  */
 public class LoadDataAuthenticateTest extends NSTestBase {
     private TenantDetails tenantDetails;
@@ -54,7 +54,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3628"})
@@ -65,7 +65,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3629"})
@@ -76,7 +76,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3630"})

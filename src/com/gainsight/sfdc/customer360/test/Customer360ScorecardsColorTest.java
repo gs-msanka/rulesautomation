@@ -58,7 +58,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         }
     }
 
-    @TestInfo(testCaseIds={"GS-796"})
+    @TestInfo(testCaseIds={"GS-5461"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-1")
     public void addScoreToMeasureWithOutWeight(HashMap<String, String> testData) {
@@ -75,7 +75,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
     
-    @TestInfo(testCaseIds={"GS-796"})
+    @TestInfo(testCaseIds={"GS-5460"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-2")
     public void addScoreToMeasureWithWeight(HashMap<String, String> testData) {
@@ -91,7 +91,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-    //No Test case in TestLink
+    @TestInfo(testCaseIds={"GS-5118"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-3")
     public void removeScoreForMeasures(HashMap<String, String> testData) {
@@ -129,7 +129,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
 
-    @TestInfo(testCaseIds={"GS-797"})
+    @TestInfo(testCaseIds={"GS-794", "795", "797"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-4")
     public void scorecardUpdates(HashMap<String, String> testData) {
@@ -180,7 +180,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-    @TestInfo(testCaseIds={"GS-789"})
+    @TestInfo(testCaseIds={"GS-5463"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-5")
     public void updateMeasureComments(HashMap<String, String> testData) {
@@ -219,7 +219,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
     }
 
-    @TestInfo(testCaseIds={"GS-796","GS-797"})
+    @TestInfo(testCaseIds={"GS-796"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-6")
     public void addUpdateRemoveMeasureScore(HashMap<String, String> testData) {
@@ -254,8 +254,8 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureScore(measure.get("GroupName"), measure.get("MeasureName"), "NA"));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
-    
-    //No Test case in TestLink
+
+    @TestInfo(testCaseIds={"GS-789"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-7")
     public void updateOverallScoreSummary(HashMap<String, String> testData) {
@@ -268,7 +268,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverAllSummary(overallScorecardSummary), "Checking Over All Summary.");
     }
 
-    //No Test case in TestLink
+    @TestInfo(testCaseIds={"GS-800"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-8")
     public void disabledOverAllHealthUpdateCheck(HashMap<String, String> testData) {
@@ -298,8 +298,8 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyMeasureColor(measure.get("GroupName"), measure.get("MeasureName"), measure.get("Score")));
         Assert.assertTrue(customer360Scorecard.verifyOverallScore(customerHealth.get("Score")));
     }
-    
-    //No Test case in TestLink
+
+    @TestInfo(testCaseIds={"GS-5462"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-10")
     public void updateOverAllCustomerHealth(HashMap<String, String> testData) {
@@ -334,6 +334,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
     }
 
     /* Goals in 360 page as problem with java script - in selenium.
+    @TestInfo(testCaseIds={"GS-793"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-9")
     public void customerGoalsUpdate(HashMap<String, String> testData) {

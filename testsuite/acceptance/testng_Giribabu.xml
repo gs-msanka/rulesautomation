@@ -1,33 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-    <listeners>
-        <listener class-name="com.gainsight.utils.AutTestListener" />
-    </listeners>
-
-    <test verbose="3" name="360 AccountAttributes360 Test" preserve-order="true">
+<suite name="Suite1">
+    <test name="test1">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
+            <class name="com.gainsight.bigdata.reportBuilder.tests.ReportBuilderTest" />
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
         </classes>
+
     </test>
-
-    <test verbose="3" name="360 RelatedList Tests" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="360 UsageTracker360 Tests" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="Customers Tab Tests" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer.tests.CustomerTest"/>
-        </classes>
-    </test>
-
-
 </suite>

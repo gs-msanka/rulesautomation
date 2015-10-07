@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.reportBuilder.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -67,6 +68,7 @@ public class ReportMaster {
         this.reportInfo = reportInfo;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ReportOption {
         private boolean normalize;
         private boolean enableDataLabels;
@@ -74,5 +76,44 @@ public class ReportMaster {
         private boolean enableRGBColor;
         private boolean enableDualYAxis;
 
+        public boolean isNormalize() {
+            return normalize;
+        }
+
+        public void setNormalize(boolean normalize) {
+            this.normalize = normalize;
+        }
+
+        public boolean isEnableDataLabels() {
+            return enableDataLabels;
+        }
+
+        public void setEnableDataLabels(boolean enableDataLabels) {
+            this.enableDataLabels = enableDataLabels;
+        }
+
+        public boolean isShowLabels() {
+            return showLabels;
+        }
+
+        public void setShowLabels(boolean showLabels) {
+            this.showLabels = showLabels;
+        }
+
+        public boolean isEnableRGBColor() {
+            return enableRGBColor;
+        }
+
+        public void setEnableRGBColor(boolean enableRGBColor) {
+            this.enableRGBColor = enableRGBColor;
+        }
+
+        public boolean isEnableDualYAxis() {
+            return enableDualYAxis;
+        }
+
+        public void setEnableDualYAxis(boolean enableDualYAxis) {
+            this.enableDualYAxis = enableDualYAxis;
+        }
     }
 }

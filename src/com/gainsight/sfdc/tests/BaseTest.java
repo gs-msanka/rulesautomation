@@ -10,8 +10,10 @@ import java.util.*;
 
 import com.gainsight.sfdc.util.PackageUtil;
 
+import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
+
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -30,7 +32,7 @@ public class BaseTest {
 	protected static BasePage basepage;
 	
 	public static SalesforceConnector sfdc;
-    public static SFDCInfo sfinfo;
+    public static SFDCInfo sfdcInfo;
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static TimeZone userTimezone;
@@ -39,8 +41,10 @@ public class BaseTest {
     public static final String NAMESPACE = sfdcConfig.getSfdcNameSpace();
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
+    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
+    public static MetaDataUtil metaUtil = new MetaDataUtil();
+    public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
 
-    public static MetaDataUtil metaUtil=new MetaDataUtil();
 
     @BeforeSuite
     public void init() throws Exception {
@@ -48,56 +52,50 @@ public class BaseTest {
     	sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+ sfdcConfig.getSfdcStoken(),
     			sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
     	
-    	Assert.assertTrue(sfdc.connect(), "SFDC Connection established successfully!");
+    	Assert.assertTrue(sfdc.connect(), "SFDC Connection Failed..., Check credentials.");
+
     	//MetadataClient is initialized
     	metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
-        if(Boolean.valueOf(sfdcConfig.getSfdcUnInstallApp())) {
-            packageUtil.unInstallApplication();
+        sfdcInfo = sfdc.fetchSFDCinfo();
+
+        if(sfdcConfig.getSfdcUnInstallApp()) {
+            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
+            packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
         //Install Application.
-        if(Boolean.valueOf(sfdcConfig.getSfdcInstallApp())) {
+        if(sfdcConfig.getSfdcInstallApp()) {
             packageUtil.installApplication(sfdcConfig.getSfdcPackageVersionNumber(), sfdcConfig.getSfdcPackagePassword());
         }
-        //If its a managed package then assigning Gainsight_Admin Permission set to the current user.
-        if(sfdcConfig.getSfdcManagedPackage()) {
-            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+
+        if(sfdcConfig.getSfdcUpdateWidgetLayouts()) {
+            packageUtil.updateWidgetLayouts(true, true, true, sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
 
-        if(Boolean.valueOf(sfdcConfig.getSfdcUpdateWidgetLayouts())) {
-            packageUtil.updateWidgetLayouts(true, true, true);
+        if(sfdcConfig.getSfdcSetupGainsightApp()) {
+            packageUtil.setupGainsightApplicationAndTabs(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
+            sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
+            if(sfdcConfig.getSfdcManagedPackage()) {
+                sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            }
+            packageUtil.deployPermissionSetCode();
+            metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         }
 
-        packageUtil.deployPermissionSetCode();
-        sfinfo = sfdc.fetchSFDCinfo();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
-        USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfinfo.getUserLocale()) ? DateUtil.localMapValues().get(sfinfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
-        userTimezone = TimeZone.getTimeZone(sfinfo.getUserTimeZone());
+        USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
+        userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
         DateUtil.timeZone =  userTimezone;
         Log.info("Initializing Selenium Environment");
         env.start();
         try {
-            String setAsDefaultApp = sfdcConfig.getSfdcSetDefaultApp();
-            String loadDefaultData = sfdcConfig.getSfdcLoadDefaultData();
             env.launchBrower();
             basepage = new BasePage();
             Log.info("Initializing Base Page : " + basepage);
-            if ((setAsDefaultApp != null && setAsDefaultApp.equals("true")) || loadDefaultData != null && loadDefaultData.equals("true")) {
-                basepage.login();
-                if ((setAsDefaultApp != null && setAsDefaultApp.equals("true"))) {
-                    basepage.setDefaultApplication("Gainsight");
-                    basepage.addTabsToApplication("Gainsight", "Customer Success 360, Gainsight, Transactions, Cockpit, Gainsight, Actions");
-                }
-                if (loadDefaultData != null && loadDefaultData.equals("true")) {
-                    basepage.loadDefaultData();
-                }
-                basepage.logout();
-            }
         } catch (Exception e) {
             env.stop();
-            Log.info(e.getLocalizedMessage());
-            e.printStackTrace();
+            Log.error(e.getLocalizedMessage(), e);
             throw e;
         }
     }

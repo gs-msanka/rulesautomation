@@ -56,7 +56,7 @@ public class GSEmailTests extends NSTestBase {
 		records.put("ExternalTenantID", sfinfo.getOrg());
 		fieldDetails.put("TenantId", "");
 		fieldDetails.put("TenantName", "");
-		mUtil.getFieldValueFromDoc("tenantmaster", records, fieldDetails);
+		//mUtil.getFieldValueFromDoc("tenantmaster", records, fieldDetails);
 		Assert.assertTrue(
 				gse.checkSubAccountInMandrill(
 						env.getProperty("mandrill.APIKey"),

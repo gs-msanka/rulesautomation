@@ -1,0 +1,14 @@
+{
+    "jobName": "Load Initial Datas to Case Object",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+    "load": {
+        "target": "sfdc",
+        "sObject": "Case",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+        "externalIDField": "p_c_ExternalID__c",
+		"file": "/testdata/newstack/CoPilot/Data/Input/Case-Init.csv"
+    }
+}

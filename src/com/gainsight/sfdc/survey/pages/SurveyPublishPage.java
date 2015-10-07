@@ -47,9 +47,15 @@ public class SurveyPublishPage extends SurveyPage {
         wait.waitTillElementDisplayed(PUBLISH_BUTTON, MIN_TIME, MAX_TIME);
     }
 
-    public String getSurveyStatus() {
-        String result = field.getText(SURVEY_STATUS).trim();
-        Log.info("Survey Status : " +result);
+    public String getSurveyStatus(SurveyProperties sProp) {
+		if (sProp.getEmailService().equalsIgnoreCase("Gainsight email service")
+				|| sProp.getStatus().equalsIgnoreCase("Publish")) {
+			wait.waitTillElementDisplayed(
+					"//div[@class='col-sm-5 status-msg' and contains(text(),'Publish')]",
+					MIN_TIME, MAX_TIME);
+		}
+		String result = field.getText(SURVEY_STATUS).trim();
+		Log.info("Survey Status : " + result);
 		return result;
 	}
 	
@@ -126,6 +132,7 @@ public class SurveyPublishPage extends SurveyPage {
 
     public String getTestEmailSuccessMsg() {
         WebElement POPUP_ELE = element.getElement(By.xpath(SEND_TEST_EMAIL_DIV));
+        wait.waitTillElementDisplayed(TEST_EMAIL_SUCCESS_MSG, MIN_TIME, MAX_TIME);
         String result = POPUP_ELE.findElement(By.xpath((TEST_EMAIL_SUCCESS_MSG))).getText().trim();
         Log.info("Error Message : " +result);
         return result;

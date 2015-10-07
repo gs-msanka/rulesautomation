@@ -1,13 +1,13 @@
 package com.gainsight.bigdata.urls;
 
-import com.gainsight.util.PropertyReader;
+import com.gainsight.util.ConfigLoader;
 
 /**
- * Created by gainsight on 07/05/15.
+ * Created by Giribabu on 07/05/15.
  */
 public interface NSURLs {
 
-    String NS_URL = PropertyReader.nsAppUrl+"/"+PropertyReader.nsApiVersion;
-    String NS_ADMIN_URL = PropertyReader.nsAdminUrl+"/"+PropertyReader.nsApiVersion;
+    public String NS_URL = ConfigLoader.getNsConfig().getNsURl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
+    public String NS_ADMIN_URL = ConfigLoader.getNsConfig().getNsAdminUrl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
 
 }

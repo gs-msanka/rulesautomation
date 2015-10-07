@@ -340,17 +340,13 @@ public class JobInfo {
 	 * @author Sunand
 	 *
 	 */
-	public class SfdcExtract {
+	public static class SfdcExtract {
 		String source;
 		String connection;
 		String table;
 		List<String> fields;
 		@JsonProperty("output")
-		String output;
-
-		public SfdcExtract() {
-			// TODO Auto-generated constructor stub
-		}
+		String outputFileLoc;
 		
 		public String getSource() {
 			return source;
@@ -384,15 +380,15 @@ public class JobInfo {
 			this.fields = fields;
 		}
 
-		public String getOutputFileLoc() {
-			return output;
-		}
+        public String getOutputFileLoc() {
+            return outputFileLoc;
+        }
 
-		public void setOutputFileLoc(String output) {
-			this.output = output;
-		}
-		
-		@Override
+        public void setOutputFileLoc(String outputFileLoc) {
+            this.outputFileLoc = outputFileLoc;
+        }
+
+        @Override
 		public String toString() {
 			return toStringFormat(this);
 		}
@@ -477,9 +473,18 @@ public class JobInfo {
 			String file;
 			String table;
 			String joinColumnName;
+            boolean resolveNameSpace = false;
 			List<Columns> columns;
-			
-			public TableInfo() {
+
+            public boolean isResolveNameSpace() {
+                return resolveNameSpace;
+            }
+
+            public void setResolveNameSpace(boolean resolveNameSpace) {
+                this.resolveNameSpace = resolveNameSpace;
+            }
+
+            public TableInfo() {
 				// TODO Auto-generated constructor stub
 			}
 			

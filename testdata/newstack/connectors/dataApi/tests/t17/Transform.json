@@ -1,0 +1,107 @@
+{
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Email",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "User Id"
+          },
+          {
+            "name": "Email",
+            "alias": "Source User Id"
+          },
+          {
+            "name": "Email",
+            "alias": "Source Account Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "Account Id"
+          },
+          {
+            "name": "Email",
+            "alias": "User Email"
+          },
+          {
+            "name": "Name",
+            "alias": "User Name"
+          }
+
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/T17_ExpectedData.csv",
+        "table": "TempData",
+        "joinColumnName": "UserEmail",
+        "columns": [
+          {
+            "name": "UserEmail",
+            "alias": "User Email"
+          },
+          {
+            "name": "AccountName",
+            "alias": "Account Name"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "Event",
+            "alias": "Event"
+          },
+          {
+            "name": "EventCount",
+            "alias": "Event Count"
+          },
+          {
+            "name": "Count_UniqueLogins",
+            "alias": "Count_UniqueLogins"
+          },
+          {
+            "name": "Avg_PageLoadTime",
+            "alias": "Avg_PageLoadTime"
+          },
+          {
+            "name": "MAX_FileSize",
+            "alias": "MAX_FileSize"
+          },
+          {
+            "name": "MIN_Price",
+            "alias": "MIN_Price"
+          },
+          {
+            "name": "Week",
+            "alias": "Week"
+          },
+          {
+            "name": "Month",
+            "alias": "Month"
+          },
+          {
+            "name": "Quarter",
+            "alias": "Quarter"
+          },
+          {
+            "name": "Year",
+            "alias": "Year"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/T17_Final_ExpectedData.csv"
+  }
+}

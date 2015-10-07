@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.tenantManagement.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -35,6 +36,8 @@ public class TenantDetails {
     private DBDetail dataDBDetail;
     @JsonProperty("postgresDBDetail")
     private DBDetail postgresDBDetail;
+    @JsonProperty("redshiftDBDetail")
+    private DBDetail redshiftDBDetail;
     private boolean disabled = false;
     private String tenantType = "OTHERS";
     private boolean systemDefined = false;
@@ -144,13 +147,16 @@ public class TenantDetails {
             this.company = company;
         }
     }
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DBDetail {
         private String dbName;
         @JsonProperty("sslEnabled")
         private boolean sslEnabled;
         @JsonProperty("dbServerDetails")
         private List<DBServerDetail> dbServerDetails;
+        
+        @JsonIgnore
+        private String uriWithoutPassword;
         //private List<HashMap<String, String>> dbDetails;
 
 
@@ -177,14 +183,26 @@ public class TenantDetails {
         public void setSslEnabled(boolean sslEnabled) {
             this.sslEnabled = sslEnabled;
         }
+        
+        public String getUriWithoutPassword() {
+			return uriWithoutPassword;
+		}
+
+		public void setUriWithoutPassword(String uriWithoutPassword) {
+			this.uriWithoutPassword = uriWithoutPassword;
+		}
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DBServerDetail {
         private String host;
         private String userName;
         private String password;
-
-        public String getHost() {
+        
+        @JsonIgnore
+        private String uriWithoutPassword;
+        
+		public String getHost() {
             return host;
         }
 
@@ -207,6 +225,14 @@ public class TenantDetails {
         public void setPassword(String password) {
             this.password = password;
         }
+    }
+
+    public DBDetail getRedshiftDBDetail() {
+        return redshiftDBDetail;
+    }
+
+    public void setRedshiftDBDetail(DBDetail redshiftDBDetail) {
+        this.redshiftDBDetail = redshiftDBDetail;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

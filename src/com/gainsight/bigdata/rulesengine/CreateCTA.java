@@ -3,18 +3,12 @@ package com.gainsight.bigdata.rulesengine;
 import java.util.HashMap;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Application;
-import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
@@ -35,11 +29,11 @@ public class CreateCTA extends RulesUtil {
 			+ "AssignValuesToCustomFields.apex";
 	ResponseObj result = null;
 	private final String TEST_DATA_FILE = "/testdata/newstack/RulesEngine/CreateCTA/CreateCTAs.xls";
-	String nsAppUrl = PropertyReader.nsAppUrl;
 
 	@BeforeClass
 	public void beforeClass() throws Exception {
-		sfdc.connect();
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        sfdc.connect();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CleanUpForRules));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		updateNSURLInAppSettings(env.getProperty("ns.appurl"));
@@ -47,7 +41,8 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, No Playbook, No Token, No Owner Field.
-	@TestInfo(testCaseIds="{GS-5572}")
+
+	@TestInfo(testCaseIds={"GS-5572"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
 	public void Rule1(HashMap<String, String> testData) throws Exception {
@@ -63,7 +58,8 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, Yes Playbook, No Token, No Owner Field.
-	@TestInfo(testCaseIds="{GS-5573}")
+
+	@TestInfo(testCaseIds={"GS-5573"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
 	public void Rule2(HashMap<String, String> testData) throws Exception {
@@ -79,7 +75,8 @@ public class CreateCTA extends RulesUtil {
 	}
 
 	// Create CTA : No Advance Criteria, Yes Playbook, No Token, Yes Owner Field.
-	@TestInfo(testCaseIds="{GS-5574}")
+
+	@TestInfo(testCaseIds={"GS-5574"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
 	public void Rule3(HashMap<String, String> testData) throws Exception {
@@ -102,7 +99,8 @@ public class CreateCTA extends RulesUtil {
 
 	// Create CTA : No Advance Criteria, Yes Playbook, Yes Token(Standard Object), No Owner Field.
 	// Tokens considered are: Id, Name, Type, Fax, Website, AnnualRevenue,NumberOfEmployees, Description, OwnerId. (Token are only Standard fields from Account Object are taken here)
-	@TestInfo(testCaseIds="{GS-5575,GS-4259}")
+
+	@TestInfo(testCaseIds={"GS-5575","GS-4259"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
 	public void Rule4(HashMap<String, String> testData) throws Exception {
@@ -167,7 +165,8 @@ public class CreateCTA extends RulesUtil {
 	// Tokens considered are: Id, Name, Type, Fax, Website, AnnualRevenue,
 	// NumberOfEmployees, Description, OwnerId. (Token are only Standard fields
 	// from Account Object are taken here)
-	@TestInfo(testCaseIds="{GS-5576}")
+
+	@TestInfo(testCaseIds={"GS-5576"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
 	public void Rule5(HashMap<String, String> testData) throws Exception {
@@ -181,7 +180,7 @@ public class CreateCTA extends RulesUtil {
 		metadataClient.deleteFields("Account", FieldsToDelete);
 		metadataClient.deleteFields("Account", FieldsToDelete1);
 		// Create Custom Fields
-		metaUtil.createFieldsOnAccount(sfdc, sfinfo);
+		metaUtil.createFieldsOnAccount(sfdc);
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateCTACustomer));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CreateOwnerField));
 		// Assign value to Custom

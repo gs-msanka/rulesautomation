@@ -3,8 +3,10 @@ package com.gainsight.sfdc.workflow.pages;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.pageobject.core.Element;
 import com.gainsight.pageobject.util.Timer;
 
 import org.openqa.selenium.By;
@@ -15,6 +17,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.sfdc.workflow.pojos.Task;
+import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.thoughtworks.selenium.webdriven.JavascriptLibrary;
 
@@ -164,6 +167,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String TO_SELECT_STATUS_IN_TASK	= "//select[@class='Status__c form-control form-select']/following-sibling::button";
     private final String SAVE_TASK		            = "//div[@class='cta-form']/div[@class='modal-footer text-center']/button[contains(text(),'Save')]";
     private final String TASK_TITLE_TO_VERIFY		= "//span[@class='title-name workflow-task-title' and contains(text(),'%s')]";
+    private final String TASK_SUBJECT_EMPTY_ALERT_MESSAGE ="//input[contains(@class, 'gs-btn btn-add btn_save saveSummary')]";
     
     //Playbook From Elements
     private final String PLAYBOOK_SELECT = "//select[@class='playbook-list']/following-sibling::button";
@@ -177,22 +181,18 @@ public class WorkflowPage extends WorkflowBasePage {
     String CALENDER_DIR_RIGHT           = "//div[@class='calendar-ctn']/div[@data-direction='RIGHT']";
     
     private final String CLICK_TO_OPEN_CTA       ="//div[@class='gs-cta-head workflow-ctaitem']";
-    private final String CTA_LINK                ="//li[contains(@class, 'gs-cockpit-tab active') and contains(@tabname, 'JBCXM__CTA__c')]";
-    private final String ACCOUNT_LINK            ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Account')]";
-    private final String OPPORTUNITY_LINK       ="//li[contains(@class, 'gs-cockpit-tab') and contains(@tabname, 'Opportunity')]";
-    private final String LINK_TO_EXISTING        ="//div[@id='details']/div[3]/div[5]/div[2]/div[@class='gs-cockpit-add-new pull-left gs-cockpit-associate-btn']";
-    private final String OPPORTUNITY_SEARCH     ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
-    private final String OPPORTUNITY_SEARCH_LINK="Opp Account - Opportunity";
-    private final String DELINK_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='De-Link']";
-    private final String DELETE_ICON             ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/descendant::div[@class='gs-cockpit-section-delete-options']/descendant::span[@title='Delete']";
-    private final String DELINK_CONFIRMATION_BOX ="//div[@class='layout_popup ui-dialog-content ui-widget-content']/descendant::div[@class='modal_footer']/descendant::input[@class='gs-btn btn-save btn_save saveSummary']";
+    private final String OBJECT_ASSOCIATION_TABS ="//li[contains(@class, 'gs-cockpit-tab')]/descendant::a[text()='%s']";
+    private final String LINK_TO_EXISTING        ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[contains(@class, 'gs-cockpit-associate-obj')]/div[text()='Link to an existing']";
+    private final String SEARCH_FIELD            ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-associate-obj pull-left']/descendant::div[@class='search-contact associate-record pull-left']/descendant::div[@class='gs_searchform']/descendant::div[@class='gs_search_section']/descendant::input[@name='search_text']";
+    private final String DELINK_ICON             ="//div[@id='details']/descendant::div[contains(@class, 'section-details')]/descendant::div[contains(@class, 'show-delink')]/descendant::span[@title='De-Link']";
+    private final String DELINK_CONFIRMATION_DILOG ="//input[contains(@class, 'btn-save') and @data-action='Yes']";
     private final String CREATE_NEW_LINK         ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-actions']/descendant::div[@class='gs-cockpit-add-new pull-left gs-cockpit-create-record']";
-    private final String NAME_SELECT             ="//div[@class='gs-cockpit-field-value pull-left']/input";
-    private final String SELECT_DATE             ="//div[@class='gs-cockpit-field-record']/descendant::span[text()='Close Date']/ancestor::div[@class='gs-cockpit-field-record']/descendant::input[last()]";
-    private final String DATE_PICKER             ="//div[@id='datePicker']/descendant::div[@class='calBody']/descendant::div[@class='buttonBar']/a";
-    private final String STAGE_SELECT            ="//div[@class='gs-cockpit-field-record']/descendant::span[text()='Stage']/ancestor::div[@class='gs-cockpit-field-record']/descendant::button";
-    private final String CLICK_SCREEN            ="//div[@class='workflow-tabs workflow-header']"; //Clicking somewhere on screen to disappear calendar
-    private final String CLICK_SAVE              ="//div[@id='details']/descendant::div[@class='section-details Opportunity']/descendant::div[@class='gs-cockpit-section-header']/div[2]/div/a[1]";
+    private final String SELECT_VALUE             ="//div[@class='gs-cockpit-field-value' and @control='%s']/input";
+    private final String PICKLIST_SELECTION      ="//div[@class='gs-cockpit-field-value' and @control='PICKLIST']/descendant::button";
+    private final String CLICK_SAVE              ="//div[@id='details']/descendant::div[contains(@class,'section-details') and @style='']/descendant::div[@class='gs-cockpit-section-header']/div[@title='Edit']/descendant::a[@title='Save']";
+    private final String EDIT_ICON_IN_DETAIL_VIEW ="//div[contains(@class, 'edit-icon') and @title='Edit']";
+    private final String EDIT_OPTIONS_ICON        ="//div[contains(@class, 'show-delink')]/descendant::div[contains(@class, 'cockpit-section-delete-options')]";
+    private final String LOADING_ICON_IN_DETAIL_VIEW = "//div[@class='gs-cockpit-section-header show-delink']/following-sibling::div[@class='gs-section-loader']";
     
     public WorkflowPage() {
         waitForPageLoad();
@@ -212,7 +212,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     private void waitForPageLoad() {
         Log.info("Loading Cockpit Page");
-        waitTillNoLoadingIcon();
+       // waitTillNoLoadingIcon();
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
         Log.info("Cockpit Page Loaded Successfully");
     }
@@ -538,7 +538,7 @@ public class WorkflowPage extends WorkflowBasePage {
     public WorkflowPage updateCTAStatus_toClosedLost(CTA cta) {
         expandCTAView(cta);
         item.click(EXP_VIEW_STATUS_BUTTON);
-       selectValueInDropDown("Closed Lost");
+        selectValueInDropDown("Closed Success");
         Timer.sleep(2);
         collapseCTAView();
         return this;
@@ -665,9 +665,15 @@ public class WorkflowPage extends WorkflowBasePage {
         Log.info("Verifying task expanded view is loaded");
         wait.waitTillElementDisplayed(DETAILED_FORM, MIN_TIME, MAX_TIME);
         Task expViewTask = new Task();
-        for(int i=0; i<3; i++) {
-            expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT).getAttribute("value").trim());
-            expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
+		for (int i = 0; i < 3; i++) {
+			expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT)
+					.getAttribute("value"));
+			if (element.isElementPresent(TASK_SUBJECT_EMPTY_ALERT_MESSAGE)) {
+				item.click(TASK_SUBJECT_EMPTY_ALERT_MESSAGE);
+			}
+			expViewTask.setSubject(element.getElement(TASK_EXP_SUBJECT)
+					.getAttribute("value"));
+			expViewTask.setPriority(element.getText(TASK_EXP_PRIORITY));
             expViewTask.setStatus(element.getText(TASK_EXP_STATUS));
             Log.info("Expected -> Subject : " +task.getSubject() +", Priority : "+task.getPriority() +", "+task.getStatus());
             Log.info("Actual -> Subject : " +expViewTask.getSubject() +", Priority : "+expViewTask.getPriority() +", "+expViewTask.getStatus());
@@ -676,7 +682,7 @@ public class WorkflowPage extends WorkflowBasePage {
                 Log.info("Priority not matched");
             if(!task.getStatus().equalsIgnoreCase(expViewTask.getStatus()))
                 Log.info("Status not matched");
-            if(task.getSubject().equalsIgnoreCase(expViewTask.getSubject()))
+            if(!task.getSubject().equalsIgnoreCase(expViewTask.getSubject()))
                 Log.info("Subject not matched");
 
             if(task.getPriority().equalsIgnoreCase(expViewTask.getPriority()) &&
@@ -713,19 +719,19 @@ public class WorkflowPage extends WorkflowBasePage {
                     Log.info("Expected Value : " +cta.getCustomer());
                     Log.info("Actual Value : " +expViewCta.getCustomer());
                     Log.info("Customer Name not matched.");
-                } else if (cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
+                } else if (!cta.getType().trim().equalsIgnoreCase(expViewCta.getType())){
                     Log.info("Expected Value :" +cta.getType());
                     Log.info("Actual Value :" +expViewCta.getType());
                     Log.info("Type not matched.");
-                } else if(cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
+                } else if(!cta.getPriority().trim().equalsIgnoreCase(expViewCta.getPriority())) {
                     Log.info("Expected Value : " +cta.getPriority());
                     Log.info("Actual Value : " +expViewCta.getPriority());
                     Log.info("Priority not matched.");
-                } else if(cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
+                } else if(!cta.getStatus().trim().equalsIgnoreCase(expViewCta.getStatus())) {
                     Log.info("Expected Value : " +cta.getStatus());
                     Log.info("Actual Value : " +expViewCta.getStatus());
                     Log.info("Status not matched.");
-                } else if(cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
+                } else if(!cta.getReason().trim().equalsIgnoreCase(expViewCta.getReason())) {
                     Log.info("Expected Value : " +cta.getReason());
                     Log.info("Actual Value : " +expViewCta.getReason());
                     Log.info("Reason not matched.");
@@ -798,7 +804,9 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             throw  new RuntimeException("CTA Type is mandatory");
         }
-        xPath = xPath+"/descendant::span[@class='cta-duedate'  and contains(@style, 'background:"+color+"') and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+     //   xPath = xPath+"/descendant::span[@class='cta-duedate'  and contains(@style, 'background:"+color+"') and contains(text(), '"+cta.getDueDate()+"')]/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        
+        xPath = xPath+"/descendant::span[@class='cta-duedate']/ancestor::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
         if(cta.getAssignee() != null) {
             xPath = xPath+"/descendant::img[contains(@alt, '"+cta.getAssignee()+"')]";
             xPath = xPath+"/ancestor::div[@class='gs-cta']";
@@ -1366,53 +1374,69 @@ public class WorkflowPage extends WorkflowBasePage {
         return this;
     }
 
-    public WorkflowPage openctadetailview(){
+    public WorkflowPage openCTADetailView(){
     	item.click(CLICK_TO_OPEN_CTA);
     	return this;
     }
 
 
-	public boolean verifyingctalink(){
-	     return link.verifyLinkVisible(CTA_LINK);
-    	
-    }
+	public boolean verifyingCtalink(HashMap<String, String> testData) {
+		return link.verifyLinkVisible(String.format(OBJECT_ASSOCIATION_TABS,
+				testData.get("DefaultObject2")));
+	}
 
-	public boolean verifyingAccountlink(){
-		return link.verifyLinkVisible(ACCOUNT_LINK);
+	public boolean verifyingAccountlink(HashMap<String, String> testData) {
+		return link.verifyLinkVisible(String.format(OBJECT_ASSOCIATION_TABS,
+				testData.get("DefaultObject1")));
 	}
 	
-	public void LinkingExistingOppourtunity(CTA cta) throws InterruptedException{
-		item.click(OPPORTUNITY_LINK);
+	public WorkflowPage linkExistingRecord(CTA cta,
+			HashMap<String, String> testData) {
+		item.click(String.format(OBJECT_ASSOCIATION_TABS,
+				testData.get("AssociateObject")));
 		item.click(LINK_TO_EXISTING);
-		Timer.sleep(5);
-		field.setText(OPPORTUNITY_SEARCH, cta.getoppourtunity());
-		link.click(OPPORTUNITY_SEARCH_LINK);
-		
+		selectRecordToLink(cta.getoppourtunity());
+		wait.waitTillElementNotDisplayed(LOADING_ICON_IN_DETAIL_VIEW, MIN_TIME, MAX_TIME);
+		return this;
 	}
     
-	public void DelinkExistingOpportunity(){
+	public WorkflowPage delinkExistingRecord() {
+		item.click(EDIT_OPTIONS_ICON);
 		item.click(DELINK_ICON);
-		item.click(DELINK_CONFIRMATION_BOX);
+		item.click(DELINK_CONFIRMATION_DILOG);
+		wait.waitTillElementNotDisplayed(LOADING_ICON_IN_DETAIL_VIEW, MIN_TIME, MAX_TIME);
+		return this;
 	}
-	
-	public boolean verifyDelinkIcon(){
-		return link.verifyLinkVisible(DELINK_ICON);
-	}
-	
-	public boolean VerifyObjectDeLink(){
-		return link.verifyLinkVisible(LINK_TO_EXISTING);
-	}
-	
-	public void CreateNewOpportunity(CTA cta){
-		Log.info("Creating New opportunity");
-		item.click(OPPORTUNITY_LINK);
+
+	public WorkflowPage createNewOpportunity(CTA cta, HashMap<String, String> testData){
+		Log.info("Creating New opportunity from CTA Detail View");
+		item.click(String.format(OBJECT_ASSOCIATION_TABS, testData.get("AssociateObject")));
 		item.click(CREATE_NEW_LINK);
-		field.setText(NAME_SELECT, cta.getopportunityName());
-		item.click(SELECT_DATE);
-		item.click(DATE_PICKER);
-		item.click(CLICK_SCREEN); 
-		item.click(STAGE_SELECT);
-		item.click("//span[text()='Prospecting']");
+		field.setText(String.format(SELECT_VALUE, "TEXT"),
+				cta.getopportunityName());
+		field.clearAndSetText(String.format(SELECT_VALUE, "DATE"),
+				cta.getDueDate());
+		item.click(PICKLIST_SELECTION);
+		selectValueInDropDown("Prospecting");
 		item.click(CLICK_SAVE);
+		wait.waitTillElementNotDisplayed("//div[@class='gs-section-loader']", MIN_TIME, MAX_TIME);
+		return this;
+	}
+	
+	private void selectRecordToLink(String Name) {
+        Log.info("Selecting Record : " +Name);
+        boolean selected = false;
+        for(int i=0; i< 3; i++) {
+            item.clearAndSetText(SEARCH_FIELD, Name);
+            Application.getDriver().findElement(By.xpath(SEARCH_FIELD)).sendKeys(Keys.ENTER);
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a[text()='"+Name+"']")) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+            Timer.sleep(2);
+        }
 	}
 }
