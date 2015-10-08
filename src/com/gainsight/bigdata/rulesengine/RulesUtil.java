@@ -389,7 +389,7 @@ public void setupRule(HashMap<String,String> testData){
 		result = wa.doPost(ApiUrls.API_RULE_RUN+"/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ ApiUrls.API_RULE_RUN+"/" + ruleId
+				+ ApiUrls.API_RULE_RUN + "/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -492,5 +492,113 @@ public void setupRule(HashMap<String,String> testData){
 		Assert.assertTrue(Boolean.valueOf(responseObj.getResult()));
 		Assert.assertNotNull(responseObj.getRequestId());
 
+	}
+
+	/**
+	 * This method will run the rule based on rule name.
+	 *
+	 * @param ruleName, name of the rule.
+	 * @return Returns true if rule ran successfully.
+	 */
+	public Boolean runRule(String ruleName) throws Exception {
+		String ruleId = getRuleId(ruleName);
+		result = wa.doPost(ApiUrls.API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
+		Log.info("Result of Rule is " + result);
+		Log.info("Rule ID:" + ruleId + "\n Request URL" + ApiUrls.API_RULE_RUN + "/" + ruleId + "\n Request rawBody:{}");
+		ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
+		Log.info("Response is " + mapper.writeValueAsString(responseObj));
+		if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
+			Log.error("Rule Request itself failed!");
+			return false;
+		} else {
+			RulesUtil.waitForCompletion(ruleId, wa, header);
+			String LRR = null;
+			SObject[] jsondata = sfdc
+					.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '" + ruleName + "' order by createdDate desc limit 1"));
+			if (jsondata.length > 0) {
+				LRR = jsondata[0].getField("JBCXM__LastRunResult__c").toString();
+			}
+			if (!LRR.equalsIgnoreCase("Success")) {
+				Log.error("Rule Processing failed");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param priorityValue - Expected Priority value
+	 * @param statusValue   - Expected Status value of cTA
+	 * @param assignee-     Account name from which contains the Assignee value for the CTA in one of the fields.
+	 * @param typeValue-    Expected CTA Type value
+	 * @param reasonValue-  Expected Reason value for cTA
+	 * @param comment-      Expected Comment
+	 * @param ruleName-     Rule Name from AutomatedAlertRules__c object
+	 * @param playbookName- Expected Playbook id - incase CTA has playbook associated
+	 * @return - true if the CTA is successfully created./ false if any of the CTA criteria do not match with the required values.
+	 */
+	public boolean isCTACreateSuccessfully(String priorityValue,
+										   String statusValue, String assignee, String typeValue,
+										   String reasonValue, String comment, String ruleName,
+										   String playbookName) {
+
+		boolean check = true;
+		SObject[] CTA_created = sfdc
+				.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
+						+ ruleName + "'"));
+		for (SObject obj : CTA_created) {
+			if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Priority__c"))
+							.getValue().toString())) {
+				Log.error("Priority did not match!!");
+				check = false;
+			}
+			if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
+							.getValue().toString())) {
+				Log.error("Status did not match!!");
+				check = false;
+			}
+			if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
+					.getValue().toString())) {
+				Log.error("Assignee did not match!!");
+				check = false;
+			}
+			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
+							.getValue().toString())) {
+				Log.error("Type did not match!!");
+				check = false;
+			}
+			if (!comment.equalsIgnoreCase(obj
+					.getChild(resolveStrNameSpace("JBCXM__Comments__c"))
+					.getValue().toString())) {
+				System.out.println("comment:"
+						+ obj.getChild(
+						resolveStrNameSpace("JBCXM__Comments__c"))
+						.getValue().toString());
+				Log.error("Comments did not match!!");
+				check = false;
+			}
+			if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
+							.getValue().toString())) {
+				Log.error("Reason did not match!!");
+				check = false;
+			}
+			if (playbookName != null) {
+				String Playbook = sfdc
+						.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__Playbook__c where Name like '"
+								+ playbookName + "'"))[0].getChild("Id")
+						.getValue().toString();
+				if (!Playbook.equalsIgnoreCase(obj
+						.getChild(resolveStrNameSpace("JBCXM__Playbook__c"))
+						.getValue().toString())) {
+					Log.error("Playbooks do not match!!");
+					check = false;
+				}
+			}
+		}
+		return check;
 	}
 }

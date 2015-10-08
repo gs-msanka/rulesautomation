@@ -3,6 +3,7 @@ package com.gainsight.sfdc.pages;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public class BasePage extends WebPage implements Constants {
     private final String WORKFLOW_TAB		= "//a[contains(@title, 'Cockpit Tab')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
-    private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
+    protected final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
@@ -250,8 +251,9 @@ public class BasePage extends WebPage implements Constants {
         env.setTimeout(30);
     }
     public void selectValueInDropDown(String value) {
-        boolean selected = false;
-        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+		List<WebElement> listElement = element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
+		boolean selected = false;
+		for (WebElement ele : listElement) {
             Log.info("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
                 ele.click();
@@ -263,6 +265,29 @@ public class BasePage extends WebPage implements Constants {
             throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
         }
     }
+
+    /**
+     *
+     * Similar to method selectValueInDropDown
+     *
+     * @param value
+     */
+    public void selectByVisbileTextInDropDown(String value) {
+		List<WebElement> listElement = element.getAllElement("//input[(@title= '" + value+ "')]/following-sibling::span[(text()= '" + value+ "')]");
+		Collections.reverse(listElement);
+		boolean selected = false;
+		for (WebElement ele : listElement) {
+			Log.info("Checking : " + ele.isDisplayed());
+			if (ele.isDisplayed()) {
+				ele.click();
+				selected = true;
+				break;
+			}
+		}
+		if (selected != true) {
+			throw new RuntimeException("Unable to select element : //input[(@title= '" + value+ "')]/following-sibling::span[(text()= '" + value+ "')]");
+		}
+	}
 
     public BasePage setSiteActiveHomePage(String siteActiveHomePage) {
         item.click(USERNAVBUTTON);

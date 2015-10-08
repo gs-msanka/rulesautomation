@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.tenantManagement.pojos;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -281,6 +282,7 @@ public class TenantDetails {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class EmailSetting {
         private String provider = "MANDRILL";
         private String[] ips;

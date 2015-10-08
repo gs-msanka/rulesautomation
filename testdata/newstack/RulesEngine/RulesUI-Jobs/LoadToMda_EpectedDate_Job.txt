@@ -1,0 +1,73 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "account",
+    "fields": [
+      "Id",
+      "Name",
+      "Date_Auto__c",
+      "DateTime_Auto__c",
+      "C_Text__c",
+      "C_TextArea__c",
+      "Number_Auto__c",
+      "Email_Auto__c"
+    ],
+    "output": "/resources/datagen/process/RulesUIAccounts.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/RulesUIAccounts.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "ID"
+          },
+          {
+            "name": "Name",
+            "alias": "Name"
+          },
+          {
+            "name": "C_Text__c",
+            "alias": "Description"
+          },
+          {
+            "name": "C_TextArea__c",
+            "alias": "LongTextArea"
+          },
+          {
+            "name": "Number_Auto__c",
+            "alias": "AnnualRevenue"
+          },
+          {
+            "name": "Email_Auto__c",
+            "alias": "Email"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/LoadToMDA.csv",
+        "table": "accounts",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Number_Auto__c",
+            "alias": "AnnualRevenue"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/LoadToMDA-Output.csv"
+  }
+}

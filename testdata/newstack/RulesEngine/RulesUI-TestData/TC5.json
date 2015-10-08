@@ -1,0 +1,127 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 5 - Load To Customers Using Mda Data",
+  "ruleDescription": "Rule 5 - Load To Customers Using Mda Data Description",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "MONGO",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Description",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "LongTextArea",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CreatedDateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Email",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "BooleanField",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AnnualRevenue",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Score",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account"
+          },
+          {
+            "fieldName": "Date",
+            "operator": "greater or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "CreatedDateTime",
+            "operator": "greater or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "Score",
+            "operator": "greater than",
+            "value": "input_1"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B and (C or D)",
+    "timeIdentifier": "Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToCustomers",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "MONGO",
+            "sourceField": "ID",
+            "destination": "Account",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "MONGO",
+            "sourceField": "Date",
+            "destination": "Renewal Date",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "MONGO",
+            "sourceField": "Description",
+            "destination": "Comments",
+            "isCustom": "true"
+          }
+        ]
+      },
+      "criterias": [
+        {
+          "showField": "Name",
+          "operator": "starts with",
+          "field": "value",
+          "value": "input_RULESUI Account"
+        },
+        {
+          "showField": "Date",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "Rule Date"
+        },
+        {
+          "showField": "Score",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_4"
+        }
+      ]
+    }
+  ]
+}
