@@ -282,7 +282,7 @@ public class CreateRuleTest extends BaseTest {
 			case LoadToCustomers:
 				srcObjRecCount = 9;
 				int trgtObjRecCount = sfdc
-						.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+						.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 				Log.info("Load to customers records count" + trgtObjRecCount);
 				verifier.verifyEquals(srcObjRecCount, trgtObjRecCount);
 				srcObjRecCount = 4;
@@ -337,7 +337,7 @@ public class CreateRuleTest extends BaseTest {
 	    		verifier.verifyEquals(srcObjRecCount, setScoreRecords);
 				break;
 			case LoadToSFDCObject:
-				trgtObjRecCount = sfdc.getRecordCount("SELECT Id FROM RulesSFDCCustom__c where IsDeleted = false");
+				trgtObjRecCount = sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM RulesSFDCCustom__c where IsDeleted = false"));
 				Log.info("Load to sfdc records count" + trgtObjRecCount);
 				verifier.verifyEquals(srcObjRecCount, trgtObjRecCount);
 				break;
@@ -362,7 +362,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		int expectedCount = 9;
 		int actualRecordCount = sfdc
-				.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+				.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 		Log.info("Load to customers records count" + " " + actualRecordCount);
 		Assert.assertEquals(expectedCount, actualRecordCount);	
     }
@@ -384,7 +384,7 @@ public class CreateRuleTest extends BaseTest {
 				Log.info("Verification done for cta");
 				break;
 			case LoadToCustomers:
-		        int trgtObjRecCount = sfdc.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+		        int trgtObjRecCount = sfdc.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 				verifier.verifyEquals(srcObjRecCount, trgtObjRecCount);
 				break;
 			case LoadToFeature:
@@ -428,7 +428,7 @@ public class CreateRuleTest extends BaseTest {
 				verifier.verifyEquals(srcObjRecCount, setScoreRecords);
 				break;
 			case LoadToSFDCObject:
-				trgtObjRecCount = sfdc.getRecordCount("SELECT Id FROM RulesSFDCCustom__c where IsDeleted = false ");
+				trgtObjRecCount = sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM RulesSFDCCustom__c where IsDeleted = false "));
 				Log.info("Load to sfdc records count" + trgtObjRecCount);
 				verifier.verifyEquals(srcObjRecCount, trgtObjRecCount);
 				break;
