@@ -516,7 +516,7 @@ public void setupRule(HashMap<String,String> testData){
 			SObject[] jsondata = sfdc
 					.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '" + ruleName + "' order by createdDate desc limit 1"));
 			if (jsondata.length > 0) {
-				LRR = jsondata[0].getField("JBCXM__LastRunResult__c").toString();
+				LRR = jsondata[0].getField(resolveStrNameSpace(("JBCXM__LastRunResult__c"))).toString();
 			}
 			if (!LRR.equalsIgnoreCase("Success")) {
 				Log.error("Rule Processing failed");
