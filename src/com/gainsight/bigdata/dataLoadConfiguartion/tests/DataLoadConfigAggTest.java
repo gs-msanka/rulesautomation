@@ -76,7 +76,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         }
 
         eventsJobInfo =  mapper.readValue(new File(testDataFiles+"/jobs/Events.json"), JobInfo.class);
-        if(false) {  //to run multiple times locally.
+        if(true) {  //to run multiple times locally.
             MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl();
             integrationImpl.authorizeMDA();
             metaUtil.createExtIdFieldOnAccount(sfdc);
