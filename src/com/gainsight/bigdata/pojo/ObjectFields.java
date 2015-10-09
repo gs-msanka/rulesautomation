@@ -39,6 +39,7 @@ public class ObjectFields {
 	public void setExternalID_Text(List<String> externalID_Text) {
 		this.externalID_Text = externalID_Text;
 	}	
+	
 	public List<HashMap<String, String[]>> getMultiPickLists() {
 		return multiPickLists;
 	}

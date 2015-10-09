@@ -1,4 +1,4 @@
-Account.Data_ExternalId__c,Contact.p_c_ExternalID__c,IsEscalated,Origin,Status,Priority,p_c_ExternalID__c
+Account.p_c_ExternalID__c,Contact.p_c_ExternalID__c,IsEscalated,Origin,Status,Priority,p_c_ExternalID__c
 Copilot_Auto000,Con.Copilot_Auto000,TRUE,Email,New,High,Case.Copilot_Auto000
 Copilot_Auto001,Con.Copilot_Auto001,TRUE,Email,New,High,Case.Copilot_Auto001
 Copilot_Auto002,Con.Copilot_Auto002,TRUE,Email,New,High,Case.Copilot_Auto002

@@ -1,0 +1,41 @@
+String username = '%USERNAME%';
+
+User user = [select id from User where Name =: username];
+
+List<Account> accs = [select id,p_c_User__c from Account where name like 'Copilot_Auto%'];
+
+for(Account a : accs)
+  a.p_c_User__c = user.id;
+  
+ 
+upsert accs;
+
+List<C_ContactObject__c> cco= [select id,p_c_User__c from C_ContactObject__c where name like 'Copilot_Cust%'];
+for(C_ContactObject__c cc : cco)
+	cc.p_c_User__c = user.id;
+	
+upsert cco;
+
+List<Case> cases = [select id,p_c_User__c from Case where p_c_ExternalID__c like '%Copilot_Auto%'];
+
+for(Case c : cases)
+  c.p_c_User__c = user.id;
+  
+ 
+upsert cases;
+
+
+List<Contact> contacts = [select id,p_c_User__c from Contact where p_c_ExternalID__c like '%Copilot_Auto%'];
+
+for(Contact cts : contacts)
+  cts.p_c_User__c = user.id;
+  
+ 
+upsert contacts;
+
+
+List<JBCXM__CustomerInfo__c> custs= [select id,p_c_User__c from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c like 'Copilot_Auto%'];
+for(JBCXM__CustomerInfo__c ci : custs)
+	ci.p_c_User__c = user.id;
+	
+upsert custs;
