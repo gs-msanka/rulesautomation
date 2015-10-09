@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -67,11 +68,12 @@ public class SmartListTest extends LoadTestData {
             nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
 	ReportManager reportManager=new ReportManager();
 	private CopilotUtil CoUtil = new CopilotUtil();
-	
+	private TenantManager tenantManager;
 
 	
     @BeforeClass
     public void setup() throws  IOException {
+		tenantManager = new TenantManager();
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();

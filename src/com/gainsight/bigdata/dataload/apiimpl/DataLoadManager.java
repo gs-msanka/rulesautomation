@@ -87,6 +87,7 @@ public class DataLoadManager extends NSTestBase {
         head.addHeader("loginName", loginName);
         try {
             ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_AUTHENTICATE, head.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             return responseObj;
         } catch (Exception e) {
             Log.error("Failed to perform authentication.", e);
@@ -107,7 +108,7 @@ public class DataLoadManager extends NSTestBase {
         }
         NsResponseObj nsResponseObj = null;
         try {
-            ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
+            ResponseObj responseObj = createSubjectAreaGetResponseObj(collectionInfo);
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             }
@@ -117,6 +118,12 @@ public class DataLoadManager extends NSTestBase {
         }
         Log.info("Returning after subject create.");
         return nsResponseObj;
+    }
+
+    public ResponseObj createSubjectAreaGetResponseObj(CollectionInfo collectionInfo) throws Exception {
+        ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
+        Log.info("Response Obj : " +responseObj.toString());
+        return responseObj;
     }
 
     /**
@@ -150,6 +157,7 @@ public class DataLoadManager extends NSTestBase {
         DataLoadStatusInfo statusInfo = null;
         try {
             ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_STATUS + jobId, headers.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
@@ -303,6 +311,7 @@ public class DataLoadManager extends NSTestBase {
         Log.info(ADMIN_DATA_LOAD_IMPORT);
         try {
             ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
@@ -333,6 +342,7 @@ public class DataLoadManager extends NSTestBase {
         String result= null;
         try {
             ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + statusId, headers.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                   result = responseObj.getContent();
             }
@@ -429,6 +439,7 @@ public class DataLoadManager extends NSTestBase {
         Log.info("Get Collection Schema...");
         try {
             ResponseObj responseObj = wa.doGet(APP_API_GET_COLLECTION+collectionId, headers.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
@@ -449,16 +460,19 @@ public class DataLoadManager extends NSTestBase {
      * @param jobId - Job Id to get failed records.
      * @return - List of String - data rows.
      */
-    public List<String> getFailedRecords(String jobId) {
+    public List<String[]> getFailedRecords(String jobId) {
         Log.info("Fetching Failed records...");
-        List<String> dataList = null;
+        List<String[]> dataList = new ArrayList<>();
         if(jobId == null) {
             throw new RuntimeException("Job Id is Mandatory");
         }
         try {
             ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + jobId, headers.getAllHeaders());
             if(responseObj.getContent()!=null || responseObj.getContent()!="") {
-                dataList = Arrays.asList(responseObj.getContent().split("\n"));
+                for(String rowData : responseObj.getContent().split("\n")) {
+                    String[] row = rowData.split(",");  //We are splitting by "," this may result in inappropriate values if there's "," in the data(Please use with caution).
+                    dataList.add(row);
+                }
             }
         } catch (Exception e) {
             Log.error("Failed to fetch records " ,e);
@@ -507,6 +521,7 @@ public class DataLoadManager extends NSTestBase {
             HttpEntity reqEntity = builder.build();
 
             ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {

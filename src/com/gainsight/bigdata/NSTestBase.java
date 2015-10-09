@@ -48,7 +48,7 @@ public class NSTestBase {
     public static SalesforceConnector sfdc;
     public static final Application env = new Application();
     public static MetaDataUtil metaUtil = new MetaDataUtil();
-    public static String accessKey;
+    public static String accessKey = null;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
@@ -108,6 +108,7 @@ public class NSTestBase {
         }
     }
 
+
     /**
      * Generates the access token for data load purpose.
      * If this method is used then, please update the headers that sends AccessKey{Used In DataLoad API}.
@@ -115,23 +116,24 @@ public class NSTestBase {
      */
     public String getDataLoadAccessKey() {
         Log.info("Getting Access Key");
-        String accessKey = null;
-        NsResponseObj rs = null;
-        try {
-            ResponseObj responseObj = wa.doPost(APP_API_TOKENS, header.getAllHeaders(), "{}");
-            rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        } catch (Exception e) {
-            Log.error("Failed to get Access Token", e);
-            throw new RuntimeException("Failed to get Access Token.");
-        }
-        if (rs.isResult()) {
-            HashMap<String, String> data = (HashMap<String, String>) rs.getData();
-            accessKey = data.get("accessKey");
-            Log.info("AccessKey : " + accessKey);
-        } else {
-            Log.info("Error Code :" + rs.getErrorCode());
-            Log.info("Error Desc : " + rs.getErrorDesc());
-            throw new RuntimeException("Failed to get Access Token.");
+        if(accessKey == null) {
+            NsResponseObj rs = null;
+            try {
+                ResponseObj responseObj = wa.doPost(APP_API_TOKENS, header.getAllHeaders(), "{}");
+                rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            } catch (Exception e) {
+                Log.error("Failed to get Access Token", e);
+                throw new RuntimeException("Failed to get Access Token.");
+            }
+            if (rs.isResult()) {
+                HashMap<String, String> data = (HashMap<String, String>) rs.getData();
+                accessKey = data.get("accessKey");
+                Log.info("AccessKey : " + accessKey);
+            } else {
+                Log.info("Error Code :" + rs.getErrorCode());
+                Log.info("Error Desc : " + rs.getErrorDesc());
+                throw new RuntimeException("Failed to get Access Token.");
+            }
         }
         return accessKey;
     }

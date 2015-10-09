@@ -10,7 +10,9 @@ import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
@@ -19,6 +21,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.annotations.TestInfo;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -52,10 +55,14 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
-        if (dbStoreType != null && dbStoreType.equalsIgnoreCase("mongo")) {
-            Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
-        } else if (dbStoreType != null && dbStoreType.equalsIgnoreCase("redshift")) {
-            Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+            if(tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+            }
+        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+            if(!tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+            }
         }
     }
 
@@ -382,7 +389,7 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        List<String> failedRecords = dataLoadManager.getFailedRecords(jobId);
+        List<String[]> failedRecords = dataLoadManager.getFailedRecords(jobId);
         Assert.assertNotNull(failedRecords);
         Assert.assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
 
@@ -830,7 +837,9 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @TestInfo(testCaseIds = {"GS-4398"})
+    //Please be notices the failed expected file if opened in excel & saved.
+    //will change 9999999999999999999999 to 1E+30 due to which test case may fail with one difference.
+    @TestInfo(testCaseIds = {"GS-4398", "GS-5141", "GS-5142", "GS-5145", "GS-4445"})
     @Test
     public void failedRecordsFetchForInvalidDataTypes() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
@@ -840,7 +849,6 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
-
         File dataLoadFile = new File(testDataFiles+"/tests/t21/CollectionData.csv");
 
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
@@ -848,12 +856,34 @@ public class LoadDataToMDATest extends NSTestBase {
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
-        //Failed records should be 12 & Success records should be 2.
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 3, 11);
 
-        List<String> failedRecords = dataLoadManager.getFailedRecords(statusId);
+        List<String[]> failedRecords = dataLoadManager.getFailedRecords(statusId);
+        File outputFile = new File(testDataFiles+"/process/t21/temp.csv");
+        outputFile.getParentFile().mkdirs();
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
+        writer.writeAll(failedRecords);
+        writer.close();
+
+        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(outputFile)));
+        Assert.assertEquals(actualData.size(), 11);
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(testDataFiles+"/tests/t21/FailedExpectedData.csv")));
+        List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
+        Log.debug("Diff Data : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(diffData.size(), 0, "No of difference records should be 0.");
 
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+    @Test
+    public void duplicateCollectionNameVerification() throws IOException {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "22_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        NsResponseObj nsResponseObj = dataLoadManager.createSubjectArea(collectionInfo);
+
     }
 
 
