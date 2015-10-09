@@ -53,18 +53,6 @@
             "alias": "Date"
           },
           {
-            "name": "GSA_AccountName",
-            "alias": "GSA_AccountName"
-          },
-          {
-            "name": "GSA_ContactName",
-            "alias": "GSA_ContactName"
-          },
-          {
-            "name": "GSA_Email",
-            "alias": "GSA_Email"
-          },
-          {
             "name": "Event",
             "alias": "Event"
           },
