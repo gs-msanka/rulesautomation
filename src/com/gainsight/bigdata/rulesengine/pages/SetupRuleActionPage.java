@@ -6,20 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.CTAAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToCustomersAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDAAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMileStoneAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToSFDCAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToUsageAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.SendEmailAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.SetScoreAction;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.DateUtil;
@@ -46,7 +37,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String POSTUPDATE_BUTTON = "//label[contains(text(),'Post update')]/..//button";
     private final String COMMENTS = "//label[contains(text(),'Comments')]/../descendant::div[contains(@class,'form')]";
     private final String SAVE_BUTTON = "//input[@type='button' and @class='gs-btn btn-save']";
-    private final String CREATE_CTA_RADIO_BUTTON  = "//input[@value='create']";
+    private final String CREATE_CTA_RADIO_BUTTON = "//input[@value='create']";
     private final String CTA_NAME_INPUT = "//div[contains(@class, 'ctaName')]";
     private final String SCORECARD_COMMENTS = "//div[contains(@class, 'setup-action-body create-score-card')]/descendant::textarea[contains(@class, 'scorecardComment')]";
 
@@ -90,103 +81,115 @@ public class SetupRuleActionPage extends BasePage {
     private final String CRITERIA_SHOWFIELD_FORWIDTH = "//select[@data-control='FIELD-VALUE']/following-sibling::button";
     private final String CRITERIA_SHOWFIELD_FORWIDTH_VALUE = "//select[@data-control='FIELD-RIGHT']/following-sibling::button";
     private final String CRITERIA_SHOWFIELD_INPUT = "//input";
-    private final String CRITERIA_SHOWFIELD_INPUT_DROPDOWN= "//select[@data-control='RULE-DATE' or @data-control='LIST']/following-sibling::button";
-   
+    private final String CRITERIA_SHOWFIELD_INPUT_DROPDOWN = "//select[@data-control='RULE-DATE' or @data-control='LIST']/following-sibling::button";
+
     private final String MEASURE_SCORE_SLIDER_CIRCLE = "//*[local-name() = 'svg' and namespace-uri()='http://www.w3.org/2000/svg']/*[local-name()='circle']";
     private final String SAVE_SCORECARD = "//div[@class='save-options clearfix']/descendant::a[@data-action='SAVE']";
-    
+
 
     private final String FIELD_MAPPING_DESTINATION = "//option[contains(text(), '%s')]";
     private final String LOAD_TO_OBJECT = "//div[contains(@class, 'only-for-load-to-object')]/descendant::select/following-sibling::button";
     private final String LOAD_TO_OBJECT_OPERATION_TYPE = "//div[contains(@class, 'only-for-load-to-object')]/descendant::select[contains(@class, 'operation-type')]/following-sibling::button";
-    
+
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";
     private final String NEWRULE_PART2 = "]";
-    
-    
+
+    /**
+     * Selects the given action type
+     *
+     * @param actionType
+     */
     public void selectActionType(String actionType) {
         item.click(SELECT_BUTTON);
         selectValueInDropDown(actionType);
     }
 
+    /**
+     * Clicks on the action button. Code handles whether any rules exists or not
+     */
     public void clickOnActionButton() {
-    	   
-		try {
+        try {
             Application.getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-			if (element.getElement(NOACTION_YET).isDisplayed()) {
-				item.click(NOACTION_BUTTON);
-			} else {
-			}
-		} catch (Exception e) {
-			item.click(ACTION_BUTTON);
-		} finally {
-			Application.getDriver().manage().timeouts().implicitlyWait(MAX_ELEMENT_WAIT, TimeUnit.SECONDS);
+            if (element.getElement(NOACTION_YET).isDisplayed()) {
+                item.click(NOACTION_BUTTON);
+            }
+        } catch (Exception e) {
+            item.click(ACTION_BUTTON);
+        } finally {
+            Application.getDriver().manage().timeouts().implicitlyWait(MAX_ELEMENT_WAIT, TimeUnit.SECONDS);
         }
-	}
+    }
 
+    /**
+     * Click on the action collapse the action for which the index i is given.
+     * @param index
+     */
     public void clickOnActionCollapse(int index) {
-        String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+index+"]//a[@class='collapseIcon']";
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + index + "]//a[@class='collapseIcon']";
         element.getElement(xpath).click();
     }
 
+    /**
+     * Click on the action collapse the action for which the index i is given.
+     */
     public void clickOnActionCollapse() {
         clickOnActionCollapse(1);
     }
 
 
     public void createCTA(CTAAction ctaAction, int i) {
-	    String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
-        item.click(xpath+SELECT_BUTTON);
-    	selectValueInDropDown("Call To Action");
-    	item.click(xpath+CREATE_CTA_RADIO_BUTTON);
-    	field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
-        item.click(xpath+PRIORITY_BUTTON);
+        item.click(xpath + SELECT_BUTTON);
+        selectValueInDropDown("Call To Action");
+        item.click(xpath + CREATE_CTA_RADIO_BUTTON);
+        field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
+        item.click(xpath + PRIORITY_BUTTON);
         selectValueInDropDown(ctaAction.getPriority());
-        item.click(xpath+CTA_TYPE);
-        selectValueInDropDown(ctaAction.getType());    
-        item.click(xpath+STATUS_BUTTON);
+        item.click(xpath + CTA_TYPE);
+        selectValueInDropDown(ctaAction.getType());
+        item.click(xpath + STATUS_BUTTON);
         selectValueInDropDown(ctaAction.getStatus());
-        item.click(xpath+PLAYBOOK);
+        item.click(xpath + PLAYBOOK);
         selectValueInDropDown(ctaAction.getPlaybook());
-        item.click(xpath+REASON_BUTTON);
-        selectValueInDropDown(ctaAction.getReason()); 
-        field.clearAndSetText(xpath+DUEDATE, ctaAction.getDueDate());
+        item.click(xpath + REASON_BUTTON);
+        selectValueInDropDown(ctaAction.getReason());
+        field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
         selectTaskOwner(ctaAction.getDefaultOwner(), i);
-        element.clearAndSetText(xpath+COMMENTS, ctaAction.getComments());
+        element.clearAndSetText(xpath + COMMENTS, ctaAction.getComments());
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 
     public void createLoadToFeature(LoadToFeatureAction loadToFeatureAction, int i) {
-    	String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
-        item.click(xpath+SELECT_BUTTON);
+        item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Feature");
-        item.click(xpath+PRODUCT_LTF);
+        item.click(xpath + PRODUCT_LTF);
         selectValueInDropDown(loadToFeatureAction.getProduct());
-        item.click(xpath+FEATURE_LTF);
+        item.click(xpath + FEATURE_LTF);
         selectValueInDropDown(loadToFeatureAction.getFeature());
-        System.out.println(loadToFeatureAction.getLicensed().getType().equalsIgnoreCase("Constant"));
+
         if (loadToFeatureAction.getLicensed().getType().equalsIgnoreCase("Constant")) {
-        	item.click(xpath+LICENSED_CONSTANT_RADIO_BUTTON);
-        	item.click(xpath+LICENCED_DROPDOWN_LOADTOFATURE);
-        	selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
-		}else {
-			item.click(xpath+LICENSED_SHOWFIELD_LTF);
-			item.click(xpath+LICENCED_DROPDOWN_LOADTOFATURE);
-			selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
-		}
-        System.out.println(loadToFeatureAction.getEnabled().getType().equalsIgnoreCase("Constant"));
+            item.click(xpath + LICENSED_CONSTANT_RADIO_BUTTON);
+            item.click(xpath + LICENCED_DROPDOWN_LOADTOFATURE);
+            selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
+        } else {
+            item.click(xpath + LICENSED_SHOWFIELD_LTF);
+            item.click(xpath + LICENCED_DROPDOWN_LOADTOFATURE);
+            selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
+        }
+
         if (loadToFeatureAction.getEnabled().getType().equalsIgnoreCase("Constant")) {
-        	item.click(xpath+ENABLED_CONSTANT_RADIO_BUTTON);
-        	item.click(xpath+ENABLED_DROPDOWN_LOADTOFATURE);
-        	selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
-		}else {
-			item.click(xpath+ENABLED_SHOWFIELD_LTF);
-			item.click(xpath+ENABLED_DROPDOWN_LOADTOFATURE);
-			selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
-		}
-        element.clearAndSetText(xpath+COMMENTS, loadToFeatureAction.getComments());
+            item.click(xpath + ENABLED_CONSTANT_RADIO_BUTTON);
+            item.click(xpath + ENABLED_DROPDOWN_LOADTOFATURE);
+            selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
+        } else {
+            item.click(xpath + ENABLED_SHOWFIELD_LTF);
+            item.click(xpath + ENABLED_DROPDOWN_LOADTOFATURE);
+            selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
+        }
+        element.clearAndSetText(xpath + COMMENTS, loadToFeatureAction.getComments());
     }
 
     public void fillLoadToUsage(String object, String field, String mapField) {
@@ -196,7 +199,7 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(mapField);
     }
 
-    public void  fillLoadToCustomers(String object, String field, String mapField) {
+    public void fillLoadToCustomers(String object, String field, String mapField) {
         String fieldMapping = String.format(FIELD_MAPPING_LTU1, object);
         fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, field);
         item.click(fieldMapping);
@@ -206,207 +209,207 @@ public class SetupRuleActionPage extends BasePage {
     public void saveRule() {
         item.click(SAVE_BUTTON);
     }
-    
+
     private void selectTaskOwner(String owner, int j) {
-       	String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+j+"]";
-           Log.info("Selecting Task Owner : " +owner);
-           boolean selected = false;
-           for(int i=0; i< 3; i++) {
-               item.clearAndSetText(xpath+DEFAULTOWNER, owner);
-               element.getElement((xpath+DEFAULTOWNER)).sendKeys(Keys.ENTER);
-               Timer.sleep(3);
-               for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+owner+"')]")) {
-                   if(ele.isDisplayed()) {
-                       ele.click();
-                       selected = true;
-                       return;
-                   }
-               }
-               Timer.sleep(2);
-           }
-           if(!selected) {
-               throw new RuntimeException("Unable to select owner");
-           }
-           Log.info("Selected Task Owner Successfully: " +owner);
-         }
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + j + "]";
+        Log.info("Selecting Task Owner : " + owner);
+        boolean selected = false;
+        for (int i = 0; i < 3; i++) {
+            item.clearAndSetText(xpath + DEFAULTOWNER, owner);
+            element.getElement((xpath + DEFAULTOWNER)).sendKeys(Keys.ENTER);
+            Timer.sleep(3);
+            for (WebElement ele : element.getAllElement("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'" + owner + "')]")) {
+                if (ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+            Timer.sleep(2);
+        }
+        if (!selected) {
+            throw new RuntimeException("Unable to select owner");
+        }
+        Log.info("Selected Task Owner Successfully: " + owner);
+    }
 
 
-    	public void createLoadToCustomers(LoadToCustomersAction loadToCustomersAction, int i) {
-    		String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
-    		clickOnActionButton();
-    		item.click(xpath + SELECT_BUTTON);
-    		selectValueInDropDown("Load to Customers");
-    		Timer.sleep(5);
-    		List<FieldMapping> ruleActions = loadToCustomersAction.getFieldMappings();
-    		for (FieldMapping fieldMappingObject : ruleActions) {
-    			String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
-    			fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
-    			item.click(xpath+fieldMapping);
-    			String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION,fieldMappingObject.getDestination());
-    			item.click(xpath+fieldMapping + fieldMappingDestination);
-    		}
-    	}
-
-
-	public void createLoadToMileStone(LoadToMileStoneAction loadToMileStoneAction, int i) {
-		String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i+ "]";
-		clickOnActionButton();
-		item.click(xpath + SELECT_BUTTON);
-		selectValueInDropDown("Load to Milestone");
-		if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
-			item.click(xpath + SHOWFIELD_LTM);
-			item.click(xpath + SHOEFIELD_SELECT_LTM);
-			selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
-		} else {
-			item.click(xpath + CONSTANT_SELECT_LTM);
-			selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
-			element.setText(NEWRULE_PART1 + i + NEWRULE_PART2
-					+ CONSTANT_SELECT_LTM_VALUE, loadToMileStoneAction.getMilestoneDate().getDateFieldValue());
-		}
-		item.click(xpath + MILESTONE_LTM);
-		selectValueInDropDown(loadToMileStoneAction.getSelectMilestone());
-		element.setText(xpath + COMMENTS, loadToMileStoneAction.getComments());
-	}
-    
-    public void loadToSfdcObject(LoadToSFDCAction loadToSFDCAction, int i) {
-    	String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
+    public void createLoadToCustomers(LoadToCustomersAction loadToCustomersAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
-        item.click(xpath+SELECT_BUTTON);
+        item.click(xpath + SELECT_BUTTON);
+        selectValueInDropDown("Load to Customers");
+        List<FieldMapping> ruleActions = loadToCustomersAction.getFieldMappings();
+        for (FieldMapping fieldMappingObject : ruleActions) {
+            String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
+            fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
+            item.click(xpath + fieldMapping);
+            String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
+            item.click(xpath + fieldMapping + fieldMappingDestination);
+        }
+    }
+
+
+    public void createLoadToMileStone(LoadToMileStoneAction loadToMileStoneAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        clickOnActionButton();
+        item.click(xpath + SELECT_BUTTON);
+        selectValueInDropDown("Load to Milestone");
+        if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
+            item.click(xpath + SHOWFIELD_LTM);
+            item.click(xpath + SHOEFIELD_SELECT_LTM);
+            selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
+        } else {
+            item.click(xpath + CONSTANT_SELECT_LTM);
+            selectValueInDropDown(loadToMileStoneAction.getMilestoneDate().getDateField());
+            element.setText(NEWRULE_PART1 + i + NEWRULE_PART2
+                    + CONSTANT_SELECT_LTM_VALUE, loadToMileStoneAction.getMilestoneDate().getDateFieldValue());
+        }
+        item.click(xpath + MILESTONE_LTM);
+        selectValueInDropDown(loadToMileStoneAction.getSelectMilestone());
+        element.setText(xpath + COMMENTS, loadToMileStoneAction.getComments());
+    }
+
+    public void loadToSfdcObject(LoadToSFDCAction loadToSFDCAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        clickOnActionButton();
+        item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to SFDC Object");
-        item.click(xpath+LOAD_TO_OBJECT);
+        item.click(xpath + LOAD_TO_OBJECT);
         selectValueInDropDown(loadToSFDCAction.getObjectName());
-        item.click(xpath+LOAD_TO_OBJECT_OPERATION_TYPE);
+        item.click(xpath + LOAD_TO_OBJECT_OPERATION_TYPE);
         selectValueInDropDown(loadToSFDCAction.getOperation());
         List<FieldMapping> ruleActions = loadToSFDCAction.getFieldMappings();
         for (FieldMapping fieldMappingObject : ruleActions) {
-        String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
-        fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
-        item.click(xpath+fieldMapping);
-        String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
-        item.click(xpath+fieldMapping + fieldMappingDestination);
+            String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
+            fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
+            item.click(xpath + fieldMapping);
+            String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
+            item.click(xpath + fieldMapping + fieldMappingDestination);
         }
     }
-    
-    public void loadToMdaCollection(LoadToMDAAction loadToMDAAction, int i) {   	
-    	String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
+
+    public void loadToMdaCollection(LoadToMDAAction loadToMDAAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
         clickOnActionButton();
-        item.click(xpath+SELECT_BUTTON);
+        item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to MDA Subject Area");
-        item.click(xpath+LOAD_TO_OBJECT);
+        item.click(xpath + LOAD_TO_OBJECT);
         selectValueInDropDown(loadToMDAAction.getObjectName());
-        item.click(xpath+LOAD_TO_OBJECT_OPERATION_TYPE);
+        item.click(xpath + LOAD_TO_OBJECT_OPERATION_TYPE);
         selectValueInDropDown(loadToMDAAction.getOperation());
         List<FieldMapping> ruleActions = loadToMDAAction.getFieldMappings();
         for (FieldMapping fieldMappingObject : ruleActions) {
-        String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
-        fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
-        item.click(xpath+fieldMapping);
+            String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
+            fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
+            item.click(xpath + fieldMapping);
             String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
-            item.click(xpath+fieldMapping + fieldMappingDestination);
+            item.click(xpath + fieldMapping + fieldMappingDestination);
         }
     }
 
 
     public void createSendEmail(SendEmailAction sendEmailAction) {
-
+        //TODO: To be implemented
+        throw new RuntimeException("Method not yet implemented.");
     }
-    
-	public void createLoadToUsage(LoadToUsageAction loadToUsageAction, int i) {
-		String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i+ "]";
-		clickOnActionButton();
-		item.click(xpath + SELECT_BUTTON);
-		selectValueInDropDown("Load to Usage");
-		List<FieldMapping> ruleActions = loadToUsageAction.getFieldMappings();
-		for (FieldMapping fieldMappingObject : ruleActions) {
-			String fieldMapping = String.format(FIELD_MAPPING_LTU1,fieldMappingObject.getSourceObject());
-			fieldMapping = fieldMapping+ String.format(FIELD_MAPPING_LTU2,fieldMappingObject.getSourceField());
-			item.click(xpath + fieldMapping);
-			String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION,fieldMappingObject.getDestination());
-			item.click(xpath + fieldMapping + fieldMappingDestination);
-		}
-	}
 
-    public void createSetScore(SetScoreAction setScoreAction, int i) {	
-    	String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+i+"]";
-		clickOnActionButton();
-		item.click(xpath + SELECT_BUTTON);
-		selectValueInDropDown("Set Score");
-		item.click(xpath + SCORE_MEASURE);
-		selectValueInDropDown(setScoreAction.getSelectMeasure());
-        item.clearAndSetText(xpath+SCORECARD_COMMENTS, setScoreAction.getComments());	
-        item.click(xpath+"//div[contains(@class, 'overallscore')]/descendant::select/following-sibling::button");
-		selectValueInDropDown(setScoreAction.getSetScoreFrom());
-	}
+    public void createLoadToUsage(LoadToUsageAction loadToUsageAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        clickOnActionButton();
+        item.click(xpath + SELECT_BUTTON);
+        selectValueInDropDown("Load to Usage");
+        List<FieldMapping> ruleActions = loadToUsageAction.getFieldMappings();
+        for (FieldMapping fieldMappingObject : ruleActions) {
+            String fieldMapping = String.format(FIELD_MAPPING_LTU1, fieldMappingObject.getSourceObject());
+            fieldMapping = fieldMapping + String.format(FIELD_MAPPING_LTU2, fieldMappingObject.getSourceField());
+            item.click(xpath + fieldMapping);
+            String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
+            item.click(xpath + fieldMapping + fieldMappingDestination);
+        }
+    }
 
-    public void addCriteria(com.gainsight.bigdata.rulesengine.pojo.setupaction.Criteria criteria2, int r, int c){
-        String xpath = "//div[contains(@class,'setup-action-ctn')]/div["+r+"]//div[@class='criteria-container']["+c+"]";
-        String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div["+r+"]";
-        item.click(criteriaButton+CRITERIA);  
-        item.click(xpath+CRITERIA_SHOWFIELD);
-        selectValueInDropDown(criteria2.getShowField());
+    public void createSetScore(SetScoreAction setScoreAction, int i) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+        clickOnActionButton();
+        item.click(xpath + SELECT_BUTTON);
+        selectValueInDropDown("Set Score");
+        item.click(xpath + SCORE_MEASURE);
+        selectValueInDropDown(setScoreAction.getSelectMeasure());
+        item.clearAndSetText(xpath + SCORECARD_COMMENTS, setScoreAction.getComments());
+        item.click(xpath + "//div[contains(@class, 'overallscore')]/descendant::select/following-sibling::button");
+        selectValueInDropDown(setScoreAction.getSetScoreFrom());
+    }
+
+    public void addCriteria(Criteria criteria, int r, int c) {
+        String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]//div[@class='criteria-container'][" + c + "]";
+        String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
+        item.click(criteriaButton + CRITERIA);
+        item.click(xpath + CRITERIA_SHOWFIELD);
+        selectValueInDropDown(criteria.getShowField());
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
-		selectValueInDropDown(criteria2.getOperator());
-		if (criteria2.getField().equalsIgnoreCase("field")) {
-			item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
-			selectValueInDropDown("field");
-			item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH_VALUE);
-			selectValueInDropDown(criteria2.getValue());
-		} else {
-			// item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
-			// selectValueInDropDown("value");
-			if (criteria2.getValue().startsWith("input_")) {
-				item.clearAndSetText(xpath + CRITERIA_SHOWFIELD_INPUT,criteria2.getValue().substring(6));
-			} else {
-				item.click(xpath + CRITERIA_SHOWFIELD_INPUT_DROPDOWN);
-				selectByVisbileTextInDropDown(criteria2.getValue());
-			}
-		}
-	}
-    
-    public String queryString(List<com.gainsight.bigdata.rulesengine.pojo.setupaction.Criteria> list){
-		String str = "";
-		String showField = "";
-		String operator = "";
-		String value = "";
-		for (com.gainsight.bigdata.rulesengine.pojo.setupaction.Criteria criteria : list) {
-			if (!criteria.getField().contains("field")) {
-				showField = criteria.getShowField()
-						.substring((criteria.getShowField().indexOf(":")) + 2).replaceAll(" ", "_");
-				showField = showField + "__c";
-				operator = getOperator(criteria.getOperator());
-				value = getValue(criteria.getField(), criteria.getValue());
-				str = str + showField + "   " + operator + "  " + value+ " AND  ";
-			}
-		}
-		str = "SELECT Id  FROM " + " Account " + " Where " + str
-				+ " isDeleted=false";
-		return str;
-	}
-      
-	public String getOperator(String operator) {
-		String symbol = "";
-		if (operator.contains("equals")) {
-			symbol = "=";
-		} else if (operator.contains("less or equal")) {
-			symbol = "<=";
-		} else if (operator.contains("greater or equal")) {
-			symbol = ">=";
-		}
-		return symbol;
-	}
-      
-	public String getValue(String field, String value) {
-		String symbol = "";
-		if (value.contains("Date")) {
-			Date date = new Date();
-			symbol = DateUtil.getFormattedDate(date, "yyyy-MM-dd");
-		} else if (field.contains("field")) {
-			symbol = value.substring((value.indexOf(":")) + 2);
-		} else if (value.contains("input")) {
-			symbol = value.substring(6);
-		} else {
-			symbol = "'" + value + "'";
-		}
-		return symbol;
-	}
+        selectValueInDropDown(criteria.getOperator());
+        if (criteria.getField().equalsIgnoreCase("field")) {
+            item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
+            selectValueInDropDown("field");
+            item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH_VALUE);
+            selectValueInDropDown(criteria.getValue());
+        } else {
+            // item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
+            // selectValueInDropDown("value");
+            if (criteria.getValue().startsWith("input_")) {
+                item.clearAndSetText(xpath + CRITERIA_SHOWFIELD_INPUT, criteria.getValue().substring(6));
+            } else {
+                item.click(xpath + CRITERIA_SHOWFIELD_INPUT_DROPDOWN);
+                selectByVisbileTextInDropDown(criteria.getValue());
+            }
+        }
+    }
+
+    public String queryString(List<Criteria> criterias) {
+        String str = "";
+        String showField = "";
+        String operator = "";
+        String value = "";
+        for (Criteria criteria : criterias) {
+            if (!criteria.getField().contains("field")) {
+                showField = criteria.getShowField()
+                        .substring((criteria.getShowField().indexOf(":")) + 2).replaceAll(" ", "_");
+                showField = showField + "__c";
+                operator = getOperator(criteria.getOperator());
+                value = getValue(criteria.getField(), criteria.getValue());
+                str = str + showField + "   " + operator + "  " + value + " AND  ";
+            }
+        }
+        str = "SELECT Id  FROM " + " Account " + " Where " + str
+                + " isDeleted=false";
+        return str;
+    }
+
+    public String getOperator(String operator) {
+        String symbol = "";
+        if (operator.contains("equals")) {
+            symbol = "=";
+        } else if (operator.contains("less or equal")) {
+            symbol = "<=";
+        } else if (operator.contains("greater or equal")) {
+            symbol = ">=";
+        }
+        return symbol;
+    }
+
+    public String getValue(String field, String value) {
+        String symbol = "";
+        if (value.contains("Date")) {
+            Date date = new Date();
+            symbol = DateUtil.getFormattedDate(date, "yyyy-MM-dd");
+        } else if (field.contains("field")) {
+            symbol = value.substring((value.indexOf(":")) + 2);
+        } else if (value.contains("input")) {
+            symbol = value.substring(6);
+        } else {
+            symbol = "'" + value + "'";
+        }
+        return symbol;
+    }
 }

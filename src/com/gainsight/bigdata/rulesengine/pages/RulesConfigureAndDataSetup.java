@@ -160,7 +160,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
             Log.error(
                     "Exception occurred while saving CustomWeRules object configuration in MDA ",
                     e);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -205,7 +205,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
             rulesUtil.saveCustomObjectInRulesConfig(payload);
         } catch (Exception e) {
             Log.error("Exception occurred while saving  configuration in MDA ", e);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -240,7 +240,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
             rulesUtil.saveCustomObjectInRulesConfig(payload);
         } catch (Exception e) {
             Log.error("Exception occurred while saving  configuration in MDA ", e);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
