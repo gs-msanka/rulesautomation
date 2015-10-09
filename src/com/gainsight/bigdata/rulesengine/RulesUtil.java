@@ -503,10 +503,7 @@ public void setupRule(HashMap<String,String> testData){
 	public Boolean runRule(String ruleName) throws Exception {
 		String ruleId = getRuleId(ruleName);
 		result = wa.doPost(ApiUrls.API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
-		Log.info("Result of Rule is " + result);
-		Log.info("Rule ID:" + ruleId + "\n Request URL" + ApiUrls.API_RULE_RUN + "/" + ruleId + "\n Request rawBody:{}");
 		ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
-		Log.info("Response is " + mapper.writeValueAsString(responseObj));
 		if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
 			Log.error("Rule Request itself failed!");
 			return false;
@@ -543,10 +540,10 @@ public void setupRule(HashMap<String,String> testData){
 										   String playbookName) {
 
 		boolean check = true;
-		SObject[] CTA_created = sfdc
+		SObject[] ctaRecords = sfdc
 				.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
 						+ ruleName + "'"));
-		for (SObject obj : CTA_created) {
+		for (SObject obj : ctaRecords) {
 			if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Priority__c"))
 							.getValue().toString())) {
@@ -587,11 +584,11 @@ public void setupRule(HashMap<String,String> testData){
 				check = false;
 			}
 			if (playbookName != null) {
-				String Playbook = sfdc
+				String playBook = sfdc
 						.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__Playbook__c where Name like '"
 								+ playbookName + "'"))[0].getChild("Id")
 						.getValue().toString();
-				if (!Playbook.equalsIgnoreCase(obj
+				if (!playBook.equalsIgnoreCase(obj
 						.getChild(resolveStrNameSpace("JBCXM__Playbook__c"))
 						.getValue().toString())) {
 					Log.error("Playbooks do not match!!");

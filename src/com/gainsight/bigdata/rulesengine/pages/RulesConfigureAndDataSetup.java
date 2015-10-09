@@ -43,9 +43,10 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 
     private DataETL dataLoad = new DataETL();
     private Calendar calendar = Calendar.getInstance();
+    RulesUtil rulesUtil = new RulesUtil();
 
     /**
-     * Creates custom object and fields for rule sui automation in sfdc
+     * Creates custom object and fields for rules ui automation in sfdc
      * @throws Exception
      */
     public void createCustomObjectAndFieldsInSfdc() throws Exception {
@@ -150,7 +151,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", metaUtil.convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
         //	metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace("RulesSFDCCustom__c"), permFields,sfdc.fetchSFDCinfo(), true);
         String configData = "{\"type\":\"SFDC\",\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\",\"fields\":[{\"name\":\"C_Checkbox__c\",\"dataType\":\"boolean\"},{\"name\":\"InputDate__c\",\"dataType\":\"date\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"dateTime\"},{\"name\":\"C_Number__c\",\"dataType\":\"double\"},{\"name\":\"C_Email__c\",\"dataType\":\"string\"},{\"name\":\"C_Text__c\",\"dataType\":\"string\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"},{\"name\":\"C_Reference__c\",\"dataType\":\"string\"}]}";
-        RulesUtil rulesUtil = new RulesUtil();
+        
         try {
             Log.info("Saving CustomWeRules object and fields info in MDA to load data using Load To SFDC action. Config Data: "
                     + configData);
@@ -200,7 +201,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         }
         loadToMDACollection.setFields(fields);
         String payload = mapper.writeValueAsString(loadToMDACollection);
-        RulesUtil rulesUtil = new RulesUtil();
         try {
             rulesUtil.saveCustomObjectInRulesConfig(payload);
         } catch (Exception e) {
@@ -236,7 +236,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         }
         loadToMDACollection.setFields(fields);
         String payload = mapper.writeValueAsString(loadToMDACollection);
-        RulesUtil rulesUtil = new RulesUtil();
         try {
             rulesUtil.saveCustomObjectInRulesConfig(payload);
         } catch (Exception e) {
@@ -254,18 +253,22 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param tenantID Tenant id
      */
     public void deleteAllRecordsFromMongoCollectionBasedOnTenantID(String dataBase, String mongoCollection, String host, int port, String tenantID) {
-        MongoClient mongoConnection = new MongoClient(new ServerAddress(host, port));
+    	MongoClient mongoConnection=null;
+    	try {
+        mongoConnection = new MongoClient(new ServerAddress(host, port));
         DB db = mongoConnection.getDB(dataBase);
         DBCollection collection = db.getCollection(mongoCollection);
         BasicDBObject Query = new BasicDBObject();
-        Query.put("tenantId", tenantID);
-        DBCursor cursor = collection.find(Query);
-        while (cursor.hasNext()) {
-            Log.info("Document is" + cursor.next());
-            collection.remove(Query);
-        }
-        mongoConnection.close();
-    }
+			Query.put("tenantId", tenantID);
+			DBCursor cursor = collection.find(Query);
+			while (cursor.hasNext()) {
+				Log.info("Document is" + cursor.next());
+			}
+			collection.remove(Query);
+		} finally {
+			mongoConnection.close();
+		}
+	}
 
 
     //TODO: Duplicate code between deleteAllRecordsFromMongoCollectionBasedOnTenantID and deleteAllRecordsFromCollectionMaster method
@@ -278,18 +281,23 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param tenantID Tenant id
      */
     public void deleteAllRecordsFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String tenantID) {
-        MongoClient mongoConnection = new MongoClient(new ServerAddress(host, port));
-        DB db = mongoConnection.getDB(dataBase);
-        DBCollection collection = db.getCollection(mongoCollection);
-        BasicDBObject andQuery = new BasicDBObject();
-        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-        obj.add(new BasicDBObject("TenantId", tenantID));
-        andQuery.put("$and", obj);
-        DBCursor cursor = collection.find(andQuery);
-        while (cursor.hasNext()) {
-            Log.info("Document is" + cursor.next());
-            collection.remove(andQuery);
-        }
-        mongoConnection.close();
+    	MongoClient mongoConnection=null;
+    	try {
+			mongoConnection = new MongoClient(new ServerAddress(host, port));
+			DB db = mongoConnection.getDB(dataBase);
+			DBCollection collection = db.getCollection(mongoCollection);
+			BasicDBObject andQuery = new BasicDBObject();
+			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+			obj.add(new BasicDBObject("TenantId", tenantID));
+			andQuery.put("$and", obj);
+			DBCursor cursor = collection.find(andQuery);
+			while (cursor.hasNext()) {
+				Log.info("Document is" + cursor.next());
+			}
+			collection.remove(andQuery);
+		} finally {
+			mongoConnection.close();
+
+		}   
     }
 }
