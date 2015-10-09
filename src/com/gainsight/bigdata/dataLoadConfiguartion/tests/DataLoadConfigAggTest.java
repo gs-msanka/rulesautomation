@@ -57,10 +57,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-
         tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-
-
         tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
 
         dataLoadManager     = new DataLoadManager();
