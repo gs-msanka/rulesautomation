@@ -84,7 +84,9 @@ public class SmartListTest extends LoadTestData {
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
-        tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
+        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        boolean isRedshiftEnabled= tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
+        Log.info("Is RedShift Enabled????" + " " +isRedshiftEnabled);
         dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
