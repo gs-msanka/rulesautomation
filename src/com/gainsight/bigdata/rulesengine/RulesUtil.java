@@ -527,6 +527,7 @@ public void setupRule(HashMap<String,String> testData){
 	}
 
 	/**
+	 * Verifies whether a CTA is created successfully
 	 * @param priorityValue - Expected Priority value
 	 * @param statusValue   - Expected Status value of cTA
 	 * @param assignee-     Account name from which contains the Assignee value for the CTA in one of the fields.
@@ -573,7 +574,7 @@ public void setupRule(HashMap<String,String> testData){
 			if (!comment.equalsIgnoreCase(obj
 					.getChild(resolveStrNameSpace("JBCXM__Comments__c"))
 					.getValue().toString())) {
-				System.out.println("comment:"
+				Log.debug("comment:"
 						+ obj.getChild(
 						resolveStrNameSpace("JBCXM__Comments__c"))
 						.getValue().toString());
