@@ -280,7 +280,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param port port to connect to mongo
      * @param tenantID Tenant id
      */
-    public void deleteAllRecordsFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String tenantID) {
+    public void deleteCollectionSchemaFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String tenantID) {
     	MongoClient mongoConnection=null;
     	try {
 			mongoConnection = new MongoClient(new ServerAddress(host, port));
