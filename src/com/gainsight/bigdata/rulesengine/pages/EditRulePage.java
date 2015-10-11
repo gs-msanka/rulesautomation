@@ -7,7 +7,7 @@ import com.gainsight.testdriver.Log;
 /**
  * Created by vmenon on 8/26/2015.
  */
-public class NewRulePage extends BasePage {
+public class EditRulePage extends BasePage {
     private final String READY_INDICATOR = "//div[@class='RuleContainer']";
     private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image')]";
     private final String RULE_NAME = "//div/input[contains(@class,'rule-name')]";
@@ -19,7 +19,7 @@ public class NewRulePage extends BasePage {
     private final String SETUP_SCHEDULE_LINK = "//li[@data-id ='SetupScheduleView']/a";
     private final String SELECT_RULE_BUTTON = "//select[contains(@class, 'select-type')]/following-sibling::button";
 
-    public NewRulePage() {
+    public EditRulePage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
     }
 

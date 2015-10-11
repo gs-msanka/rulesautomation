@@ -1,6 +1,6 @@
 package com.gainsight.bigdata.rulesengine.util;
 
-import com.gainsight.bigdata.rulesengine.pages.NewRulePage;
+import com.gainsight.bigdata.rulesengine.pages.EditRulePage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRulePage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
@@ -47,8 +47,8 @@ public class RulesEngineUtil  extends BaseTest{
      * @param rulesPojo RulesPojo configuration object for creation of the rule.
      */
     public void createRuleFromUi(RulesPojo rulesPojo ) {
-        NewRulePage newRulePage = new NewRulePage();
-        newRulePage.enterRuleDetailsAndClickNext(rulesPojo);
+        EditRulePage editRulePage = new EditRulePage();
+        editRulePage.enterRuleDetailsAndClickNext(rulesPojo);
         int i=1;
 		if ((rulesPojo.getSetupActions().size() == 1)
 				&& (rulesPojo.getSetupActions().get(0).getActionType().name()

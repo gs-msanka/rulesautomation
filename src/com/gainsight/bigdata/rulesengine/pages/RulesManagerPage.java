@@ -38,11 +38,11 @@ public class RulesManagerPage extends BasePage {
 
     /**
      * Clicks on the add rule page button
-     * @return NewRulePage class object
+     * @return EditRulePage class object
      */
-    public NewRulePage clickOnAddRule() {
+    public EditRulePage clickOnAddRule() {
         item.click(ADD_RULE_LINK);
-        return new NewRulePage();
+        return new EditRulePage();
     }
 
     /**
@@ -149,13 +149,13 @@ public class RulesManagerPage extends BasePage {
     /**
      * Clicks on the edit option for a given rule
      * @param ruleName Rule name to edit
-     * @return NewRulePage object after clciking on the dit button
+     * @return EditRulePage object after clciking on the dit button
      */
-    public NewRulePage editRuleByName(String ruleName) {
+    public EditRulePage editRuleByName(String ruleName) {
         String ruleNameToEdit = String.format(EDIT_RULE_LINK, ruleName);
         Log.info("Rule xpath is" + " " + ruleNameToEdit);
         item.click(ruleNameToEdit);
-        return new NewRulePage();
+        return new EditRulePage();
 
     }
 }

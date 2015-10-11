@@ -36,6 +36,10 @@ public class RulesSchedulerPage extends BasePage {
     private final String HISTORYRUN = "//div[contains(text(),'Run for historical periods')]/preceding-sibling::input";
     private final String SCHEDULESTART = "//a[contains(text(),'Start')]";
 
+    public RulesSchedulerPage() {
+        throw new RuntimeException(this.getClass().getName() +" is not yet implemented.");
+    }
+
     public void dailySchedule(String ruleName) {
 
         // Select daily
