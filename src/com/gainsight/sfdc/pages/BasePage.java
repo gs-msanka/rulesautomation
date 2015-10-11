@@ -125,7 +125,7 @@ public class BasePage extends WebPage implements Constants {
 	
 
 	public OpportunityPage gotoOpportunityPageWithId(String Id){
-		driver.get(env.getDefaultUrl()+"/"+Id);
+		driver.get(env.getDefaultUrl() + "/" + Id);
 		return new OpportunityPage();
 	}
 	// Start of Top Level Navigation
@@ -233,7 +233,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
     public WebElement getFirstDisplayedElement(String identifier) {
-        Log.info("Element Identifier : " +identifier);
+        Log.info("Element Identifier : " + identifier);
         List<WebElement> elements = element.getAllElement(identifier);
         //Log.info("Total Number of Elements :" +elements.size());
         for(WebElement ele : elements) {
@@ -250,9 +250,23 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
-    public void selectValueInDropDown(String value) {
-		List<WebElement> listElement = element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]");
+
+    /**
+     * Selects a value in drop down searched by the given value. Elements  matching the selector are identified from top of the page.
+     * These elements are then iterated and checked whether they are displayed. The first element found as diplayed is selected.
+     * @param value Value that needs to be searched and selected
+     * @param reverseSelect set it to true in case you want to reverse elemenet selection procedure. If set true the first element from the last that is displayed will be selected.
+     *                      This option is faster if you know that the first element from the last is the one that you are looking for.
+     */
+    public void selectValueInDropDown(String value, boolean reverseSelect) {
+        String selector = "//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]";
+		List<WebElement> listElement = element.getAllElement(selector);
 		boolean selected = false;
+
+        if(reverseSelect) {
+            Collections.reverse(listElement);
+        }
+
 		for (WebElement ele : listElement) {
             Log.info("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
@@ -267,27 +281,13 @@ public class BasePage extends WebPage implements Constants {
     }
 
     /**
-     *
-     * Similar to method selectValueInDropDown
-     *
-     * @param value
+     * Selects a value in drop down searched by the given value. Elements  matching the selector are identified from top of the page.
+     * These elements are then iterated and checked whether they are displayed. The first element found as diplayed is selected.
+     * @param value Value that needs to be searched and selected
      */
-    public void selectByVisbileTextInDropDown(String value) {
-		List<WebElement> listElement = element.getAllElement("//input[(@title= '" + value+ "')]/following-sibling::span[(text()= '" + value+ "')]");
-		Collections.reverse(listElement);
-		boolean selected = false;
-		for (WebElement ele : listElement) {
-			Log.info("Checking : " + ele.isDisplayed());
-			if (ele.isDisplayed()) {
-				ele.click();
-				selected = true;
-				break;
-			}
-		}
-		if (selected != true) {
-			throw new RuntimeException("Unable to select element : //input[(@title= '" + value+ "')]/following-sibling::span[(text()= '" + value+ "')]");
-		}
-	}
+    public void selectValueInDropDown(String value) {
+        selectValueInDropDown(value, false);
+    }
 
     public BasePage setSiteActiveHomePage(String siteActiveHomePage) {
         item.click(USERNAVBUTTON);

@@ -137,7 +137,7 @@ public class SetupRulePage extends BasePage {
 	
 	public SetupRulePage selectTimeIdentifier(String timeIdentifier){
 		item.click(TIMEIDENTIFIER);
-		selectByVisbileTextInDropDown(timeIdentifier);
+		selectValueInDropDown(timeIdentifier, true);
 		return this;
 	} 
 
@@ -166,7 +166,7 @@ public class SetupRulePage extends BasePage {
 			value = value.substring(7);
 			String filterSValue = String.format(ACTION_FILTER_SVALUE, object+ "::" + fields);
 			item.click(filterSValue);
-			selectByVisbileTextInDropDown(value);
+			selectValueInDropDown(value, true);
 		} else if (value.startsWith("input_")) {
 			value = value.substring(6);
 			String filterIValue = String.format(ACTION_FILTER_IVALUE, object+ "::" + fields);
@@ -190,7 +190,7 @@ public class SetupRulePage extends BasePage {
 			value = value.substring(7);
 			String filterSValue = String.format(ACTION_FILTER_SVALUE, fields);
 			item.click(filterSValue);
-			selectByVisbileTextInDropDown(value);
+			selectValueInDropDown(value, true);
 		} else if (value.startsWith("input_")) {
 			value = value.substring(6);
 			String filterIValue = String.format(ACTION_FILTER_IVALUE, fields);
@@ -215,14 +215,14 @@ public class SetupRulePage extends BasePage {
 			if (calculatedField.getFieldAConfig().getCalculatedFieldType().name().equals("AGGREGATION")) {
 				item.click(CALCULATED_FIELDS_AGGREGATION_RADIO_BUTTON_A_SECTION);
 				item.click(CALCULATED_FIELD_AGGREGATION_LIST_DROPDOWN_A_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldAConfig().getAggregation().getAggregationCalculation());
+				selectValueInDropDown(calculatedField.getFieldAConfig().getAggregation().getAggregationCalculation(), true);
 				item.click(CALCULATED_FIELD_SOURCEFIELD_LIST_DROPDOWN_A_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldAConfig().getAggregation().getSourceField());
+				selectValueInDropDown(calculatedField.getFieldAConfig().getAggregation().getSourceField(), true);
 				item.click(CALCULATED_FIELD_PERIODTYPE_LIST_DROPDOWN_A_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldAConfig().getAggregation().getPeriodType());
+				selectValueInDropDown(calculatedField.getFieldAConfig().getAggregation().getPeriodType(), true);
 				element.clearAndSetText(CALCULATED_FIELD_NO_OF_PERIODS_A_SECTION,calculatedField.getFieldAConfig().getAggregation().getNoOfPeriods());
 				item.click(CALCULATED_FIELD_GRANULARITY_A_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldAConfig().getAggregation().getGranularity());
+				selectValueInDropDown(calculatedField.getFieldAConfig().getAggregation().getGranularity(), true);
 				if (calculatedField.getFieldAConfig().getAggregation().isAdjustForMissingData()) {
 					item.click(CALCULATED_FILED_ADJUST_MISSINGDATA_A_SECTION);
 				} else {
@@ -231,19 +231,19 @@ public class SetupRulePage extends BasePage {
 			} else {
 				item.click(CALCULATED_FIELDS_SHOW_FIELD_RADIO_BUTTON_A_SECTION);
 				item.click(CALCULATED_FILED_SELECT_A_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldAConfig().getShowField());
+				selectValueInDropDown(calculatedField.getFieldAConfig().getShowField(), true);
 			}
 			if (calculatedField.getFieldBConfig().getCalculatedFieldType().name().equals("AGGREGATION")) {
 				item.click(CALCULATED_FIELDS_AGGREGATION_RADIO_BUTTON_B_SECTION);
 				item.click(CALCULATED_FIELD_AGGREGATION_LIST_DROPDOWN_B_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldBConfig().getAggregation().getAggregationCalculation());
+				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getAggregationCalculation(), true);
 				item.click(CALCULATED_FIELD_SOURCEFIELD_LIST_DROPDOWN_B_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldBConfig().getAggregation().getSourceField());
+				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getSourceField(), true);
 				item.click(CALCULATED_FIELD_PERIODTYPE_LIST_DROPDOWN_B_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldBConfig().getAggregation().getPeriodType());
+				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getPeriodType(), true);
 				element.clearAndSetText(CALCULATED_FIELD_NO_OF_PERIODS_B_SECTION,calculatedField.getFieldBConfig().getAggregation().getNoOfPeriods());
 				item.click(CALCULATED_FIELD_GRANULARITY_B_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldBConfig().getAggregation().getGranularity());
+				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getGranularity(), true);
 				if (calculatedField.getFieldAConfig().getAggregation().isAdjustForMissingData()) {
 					item.click(CALCULATED_FILED_ADJUST_MISSINGDATA_B_SECTION);
 				} else {
@@ -252,18 +252,18 @@ public class SetupRulePage extends BasePage {
 			} else {
 				item.click(CALCULATED_FIELDS_SHOW_FIELD_RADIO_BUTTON_B_SECTION);
 				item.click(CALCULATED_FILED_SELECT_B_SECTION);
-				selectByVisbileTextInDropDown(calculatedField.getFieldBConfig().getShowField());
+				selectValueInDropDown(calculatedField.getFieldBConfig().getShowField(), true);
 			}
 		} else {
 			item.click(CALCULATED_FIELD_AGGREGATION_LIST_DROPDOWN_A_SECTION);
-			selectByVisbileTextInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation());
+			selectValueInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation(), true);
 			item.click(CALCULATED_FIELD_SOURCEFIELD_LIST_DROPDOWN_A_SECTION);
-			selectByVisbileTextInDropDown(calculatedField.getAggregationConfig().getSourceField());
+			selectValueInDropDown(calculatedField.getAggregationConfig().getSourceField(), true);
 			item.click(CALCULATED_FIELD_PERIODTYPE_LIST_DROPDOWN_A_SECTION);
-			selectByVisbileTextInDropDown(calculatedField.getAggregationConfig().getPeriodType());
+			selectValueInDropDown(calculatedField.getAggregationConfig().getPeriodType(), true);
 			element.clearAndSetText(CALCULATED_FIELD_NO_OF_PERIODS_A_SECTION,calculatedField.getAggregationConfig().getNoOfPeriods());
 			item.click(CALCULATED_FIELD_GRANULARITY_A_SECTION);
-			selectByVisbileTextInDropDown(calculatedField.getAggregationConfig().getGranularity());
+			selectValueInDropDown(calculatedField.getAggregationConfig().getGranularity(), true);
 			if (calculatedField.getAggregationConfig().isAdjustForMissingData()) {
 				item.click(CALCULATED_FILED_ADJUST_MISSINGDATA_A_SECTION);
 			} else {

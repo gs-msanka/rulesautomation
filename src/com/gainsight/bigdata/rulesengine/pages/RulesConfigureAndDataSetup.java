@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.utils.MongoUtil;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
@@ -252,20 +253,15 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param tenantID Tenant id
      */
     public void deleteAllRecordsFromMongoCollectionBasedOnTenantID(String dataBase, String mongoCollection, String host, int port, String tenantID) {
-    	MongoClient mongoConnection=null;
+        MongoUtil mongoUtil = new MongoUtil();
+        mongoUtil.createConnection(host, port, dataBase);
     	try {
-        mongoConnection = new MongoClient(new ServerAddress(host, port));
-        DB db = mongoConnection.getDB(dataBase);
-        DBCollection collection = db.getCollection(mongoCollection);
-        BasicDBObject Query = new BasicDBObject();
-			Query.put("tenantId", tenantID);
-			DBCursor cursor = collection.find(Query);
-			while (cursor.hasNext()) {
-				Log.info("Document is" + cursor.next());
-			}
-			collection.remove(Query);
+            BasicDBObject query = new BasicDBObject();
+			query.put("tenantId", tenantID);
+
+			mongoUtil.removeOne(mongoCollection, query);
 		} finally {
-			mongoConnection.close();
+			mongoUtil.closeConnection();
 		}
 	}
 
@@ -280,23 +276,17 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param tenantID Tenant id
      */
     public void deleteCollectionSchemaFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String tenantID) {
-    	MongoClient mongoConnection=null;
+        MongoUtil mongoUtil = new MongoUtil();
+        mongoUtil.createConnection(host, port, dataBase);
     	try {
-			mongoConnection = new MongoClient(new ServerAddress(host, port));
-			DB db = mongoConnection.getDB(dataBase);
-			DBCollection collection = db.getCollection(mongoCollection);
 			BasicDBObject andQuery = new BasicDBObject();
 			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
 			obj.add(new BasicDBObject("TenantId", tenantID));
 			andQuery.put("$and", obj);
-			DBCursor cursor = collection.find(andQuery);
-			while (cursor.hasNext()) {
-				Log.info("Document is" + cursor.next());
-			}
-			collection.remove(andQuery);
-		} finally {
-			mongoConnection.close();
+            mongoUtil.removeOne(mongoCollection, andQuery);
 
+		} finally {
+			mongoUtil.closeConnection();
 		}   
     }
 }

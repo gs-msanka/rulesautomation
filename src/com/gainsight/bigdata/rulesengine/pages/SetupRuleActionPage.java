@@ -109,14 +109,14 @@ public class SetupRuleActionPage extends BasePage {
      */
     public void clickOnActionButton() {
         try {
-            Application.getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            env.setTimeout(0);
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
         } catch (Exception e) {
             item.click(ACTION_BUTTON);
         } finally {
-            Application.getDriver().manage().timeouts().implicitlyWait(MAX_ELEMENT_WAIT, TimeUnit.SECONDS);
+            env.setTimeout(MAX_ELEMENT_WAIT);
         }
     }
 
@@ -361,7 +361,7 @@ public class SetupRuleActionPage extends BasePage {
                 item.clearAndSetText(xpath + CRITERIA_SHOWFIELD_INPUT, criteria.getValue().substring(6));
             } else {
                 item.click(xpath + CRITERIA_SHOWFIELD_INPUT_DROPDOWN);
-                selectByVisbileTextInDropDown(criteria.getValue());
+                selectValueInDropDown(criteria.getValue(), true);
             }
         }
     }
