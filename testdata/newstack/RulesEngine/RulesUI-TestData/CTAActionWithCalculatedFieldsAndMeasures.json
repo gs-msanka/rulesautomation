@@ -1,0 +1,164 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule  - CTA Using MDA Calculated Measures and Calculated Fileds",
+  "ruleDescription": "Rule  - CTA Using MDA Calculated Measures and Calculated Fileds",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "MONGO",
+    "calculatedFields": [
+      {
+        "fieldName": "CaculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "AVG",
+          "sourceField": "SumOfTwoNumberFields",
+          "periodType": "Past",
+          "noOfPeriods": "2",
+          "granularity": "Months",
+          "adjustForMissingData": "true"
+        }
+      },
+      {
+        "fieldName": "CaculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "AnnualRevenue"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Score"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "MONGO",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Description",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "LongTextArea",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CreatedDateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Email",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "BooleanField",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AnnualRevenue",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Score",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "SumOfTwoNumberFields",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "DifferenceOfTwoNumberFields",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account"
+          },
+          {
+            "fieldName": "Date",
+            "operator": "greater or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "SumOfTwoNumberFields",
+            "operator": "greater or equal",
+            "value": "input_15000"
+          },
+          {
+            "fieldName": "Score",
+            "operator": "greater than",
+            "value": "input_10"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B and (C or D)",
+    "timeIdentifier": "Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "Rule  - CTA Using MDA Calculated Measures and Calculated Fileds",
+        "priority": "High",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": [
+        {
+          "showField": "Name",
+          "operator": "starts with",
+          "field": "value",
+          "value": "input_RULESUI"
+        },
+        {
+          "showField": "CaculatedField - 1",
+          "operator": "not equal to",
+          "field": "value",
+          "value": "input_30000"
+        },
+        {
+          "showField": "CaculatedField - 2",
+          "operator": "greater than",
+          "field": "value",
+          "value": "input_50"
+        },
+        {
+          "showField": "SumOfTwoNumberFields",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_15000"
+        },
+        {
+          "showField": "DifferenceOfTwoNumberFields",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_30000"
+        }
+      ]
+    }
+  ]
+}

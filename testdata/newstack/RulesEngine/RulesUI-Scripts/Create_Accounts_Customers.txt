@@ -1,0 +1,26 @@
+delete [select id from Account where name like 'RULESUI Account%'];
+//if required delete contacts from contact object where name like RULESUI
+
+//Create Accounts
+List<Account> accList = new List<Account>();
+for(integer i=1; i<10 ; i++) {
+   Account acc = new Account(Name ='RULESUI Account ' +i,Data_ExternalID__c='RULESUI Account ' +i);
+   accList.add(acc);
+}
+
+insert accList;
+
+delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c  like 'RULESUI Account%'];
+//Add Accounts to Customers
+List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
+                                 JBCXM__SystemName__c = 'ActiveCustomer'];
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+JBCXM__CustomerInfo__c cust = null;
+for(Account acc : [SELECT id FROM Account where name like 'RULESUI Account%']) {
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = acc.id, JBCXM__Status__c  = (pkList.get(0)).id);
+			custList.add(cust);
+    
+}
+
+insert custList;
+

@@ -3,6 +3,7 @@ package com.gainsight.sfdc.pages;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public class BasePage extends WebPage implements Constants {
     private final String WORKFLOW_TAB		= "//a[contains(@title, 'Cockpit Tab')]";
     private final String MORE_TABS          = "MoreTabs_Tab";
     private final String MORE_TABS_LIST     = "MoreTabs_List";
-    private final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
+    protected final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
@@ -124,7 +125,7 @@ public class BasePage extends WebPage implements Constants {
 	
 
 	public OpportunityPage gotoOpportunityPageWithId(String Id){
-		driver.get(env.getDefaultUrl()+"/"+Id);
+		driver.get(env.getDefaultUrl() + "/" + Id);
 		return new OpportunityPage();
 	}
 	// Start of Top Level Navigation
@@ -232,7 +233,7 @@ public class BasePage extends WebPage implements Constants {
 	}
 
     public WebElement getFirstDisplayedElement(String identifier) {
-        Log.info("Element Identifier : " +identifier);
+        Log.info("Element Identifier : " + identifier);
         List<WebElement> elements = element.getAllElement(identifier);
         //Log.info("Total Number of Elements :" +elements.size());
         for(WebElement ele : elements) {
@@ -249,9 +250,24 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementNotPresent(LOADING_IMG, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
-    public void selectValueInDropDown(String value) {
-        boolean selected = false;
-        for(WebElement ele : element.getAllElement("//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]")) {
+
+    /**
+     * Selects a value in drop down searched by the given value. Elements  matching the selector are identified from top of the page.
+     * These elements are then iterated and checked whether they are displayed. The first element found as diplayed is selected.
+     * @param value Value that needs to be searched and selected
+     * @param reverseSelect set it to true in case you want to reverse elemenet selection procedure. If set true the first element from the last that is displayed will be selected.
+     *                      This option is faster if you know that the first element from the last is the one that you are looking for.
+     */
+    public void selectValueInDropDown(String value, boolean reverseSelect) {
+        String selector = "//input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]";
+		List<WebElement> listElement = element.getAllElement(selector);
+		boolean selected = false;
+
+        if(reverseSelect) {
+            Collections.reverse(listElement);
+        }
+
+		for (WebElement ele : listElement) {
             Log.info("Checking : "+ele.isDisplayed());
             if(ele.isDisplayed()) {
                 ele.click();
@@ -262,6 +278,15 @@ public class BasePage extends WebPage implements Constants {
         if(selected != true) {
             throw new RuntimeException("Unable to select element : //input[contains(@title, '"+value+"')]/following-sibling::span[contains(text(), '"+value+"')]" );
         }
+    }
+
+    /**
+     * Selects a value in drop down searched by the given value. Elements  matching the selector are identified from top of the page.
+     * These elements are then iterated and checked whether they are displayed. The first element found as diplayed is selected.
+     * @param value Value that needs to be searched and selected
+     */
+    public void selectValueInDropDown(String value) {
+        selectValueInDropDown(value, false);
     }
 
     public BasePage setSiteActiveHomePage(String siteActiveHomePage) {

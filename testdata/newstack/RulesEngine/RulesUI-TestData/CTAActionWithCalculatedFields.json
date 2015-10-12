@@ -1,0 +1,189 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "CTA Action Using Calculated Fields..",
+  "ruleDescription": "CTA Action Using Calculated Fields - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Usage Data",
+    "calculatedFields": [
+      {
+        "fieldName": "CaculatedField - 1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Page Visits",
+            "periodType": "Past",
+            "noOfPeriods": "2",
+            "granularity": "Months",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Page Views",
+            "periodType": "Past",
+            "noOfPeriods": "2",
+            "granularity": "Months",
+            "adjustForMissingData": "true"
+          }
+        }
+      },
+      {
+        "fieldName": "CaculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Usage Data::Page Visits"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Usage Data::Page Views"
+        }
+      },
+      {
+        "fieldName": "CaculatedField - 3",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Page Visits",
+            "periodType": "Past",
+            "noOfPeriods": "3",
+            "granularity": "Months",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Page Views",
+            "periodType": "Past",
+            "noOfPeriods": "3",
+            "granularity": "Months",
+            "adjustForMissingData": "true"
+          }
+        }
+      },
+      {
+        "fieldName": "CaculatedField - 4",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Usage Data::Page Visits"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "Usage Data::Files Downloaded"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Usage Data",
+        "showFields": [
+          {
+            "fieldName": "Page Views",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Account",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Page Visits",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Files Downloaded",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Account Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account "
+          },
+          {
+            "fieldName": "Date",
+            "operator": "less or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "Files Downloaded",
+            "operator": "greater or equal",
+            "value": "input_10"
+          },
+          {
+            "fieldName": "No of Report Run",
+            "operator": "greater than",
+            "value": "input_10"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B and (C or D)",
+    "timeIdentifier": "Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "CTA Rule 1 - UI",
+        "priority": "High",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": [
+        {
+          "showField": "CaculatedField - 1",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_100"
+        },
+        {
+          "showField": "CaculatedField - 2",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_50"
+        },
+        {
+          "showField": "Usage Data::Files Downloaded",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_10"
+        },
+        {
+          "showField": "Usage Data::Page Views",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_10"
+        }
+      ]
+    }
+  ]
+}

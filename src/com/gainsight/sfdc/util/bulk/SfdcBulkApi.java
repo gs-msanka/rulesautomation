@@ -181,7 +181,7 @@ public class SfdcBulkApi {
 		
 		String async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
 		//Waiting until the batch job is complete
-		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 60);
+		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 600);
 		if(waitResult) {
 			//Fetching result from batch
 			String output = op.fetchResult(async_batch_status_url);

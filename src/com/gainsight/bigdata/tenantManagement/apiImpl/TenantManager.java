@@ -17,6 +17,9 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -27,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.gainsight.bigdata.urls.AdminURLs.*;
+import static com.gainsight.sfdc.pages.Constants.INTERVAL_TIME;
+import static com.gainsight.sfdc.pages.Constants.MAX_WAIT_TIME;
 
 /**
  * Created by Giribabu on 07/05/15.
@@ -58,7 +63,13 @@ public class TenantManager {
         header.addHeader("appOrgId", sfdcInfo.getOrg());
         header.addHeader("appSessionId", sfdcInfo.getSessionId());
         header.addHeader("appUserId", sfdcInfo.getUserId());
-        String authToken = getMDAAuthToken();
+        
+		String authToken = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<String>() {
+					@Override
+					public String apply() {
+						return getMDAAuthToken();
+					}
+				});
         if (authToken == null || authToken == "") {
             throw new RuntimeException("Failed to generate auth token");
         }
@@ -182,7 +193,7 @@ public class TenantManager {
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 org.apache.http.Header[] headers = responseObj.getAllHeaders();
                 for (org.apache.http.Header h : headers) {
-                    if (h.getName() != null && h.getName().equals("Authtoken")) {
+                    if (h.getName() != null && h.getName().equalsIgnoreCase("authToken")) {
                         authToken = h.getValue();
                         Log.info("Auth Token :" + authToken);
                     }

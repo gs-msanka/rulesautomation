@@ -1,0 +1,34 @@
+ {
+	"jobName": "Load Account For Custom Rules",
+    "jobType" : "AccountUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+      "dateProcess" : {
+            "inputFile" : "/testdata/newstack/RulesEngine/RulesUI-Data/RulesUI_Account_For_Load_to_Customers_Action.csv",
+            "outputFile" : "/resources/datagen/process/RulesUI_Account.csv",
+            "fields" :[
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : false,
+                    "fieldName" : "Date_Auto__c"
+
+                },
+                {
+                    "weekly" : false,
+                    "daily"  : true,
+                    "dateTime" : true,
+                    "fieldName" : "DateTime_Auto__c"
+                }
+            ]
+        },
+	"load": {
+        "target": "sfdc",
+        "sObject": "Account",
+        "operation": "upsert",
+        "contentType": "CSV",
+		"externalIDField": "Data_ExternalId__c",
+        "cleanUp" : false,
+        "file": "/resources/datagen/process/RulesUI_Account.csv"
+    }
+}

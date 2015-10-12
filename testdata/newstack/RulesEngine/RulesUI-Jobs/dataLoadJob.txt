@@ -1,0 +1,79 @@
+{       
+    "jobName": "Update Account names and ID",
+    "jobType" : "AccountUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+        "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "Account",
+        "fields": [
+            "Id",
+            "Name"
+        ],
+        "output": "/resources/datagen/process/RulesUIAccounts.csv"
+    },
+    "transform": {
+    	"query" : "",
+    	"useQuery" : false,
+        "tableInfo": [
+            {
+                "file": "/resources/datagen/process/RulesUIAccounts.csv",
+                "table": "account",
+                "joinColumnName": "Name",
+                "columns": [
+                    {
+                        "name": "ID",
+                        "alias": "ID"
+                    }
+                ]
+            },
+            {
+                "file": "/testdata/newstack/RulesEngine/RulesUI-Data/LoadToMDA.csv",
+                "table": "accounts",
+                "joinColumnName": "Name",
+                "columns": [
+                	{
+                        "name": "Name",
+                        "alias": "Name"
+                    },
+		    {
+                        "name": "Description",
+                        "alias": "Description"
+                    },
+		     {
+                        "name": "LongTextArea",
+                        "alias": "LongTextArea"
+                    },
+		    {
+                        "name": "AnnualRevenue",
+                        "alias": "AnnualRevenue"
+                    },  
+		     {
+                        "name": "Date",
+                        "alias": "Date"
+                    },
+		     {
+                        "name": "CreatedDateTime",
+                        "alias": "CreatedDateTime"
+                    },
+		    {
+                        "name": "Email",
+                        "alias": "Email"
+                    },
+		    {
+                        "name": "BooleanField",
+                        "alias": "BooleanField"
+                    },
+		    {
+                        "name": "Score",
+                        "alias": "Score"
+                    }     
+                ]
+            }
+        ],
+        "join": true,
+        "picklist": false,
+        "output": "/testdata/newstack/RulesEngine/RulesUI-Data/LoadToMDA-Output.csv"
+    }
+}
