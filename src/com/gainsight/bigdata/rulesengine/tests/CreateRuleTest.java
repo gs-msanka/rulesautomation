@@ -258,7 +258,9 @@ public class CreateRuleTest extends BaseTest {
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
         rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
+        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
         rulesManagerPage.clickOnAddRule();
