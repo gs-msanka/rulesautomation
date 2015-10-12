@@ -69,7 +69,8 @@ public class SetupRulePage extends BasePage {
     
 
     public SetupRulePage() {
-        Log.info("Dummy Constructor");
+    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+    	Log.info("Waiting for the page to load");
     }
 
     public void dropDownOFSourceObjectSelection() {
