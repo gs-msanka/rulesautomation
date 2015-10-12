@@ -22,6 +22,9 @@ import com.gainsight.testdriver.Log;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 
+
+import static com.gainsight.bigdata.urls.ApiUrls.*;
+
 public class RulesUtil extends NSTestBase {
 
 	// public static SFDCUtil sfdcUtil = new SFDCUtil();
@@ -480,11 +483,11 @@ public void setupRule(HashMap<String,String> testData){
 
 	public void saveCustomObjectInRulesConfig(String data) throws Exception{
 		Log.info("\n Request URL"
-				+ ApiUrls.APP_API_RULES_LOADABLE_OBJECT
+				+ APP_API_RULES_LOADABLE_OBJECT
 				+ "\n Request rawBody:" + data);
 
 		result = wa.doPost(
-				ApiUrls.APP_API_RULES_LOADABLE_OBJECT,
+				APP_API_RULES_LOADABLE_OBJECT,
 				header.getAllHeaders(), data);
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -502,7 +505,7 @@ public void setupRule(HashMap<String,String> testData){
 	 */
 	public Boolean runRule(String ruleName) throws Exception {
 		String ruleId = getRuleId(ruleName);
-		result = wa.doPost(ApiUrls.API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
+		result = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
 		ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
 		if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
 			Log.error("Rule Request itself failed!");
