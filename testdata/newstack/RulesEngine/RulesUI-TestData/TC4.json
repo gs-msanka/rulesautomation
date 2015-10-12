@@ -1,0 +1,184 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 4 - Load To Customers Using Native Data",
+  "ruleDescription": "Rule 4 - Load To Customers Using Native Data",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Currency",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "DateTime Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Email Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Number Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Percent Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Account Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Phone",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "PickList Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "MultiPicklist Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_TextArea",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "URL Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Boolean Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_URL",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Picklist",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Account Name",
+            "operator": "starts with",
+            "value": "input_Account RULESUI"
+          },
+          {
+            "fieldName": "C_Picklist",
+            "operator": "includes",
+            "value": "select_Pvalue1"
+          },
+          {
+            "fieldName": "Date Auto",
+            "operator": "less or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "Number Auto",
+            "operator": "greater than",
+            "value": "input_10"
+          },
+          {
+            "fieldName": "Email Auto",
+            "operator": "equals",
+            "value": "input_athaduka@gainsight.com"
+          },
+          {
+            "fieldName": "Currency Auto",
+            "operator": "greater than",
+            "value": "input_100"
+          },
+          {
+            "fieldName": "Percent Auto",
+            "operator": "not equal to",
+            "value": "input_797946"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B and (C or D or E) and F and G",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToCustomers",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "Account",
+            "sourceField": "Id",
+            "destination": "Account",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_TextArea",
+            "destination": "Comments",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Date Auto",
+            "destination": "Renewal Date",
+            "isCustom": "true"
+          }
+        ]
+      },
+      "criterias": [
+        {
+          "showField": "Account::Id",
+          "operator": "equals",
+          "field": "field",
+          "value": "Account::Id"
+        },
+        {
+          "showField": "Account::Date Auto",
+          "operator": "less or equal",
+          "field": "value",
+          "value": "Rule Date"
+        },
+        {
+          "showField": "Account::C_Picklist",
+          "operator": "equals",
+          "field": "value",
+          "value": "Pvalue1"
+        },
+        {
+          "showField": "Account::Number Auto",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_10"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "LodabaleObjects": [
+    {
+      "objectType": "Native",
+      "dataLoadObject": [
+        {
+          "objectName": "account",
+          "fields": [
+            {
+              "fieldName": ""
+            },
+            {
+              "fieldName": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "MATRIX",
+      "dataLoadObject": [
+        {
+          "objectName": "account",
+          "fields": [
+            {
+              "fieldName": ""
+            },
+            {
+              "fieldName": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

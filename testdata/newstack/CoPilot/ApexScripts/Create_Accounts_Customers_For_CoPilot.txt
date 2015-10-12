@@ -10,6 +10,8 @@ for(integer i=1; i<10 ; i++) {
 
 insert accList;
 
+delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c  like 'COPILOT Account'];
+
 //Add Accounts to Customers
 List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
                                  JBCXM__SystemName__c = 'ActiveCustomer'];

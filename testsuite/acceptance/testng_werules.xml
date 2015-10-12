@@ -6,6 +6,12 @@
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
     </listeners>
 
+	<test verbose="3" name="RulesEngine UI Automation Tests" preserve-order="true">
+		<classes>
+			<class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest" />
+		</classes>
+	</test>
+
     <test verbose="3" name="Rule_Account_Monthly_Test" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.rulesEngine.tests.Rule_Account_Monthly_Test"/>

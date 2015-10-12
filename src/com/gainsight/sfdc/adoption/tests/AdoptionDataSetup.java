@@ -111,7 +111,7 @@ public class AdoptionDataSetup extends BaseTest {
                         Log.info("Running Aggregation On : " + year + "-" + month + "-" + day);
                         sfdc.runApexCode(resolveStrNameSpace(code));
                     }
-                    Thread.sleep(15000L);
+                    //Thread.sleep(15000L);
                     waitForBatchExecutionToComplete("AdoptionAggregation");
                 }
             } else {
@@ -125,7 +125,7 @@ public class AdoptionDataSetup extends BaseTest {
                         sfdc.runApexCode(resolveStrNameSpace(code));
                         cal.add(Calendar.MONTH, -1);
                     }
-                    Thread.sleep(15000L);
+                    //Thread.sleep(15000L);
                     waitForBatchExecutionToComplete("AdoptionAggregation");
                 }
             }

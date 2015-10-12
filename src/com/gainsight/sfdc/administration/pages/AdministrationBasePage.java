@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.administration.pages;
 
+import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.sfdc.pages.BasePage;
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +21,7 @@ public class AdministrationBasePage extends BasePage {
     private final String ADMIN_FEATURES         = "//a[contains(@href,'Administration-Features')]";
     private final String ADMIN_NOTIFICATION     = "//a[contains(@href,'Administration-Notifications')]";
     private final String ADMIN_UI_SETTINGS      = "//a[contains(@href,'Administration-UIViews')]";
-    private final String ADMIN_RULES_ENGINE     = "//a[contains(@href,'Administration-RulesEngine')]";
+    private final String ADMIN_RULES_ENGINE     = "//a[contains(@href,'RulesManager')]";
     private final String SETUP                  = "//a[@id='setupLink' and @title='Setup']";
     private final String INTEGRATION_PAGE		= "//a[@href='Integration']";
     private final String COCKPIT_CONFIG_PAGE    = "//a[@href='WorkflowConfiguration']";
@@ -79,4 +80,8 @@ public class AdministrationBasePage extends BasePage {
 		item.click(ADMIN_360_SECTION);
         return new AdminCustomer360Section();
 	}
+    public RulesManagerPage clickOnRulesEnginePage(){
+        item.click(ADMIN_RULES_ENGINE);
+        return new RulesManagerPage();
+    }
 }
