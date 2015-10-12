@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.gainsight.bigdata.urls.ApiUrls;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -52,11 +51,11 @@ public class RulesUtil extends NSTestBase {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		Log.info("request:" + ApiUrls.APP_API_EVENTRULE + "/" + ruleId);
-		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
+		Log.info("request:" + APP_API_EVENTRULE + "/" + ruleId);
+		result = wa.doPost(APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
+				+APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
 		ResponseObject responseObj = RulesUtil.convertToObject(result
 				.getContent());
@@ -261,7 +260,7 @@ public void setupRule(HashMap<String,String> testData){
 		long executionTime = 0;
 		while (flag && executionTime < maxWaitingTime) {
 			Thread.sleep(10000);
-			ResponseObj result = webAction.doGet(ApiUrls.APP_API_ASYNC_STATUS
+			ResponseObj result = webAction.doGet(APP_API_ASYNC_STATUS
 					+ "?ruleId=" + ruleId + "",
 					header.getAllHeaders());
 			ResponseObject res = RulesUtil.convertToObject(result.getContent());
@@ -389,10 +388,10 @@ public void setupRule(HashMap<String,String> testData){
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(ApiUrls.API_RULE_RUN+"/" + ruleId,
+		result = wa.doPost(API_RULE_RUN+"/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ ApiUrls.API_RULE_RUN + "/" + ruleId
+				+ API_RULE_RUN + "/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result

@@ -32,7 +32,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String PLAYBOOK = "//label[contains(text(),'Status')]/following-sibling::div/select[contains(@class,'playBook')]/following-sibling::button";
     private final String REASON_BUTTON = "//label[contains(text(),'Reason')]/following-sibling::div/select[contains(@class,'Reason')]/following-sibling::button";
     private final String OWNERFIELD = "//label[contains(text(),'Reason')]/following-sibling::div/select[contains(@class,'OwnerField')]/following-sibling::button";
-    private final String DUEDATE = "//label[contains(text(),'Default Owner')]/preceding-sibling::div//input";
+    private final String DUEDATE = "//div[@class='dueDate']/input";
     private final String DEFAULTOWNER = "//label[contains(text(),'Default Owner')]/following-sibling::div//input";
     private final String POSTUPDATE_BUTTON = "//label[contains(text(),'Post update')]/..//button";
     private final String COMMENTS = "//label[contains(text(),'Comments')]/../descendant::div[contains(@class,'form')]";

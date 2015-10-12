@@ -222,8 +222,8 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        String configData = "{\"type\":\"MDA\",\"fields\":[{\"name\":\"gsm54894\",\"dataType\":\"NUMBER\"},{\"name\":\"gsd80189\",\"dataType\":\"DATETIME\"\n},{\"name\":\"gsd20538\",\"dataType\":\"DATE\"},{\"name\":\"gsd35553\",\"dataType\":\"STRING\"},{\"name\":\"gsd86386\",\"dataType\"\n:\"STRING\"},{\"name\":\"gsd97302\",\"dataType\":\"STRING\"},{\"name\":\"gsd5591\",\"dataType\":\"STRING\"},{\"name\":\"gsd36184\"\n,\"dataType\":\"STRING\"}],\"objectName\":\"2a90fcf6-a8f5-4a1e-b42e-2968c4e28a80\",\"objectLabel\":\"MONGO\"}";
-        LoadToMDACollection loadToMDACollection = mapper.readValue(configData, LoadToMDACollection.class);
+        LoadToMDACollection loadToMDACollection =new LoadToMDACollection();
+        loadToMDACollection.setType("MDA"); 
         loadToMDACollection.setObjectName(actualCollectionInfo.getCollectionDetails().getCollectionId());
         loadToMDACollection.setObjectLabel(actualCollectionInfo.getCollectionDetails().getCollectionName());
         List<LoadToMDACollection.Field> fields = new ArrayList<>();
