@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.reporting.sfdc.setup;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -12,50 +13,57 @@ import com.sforce.soap.partner.sobject.SObject;
  * Created by JayaPrakash on 01/09/15.
  */
 
-public class LoadSFDCReports extends BaseTest{
-    private final String CREATE_CASES_SCRIPT    = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCases.txt";
+public class LoadSFDCReportsTest extends BaseTest{
+    private final String BASE_PATH = Application.basedir+"/testdata/sfdc/reporting/scripts/";
+    private final String CREATE_CASES_SCRIPT    = BASE_PATH+"CreateCases.txt";
     private final String CREATE_USERS_SCRIPT    = Application.basedir+"/apex_scripts/general/CreateUsers.txt";
-    private final String CREATE_MILESTONES_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/Milestones.txt";
+    private final String CREATE_MILESTONES_SCRIPT = BASE_PATH+"/Milestones.txt";
 
-    private final String CREATE_CS360SECTION_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateCS360Section.txt";
-    private final String CREATE_LAYOUT_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateLayout.txt";
-    private final String CREATE_CONTAINER_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateContainer.txt";
+    private final String CREATE_CS360SECTION_SCRIPT = BASE_PATH+"CreateCS360Section.txt";
+    private final String CREATE_LAYOUT_SCRIPT = BASE_PATH+"CreateLayout.txt";
+    private final String CREATE_CONTAINER_SCRIPT = BASE_PATH+"CreateContainer.txt";
 
-    private final String CREATE_REPORTS_1M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith1M1D.txt";
-    private final String CREATE_REPORTS_1M2D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith1M2D.txt";
-    private final String CREATE_REPORTS_2M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith2M1D.txt";
-    private final String CREATE_REPORTS_2M2D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith2M2D.txt";
-    private final String CREATE_REPORTS_3M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith3M1D.txt";
-    private final String CREATE_REPORTS_3M2D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith3M2D.txt";
-    private final String CREATE_REPORTS_4M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith4M1D.txt";
-    private final String CREATE_REPORTS_5M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith5M1D.txt";
-    private final String CREATE_REPORTS_6M1D_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWith6M1D.txt";
-    private final String CREATE_REPORTS_COLORS_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithColors.txt";
-    private final String CREATE_REPORTS_NORMALIZATION_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithNormalization.txt";
-    private final String CREATE_REPORTS_MULTIPLECOMBO_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithMultipleCombo.txt";
-    private final String CREATE_REPORTS_SUMMARIZEDBY_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateReportsWithSummarizedByOption.txt";
+    private final String CREATE_REPORTS_1M1D_SCRIPT = BASE_PATH+"CreateReportsWith1M1D.txt";
+    private final String CREATE_REPORTS_1M2D_SCRIPT = BASE_PATH+"CreateReportsWith1M2D.txt";
+    private final String CREATE_REPORTS_2M1D_SCRIPT = BASE_PATH+"CreateReportsWith2M1D.txt";
+    private final String CREATE_REPORTS_2M2D_SCRIPT = BASE_PATH+"CreateReportsWith2M2D.txt";
+    private final String CREATE_REPORTS_3M1D_SCRIPT = BASE_PATH+"CreateReportsWith3M1D.txt";
+    private final String CREATE_REPORTS_3M2D_SCRIPT = BASE_PATH+"CreateReportsWith3M2D.txt";
+    private final String CREATE_REPORTS_4M1D_SCRIPT = BASE_PATH+"CreateReportsWith4M1D.txt";
+    private final String CREATE_REPORTS_5M1D_SCRIPT = BASE_PATH+"CreateReportsWith5M1D.txt";
+    private final String CREATE_REPORTS_6M1D_SCRIPT = BASE_PATH+"CreateReportsWith6M1D.txt";
+    private final String CREATE_REPORTS_COLORS_SCRIPT = BASE_PATH+"CreateReportsWithColors.txt";
+    private final String CREATE_REPORTS_NORMALIZATION_SCRIPT = BASE_PATH+"CreateReportsWithNormalization.txt";
+    private final String CREATE_REPORTS_MULTIPLECOMBO_SCRIPT = BASE_PATH+"CreateReportsWithMultipleCombo.txt";
+    private final String CREATE_REPORTS_SUMMARIZEDBY_SCRIPT = BASE_PATH+"CreateReportsWithSummarizedByOption.txt";
 
     @BeforeClass
     public void loadInitScripts() throws Exception {
-        sfdc.connect();
+        Assert.assertTrue(sfdc.connect(),"Failed to connect SFDC");
         Log.info("Executing the script to create cases into Case Object...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CASES_SCRIPT));
         Log.info("Executing the script to create Users...");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
-        Log.info("Executing the script to create CTAs...");
         Log.info("Executing the script to create Milestones");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_MILESTONES_SCRIPT).replaceAll("customerRecordCount", "5"));
 
     }
 
     public void createReportWithAnyCombination(String ScriptName,String ReportName,String GraphType,String RLName,String LayoutName,String baseObjName){
-        //Creating Report and assign the report to CS 360 section
-
+        //Adding the report to C360 page
         SObject[] CS360SectionID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__C360Sections__c WHERE NAME = '"+RLName+"'"));
+        if (!(CS360SectionID.length >= 1)){
+            throw new RuntimeException("No Related list with the name "+RLName);
+        }
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ScriptName).replaceAll("viewName", ReportName).replaceAll("graphType", GraphType).replaceAll("cs360SectionID", CS360SectionID[0].getId()));
-        //Adding the report to home page
+        //Adding the report to Home page
+
         SObject[] HomeLayoutID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__Dashboard__c WHERE NAME ='"+LayoutName +"'"));
         SObject[] ReportID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__UIViews__c WHERE NAME = '"+ReportName+"'"));
+
+        if ((!(HomeLayoutID.length >= 1)) & (!(ReportID.length >= 1))){
+            throw new RuntimeException("No Home Page with the name "+LayoutName);
+        }
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTAINER_SCRIPT).replaceAll("LayoutID", HomeLayoutID[0].getId()).replaceAll("viewID", ReportID[0].getId()));
     }
 
