@@ -1,0 +1,56 @@
+{
+  "inputFilePath": "/testdata/newstack/connectors/dataApi/tests/t19/ExpectedData_1.csv",
+  "outputFilePath": "/testdata/newstack/connectors/dataApi/process/t19/DateProcess_ExpectedData_1.csv",
+  "dateColumnProperties": [
+    {
+      "dateFormat": "MM-dd-yyyy",
+      "fieldName": "Date",
+      "weekLabel": false,
+      "month": false,
+      "quarter": false,
+      "year": false,
+      "weekStartsOn": null,
+      "weekLabelBasedOnEndDayOfWeek": false
+    },
+    {
+      "dateFormat": "MM-dd-yyyy",
+      "fieldName": "Week",
+      "weekLabel": true,
+      "month": false,
+      "quarter": false,
+      "year": false,
+      "weekStartsOn": "Mon",
+      "weekLabelBasedOnEndDayOfWeek": false
+    },
+    {
+      "dateFormat": "MM-dd-yyyy",
+      "fieldName": "Month",
+      "weekLabel": false,
+      "month": true,
+      "quarter": false,
+      "year": false,
+      "weekStartsOn": null,
+      "weekLabelBasedOnEndDayOfWeek": false
+    },
+    {
+      "dateFormat": "MM-dd-yyyy",
+      "fieldName": "Quarter",
+      "weekLabel": false,
+      "month": false,
+      "quarter": true,
+      "year": false,
+      "weekStartsOn": null,
+      "weekLabelBasedOnEndDayOfWeek": false
+    },
+    {
+      "dateFormat": "MM-dd-yyyy",
+      "fieldName": "Year",
+      "weekLabel": false,
+      "month": false,
+      "quarter": false,
+      "year": true,
+      "weekStartsOn": null,
+      "weekLabelBasedOnEndDayOfWeek": false
+    }
+  ]
+}

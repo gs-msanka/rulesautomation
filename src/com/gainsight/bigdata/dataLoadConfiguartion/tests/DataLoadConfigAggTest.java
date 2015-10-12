@@ -13,6 +13,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.util.DateUtil;
@@ -57,10 +58,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
     public void setup(@Optional String dbStoreType) throws Exception {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
+        tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+
         dataLoadManager     = new DataLoadManager();
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
-        dataLoadAggConfigManager = new DataLoadAggConfigManager();
+        dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
             if(tenantDetails.isRedshiftEnabled()) {
@@ -90,6 +93,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         dataETL.execute(eventsJobInfo);
     }
 
+    /**
+     * Account Id has account identifier.
+     * Date - timestamp identifier.
+     * Measures - Sum.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3886"})
     @Test
     public void accountIdDateMappedAndMeasureAsSum() throws IOException {
@@ -134,6 +143,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identifier
+     * Date - timestamp identifier.
+     * Measdure - average.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3887"})
     @Test
     public void accountIdDateMappedAndMeasureAsAvg() throws IOException {
@@ -178,6 +193,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identifier.
+     * Date  - time identifier.
+     * Measures - Count.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3888"})
     @Test
     public void accountIdDateMappedAndMeasureAsCount() throws IOException {
@@ -222,6 +243,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account id has account identifier.
+     * Contact id has user identifier.
+     * Time - has timestamp identifier.
+     * Measures - Sum, Avg.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3889"})
     @Test
     public void accountIdContactIdDateMappedAndMeasuresAsSumAndAvg() throws IOException {
@@ -267,6 +295,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account ExternalId - account Identifier.
+     * Contact External Id - user identifier.
+     * Date - timestamp identifier.
+     * Measures - Sum , Avg.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3891"})
     @Test
     public void accountExtIdContactExtIdDateMappedAndMeasuresAsSumAndAvg() throws IOException {
@@ -312,6 +347,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identidier.
+     * Datetime has timestamp identifier.
+     * Measures - Sum.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3899"})
     @Test
     public void accIdTimeStampEventMeasureSum() throws IOException {
@@ -357,6 +398,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Name has account identifier.
+     * Event Identifier
+     * DateTime - timestamp identifier.
+     * Measures - Avg.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3900"})
     @Test
     public void accNameTimeStampEventMeasureAvg() throws IOException {
@@ -402,6 +450,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account External Id has Account identifier.
+     * Time has timestamp identifier.
+     * Event identifier.
+     * Mesures - Count.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3901"})
     @Test
     public void accExternalIdTimeStampEventMeasureCount() throws IOException {
@@ -447,6 +502,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identifier.
+     * Contact Id has contact identifier.
+     * DateTime has timestamp identifier.
+     * Event identifier.
+     * Mesaures - Sum, Avg, Count, Min and Max.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3903"})
     @Test
     public void accIdContactIdTimeStampEventMeasuresWithSumAvgCountMinMax() throws IOException {
@@ -493,6 +556,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account External Id - Account Identifier.
+     * Contact External Id - Contact Idenfifier.
+     * DateTime - Timestamp identiifier.
+     * Event Identifier.
+     * Measures - Sum, Avg.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3905"})
     @Test
     public void accExtIdContactExtIdTimeStampEventMeasureSumAvg() throws IOException {
@@ -539,6 +610,12 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identifier.
+     * Time has timestamp identifier.
+     * Measures - SUM.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3909"})
     @Test
     public void accountIdTimeStampMappedAndMeasureAsSum() throws IOException {
@@ -583,6 +660,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Id has account identifier.
+     * User id has user identifier.
+     * TimeStamp has timestamp identifier.
+     * Measures - SUM.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3910"})
     @Test
     public void accountIdContactIdTimeStampMeasureSum() throws IOException {
@@ -628,6 +712,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact Id has Account Identifier.
+     * Contact Id has user Identifier.
+     * Date has timestamp identifier.
+     * Measures - Sum, Avg, Count.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3892"})
     @Test
     public void contactIDHasAccountAndUserIdentifierMeasureSumAvgCount() throws IOException {
@@ -673,6 +764,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact Email has Account Identifier.
+     * Contact Email has user identifier.
+     * Date has time stamp identifier.
+     * Measures - Avg, Count, Min and Max.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3893"})
     @Test
     public void contactEmailHasAccountAndUserIdentifierMeasureAvgCountMinMax() throws IOException {
@@ -718,6 +816,13 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact External ID has account identifier.
+     * Contact External Id has user identifier.
+     * Date has Time stamp identifier.
+     * Measures - Avg, Count, Min and Max.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3894"})
     @Test
     public void contactExternalIdHasAccountAndUserIdentifierMeasureAvgCountMinMax() throws IOException {
@@ -763,6 +868,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact Id Has Account Identifier.
+     * Contact Id Has User Identifier.
+     * DareTime Has timestamp Identifier.
+     * Event Identifier.
+     * Measures - Sum, Average and Count.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3906"})
     @Test
     public void contactIDHasAccountAndUserIdentifierWithTimeStampEventMeasureAsSumAvgCount() throws IOException {
@@ -809,6 +922,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact Email Has Account Identifeir.
+     * Contact Email Has User Identifier.
+     * DateTime has timestamp Identifier.
+     * Event Identifier.
+     * Measures - Average, Count, MIN and MAX.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3907"})
     @Test
     public void contactEmailHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax() throws IOException {
@@ -855,6 +976,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Contact External Id Has Account Identifier.
+     * <br>Contact External Id Has User Identifier.
+     * <br>DateTime Has timestamp Identifier.
+     * <br>Event Identifier.
+     * <br>Measure with Average, Count, Min and MAx.
+     * @throws IOException
+     */
     @TestInfo(testCaseIds = {"GS-3908"})
     @Test
     public void contactExternalIdHasAccountAndUserIdentifierTimeStampMeasureAvgCountMinMax() throws IOException {
@@ -901,8 +1030,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
+    /**
+     * Account Identifier - External ID of Account. <br>
+     * Contact Identifier - External ID of Contact. <br>
+     * Measures With All Agg Types - SUM, AVG, COUNT, MIN, MAX.<br>
+     * Date has timestamp identifier. <br>
+     * Event Identifier.<br>
+     * Custom Fields - No Properties, then add properties, then remove properties.<br>
+     * @throws IOException
+     */
+    @TestInfo(testCaseIds = {"GS-3896", "GS-3897", "GS-3898"})
     @Test
-    public void accountAndContactExternalWithCustomFieldsAndMeasuresWithAllAggregationTypes() throws IOException {
+    public void accountAndContactExternalIDWithCustomFieldsAndMeasuresWithAllAggregationTypes() throws IOException {
 
         CollectionInfo collectionInfo = mapper.readValue(new File(COLLECTION_MASTER_SCHEMA), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T19_" + date.getTime());
@@ -920,6 +1059,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
         setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
         setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
+
+        List<Mapping> customMapping = accountDetail.getGlobalMapping().getCustom();
+        accountDetail.getGlobalMapping().setCustom(new ArrayList<Mapping>());
+
         setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
@@ -935,14 +1078,42 @@ public class DataLoadConfigAggTest extends NSTestBase {
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " + endCollectionName);
 
-        MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t19/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,date);
+        MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles + "/tests/t19/DateProcess.json"), MDADateProcessor.class);
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
-        JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t19/Transform.json"), JobInfo.class);
+        JobInfo jobInfo = mapper.readValue(new File(testDataFiles + "/tests/t19/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
 
         CollectionInfo aggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
-        verifyCollectionData(aggCollectionInfo,jobInfo.getTransformationRule().getOutputFileLoc());
+        verifyCollectionData(aggCollectionInfo, jobInfo.getTransformationRule().getOutputFileLoc());
+
+        accountDetail.getGlobalMapping().setCustom(customMapping);
+        statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
+        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
+
+        MDADateProcessor dateProcessor1  = mapper.readValue(new File(testDataFiles + "/tests/t19/DateProcess_1.json"), MDADateProcessor.class);
+        FileProcessor.getDateProcessedFile(dateProcessor1, date);
+
+        JobInfo jobInfo1 = mapper.readValue(new File(testDataFiles + "/tests/t19/Transform_1.json"), JobInfo.class);
+        dataETL.execute(jobInfo1);
+
+        CollectionInfo newAggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
+        verifyCollectionData(newAggCollectionInfo, jobInfo1.getTransformationRule().getOutputFileLoc());
+
+        accountDetail.getGlobalMapping().setCustom(new ArrayList<Mapping>());
+        statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
+        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+
+        aggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
+        verifyCollectionData(aggCollectionInfo, jobInfo.getTransformationRule().getOutputFileLoc());
+
+        statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
+        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        verifyCollectionData(aggCollectionInfo, jobInfo.getTransformationRule().getOutputFileLoc());
 
         accountIdsToDelete.add(accountDetail.getAccountId());
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());

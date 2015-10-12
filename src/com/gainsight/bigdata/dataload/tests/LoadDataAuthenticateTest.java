@@ -4,6 +4,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.http.ResponseObj;
@@ -46,6 +47,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
     @Test
     public void mdaAuthorizeCheckingWithInvalidAccessKey() throws IOException {
         String key = accessKey;
+        accessKey = null;
         accessKey = getDataLoadAccessKey(); //re-generating another accessKey to verify that old one is discarded.
         dataLoadManager.headers.removeHeader("accessKey");
         dataLoadManager.headers.addHeader("accessKey", accessKey);  //As the access token is reset here, it should be updated at global level else all other test cases with fail.

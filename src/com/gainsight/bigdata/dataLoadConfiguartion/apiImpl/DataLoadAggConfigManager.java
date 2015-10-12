@@ -1,24 +1,20 @@
 package com.gainsight.bigdata.dataLoadConfiguartion.apiImpl;
 
 
-import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.connectors.GlobalMapping;
-import com.gainsight.bigdata.dataLoadConfiguartion.mapping.IdentifierMapper;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.DataAggProcessJobStatus;
 import com.gainsight.bigdata.dataLoadConfiguartion.enums.DataAggProcessStatusType;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.AccountDetail;
-import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.Identifier;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpStatus;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.testng.Assert;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +26,15 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 /**
  * Created by Giribabu on 19/06/15.
  */
-public class DataLoadAggConfigManager extends NSTestBase {
+public class DataLoadAggConfigManager {
+
+    private Header header = null;
+    WebAction wa = new WebAction();
+    ObjectMapper mapper = new ObjectMapper();
+
+    public DataLoadAggConfigManager(Header header) {
+        this.header = header;
+    }
 
 
     /**
@@ -97,6 +101,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
         }
         try {
             ResponseObj responseObj = wa.doDelete(ACCOUNT_DELETE + accountId, header.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             } else {
@@ -124,6 +129,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
         AccountDetail accountDetail = null;
         try {
             ResponseObj responseObj = wa.doGet(ACCOUNT_DETAIL_GET + accountId, header.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 accountDetail = mapper.convertValue(nsResponseObj.getData(), AccountDetail.class);
@@ -312,6 +318,7 @@ public class DataLoadAggConfigManager extends NSTestBase {
      */
     public NsResponseObj getAggregationJobStatus(String statusId) throws Exception {
         ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + statusId, header.getAllHeaders());
+        Log.info("Response Obj : " +responseObj.toString());
         NsResponseObj nsResponseObj = null;
         if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
             nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);

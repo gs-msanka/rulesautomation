@@ -62,8 +62,16 @@ public interface ApiUrls extends NSURLs {
     public final String COLLECTION_DATA_VALIDATE        = NS_URL + "/api/dataload/validate";
     public final String COLLECTION_DATA_LOAD            = NS_URL + "/api/dataload/load";
     public final String COLLECTION_DATA_MAPPING         = NS_URL + "/api/dataload/mapping";
-    public final String COLLECTION_DEPENDENCY_DETAIL    = NS_URL + "/api/collections/collectionDetail";
+    public final String COLLECTION_DETAIL               = NS_URL + "/api/collections/collectionDetail";
     public final String COLLECTION_DATA_ASYNC_IMPORT    = NS_URL + "/api/dataload/import";
+
+    //S3 Connectors API
+    public final String S3_ACCOUNT_FETCH                = NS_URL + "/api/s3Connector/account/fetch";
+    public final String S3_FOLDERS_FETCH                = NS_URL + "/api/s3Connector/s3Folders/fetch";
+
+
+    //Common API
+    public final String API_SCHEDULE                    = NS_URL + "/api/schedule";
 
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
