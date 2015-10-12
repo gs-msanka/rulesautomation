@@ -127,7 +127,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
 
     //Files Downloaded, Page Views.
     private void selectMeasures(String measures) {
-        Log.info("Measures : " +measures);
+        Log.info("Measures : " + measures);
         item.click(MEASURE_SELECT_BUTTON);
         Timer.sleep(2);
         getFirstDisplayedElement(UNCHECK_ALL_MEASURES).click();
@@ -168,7 +168,7 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
         if (weekLabelDate != null && !weekLabelDate.isEmpty()) {
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).clear();
             getFirstDisplayedElement(WEEK_END_DATE_INPUT).sendKeys(weekLabelDate);
-            Log.info("Week Label : " +weekLabelDate);
+            Log.info("Week Label : " + weekLabelDate);
         }
         button.click(GO_BUTTON);
         Timer.sleep(2);
@@ -274,6 +274,34 @@ public class AdoptionAnalyticsPage extends AdoptionBasePage {
             }
         }
         Log.info("Checked the data in the grid & returning result :" + result);
+        return result;
+    }
+
+    public List<List<String>> getAdoptionTableData(){
+        List<List<String>> tableData = new ArrayList<>();
+        WebElement table = element.getElement("dynamicAdoptionTableList");
+        List<WebElement> rows = table.findElements(By.tagName("tr"));
+        Log.info("The Number of actual Rows : " + rows.size());
+        for (WebElement row : rows) {
+            List<String> actualValues = new ArrayList<>();
+            Log.info("Actual Row text : " + row.getText());
+            for (WebElement cell : row.findElements(By.tagName("td"))) {
+                actualValues.add(cell.getText().trim());
+            }
+            tableData.add(actualValues);
+        }
+        return tableData;
+    }
+
+    public boolean isDataPresentInGridData(List<List<String>> tableData, String value) {
+        List<String> values = Arrays.asList(value.split("\\|"));
+        boolean result = false;
+        for (List<String> rowData : tableData) {
+            if(rowData.containsAll(values)) {
+                result = true;
+                break;
+            }
+        }
         return result;
     }
 

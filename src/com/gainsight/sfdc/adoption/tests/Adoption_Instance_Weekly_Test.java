@@ -2,6 +2,7 @@ package com.gainsight.sfdc.adoption.tests;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.gainsight.sfdc.util.DateUtil;
@@ -321,20 +322,21 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
+        List<List<String>> tableData = usage.getAdoptionTableData();
         String[] data = testData.get("UD_Data1").split(":::");
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
     }
 
     @TestInfo(testCaseIds={"GS-5046"})
@@ -348,21 +350,22 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
+        List<List<String>> tableData = usage.getAdoptionTableData();
         String[] data = testData.get("UD_Data1").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
-        Assert.assertTrue(usage.isDataPresentInGrid(data[1]));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
     }
 
     @TestInfo(testCaseIds={"GS-5517"})
@@ -376,30 +379,31 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         usage.setWeekLabelDate(DateUtil.getWeekLabelDate(WEEKDAY, USER_DATE_FORMAT, userTimezone, Integer.valueOf(testData.get("Date"))*7, isEndDate));
         usage = usage.displayCustWeeklyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
+        List<List<String>> tableData = usage.getAdoptionTableData();
         String[] data = testData.get("UD_Data1").split(":::");
         usage.viewCustomerInstanceData(data[0]);
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
-            Assert.assertTrue(usage.isDataPresentInGrid(s));
+            Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
-            Assert.assertTrue(usage.isDataPresentInGrid(s));
+            Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
-            Assert.assertTrue(usage.isDataPresentInGrid(s));
+            Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
-            Assert.assertTrue(usage.isDataPresentInGrid(s));
+            Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
-            Assert.assertTrue(usage.isDataPresentInGrid(s));
+            Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
     }
 

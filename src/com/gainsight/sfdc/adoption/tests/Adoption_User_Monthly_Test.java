@@ -2,6 +2,7 @@ package com.gainsight.sfdc.adoption.tests;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import com.gainsight.sfdc.util.DateUtil;
@@ -360,15 +361,16 @@ public class Adoption_User_Monthly_Test extends AdoptionDataSetup {
         usage.setYear(String.valueOf(cal.get(Calendar.YEAR)));
         usage = usage.displayCustMonthlyData();
         Assert.assertTrue(usage.isChartDisplayed(), "Verifying the adoption chart is displayed for the user.");
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data1")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data2")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data3")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data4")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data5")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data6")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data7")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data8")));
-        Assert.assertTrue(usage.isDataPresentInGrid(testData.get("UD_Data9")));
+        List<List<String>> tableData = usage.getAdoptionTableData();
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data1")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data2")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data3")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data4")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data5")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data6")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data7")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data8")));
+        Assert.assertTrue(usage.isDataPresentInGridData(tableData,testData.get("UD_Data9")));
     }
 
     @TestInfo(testCaseIds={"GS-5086"})
