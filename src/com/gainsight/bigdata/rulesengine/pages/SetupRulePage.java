@@ -133,7 +133,7 @@ public class SetupRulePage extends BasePage {
 	
 	public SetupRulePage selectTimeIdentifier(String timeIdentifier){
 		item.click(TIMEIDENTIFIER);
-		selectValueInDropDown(timeIdentifier, true);
+		selectValueInDropDown(timeIdentifier);
 		return this;
 	} 
 
