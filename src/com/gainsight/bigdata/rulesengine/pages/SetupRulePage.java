@@ -67,10 +67,6 @@ public class SetupRulePage extends BasePage {
     private final String CALCULATED_FIELDS_SHOW_FIELD_RADIO_BUTTON_B_SECTION = "//label[@class='radio-inline']/descendant::input[@value='showfield' and @data-section='B']";
     private final String CALCULATED_FIELDS_SAVE_BUTTON = "//span[contains(@class, 'btn-save') and text()='Ok']";
     
-    public SetupRulePage(String s) {
-        wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
-        Log.info("Waiting for the page to load");
-    }
 
     public SetupRulePage() {
         Log.info("Dummy Constructor");

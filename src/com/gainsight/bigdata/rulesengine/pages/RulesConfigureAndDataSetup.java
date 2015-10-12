@@ -258,8 +258,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
     	try {
             BasicDBObject query = new BasicDBObject();
 			query.put("tenantId", tenantID);
-
-			mongoUtil.removeOne(mongoCollection, query);
+			mongoUtil.removeMany(mongoCollection, query);
 		} finally {
 			mongoUtil.closeConnection();
 		}
@@ -283,8 +282,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
 			obj.add(new BasicDBObject("TenantId", tenantID));
 			andQuery.put("$and", obj);
-            mongoUtil.removeOne(mongoCollection, andQuery);
-
+            mongoUtil.removeMany(mongoCollection, andQuery);
 		} finally {
 			mongoUtil.closeConnection();
 		}   
