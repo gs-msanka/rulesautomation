@@ -30,12 +30,6 @@
         </classes>
     </test>
 
-    <test verbose="3" name="360 RelatedList Tests" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Relatedlisttests"/>
-        </classes>
-    </test>
-
     <test verbose="3" name="360 UsageTracker360 Tests" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.customer360.test.UsageTracker360Tests"/>
