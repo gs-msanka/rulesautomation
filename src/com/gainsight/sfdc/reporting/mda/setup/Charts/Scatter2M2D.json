@@ -1,0 +1,174 @@
+{
+  "ReportInfo" : [
+    {
+      "SchemaName" : "",
+      "CollectionID" : "",
+      "limit" : 500,
+      "Type" : "adhoc",
+      "Dimensions" : [
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Active",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "Active",
+          "dataType" : "boolean",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductCode",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Count of ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "No of Schedules Created",
+          "axis" : "measure",
+          "decimalPlaces" : 3,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Sum of No of Schedules Created",
+          "dataType" : "number",
+          "collectionId" : ""
+        }
+      ],
+      "ReportReadLimit" : 100,
+      "DimensionBrowserReadLimit" : 1000,
+      "reportName" : "JP_2M2D_Scatter",
+      "ReportId" : "c051f465-b655-48fc-aba5-0a482a09c717",
+      "assetType" : "ANALYTICS",
+      "whereAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "AccountName",
+            "alias" : "A",
+            "dataType" : "string",
+            "filterOperator" : "STARTSWITH",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "abb"
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "AccountName",
+            "alias" : "B",
+            "dataType" : "string",
+            "filterOperator" : "STARTSWITH",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "AAR"
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "A OR B"
+      },
+      "havingAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "ProductCode",
+            "alias" : "1",
+            "dataType" : "string",
+            "filterOperator" : "EQ",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              4
+            ],
+            "locked" : false,
+            "aggregateFunction" : "count",
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "No of Schedules Created",
+            "alias" : "2",
+            "dataType" : "number",
+            "filterOperator" : "GT",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              90
+            ],
+            "locked" : false,
+            "aggregateFunction" : "sum",
+            "collectionId" : "",
+            "type" : 1
+          }
+        ],
+        "expression" : "1 OR 2"
+      },
+      "skip" : 0,
+      "drillDownReportDimensions" : [
+        {
+          "col" : "ProductCode",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "No of Schedules Created",
+          "axis" : "row",
+          "decimalPlaces" : 3,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "No of Schedules Created",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Active",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Active",
+          "dataType" : "boolean",
+          "collectionId" : ""
+        }
+      ]
+    }
+  ],
+  "format" : "JSON",
+  "displayType" : "SCATTER",
+  "reportMasterRequired" : false,
+  "newReport" : true,
+  "reportOptions" : {
+    "normalize" : false,
+    "enableDataLabels" : false,
+    "showLabels" : true,
+    "enableRGBColor" : false,
+    "enableDualYAxis" : true
+  },
+  "deleted" : false
+}

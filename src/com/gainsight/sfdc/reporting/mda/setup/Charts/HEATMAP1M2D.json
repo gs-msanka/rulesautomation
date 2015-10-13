@@ -1,0 +1,163 @@
+{
+  "ReportInfo" : [
+    {
+      "SchemaName" : "",
+      "CollectionID" : "",
+      "limit" : 500,
+      "Type" : "adhoc",
+      "Dimensions" : [
+        {
+          "col" : "Industry",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "Industry",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "ProductName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Files Downloaded",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Sum of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        }
+      ],
+      "ReportReadLimit" : 100,
+      "DimensionBrowserReadLimit" : 1000,
+      "reportName" : "JP_1M_1D_ColumnChart",
+      "ReportId" : "743396a9-c522-479d-9290-7ab7d891bfa3",
+      "assetType" : "ANALYTICS",
+      "whereAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "AccountName",
+            "alias" : "A",
+            "dataType" : "string",
+            "filterOperator" : "NE",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "Date",
+            "alias" : "B",
+            "dataType" : "date",
+            "filterOperator" : "EQ",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "timeFunction" : "LAST_30_DAYS",
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "ProductName",
+            "alias" : "C",
+            "dataType" : "string",
+            "filterOperator" : "CONTAINS",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "Windows"
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "ProductName",
+            "alias" : "D",
+            "dataType" : "string",
+            "filterOperator" : "CONTAINS",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "Miscrosoft"
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "A AND B AND (C OR D)"
+      },
+      "havingAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Files Downloaded",
+            "alias" : "1",
+            "dataType" : "number",
+            "filterOperator" : "GTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              5
+            ],
+            "locked" : false,
+            "aggregateFunction" : "sum",
+            "collectionId" : "",
+            "type" : 1
+          }
+        ],
+        "expression" : "1"
+      },
+      "skip" : 0,
+      "drillDownReportDimensions" : [
+        {
+          "col" : "Files Downloaded",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Sum of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Industry",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Industry",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductName",
+          "dataType" : "string",
+          "collectionId" : ""
+        }
+      ]
+    }
+  ],
+  "format" : "JSON",
+  "displayType" : "HEATMAP",
+  "reportMasterRequired" : false,
+  "newReport" : true,
+  "reportOptions" : {
+    "normalize" : false,
+    "enableDataLabels" : false,
+    "showLabels" : true,
+    "enableRGBColor" : false,
+    "enableDualYAxis" : true
+  },
+  "deleted" : false
+}
