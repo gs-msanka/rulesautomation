@@ -42,6 +42,7 @@ public class EditRulePage extends BasePage {
      * @param ruleName
      */
     public void enterRuleName(String ruleName) {
+    	wait.waitTillElementDisplayed(RULE_NAME, MIN_TIME, MAX_TIME);
         field.clearAndSetText(RULE_NAME, ruleName);
     }
 
