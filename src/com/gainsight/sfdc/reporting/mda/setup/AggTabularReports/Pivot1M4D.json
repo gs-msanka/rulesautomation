@@ -1,0 +1,177 @@
+
+{
+  "ReportInfo" : [
+    {
+      "SchemaName" : "",
+      "CollectionID" : "",
+      "limit" : 500,
+      "Type" : "adhoc",
+      "Dimensions" : [
+        {
+          "col" : "Date",
+          "axis" : "column",
+          "decimalPlaces" : 0,
+          "order" : "desc",
+          "type" : 0,
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        },
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductCode",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "fieldDisplayName" : "ProductName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Files Downloaded",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Sum of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        }
+      ],
+      "ReportReadLimit" : 10,
+      "DimensionBrowserReadLimit" : 1000,
+      "reportName" : "JP_PivotReport",
+      "ReportId" : "9e6d82f7-f73c-45ee-954d-33c0a6e14a6a",
+      "assetType" : "ANALYTICS",
+      "whereAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Date",
+            "alias" : "A",
+            "dataType" : "date",
+            "filterOperator" : "EQ",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "timeFunction" : "LAST_30_DAYS",
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "AccountName",
+            "alias" : "B",
+            "dataType" : "string",
+            "filterOperator" : "NE",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "A AND B"
+      },
+      "havingAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Files Downloaded",
+            "alias" : "1",
+            "dataType" : "number",
+            "filterOperator" : "GT",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              0
+            ],
+            "locked" : false,
+            "aggregateFunction" : "sum",
+            "collectionId" : "",
+            "type" : 1
+          }
+        ],
+        "expression" : "1"
+      },
+      "skip" : 0,
+      "drillDownReportDimensions" : [
+        {
+          "col" : "Files Downloaded",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Sum of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Date",
+          "axis" : "column",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        },
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductCode",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductName",
+          "dataType" : "string",
+          "collectionId" : ""
+        }
+      ]
+    }
+  ],
+  "format" : "JSON",
+  "displayType" : "GRID",
+  "reportMasterRequired" : false,
+  "newReport" : true,
+  "reportOptions" : {
+    "normalize" : false,
+    "enableDataLabels" : false,
+    "showLabels" : true,
+    "enableRGBColor" : false,
+    "enableDualYAxis" : true
+  },
+  "deleted" : false
+}
