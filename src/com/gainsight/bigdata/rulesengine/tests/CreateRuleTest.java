@@ -106,12 +106,12 @@ public class CreateRuleTest extends BaseTest {
         dataLoadManager = new DataLoadManager();
         dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
-        runMetricSetup(METRICS_CREATE_FILE, SCHEME);
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
         adminScorecardSection.enableScorecard();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
+        runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
         metaUtil.createFieldsOnUsageData(sfdc);
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
