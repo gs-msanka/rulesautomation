@@ -75,6 +75,9 @@ public class CreateRuleTest extends BaseTest {
     private static final String CREATE_ACCOUNTS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_For_LoadToCustomersAction.txt";
     private static final String COLLECTION_MASTER = "collectionmaster";
     private static final String RULES_LOADABLE_OBJECT = "rulesLoadableObject";
+    private static final String SCHEME = "Score";
+    private static final String METRICS_CREATE_FILE =  Application.basedir + "/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
+    private static final String SCORECARD_CLEAN_FILE = Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt";
     private ObjectMapper mapper = new ObjectMapper();
     public static SFDCInfo sfinfo;
     private DBDetail dbDetail = null;
@@ -103,12 +106,13 @@ public class CreateRuleTest extends BaseTest {
         dataLoadManager = new DataLoadManager();
         dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
         adminScorecardSection.enableScorecard();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
+        runMetricSetup(METRICS_CREATE_FILE, SCHEME);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
         metaUtil.createFieldsOnUsageData(sfdc);
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
         metaUtil.createFieldsOnAccount(sfdc);

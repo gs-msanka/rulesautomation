@@ -220,7 +220,7 @@
     {
       "actionType": "setScore",
       "action": {
-        "selectMeasure": "Support",
+        "selectMeasure": "Login Activity",
         "setScoreFrom": "Number Auto",
         "comments": "Test comments for Set Score"
       },
