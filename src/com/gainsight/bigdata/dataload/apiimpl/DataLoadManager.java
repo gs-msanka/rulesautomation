@@ -36,8 +36,6 @@ import static com.gainsight.sfdc.pages.Constants.*;
  * Created by Giribabu on 13/05/15.
  */
 public class DataLoadManager extends NSTestBase {
-	
-	private static int maxAttempts=0;
 
     public Header headers = new Header();
 
@@ -112,9 +110,6 @@ public class DataLoadManager extends NSTestBase {
             ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-            } if (responseObj.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE && maxAttempts<3) {
-				maxAttempts++;
-				createSubjectArea(collectionInfo);
             }
         } catch (Exception e) {
             Log.error("Failed to create subject area ", e);

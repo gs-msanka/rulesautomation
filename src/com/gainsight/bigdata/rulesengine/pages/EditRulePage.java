@@ -1,6 +1,9 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import org.openqa.selenium.Keys;
+
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Log;
 
@@ -44,6 +47,7 @@ public class EditRulePage extends BasePage {
     public void enterRuleName(String ruleName) {
     	wait.waitTillElementDisplayed(RULE_NAME, MIN_TIME, MAX_TIME);
         field.clearAndSetText(RULE_NAME, ruleName);
+        element.getElement(RULE_NAME).sendKeys(Keys.ENTER);
     }
 
     /**
@@ -88,6 +92,8 @@ public class EditRulePage extends BasePage {
      * @param rulesPojo
      */
     public void enterRuleDetailsAndClickNext(RulesPojo rulesPojo){
+    	//We are getting UI error in Rules manager page, will remove it once we found exact issue
+    	Timer.sleep(5);
         selectRuleType(rulesPojo.getRuleType());
         enterRuleName(rulesPojo.getRuleName());
         enterRuleDescription(rulesPojo.getRuleDescription());
