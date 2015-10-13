@@ -27,7 +27,7 @@ import java.util.Date;
  *
  */
 
-public class LoadMDAReports extends NSTestBase {
+public class LoadMDAReportsTest extends NSTestBase {
     private ReportManager reportManager;
     private TenantDetails tenantDetails;
     //private TenantManager tenantManager;

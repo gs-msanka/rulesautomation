@@ -11,14 +11,14 @@
     <test verbose="3" name="Load To MDA MONGO" preserve-order="true">
         <parameter name="dbStoreType" value="MONGO"/>
         <classes>
-            <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReports" />
+            <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReportsTest" />
         </classes>
     </test>
 
     <test verbose="3" name="Load To MDA REDSHIFT" preserve-order="true">
         <parameter name="dbStoreType" value="REDSHIFT"/>
         <classes>
-            <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReports" />
+            <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReportsTest" />
         </classes>
     </test>
 
