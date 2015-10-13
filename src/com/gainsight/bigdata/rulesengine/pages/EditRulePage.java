@@ -92,8 +92,6 @@ public class EditRulePage extends BasePage {
      * @param rulesPojo
      */
     public void enterRuleDetailsAndClickNext(RulesPojo rulesPojo){
-    	//We are getting UI error in Rules manager page, will remove it once we found exact issue
-    	Timer.sleep(5);
         selectRuleType(rulesPojo.getRuleType());
         enterRuleName(rulesPojo.getRuleName());
         enterRuleDescription(rulesPojo.getRuleDescription());
