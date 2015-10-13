@@ -7,6 +7,10 @@ import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects.DataLoadObject;
+import com.gainsight.bigdata.rulesengine.pages.DataLoadConfiguration;
 import com.gainsight.bigdata.rulesengine.pages.RulesConfigureAndDataSetup;
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
@@ -26,6 +30,7 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBServerDetail;
+import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.beans.SFDCInfo;
@@ -41,8 +46,10 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.Verifier;
 import com.sforce.soap.partner.sobject.SObject;
 
+import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -50,7 +57,9 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -87,9 +96,12 @@ public class CreateRuleTest extends BaseTest {
     String[] dataBaseDetail = null;
     private String host = null;
     private String port = null;
+    private String userName = null;
+	private String passWord = null;
     private String collectionDBName = null;
     private RulesUtil rulesUtil = new RulesUtil();
     public List<String> collectionNames = new ArrayList<String>();
+    private TenantManager tenantManager;
 
 
     @BeforeClass
@@ -98,8 +110,10 @@ public class CreateRuleTest extends BaseTest {
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
-        TenantManager tenantManager = new TenantManager();
+        tenantManager=new TenantManager();
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
+        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager();
         dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
@@ -118,6 +132,8 @@ public class CreateRuleTest extends BaseTest {
             dataBaseDetail = dbServerDetail.getHost().split(":");
             host = dataBaseDetail[0];
             port = dataBaseDetail[1];
+            userName=dbServerDetail.getUserName();
+			passWord=dbServerDetail.getPassword();
         }
         Log.info("Host is" + host + " and Port is " + port);
     }
@@ -441,4 +457,84 @@ public class CreateRuleTest extends BaseTest {
         }
         verifier.assertVerification();
     }
+    
+    @Test // TODO - WIP
+	public void verifyDataLoadConfiguration() throws Exception{
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port),userName, passWord, dbDetail.getDbName());
+		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
+		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
+				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnConfigure();
+		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectDataSource(loadableObject.getObjectType());
+			for (DataLoadObject dataLoadObject : loadableObject.getDataLoadObject()) {
+				dataLoadConfiguration.selectSourceObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.clickOnNativeObjectSelectionSymbol();
+				dataLoadConfiguration.clickOnParticularObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.selectFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.clickOnSaveButton();
+			}
+		}
+	}
+	
+
+	/**
+	 * TestCase to verify Gainsight package objects(JBCXM) are available under
+	 * dataload configuration Dropdownlist or not.
+	 * 
+	 * This testcase will work in Beta or managed package only(Since, In Dev org
+	 * Rules Team is not handling this case)
+	 * @throws IOException 
+	 */
+	@Test
+	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
+		try {
+			RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+			rulesManagerPage.clickOnConfigure();
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectSourceObjectFromNativeData();
+			dataLoadConfiguration.clickOnNativeObjectSelection();
+			String str = FileUtils.readFileToString(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC8.txt"));
+			List<String> gainSightObjects = new ArrayList<String>(Arrays.asList(str.split(",")));
+			Element element = new Element();
+			env.setTimeout(0);
+			for (int i = 0; i < gainSightObjects.size(); i++) {
+				Assert.assertFalse(element.isElementPresent("//li[contains(@class, 'ui-multiselect-option')]/descendant::span[text()='"+gainSightObjects.get(i)+"']"),
+						"Check whether Gainsight Package Objects are present under DataLoadConfiguration List !!!");
+			}
+		} finally {
+			env.setTimeout(30);
+		}
+	}
+	
+	@Test
+	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
+				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnConfigure();
+		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectDataSource(loadableObject.getObjectType());
+			for (DataLoadObject dataLoadObject : loadableObject.getDataLoadObject()) {
+				dataLoadConfiguration.selectSourceObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.clickOnNativeObjectSelectionSymbol();
+				dataLoadConfiguration.clickOnParticularObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.selectFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.removeFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.clickOnSaveButton();
+				int expectedList = dataLoadObject.getFields().size() - dataLoadObject.getRemoveFields().size();
+				System.out.println("Expected Size is " + expectedList);
+				Element element = new Element();
+				List<WebElement> actualList = element.getAllElement("//select[contains(@class,'selectedFields fieldSelect')]/descendant::option");
+				Log.info("Actual Selected Fileds List in UI is " + actualList.size());
+				Assert.assertEquals(actualList.size(), expectedList,  "Check Dropdown list Size in UI with actual testdata");
+			}
+		}
+	}
 }
