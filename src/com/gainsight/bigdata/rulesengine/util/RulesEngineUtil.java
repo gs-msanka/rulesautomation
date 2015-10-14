@@ -67,13 +67,12 @@ public class RulesEngineUtil  extends BaseTest{
                 setupRuleActionPage.clickOnActionCollapse(i);
                 i++;
             }
-            setupRuleActionPage.saveRule();
-            
+            setupRuleActionPage.saveRule();  
 			if (rulesPojo.getShowScheduler() != null) {
-				RulesSchedulerPage rulesSchedulerPage=new RulesSchedulerPage();
+				RulesSchedulerPage rulesSchedulerPage = new RulesSchedulerPage();
 				rulesSchedulerPage.fillSchedulerInformation(rulesPojo.getShowScheduler());
 			}
-        }
+		}
     }
 
     /**

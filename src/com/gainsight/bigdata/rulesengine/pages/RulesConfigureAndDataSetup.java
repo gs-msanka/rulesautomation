@@ -327,4 +327,15 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
 	}
+	
+	public void updateTimeZoneInAppSettings() {
+		if (sfdc.getRecordCount(resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")) > 0) {
+		System.out.println("setting JBCXM__OrgTimeZone__c (TimeZone) in app settings");
+		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__OrgTimeZone__c from JBCXM__ApplicationSettings__c];"
+                + "appSet.JBCXM__OrgTimeZone__c='America/Los_Angeles';" + "update appSet;"));
+		Log.info("NS URL Updated Successfully");
+		}else {
+			throw new RuntimeException("Configure Gainsight Application to update TimeZone");
+		}
+	}
 }

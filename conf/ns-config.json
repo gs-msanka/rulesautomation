@@ -20,7 +20,13 @@
       "mongo_global_db"         : "test_gsglobaldb",
       "mongo_global_username"   : "mdaqa02",
       "mongo_global_password"   : "fgFByS5D",
-      "mongo_global_ssl_enable" : "false"
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host"       : "54.204.251.136",
+      "mongo_scheduler_port"       : "27017",
+      "mongo_scheduler_db"         : "test_gsglobaldb",
+      "mongo_scheduler_username"   : "mdaqa02",
+      "mongo_scheduler_password"   : "fgFByS5D",
+      "mongo_scheduler_ssl_enable" : "false"
     },
     "test1" : {
       "ns_sfdc_username"  : "snasika@ns.com",
@@ -34,7 +40,13 @@
       "mongo_global_db"         : "test_gsglobaldb",
       "mongo_global_username"   : "mdaqa02",
       "mongo_global_password"   : "fgFByS5D",
-      "mongo_global_ssl_enable" : "false"
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host"       : "dogen.mongohq.com",
+      "mongo_scheduler_port"       : "10008",
+      "mongo_scheduler_db"         : "schedulerdb_test1",
+      "mongo_scheduler_username"   : "mdaqa02",
+      "mongo_scheduler_password"   : "fgFByS5D",
+      "mongo_scheduler_ssl_enable" : "false"
     },
     "dev" : {
       "ns_sfdc_username" : "ggolla@devns.com",
@@ -42,7 +54,19 @@
       "ns_sfdc_stoken"   : "QQdPH3gDrTqEGOpJthaT5S4g5",
       "ns_appUrl"         : "https://api-router.herokuapp.com",
       "ns_adminUrl"       : "https://api-router.herokuapp.com",
-      "ns_version"        : "v1.0"
+      "ns_version"        : "v1.0",
+      "mongo_global_host"       : "52.0.148.18",
+      "mongo_global_port"       : "27017",
+      "mongo_global_db"         : "gsglobaldb",
+      "mongo_global_username"   : "gsuser",
+      "mongo_global_password"   : "T4Fa36Hr",
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host"       : "52.0.148.18",
+      "mongo_scheduler_port"       : "27017",
+      "mongo_scheduler_db"         : "gsglobaldb",
+      "mongo_scheduler_username"   : "gsuser",
+      "mongo_scheduler_password"   : "T4Fa36Hr",
+      "mongo_scheduler_ssl_enable" : "false"
     },
     "dev2" : {
       "ns_sfdc_username" : "ggolla@devns.com",
@@ -56,7 +80,13 @@
       "mongo_global_db"         : "gsglobaldb",
       "mongo_global_username"   : "gsuser",
       "mongo_global_password"   : "T4Fa36Hr",
-      "mongo_global_ssl_enable" : "false"
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host"       : "52.0.148.18",
+      "mongo_scheduler_port"       : "27017",
+      "mongo_scheduler_db"         : "gsglobaldb",
+      "mongo_scheduler_username"   : "gsuser",
+      "mongo_scheduler_password"   : "T4Fa36Hr",
+      "mongo_scheduler_ssl_enable" : "false"
     }
   }
 }

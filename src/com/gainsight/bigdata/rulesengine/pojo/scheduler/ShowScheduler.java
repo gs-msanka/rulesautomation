@@ -25,7 +25,11 @@ public class ShowScheduler {
 	private String endDate;
 	private String timeZone;
 	private String emailFailures;
+	private String cronExpression;
+	
+
 	private boolean runForHistoricalPeriods;
+	
 	
 	public String getPreferredStartTimeHours() {
 		return preferredStartTimeHours;
@@ -129,5 +133,13 @@ public class ShowScheduler {
 
 	public void setRunForHistoricalPeriods(boolean runForHistoricalPeriods) {
 		this.runForHistoricalPeriods = runForHistoricalPeriods;
+	}
+	
+	public String getCronExpression() {
+		return cronExpression;
+	}
+
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
 	}
 }

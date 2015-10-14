@@ -38,11 +38,6 @@ public class RulesSchedulerPage extends BasePage {
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
     private final String YEARY_ON_EVERY_DAY_NUM_PICK = "//select[contains(@class, 'yearly-onevery-daynumpick')]/following-sibling::button";
-
-/*    public RulesSchedulerPage() {
-    	wait.waitTillElementDisplayed(SCHEDULAR_DIV_CONTAINER, MIN_TIME, MAX_TIME);
-     //   throw new RuntimeException(this.getClass().getName() +" is not yet implemented.");
-    }*/
     
     
     /**
@@ -55,11 +50,17 @@ public class RulesSchedulerPage extends BasePage {
     	return this; 	
     }
     
+    /**
+     * Clicks on Start Scheduler button in Scheduler UI
+     */
     public void clickOnStartSchedulerButton(){
     	item.click(START_SCHEDULER_BUTTON);
     }
     
-
+    /**
+     * Fills daily Scheduler info in UI
+     * @param scheduler object
+     */
     public void dailySchedule(ShowScheduler scheduler) {
 		Log.info("Filling scheduler information for scheduler type - Daily");
 		item.click(DAILY);
@@ -69,18 +70,25 @@ public class RulesSchedulerPage extends BasePage {
 			item.click(DAILY_EVERYDAY_RADIOBUTTON);
 		}
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
     }
 
+    /**
+     * Fills weekly Scheduler info in UI
+     * @param scheduler object
+     */
     public void weeklySchedule(ShowScheduler scheduler) {
 		Log.info("Filling scheduler information for scheduler type - Weekly");
 		item.click(WEEKLY);
 		Log.info("Weekly schedule check box selected");
 		field.selectCheckBox(String.format(WEEKLY_DAY,scheduler.getWeeklyRecurringInterval()));
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
 	}
 
+    
+    /**
+     * Fills monthly Scheduler info in UI
+     * @param scheduler object
+     */
     public void monthlySchedule(ShowScheduler scheduler) {
 		Log.info("Filling scheduler information for scheduler type - Monthly");
 		item.click(MONTHLY);
@@ -96,9 +104,12 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getMonthlyRecurringInterval().split("_")[2]);
 		}
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
 	}
 
+    /**
+     * Fills yearly Scheduler info in UI
+     * @param scheduler object
+     */
     public void yearlySchedule(ShowScheduler scheduler) {
 		Log.info("Filling scheduler information for scheduler type - Yearly");
 		item.click(YEARLY);
@@ -118,9 +129,14 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getYearlyRecurringInterval().split("_")[3]);
 		}   
         commonSchedularActions(scheduler);
-        clickOnStartSchedulerButton();
     }
     
+    
+    /**
+     * Fills all the common action relates to all types of schedulers
+     * (Daily/Weekly/Monthly/Yearly)
+     * @param scheduler object
+     */
     public void commonSchedularActions(ShowScheduler scheduler){
     	element.setText(START_DATE, scheduler.getStartDate());
 		element.setText(END_DATE, scheduler.getEndDate());
@@ -136,6 +152,10 @@ public class RulesSchedulerPage extends BasePage {
 		}	
     }
     
+    /**
+     * Fills Scheduler info in UI
+     * @param scheduler object
+     */
     public void fillSchedulerInformation(ShowScheduler scheduler){
 		clickOnSchedulerLink();
 		wait.waitTillElementDisplayed(SCHEDULER_DIV_CONTAINER, MIN_TIME, MAX_TIME);

@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 11 - Monthly scheduler",
-  "ruleDescription": "Rule 11 - Monthly scheduler",
+  "ruleName": "Rule 11 - Yearly scheduler",
+  "ruleDescription": "Rule 11 - Yearly scheduler Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",
@@ -32,7 +32,7 @@
     {
       "actionType": "createCta",
       "action": {
-        "name": "Rule 11 - CTA - Monthly scheduler",
+        "name": "Rule 11 - CTA - Yearly scheduler",
         "priority": "High",
         "type": "Risk",
         "status": "New",
@@ -55,6 +55,7 @@
     "preferredStartTimeMinutes": "10",
     "timeZone": "America/Los_Angeles",
     "emailFailures": "athaduka@gainsight.com",
-    "runForHistoricalPeriods": true
+    "runForHistoricalPeriods": true,
+    "cronExpression" : "0 10 10 3 3 ? *"
   }
 }

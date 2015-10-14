@@ -17,12 +17,9 @@ import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.pojo.enums.ActionType;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CTAAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToCustomersAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDAAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMileStoneAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToSFDCAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToUsageAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.RuleAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.SetScoreAction;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
@@ -43,10 +40,15 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.util.MongoDBDAO;
+import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.Verifier;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.sforce.soap.partner.sobject.SObject;
 
 import org.apache.commons.io.FileUtils;
+import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openqa.selenium.WebElement;
@@ -58,11 +60,8 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -104,6 +103,7 @@ public class CreateRuleTest extends BaseTest {
     private RulesUtil rulesUtil = new RulesUtil();
     public List<String> collectionNames = new ArrayList<String>();
     private TenantManager tenantManager;
+    private static final String SCHEDULE_COLLECTION = "schedule";
 
 
     @BeforeClass
@@ -138,6 +138,7 @@ public class CreateRuleTest extends BaseTest {
 			passWord=dbServerDetail.getPassword();
         }
         Log.info("Host is" + host + " and Port is " + port);
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings();
     }
 
     @BeforeMethod
@@ -460,7 +461,7 @@ public class CreateRuleTest extends BaseTest {
         verifier.assertVerification();
     }
     
-    @Test // TODO - WIP
+   // @Test // TODO - WIP
 	public void verifyDataLoadConfiguration() throws Exception{
 		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
 		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
@@ -540,7 +541,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 	}
 	
-	@Test //TODO - Assertions
+	@Test
 	public void dailyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC9.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -548,10 +549,19 @@ public class CreateRuleTest extends BaseTest {
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
 	
-	@Test //TODO - Assertions
+	@Test
 	public void weeklyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC10.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -559,9 +569,18 @@ public class CreateRuleTest extends BaseTest {
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!"); 
 	}
 	
-	@Test //TODO - Assertions
+	@Test
 	public void monthlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC11.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -569,9 +588,18 @@ public class CreateRuleTest extends BaseTest {
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");   
 	}
 	
-	@Test //TODO - Assertions
+	@Test
 	public void yearlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC12.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -579,24 +607,44 @@ public class CreateRuleTest extends BaseTest {
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
-        
-        Log.info(rulesPojo.getShowScheduler().getStartDate());
-        Log.info(rulesPojo.getShowScheduler().getEndDate());
-        
-        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date formateDate = df.parse("2015-10-14 10:10");
-        long epoch = formateDate.getTime();
-        Log.info(" Unixtime is " +epoch);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		}
+	 
+		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
 	
+	/**
+	 * method to get cronExpression from Scheduler Db
+	 * 
+	 * @param tenantId
+     * @param jobIdentifier property from scheduler Db
+	 * @return cronExpression
+	 * @throws IOException 
+	 */
 	
-	@Test
-	public void demo() throws Exception{
-		
-	    SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date formateDate = df.parse("2015-10-14 10:10");
-        long epoch = formateDate.getTime();
-        Log.info(" Unixtime is " +epoch);
+	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
+		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
+		String cronExpression = null;
+		try {
+			BasicDBObject whereQuery = new BasicDBObject();
+			whereQuery.put("tenantId", tenantID);
+			whereQuery.put("jobIdentifier", jobIdentifier);
+			MongoCollection<Document> collection = mongoUtil.getMongoCollection(SCHEDULE_COLLECTION);
+			FindIterable<Document> iterable = collection.find(whereQuery).limit(1);
+			for (Document document : iterable) {
+				cronExpression = (String) document.get("cronExpression");
+				Log.info(cronExpression);
+			}
+		} finally {
+			mongoUtil.closeConnection();
+		}
+		return cronExpression;
 	}
 }
