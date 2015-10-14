@@ -1,0 +1,60 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 11 - Monthly scheduler",
+  "ruleDescription": "Rule 11 - Monthly scheduler",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          }
+        ]
+      },
+      {
+        "sourceObject": "Customer Info",
+        "showFields": [
+          {
+            "fieldName": "ASV",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "Rule 11 - CTA - Monthly scheduler",
+        "priority": "High",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": []
+    }
+  ],
+  "showScheduler": {
+    "recurringType": "Yearly",
+    "yearlyRecurringInterval": "On every_March_3rd",
+    "startDate": "0",
+    "endDate": "3",
+    "preferredStartTimeHours": "10",
+    "preferredStartTimeMinutes": "10",
+    "timeZone": "America/Los_Angeles",
+    "emailFailures": "athaduka@gainsight.com",
+    "runForHistoricalPeriods": true
+  }
+}
