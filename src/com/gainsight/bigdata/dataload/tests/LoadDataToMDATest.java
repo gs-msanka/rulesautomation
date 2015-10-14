@@ -20,6 +20,8 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
+import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
@@ -48,6 +50,9 @@ public class LoadDataToMDATest extends NSTestBase {
     private List<String> collectionsToDelete = new ArrayList<>();
 
     private String testDataFiles = testDataBasePath + "/dataLoader";
+    MongoDBDAO mongoDBDAO =null;
+    String dataStoreDB = null;
+
 
     @BeforeClass
     @Parameters("dbStoreType")
@@ -55,16 +60,23 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         dataLoadManager = new DataLoadManager();
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
             if(tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
-        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
             if(!tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
         }
-    }
+            //This will help to run the same suite for multiple data bases.
+            //Please make sure your global db/schema db details are correct.
+            if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+                dataStoreDB = dbStoreType;
+                mongoDBDAO = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+            }
+        }
 
     @TestInfo(testCaseIds = {"GS-4760", "GS-3655", "GS-3681", "GS-4373", "GS-4372", "GS-4369", "GS-3634", "GS-4368"})
     @Test
@@ -73,6 +85,13 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "1_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
+
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -99,6 +118,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "2_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -132,6 +156,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "3_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -165,6 +194,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "4_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -197,6 +231,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "5_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -230,6 +269,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "6_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -263,6 +307,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "7_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -296,6 +345,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "8_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -330,6 +384,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "9_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -375,6 +434,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "10_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -414,6 +478,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "11_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -448,6 +517,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "12_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -495,6 +569,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "13_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -543,6 +622,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "14_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -582,6 +666,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "15_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -628,6 +717,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "16_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -679,6 +773,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "17_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -730,6 +829,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "18_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -775,6 +879,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "19_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t19/LoadTransform.json"), JobInfo.class);
@@ -808,6 +917,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform1 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform.json"), JobInfo.class);
@@ -846,6 +960,11 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "21_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(),collectionId, DBStoreType.POSTGRES);
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
@@ -875,7 +994,8 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @Test
+    //@Test
+    //WIP
     public void duplicateCollectionNameVerification() throws IOException {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "22_" + date.getTime();
