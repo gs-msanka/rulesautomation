@@ -333,11 +333,11 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		}
 	}
 	
-	public void updateTimeZoneInAppSettings() {
+	public void updateTimeZoneInAppSettings(String timeZone) {
 		if (sfdc.getRecordCount(resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")) > 0) {
 		System.out.println("setting JBCXM__OrgTimeZone__c (TimeZone) in app settings");
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__OrgTimeZone__c from JBCXM__ApplicationSettings__c];"
-                + "appSet.JBCXM__OrgTimeZone__c='America/Los_Angeles';" + "update appSet;"));
+                + "appSet.JBCXM__OrgTimeZone__c='"+timeZone+"';" + "update appSet;"));
 		Log.info("America/Los_Angeles Timezone Updated Successfully");
 		}else {
 			throw new RuntimeException("Configure Gainsight Application to update TimeZone");
@@ -346,8 +346,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 	
 	
 	/**
-	 * method to get cronExpression from Scheduler Db
-	 * 
+	 * Method to get cronExpression from Scheduler Db
 	 * @param tenantId
      * @param jobIdentifier property from scheduler Db
 	 * @return cronExpression
@@ -358,15 +357,12 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
 		String cronExpression = null;
 		try {
-			BasicDBObject whereQuery = new BasicDBObject();
+			Document whereQuery = new Document();
 			whereQuery.put("tenantId", tenantID);
 			whereQuery.put("jobIdentifier", jobIdentifier);
-			MongoCollection<Document> collection = mongoUtil.getMongoCollection(SCHEDULE_COLLECTION);
-			FindIterable<Document> iterable = collection.find(whereQuery).limit(1);
-			for (Document document : iterable) {
-				cronExpression = (String) document.get("cronExpression");
-				Log.info(cronExpression);
-			}
+			Document collection = mongoUtil.getFirstRecord(SCHEDULE_COLLECTION, whereQuery);
+			cronExpression = (String) collection.get("cronExpression");
+			Log.info(cronExpression);
 		} finally {
 			mongoUtil.closeConnection();
 		}

@@ -145,7 +145,8 @@ public class CreateRuleTest extends BaseTest {
 			passWord=dbServerDetail.getPassword();
         }
         Log.info("Host is" + host + " and Port is " + port);
-        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings();
+        // Updating timeZone to America/Los_Angeles in Application settings
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
     }
 
     @BeforeMethod

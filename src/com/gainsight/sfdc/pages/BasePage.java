@@ -74,8 +74,7 @@ public class BasePage extends WebPage implements Constants {
 		field.setTextField("password", sfdcConfig.getSfdcPassword());
 		button.click("Login");
         try {
-        	Timer.sleep(15);
-         //   wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
+            wait.waitTillElementPresent(USERNAVBUTTON, MIN_TIME, MAX_TIME);
         } catch (Exception e) {
             Log.info("Trying to clicking on continue in on schedule screen.");
             if(isTextPresent("Scheduled Maintenance Notification")) {
