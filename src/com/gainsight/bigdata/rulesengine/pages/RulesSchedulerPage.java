@@ -38,6 +38,7 @@ public class RulesSchedulerPage extends BasePage {
     private final String START_SCHEDULER_BUTTON = "//a[contains(@class, 'btn-save') and text()='Start']";
     private final String YEARY_ON_EVERY_MONTHLYPICK = "//select[contains(@class, 'yearly-onevery-monthpick')]/following-sibling::button";
     private final String YEARY_ON_EVERY_DAY_NUM_PICK = "//select[contains(@class, 'yearly-onevery-daynumpick')]/following-sibling::button";
+    private final String RULES_CONTAINER = "//div[contains(@class, 'Rules_Manager')]/descendant::div[contains(@class, 'gs-re-top-section row')]";
     
     
     /**
@@ -55,6 +56,7 @@ public class RulesSchedulerPage extends BasePage {
      */
     public void clickOnStartSchedulerButton(){
     	item.click(START_SCHEDULER_BUTTON);
+    	wait.waitTillElementDisplayed(RULES_CONTAINER, MIN_TIME, MAX_TIME);
     }
     
     /**
@@ -70,7 +72,6 @@ public class RulesSchedulerPage extends BasePage {
 			item.click(DAILY_EVERYDAY_RADIOBUTTON);
 		}
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
     }
 
     /**
@@ -83,7 +84,6 @@ public class RulesSchedulerPage extends BasePage {
 		Log.info("Weekly schedule check box selected");
 		field.selectCheckBox(String.format(WEEKLY_DAY,scheduler.getWeeklyRecurringInterval()));
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
 	}
 
     
@@ -106,7 +106,6 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getMonthlyRecurringInterval().split("_")[2]);
 		}
 		commonSchedularActions(scheduler);
-		clickOnStartSchedulerButton();
 	}
 
     /**
@@ -132,7 +131,6 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getYearlyRecurringInterval().split("_")[3]);
 		}   
         commonSchedularActions(scheduler);
-        clickOnStartSchedulerButton();
     }
     
     
