@@ -15,6 +15,7 @@ import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 
+import org.bson.Document;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
@@ -38,6 +39,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 
 
 /**
@@ -48,6 +51,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
     private DataETL dataLoad = new DataETL();
     private Calendar calendar = Calendar.getInstance();
     RulesUtil rulesUtil = new RulesUtil();
+    private static final String SCHEDULE_COLLECTION = "schedule";
 
     /**
      * Creates custom object and fields for rules ui automation in sfdc
@@ -291,6 +295,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		}   
     }
     
+   // TODO - WIP
     /**
      * Creates multiple(six) subject areas for a tenant in Mongo, RedShift databases based upon the iteration given.
      * @param TenantDetails
@@ -337,5 +342,34 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		}else {
 			throw new RuntimeException("Configure Gainsight Application to update TimeZone");
 		}
+	}
+	
+	
+	/**
+	 * method to get cronExpression from Scheduler Db
+	 * 
+	 * @param tenantId
+     * @param jobIdentifier property from scheduler Db
+	 * @return cronExpression
+	 * @throws IOException 
+	 */
+	
+	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
+		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
+		String cronExpression = null;
+		try {
+			BasicDBObject whereQuery = new BasicDBObject();
+			whereQuery.put("tenantId", tenantID);
+			whereQuery.put("jobIdentifier", jobIdentifier);
+			MongoCollection<Document> collection = mongoUtil.getMongoCollection(SCHEDULE_COLLECTION);
+			FindIterable<Document> iterable = collection.find(whereQuery).limit(1);
+			for (Document document : iterable) {
+				cronExpression = (String) document.get("cronExpression");
+				Log.info(cronExpression);
+			}
+		} finally {
+			mongoUtil.closeConnection();
+		}
+		return cronExpression;
 	}
 }

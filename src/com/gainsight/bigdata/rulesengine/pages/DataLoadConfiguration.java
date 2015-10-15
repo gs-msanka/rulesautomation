@@ -26,10 +26,13 @@ public class DataLoadConfiguration extends BasePage {
 	private final String SELECTED_FILEDS_LIST = "//select[contains(@class,'selectedFields fieldSelect')]";
 
 	public DataLoadConfiguration() {
-		wait.waitTillElementDisplayed(RULES_CONFIGUREPAGE_DIV, MIN_TIME,
-				MAX_TIME);
+		wait.waitTillElementDisplayed(RULES_CONFIGUREPAGE_DIV, MIN_TIME, MAX_TIME);
 	}
 
+    /**
+     * Selects DataSource such as Native or Matrix
+     * @param dataSource
+     */
 	public void selectDataSource(String dataSource) {
 		if (dataSource.equalsIgnoreCase("Native")) {
 			selectSourceObjectFromNativeData();
@@ -38,16 +41,25 @@ public class DataLoadConfiguration extends BasePage {
 		}
 	}
 
+    /**
+     * Clicks on Native object Dropdown
+     */
 	public void selectSourceObjectFromNativeData() {
 		item.click(DATA_SOURCE_FORCE);
 	}
 
+    /**
+     * Clicks on Matrix object Dropdown
+     */
 	public void selectSourceObjectFromMatrixData() {
 		item.click(DATA_SOURCE_NEWSTACK);
 		wait.waitTillElementNotDisplayed(
 				"//label[contains(@class, 'loading-spin')]", MIN_TIME, MAX_TIME);
 	}
 
+    /**
+     * Selects exact objects which needs to ass permission for dataload Confoguration
+     */
 	public void selectSourceObject(String sourceObject) {
 		clickOnNativeObjectSelection();
 		field.clearAndSetText(SOURCE_FIELD_SEARCH, sourceObject);
@@ -60,6 +72,9 @@ public class DataLoadConfiguration extends BasePage {
 		item.click(SOURCE_OBJECT_DROPDOWN_LOC);
 	}
 
+    /**
+     * clicks on native object selection
+     */
 	public void clickOnNativeObjectSelection() {
 		item.click(OBJECT_IN_NATIVE);
 	}
@@ -68,16 +83,27 @@ public class DataLoadConfiguration extends BasePage {
 		item.click(OBJECT_IN_NATIVE_SYMBOL);
 	}
 
+    /**
+     * click on particular object in dataload configuration
+     * @param object on which it needs to be clicked
+     */
 	public void clickOnParticularObject(String object) {
 		String fieldNameXpath = String.format(ACTUAL_OBJECT, object);
 		item.click(fieldNameXpath);
 	}
 
+    /**
+     * clicks on save button in dataload configuration
+     */
 	public DataLoadConfiguration clickOnSaveButton() {
 		item.click(SAVE);
 		return this;
 	}
 
+    /**
+     * Adds fields from an object in dataload configuration
+     * @param object for which fields needs to be added
+     */
 	public void selectFieldsFromList(DataLoadObject dataLoadObject) {
 		String totalFields = "";
 		for (Field field : dataLoadObject.getFields()) {
@@ -93,7 +119,12 @@ public class DataLoadConfiguration extends BasePage {
 		}
 		item.click(MOVE_RIGHT);
 	}
-
+	
+	
+    /**
+     * Removes fields from an object in dataload configuration
+     * @param object from which fields needs to be removed
+     */
 	public void removeFieldsFromList(DataLoadObject dataLoadObject) {
 		String totalFields = "";
 		for (Field field : dataLoadObject.getRemoveFields()) {

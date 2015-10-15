@@ -31,6 +31,7 @@ import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.DateUtil;
@@ -106,7 +107,6 @@ public class CreateRuleTest extends BaseTest {
     private RulesUtil rulesUtil = new RulesUtil();
     public List<String> collectionNames = new ArrayList<String>();
     private TenantManager tenantManager;
-    private static final String SCHEDULE_COLLECTION = "schedule";
 
 
     @BeforeClass
@@ -116,6 +116,8 @@ public class CreateRuleTest extends BaseTest {
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
         tenantManager=new TenantManager();
+        GSEmailSetup gs=new GSEmailSetup();
+        gs.enableOAuthForOrg();
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
@@ -123,9 +125,9 @@ public class CreateRuleTest extends BaseTest {
         dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
-/*        AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
+        AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
-        adminScorecardSection.enableScorecard();*/
+        adminScorecardSection.enableScorecard();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
         runMetricSetup(METRICS_CREATE_FILE, SCHEME);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
@@ -560,7 +562,7 @@ public class CreateRuleTest extends BaseTest {
 		}else {
 			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
 		} 
-		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
@@ -580,7 +582,7 @@ public class CreateRuleTest extends BaseTest {
 		}else {
 			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
 		} 
-		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!"); 
 	}
 	
@@ -599,7 +601,7 @@ public class CreateRuleTest extends BaseTest {
 		}else {
 			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
 		} 
-		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");   
 	}
 	
@@ -619,36 +621,9 @@ public class CreateRuleTest extends BaseTest {
 			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
 		}
 	 
-		String actualCronExpression = getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
-	
-	/**
-	 * method to get cronExpression from Scheduler Db
-	 * 
-	 * @param tenantId
-     * @param jobIdentifier property from scheduler Db
-	 * @return cronExpression
-	 * @throws IOException 
-	 */
-	
-	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
-		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
-		String cronExpression = null;
-		try {
-			BasicDBObject whereQuery = new BasicDBObject();
-			whereQuery.put("tenantId", tenantID);
-			whereQuery.put("jobIdentifier", jobIdentifier);
-			MongoCollection<Document> collection = mongoUtil.getMongoCollection(SCHEDULE_COLLECTION);
-			FindIterable<Document> iterable = collection.find(whereQuery).limit(1);
-			for (Document document : iterable) {
-				cronExpression = (String) document.get("cronExpression");
-				Log.info(cronExpression);
-			}
-		} finally {
-			mongoUtil.closeConnection();
-		}
-		return cronExpression;
-	}
+
 }

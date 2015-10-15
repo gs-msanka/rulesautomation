@@ -70,6 +70,7 @@ public class RulesSchedulerPage extends BasePage {
 			item.click(DAILY_EVERYDAY_RADIOBUTTON);
 		}
 		commonSchedularActions(scheduler);
+		clickOnStartSchedulerButton();
     }
 
     /**
@@ -82,6 +83,7 @@ public class RulesSchedulerPage extends BasePage {
 		Log.info("Weekly schedule check box selected");
 		field.selectCheckBox(String.format(WEEKLY_DAY,scheduler.getWeeklyRecurringInterval()));
 		commonSchedularActions(scheduler);
+		clickOnStartSchedulerButton();
 	}
 
     
@@ -104,6 +106,7 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getMonthlyRecurringInterval().split("_")[2]);
 		}
 		commonSchedularActions(scheduler);
+		clickOnStartSchedulerButton();
 	}
 
     /**
@@ -129,6 +132,7 @@ public class RulesSchedulerPage extends BasePage {
 			selectValueInDropDown(scheduler.getYearlyRecurringInterval().split("_")[3]);
 		}   
         commonSchedularActions(scheduler);
+        clickOnStartSchedulerButton();
     }
     
     
