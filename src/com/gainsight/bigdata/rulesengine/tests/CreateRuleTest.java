@@ -558,7 +558,7 @@ public class CreateRuleTest extends BaseTest {
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         String ruleID=null;
-        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
 		if (result.length > 0) {
 			 ruleID = (String) result[0].getField("Id");			
 		}else {
@@ -578,7 +578,7 @@ public class CreateRuleTest extends BaseTest {
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         String ruleID=null;
-        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
 		if (result.length > 0) {
 			 ruleID = (String) result[0].getField("Id");			
 		}else {
@@ -597,7 +597,7 @@ public class CreateRuleTest extends BaseTest {
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         String ruleID=null;
-        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
 		if (result.length > 0) {
 			 ruleID = (String) result[0].getField("Id");			
 		}else {
@@ -616,7 +616,7 @@ public class CreateRuleTest extends BaseTest {
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         String ruleID=null;
-        SObject[] result =sfdc.getRecords("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1");
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
 		if (result.length > 0) {
 			 ruleID = (String) result[0].getField("Id");			
 		}else {
