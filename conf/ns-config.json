@@ -41,9 +41,9 @@
       "mongo_global_username"   : "mdaqa02",
       "mongo_global_password"   : "fgFByS5D",
       "mongo_global_ssl_enable" : "false",
-      "mongo_scheduler_host"       : "dogen.mongohq.com",
-      "mongo_scheduler_port"       : "10008",
-      "mongo_scheduler_db"         : "schedulerdb_test1",
+      "mongo_scheduler_host"       : "54.204.251.136",
+      "mongo_scheduler_port"       : "27017",
+      "mongo_scheduler_db"         : "test_gsglobaldb",
       "mongo_scheduler_username"   : "mdaqa02",
       "mongo_scheduler_password"   : "fgFByS5D",
       "mongo_scheduler_ssl_enable" : "false"
