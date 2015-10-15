@@ -338,7 +338,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		System.out.println("setting JBCXM__OrgTimeZone__c (TimeZone) in app settings");
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__OrgTimeZone__c from JBCXM__ApplicationSettings__c];"
                 + "appSet.JBCXM__OrgTimeZone__c='America/Los_Angeles';" + "update appSet;"));
-		Log.info("NS URL Updated Successfully");
+		Log.info("America/Los_Angeles Timezone Updated Successfully");
 		}else {
 			throw new RuntimeException("Configure Gainsight Application to update TimeZone");
 		}
