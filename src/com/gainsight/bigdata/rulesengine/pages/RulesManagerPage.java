@@ -23,6 +23,7 @@ public class RulesManagerPage extends BasePage {
     private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
     private final String DELETE_RULE_LINK = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/ancestor::div[contains(@class, 're-rule-content')]/descendant::span[@title='Delete']";
     private final String EDIT_RULE_LINK = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/ancestor::div[contains(@class, 're-rule-content')]/descendant::span[@title='Edit']";
+    private final String RULES_CONFIGURE_LINK = "//div[contains(@class, 'configure-settings')]/descendant::span";
     
     
     private final String ADD_RULE_LINK = "//input[contains(@class, 'add-rule') and @value='+ Rule']";
@@ -158,4 +159,14 @@ public class RulesManagerPage extends BasePage {
         return new EditRulePage();
 
     }
+
+    /**
+     * Clicks on the configure option in rulesmanager page
+     * @return DataLoadConfiguration object after clicking on configure link
+     */
+    public DataLoadConfiguration clickOnConfigure(){
+    	item.click(RULES_CONFIGURE_LINK);
+    	return new DataLoadConfiguration();
+    }
+    
 }

@@ -62,6 +62,30 @@ public class NsConfig {
         return getConfigValue(INsProperties.globalDBIsSSLEnabled);
     }
 
+    public String getSchedulerDBHost() {
+        return getConfigValue(INsProperties.SchedulerDBHost);
+    }
+
+    public String getSchedulerDBPort() {
+        return getConfigValue(INsProperties.SchedulerDBPort);
+    }
+
+    public String getSchedulerDBDatabase() {
+        return getConfigValue(INsProperties.SchedulerDBDatabase);
+    }
+
+    public String getSchedulerDBUserName() {
+        return getConfigValue(INsProperties.SchedulerDBUserName);
+    }
+
+    public String getSchedulerDBPassword() {
+        return getConfigValue(INsProperties.SchedulerDBPassword);
+    }
+
+    public String getSchedulerDBIsSSLEnabled() {
+        return getConfigValue(INsProperties.SchedulerDBIsSSLEnabled);
+    }
+    
     public JsonObject getConfigObject() {
         return configObject;
     }
@@ -85,7 +109,13 @@ public class NsConfig {
         public static final String globalDBDatabase = "mongo_global_db";
         public static final String globalDBUserName = "mongo_global_username";
         public static final String globalDBPassword = "mongo_global_password";
-        public static final String globalDBIsSSLEnabled = "mongo_global_ssl_enable";
+        public static final String globalDBIsSSLEnabled = "mongo_global_ssl_enable"; 
+        public static final String SchedulerDBHost = "mongo_scheduler_host";
+        public static final String SchedulerDBPort = "mongo_scheduler_port";
+        public static final String SchedulerDBDatabase = "mongo_scheduler_db";
+        public static final String SchedulerDBUserName = "mongo_scheduler_username";
+        public static final String SchedulerDBPassword = "mongo_scheduler_password";
+        public static final String SchedulerDBIsSSLEnabled = "mongo_scheduler_ssl_enable";
 
 
 

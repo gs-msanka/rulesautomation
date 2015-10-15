@@ -1,7 +1,9 @@
 package com.gainsight.bigdata.rulesengine.pojo;
 
+import com.gainsight.bigdata.rulesengine.pojo.scheduler.ShowScheduler;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.RuleAction;
 import com.gainsight.bigdata.rulesengine.pojo.setuprule.SetupRulePojo;
+import com.gainsight.sfdc.workflow.pojos.CTA.EventRecurring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +17,17 @@ public class RulesPojo {
     private String ruleDescription = "";
     private SetupRulePojo setupRule = new SetupRulePojo();
     private List<RuleAction> setupActions = new ArrayList<>();
+    private ShowScheduler showScheduler;
 
-    public String getRuleType() {
+	public ShowScheduler getShowScheduler() {
+		return showScheduler;
+	}
+
+	public void setShowScheduler(ShowScheduler showScheduler) {
+		this.showScheduler = showScheduler;
+	}
+
+	public String getRuleType() {
         return ruleType;
     }
 
