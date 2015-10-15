@@ -134,6 +134,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsOnUsageData(sfdc);
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
         metaUtil.createFieldsOnAccount(sfdc);
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
