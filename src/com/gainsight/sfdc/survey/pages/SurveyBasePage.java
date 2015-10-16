@@ -173,9 +173,10 @@ public class SurveyBasePage extends BasePage {
 	public void selectaccount(String accountName) {
         Log.info("Selecting Account for complete Anonymous surveys : " +accountName);
         boolean selected = false;
-        for(int i=0; i< 3; i++) {
+        for(int i=0; i< 5; i++) {
             item.clearAndSetText(ANONYMOUS_ACCOUNT_INPUT, accountName);
             element.getElement((ANONYMOUS_ACCOUNT_INPUT)).sendKeys(Keys.ENTER);
+            wait.waitTillElementPresent("//li[@class='ui-menu-item']/a[text()='"+accountName+"']", MIN_TIME, MAX_TIME);
             for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a[text()='"+accountName+"']")) {
                 if(ele.isDisplayed()) {
                     ele.click();
@@ -183,7 +184,6 @@ public class SurveyBasePage extends BasePage {
                     return;
                 }
             }
-            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select Customer");
