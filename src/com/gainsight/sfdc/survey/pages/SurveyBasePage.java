@@ -186,9 +186,9 @@ public class SurveyBasePage extends BasePage {
             }
         }
         if(!selected) {
-            throw new RuntimeException("Unable to select Customer");
+            throw new RuntimeException("Unable to select Account");
         }
-        Log.info("Selected Customer Successfully: " +accountName);
+        Log.info("Selected Account Successfully: " +accountName);
     }
 
     public void selectValueFromDropDown(WebElement webEle, List<String> options) {
