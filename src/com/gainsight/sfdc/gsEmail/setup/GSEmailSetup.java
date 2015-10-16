@@ -3,6 +3,10 @@ package com.gainsight.sfdc.gsEmail.setup;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -12,6 +16,7 @@ import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.Log;
 import com.gainsight.utils.MongoUtil;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.mongodb.ServerAddress;
@@ -94,12 +99,7 @@ public class GSEmailSetup extends BaseTest {
 
 	}
 
-	// Includes creation of survey via Apex script,
-	// getting access key for GS email,
-	// Updating the Access key in the Application Settings object
-	public void createSurveyWithGSEmail() {
-/*		sfdc.runApexCode(getNameSpaceResolvedFileContents(env.basedir
-				+ "/apex_scripts/Surveys/EmailService_NonAnonySurvey.apex"));*/ /*Commented for now as the script doesn't exists*/
+	public void updateAccessKeyInApplicationSettingForGSEmail() {
 		Header hdrs = new Header();
 		SFDCInfo sfinfo = sfdc.fetchSFDCinfo();
 		String endPoint = nsConfig.getNsURl();
@@ -111,28 +111,25 @@ public class GSEmailSetup extends BaseTest {
 			hdrs.addHeader("appOrgId", orgId);
 			hdrs.addHeader("appUserId", userId);
 			hdrs.addHeader("appSessionId", sessionid);
-			System.out.println("endpoint:" + sfinfo.getEndpoint());
-			// Creating Origin header value:
+			Log.info(("endpoint:" + sfinfo.getEndpoint()));
 			String SFInstance = sfinfo.getEndpoint().split("https://")[1]
 					.split("\\.")[0];
 			String OriginHeader = "";
 			if (isPackaged)
-				OriginHeader = "https://jbcxm." + SFInstance
-						+ ".visual.force.com";
-			else
+				OriginHeader = "https://jbcxm." + SFInstance + ".visual.force.com";
+			else{
 				OriginHeader = "https://" + SFInstance + ".visual.force.com";
-
-			System.out.println("OriginHeader value=" + OriginHeader);
+			}
+			Log.info("OriginHeader value=" + OriginHeader);
 			hdrs.addHeader("Origin", OriginHeader);
 			String uri = endPoint + GET_ACCESS_KEY;
-
 			ResponseObj httpResp = wa.doGet(uri, hdrs.getAllHeaders());
-			System.out.println("response==" + httpResp.getContent());
-			AccessKey = httpResp.getContent().split("\"accessKey\":\"")[1]
-					.split("\"")[0];
-			TenantId = httpResp.getContent().split("\"id\":\"")[1].split("\"")[0];
-			OrgName = httpResp.getContent().split("\"name\":\"")[1].split("\"")[0];
-			System.out.println("Got AccessKey as ..." + AccessKey);
+			ObjectMapper mapper=new ObjectMapper();
+			JsonNode jsonNode= mapper.readTree(httpResp.getContent());
+			Log.info("Response is " +jsonNode);
+			JsonNode Data = jsonNode.get("data");
+			AccessKey=Data.findValue("accessKey").toString().replace("\"", "");
+			Log.info("Access key is " + " " +AccessKey);
 			if (AccessKey != null && AccessKey != "") {
 				sfdc.runApexCode(resolveStrNameSpace("String marketoAESKey= '1234567890123456';"
 						+ "Blob aesKeyBlob = Blob.valueOf(marketoAESKey);"
@@ -144,16 +141,11 @@ public class GSEmailSetup extends BaseTest {
 						+ "List<JBCXM__ApplicationSettings__c> appSet= [select id,JBCXM__AccessKeys__c from JBCXM__ApplicationSettings__c];"
 						+ "appSet[0].JBCXM__AccessKeys__c='{\"gainsightEmailKey\":\"'+encoded+'\"}';"
 						+ "upsert appSet;"));
-				// checkSubAccountInMandrill("fi_h5Ag1dOmqYFV79aYcTA", TenantId,
-				// OrgName);
-
-			} else
-				System.out
-						.println("error in fetching Accesskey!!...could not update the ");
+			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.error("Error in fetching Accesskey!!...Could not update in ApplicationSettings");
+			throw new RuntimeException("Error in fetching access key, kindly recheck the response returned !!");
 		}
-
 	}
 
 	public Boolean sendTestEmail() {

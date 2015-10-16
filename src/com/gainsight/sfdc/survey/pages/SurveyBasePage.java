@@ -176,7 +176,6 @@ public class SurveyBasePage extends BasePage {
         for(int i=0; i< 3; i++) {
             item.clearAndSetText(ANONYMOUS_ACCOUNT_INPUT, accountName);
             element.getElement((ANONYMOUS_ACCOUNT_INPUT)).sendKeys(Keys.ENTER);
-            wait.waitTillElementDisplayed("//li[@class='ui-menu-item']/a[text()='"+accountName+"']", MIN_TIME, MAX_TIME);
             for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a[text()='"+accountName+"']")) {
                 if(ele.isDisplayed()) {
                     ele.click();
@@ -184,6 +183,7 @@ public class SurveyBasePage extends BasePage {
                     return;
                 }
             }
+            Timer.sleep(2);
         }
         if(!selected) {
             throw new RuntimeException("Unable to select Customer");
