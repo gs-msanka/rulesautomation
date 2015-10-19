@@ -75,5 +75,12 @@ public interface ApiUrls extends NSURLs {
 
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
+    
+    //GS Email related API's
+    public final String GET_ACCESS_KEY                  = NS_URL + "/api/email/account";
+    public final String EXISTS_CALL                     = NS_URL + "/api/accounts/SFDC/exists";
+    public final String SEND_EMAIL                      = NS_URL + "/api/email/template";
+    public final String MANDRILL_ENDPOINT               = "https://mandrillapp.com/api/1.0/";
+    public final String MANDRILL_SUBACCOUNT_INFO        = "/subaccounts/info.json";
 
 }
