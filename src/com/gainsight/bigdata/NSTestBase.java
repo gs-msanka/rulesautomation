@@ -102,6 +102,8 @@ public class NSTestBase {
             sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
             if(sfdcConfig.getSfdcManagedPackage()) {
                 sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            } else {
+                sfdc.runApexCode("AdminHandler.assignPermissionToallGainsightObject();"); //To give permissions to all the object & fields in the org.
             }
             packageUtil.deployPermissionSetCode();
             metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
