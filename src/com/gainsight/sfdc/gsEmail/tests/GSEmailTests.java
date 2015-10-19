@@ -64,12 +64,6 @@ public class GSEmailTests extends NSTestBase {
 				"Account registration successful in mandrill!");
 	}
 
-	@Test
-	public void testSendEmailSingleRecipient() {
-		gse.updateAccessKeyInApplicationSettingForGSEmail();
-		gse.sendTestEmail();
-	}
-
 	@AfterClass
 	public void tearDown() {
 		basepage.logout();
