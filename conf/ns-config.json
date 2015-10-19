@@ -63,7 +63,7 @@
       "ns_sfdc_password": "devTenant2015",
       "ns_sfdc_stoken": "QQdPH3gDrTqEGOpJthaT5S4g5",
       "ns_appUrl": "https://fibonacci-api-router.herokuapp.com",
-      "ns_adminUrl": "https://api-router.herokuapp.com",
+      "ns_adminUrl": "https://dev007-api-router.herokuapp.com",
       "ns_version": "v1.0",
       "mongo_global_host": "52.0.148.18",
       "mongo_global_port": "27017",

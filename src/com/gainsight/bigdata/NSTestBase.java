@@ -120,6 +120,7 @@ public class NSTestBase {
             NsResponseObj rs = null;
             try {
                 ResponseObj responseObj = wa.doPost(APP_API_TOKENS, header.getAllHeaders(), "{}");
+                Log.info("Return Obj : " +responseObj.toString());
                 rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             } catch (Exception e) {
                 Log.error("Failed to get Access Token", e);
@@ -152,7 +153,7 @@ public class NSTestBase {
         ResponseObj responseObj = null;
         String authToken = null;
         try {
-            responseObj = wa.doGet(ADMIN_DATA_LOAD_AUTHENTICATE, header.getAllHeaders());
+            responseObj = wa.doGet(DATA_LOAD_AUTHENTICATE, header.getAllHeaders());
         } catch (Exception e) {
             Log.error("Failed to get Auth Token", e);
             throw new RuntimeException("Failed to get Auth Token" + e);
