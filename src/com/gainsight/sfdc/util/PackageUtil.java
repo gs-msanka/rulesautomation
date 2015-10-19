@@ -145,10 +145,13 @@ public class PackageUtil {
     public void setupGainsightApplicationAndTabs(boolean managePackage, String nameSpace) throws ConnectionException {
         CustomApplication application = new CustomApplication();
         application.setFullName(FileUtil.resolveNameSpace("JBCXM__JBara", managePackage ? nameSpace : null));
-        application.setTab(new String[]{"JBCXM__Gainsight", "JBCXM__Customers", "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption",
+        String[] tabs = new String[]{"JBCXM__Gainsight", "JBCXM__Customers", "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption",
                 "JBCXM__Survey", "JBCXM__Administration", "JBCXM__Cockpit",
-                "JBCXM__GainsightMobile", "JBCXM__Insights", "JBCXM__NPS", "JBCXM__Churn"});
-
+                "JBCXM__GainsightMobile", "JBCXM__Insights", "JBCXM__NPS", "JBCXM__Churn"};
+        for(int i=0; i< tabs.length; i++) {
+            tabs[i]= FileUtil.resolveNameSpace(tabs[i], managePackage ? nameSpace : null);
+        }
+        application.setTab(tabs);
         application.setLabel("Gainsight");
 
         SaveResult[] saveResults = metadataConnection.updateMetadata(new Metadata[]{application});
