@@ -287,7 +287,7 @@ public class SurveySetup extends BaseTest implements Constants{
     
 	public int getRecordCountFromContactObject() {
 		int count = sfdc
-				.getRecordCount("SELECT Id,name FROM Contact where isDeleted=false");
+				.getRecordCount(resolveStrNameSpace("SELECT Id,name FROM Contact where isDeleted=false"));
 		Log.info("Count from Object is" + count);
 		return count;
 	}
@@ -301,7 +301,7 @@ public class SurveySetup extends BaseTest implements Constants{
     
 	public void updateNSURLInAppSettings(String NSURL) {
 		System.out.println("setting ns url in app settings");
-		sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
+		sfdc.getRecordCount((resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")));
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
                 + "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
 		Log.info("NS URL Updated Successfully");
@@ -312,10 +312,10 @@ public class SurveySetup extends BaseTest implements Constants{
 		Timer.sleep(5); //Added sleep since its taking 2-3 seconds of time to retrive the data from sfdc
 		SObject[] jsondata = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
-		System.out.println(sfdc.getRecords("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
+		Log.info("Total records are" +sfdc.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1")));
 		boolean result = false;
 		if (jsondata.length > 0) {
-			String sTemp = (String) jsondata[0].getField("JBCXM__HasRules__c");
+			String sTemp = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__HasRules__c"));
 			result = Boolean.valueOf(sTemp);
 		}
 		return result;
@@ -328,7 +328,7 @@ public class SurveySetup extends BaseTest implements Constants{
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__Dependent__c FROM JBCXM__SurveyQuestion__c order by createdDate desc limit 1"));
 		boolean result = false;
 		if (jsondata.length > 0) {
-			String sTemp = (String) jsondata[0].getField("JBCXM__Dependent__c");
+			String sTemp = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__Dependent__c"));
 			result = Boolean.valueOf(sTemp);
 		}
 		return result;
@@ -421,15 +421,15 @@ public class SurveySetup extends BaseTest implements Constants{
 	}
    
 	public void populateObjMaps() {
-		suveyQus = getMapFromObject("JBCXM__SurveyQuestion__c",
-				"JBCXM__Title__c", "SQ");
-		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "Name",
+		suveyQus = getMapFromObject(resolveStrNameSpace("JBCXM__SurveyQuestion__c"),
+				resolveStrNameSpace("JBCXM__Title__c"), "SQ");
+		ctaTypesMap = getMapFromObject(resolveStrNameSpace("JBCXM__CTATypes__c"), "Name",
 				"CT");
-		PickListMap = getMapFromObject("JBCXM__PickList__c",
-				"JBCXM__SystemName__c", "PL");
-		playBook = getMapFromObject("JBCXM__Playbook__c", "Name", "PB");
-		surveyAns = getMapFromObject("JBCXM__SurveyAllowedAnswers__c",
-				"JBCXM__Title__c", "SA");
+		PickListMap = getMapFromObject(resolveStrNameSpace("JBCXM__PickList__c"),
+				resolveStrNameSpace("JBCXM__SystemName__c"), "PL");
+		playBook = getMapFromObject(resolveStrNameSpace("JBCXM__Playbook__c"), "Name", "PB");
+		surveyAns = getMapFromObject(resolveStrNameSpace("JBCXM__SurveyAllowedAnswers__c"),
+				resolveStrNameSpace("JBCXM__Title__c"), "SA");
 
 	}
 	
@@ -490,7 +490,7 @@ public class SurveySetup extends BaseTest implements Constants{
 			@Override
 			public Integer apply(WebDriver driver) {
 				return sfdc
-						.getRecordCount("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false");
+						.getRecordCount(resolveStrNameSpace("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false"));
 			}
 		});
 	}

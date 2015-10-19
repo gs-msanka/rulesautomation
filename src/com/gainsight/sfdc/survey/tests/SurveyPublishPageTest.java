@@ -39,9 +39,9 @@ public class SurveyPublishPageTest extends SurveySetup {
 
  
 	@BeforeClass
-	public void setUp() {
+	public void setUp() throws Exception {
 		sfdc.connect();
-		sfdc.runApexCode(QUERY);
+		sfdc.runApexCode(resolveStrNameSpace(QUERY));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		basepage.login();
@@ -260,7 +260,7 @@ public class SurveyPublishPageTest extends SurveySetup {
 		HashMap<String, String> msgDetails = new HashMap<String, String>();
 		if (contacts.length > 0) {
 			for (int i = 0; i < contacts.length; i++) {
-				String temp1 = (String) contacts[i].getField("JBCXM__Email__c");
+				String temp1 = (String) contacts[i].getField(resolveStrNameSpace("JBCXM__Email__c"));
 				msgDetails.put(temp1.trim(), emailSubject);
 			}
 		}
