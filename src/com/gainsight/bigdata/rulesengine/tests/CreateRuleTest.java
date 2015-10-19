@@ -56,6 +56,9 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -109,7 +112,7 @@ public class CreateRuleTest extends BaseTest {
     private TenantManager tenantManager;
 
 
-    @BeforeClass
+    @BeforeTest
     public void setUp() throws Exception {
         basepage.login();
         sfdc.connect();
@@ -147,6 +150,16 @@ public class CreateRuleTest extends BaseTest {
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
+    }
+    
+    @BeforeClass
+    @Parameters("dbStoreType")
+    public void loadDataToMongoAndRedshiftDatabases(@Optional String dbStoreType) throws Exception{
+        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));           
+        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+        } 	
     }
 
     @BeforeMethod
