@@ -1,3 +1,14 @@
+
+List<Account< acclist = [Select id from account where name='Lexidata Corporation'];
+Account acc1;
+if(acclist.size() < 1) {
+    acc1 = new Account(name='Lexidata Corporation');
+    insert acc1;
+} else {
+    acc1 = aclist.get(0);
+}
+
+
 List<Account> accList = [SELECT Id FROM Account WHERE Name = 'Lexidata Corporation' limit 10];
 System.debug(accList.size());
 DELETE [SELECT Id FROM JBCXM__UsageTracker__c];

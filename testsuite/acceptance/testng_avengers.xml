@@ -5,12 +5,7 @@
 		<listener class-name="com.gainsight.utils.AutTestListener" />
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
 	</listeners>
-	
-	<test verbose="3" name="360 AccountAttributes360 Test" preserve-order="true">
-		<classes>
-            <class name="com.gainsight.sfdc.customer360.test.AccountAttributes360Test"/>
-		</classes>
-	</test>
+
     <test verbose="3" name="360 Customer360Features Tests" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests"/>
@@ -19,14 +14,6 @@
     <test verbose="3" name="360 Customer360Milestones Tests" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests"/>
-        </classes>
-    </test>
-
-    <test verbose="3" name="360 Scorecard Tests" preserve-order="true">
-        <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
         </classes>
     </test>
 
