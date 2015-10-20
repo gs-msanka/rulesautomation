@@ -39,7 +39,10 @@ public class SurveyPropertiesTest extends SurveySetup{
 		ns.init();
 		ns.tenantAutoProvision();
 		gs.enableOAuthForOrg();
-		gs.createSurveyWithGSEmail();
+		gs.updateAccessKeyInApplicationSettingForGSEmail();
+		metaUtil.createExtIdFieldOnAccount(sfdc);
+		metaUtil.createExtIdFieldOnContacts(sfdc);
+		
 		
 	}
     

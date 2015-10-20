@@ -1,6 +1,9 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import org.openqa.selenium.Keys;
+
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Log;
 
@@ -42,7 +45,9 @@ public class EditRulePage extends BasePage {
      * @param ruleName
      */
     public void enterRuleName(String ruleName) {
+    	wait.waitTillElementDisplayed(RULE_NAME, MIN_TIME, MAX_TIME);
         field.clearAndSetText(RULE_NAME, ruleName);
+        element.getElement(RULE_NAME).sendKeys(Keys.ENTER);
     }
 
     /**

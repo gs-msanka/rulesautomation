@@ -11,7 +11,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
+
+import org.bson.Document;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
@@ -35,6 +39,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 
 
 /**
@@ -45,6 +51,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
     private DataETL dataLoad = new DataETL();
     private Calendar calendar = Calendar.getInstance();
     RulesUtil rulesUtil = new RulesUtil();
+    private static final String SCHEDULE_COLLECTION = "schedule";
 
     /**
      * Creates custom object and fields for rules ui automation in sfdc
@@ -287,4 +294,78 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 			mongoUtil.closeConnection();
 		}   
     }
+    
+   // TODO - WIP
+    /**
+     * Creates multiple(six) subject areas for a tenant in Mongo, RedShift databases based upon the iteration given.
+     * @param TenantDetails
+     * @param MongoDBDAO
+     */
+	public void createMultipleSubjectAreasForDataLoadConfiguration(TenantDetails tenantDetails, MongoDBDAO mongoDBDAO) throws Exception{
+		DataLoadManager dataLoadManager = new DataLoadManager();
+		JobInfo load = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
+		dataLoad.execute(load);
+		try {
+		for (int i = 0; i < 6; i++) {
+				String collectionName = "SubjectArea" + " " + i;
+				Log.info("Collection Name : " + collectionName);
+			    CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchemaForDataLoadConfiguration.json")), CollectionInfo.class);
+				collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+				String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+				Assert.assertNotNull(collectionId);
+				boolean iSRedShiftEnabled=false;
+				if ((i > 2) && (!iSRedShiftEnabled)) {
+					iSRedShiftEnabled = tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
+					Log.info("Is Redhisft Enabled ??? " + iSRedShiftEnabled);
+					mongoDBDAO.updateCollectionDBStoreTypeByCollectionName(tenantDetails.getTenantId(), collectionName,DBStoreType.REDSHIFT);
+				}
+			    JobInfo loadTransform = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
+				File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform, calendar.getTime());
+				DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(collectionInfo);
+				metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
+				String statusId = dataLoadManager.dataLoadManage(metadata,dataLoadFile);
+				Assert.assertNotNull(statusId);
+				dataLoadManager.waitForDataLoadJobComplete(statusId);
+			}
+		} finally {
+			tenantManager.disableRedShift(tenantDetails);
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+	}
+	
+	public void updateTimeZoneInAppSettings(String timeZone) {
+		if (sfdc.getRecordCount(resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")) > 0) {
+		System.out.println("setting JBCXM__OrgTimeZone__c (TimeZone) in app settings");
+		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__OrgTimeZone__c from JBCXM__ApplicationSettings__c];"
+                + "appSet.JBCXM__OrgTimeZone__c='"+timeZone+"';" + "update appSet;"));
+		Log.info("America/Los_Angeles Timezone Updated Successfully");
+		}else {
+			throw new RuntimeException("Configure Gainsight Application to update TimeZone");
+		}
+	}
+	
+	
+	/**
+	 * Method to get cronExpression from Scheduler Db
+	 * @param tenantId
+     * @param jobIdentifier property from scheduler Db
+	 * @return cronExpression
+	 * @throws IOException 
+	 */
+	
+	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
+		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
+		String cronExpression = null;
+		try {
+			Document whereQuery = new Document();
+			whereQuery.put("tenantId", tenantID);
+			whereQuery.put("jobIdentifier", jobIdentifier);
+			Document collection = mongoUtil.getFirstRecord(SCHEDULE_COLLECTION, whereQuery);
+			cronExpression = (String) collection.get("cronExpression");
+			Log.info(cronExpression);
+		} finally {
+			mongoUtil.closeConnection();
+		}
+		return cronExpression;
+	}
 }

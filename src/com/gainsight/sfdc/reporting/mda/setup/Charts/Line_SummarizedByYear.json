@@ -1,0 +1,190 @@
+
+{
+  "ReportInfo" : [
+    {
+      "SchemaName" : "",
+      "CollectionID" : "",
+      "limit" : 500,
+      "Type" : "adhoc",
+      "Dimensions" : [
+        {
+          "col" : "Date",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "type" : 0,
+          "summarizedBy" : "CY",
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        },
+        {
+          "col" : "AccountName",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count_distinct",
+          "type" : 0,
+          "fieldDisplayName" : "Count_distinct of AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Page Views",
+          "axis" : "measure",
+          "decimalPlaces" : 3,
+          "agg_func" : "avg",
+          "order" : "desc",
+          "type" : 1,
+          "fieldDisplayName" : "Avg of Page Views",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Files Downloaded",
+          "axis" : "measure",
+          "decimalPlaces" : 3,
+          "agg_func" : "max",
+          "type" : 1,
+          "fieldDisplayName" : "Max of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        }
+      ],
+      "ReportReadLimit" : 50,
+      "DimensionBrowserReadLimit" : 1000,
+      "reportName" : "Auto_ByDateFilter_Custom_Line",
+      "ReportId" : "e2cc3d20-2bae-4d5b-92da-084bbe4d3f7a",
+      "assetType" : "ANALYTICS",
+      "whereAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Active",
+            "alias" : "A",
+            "dataType" : "boolean",
+            "filterOperator" : "EQ",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              true
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "Industry",
+            "alias" : "B",
+            "dataType" : "string",
+            "filterOperator" : "NE",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "Date",
+            "alias" : "C",
+            "dataType" : "date",
+            "filterOperator" : "GTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "03-11-2012"
+            ],
+            "timeFunction" : "CUSTOM",
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "A AND B AND C"
+      },
+      "havingAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Page Views",
+            "alias" : "1",
+            "dataType" : "number",
+            "filterOperator" : "LTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              50
+            ],
+            "locked" : false,
+            "aggregateFunction" : "avg",
+            "collectionId" : "",
+            "type" : 1
+          },
+          {
+            "dbName" : "AccountName",
+            "alias" : "2",
+            "dataType" : "string",
+            "filterOperator" : "GTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              0
+            ],
+            "locked" : false,
+            "aggregateFunction" : "count_distinct",
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "1 AND 2"
+      },
+      "skip" : 0,
+      "drillDownReportDimensions" : [
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count_distinct",
+          "type" : 0,
+          "fieldDisplayName" : "Count_distinct of AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Page Views",
+          "axis" : "row",
+          "decimalPlaces" : 3,
+          "agg_func" : "avg",
+          "type" : 1,
+          "fieldDisplayName" : "Avg of Page Views",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Files Downloaded",
+          "axis" : "row",
+          "decimalPlaces" : 3,
+          "agg_func" : "max",
+          "type" : 1,
+          "fieldDisplayName" : "Max of Files Downloaded",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Date",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        }
+      ]
+    }
+  ],
+  "format" : "JSON",
+  "displayType" : "LINE",
+  "reportMasterRequired" : false,
+  "newReport" : true,
+  "reportOptions" : {
+    "normalize" : false,
+    "enableDataLabels" : false,
+    "showLabels" : true,
+    "enableRGBColor" : false,
+    "enableDualYAxis" : true
+  },
+  "deleted" : false
+}

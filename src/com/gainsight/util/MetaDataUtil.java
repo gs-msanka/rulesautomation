@@ -399,7 +399,8 @@ public class MetaDataUtil {
         String[] numberFields2 = new String[]{"Emails Sent Count", "Leads", "No of Campaigns", "DB Size", "Active Users"};
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields1, false);
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
-        addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)), sfdc.fetchSFDCinfo(), true);
+        addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields1), sfdc.fetchSFDCinfo(), true);
+        addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields2), sfdc.fetchSFDCinfo(), true);
     }
 
     //same method is used by rules engine test cases also.

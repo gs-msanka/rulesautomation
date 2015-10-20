@@ -1,0 +1,56 @@
+{
+  "configureName": "",
+  "loadableObjects": [
+    {
+      "objectType": "Native",
+      "dataLoadObject": [
+        {
+          "objectName": "RulesSFDCCustom Object",
+          "fields": [
+            {
+              "fieldName": "C_Currency :: CURRENCY"
+            },
+            {
+              "fieldName": "C_Percent :: PERCENT"
+            },
+            {
+              "fieldName": "C_Phone :: PHONE"
+            },
+            {
+              "fieldName": "C_Picklist :: PICKLIST"
+            },
+            {
+              "fieldName": "C_URL :: URL"
+            },
+            {
+              "fieldName": "Id :: ID"
+            },
+            {
+              "fieldName": "CName :: STRING"
+            },
+            {
+              "fieldName": "ActiveUsers :: DOUBLE"
+            },
+            {
+              "fieldName": "AccPercentage :: PERCENT"
+            }
+          ],
+          "removeFields": [
+            {
+              "fieldName": "C_Currency :: CURRENCY"
+            },
+            {
+              "fieldName": "C_Percent :: PERCENT"
+            },
+            {
+              "fieldName": "C_Phone :: PHONE"
+            },
+            {
+              "fieldName": "C_Picklist :: PICKLIST"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,32 +1,1329 @@
 {
-  "LodabaleObjects": [
+  "configureName": "",
+  "loadableObjects": [
     {
       "objectType": "Native",
       "dataLoadObject": [
         {
-          "objectName": "account",
+          "objectName": "Account",
           "fields": [
             {
-              "fieldName": ""
+              "fieldName": "Account Description :: TEXTAREA"
             },
             {
-              "fieldName": ""
+              "fieldName": "Account Fax :: PHONE"
+            },
+            {
+              "fieldName": "Account Name :: STRING"
+            },
+            {
+              "fieldName": "Account Number :: STRING"
+            },
+            {
+              "fieldName": "Account Rating :: PICKLIST"
+            },
+            {
+              "fieldName": "Account Site :: STRING"
+            },
+            {
+              "fieldName": "Account Source :: PICKLIST"
+            },
+            {
+              "fieldName": "Account Type :: PICKLIST"
+            },
+            {
+              "fieldName": "AccPercentage :: PERCENT"
+            },
+            {
+              "fieldName": "ActiveUsers :: DOUBLE"
+            },
+            {
+              "fieldName": "Annual Revenue :: CURRENCY"
+            },
+            {
+              "fieldName": "Boolean Auto :: BOOLEAN"
+            },
+            {
+              "fieldName": "C_Currency :: CURRENCY"
+            },
+            {
+              "fieldName": "C_Email :: EMAIL"
+            },
+            {
+              "fieldName": "C_MultiPicklist :: MULTIPICKLIST"
+            },
+            {
+              "fieldName": "C_Number :: DOUBLE"
+            },
+            {
+              "fieldName": "C_Phone :: PHONE"
+            },
+            {
+              "fieldName": "C_Picklist :: PICKLIST"
+            },
+            {
+              "fieldName": "C_Reference :: USERLOOKUP"
+            },
+            {
+              "fieldName": "C_Reference Email :: EMAIL"
+            },
+            {
+              "fieldName": "C_Text :: STRING"
+            },
+            {
+              "fieldName": "C_TextArea :: TEXTAREA"
+            },
+            {
+              "fieldName": "C_URL :: URL"
+            },
+            {
+              "fieldName": "Currency Auto :: CURRENCY"
+            },
+            {
+              "fieldName": "Data ExternalId :: STRING"
+            },
+            {
+              "fieldName": "Date Auto :: DATE"
+            },
+            {
+              "fieldName": "DateTime Auto :: DATETIME"
+            },
+            {
+              "fieldName": "Email Auto :: EMAIL"
+            },
+            {
+              "fieldName": "Employees :: INTEGER"
+            },
+            {
+              "fieldName": "Id :: ID"
+            },
+            {
+              "fieldName": "Industry :: PICKLIST"
+            },
+            {
+              "fieldName": "IsActive :: BOOLEAN"
+            },
+            {
+              "fieldName": "MultiPicklist Auto :: MULTIPICKLIST"
+            },
+            {
+              "fieldName": "Number Auto :: DOUBLE"
+            },
+            {
+              "fieldName": "Owner :: USERLOOKUP"
+            },
+            {
+              "fieldName": "Ownership :: PICKLIST"
+            },
+            {
+              "fieldName": "Percent Auto :: PERCENT"
+            },
+            {
+              "fieldName": "PickList Auto :: PICKLIST"
+            },
+            {
+              "fieldName": "Shipping City :: STRING"
+            },
+            {
+              "fieldName": "Website :: URL"
+            },
+            {
+              "fieldName": "Ticker Symbol :: STRING"
+            },
+            {
+              "fieldName": "SIC Description :: STRING"
+            },
+            {
+              "fieldName": "SIC Code :: STRING"
+            },
+            {
+              "fieldName": "Owner ID Email :: EMAIL"
+            },
+            {
+              "fieldName": "Billing State/Province :: STRING"
+            },
+            {
+              "fieldName": "Billing Zip/Postal Code :: STRING"
+            },
+            {
+              "fieldName": "URL Auto :: URL"
+            }
+          ]
+        },
+        {
+          "objectName": "Case",
+          "fields": [
+            {
+              "fieldName": "Case Origin :: PICKLIST"
+            },
+            {
+              "fieldName": "Case Reason :: PICKLIST"
+            },
+            {
+              "fieldName": "Company :: STRING"
+            },
+            {
+              "fieldName": "Description :: TEXTAREA"
+            },
+            {
+              "fieldName": "Email Address :: EMAIL"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Phone :: STRING"
+            },
+            {
+              "fieldName": "Subject :: STRING"
+            }
+          ]
+        },
+        {
+          "objectName": "Opportunity",
+          "fields": [
+            {
+              "fieldName": "Amount :: CURRENCY"
+            },
+            {
+              "fieldName": "Campaign ID :: STRING"
+            },
+            {
+              "fieldName": "Close Date :: DATE"
+            },
+            {
+              "fieldName": "Description :: TEXTAREA"
+            },
+            {
+              "fieldName": "Forecast Category :: PICKLIST"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Opportunity Type :: PICKLIST"
+            },
+            {
+              "fieldName": "Stage :: PICKLIST"
+            }
+          ]
+        },
+        {
+          "objectName": "Contact",
+          "fields": [
+            {
+              "fieldName": "Business Fax :: PHONE"
+            },
+            {
+              "fieldName": "Business Phone :: PHONE"
+            },
+            {
+              "fieldName": "Contact Description :: TEXTAREA"
+            },
+            {
+              "fieldName": "Department :: STRING"
+            },
+            {
+              "fieldName": "Do Not Call :: BOOLEAN"
+            },
+            {
+              "fieldName": "Email :: EMAIL"
+            },
+            {
+              "fieldName": "Home Phone :: PHONE"
+            },
+            {
+              "fieldName": "Lead Source :: PICKLIST"
+            }
+          ]
+        },
+        {
+          "objectName": "User",
+          "fields": [
+            {
+              "fieldName": "Active :: BOOLEAN"
+            },
+            {
+              "fieldName": "Admin Info Emails :: BOOLEAN"
+            },
+            {
+              "fieldName": "Alias :: STRING"
+            },
+            {
+              "fieldName": "Cell :: PHONE"
+            },
+            {
+              "fieldName": "City :: STRING"
+            },
+            {
+              "fieldName": "Contact ID :: STRING"
+            },
+            {
+              "fieldName": "Department :: STRING"
+            },
+            {
+              "fieldName": "Id :: ID"
+            }
+          ]
+        },
+        {
+          "objectName": "Event",
+          "fields": [
+            {
+              "fieldName": "Description :: TEXTAREA"
+            },
+            {
+              "fieldName": "Duration :: INTEGER"
+            },
+            {
+              "fieldName": "End Date :: DATE"
+            }
+          ]
+        },
+        {
+          "objectName": "Task",
+          "fields": [
+            {
+              "fieldName": "Call Result :: STRING"
+            },
+            {
+              "fieldName": "Priority :: PICKLIST"
+            }
+          ]
+        },
+        {
+          "objectName": "RulesSFDCCustom Object",
+          "fields": [
+            {
+              "fieldName": "C_Currency :: CURRENCY"
+            },
+            {
+              "fieldName": "C_URL :: URL"
+            }
+          ]
+        },
+        {
+          "objectName": "Call Center",
+          "fields": [
+            {
+              "fieldName": "Internal Name :: STRING"
+            },
+            {
+              "fieldName": "Version :: DOUBLE"
             }
           ]
         }
       ]
     },
     {
-      "objectType": "MATRIX",
+      "objectType": "Matrix",
       "dataLoadObject": [
         {
-          "objectName": "account",
+          "objectName": "SubjectArea 0",
           "fields": [
             {
-              "fieldName": ""
+              "fieldName": "AnnualRevenue :: NUMBER"
             },
             {
-              "fieldName": ""
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "Matrix",
+      "dataLoadObject": [
+        {
+          "objectName": "SubjectArea 1",
+          "fields": [
+            {
+              "fieldName": "AnnualRevenue :: NUMBER"
+            },
+            {
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "Matrix",
+      "dataLoadObject": [
+        {
+          "objectName": "SubjectArea 2",
+          "fields": [
+            {
+              "fieldName": "AnnualRevenue :: NUMBER"
+            },
+            {
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "Matrix",
+      "dataLoadObject": [
+        {
+          "objectName": "SubjectArea 3",
+          "fields": [
+            {
+              "fieldName": "AnnualRevenue :: NUMBER"
+            },
+            {
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "Matrix",
+      "dataLoadObject": [
+        {
+          "objectName": "SubjectArea 4",
+          "fields": [
+            {
+              "fieldName": "AnnualRevenue :: NUMBER"
+            },
+            {
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "objectType": "Matrix",
+      "dataLoadObject": [
+        {
+          "objectName": "SubjectArea 5",
+          "fields": [
+            {
+              "fieldName": "AnnualRevenue :: NUMBER"
+            },
+            {
+              "fieldName": "BooleanField :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField1 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField2 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField3 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField4 :: BOOLEAN"
+            },
+            {
+              "fieldName": "BooleanField5 :: BOOLEAN"
+            },
+            {
+              "fieldName": "CreatedDateTime :: DATETIME"
+            },
+            {
+              "fieldName": "Date :: DATE"
+            },
+            {
+              "fieldName": "Date1 :: DATE"
+            },
+            {
+              "fieldName": "Date2 :: DATE"
+            },
+            {
+              "fieldName": "Date3 :: DATE"
+            },
+            {
+              "fieldName": "Date4 :: DATE"
+            },
+            {
+              "fieldName": "Date5 :: DATE"
+            },
+            {
+              "fieldName": "Date6 :: DATE"
+            },
+            {
+              "fieldName": "Date7 :: DATE"
+            },
+            {
+              "fieldName": "Date8 :: DATE"
+            },
+            {
+              "fieldName": "DateTime1 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime2 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime3 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime4 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime5 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime6 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime7 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime8 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime9 :: DATETIME"
+            },
+            {
+              "fieldName": "DateTime10 :: DATETIME"
+            },
+            {
+              "fieldName": "Description :: STRING"
+            },
+            {
+              "fieldName": "Email :: STRING"
+            },
+            {
+              "fieldName": "ID :: STRING"
+            },
+            {
+              "fieldName": "LongTextArea :: STRING"
+            },
+            {
+              "fieldName": "Name :: STRING"
+            },
+            {
+              "fieldName": "Number1 :: NUMBER"
+            },
+            {
+              "fieldName": "Number2 :: NUMBER"
+            },
+            {
+              "fieldName": "Number3 :: NUMBER"
+            },
+            {
+              "fieldName": "Number4 :: NUMBER"
+            },
+            {
+              "fieldName": "Number5 :: NUMBER"
+            },
+            {
+              "fieldName": "Number6 :: NUMBER"
+            },
+            {
+              "fieldName": "Number7 :: NUMBER"
+            },
+            {
+              "fieldName": "Number8 :: NUMBER"
+            },
+            {
+              "fieldName": "Number9 :: NUMBER"
+            },
+            {
+              "fieldName": "Number10 :: NUMBER"
+            },
+            {
+              "fieldName": "Score :: NUMBER"
+            },
+            {
+              "fieldName": "String1 :: STRING"
+            },
+            {
+              "fieldName": "String2 :: STRING"
+            },
+            {
+              "fieldName": "String3 :: STRING"
+            },
+            {
+              "fieldName": "String4 :: STRING"
+            },
+            {
+              "fieldName": "String5 :: STRING"
+            },
+            {
+              "fieldName": "String6 :: STRING"
+            },
+            {
+              "fieldName": "String7 :: STRING"
+            },
+            {
+              "fieldName": "String8 :: STRING"
+            },
+            {
+              "fieldName": "String9 :: STRING"
+            },
+            {
+              "fieldName": "String10 :: STRING"
             }
           ]
         }

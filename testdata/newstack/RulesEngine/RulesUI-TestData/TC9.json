@@ -1,0 +1,61 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 9 - Daily scheduler",
+  "ruleDescription": "Rule 9 - Daily scheduler Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          }
+        ]
+      },
+      {
+        "sourceObject": "Customer Info",
+        "showFields": [
+          {
+            "fieldName": "ASV",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "Rule 9 - CTA - Daily scheduler",
+        "priority": "High",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": []
+    }
+  ],
+  "showScheduler": {
+    "recurringType": "Daily",
+    "dailyRecurringInterval": "EveryWeekday",
+    "startDate": "0",
+    "endDate": "3",
+    "preferredStartTimeHours": "10",
+    "preferredStartTimeMinutes": "10",
+    "timeZone": "America/Los_Angeles",
+    "emailFailures": "athaduka@gainsight.com",
+    "runForHistoricalPeriods": true,
+    "cronExpression": "0 10 10 ? * 2-6 *"
+  }
+}

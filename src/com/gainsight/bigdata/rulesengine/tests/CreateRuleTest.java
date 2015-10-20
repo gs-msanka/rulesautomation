@@ -7,18 +7,19 @@ import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects;
+import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects.DataLoadObject;
+import com.gainsight.bigdata.rulesengine.pages.DataLoadConfiguration;
 import com.gainsight.bigdata.rulesengine.pages.RulesConfigureAndDataSetup;
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.pojo.enums.ActionType;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CTAAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToCustomersAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDAAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMileStoneAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToSFDCAction;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToUsageAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.RuleAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.SetScoreAction;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
@@ -26,9 +27,11 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBServerDetail;
+import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.DateUtil;
@@ -38,11 +41,18 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.util.MongoDBDAO;
+import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.Verifier;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.sforce.soap.partner.sobject.SObject;
 
+import org.apache.commons.io.FileUtils;
+import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -50,8 +60,9 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +86,9 @@ public class CreateRuleTest extends BaseTest {
     private static final String CREATE_ACCOUNTS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_For_LoadToCustomersAction.txt";
     private static final String COLLECTION_MASTER = "collectionmaster";
     private static final String RULES_LOADABLE_OBJECT = "rulesLoadableObject";
+    private static final String SCHEME = "Score";
+    private static final String METRICS_CREATE_FILE =  Application.basedir + "/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
+    private static final String SCORECARD_CLEAN_FILE = Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt";
     private ObjectMapper mapper = new ObjectMapper();
     public static SFDCInfo sfinfo;
     private DBDetail dbDetail = null;
@@ -87,9 +101,12 @@ public class CreateRuleTest extends BaseTest {
     String[] dataBaseDetail = null;
     private String host = null;
     private String port = null;
+    private String userName = null;
+	private String passWord = null;
     private String collectionDBName = null;
     private RulesUtil rulesUtil = new RulesUtil();
     public List<String> collectionNames = new ArrayList<String>();
+    private TenantManager tenantManager;
 
 
     @BeforeClass
@@ -98,28 +115,38 @@ public class CreateRuleTest extends BaseTest {
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
-        TenantManager tenantManager = new TenantManager();
+        tenantManager=new TenantManager();
+        GSEmailSetup gs=new GSEmailSetup();
+        gs.enableOAuthForOrg();
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
+        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager();
         dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
         adminScorecardSection.enableScorecard();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(NUMERIC_SCHEME_FILE));
+        runMetricSetup(METRICS_CREATE_FILE, SCHEME);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
         metaUtil.createFieldsOnUsageData(sfdc);
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
         metaUtil.createFieldsOnAccount(sfdc);
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
             host = dataBaseDetail[0];
             port = dataBaseDetail[1];
+            userName=dbServerDetail.getUserName();
+			passWord=dbServerDetail.getPassword();
         }
         Log.info("Host is" + host + " and Port is " + port);
+        // Updating timeZone to America/Los_Angeles in Application settings
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
     }
 
     @BeforeMethod
@@ -441,4 +468,164 @@ public class CreateRuleTest extends BaseTest {
         }
         verifier.assertVerification();
     }
+    
+   // @Test // TODO - WIP
+	public void verifyDataLoadConfiguration() throws Exception{
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port),userName, passWord, dbDetail.getDbName());
+		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
+		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
+				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnConfigure();
+		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectDataSource(loadableObject.getObjectType());
+			for (DataLoadObject dataLoadObject : loadableObject.getDataLoadObject()) {
+				dataLoadConfiguration.selectSourceObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.clickOnNativeObjectSelectionSymbol();
+				dataLoadConfiguration.clickOnParticularObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.selectFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.clickOnSaveButton();
+			}
+		}
+	}
+	
+
+	/**
+	 * TestCase to verify Gainsight package objects(JBCXM) are available under
+	 * dataload configuration Dropdownlist or not.
+	 * 
+	 * This testcase will work in Beta or managed package only(Since, In Dev org
+	 * Rules Team is not handling this case)
+	 * @throws IOException 
+	 */
+	@Test
+	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
+		try {
+			RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+			rulesManagerPage.clickOnConfigure();
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectSourceObjectFromNativeData();
+			dataLoadConfiguration.clickOnNativeObjectSelection();
+			String str = FileUtils.readFileToString(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC8.txt"));
+			List<String> gainSightObjects = new ArrayList<String>(Arrays.asList(str.split(",")));
+			Element element = new Element();
+			env.setTimeout(0);
+			for (int i = 0; i < gainSightObjects.size(); i++) {
+				Assert.assertFalse(element.isElementPresent("//li[contains(@class, 'ui-multiselect-option')]/descendant::span[text()='"+gainSightObjects.get(i)+"']"),
+						"Check whether Gainsight Package Objects are present under DataLoadConfiguration List !!!");
+			}
+		} finally {
+			env.setTimeout(30);
+		}
+	}
+	
+	@Test
+	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
+				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnConfigure();
+		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
+			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
+			dataLoadConfiguration.selectDataSource(loadableObject.getObjectType());
+			for (DataLoadObject dataLoadObject : loadableObject.getDataLoadObject()) {
+				dataLoadConfiguration.selectSourceObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.clickOnNativeObjectSelectionSymbol();
+				dataLoadConfiguration.clickOnParticularObject(dataLoadObject.getObjectName());
+				dataLoadConfiguration.selectFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.removeFieldsFromList(dataLoadObject);
+				dataLoadConfiguration.clickOnSaveButton();
+				int expectedList = dataLoadObject.getFields().size() - dataLoadObject.getRemoveFields().size();
+				System.out.println("Expected Size is " + expectedList);
+				Element element = new Element();
+				List<WebElement> actualList = element.getAllElement("//select[contains(@class,'selectedFields fieldSelect')]/descendant::option");
+				Log.info("Actual Selected Fileds List in UI is " + actualList.size());
+				Assert.assertEquals(actualList.size(), expectedList,  "Check Dropdown list Size in UI with actual testdata");
+			}
+		}
+	}
+	
+	@Test
+	public void dailyScheduler() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC9.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
+        rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
+	}
+	
+	
+	@Test
+	public void weeklyScheduler() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC10.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
+        rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!"); 
+	}
+	
+	@Test
+	public void monthlyScheduler() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC11.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
+        rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		} 
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");   
+	}
+	
+	@Test
+	public void yearlyScheduler() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC12.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
+        rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        String ruleID=null;
+        SObject[] result =sfdc.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__AutomatedAlertRules__c where JBCXM__LastRunResult__c=null order by CreatedDate desc limit 1"));
+		if (result.length > 0) {
+			 ruleID = (String) result[0].getField("Id");			
+		}else {
+			throw new RuntimeException("RuleID is not present, Please check Automated Alert Rules Object");
+		}
+	 
+		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
+		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
+	}
+	
+
 }

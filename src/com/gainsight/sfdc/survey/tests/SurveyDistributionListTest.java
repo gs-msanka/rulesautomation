@@ -47,7 +47,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 	
 	@BeforeMethod
 	public void cleanUpData(){
-		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
+		sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];"));
 	}
 
 	@TestInfo(testCaseIds = {"GS-2715", "GS-2716", "GS-2720", "GS-2721"})
@@ -171,8 +171,8 @@ public class SurveyDistributionListTest extends SurveySetup {
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
 						+ surveyParticipants.getSearchFilter()
 						+ "' and isDeleted=false")),
-				sfdc.getRecordCount("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
-						+ getSurveyDistributionID(surProp) + "'"));
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surProp) + "'")));
 	}
 
 	@TestInfo(testCaseIds = {"GS-2715", "GS-2716", "GS-2720", "GS-2721"})
@@ -328,8 +328,8 @@ public class SurveyDistributionListTest extends SurveySetup {
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='"
 						+ surveyParticipants.getSearchFilter()
 						+ "' and isDeleted=false")),
-				sfdc.getRecordCount("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
-						+ getSurveyDistributionID(surveyPropData) + "'"));
+				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyDistributionScheduleId__c='"
+						+ getSurveyDistributionID(surveyPropData) + "'")));
 	}
 	
 	@TestInfo(testCaseIds = { "GS-2665","GS-2715", "GS-2716", "GS-2720", "GS-2721" })

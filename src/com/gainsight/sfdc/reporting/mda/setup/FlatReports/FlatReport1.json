@@ -1,0 +1,222 @@
+
+{
+  "ReportInfo" : [
+    {
+      "SchemaName" : "",
+      "CollectionID" : "",
+      "limit" : 500,
+      "Type" : "adhoc",
+      "Dimensions" : [
+        {
+          "col" : "Date",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        },
+        {
+          "col" : "AccountName",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Page Views",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Page Views",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "EventTimeStamp",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "EventTimeStamp",
+          "dataType" : "dateTime",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Active",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Active",
+          "dataType" : "boolean",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductCode",
+          "axis" : "measure",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        }
+      ],
+      "ReportReadLimit" : 100,
+      "DimensionBrowserReadLimit" : 1000,
+      "reportName" : "Auto_Flat Report",
+      "ReportId" : "739b7687-824d-4492-94ff-80d29c29209d",
+      "assetType" : "ANALYTICS",
+      "whereAdvanceFilter" : {
+        "filters" : [
+          {
+            "dbName" : "Active",
+            "alias" : "A",
+            "dataType" : "boolean",
+            "filterOperator" : "EQ",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              true
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "Date",
+            "alias" : "B",
+            "dataType" : "date",
+            "filterOperator" : "GTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "03-11-2015"
+            ],
+            "timeFunction" : "CUSTOM",
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "Page Views",
+            "alias" : "C",
+            "dataType" : "number",
+            "filterOperator" : "GTE",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              50
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 1
+          },
+          {
+            "dbName" : "ProductCode",
+            "alias" : "D",
+            "dataType" : "string",
+            "filterOperator" : "STARTSWITH",
+            "logicalOperator" : "AND",
+            "filterValues" : [
+              "Code00"
+            ],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          },
+          {
+            "dbName" : "AccountName",
+            "alias" : "E",
+            "dataType" : "string",
+            "filterOperator" : "NE",
+            "logicalOperator" : "AND",
+            "filterValues" : [],
+            "locked" : false,
+            "collectionId" : "",
+            "type" : 0
+          }
+        ],
+        "expression" : "A AND B AND C AND D AND E"
+      },
+      "skip" : 0,
+      "drillDownReportDimensions" : [
+        {
+          "col" : "AccountName",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "AccountName",
+          "dataType" : "string",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Page Views",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "sum",
+          "type" : 1,
+          "fieldDisplayName" : "Page Views",
+          "dataType" : "number",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Date",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Date",
+          "dataType" : "date",
+          "collectionId" : ""
+        },
+        {
+          "col" : "EventTimeStamp",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "EventTimeStamp",
+          "dataType" : "dateTime",
+          "collectionId" : ""
+        },
+        {
+          "col" : "Active",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "Active",
+          "dataType" : "boolean",
+          "collectionId" : ""
+        },
+        {
+          "col" : "ProductCode",
+          "axis" : "row",
+          "decimalPlaces" : 0,
+          "agg_func" : "count",
+          "type" : 0,
+          "fieldDisplayName" : "ProductCode",
+          "dataType" : "string",
+          "collectionId" : ""
+        }
+      ]
+    }
+  ],
+  "format" : "JSON",
+  "displayType" : "GRID",
+  "reportMasterRequired" : false,
+  "newReport" : true,
+  "reportOptions" : {
+    "normalize" : false,
+    "enableDataLabels" : false,
+    "showLabels" : true,
+    "enableRGBColor" : false,
+    "enableDualYAxis" : true
+  },
+  "deleted" : false
+}

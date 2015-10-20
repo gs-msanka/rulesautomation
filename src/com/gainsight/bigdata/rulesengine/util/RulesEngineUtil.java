@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.rulesengine.util;
 
 import com.gainsight.bigdata.rulesengine.pages.EditRulePage;
+import com.gainsight.bigdata.rulesengine.pages.RulesSchedulerPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRulePage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
@@ -66,8 +67,12 @@ public class RulesEngineUtil  extends BaseTest{
                 setupRuleActionPage.clickOnActionCollapse(i);
                 i++;
             }
-            setupRuleActionPage.saveRule();
-        }
+            setupRuleActionPage.saveRule();  
+			if (rulesPojo.getShowScheduler() != null) {
+				RulesSchedulerPage rulesSchedulerPage = new RulesSchedulerPage();
+				rulesSchedulerPage.fillSchedulerInformation(rulesPojo.getShowScheduler());
+			}
+		}
     }
 
     /**
