@@ -12,7 +12,6 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
-import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.http.ResponseObj;
@@ -26,8 +25,6 @@ import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.http.HttpStatus;
-import org.apache.poi.util.StringUtil;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -61,7 +58,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws IOException {
-        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        //Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails =tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         dataLoadManager = new DataLoadManager();
@@ -94,7 +91,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
@@ -126,7 +124,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -164,7 +163,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -202,7 +202,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -239,7 +240,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -277,7 +279,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -315,7 +318,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -353,7 +357,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -392,7 +397,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -442,7 +448,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -486,7 +493,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -525,7 +533,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -577,7 +586,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -630,7 +640,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -674,7 +685,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -725,7 +737,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -781,7 +794,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -837,7 +851,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
@@ -887,7 +902,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -925,7 +941,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -968,7 +985,8 @@ public class LoadDataToMDATest extends NSTestBase {
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES));
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
@@ -1023,6 +1041,12 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
@@ -1030,7 +1054,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        verifyJobDetails(statusId,collectionName,45,0);
+        verifyJobDetails(statusId, collectionName, 45, 0);
 
         File expectedFile = new File(testDataFiles+"/tests/t23/ExpectedData.csv");
         verifyData(actualCollectionInfo, expectedFile);
