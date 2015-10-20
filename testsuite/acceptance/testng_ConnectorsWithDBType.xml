@@ -25,6 +25,12 @@
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
         </classes>
     </test>
+    <test verbose="3" name="Load To MDA REDSHIFT" preserve-order="true">
+        <parameter name="dbStoreType" value="Postgres"/>
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
+        </classes>
+    </test>
 
     <test verbose="3" name="Load To MDA MONGO AND AGG" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo"/>
