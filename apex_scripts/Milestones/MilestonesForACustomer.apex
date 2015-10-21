@@ -7,7 +7,7 @@ List<String> comments=new List<String>{'First Transactions successfully added','
                                         'Check on Customer Scorecard','Customer signed off on Implementation',
                                         '1st Quarterly Business Review Meet', 'Referred to 2 more customers',
                                         'Renewal due for this customer','Software release 4.0.2'};
-Date myDate = Date.today();
+DateTime myDate = DateTime.now();
 Integer d=0;
 for(Integer p=0;p<msList.size();p++)
 {
