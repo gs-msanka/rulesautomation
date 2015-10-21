@@ -154,7 +154,7 @@ public class Customer360Page extends BasePage {
                 Timer.sleep(2); //As its failing more frequently, add stale pause.
                 field.clearAndSetText(ACC_INS_NAME_INPUT, name);
                 driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
-                wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                wait.waitTillElementDisplayed("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
                 driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
                 selected = true;
                 break;
