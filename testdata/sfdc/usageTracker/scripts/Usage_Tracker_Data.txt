@@ -1,19 +1,37 @@
-
-List<Account< acclist = [Select id from account where name='Lexidata Corporation'];
+List<Account> acclist = [Select id from account where name='Lexidata Corporation'];
 Account acc1;
 if(acclist.size() < 1) {
     acc1 = new Account(name='Lexidata Corporation');
     insert acc1;
+    acclist.add(acc1);
 } else {
-    acc1 = aclist.get(0);
+    acc1 = acclist.get(0);
 }
 
+DELETE [SELECT Id FROM JBCXM__UsageTracker__c where JBCXM__account__r.name='Lexidata Corporation'];
+DELETE [SELECT Id FROM JBCXM__CustomerInfo__c where JBCXM__account__r.name='Lexidata Corporation'];
 
-List<Account> accList = [SELECT Id FROM Account WHERE Name = 'Lexidata Corporation' limit 10];
-System.debug(accList.size());
-DELETE [SELECT Id FROM JBCXM__UsageTracker__c];
+List<JBCXM__PickList__c> statusList = [Select id, Name from JBCXM__PickList__c where JBCXM__Category__c = 'Customer Status' and JBCXM__SystemName__c ='ActiveCustomer'];
+if(statusList.size() <1) {
+    System.debug('No Customer status ActiveCustomer found in your org');
+}
+
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+for(Account acc : acclist) {
+    JBCXM__CustomerInfo__c cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c = acc.Id,
+                                            JBCXM__Status__c =statusList.get(0).Id);
+    custList.add(cust);
+}
+insert custList;
+
 List<String> utList = new List<String>{'Emails Sent Count', 'Files Upload Count', 'Network Traffic Created'};
-List<JBCXM__PickList__c> pkList = [SELECT Id FROM JBCXM__PickList__c WHERE Name IN: utList ORDER BY Name];
+List<JBCXM__PickList__c> pkList = [SELECT Id, JBCXM__UsageTrackingMeasure__c FROM JBCXM__PickList__c WHERE Name IN: utList and
+                                    JBCXM__AdoptionMeasure__c=true and JBCXM__Category__c='Adoption Measure Types' ORDER BY Name];
+for(JBCXM__PickList__c pk : pkList) {
+         pk.JBCXM__UsageTrackingMeasure__c =  true;
+}
+update pkList;
+
 List<JBCXM__UsageTracker__c> usTList = new List<JBCXM__UsageTracker__c>();
 
 JBCXM__UsageTracker__c ut;
