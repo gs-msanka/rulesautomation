@@ -26,7 +26,7 @@ insert custList;
 
 List<String> utList = new List<String>{'Emails Sent Count', 'Files Upload Count', 'Network Traffic Created'};
 List<JBCXM__PickList__c> pkList = [SELECT Id, JBCXM__UsageTrackingMeasure__c FROM JBCXM__PickList__c WHERE Name IN: utList and
-                                    JBCXM__AdoptionMeasure__c=true and JBCXM__Category__c='Adoption Measure Types' ORDER BY Name];
+                                     JBCXM__Category__c='Adoption Measure Types' ORDER BY Name];
 for(JBCXM__PickList__c pk : pkList) {
          pk.JBCXM__UsageTrackingMeasure__c =  true;
 }
