@@ -134,9 +134,9 @@ public class Customer360Page extends BasePage {
             try {
                 wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
 				wait.waitTillElementDisplayed(ACC_INS_NAME_INPUT, MIN_TIME, MAX_TIME);
-				Timer.sleep(2);  //Stale pause, added as we see it fails quite often.
 				Actions action = new Actions(driver);
-				action.moveToElement(element.getElement(CUST_SELECT_LIST)).click().perform();
+				action.moveToElement(element.getElement(CUST_SELECT_LIST)).click().build().perform();
+				Timer.sleep(2);  //Stale pause, added as we see it fails quite often.
                 wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, 5);
                 if(byInstance) {
                     if(byContains) {
