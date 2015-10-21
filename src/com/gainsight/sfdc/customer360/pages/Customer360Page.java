@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import java.awt.event.MouseEvent;
 import java.sql.Time;
 import java.util.HashMap;
 
@@ -13,6 +14,8 @@ import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.Mouse;
 
 public class Customer360Page extends BasePage {
 
@@ -130,8 +133,10 @@ public class Customer360Page extends BasePage {
         for(int i=0; i <3; i++) {
             try {
                 wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
+				wait.waitTillElementDisplayed(ACC_INS_NAME_INPUT, MIN_TIME, MAX_TIME);
 				Timer.sleep(2);  //Stale pause, added as we see it fails quite often.
-                item.click(CUST_SERCHBY_SELECT);
+				Actions action = new Actions(driver);
+				action.moveToElement(element.getElement(CUST_SELECT_LIST)).click().perform();
                 wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, 5);
                 if(byInstance) {
                     if(byContains) {
