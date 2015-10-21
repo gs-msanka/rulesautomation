@@ -130,8 +130,9 @@ public class Customer360Page extends BasePage {
         for(int i=0; i <3; i++) {
             try {
                 wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
+				Timer.sleep(2);  //Stale pause, added as we see it fails quite often.
                 item.click(CUST_SERCHBY_SELECT);
-                wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, MAX_TIME-20);
+                wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, 5);
                 if(byInstance) {
                     if(byContains) {
                         item.click(dropdownElement+"/li[contains(@class, 'instance-name-cnt')]");
@@ -154,7 +155,7 @@ public class Customer360Page extends BasePage {
                 break;
             } catch (Exception e) {
                 Log.error("Unable to select customer", e);
-                Timer.sleep(2);
+				refreshPage();
             }
         }
         if(!selected) {
