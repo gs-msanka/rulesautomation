@@ -34,8 +34,7 @@ public class Adoption_Account_Weekly_Test extends AdoptionDataSetup {
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
-        dataSetup.updateUtilizationCal("STANDARD");
-        dataSetup.updateUsersDisplayInUsageGrids(true);
+        dataSetup.updateUtilizationAndUserDisplayInGrid("STANDARD", true);
         dataSetup.runAdoptionAggregation(1, true, isEndDate, WEEKDAY);
     }
 
