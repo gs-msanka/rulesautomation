@@ -310,8 +310,8 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 	 */
 	
 	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
-		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase(),
-				nsConfig.getSchedulerDBUserName(), nsConfig.getSchedulerDBPassword());
+		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()),
+				nsConfig.getSchedulerDBUserName(), nsConfig.getSchedulerDBPassword(), nsConfig.getSchedulerDBDatabase());
 		String cronExpression = null;
 		try {
 			Document whereQuery = new Document();
