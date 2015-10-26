@@ -4,6 +4,8 @@ import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.MongoUtil;
+import com.mongodb.BasicDBObject;
+
 import org.bson.Document;
 import org.bson.types.Binary;
 
@@ -213,5 +215,29 @@ public class MongoDBDAO  {
         updateDocument.append("$set", new Document().append("CollectionDetails.dataStoreType", dbStoreType.name()));
 
         return mongoUtil.updateSingleRecord(COLLECTION_MASTER, document, updateDocument);
+    }
+    
+    /**
+     * Deletes all Rrecord from mongo collection based on tenantID
+     * @param tenantID Tenant id
+     * @param mongoCollection Collection name
+     */
+    public boolean deleteAllRecordsFromMongoCollectionBasedOnTenantID(String tenantID, String mongoCollection){
+    	BasicDBObject query = new BasicDBObject();
+		query.put("tenantId", tenantID);
+		return mongoUtil.removeMany(mongoCollection, query);
+    }
+    
+    /**
+     * Deletes all Rrecord from mongo collection from collection master
+     * @param tenantID Tenant id
+     * @param mongoCollection Collection name
+     */
+    public boolean deleteCollectionSchemaFromCollectionMaster(String tenantID, String mongoCollection){
+		BasicDBObject andQuery = new BasicDBObject();
+		List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+		obj.add(new BasicDBObject("TenantId", tenantID));
+		andQuery.put("$and", obj);
+        return mongoUtil.removeMany(mongoCollection, andQuery);
     }
 }
