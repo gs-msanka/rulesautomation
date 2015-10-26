@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
+import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
@@ -36,6 +37,7 @@ import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
@@ -67,6 +69,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -111,6 +114,7 @@ public class CreateRuleTest extends BaseTest {
     private RulesUtil rulesUtil = new RulesUtil();
     public List<String> collectionNames = new ArrayList<String>();
     private TenantManager tenantManager;
+    private Calendar calendar = Calendar.getInstance();
 
 
     @BeforeTest
@@ -155,7 +159,7 @@ public class CreateRuleTest extends BaseTest {
 		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
-        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
     }
     
     @BeforeClass
@@ -687,5 +691,57 @@ public class CreateRuleTest extends BaseTest {
 		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
-
+	
+	@Test
+	public void mdaJoinsTest1() throws Exception{
+	       
+		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		try {
+			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER),
+					"Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)),JobInfo.class);
+		dataETL.execute(jobInfo);
+        JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
+		dataETL.execute(load);
+		String collectionName = "RedShift-Joins-Collection-1";
+		Log.info("Collection Name : " + collectionName);
+		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")),CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+		String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+		Assert.assertNotNull(collectionId);
+		CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+	    JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
+		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,calendar.getTime());
+		DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+		String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
+		Assert.assertNotNull(statusId);
+		dataLoadManager.waitForDataLoadJobComplete(statusId);
+	       
+	    JobInfo load1 = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
+		dataETL.execute(load1);
+		String collectionName1 = "RedShift-Joins-Collection-2";
+		Log.info("Collection Name : " + collectionName1);
+	    CollectionInfo collectionInfo1 = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")), CollectionInfo.class);
+		collectionInfo1.getCollectionDetails().setCollectionName(collectionName1);
+		String collectionId1 = dataLoadManager.createSubjectAreaAndGetId(collectionInfo1);
+		Assert.assertNotNull(collectionId1);
+	    CollectionInfo actualCollectionInfo1 = dataLoadManager.getCollectionInfo(collectionId1);
+	    JobInfo loadTransform1 = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
+	    File dataLoadFile1 = FileProcessor.getDateProcessedFile(loadTransform1, calendar.getTime());
+	    DataLoadMetadata metadata1 = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo1);
+	    metadata1.setCollectionName(actualCollectionInfo1.getCollectionDetails().getCollectionName());
+	    String statusId1 = dataLoadManager.dataLoadManage(metadata1, dataLoadFile1);
+	    Assert.assertNotNull(statusId1);
+	    dataLoadManager.waitForDataLoadJobComplete(statusId1);
+	       
+	       
+	       
+	       
+	    }
+	    
 }
