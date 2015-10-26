@@ -36,8 +36,7 @@ public class Adoption_Account_Monthly_Test extends BaseTest {
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
-        dataSetup.updateUtilizationCal("STANDARD");
-        dataSetup.updateUsersDisplayInUsageGrids(true);
+        dataSetup.updateUtilizationAndUserDisplayInGrid("STANDARD", true);
         dataSetup.runAdoptionAggregation(1, false, false, null);
     }
 

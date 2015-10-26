@@ -36,8 +36,7 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         dataSetup.initialSetup();
         dataSetup.loadUsageAccountAndCustomersData();
         dataSetup.loadUsageData(JOB_UsageData);
-        dataSetup.updateUtilizationCal("STANDARD");
-        dataSetup.updateUsersDisplayInUsageGrids(true);
+        dataSetup.updateUtilizationAndUserDisplayInGrid("STANDARD", true);
         runAdoptionAggregation(15, true, isEndDate, WEEKDAY);
     }
 
@@ -327,15 +326,19 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
     }
 
@@ -353,18 +356,23 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         List<List<String>> tableData = usage.getAdoptionTableData();
         String[] data = testData.get("UD_Data1").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         Assert.assertTrue(usage.isDataPresentInGridData(tableData, data[1]));
     }
 
@@ -382,26 +390,31 @@ public class Adoption_Instance_Weekly_Test extends AdoptionDataSetup {
         List<List<String>> tableData = usage.getAdoptionTableData();
         String[] data = testData.get("UD_Data1").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
             Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data2").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
             Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data3").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
             Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data4").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
             Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }
         data = testData.get("UD_Data5").split(":::");
         usage.viewCustomerInstanceData(data[0]);
+        tableData = usage.getAdoptionTableData();
         for(String s : Arrays.copyOfRange(data, 1, data.length)) {
             Assert.assertTrue(usage.isDataPresentInGridData(tableData, s));
         }

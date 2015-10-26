@@ -78,6 +78,8 @@ public class BaseTest {
             sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
             if(sfdcConfig.getSfdcManagedPackage()) {
                 sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            } else {
+                sfdc.runApexCode("AdminHandler.assignPermissionToallGainsightObject();");
             }
             packageUtil.deployPermissionSetCode();
             metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);

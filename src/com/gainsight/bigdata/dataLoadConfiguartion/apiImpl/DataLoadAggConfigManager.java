@@ -282,7 +282,8 @@ public class DataLoadAggConfigManager {
         }
         DataAggProcessJobStatus jobStatus = mapper.convertValue(nsResponseObj.getData(), DataAggProcessJobStatus.class);
         if (jobStatus != null && jobStatus.getStatus() != null
-                && (jobStatus.getStatus().equals(DataAggProcessStatusType.COMPLETED.name()) || jobStatus.getStatus().equals(DataAggProcessStatusType.FAILED_WHILE_PROCESSING.name()))) {
+                && (jobStatus.getStatus().equals(DataAggProcessStatusType.COMPLETED.name()) ||
+                jobStatus.getStatus().equals(DataAggProcessStatusType.FAILED_WHILE_PROCESSING.name()))) {
             result = true;
         }
         return result;

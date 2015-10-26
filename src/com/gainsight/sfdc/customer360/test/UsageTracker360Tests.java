@@ -22,8 +22,8 @@ import com.gainsight.utils.DataProviderArguments;
  * To change this template use File | Settings | File Templates.
  */
 public class UsageTracker360Tests  extends BaseTest {
-    private final String TEST_DATA_FILE = "testdata/sfdc/usageTracker/data/UsageTracker_360_TestData.xls";
-    private final String DATA_SCRIPT_FILE  = env.basedir+"/testdata/sfdc/usageTracker/scripts/Usage_Tracker_Data.txt";
+    private final String TEST_DATA_FILE     = "testdata/sfdc/usageTracker/data/UsageTracker_360_TestData.xls";
+    private final String DATA_SCRIPT_FILE   = env.basedir+"/testdata/sfdc/usageTracker/scripts/Usage_Tracker_Data.txt";
     private final String SETUP_SCRIPT_FILE  = env.basedir+"/testdata/sfdc/usageTracker/scripts/Usage_Tracker_Measures_Create.txt";
 
     @BeforeClass
