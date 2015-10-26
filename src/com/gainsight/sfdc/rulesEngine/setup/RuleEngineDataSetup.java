@@ -210,7 +210,7 @@ public class RuleEngineDataSetup extends BaseTest {
         writer.write(code);
         writer.close();
         jobInfo = mapper.readValue(resolveNameSpace(outFile),JobInfo.class);
-        dataETL.cleanUp(USAGE_OBJECT, null);
+        dataETL.cleanUp(resolveStrNameSpace(USAGE_OBJECT), null);
         dataETL.execute(jobInfo);
     }
 

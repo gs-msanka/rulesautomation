@@ -570,6 +570,7 @@ public class TenantManager {
      * @return - true in case of successful db tenant db details update else false.
      */
     public boolean enableRedShift(TenantDetails tenantDetails, TenantDetails.DBDetail dbDetail) {
+        Log.info("Enabling Redshift...");
         boolean result = false;
         tenantDetails.setRedshiftEnabled(true);
         if(dbDetail !=null && testRedShiftDBDetails(dbDetail)) {
@@ -604,6 +605,7 @@ public class TenantManager {
      * @return
      */
     public boolean disableRedShift(TenantDetails tenantDetails) {
+        Log.info("Disabling Redshift...");
         tenantDetails.setRedshiftEnabled(false);
         return updateTenant(tenantDetails);
     }

@@ -47,7 +47,7 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 	
 	@BeforeMethod
 	public void cleanUpData(){
-		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
+		sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];"));
 	}
  
 	@TestInfo(testCaseIds = {"GS-2732", "GS-2714"}) 
@@ -130,9 +130,6 @@ public class SurveyAddParticipantsTest extends SurveySetup {
 				SurveyAddParticipants.class);
 		surveyAddParticipant.loadFromContactObject(surveyParticipants);
 		surveyAddParticipant.loadParticipants();
-		Assert.assertEquals(surveyAddParticipant.getMessage(),
-				"Selected participants are added successfully",
-				"Verifying message from UI");
 		Assert.assertEquals(
 				getCountFromSurveyParticipantObject(surProp),
 				sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,Name,Title FROM Contact where TITLE='QA' and isDeleted=false")));

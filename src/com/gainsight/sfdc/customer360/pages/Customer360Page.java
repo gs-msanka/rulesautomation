@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.customer360.pages;
 
+import java.awt.event.MouseEvent;
 import java.sql.Time;
 import java.util.HashMap;
 
@@ -13,6 +14,8 @@ import com.gainsight.sfdc.customer360.pojo.CustomerSummary;
 import com.gainsight.sfdc.customer360.pojo.SummaryLabels;
 import com.gainsight.sfdc.customer360.pojo.TimeLineItem;
 import com.gainsight.sfdc.pages.BasePage;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.Mouse;
 
 public class Customer360Page extends BasePage {
 
@@ -130,31 +133,16 @@ public class Customer360Page extends BasePage {
         for(int i=0; i <3; i++) {
             try {
                 wait.waitTillElementDisplayed(CUST_SERCHBY_SELECT, MIN_TIME, MAX_TIME);
-                item.click(CUST_SERCHBY_SELECT);
-                wait.waitTillElementDisplayed(dropdownElement, MIN_TIME, MAX_TIME-20);
-                if(byInstance) {
-                    if(byContains) {
-                        item.click(dropdownElement+"/li[contains(@class, 'instance-name-cnt')]");
-                    } else {
-                        item.click(dropdownElement+"/li[contains(@class, 'instance-name-starts')]");
-                    }
-                } else {
-                    if(byContains) {
-                        item.click(dropdownElement+"/li[contains(@class, 'cust-name-cnt')]");
-                    } else {
-                        item.click(dropdownElement+"/li[contains(@class, 'cust-name-starts')]");
-                    }
-                }
-                Timer.sleep(2); //As its failing more frequently, add stale pause.
+				wait.waitTillElementDisplayed(ACC_INS_NAME_INPUT, MIN_TIME, MAX_TIME);
                 field.clearAndSetText(ACC_INS_NAME_INPUT, name);
                 driver.findElement(By.xpath(ACC_INS_NAME_INPUT)).sendKeys(Keys.ENTER);
-                wait.waitTillElementDisplayed(CUST_SELECT_LIST, MIN_TIME, MAX_TIME);
+                wait.waitTillElementDisplayed("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]", MIN_TIME, MAX_TIME);
                 driver.findElement(By.xpath("//li[@class='ui-menu-item' and @role = 'presentation']/a[contains(text(),'"+name+"')]")).click();
                 selected = true;
                 break;
             } catch (Exception e) {
                 Log.error("Unable to select customer", e);
-                Timer.sleep(2);
+				refreshPage();
             }
         }
         if(!selected) {

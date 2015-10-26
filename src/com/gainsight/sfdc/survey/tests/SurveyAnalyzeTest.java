@@ -33,7 +33,7 @@ public class SurveyAnalyzeTest extends SurveySetup {
 	public void setUp() {
 		sfdc.connect();
 		basepage.login();
-		sfdc.runApexCode("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];");
+		sfdc.runApexCode(resolveStrNameSpace("Delete [SELECT Id FROM JBCXM__SurveyParticipant__c];"));
 	}
 	
 	@TestInfo(testCaseIds={"GS-2737", "GS-2739", "GS-5762"})

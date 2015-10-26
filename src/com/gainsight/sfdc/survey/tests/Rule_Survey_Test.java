@@ -83,7 +83,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule1")
 	public void surveyRuleRadioQuestionType(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
@@ -108,7 +108,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule2")
 	public void surveyRuleMatixSingleQuestionType(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
@@ -134,7 +134,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule3")
 	public void surveyRuleSingleSelectQuestionType(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
@@ -159,7 +159,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule4")
 	public void surveyRuleSingleSelect(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
@@ -184,7 +184,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule5")
 	public void surveyRuleMultiSelect(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);
@@ -209,7 +209,7 @@ public class Rule_Survey_Test extends SurveySetup {
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "Rule6")
 	public void surveyRuleMatrixMultipleAnswers	(HashMap<String, String> testData) throws Exception {
-		testData.put("JBCXM__TaskDefaultOwner__c", sfdcInfo.getUserId());
+		testData.put(resolveStrNameSpace("JBCXM__TaskDefaultOwner__c"), sfdcInfo.getUserId());
 		testData.put("Name", SURVEY_ID);
 		populateObjMaps();
 		setupRule(testData);

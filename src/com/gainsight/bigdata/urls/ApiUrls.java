@@ -47,6 +47,15 @@ public interface ApiUrls extends NSURLs {
     public final String SEGMENT_PROJECT_GET             = NS_URL + "/api/accounts/integrations/SEGMENT_IO";
     public final String SEGMENT_ACCESS_KEY_GET          = NS_URL + "/api/tokens/integrations/SEGMENT_IO/projects/"; //Append Account ID to get access-key for segmentIO project.
 
+    //Data Load
+    public final String DATA_LOAD_AUTHENTICATE          = NS_URL + "/admin/dataload/authenticate";
+    public final String DATA_LOAD_COLLECTIONS           = NS_URL + "/admin/collections";
+    public final String DATA_LOAD_GET_COLLECTIONS_ALL   = NS_URL+"/admin/collections/ALL";
+    public final String DATA_LOAD_STATUS                = NS_URL + "/admin/dataload/status/"; //Status id should be appended.
+    public final String DATA_LOAD_IMPORT                = NS_URL + "/admin/dataload/import";
+    public final String DATA_LOAD_EXPORT_FAILURES       = NS_URL + "/admin/dataload/export/failure/status/"; //Status id should be appended.
+
+
 
     public final String GA_DEACTIVATE_PUT               = NS_URL + "/api/accounts/accountType/GOOGLE_ANALYTICS/default/false";
     public final String GA_PROJECT_GET                  = NS_URL + "/api/accounts/integrations/GOOGLE_ANALYTICS";
@@ -75,5 +84,12 @@ public interface ApiUrls extends NSURLs {
 
     //Copilot
     public String API_CREATE_SMARTLIST        = NS_URL + "/api/smartlists/";
+    
+    //GS Email related API's
+    public final String GET_ACCESS_KEY                  = NS_URL + "/api/email/account";
+    public final String EXISTS_CALL                     = NS_URL + "/api/accounts/SFDC/exists";
+    public final String SEND_EMAIL                      = NS_URL + "/api/email/template";
+    public final String MANDRILL_ENDPOINT               = "https://mandrillapp.com/api/1.0/";
+    public final String MANDRILL_SUBACCOUNT_INFO        = "/subaccounts/info.json";
 
 }

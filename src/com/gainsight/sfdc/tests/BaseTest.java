@@ -78,11 +78,13 @@ public class BaseTest {
             sfdc.runApexCode(resolveStrNameSpace(LOAD_SETUP_DATA_SCRIPT));
             if(sfdcConfig.getSfdcManagedPackage()) {
                 sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/AssignPermissionSetScript.txt"));
+            } else {
+                sfdc.runApexCode("AdminHandler.assignPermissionToallGainsightObject();");
             }
             packageUtil.deployPermissionSetCode();
             metaUtil.setupPermissionsToStandardObjectAndFields(sfdcInfo);
         }
-
+        addNSURLToRemoteSiteSettings();
         Log.info("Sfdc Info : " +sfdc.getLoginResult().getUserInfo().getUserFullName());
         USER_DATE_FORMAT = DateUtil.localMapValues().containsKey(sfdcInfo.getUserLocale()) ? DateUtil.localMapValues().get(sfdcInfo.getUserLocale()).split(" ")[0] : "yyyy-mm-dd";
         userTimezone = TimeZone.getTimeZone(sfdcInfo.getUserTimeZone());
@@ -211,8 +213,8 @@ public class BaseTest {
     }
 
     public void addNSURLToRemoteSiteSettings() throws Exception {
-        System.out.println("creating remote site!");
-        metadataClient.createRemoteSiteSetting("GSRemoteSite", env.getProperty("ns.appurl"));
+        Log.info("Creating Remote Site with Ns Url");
+        metadataClient.createRemoteSiteSetting("GSRemoteSite", nsConfig.getNsURl());
     }
 
    
