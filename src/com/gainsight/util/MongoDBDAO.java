@@ -221,34 +221,23 @@ public class MongoDBDAO  {
      * Deletes all Rrecord from mongo collection based on tenantID
      * @param tenantID Tenant id
      * @param mongoCollection Collection name
-     * @mongoDBDAO mongoConnection
      */
-    public boolean deleteAllRecordsFromMongoCollectionBasedOnTenantID(String tenantID, String mongoCollection, MongoDBDAO mongoDBDAO ){
-    	try{
+    public boolean deleteAllRecordsFromMongoCollectionBasedOnTenantID(String tenantID, String mongoCollection){
     	BasicDBObject query = new BasicDBObject();
 		query.put("tenantId", tenantID);
 		return mongoUtil.removeMany(mongoCollection, query);
-    	}finally{
-    		mongoDBDAO.mongoUtil.closeConnection();
-    	}
     }
     
     /**
      * Deletes all Rrecord from mongo collection from collection master
      * @param tenantID Tenant id
      * @param mongoCollection Collection name
-     * @mongoDBDAO mongoConnection
      */
-    public boolean deleteCollectionSchemaFromCollectionMaster(String tenantID, String mongoCollection, MongoDBDAO mongoDBDAO){
-    	try{
+    public boolean deleteCollectionSchemaFromCollectionMaster(String tenantID, String mongoCollection){
 		BasicDBObject andQuery = new BasicDBObject();
 		List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
 		obj.add(new BasicDBObject("TenantId", tenantID));
 		andQuery.put("$and", obj);
         return mongoUtil.removeMany(mongoCollection, andQuery);
-    	}
-        finally{
-    		mongoDBDAO.mongoUtil.closeConnection();
-    	}
     }
 }
