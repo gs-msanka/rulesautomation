@@ -89,11 +89,11 @@
       "mongo_scheduler_ssl_enable" : "false"
     },
      "fibonacci": {
-      "ns_sfdc_username"    : "ggolla@devns.com",
-      "ns_sfdc_password"    : "devTenant2015",
-      "ns_sfdc_stoken"      : "QQdPH3gDrTqEGOpJthaT5S4g5",
+      "ns_sfdc_username"    : "ggolla@nsfibonacci.com",
+      "ns_sfdc_password"    : "finbonacci@gs2015",
+      "ns_sfdc_stoken"      : "GM9HLG07RBuKsQK32LrurwLe",
       "ns_appUrl"           : "https://fibonacci-api-router.herokuapp.com",
-      "ns_adminUrl"         : "https://dev007-api-router.herokuapp.com",
+      "ns_adminUrl"         : "https://fibonacci-api-router.herokuapp.com",
       "ns_version"          : "v1.0",
       "mongo_global_host"   : "52.0.148.18",
       "mongo_global_port"   : "27017",
