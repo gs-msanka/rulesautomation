@@ -59,10 +59,10 @@ public class WorkflowPage extends WorkflowBasePage {
 
     //CTA Form Page Elements
     private final String CREATE_CTA_ICON        = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
-    private final String CREATE_RISK_LINK       = "//a[@data-action='RISK']";
+    private final String CREATE_CTA_LINK       = "//a[@data-action='%s']";
     private final String CREATE_OPPOR_LINK      = "//a[@data-action='OPPORTUNITY']";
     private final String CREATE_EVENT_LINK      = "//a[@data-action='EVENT']";
-    private final String RISK_CTA_FORM_TITLE    = "//span[text()='Add Risk']";
+    private final String CTA_FORM_TITLE    = "//span[text()='Add %s']";
     private final String OPPO_CTA_FORM_TITLE    = "//span[text()='Add Opportunity']";
     private final String EVENT_CTA_FORM_TITLE   = "//span[text()='Add Event']";
     private final String CREATE_FORM_SUBJECT    = "//input[@class='form-control cta-subject']";
@@ -220,15 +220,16 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage createCTA(CTA cta){
     	item.click(CREATE_CTA_ICON);
-    	if(cta.getType().equals("Risk"))
-    	{
-            Log.info("Adding CTA of Type - RISK");
-    		item.click(CREATE_RISK_LINK);
-    		wait.waitTillElementDisplayed(RISK_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
+    	/*if(cta.getType().equals("Risk"))
+    	{*/
+    		
+            Log.info("Adding CTA of Type - "+cta.getType());
+    		item.click(String.format(CREATE_CTA_LINK, cta.getTypeId()));
+    		wait.waitTillElementDisplayed(String.format(CTA_FORM_TITLE,cta.getType()), MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
-    	}
-    	if(cta.getType().equals("Opportunity")){
+    	//}
+    	/*if(cta.getType().equals("Opportunity")){
             Log.info("Adding CTA of Type - Opportunity");
     		item.click(CREATE_OPPOR_LINK);
     		wait.waitTillElementDisplayed(OPPO_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
@@ -240,7 +241,7 @@ public class WorkflowPage extends WorkflowBasePage {
     		item.click(CREATE_EVENT_LINK);
     		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
-    	}
+    	}*/
     	return this;
 	}
     
@@ -813,7 +814,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             throw new RuntimeException("Assignee should be specified.");
         }
-        Log.info("CTA Path : " + xPath);
+	        Log.info("CTA Path : " + xPath);
         return xPath;
     }
 

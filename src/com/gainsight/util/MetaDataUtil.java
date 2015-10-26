@@ -301,7 +301,7 @@ public class MetaDataUtil {
         metadataClient = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
         String[] fields = new String[]{"Data ExternalId", "Account ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
-        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
+        addFieldPermissionsToUsers("Account", fields, sfdc.fetchSFDCinfo(), false);
     }
 
     /**
@@ -401,6 +401,7 @@ public class MetaDataUtil {
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
         addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields1), sfdc.fetchSFDCinfo(), true);
         addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields2), sfdc.fetchSFDCinfo(), true);
+      //  addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)), sfdc.fetchSFDCinfo(), true);
     }
 
     //same method is used by rules engine test cases also.

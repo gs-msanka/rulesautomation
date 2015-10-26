@@ -47,10 +47,10 @@ public class WorkFlowTest extends WorkflowSetup {
     @BeforeClass
     public void setup() throws Exception {
     	sfdc.connect();
-       basepage.login();
-       metaUtil.createExtIdFieldOnAccount(sfdc);
+    	basepage.login();
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        //createExtIdFieldOnUser();
+        metaUtil.createExtIdFieldOnUser(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         cleanPlaybooksData();
         loadDefaultPlaybooks();
@@ -69,6 +69,8 @@ public class WorkFlowTest extends WorkflowSetup {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        String typeId=sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId();
+        cta.setTypeId(typeId);
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created");
     }
@@ -82,6 +84,9 @@ public class WorkFlowTest extends WorkflowSetup {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        System.out.println(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"));
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
+        System.out.println("id is:"+cta.getTypeId());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created");
     }
@@ -94,6 +99,7 @@ public class WorkFlowTest extends WorkflowSetup {
         CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
         cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Opportunity CTA is created");
     }
@@ -111,6 +117,7 @@ public class WorkFlowTest extends WorkflowSetup {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -130,6 +137,7 @@ public class WorkFlowTest extends WorkflowSetup {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -148,6 +156,7 @@ public class WorkFlowTest extends WorkflowSetup {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -167,6 +176,7 @@ public class WorkFlowTest extends WorkflowSetup {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -185,6 +195,7 @@ public class WorkFlowTest extends WorkflowSetup {
         recurEvent.setRecurStartDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurStartDate()), 0, false));
         recurEvent.setRecurEndDate(getDateWithFormat(Integer.valueOf(recurEvent.getRecurEndDate()), 0, false));
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
 
         cta.setDueDate(getDateWithFormat(temp, 0, true));
@@ -202,6 +213,7 @@ public class WorkFlowTest extends WorkflowSetup {
         cta.setDueDate(getDateWithFormat(temp, 0, false));
         CTA.EventRecurring recurEvent=cta.getEventRecurring();
         cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
         workflowPage.createCTA(cta);
         cta.setDueDate(getDateWithFormat(temp, 0, true));
         Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -218,6 +230,7 @@ public class WorkFlowTest extends WorkflowSetup {
        cta.setDueDate(getDateWithFormat(temp, 0, false));
        CTA.EventRecurring recurEvent=cta.getEventRecurring();
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);
        cta.setDueDate(getDateWithFormat(temp, 0, true));
        Assert.assertEquals(1, countOfRecords(cta, true, null));
@@ -972,7 +985,7 @@ public class WorkFlowTest extends WorkflowSetup {
        workflowPage.editTasks(cta, updatedTask,tasks.get(0));
        Assert.assertTrue(workflowPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
    }
-   */
+   
    
     @TestInfo(testCaseIds={"GS-2121"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1310,7 +1323,7 @@ public class WorkFlowTest extends WorkflowSetup {
         for(CTA ct : ctaList1) {
             Assert.assertTrue(workflowPage.isCTADisplayed(ct));
         }
-        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));*/ 
+        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));*/ /*
     }
 
     @TestInfo(testCaseIds={"GS-2063"})
@@ -1641,5 +1654,5 @@ public class WorkFlowTest extends WorkflowSetup {
 		String temp2 = jsonData2[0].getId();
 		Log.info(temp2);
 		Assert.assertEquals(temp, temp2);
-	}
+	}*/
 }
