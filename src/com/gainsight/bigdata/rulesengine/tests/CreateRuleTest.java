@@ -120,6 +120,7 @@ public class CreateRuleTest extends BaseTest {
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        try {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
@@ -137,8 +138,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
-		try {
-			dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
