@@ -120,14 +120,9 @@ public class CreateRuleTest extends BaseTest {
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        try{
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
-        }
-        finally{
-    		mongoDBDAO.mongoUtil.closeConnection();
-    	}
         dataLoadManager = new DataLoadManager();
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
@@ -142,7 +137,8 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
-        dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+		try {
+			dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
@@ -150,7 +146,10 @@ public class CreateRuleTest extends BaseTest {
             port = dataBaseDetail[1];
             userName=dbServerDetail.getUserName();
 			passWord=dbServerDetail.getPassword();
-        }
+			}
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
