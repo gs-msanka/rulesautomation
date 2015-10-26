@@ -259,9 +259,9 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param port port to connect to mongo
      * @param tenantID Tenant id
      */
-    public void deleteAllRecordsFromMongoCollectionBasedOnTenantID(String dataBase, String mongoCollection, String host, int port, String tenantID) {
+    public void deleteAllRecordsFromMongoCollectionBasedOnTenantID(String dataBase, String mongoCollection, String host, int port, String userName, String Password, String tenantID) {
         MongoUtil mongoUtil = new MongoUtil();
-        mongoUtil.createConnection(host, port, dataBase);
+        mongoUtil.createConnection(host, port, userName, Password, dataBase);
     	try {
             BasicDBObject query = new BasicDBObject();
 			query.put("tenantId", tenantID);
@@ -281,9 +281,9 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @param port port to connect to mongo
      * @param tenantID Tenant id
      */
-    public void deleteCollectionSchemaFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String tenantID) {
+    public void deleteCollectionSchemaFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String userName, String Password, String tenantID) {
         MongoUtil mongoUtil = new MongoUtil();
-        mongoUtil.createConnection(host, port, dataBase);
+        mongoUtil.createConnection(host, port, userName, Password, dataBase);
     	try {
 			BasicDBObject andQuery = new BasicDBObject();
 			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
@@ -354,7 +354,8 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 	 */
 	
 	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
-		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase());
+		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase(),
+				nsConfig.getSchedulerDBPassword(), nsConfig.getSchedulerDBPassword());
 		String cronExpression = null;
 		try {
 			Document whereQuery = new Document();

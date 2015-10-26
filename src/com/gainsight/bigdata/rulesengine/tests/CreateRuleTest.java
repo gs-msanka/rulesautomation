@@ -156,7 +156,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
@@ -184,11 +184,11 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void loadToMdaActionUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createEmptySubjectArea();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -247,7 +247,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -265,7 +265,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -284,8 +284,8 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
@@ -380,7 +380,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testLoadToCustomersWithMatrixData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -471,8 +471,8 @@ public class CreateRuleTest extends BaseTest {
     
    // @Test // TODO - WIP
 	public void verifyDataLoadConfiguration() throws Exception{
-		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
-		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
+		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), userName, passWord, tenantDetails.getTenantId());
 		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port),userName, passWord, dbDetail.getDbName());
 		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
@@ -524,7 +524,7 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
-		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), userName, passWord,  tenantDetails.getTenantId());
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
