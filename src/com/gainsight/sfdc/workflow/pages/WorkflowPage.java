@@ -118,7 +118,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_CUSTOMER              = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accountname')]";
     private final String EXP_VIEW_TYPE                  = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accounttype')]";
     private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
-    private final String EXP_VIEW_DUE_DATE_INPUT        = "frmDateCtrl";
+    private final String EXP_VIEW_DUE_DATE_INPUT        = "//div[@class='ac-statu-date']/input[@class='form-control cta-dateCtrl require-tooltip']";
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
     private final String EXP_VIEW_SET_SNOOZE_DATE       = "//input[@class='form-control cta-snooze-input']";
 	private final String EXP_VIEW_SNOOZE_REASON_BUTTON  = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
