@@ -112,7 +112,6 @@ public class CreateRuleTest extends BaseTest {
 
     @BeforeClass
     public void setUp() throws Exception {
-    	try{
         basepage.login();
         sfdc.connect();
         nsTestBase.init();
@@ -120,12 +119,16 @@ public class CreateRuleTest extends BaseTest {
         tenantManager=new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
+        MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        try{
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
+        }
+        finally{
+    		mongoDBDAO.mongoUtil.closeConnection();
+    	}
         dataLoadManager = new DataLoadManager();
-        MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
@@ -139,6 +142,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
+        dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
@@ -150,9 +154,6 @@ public class CreateRuleTest extends BaseTest {
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
-    	}finally{
-    		mongoDBDAO.mongoUtil.closeConnection();
-    	}
     }
 
     @BeforeMethod
@@ -164,8 +165,7 @@ public class CreateRuleTest extends BaseTest {
     public void testAllActionsUsingNativeData() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
     	try{
-    	boolean isSuccess =mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT);
-    	Assert.assertTrue(isSuccess);
+    	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
     	}
     	finally{
     	mongoDBDAO.mongoUtil.closeConnection();
@@ -199,13 +199,11 @@ public class CreateRuleTest extends BaseTest {
     public void loadToMdaActionUsingNativeData() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
     	try{
-    	boolean isSuccess =mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
-    	Assert.assertTrue(isSuccess);
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
-        boolean isDeletionSuccess =mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT);
-        Assert.assertTrue(isDeletionSuccess);
+        Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -269,9 +267,7 @@ public class CreateRuleTest extends BaseTest {
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
-			boolean isSuccess=mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-					tenantDetails.getTenantId(), COLLECTION_MASTER);
-			Assert.assertTrue(isSuccess);
+			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -294,9 +290,8 @@ public class CreateRuleTest extends BaseTest {
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
-			boolean isSuccess=mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-					tenantDetails.getTenantId(), COLLECTION_MASTER);
-			Assert.assertTrue(isSuccess);
+			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -320,10 +315,8 @@ public class CreateRuleTest extends BaseTest {
     public void testAllActionsUsingMdaData() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
     	try{
-    	boolean isSuccess=mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
-    	Assert.assertTrue(isSuccess);
-    	boolean isDeleteSuccess=mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT);
-    	Assert.assertTrue(isDeleteSuccess);
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+    	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -423,8 +416,7 @@ public class CreateRuleTest extends BaseTest {
     public void testLoadToCustomersWithMatrixData() throws Exception {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
     	try{
-    	boolean Success=mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
-        Assert.assertTrue(Success);
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -520,10 +512,8 @@ public class CreateRuleTest extends BaseTest {
 	public void verifyDataLoadConfiguration() throws Exception{
 		MongoDBDAO mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try{
-	    boolean isSuccess=mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT);
-	    Assert.assertTrue(isSuccess);
-	    boolean isDeletionSuccess=mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
-	    Assert.assertTrue(isDeletionSuccess);
+		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
@@ -579,9 +569,8 @@ public class CreateRuleTest extends BaseTest {
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
 		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
-			boolean isSuccess=mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
-					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT);
-			Assert.assertTrue(isSuccess);
+			Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
+					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
