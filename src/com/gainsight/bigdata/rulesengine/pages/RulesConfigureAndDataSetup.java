@@ -250,50 +250,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
             throw new RuntimeException(e);
         }
     }
-
-    /**
-     * Deletes all Rrecord from mongo collection for a tenant
-     * @param dataBase database to connect to
-     * @param mongoCollection Collection name
-     * @param host Host of mongo
-     * @param port port to connect to mongo
-     * @param tenantID Tenant id
-     */
-    public void deleteAllRecordsFromMongoCollectionBasedOnTenantID(String dataBase, String mongoCollection, String host, int port, String userName, String Password, String tenantID) {
-        MongoUtil mongoUtil = new MongoUtil();
-        mongoUtil.createConnection(host, port, userName, Password, dataBase);
-    	try {
-            BasicDBObject query = new BasicDBObject();
-			query.put("tenantId", tenantID);
-			mongoUtil.removeMany(mongoCollection, query);
-		} finally {
-			mongoUtil.closeConnection();
-		}
-	}
-
-
-    //TODO: Duplicate code between deleteAllRecordsFromMongoCollectionBasedOnTenantID and deleteAllRecordsFromCollectionMaster method
-    /**
-     * Deletes all Rrecord from mongo collection from collection master
-     * @param dataBase database to connect to
-     * @param mongoCollection Collection name
-     * @param host Host of mongo
-     * @param port port to connect to mongo
-     * @param tenantID Tenant id
-     */
-    public void deleteCollectionSchemaFromCollectionMaster(String dataBase, String mongoCollection, String host, int port, String userName, String Password, String tenantID) {
-        MongoUtil mongoUtil = new MongoUtil();
-        mongoUtil.createConnection(host, port, userName, Password, dataBase);
-    	try {
-			BasicDBObject andQuery = new BasicDBObject();
-			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-			obj.add(new BasicDBObject("TenantId", tenantID));
-			andQuery.put("$and", obj);
-            mongoUtil.removeMany(mongoCollection, andQuery);
-		} finally {
-			mongoUtil.closeConnection();
-		}   
-    }
     
    // TODO - WIP
     /**
@@ -355,7 +311,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 	
 	public String getCronExpressionFromDb(String tenantID, String jobIdentifier)throws Exception {
 		MongoUtil mongoUtil = new MongoUtil(nsConfig.getSchedulerDBHost(), Integer.valueOf(nsConfig.getSchedulerDBPort()), nsConfig.getSchedulerDBDatabase(),
-				nsConfig.getSchedulerDBPassword(), nsConfig.getSchedulerDBPassword());
+				nsConfig.getSchedulerDBUserName(), nsConfig.getSchedulerDBPassword());
 		String cronExpression = null;
 		try {
 			Document whereQuery = new Document();
