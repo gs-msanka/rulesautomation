@@ -86,7 +86,7 @@ public class DataLoadManager extends NSTestBase {
         head.addHeader("accessKey", accessKey);
         head.addHeader("loginName", loginName);
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_AUTHENTICATE, head.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_AUTHENTICATE, head.getAllHeaders());
             Log.info("Response Obj : " +responseObj.toString());
             return responseObj;
         } catch (Exception e) {
@@ -121,7 +121,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     public ResponseObj createSubjectAreaGetResponseObj(CollectionInfo collectionInfo) throws Exception {
-        ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
+        ResponseObj responseObj = wa.doPost(DATA_LOAD_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
         Log.info("Response Obj : " +responseObj.toString());
         return responseObj;
     }
@@ -156,7 +156,7 @@ public class DataLoadManager extends NSTestBase {
         }
         DataLoadStatusInfo statusInfo = null;
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_STATUS + jobId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_STATUS + jobId, headers.getAllHeaders());
             Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
@@ -308,9 +308,8 @@ public class DataLoadManager extends NSTestBase {
         FileBody body = new FileBody(file, ContentType.MULTIPART_FORM_DATA);
         builder.addPart("file", body);
         HttpEntity reqEntity = builder.build();
-        Log.info(ADMIN_DATA_LOAD_IMPORT);
         try {
-            ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            ResponseObj responseObj = wa.doPost(DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
             Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
@@ -341,7 +340,7 @@ public class DataLoadManager extends NSTestBase {
     public String exportFailedRecords(String statusId) {
         String result= null;
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + statusId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_EXPORT_FAILURES + statusId, headers.getAllHeaders());
             Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                   result = responseObj.getContent();
@@ -392,7 +391,7 @@ public class DataLoadManager extends NSTestBase {
         Log.info("Getting All the Collections...");
         List<CollectionInfo> collectionInfoList = new ArrayList<>();
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_GET_COLLECTIONS_ALL, header.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_GET_COLLECTIONS_ALL, header.getAllHeaders());
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
 
             HashMap<String, List<CollectionInfo>> collectionInfoMap = mapper.convertValue(nsResponseObj.getData(), new TypeReference<HashMap<String, ArrayList<CollectionInfo>>>() {});
@@ -467,7 +466,7 @@ public class DataLoadManager extends NSTestBase {
             throw new RuntimeException("Job Id is Mandatory");
         }
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + jobId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_EXPORT_FAILURES + jobId, headers.getAllHeaders());
             if(responseObj.getContent()!=null || responseObj.getContent()!="") {
                 for(String rowData : responseObj.getContent().split("\n")) {
                     String[] row = rowData.split(",");  //We are splitting by "," this may result in inappropriate values if there's "," in the data(Please use with caution).
@@ -520,7 +519,7 @@ public class DataLoadManager extends NSTestBase {
 
             HttpEntity reqEntity = builder.build();
 
-            ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            ResponseObj responseObj = wa.doPost(DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
             Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);

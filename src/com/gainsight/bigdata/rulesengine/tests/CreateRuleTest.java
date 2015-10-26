@@ -54,6 +54,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -121,11 +122,12 @@ public class CreateRuleTest extends BaseTest {
         tenantManager=new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
+        MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        try {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager();
-        dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
@@ -139,6 +141,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
+		dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
@@ -146,7 +149,10 @@ public class CreateRuleTest extends BaseTest {
             port = dataBaseDetail[1];
             userName=dbServerDetail.getUserName();
 			passWord=dbServerDetail.getPassword();
-        }
+			}
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
@@ -169,7 +175,13 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+    	try{
+    	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+    	}
+    	finally{
+    	mongoDBDAO.mongoUtil.closeConnection();
+    	}
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
@@ -197,11 +209,16 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void loadToMdaActionUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+    	try{
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+        Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         rulesConfigureAndDataSetup.createEmptySubjectArea();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -260,7 +277,12 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		try {
+			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -278,7 +300,13 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		try {
+			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -297,8 +325,13 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
-        rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+    	try{
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+    	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
@@ -393,7 +426,12 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testLoadToCustomersWithMatrixData() throws Exception {
-        rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
+    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+    	try{
+    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -484,9 +522,13 @@ public class CreateRuleTest extends BaseTest {
     
    // @Test // TODO - WIP
 	public void verifyDataLoadConfiguration() throws Exception{
-		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
-		rulesConfigureAndDataSetup.deleteCollectionSchemaFromCollectionMaster(dbDetail.getDbName(), COLLECTION_MASTER, host, Integer.valueOf(port), tenantDetails.getTenantId());
-		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port),userName, passWord, dbDetail.getDbName());
+		MongoDBDAO mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		try{
+		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
 		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
@@ -537,7 +579,13 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
-		rulesConfigureAndDataSetup.deleteAllRecordsFromMongoCollectionBasedOnTenantID(dbDetail.getDbName(), RULES_LOADABLE_OBJECT, host, Integer.valueOf(port), tenantDetails.getTenantId());
+		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		try {
+			Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
+					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		} finally {
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
@@ -639,6 +687,5 @@ public class CreateRuleTest extends BaseTest {
 		String actualCronExpression = rulesConfigureAndDataSetup.getCronExpressionFromDb(tenantDetails.getTenantId(), ruleID);
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
-	
 
 }
