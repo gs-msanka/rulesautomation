@@ -6,6 +6,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
@@ -70,8 +71,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**
@@ -119,20 +122,20 @@ public class CreateRuleTest extends BaseTest {
 
     @BeforeTest
     public void setUp() throws Exception {
-        basepage.login();
+   //     basepage.login();
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
         tenantManager=new TenantManager();
-        GSEmailSetup gs=new GSEmailSetup();
-        gs.enableOAuthForOrg();
+/*        GSEmailSetup gs=new GSEmailSetup();
+        gs.enableOAuthForOrg();*/
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         try {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-        tenantManager.disableRedShift(tenantDetails);
+   //     tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager();
-        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+     /*   rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
@@ -144,7 +147,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));*/
 		dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
@@ -159,10 +162,10 @@ public class CreateRuleTest extends BaseTest {
 		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
-        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
+ //       rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
     }
     
-    @BeforeClass
+ //   @BeforeClass
     @Parameters("dbStoreType")
     public void loadDataToMongoAndRedshiftDatabases(@Optional String dbStoreType) throws Exception{
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
@@ -695,13 +698,13 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void mdaJoinsTest1() throws Exception{
 	       
-		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+/*		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
 			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER),
 					"Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
-		}
+		}*/
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)),JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -739,8 +742,37 @@ public class CreateRuleTest extends BaseTest {
 	    Assert.assertNotNull(statusId1);
 	    dataLoadManager.waitForDataLoadJobComplete(statusId1);
 	       
-	       
-	       
+	    
+		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
+		Log.info(mapper.writeValueAsString(actualCollectionInfoForCollection1));
+		
+		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
+		Log.info(mapper.writeValueAsString(actualCollectionInfoForCollection2));
+		
+		Map<String, String> hm=new HashMap<String, String>();
+		for (Column column : actualCollectionInfoForCollection2.getColumns()) {
+			hm.put(column.getDisplayName(), column.getDbName());		
+		}
+	     
+		for (Entry<String, String> entry : hm.entrySet()) {
+			Log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
+		}
+		
+		Log.info(actualCollectionInfoForCollection2.getCollectionDetails().getDbCollectionName());
+		Log.info(actualCollectionInfoForCollection2.getCollectionDetails().getCollectionId());
+		
+		
+			
+			for (Column column : actualCollectionInfoForCollection1.getColumns()) {
+				
+				if (hm.get("ID") != null) {
+					
+				}
+				
+			}
+			
+		
+		
 	       
 	    }
 	    
