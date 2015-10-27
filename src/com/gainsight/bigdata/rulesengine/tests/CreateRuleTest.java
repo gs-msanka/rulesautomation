@@ -7,6 +7,7 @@ import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo.Column;
+import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
@@ -122,20 +123,20 @@ public class CreateRuleTest extends BaseTest {
 
     @BeforeTest
     public void setUp() throws Exception {
-   //     basepage.login();
+        basepage.login();
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
         tenantManager=new TenantManager();
-/*        GSEmailSetup gs=new GSEmailSetup();
-        gs.enableOAuthForOrg();*/
+        GSEmailSetup gs=new GSEmailSetup();
+        gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         try {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-   //     tenantManager.disableRedShift(tenantDetails);
+        tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager();
-     /*   rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
@@ -147,7 +148,7 @@ public class CreateRuleTest extends BaseTest {
         metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
         metaUtil.createFieldsOnAccount(sfdc);
         metaUtil.createExtIdFieldOnAccount(sfdc);
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));*/
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_FEATURES));
 		dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
@@ -744,36 +745,35 @@ public class CreateRuleTest extends BaseTest {
 	       
 	    
 		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
-		Log.info(mapper.writeValueAsString(actualCollectionInfoForCollection1));
-		
 		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
-		Log.info(mapper.writeValueAsString(actualCollectionInfoForCollection2));
 		
 		Map<String, String> hm=new HashMap<String, String>();
 		for (Column column : actualCollectionInfoForCollection2.getColumns()) {
-			hm.put(column.getDisplayName(), column.getDbName());		
+			hm.put(column.getDisplayName(), column.getDbName());
 		}
-	     
 		for (Entry<String, String> entry : hm.entrySet()) {
 			Log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
 		}
-		
-		Log.info(actualCollectionInfoForCollection2.getCollectionDetails().getDbCollectionName());
-		Log.info(actualCollectionInfoForCollection2.getCollectionDetails().getCollectionId());
-		
-		
-			
-			for (Column column : actualCollectionInfoForCollection1.getColumns()) {
-				
-				if (hm.get("ID") != null) {
-					
-				}
-				
+		LookUpDetail lookUpDetail = new LookUpDetail();
+		// Forming lookup object on ID field for mda joins
+		for (Column column : actualCollectionInfoForCollection1.getColumns()) {
+			if (column.getDisplayName().equalsIgnoreCase("ID")) {
+				column.setLookupDetail(lookUpDetail);
+				column.setHasLookup(true);
+			    column.getLookupDetail().setCollectionId(actualCollectionInfoForCollection2.getCollectionDetails().getCollectionId());
+			    column.getLookupDetail().setDbCollectionName(actualCollectionInfoForCollection2.getCollectionDetails().getDbCollectionName());
+				column.getLookupDetail().setFieldDBName(hm.get("ID"));
 			}
-			
+		}
+		String jsonNode = mapper.writeValueAsString(actualCollectionInfoForCollection1);
+		Log.info("updated collection schema is " + jsonNode);
+		Log.info("Is update Success ??? " + tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection1));
 		
 		
-	       
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
 	    }
 	    
 }
