@@ -1,5 +1,28 @@
 package com.gainsight.bigdata.rulesengine.tests;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -37,7 +60,6 @@ import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -45,37 +67,8 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.util.MongoDBDAO;
-import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.Verifier;
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 import com.sforce.soap.partner.sobject.SObject;
-
-import org.apache.commons.io.FileUtils;
-import org.bson.Document;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
 /**
@@ -163,10 +156,10 @@ public class CreateRuleTest extends BaseTest {
 		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
- //       rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
     }
     
- //   @BeforeClass
+    @BeforeClass
     @Parameters("dbStoreType")
     public void loadDataToMongoAndRedshiftDatabases(@Optional String dbStoreType) throws Exception{
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
@@ -697,19 +690,19 @@ public class CreateRuleTest extends BaseTest {
 	}
 	
 	@Test
-	public void mdaJoinsTest1() throws Exception{
-	       
-/*		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+	public void testCTAActionWithMdaJoins() throws Exception{
+		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
-			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER),
-					"Check whether Delete operation is success or not");
+			Assert.assertTrue(mongoDBDAO
+					.deleteCollectionSchemaFromCollectionMaster(
+							tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
-		}*/
+		}
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)),JobInfo.class);
 		dataETL.execute(jobInfo);
-        JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
+		JobInfo load = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load);
 		String collectionName = "RedShift-Joins-Collection-1";
 		Log.info("Collection Name : " + collectionName);
@@ -718,36 +711,35 @@ public class CreateRuleTest extends BaseTest {
 		String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
 		Assert.assertNotNull(collectionId);
 		CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-	    JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"),JobInfo.class);
 		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,calendar.getTime());
 		DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
 		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
 		String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
 		Assert.assertNotNull(statusId);
 		dataLoadManager.waitForDataLoadJobComplete(statusId);
-	       
-	    JobInfo load1 = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
+
+		JobInfo load1 = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load1);
 		String collectionName1 = "RedShift-Joins-Collection-2";
 		Log.info("Collection Name : " + collectionName1);
-	    CollectionInfo collectionInfo1 = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")), CollectionInfo.class);
+		CollectionInfo collectionInfo1 = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")),CollectionInfo.class);
 		collectionInfo1.getCollectionDetails().setCollectionName(collectionName1);
 		String collectionId1 = dataLoadManager.createSubjectAreaAndGetId(collectionInfo1);
 		Assert.assertNotNull(collectionId1);
-	    CollectionInfo actualCollectionInfo1 = dataLoadManager.getCollectionInfo(collectionId1);
-	    JobInfo loadTransform1 = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
-	    File dataLoadFile1 = FileProcessor.getDateProcessedFile(loadTransform1, calendar.getTime());
-	    DataLoadMetadata metadata1 = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo1);
-	    metadata1.setCollectionName(actualCollectionInfo1.getCollectionDetails().getCollectionName());
-	    String statusId1 = dataLoadManager.dataLoadManage(metadata1, dataLoadFile1);
-	    Assert.assertNotNull(statusId1);
-	    dataLoadManager.waitForDataLoadJobComplete(statusId1);
-	       
-	    
+		CollectionInfo actualCollectionInfo1 = dataLoadManager.getCollectionInfo(collectionId1);
+		JobInfo loadTransform1 = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"),JobInfo.class);
+		File dataLoadFile1 = FileProcessor.getDateProcessedFile(loadTransform1,calendar.getTime());
+		DataLoadMetadata metadata1 = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo1);
+		metadata1.setCollectionName(actualCollectionInfo1.getCollectionDetails().getCollectionName());
+		String statusId1 = dataLoadManager.dataLoadManage(metadata1,dataLoadFile1);
+		Assert.assertNotNull(statusId1);
+		dataLoadManager.waitForDataLoadJobComplete(statusId1);
+
 		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
 		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
-		
-		Map<String, String> hm=new HashMap<String, String>();
+
+		Map<String, String> hm = new HashMap<String, String>();
 		for (Column column : actualCollectionInfoForCollection2.getColumns()) {
 			hm.put(column.getDisplayName(), column.getDbName());
 		}
@@ -760,20 +752,27 @@ public class CreateRuleTest extends BaseTest {
 			if (column.getDisplayName().equalsIgnoreCase("ID")) {
 				column.setLookupDetail(lookUpDetail);
 				column.setHasLookup(true);
-			    column.getLookupDetail().setCollectionId(actualCollectionInfoForCollection2.getCollectionDetails().getCollectionId());
-			    column.getLookupDetail().setDbCollectionName(actualCollectionInfoForCollection2.getCollectionDetails().getDbCollectionName());
+				column.getLookupDetail().setCollectionId(actualCollectionInfoForCollection2.getCollectionDetails().getCollectionId());
+				column.getLookupDetail().setDbCollectionName(actualCollectionInfoForCollection2.getCollectionDetails().getDbCollectionName());
 				column.getLookupDetail().setFieldDBName(hm.get("ID"));
 			}
 		}
 		String jsonNode = mapper.writeValueAsString(actualCollectionInfoForCollection1);
 		Log.info("updated collection schema is " + jsonNode);
 		Log.info("Is update Success ??? " + tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection1));
-		
-		
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-	    }
-	    
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC13.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),ctaAction.getReason(), ctaAction.getComments(),rulesPojo.getRuleName(), ctaAction.getPlaybook()));
+        }
+	}
+
+	
 }

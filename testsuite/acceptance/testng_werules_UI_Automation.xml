@@ -46,6 +46,7 @@
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="loadToMdaActionUsingNativeData" />
+               <include name="testCTAActionWithMdaJoins" />
             </methods>
          </class>
       </classes>

@@ -3,6 +3,7 @@ package com.gainsight.bigdata.rulesengine.pages;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.rulesengine.pojo.setuprule.CalculatedField;
+import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Log;
 
@@ -66,6 +67,9 @@ public class SetupRulePage extends BasePage {
     private final String CALCULATED_FILED_SELECT_B_SECTION = "//select[contains(@class, 'calc_select rhs_selfieldList')]/following-sibling::button";
     private final String CALCULATED_FIELDS_SHOW_FIELD_RADIO_BUTTON_B_SECTION = "//label[@class='radio-inline']/descendant::input[@value='showfield' and @data-section='B']";
     private final String CALCULATED_FIELDS_SAVE_BUTTON = "//span[contains(@class, 'btn-save') and text()='Ok']";
+    
+    private final String LOOKUP_BUTTON = "//span[contains(text(), '%s')]/ancestor::li[contains(@class, 'tree-child-li-node')]/descendant::i";
+    private final String MDA_OBJECT_SOURCE_FIELD = "//div[contains(@class, 'gs-rb-schema-tree-wrapper')]/descendant::a/descendant::span[text()='%s']";
     
 
     public SetupRulePage() {
@@ -171,12 +175,20 @@ public class SetupRulePage extends BasePage {
 		}
 	}
     
-    public void dragAndDropFieldsToShowAreaForMatrixData(String field) {
-        String sourceXpath = "//div[contains(@class, 'gs-rb-schema-tree-wrapper')]/descendant::a/descendant::span[text()='"+field+"']";
-        element.dragAndDrop(sourceXpath, SHOW_FIELDS_DIV);
+    public void dragAndDropFieldsToShowAreaForMatrixData(String field, String joinWithCollection, boolean isLookUp) {
+		String sourceXpath = null;
+		if (!isLookUp || !field.startsWith("lookup_")) {
+			sourceXpath = String.format(MDA_OBJECT_SOURCE_FIELD, field);
+			element.dragAndDrop(sourceXpath, SHOW_FIELDS_DIV);
+		} else {
+			field = field.substring(7);
+			item.click(String.format(LOOKUP_BUTTON, joinWithCollection));
+			sourceXpath = "//span[contains(text(), '"+joinWithCollection+"')]/ancestor::li[contains(@class, 'tree-child-li-node')]/descendant::i/..//span[text()='"+field+"']";
+			element.dragAndDrop(sourceXpath, SHOW_FIELDS_DIV);
+			item.click(String.format(LOOKUP_BUTTON, joinWithCollection));
+		}
+	}
 
-    }
-    
     public void dragAndDropFieldsToActionsForMatrixData(String object, String fields, String operator, String value) {
     	String sourceXpath = "//div[contains(@class, 'gs-rb-schema-tree-wrapper')]/descendant::a/descendant::span[text()='"+fields+"']";
 		element.dragAndDrop(sourceXpath, ACTION_FIELDS_DIV);
@@ -271,4 +283,26 @@ public class SetupRulePage extends BasePage {
 		Assert.assertTrue(element
 				.getElement("//span[contains(@class, 'visual-send-results') and text()='Email Results']").isDisplayed());
 	}
+	
+    public void dragAndDropFieldsToActionsForMDAJoinsMatrixData(String object, String fields, String operator, String value, String joinWithCollection) {
+    	String fieldSubString = fields.substring(7);
+		item.click(String.format(LOOKUP_BUTTON, joinWithCollection));
+		String sourceXpath = "//span[contains(text(), '"+joinWithCollection+"')]/ancestor::li[contains(@class, 'tree-child-li-node')]/descendant::i/..//span[text()='"+fieldSubString+"']";
+		element.dragAndDrop(sourceXpath, ACTION_FIELDS_DIV);
+		String filterOperator = String.format(ACTION_FILTER_OPERATOR, fieldSubString);
+		item.click(filterOperator);
+		selectValueInDropDown(operator);
+		if (value.startsWith("select_")) {
+			value = value.substring(7);
+			String filterSValue = String.format(ACTION_FILTER_SVALUE, fieldSubString);
+			item.click(filterSValue);
+			selectValueInDropDown(value, true);
+		} else if (value.startsWith("input_")) {
+			value = value.substring(6);
+			String filterIValue = String.format(ACTION_FILTER_IVALUE, fieldSubString);
+			field.clearAndSetText(filterIValue, value);
+		}
+		item.click(String.format(LOOKUP_BUTTON, joinWithCollection));
+	} 
+
 }

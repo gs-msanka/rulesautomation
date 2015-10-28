@@ -13,6 +13,7 @@ import com.gainsight.bigdata.rulesengine.pojo.setuprule.SetupData;
 import com.gainsight.bigdata.rulesengine.pojo.setuprule.SetupRulePojo;
 import com.gainsight.bigdata.rulesengine.pojo.setuprule.ShowFields;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.Log;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -155,20 +156,25 @@ public class RulesEngineUtil  extends BaseTest{
 		SetupRulePage setupRulePage = new SetupRulePage();
 		setupRulePage.selectDataSource(setupRulePojo.getDataSource());
 		setupRulePage.selectSourceObject(setupRulePojo.getSelectObject());
+		
 		for (SetupData setupData : setupRulePojo.getSetupData()) {
 			String sourceObject = setupData.getSourceObject();
 			for (ShowFields showField : setupData.getShowFields()) {
 				if (setupRulePojo.getDataSource().equalsIgnoreCase("Native")) {
 					setupRulePage.dragAndDropFieldsToShowArea(sourceObject,showField.getFieldName());
 				} else {
-					setupRulePage.dragAndDropFieldsToShowAreaForMatrixData(showField.getFieldName());
+					setupRulePage.dragAndDropFieldsToShowAreaForMatrixData(showField.getFieldName(), setupRulePojo.getJoinWithCollection(), setupRulePojo.isLookUpField());
 				}
 			}
 			for (FilterFields filterField : setupData.getFilterFields()) {
 				if (setupRulePojo.getDataSource().equalsIgnoreCase("Native")) {
 					setupRulePage.dragAndDropFieldsToActionsForNativeData(sourceObject, filterField.getFieldName(), filterField.getOperator(), filterField.getValue());
-				} else {
+				} else if (!setupRulePojo.isLookUpField() || !filterField.getFieldName().startsWith("lookup_")) {
 					setupRulePage.dragAndDropFieldsToActionsForMatrixData(sourceObject, filterField.getFieldName(),filterField.getOperator(), filterField.getValue());
+				} else {
+					setupRulePage.dragAndDropFieldsToActionsForMDAJoinsMatrixData(sourceObject, filterField.getFieldName(),
+									filterField.getOperator(),filterField.getValue(),setupRulePojo.getJoinWithCollection());
+
 				}
 			}
 		}

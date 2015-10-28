@@ -19,6 +19,10 @@ public class SetupRulePojo {
 	private List<CalculatedField> calculatedFields = new ArrayList<>();
 	private String advancedLogic = "";
 	private String timeIdentifier = "";
+	private String joinOnCollection = "";
+	private String joinWithCollection = "";
+	private String joinOnCollectionField;
+	private boolean lookUpField=false;
 
 	public String getSelectObject() {
 		return selectObject;
@@ -66,5 +70,37 @@ public class SetupRulePojo {
 
 	public void setTimeIdentifier(String timeIdentifier) {
 		this.timeIdentifier = timeIdentifier;
+	}
+
+	public String getJoinOnCollection() {
+		return joinOnCollection;
+	}
+
+	public void setJoinOnCollection(String joinOnCollection) {
+		this.joinOnCollection = joinOnCollection;
+	}
+
+	public String getJoinWithCollection() {
+		return joinWithCollection;
+	}
+
+	public void setJoinWithCollection(String joinWithCollection) {
+		this.joinWithCollection = joinWithCollection;
+	}
+
+	public String getJoinOnCollectionField() {
+		return joinOnCollectionField;
+	}
+
+	public void setJoinOnCollectionField(String joinOnCollectionField) {
+		this.joinOnCollectionField = joinOnCollectionField;
+	}
+
+	public boolean isLookUpField() {
+		return lookUpField;
+	}
+
+	public void setLookUpField(boolean lookUpField) {
+		this.lookUpField = lookUpField;
 	}
 }
