@@ -341,6 +341,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -364,6 +365,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -391,6 +393,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
         ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -436,6 +439,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -459,6 +463,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -499,6 +504,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -521,6 +527,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);    
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Risk CTA is created ");
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
@@ -554,9 +561,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForRiskCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
@@ -573,9 +580,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForOpportunityCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
       workflowPage.createCTA(cta);      
       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
@@ -592,9 +599,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForEventCTA(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
       cta.setAssignee(sfdcInfo.getUserFullName());
+      cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
       workflowPage.createCTA(cta);      
       workflowPage.createMilestoneForCTA(cta);
       String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
@@ -610,9 +617,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForRiskCTA_Resolved(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
@@ -638,9 +645,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForOpportunityCTA_Won(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
       workflowPage.createCTA(cta);      
       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
       workflowPage.createMilestoneForCTA(cta);
@@ -665,9 +672,9 @@ public class WorkFlowTest extends WorkflowSetup {
    public void createMilestoneForEventCTA_Completed(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
-
       cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
       cta.setAssignee(sfdcInfo.getUserFullName());
+      cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
       workflowPage.createCTA(cta);      
       workflowPage.createMilestoneForCTA(cta);
       String milestoneQuery="Select JBCXM__Comment__c from JBCXM__Milestone__c where JBCXM__Customer__r.JBCXM__CustomerName__c='"+cta.getCustomer()+"' and JBCXM__Milestone__r.JBCXM__SystemName__c='"+cta.getType()+" Created'";
@@ -686,7 +693,7 @@ public class WorkFlowTest extends WorkflowSetup {
    }
    
     @TestInfo(testCaseIds={"GS-5557"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA23")
    public void snoozeRiskCTA(HashMap<String,String> testData) throws IOException{
        WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
@@ -695,8 +702,9 @@ public class WorkFlowTest extends WorkflowSetup {
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setSnoozeDate(getDateWithFormat(Integer.valueOf(cta.getSnoozeDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
-      workflowPage.createCTA(cta);      
-      Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
+       workflowPage.createCTA(cta);      
+       Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.snoozeCTA(cta);
        workflowPage = workflowBasePage.clickOnListView();
         workflowPage = workflowPage.showSnoozeCTA();
@@ -711,6 +719,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage = workflowPage.flagCTA(cta);
@@ -728,6 +737,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);     
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.closeCTA(cta, false);
@@ -748,6 +758,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);     
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
        workflowPage.updateCTAStatus_toClosedLost(cta);
@@ -768,6 +779,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
@@ -801,6 +813,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
@@ -827,6 +840,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
       workflowPage.createCTA(cta);
        Assert.assertTrue(workflowPage.isCTADisplayed(cta));
        workflowPage = workflowPage.closeCTA(cta, false);
@@ -848,6 +862,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
          cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
          cta.setAssignee(sfdcInfo.getUserFullName());
+         cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
          workflowPage.createCTA(cta);      
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
@@ -881,12 +896,13 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta); 
-      
-      CTA updatedCta=mapper.readValue(testData.get("UpdatedCTA"), CTA.class);
+       CTA updatedCta=mapper.readValue(testData.get("UpdatedCTA"), CTA.class);
       
       if(updatedCta.getAssignee()==null)
     	  updatedCta.setAssignee(sfdcInfo.getUserFullName());
+      updatedCta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+updatedCta.getType()+"'"))[0].getId());
       updatedCta.setDueDate(getDateWithFormat(Integer.valueOf(updatedCta.getDueDate()),0, false));
       workflowPage.updateCTADetails(cta, updatedCta);
       Assert.assertTrue(workflowPage.isCTADisplayed(updatedCta), "Verifying Updated CTA Values");
@@ -901,6 +917,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);
         workflowPage.deleteCTA(cta);
       Assert.assertFalse(workflowPage.isCTADisplayed(cta), "Verifying if the CTA is delete successfully");
@@ -915,7 +932,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
-
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        	workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});
@@ -941,6 +958,7 @@ public class WorkFlowTest extends WorkflowSetup {
        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
        cta.setAssignee(sfdcInfo.getUserFullName());
+       cta.setTypeId(sfdc.getRecords(resolveStrNameSpace("select id from JBCXM__CTATypes__c where Name = '"+cta.getType()+"'"))[0].getId());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
         ArrayList<Task> tasks  = mapper.readValue(testData.get("Tasks"), new TypeReference<ArrayList<Task>>() {});

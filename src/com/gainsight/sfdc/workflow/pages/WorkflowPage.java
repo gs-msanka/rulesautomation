@@ -104,7 +104,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-    private final String EXP_VIEW_HEADER                = "//div[@class='wf-details-header']";
+    private final String EXP_VIEW_HEADER                = "//div[@class='wf-details-header can-cls-disable']";
     private final String EXP_VIEW_CTA_MORE_OPTIONS      = "//a[@class='more-edit more-options']";
     private final String EXP_VIEW_ADD_NEW_TASK          = "//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String EXP_VIEW_APPLY_PLAYBOOK        = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Apply Playbook']";
@@ -135,14 +135,14 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String DESYNC_AND_DELETE      = "//div[@class='modal_footer']/input[@data-action='Delete']";
     
     //Task Expanded View Elements
-    private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
+    private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header can-cls-disable']/descendant::label[@class='task-username']";
     private final String TASK_EXP_ASSIGNEE_SEARCH   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
     private final String TASK_EXP_ASSIGNEE_SELECT   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
     private final String TASK_EXP_SUBJECT           = "//input[contains(@class, 'editblue_title_input task-title')]";
     private final String TASK_EXP_PRIORITY          = "//select[contains(@class, 'task-select-priority')]/following-sibling::button";
     private final String TASK_EXP_STATUS            = "//select[contains(@class, 'task-select-status')]/following-sibling::button";
     private final String TASK_COMMENTS              = "//div[contains(@class, 'task-description-textarea')]";
-    private final String TASK_DUE_DATE              = "task-date-id";
+    private final String TASK_DUE_DATE              = "//input[@class='form-control task-dateCtrl']";
     private final String TASK_EXP_SLIDE_ICON        = "//div[@class='task-detail-set']/div[@class='slide-icon']";
     private final String TASK_EXP_MORE_OPTIONS      = "//div[@class='task-detail-set']/descendant::a[contains(@class, 'more-options')]";
     private final String TASK_EXP_EDIT_OPTION       = "//div[@class='task-detail-set']/descendant::a[@data-action='EDIT_TASK']";
