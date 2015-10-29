@@ -102,7 +102,7 @@
       "mongo_global_password"   : "T4Fa36Hr",
       "mongo_global_ssl_enable" : "false"
     },
-      "automation" : {
+      "autoqa01" : {
       "ns_sfdc_username"  : "athaduka@nsautoqa01.com",
       "ns_sfdc_password"  : "Abhilash1.",
       "ns_sfdc_stoken"    : "lo0FdILI6WkRWZaHRuDnwgnT",
