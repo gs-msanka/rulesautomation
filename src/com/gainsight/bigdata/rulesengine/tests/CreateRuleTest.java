@@ -37,6 +37,7 @@ import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConf
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects.DataLoadObject;
 import com.gainsight.bigdata.rulesengine.pages.DataLoadConfiguration;
+import com.gainsight.bigdata.rulesengine.pages.EditRulePage;
 import com.gainsight.bigdata.rulesengine.pages.RulesConfigureAndDataSetup;
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
@@ -66,6 +67,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
+import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.Verifier;
 import com.sforce.soap.partner.sobject.SObject;
@@ -162,12 +164,12 @@ public class CreateRuleTest extends BaseTest {
     @BeforeClass
     @Parameters("dbStoreType")
     public void loadDataToMongoAndRedshiftDatabases(@Optional String dbStoreType) throws Exception{
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+    	if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));           
-        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+    	} else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
                 Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-        } 	
-    }
+		}
+	}
 
     @BeforeMethod
     public void rulesCleanup() {
@@ -691,20 +693,22 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testCTAActionWithMdaJoins() throws Exception{
-		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		try {
-			Assert.assertTrue(mongoDBDAO
-					.deleteCollectionSchemaFromCollectionMaster(
-							tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
+		Calendar calendar = Calendar.getInstance();
+		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
+		String redShiftCollection2=Long.toString(calendar.getTimeInMillis());
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC13.json"), RulesPojo.class);
+		rulesPojo.getSetupRule().setJoinOnCollection(redShiftCollection1 + "1");
+		rulesPojo.getSetupRule().setJoinWithCollection(redShiftCollection2  + "2");
+		rulesPojo.getSetupRule().setSelectObject(redShiftCollection1 + "1");	
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(redShiftCollection1 + "1");
+		String jsonNode = mapper.writeValueAsString(rulesPojo);
+		Log.info(jsonNode);
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)),JobInfo.class);
 		dataETL.execute(jobInfo);
 		JobInfo load = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load);
-		String collectionName = "RedShift-Joins-Collection-1";
+		String collectionName = redShiftCollection1 + "1";
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")),CollectionInfo.class);
 		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
@@ -721,7 +725,7 @@ public class CreateRuleTest extends BaseTest {
 
 		JobInfo load1 = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load1);
-		String collectionName1 = "RedShift-Joins-Collection-2";
+		String collectionName1 = redShiftCollection2  + "2";
 		Log.info("Collection Name : " + collectionName1);
 		CollectionInfo collectionInfo1 = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")),CollectionInfo.class);
 		collectionInfo1.getCollectionDetails().setCollectionName(collectionName1);
@@ -735,10 +739,9 @@ public class CreateRuleTest extends BaseTest {
 		String statusId1 = dataLoadManager.dataLoadManage(metadata1,dataLoadFile1);
 		Assert.assertNotNull(statusId1);
 		dataLoadManager.waitForDataLoadJobComplete(statusId1);
-
+		
 		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
 		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
-
 		Map<String, String> hm = new HashMap<String, String>();
 		for (Column column : actualCollectionInfoForCollection2.getColumns()) {
 			hm.put(column.getDisplayName(), column.getDbName());
@@ -757,10 +760,10 @@ public class CreateRuleTest extends BaseTest {
 				column.getLookupDetail().setFieldDBName(hm.get("ID"));
 			}
 		}
-		String jsonNode = mapper.writeValueAsString(actualCollectionInfoForCollection1);
-		Log.info("updated collection schema is " + jsonNode);
+		String jsonNode1 = mapper.writeValueAsString(actualCollectionInfoForCollection1);
+		Log.info("updated collection schema is " + jsonNode1);
 		Log.info("Is update Success ??? " + tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection1));
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC13.json"), RulesPojo.class);
+		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection1), "check collectionmaster is updated or not via api");
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -771,8 +774,65 @@ public class CreateRuleTest extends BaseTest {
 			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
 			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(),
 					sfdcInfo.getUserId(), ctaAction.getType(),ctaAction.getReason(), ctaAction.getComments(),rulesPojo.getRuleName(), ctaAction.getPlaybook()));
-        }
+		}
+	}
+	
+	
+	@Test
+	public void testRuleInactive() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC14.json"),RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		EditRulePage editRulePage=new EditRulePage();
+		editRulePage.clickOnRulesList();
+		rulesManagerPage.switchOffRuleByName(rulesPojo.getRuleName());
+		Assert.assertTrue(rulesManagerPage.isRuleInActive(rulesPojo.getRuleName()), "Check whether rule is active or inactive!! ");
+	}
+	
+	@Test
+	public void testCloningOFARule() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC15.json"),RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		EditRulePage editRulePage=new EditRulePage();
+		editRulePage.clickOnRulesList();
+		rulesManagerPage.cloneARuleByName(rulesPojo.getRuleName(), rulesPojo.getRuleName()+ "CLONED");
+		Assert.assertTrue(rulesManagerPage.isRuleInActive(rulesPojo.getRuleName()+ "CLONED"), "Check whether rule is cloned or not !!");
+		SObject[] rule1Criteria=sfdc.getRecords(resolveStrNameSpace("select ID,JBCXM__TriggerCriteria__c from JBCXM__AutomatedAlertRules__c where Name='"+rulesPojo.getRuleName()+"'"));
+		SObject[] rule2Criteria=sfdc.getRecords(resolveStrNameSpace("select ID,JBCXM__TriggerCriteria__c from JBCXM__AutomatedAlertRules__c where Name='"+rulesPojo.getRuleName()+ "CLONED"+"'"));
+		Assert.assertEquals(rule1Criteria[0].getField("JBCXM__TriggerCriteria__c"), rule2Criteria[0].getField("JBCXM__TriggerCriteria__c"), "verify json data for autual rule and cloned rule");
+	}
+	
+	
+	@Test
+	public void testDeleteRule() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC16.json"),RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		EditRulePage editRulePage=new EditRulePage();
+		editRulePage.clickOnRulesList();
+		try{
+		rulesManagerPage.deleteRuleByName(rulesPojo.getRuleName());
+		env.setTimeout(2);
+		Assert.assertFalse(rulesManagerPage.isRulePresentByName(rulesPojo.getRuleName()), "Check whether rule is present or not in UI after deletion!! ");
+		} finally {
+			env.setTimeout(30);
+		}
 	}
 
-	
+	@Test
+	public void testEditARule() throws Exception{
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC17.json"),RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		EditRulePage editRulePage=new EditRulePage();
+		editRulePage.clickOnRulesList();
+		rulesManagerPage.editRuleByName(rulesPojo.getRuleName());
+		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
+	}
+
 }

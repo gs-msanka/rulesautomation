@@ -174,7 +174,6 @@ public class RulesEngineUtil  extends BaseTest{
 				} else {
 					setupRulePage.dragAndDropFieldsToActionsForMDAJoinsMatrixData(sourceObject, filterField.getFieldName(),
 									filterField.getOperator(),filterField.getValue(),setupRulePojo.getJoinWithCollection());
-
 				}
 			}
 		}

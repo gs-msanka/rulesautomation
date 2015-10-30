@@ -18,6 +18,10 @@
                <include name="testLoadToCustomersWithNativeData" />
                <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
                <include name="verifyDataLoadConfiguration" />
+               <include name="testRuleInactive" />
+               <include name="testCloningOFARule" />
+               <include name="testDeleteRule" />
+               <include name="testEditARule" />
             </methods>
          </class>
       </classes>
