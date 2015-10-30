@@ -407,7 +407,7 @@ public class CreateRuleTest extends BaseTest {
                 case SetScore:
                     SetScoreAction setScoreAction = objectMapper.readValue(actionObject, SetScoreAction.class);
                     SObject[] JBCXM__MetricId__c = sfdc
-                            .getRecords("SELECT Id FROM JBCXM__ScorecardMetric__c where Name = '" + setScoreAction.getSelectMeasure() + "'");
+                            .getRecords(resolveStrNameSpace("SELECT Id FROM JBCXM__ScorecardMetric__c where Name = '" + setScoreAction.getSelectMeasure() + "'"));
                     int setScoreRecords = sfdc
                             .getRecordCount(resolveStrNameSpace(
                                     "SELECT Id,JBCXM__CurComment__c,JBCXM__CurScoreId__c,JBCXM__MetricId__c FROM JBCXM__ScorecardFact__c where JBCXM__MetricId__c='"
@@ -506,7 +506,7 @@ public class CreateRuleTest extends BaseTest {
                 case SetScore:
                     SetScoreAction setScoreAction = objectMapper.readValue(actionObject, SetScoreAction.class);
                     SObject[] JBCXM__MetricId__c = sfdc
-                            .getRecords("SELECT Id FROM JBCXM__ScorecardMetric__c where Name = '" + setScoreAction.getSelectMeasure() + "'");
+                            .getRecords(resolveStrNameSpace("SELECT Id FROM JBCXM__ScorecardMetric__c where Name = '" + setScoreAction.getSelectMeasure() + "'"));
                     int setScoreRecords = sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__CurComment__c,JBCXM__CurScoreId__c,JBCXM__MetricId__c FROM JBCXM__ScorecardFact__c where JBCXM__MetricId__c='" + JBCXM__MetricId__c[0].getField("Id").toString() + "' AND isDeleted=false"));
                     Log.info("No of records for set score" + setScoreRecords);
                     verifier.verifyEquals(srcObjRecCount, setScoreRecords);
