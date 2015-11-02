@@ -814,13 +814,10 @@ public class CreateRuleTest extends BaseTest {
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		EditRulePage editRulePage=new EditRulePage();
 		editRulePage.clickOnRulesList();
-		try{
 		rulesManagerPage.deleteRuleByName(rulesPojo.getRuleName());
 		env.setTimeout(2);
 		Assert.assertFalse(rulesManagerPage.isRulePresentByName(rulesPojo.getRuleName()), "Check whether rule is present or not in UI after deletion!! ");
-		} finally {
-			env.setTimeout(30);
-		}
+		
 	}
 
 	@Test

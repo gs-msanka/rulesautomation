@@ -566,6 +566,7 @@ public class CollectionInfo {
     }
     
     @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LookUpDetail {
 
 		private String name;
@@ -573,6 +574,24 @@ public class CollectionInfo {
 		private String collectionId;
 		private String dbCollectionName;
 		private String fieldDBName;
+		private String collectionName;
+		private String columnDisplayName;
+
+		public String getCollectionName() {
+			return collectionName;
+		}
+
+		public void setCollectionName(String collectionName) {
+			this.collectionName = collectionName;
+		}
+
+		public String getColumnDisplayName() {
+			return columnDisplayName;
+		}
+
+		public void setColumnDisplayName(String columnDisplayName) {
+			this.columnDisplayName = columnDisplayName;
+		}
 
 		public String getName() {
 			return name;
