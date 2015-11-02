@@ -175,9 +175,9 @@ public class SetupRulePage extends BasePage {
 		}
 	}
     
-    public void dragAndDropFieldsToShowAreaForMatrixData(String field, String joinWithCollection, boolean isLookUp) {
+    public void dragAndDropFieldsToShowAreaForMatrixData(String field, String joinWithCollection) {
 		String sourceXpath = null;
-		if (!isLookUp || !field.startsWith("lookup_")) {
+		if (!field.startsWith("lookup_")) {
 			sourceXpath = String.format(MDA_OBJECT_SOURCE_FIELD, field);
 			element.dragAndDrop(sourceXpath, SHOW_FIELDS_DIV);
 		} else {

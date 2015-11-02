@@ -163,7 +163,7 @@ public class RulesEngineUtil  extends BaseTest{
 				if (setupRulePojo.getDataSource().equalsIgnoreCase("Native")) {
 					setupRulePage.dragAndDropFieldsToShowArea(sourceObject,showField.getFieldName());
 				} else {
-					setupRulePage.dragAndDropFieldsToShowAreaForMatrixData(showField.getFieldName(), setupRulePojo.getJoinWithCollection(), setupRulePojo.isLookUpField());
+					setupRulePage.dragAndDropFieldsToShowAreaForMatrixData(showField.getFieldName(), setupRulePojo.getJoinWithCollection());
 				}
 			}
 			for (FilterFields filterField : setupData.getFilterFields()) {
