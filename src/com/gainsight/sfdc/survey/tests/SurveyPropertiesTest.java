@@ -33,6 +33,8 @@ public class SurveyPropertiesTest extends SurveySetup{
 		Log.info("Adding properties in Survey Properties Tab");
 		sfdc.connect();
 		basepage.login();
+		metaUtil.createExtIdFieldOnAccount(sfdc);
+		metaUtil.createExtIdFieldOnContacts(sfdc);
 		sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
 		updateNSURLInAppSettings(nsConfig.getNsURl());
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
@@ -40,10 +42,6 @@ public class SurveyPropertiesTest extends SurveySetup{
 		ns.tenantAutoProvision();
 		gs.enableOAuthForOrg();
 		gs.updateAccessKeyInApplicationSettingForGSEmail();
-		metaUtil.createExtIdFieldOnAccount(sfdc);
-		metaUtil.createExtIdFieldOnContacts(sfdc);
-		
-		
 	}
     
 	@TestInfo(testCaseIds={"GS-2662","GS-2667","GS-2668","GS-2669"})
