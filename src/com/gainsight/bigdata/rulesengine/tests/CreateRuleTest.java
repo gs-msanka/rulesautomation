@@ -54,6 +54,7 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBDetail;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails.DBServerDetail;
+import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.administration.pages.AdminScorecardSection;
 import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
@@ -116,8 +117,9 @@ public class CreateRuleTest extends BaseTest {
     private Calendar calendar = Calendar.getInstance();
 
 
-    @BeforeTest
-    public void setUp() throws Exception {
+    @BeforeClass
+    @Parameters("dbStoreType")
+    public void setUp(@Optional String dbStoreType) throws Exception {
         basepage.login();
         sfdc.connect();
         nsTestBase.init();
@@ -158,16 +160,14 @@ public class CreateRuleTest extends BaseTest {
 		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
-        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles"); 
-    }
-    
-    @BeforeClass
-    @Parameters("dbStoreType")
-    public void loadDataToMongoAndRedshiftDatabases(@Optional String dbStoreType) throws Exception{
-    	if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));           
-    	} else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
-                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
+		if (dbStoreType != null
+				&& dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
+			Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+		} else if (dbStoreType != null
+				&& dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+			Assert.assertTrue(tenantManager
+					.enabledRedShiftWithDBDetails(tenantDetails));
 		}
 	}
 
@@ -693,7 +693,6 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testCTAActionWithMdaJoins() throws Exception{
-		Calendar calendar = Calendar.getInstance();
 		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
 		String redShiftCollection2=Long.toString(calendar.getTimeInMillis());
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC13.json"), RulesPojo.class);
@@ -721,7 +720,9 @@ public class CreateRuleTest extends BaseTest {
 		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
 		String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
 		Assert.assertNotNull(statusId);
-		dataLoadManager.waitForDataLoadJobComplete(statusId);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
+		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");
+		
 
 		JobInfo load1 = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load1);
@@ -738,17 +739,12 @@ public class CreateRuleTest extends BaseTest {
 		metadata1.setCollectionName(actualCollectionInfo1.getCollectionDetails().getCollectionName());
 		String statusId1 = dataLoadManager.dataLoadManage(metadata1,dataLoadFile1);
 		Assert.assertNotNull(statusId1);
-		dataLoadManager.waitForDataLoadJobComplete(statusId1);
+		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId1), "verify whether dataload job status status != IN_PROGRESS");
+		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId1),"verify whether dataload job is completed or not");
 		
 		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
 		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
-		Map<String, String> hm = new HashMap<String, String>();
-		for (Column column : actualCollectionInfoForCollection2.getColumns()) {
-			hm.put(column.getDisplayName(), column.getDbName());
-		}
-		for (Entry<String, String> entry : hm.entrySet()) {
-			Log.info("Key : " + entry.getKey() + " Value : " + entry.getValue());
-		}
+		Map<String, String> hm=CollectionUtil.getDisplayAndDBNamesMap(actualCollectionInfoForCollection2);
 		LookUpDetail lookUpDetail = new LookUpDetail();
 		// Forming lookup object on ID field for mda joins
 		for (Column column : actualCollectionInfoForCollection1.getColumns()) {
