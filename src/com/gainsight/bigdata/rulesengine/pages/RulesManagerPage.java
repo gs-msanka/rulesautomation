@@ -85,6 +85,7 @@ public class RulesManagerPage extends BasePage {
 		String ruleNameOFF = String.format(SWITCH_ON_OFF_RULE, ruleName);
 		Log.info("Rule xpath is" + " " + ruleNameOFF);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		element.mouseOverAndClickOnIdentifier(ruleNameOFF);
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
@@ -148,6 +149,7 @@ public class RulesManagerPage extends BasePage {
     public void deleteRuleByName(String ruleName) {
 		String ruleNameToDelete = String.format(RULE_LISTING_ACTIONS, ruleName, "Delete");
 		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		element.mouseOverAndClickOnIdentifier(ruleNameToDelete);
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
@@ -164,6 +166,7 @@ public class RulesManagerPage extends BasePage {
 		String ruleNameToEdit = String.format(RULE_LISTING_ACTIONS, ruleName, "Edit");
 		Log.info("Rule xpath is" + " " + ruleNameToEdit);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		element.mouseOverAndClickOnIdentifier(ruleNameToEdit);
 		return new EditRulePage();
     }
@@ -195,6 +198,7 @@ public class RulesManagerPage extends BasePage {
 		String cloneRuleLink = String.format(RULE_LISTING_ACTIONS, ruleName, "Clone");
 		Log.info("Rule xpath is" + " " + cloneRuleLink);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		element.mouseOverAndClickOnIdentifier(cloneRuleLink);
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
 		element.clearAndSetText(CLONE_RULE_INPUT, newRuleName);
