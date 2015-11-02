@@ -1,13 +1,11 @@
 package com.gainsight.bigdata.pojo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionInfo {
@@ -306,8 +304,36 @@ public class CollectionInfo {
         private String defaultValue;
         private String groupName;
         private String measureValueBucket;
+        private boolean hasLookup=false;
+        
+		public boolean isHasLookup() {
+			return hasLookup;
+		}
 
-        public String getDatatype() {
+		public void setHasLookup(boolean hasLookup) {
+			this.hasLookup = hasLookup;
+		}
+
+		private LookUpDetail lookupDetail;
+
+		public LookUpDetail getLookupDetail() {
+			return lookupDetail;
+		}
+
+		public int getColumnAttribute() {
+			return columnAttribute;
+		}
+
+		public void setColumnAttribute(int columnAttribute) {
+			this.columnAttribute = columnAttribute;
+		}
+
+
+		public void setLookupDetail(LookUpDetail lookupDetail) {
+			this.lookupDetail = lookupDetail;
+		}
+
+		public String getDatatype() {
             return datatype;
         }
 
@@ -538,4 +564,73 @@ public class CollectionInfo {
             this.name = name;
         }
     }
+    
+    @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class LookUpDetail {
+
+		private String name;
+		private String lookupId;
+		private String collectionId;
+		private String dbCollectionName;
+		private String fieldDBName;
+		private String collectionName;
+		private String columnDisplayName;
+
+		public String getCollectionName() {
+			return collectionName;
+		}
+
+		public void setCollectionName(String collectionName) {
+			this.collectionName = collectionName;
+		}
+
+		public String getColumnDisplayName() {
+			return columnDisplayName;
+		}
+
+		public void setColumnDisplayName(String columnDisplayName) {
+			this.columnDisplayName = columnDisplayName;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getLookupId() {
+			return lookupId;
+		}
+
+		public void setLookupId(String lookupId) {
+			this.lookupId = lookupId;
+		}
+
+		public String getCollectionId() {
+			return collectionId;
+		}
+
+		public void setCollectionId(String collectionId) {
+			this.collectionId = collectionId;
+		}
+
+		public String getDbCollectionName() {
+			return dbCollectionName;
+		}
+
+		public void setDbCollectionName(String dbCollectionName) {
+			this.dbCollectionName = dbCollectionName;
+		}
+
+		public String getFieldDBName() {
+			return fieldDBName;
+		}
+
+		public void setFieldDBName(String fieldDBName) {
+			this.fieldDBName = fieldDBName;
+		}
+	}
 }

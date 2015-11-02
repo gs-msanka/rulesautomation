@@ -21,6 +21,8 @@ public class EditRulePage extends BasePage {
     private final String SETUP_ACTION_LINK = "//li[@data-id ='SetupActionView']/a";
     private final String SETUP_SCHEDULE_LINK = "//li[@data-id ='SetupScheduleView']/a";
     private final String SELECT_RULE_BUTTON = "//select[contains(@class, 'select-type')]/following-sibling::button";
+    private final String RULES_LIST_VIEW = "//li[@data-id ='ListView']/a";
+    private final String RULES_HEADER = "//div[contains(@class, 'gs-re-top-section')]";
 
     public EditRulePage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -124,5 +126,13 @@ public class EditRulePage extends BasePage {
         item.click(SETUP_ACTION_LINK);
         return new SetupRuleActionPage();
     }
+    
+    /**
+     * Clicks on RulesList Screen link
+     */
+    public void clickOnRulesList(){
+		item.click(RULES_LIST_VIEW);
+		wait.waitTillElementDisplayed(RULES_HEADER, MIN_TIME, MAX_TIME);
+	}
 
 }
