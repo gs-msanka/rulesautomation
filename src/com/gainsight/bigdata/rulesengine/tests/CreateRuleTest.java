@@ -29,6 +29,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
@@ -826,6 +827,29 @@ public class CreateRuleTest extends BaseTest {
 		editRulePage.clickOnRulesList();
 		rulesManagerPage.editRuleByName(rulesPojo.getRuleName());
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
+	}
+	
+	
+	@Test
+	public void VerifyingRecordsOndateFiltersUsingNativeData() throws Exception {
+		ObjectFields objField = new ObjectFields();
+		List<String> Date = new ArrayList<String>();
+		// Creating 10 date type fields on Account objects
+		for (int i = 0; i < 10; i++) {
+			Date.add("DateField" + i);
+		}
+		objField.setDates(Date);
+		metaUtil.createFieldsOnObject(sfdc, "Account", objField);
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC18.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 9, "Verify records fetched are valid or not");
 	}
 
 }

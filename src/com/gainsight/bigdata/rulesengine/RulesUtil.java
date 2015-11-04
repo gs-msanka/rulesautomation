@@ -9,9 +9,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.management.RuntimeErrorException;
+
+import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -19,8 +23,8 @@ import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
 import com.sforce.soap.partner.sobject.SObject;
-import org.testng.Assert;
 
+import org.testng.Assert;
 
 import static com.gainsight.bigdata.urls.ApiUrls.*;
 
@@ -252,8 +256,9 @@ public void setupRule(HashMap<String,String> testData){
 	 * @param header
 	 * @throws Exception
 	 */
-	public static void waitForCompletion(String ruleId, WebAction webAction,
+	public static int waitForCompletion(String ruleId, WebAction webAction,
 			Header header) throws Exception {
+		int totalNumberOfRecordsProcessed = 0;
 		boolean flag = true;
 		int maxWaitingTime = 3000000;
 		long startTime = System.currentTimeMillis();
@@ -271,6 +276,11 @@ public void setupRule(HashMap<String,String> testData){
 				if (status.equalsIgnoreCase("completed")
 						|| status.equalsIgnoreCase("failed_while_processing")) {
 					flag = false;
+					String executionMessage=map.get("executionMessages").toString();
+					String str ="Number of records fetched: ";
+					totalNumberOfRecordsProcessed= Integer.valueOf(executionMessage.substring(executionMessage.indexOf(str)+str.length(),
+							executionMessage.indexOf(',',executionMessage.indexOf(str)+str.length())).trim());
+					Log.info("total records fetched are " +totalNumberOfRecordsProcessed);	
 					if (!status.equalsIgnoreCase("completed")) {
 						Log.info("ruledID - " + ruleId + " "
 								+ map.get("executionMessages"));
@@ -279,6 +289,7 @@ public void setupRule(HashMap<String,String> testData){
 			}
 			executionTime = System.currentTimeMillis() - startTime;
 		}
+		return totalNumberOfRecordsProcessed;
 	}
 
     /**
@@ -600,5 +611,28 @@ public void setupRule(HashMap<String,String> testData){
 			}
 		}
 		return check;
+	}
+	
+	/**
+	 * This method will run the rule based on rule name.
+	 * @param ruleName, name of the rule.
+	 * @return returns number fo record processed
+	 */
+	public int getTotalRecordsProcessed(String ruleName) throws Exception {
+		String ruleId = getRuleId(ruleName);
+		int totalRecords = 0;
+		ResponseObj responseObj = wa.doPost(API_RULE_RUN + "/" + ruleId,
+				header.getAllHeaders(), "{}");
+		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+			NsResponseObj nsResponseObj = mapper.readValue(
+					responseObj.getContent(), NsResponseObj.class);
+			if (!nsResponseObj.isResult() || nsResponseObj.getRequestId() == null) {
+				Log.error("Rule Request itself failed!");
+				throw new RuntimeException("Rule processing failed");
+			} else {
+				totalRecords = RulesUtil.waitForCompletion(ruleId, wa, header);
+			}
+		}
+		return totalRecords;
 	}
 }
