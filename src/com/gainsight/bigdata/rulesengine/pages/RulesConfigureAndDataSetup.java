@@ -177,7 +177,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @throws Exception
      */
     public void createMdaSubjectAreaWithData() throws Exception {
-        DataLoadManager dataLoadManager = new DataLoadManager();
+        DataLoadManager dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
         dataLoad.execute(load);
         String collectionName = "MONGO";
@@ -221,7 +221,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * @throws Exception
      */
     public void createEmptySubjectArea() throws Exception {
-        DataLoadManager dataLoadManager = new DataLoadManager();
+        DataLoadManager dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         String collectionName = "EmptySubjectArea";
         Log.info("Collection Name : " + collectionName);
         CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema.json")), CollectionInfo.class);
@@ -250,15 +250,15 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
             throw new RuntimeException(e);
         }
     }
-    
+
    // TODO - WIP
     /**
      * Creates multiple(six) subject areas for a tenant in Mongo, RedShift databases based upon the iteration given.
-     * @param TenantDetails
-     * @param MongoDBDAO
+     * @param tenantDetails
+     * @param mongoDBDAO
      */
 	public void createMultipleSubjectAreasForDataLoadConfiguration(TenantDetails tenantDetails, MongoDBDAO mongoDBDAO) throws Exception{
-		DataLoadManager dataLoadManager = new DataLoadManager();
+		DataLoadManager dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
 		JobInfo load = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
 		dataLoad.execute(load);
 		try {
@@ -303,7 +303,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 	
 	/**
 	 * Method to get cronExpression from Scheduler Db
-	 * @param tenantId
+	 * @param tenantID
      * @param jobIdentifier property from scheduler Db
 	 * @return cronExpression
 	 * @throws IOException 

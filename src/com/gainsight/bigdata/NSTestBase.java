@@ -60,7 +60,7 @@ public class NSTestBase {
 
     @BeforeSuite
     public void init() throws Exception {
-        tenantManager = new TenantManager();
+        tenantManager = TenantManager.getInstance();
         //Initializing Headers
         header = new Header();
         wa = new WebAction();
@@ -322,7 +322,7 @@ public class NSTestBase {
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
         }
         if(result) {
-            updateNSURLInAppSettings(nsConfig.getNsURl());
+            updateNSURLInAppSettings(nsConfig.getNsURl()+"/"+nsConfig.getNsVersion());
         }
         return result;
     }

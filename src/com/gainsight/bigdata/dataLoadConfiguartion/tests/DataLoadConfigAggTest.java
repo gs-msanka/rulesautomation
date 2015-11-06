@@ -17,6 +17,7 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -24,8 +25,10 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
 import com.gainsight.utils.annotations.TestInfo;
+import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
-import org.testng.Assert;
+import static org.testng.Assert.*;
 import org.testng.annotations.Optional;
 import org.testng.annotations.*;
 
@@ -56,22 +59,21 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-
-        dataLoadManager     = new DataLoadManager();
+        dataLoadManager     = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
             if(tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+                assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
         } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
             if(!tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+                assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
         }
 
@@ -90,7 +92,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
             JobInfo customerJobInfo = mapper.readValue(new File(testDataFiles+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
         }
-        dataETL.execute(eventsJobInfo);
+
+
     }
 
     /**
@@ -106,16 +109,16 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T1_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t1/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -123,8 +126,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -156,16 +159,16 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T2_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t2/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -173,8 +176,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -206,16 +209,16 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T3_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t3/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -223,8 +226,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -257,17 +260,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T4_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t4/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -275,8 +278,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -309,17 +312,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T5_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t5/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -327,8 +330,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -360,17 +363,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T6_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t6/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -378,8 +381,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -412,17 +415,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T7_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t7/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -430,8 +433,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -464,17 +467,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T8_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t8/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -482,15 +485,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t8/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,date);
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t8/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -517,18 +520,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T9_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t9/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -536,8 +539,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -571,18 +574,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T10_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t10/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -590,15 +593,15 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t10/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,date);
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t10/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -623,16 +626,16 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T11_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t11/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -640,8 +643,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -674,17 +677,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T12_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t12/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -692,8 +695,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -726,17 +729,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T13_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t13/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -744,8 +747,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -778,17 +781,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T14_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t14/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -796,8 +799,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -830,17 +833,17 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T15_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t15/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -848,8 +851,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -883,18 +886,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T16_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t16/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -902,8 +905,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -937,18 +940,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T17_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t17/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -956,8 +959,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -991,18 +994,18 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T18_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t18/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -1010,8 +1013,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -1047,23 +1050,23 @@ public class DataLoadConfigAggTest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName("GS_DATA_T19_" + date.getTime());
 
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        Assert.assertNotNull(collectionId);
+        assertNotNull(collectionId);
         collectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         loadDataToCollection(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), eventsJobInfo.getTransformationRule().getOutputFileLoc());
 
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t19/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
 
         List<Mapping> customMapping = accountDetail.getGlobalMapping().getCustom();
         accountDetail.getGlobalMapping().setCustom(new ArrayList<Mapping>());
 
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -1071,8 +1074,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
         accountDetail.getRunNowDetails().setEndDate(DateUtil.addDays(date, Integer.valueOf(accountDetail.getRunNowDetails().getEndDate()), DateUtil.DEFAULT_UTC_DATE_FORMAT));
 
         String statusId = dataLoadAggConfigManager.createDataLoadApiProject(accountDetail, AccountActionType.SAVE_AND_RUN.name());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         String endCollectionName = accountDetail.getDisplayName() + " Day Agg";
@@ -1089,8 +1092,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
         accountDetail.getGlobalMapping().setCustom(customMapping);
         statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         accountDetail = dataLoadAggConfigManager.getAccountDetailByProjectName(accountDetail.getDisplayName());
 
         MDADateProcessor dateProcessor1  = mapper.readValue(new File(testDataFiles + "/tests/t19/DateProcess_1.json"), MDADateProcessor.class);
@@ -1104,22 +1107,20 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
         accountDetail.getGlobalMapping().setCustom(new ArrayList<Mapping>());
         statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
 
         aggCollectionInfo = dataLoadManager.getCollection(endCollectionName);
         verifyCollectionData(aggCollectionInfo, jobInfo.getTransformationRule().getOutputFileLoc());
 
         statusId = dataLoadAggConfigManager.updateDataLoadApiProject(mapper.writeValueAsString(accountDetail), AccountActionType.SAVE_AND_RUN.name(), accountDetail.getAccountId());
-        Assert.assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
-        Assert.assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
+        assertTrue(dataLoadAggConfigManager.waitForAggregationJobToComplete(statusId), "Wait for the Aggregation job Failed.");
+        assertTrue(dataLoadAggConfigManager.isDataAggregationCompleteWithSuccess(statusId), "Status of Aggregation job is not complete.");
         verifyCollectionData(aggCollectionInfo, jobInfo.getTransformationRule().getOutputFileLoc());
 
         accountIdsToDelete.add(accountDetail.getAccountId());
         collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
-
-
 
 
     @AfterClass
@@ -1159,53 +1160,29 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
     private void verifyCollectionData(CollectionInfo aggCollectionInfo, String expFilePath) throws IOException {
-        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(aggCollectionInfo)));
+        List<Map<String, String>> actualData = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(aggCollectionInfo)));
         Log.info("ActualData Size : " + actualData.size());
         actualData = reportManager.getProcessedReportData(actualData, aggCollectionInfo);
-        //Log.info("Actual Data : " + mapper.writeValueAsString(actualData));
+        Log.debug("Actual Data : " + mapper.writeValueAsString(actualData));
 
         CSVReader expectedReader = new CSVReader(new FileReader(Application.basedir+expFilePath));
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
-        //Log.info("Expected Data  " +mapper.writeValueAsString(expectedData));
+        Log.debug("Expected Data  " +mapper.writeValueAsString(expectedData));
 
         List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
         Log.info("Un-Matched Records " + mapper.writeValueAsString(diffData));
-        Assert.assertEquals(diffData.size(), 0, "No of unmatched records should be zero.");
+        assertEquals(diffData.size(), 0, "No of unmatched records should be zero.");
 
     }
 
     private void loadDataToCollection(DataLoadMetadata metadata, String filePath) {
         String statusID = dataLoadManager.dataLoadManage(metadata, new File(Application.basedir + filePath));
-        Assert.assertNotNull(statusID);
-        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusID), "Wait for the data load complete failed.");
+        assertNotNull(statusID);
+        assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusID), "Wait for the data load complete failed.");
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(statusID);
-        Assert.assertEquals(0, statusInfo.getFailureCount(), "Failed records should be zero.");
+        assertEquals(0, statusInfo.getFailureCount(), "Failed records should be zero.");
     }
 
-    private void setSourceDBNameForIdentifier(Identifier identifier, HashMap<String, String> dBDisplayNamesMap) {
-        String name = identifier.getSource().getDisplayName();
-        if(name == null) {
-            throw new IllegalArgumentException("Source display name can't be null.");
-        }
-        if(dBDisplayNamesMap == null || !dBDisplayNamesMap.containsKey(name)) {
-            throw new IllegalArgumentException("DB Names Map should not be null, db display names map doesn't contains " +name);
-        }
-        identifier.getSource().setDbName(dBDisplayNamesMap.get(name));
-    }
 
-    private void setSourceDBNameForCustomAndMeasureFields(List<Mapping> mappingList, HashMap<String, String> dBDisplayNamesMap) {
-        if(mappingList ==null || mappingList.size() ==0) {
-            return;
-        }
-        if(dBDisplayNamesMap == null) {
-            throw new IllegalArgumentException("DB Names Map should not be null");
-        }
-        for(Mapping mapping : mappingList) {
-            if(!dBDisplayNamesMap.containsKey(mapping.getSource().getDisplayName())) {
-                throw new RuntimeException("DB Names map doesn't contain " +mapping.getSource().getDisplayName());
-            }
-            mapping.getSource().setDbName(dBDisplayNamesMap.get(mapping.getSource().getDisplayName()));
-        }
-    }
 
 }

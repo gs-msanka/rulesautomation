@@ -54,7 +54,6 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -116,7 +115,7 @@ public class CreateRuleTest extends BaseTest {
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
-        tenantManager=new TenantManager();
+        tenantManager=TenantManager.getInstance();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
@@ -124,7 +123,7 @@ public class CreateRuleTest extends BaseTest {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, nsTestBase.getDataLoadAccessKey());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();

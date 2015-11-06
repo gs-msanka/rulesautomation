@@ -82,7 +82,7 @@ public class SmartListTest extends LoadTestData {
     public void setup() throws  IOException {
     	Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         boolean isRedshiftEnabled= tenantManager.enabledRedShiftWithDBDetails(tenantDetails);

@@ -42,7 +42,7 @@ public class ReportBuilderTest extends NSTestBase {
         //Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         //tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         reportManager = new ReportManager();
-        dataLoadManager= new DataLoadManager();
+        dataLoadManager= new DataLoadManager(sfinfo, getDataLoadAccessKey());
 
         dataTransForm = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/jobs/DataProcessJob1.json"), JobInfo.class);
         if(true) {      //Locally to run multiple time, we can make it false
