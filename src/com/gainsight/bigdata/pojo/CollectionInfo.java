@@ -305,7 +305,16 @@ public class CollectionInfo {
         private String groupName;
         private String measureValueBucket;
         private boolean hasLookup=false;
+        private String calculatedExpression;
         
+		public String getCalculatedExpression() {
+			return calculatedExpression;
+		}
+
+		public void setCalculatedExpression(String calculatedExpression) {
+			this.calculatedExpression = calculatedExpression;
+		}
+
 		public boolean isHasLookup() {
 			return hasLookup;
 		}

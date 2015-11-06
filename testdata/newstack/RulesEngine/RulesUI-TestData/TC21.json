@@ -1,0 +1,78 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 20 - DateTime type verification in Setup Rule Using Matrix Data",
+  "ruleDescription": "Rule 20 - DateTime type verification in Setup Rule Using Matrix Data",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "MONGO",
+    "setupData": [
+      {
+        "sourceObject": "MONGO",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "DateTime2",
+            "operator": "greater or equal",
+            "value": "select_Last Day of Next Month"
+          },
+          {
+            "fieldName": "DateTime1",
+            "operator": "greater than",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "DateTime4",
+            "operator": "greater or equal",
+            "value": "select_First Day of Previous Week"
+          },
+          {
+            "fieldName": "DateTime3",
+            "operator": "equals",
+            "value": "select_First Day of Next Month"
+          },
+          {
+            "fieldName": "DateTime5",
+            "operator": "less or equal",
+            "value": "select_First Day of Current Week"
+          },
+          {
+            "fieldName": "DateTime6",
+            "operator": "not equal to",
+            "value": "select_Last Day of Next Month"
+          },
+          {
+            "fieldName": "DateTime7",
+            "operator": "not equal to",
+            "value": "select_Last Day of Current Month"
+          },
+          {
+            "fieldName": "DateTime8",
+            "operator": "equals",
+            "value": "select_First Day of Current Week"
+          },
+          {
+            "fieldName": "DateTime9",
+            "operator": "greater or equal",
+            "value": "select_First Day of Previous Week"
+          },
+          {
+            "fieldName": "Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account "
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "((A and B and E) or (C and H) or (D and F)) or (I and J)",
+    "timeIdentifier": "DateTime1"
+  }
+}
