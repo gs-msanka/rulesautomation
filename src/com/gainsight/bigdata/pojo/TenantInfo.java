@@ -3,30 +3,19 @@ package com.gainsight.bigdata.pojo;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * This is simple class to hold on just the
+ * high level tenant information like org id, org name, tenant id, tenant name & know about redshift enabled.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TenantInfo {
 
-    @JsonProperty("TenantId")
     private String tenantId;
-
-	private String authToken;
     private String tenantName;
-	
-	@JsonProperty("ExternalTenantID")
-	private String externalTenantID;
-	
-	@JsonProperty("ExternalTenantName")
-	private String externalTenantName;
-    private String tenantType;
-    private boolean disabled;
 
-    public String getTenantName() {
-        return tenantName;
-    }
-
-    public void setTenantName(String tenantName) {
-        this.tenantName = tenantName;
-    }
+	private String orgId;
+	private String orgName;
+    private boolean redShiftEnabled;
 
     public String getTenantId() {
         return tenantId;
@@ -36,43 +25,46 @@ public class TenantInfo {
         this.tenantId = tenantId;
     }
 
-    public String getExternalTenantID() {
-		return externalTenantID;
-	}
-
-	public void setExternalTenantID(String externalTenantID) {
-		this.externalTenantID = externalTenantID;
-	}
-
-	public String getExternalTenantName() {
-		return externalTenantName;
-	}
-
-	public void setExternalTenantName(String externalTenantName) {
-		this.externalTenantName = externalTenantName;
-	}
-
-    public String getTenantType() {
-        return tenantType;
+    public String getTenantName() {
+        return tenantName;
     }
 
-    public void setTenantType(String tenantType) {
-        this.tenantType = tenantType;
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
     }
 
-    public boolean isDisabled() {
-        return disabled;
+    public String getOrgId() {
+        return orgId;
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
     }
 
-	public String getAuthToken() {
-		return authToken;
-	}
+    public String getOrgName() {
+        return orgName;
+    }
 
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
-	}
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public boolean isRedShiftEnabled() {
+        return redShiftEnabled;
+    }
+
+    public void setRedShiftEnabled(boolean redShiftEnabled) {
+        this.redShiftEnabled = redShiftEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "TenantInfo{" +
+                "tenantId='" + tenantId + '\'' +
+                ", tenantName='" + tenantName + '\'' +
+                ", orgId='" + orgId + '\'' +
+                ", orgName='" + orgName + '\'' +
+                ", redShiftEnabled=" + redShiftEnabled +
+                '}';
+    }
 }

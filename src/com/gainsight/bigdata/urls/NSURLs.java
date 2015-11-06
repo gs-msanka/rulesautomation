@@ -7,7 +7,7 @@ import com.gainsight.util.ConfigLoader;
  */
 public interface NSURLs {
 
-    public String NS_URL = ConfigLoader.getNsConfig().getNsURl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
-    public String NS_ADMIN_URL = ConfigLoader.getNsConfig().getNsAdminUrl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
+    String NS_URL           = ConfigLoader.getNsConfig().getNsURl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
+    String NS_ADMIN_URL     = ConfigLoader.getNsConfig().getNsAdminUrl()+"/"+ConfigLoader.getNsConfig().getNsVersion();
 
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionInfo {
@@ -134,9 +135,9 @@ public class CollectionInfo {
 		@JsonProperty("CollectionName")
 		private String collectionName;
 		@JsonProperty("dbType")
-        private String dbType;
+        private String dbType ="DATA";
 		@JsonProperty("dataStoreType")
-        private String dataStoreType;
+        private String dataStoreType ="MONGO";
         @JsonProperty("dbCollectionName")
         private String dbCollectionName;
         @JsonProperty("CollectionID")
@@ -302,10 +303,20 @@ public class CollectionInfo {
         @JsonProperty("columnAttribute")
         private int columnAttribute;
         private int useThousandSeparator;
+        private int maxLength =250;
 
         private String defaultValue;
         private String groupName;
         private String measureValueBucket;
+        private String description;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
         public String getDatatype() {
             return datatype;
@@ -357,8 +368,6 @@ public class CollectionInfo {
         public void setFormula(List<ColumnFormula> formula) {
             this.formula = formula;
         }
-
-        private int maxLength;
 
         public int getMaxLength() {
             return maxLength;
