@@ -342,11 +342,15 @@ public class SetupRuleActionPage extends BasePage {
     }
 
     public void addCriteria(Criteria criteria, int r, int c) {
+    	String fieldName=criteria.getShowField();
+    	if (criteria.getShowField().startsWith("lookup_")) {
+    		fieldName=criteria.getShowField().substring(7);
+		}
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]//div[@class='criteria-container'][" + c + "]";
         String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
         item.click(criteriaButton + CRITERIA);
         item.click(xpath + CRITERIA_SHOWFIELD);
-        selectValueInDropDown(criteria.getShowField());
+        selectValueInDropDown(fieldName);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
         selectValueInDropDown(criteria.getOperator());
         if (criteria.getField().equalsIgnoreCase("field")) {

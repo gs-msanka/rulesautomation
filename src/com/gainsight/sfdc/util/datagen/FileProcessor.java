@@ -1,10 +1,7 @@
 package com.gainsight.sfdc.util.datagen;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -136,7 +133,7 @@ public class FileProcessor {
 		
 			while(cols != null) {
 				int daysDiff = Integer.parseInt(cols[fieldIndex]);
-				cols[fieldIndex] = DateUtil.addDays(Calendar.getInstance(),daysDiff, "yyyy-MM-dd'T'HH:mm:ss");
+				cols[fieldIndex] = DateUtil.addDays(Calendar.getInstance(), daysDiff, "yyyy-MM-dd'T'HH:mm:ss");
 				writer.writeNext(cols);
 				writer.flush();
 				cols = reader.readNext();
@@ -181,7 +178,7 @@ public class FileProcessor {
         return outputFile;
     }
 
-    public static File getDateProcessedFile(File inputFile, File outputFile, ArrayList<JobInfo.DateProcess.Fields> fields, Date date) throws IOException {
+    public static File getDateProcessedFile(File inputFile, File outputFile, List<JobInfo.DateProcess.Fields> fields, Date date) throws IOException {
         Log.info("Started Date Processing....");
 
         outputFile.getParentFile().mkdirs();
@@ -237,6 +234,17 @@ public class FileProcessor {
         }
         Log.info("Completed Date Processing.");
         return outputFile;
+    }
+
+    public static File getDateProcessedFile(File inputFile, File outputFile, Date date, String dateFormat, String fieldName) throws IOException {
+        if(inputFile ==null || outputFile == null || date == null || dateFormat == null || dateFormat.isEmpty() || fieldName ==null || fieldName.isEmpty()) {
+            throw new IllegalArgumentException("Methods parameters should not null / empty");
+        }
+        JobInfo.DateProcess.Fields field = new JobInfo.DateProcess.Fields();
+        field.setFieldName(fieldName);
+        field.setDaily(true);
+        field.setDateFormat(dateFormat);
+        return getDateProcessedFile(inputFile, outputFile, Arrays.asList(new JobInfo.DateProcess.Fields[]{field}), date);
     }
 
     private static String getDate(JobInfo.DateProcess.Fields field, int value) {

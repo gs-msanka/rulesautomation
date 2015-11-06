@@ -83,7 +83,7 @@ public class ConfigLoader {
      * @return SfdcConfig object of the said loaded config
      */
     public static SfdcConfig getSfdcConfig(){
-        String env = System.getProperty("sfdc_env" , "default");
+        String env = System.getProperty("sfdc_env" , "11Demo");
         return getSfdcConfig(env);
     }
 
@@ -95,7 +95,7 @@ public class ConfigLoader {
      * @return NsConfig object of the said loaded config
      */
     public static NsConfig getNsConfig(){
-        String env = System.getProperty("ns_env" , "test");
+        String env = System.getProperty("ns_env" , "test1");
         return getNsConfig(env);
     }
 

@@ -928,7 +928,7 @@ public class SmartListTest extends LoadTestData {
 						+ "/testdata/newstack/CoPilot/Job/demoload.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4637-1-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1021,7 +1021,7 @@ public class SmartListTest extends LoadTestData {
 										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -postgres-etl.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4637-2-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1113,7 +1113,7 @@ public class SmartListTest extends LoadTestData {
 										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -RedShift-etl.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4637-3-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1202,7 +1202,7 @@ public class SmartListTest extends LoadTestData {
 				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
 				JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4638-1-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1291,7 +1291,7 @@ public class SmartListTest extends LoadTestData {
 				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
 				JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4638-2-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1380,7 +1380,7 @@ public class SmartListTest extends LoadTestData {
 				+ "/testdata/newstack/CoPilot/Job/GS-4638-Etl.txt"),
 				JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4638-3-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1470,7 +1470,7 @@ public class SmartListTest extends LoadTestData {
 						+ "/testdata/newstack/CoPilot/Job/demoload.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4639-1-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1562,7 +1562,7 @@ public class SmartListTest extends LoadTestData {
 										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -postgres-etl.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4639-2-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
@@ -1653,7 +1653,7 @@ public class SmartListTest extends LoadTestData {
 										+ "/testdata/newstack/CoPilot/Job/GS-4637-1 -RedShift-etl.txt"),
 						JobInfo.class);
 		dataLoad.execute(load);
-		collectionName = testData.get("CollectionName") + "-"
+		collectionName = testData.get("CollectionName") + "GS-4639-3-"
 				+ calendar.getTimeInMillis();
 		Log.info("Collection Name : " + collectionName);
 		CollectionInfo collectionInfo = mapper.readValue(
