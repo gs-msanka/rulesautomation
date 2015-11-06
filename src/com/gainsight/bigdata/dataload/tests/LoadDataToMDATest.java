@@ -26,7 +26,8 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.type.TypeReference;
-import static org.testng.Assert.*;
+
+import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 
@@ -58,17 +59,17 @@ public class LoadDataToMDATest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws IOException {
-        assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails =tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
             if(tenantDetails.isRedshiftEnabled()) {
-                assertTrue(tenantManager.disableRedShift(tenantDetails));
+                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
         } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
             if(!tenantDetails.isRedshiftEnabled()) {
-                assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
         }
         //This will help to run the same suite for multiple data bases.
@@ -86,27 +87,27 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "1_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
 
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
         verifyData(actualCollectionInfo, expFile);
@@ -120,16 +121,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "2_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/ExpectedTransform.json"), JobInfo.class);
@@ -144,9 +145,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
         verifyData(actualCollectionInfo, expFile);
@@ -159,16 +160,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "3_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/ExpectedTransform.json"), JobInfo.class);
@@ -182,9 +183,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -198,16 +199,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "4_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/ExpectedTransform.json"), JobInfo.class);
@@ -221,9 +222,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
         verifyData(actualCollectionInfo, expFile);
@@ -236,16 +237,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "5_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/ExpectedTransform.json"), JobInfo.class);
@@ -259,9 +260,9 @@ public class LoadDataToMDATest extends NSTestBase {
 
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -275,16 +276,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "6_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/ExpectedTransform.json"), JobInfo.class);
@@ -298,9 +299,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -314,16 +315,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "7_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/ExpectedTransform.json"), JobInfo.class);
@@ -337,9 +338,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -353,16 +354,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "8_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/ExpectedTransform.json"), JobInfo.class);
@@ -376,9 +377,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -393,39 +394,39 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "9_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform.json"), JobInfo.class);
 
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
         List<CollectionInfo.Column> columns = mapper.readValue(new File(testDataFiles + "/tests/t9/ExtraColumns.json"), new TypeReference<ArrayList<CollectionInfo.Column>>() {
         });
         actualCollectionInfo.getColumns().addAll(columns);
-        assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(), actualCollectionInfo));
+        Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(), actualCollectionInfo));
         actualCollectionInfo = dataLoadManager.getCollectionInfo(actualCollectionInfo.getCollectionDetails().getCollectionId());
 
         loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform_1.json"), JobInfo.class);
         dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 8, 0);
 
@@ -444,16 +445,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t10/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "10_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/ExpectedTransform.json"), JobInfo.class);
@@ -461,24 +462,24 @@ public class LoadDataToMDATest extends NSTestBase {
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
 
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         List<String[]> failedRecords = dataLoadManager.getFailedRecords(jobId);
-        assertNotNull(failedRecords);
-        assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
+        Assert.assertNotNull(failedRecords);
+        Assert.assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 5);
         List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo)), actualCollectionInfo);
         List<Map<String, String>> expData = ReportManager.truncateStringData(ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo), actualCollectionInfo);
         Log.info("Actual     : " + mapper.writeValueAsString(actualData));
         Log.info("Expected  : " + mapper.writeValueAsString(expData));
-        assertEquals(actualData.size(), expData.size());
+        Assert.assertEquals(actualData.size(), expData.size());
 
         List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
-        assertEquals(0, diffData.size());
+        Assert.assertEquals(0, diffData.size());
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
@@ -489,37 +490,37 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "11_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
         verifyData(actualCollectionInfo, expFile);
 
         jobId = dataLoadManager.clearAllCollectionData(actualCollectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
-        assertNotNull(jobId, "Job Id (or) status id is null.");
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId, "Job Id (or) status id is null.");
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
         List<Map<String, String>> actualData = reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo));
-        assertEquals(0, actualData.size());
+        Assert.assertEquals(0, actualData.size());
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
@@ -529,23 +530,23 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t12/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "12_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t12/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 20, 0);
 
@@ -563,9 +564,9 @@ public class LoadDataToMDATest extends NSTestBase {
         DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t12/ClearMetadata.json"), DataLoadMetadata.class);
         metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
 
@@ -582,23 +583,23 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t13/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "13_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t13/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 15, 0);
 
@@ -616,9 +617,9 @@ public class LoadDataToMDATest extends NSTestBase {
         DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t13/ClearMetadata.json"), DataLoadMetadata.class);
         metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 6, 0); //it should but 5 there's a product issue that sends 1 record extra.
 
@@ -636,23 +637,23 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "14_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -662,9 +663,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
         metadata.setKeyFields(new String[]{"Id"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
 
@@ -681,16 +682,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "15_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
@@ -702,9 +703,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -714,9 +715,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
         metadata.setKeyFields(new String[]{"Id", "AccountName"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 7, 0);
 
@@ -733,16 +734,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "16_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t16/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
@@ -754,9 +755,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -771,9 +772,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
         metadata.setKeyFields(new String[]{"Id"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -790,16 +791,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "17_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t17/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
@@ -811,9 +812,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -828,9 +829,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
         metadata.setKeyFields(new String[]{"Id", "AccountName"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -847,16 +848,16 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "18_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertNotNull(actualCollectionInfo);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
@@ -864,9 +865,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -878,9 +879,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
         metadata.setKeyFields(new String[]{"Id"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
-        assertNotNull(jobId);
-        assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -898,15 +899,15 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "19_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t19/LoadTransform.json"), JobInfo.class);
 
         File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform, date);
@@ -918,9 +919,9 @@ public class LoadDataToMDATest extends NSTestBase {
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
 
         String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
-        assertNotNull(statusId);
+        Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
@@ -937,15 +938,15 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform1 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform.json"), JobInfo.class);
         JobInfo loadTransform2 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform_1.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t20/ExpectedTransform.json"), JobInfo.class);
@@ -953,17 +954,17 @@ public class LoadDataToMDATest extends NSTestBase {
         File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform1, date);
 
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
-        assertNotNull(statusId);
+        Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
         dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform2, date);
         statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
-        assertNotNull(statusId);
+        Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
@@ -981,22 +982,22 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "21_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataLoadFile = new File(testDataFiles+"/tests/t21/CollectionData.csv");
 
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
-        assertNotNull(statusId);
+        Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
 
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 3, 11);
 
@@ -1008,11 +1009,11 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.close();
 
         List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(outputFile)));
-        assertEquals(actualData.size(), 11);
+        Assert.assertEquals(actualData.size(), 11);
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(testDataFiles+"/tests/t21/FailedExpectedData.csv")));
         List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
         Log.debug("Diff Data : " +mapper.writeValueAsString(diffData));
-        assertEquals(diffData.size(), 0, "No of difference records should be 0.");
+        Assert.assertEquals(diffData.size(), 0, "No of difference records should be 0.");
 
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
@@ -1024,13 +1025,13 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "22_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         ResponseObj responseObj = dataLoadManager.createSubjectAreaGetResponseObj(collectionInfo);
-        assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode(), "Internal Server error should be returned."); //This should be bad request.
+        Assert.assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode(), "Was expected bad request.");
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        assertFalse(nsResponseObj.isResult());
-        assertEquals(MDAErrorCodes.SUBJECT_AREA_ALREADY_EXISTS.getGSCode(), nsResponseObj.getErrorCode());
-        assertEquals("Subject Area Name Already in use please use a different name.", nsResponseObj.getErrorDesc());
+        Assert.assertFalse(nsResponseObj.isResult());
+        Assert.assertEquals(MDAErrorCodes.SUBJECT_AREA_ALREADY_EXISTS.getGSCode(), nsResponseObj.getErrorCode());
+        Assert.assertEquals("Subject Area Name Already in use please use a different name.", nsResponseObj.getErrorDesc());
     }
 
     @TestInfo(testCaseIds = {"GS-7832"})
@@ -1040,19 +1041,19 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "23_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
         if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
             collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t23/CollectionData.csv");
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
-        assertNotNull(statusId);
+        Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         verifyJobDetails(statusId, collectionName, 45, 0);
 
@@ -1067,10 +1068,10 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "24_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t24/CollectionData.csv");
         DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
@@ -1079,7 +1080,7 @@ public class LoadDataToMDATest extends NSTestBase {
 
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
-        assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId), "Status of data load should be completed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId), "Status of data load should be completed.");
 
         File expectedFile = new File(testDataFiles+"/tests/t24/ExpectedData.csv");
         verifyData(actualCollectionInfo, expectedFile);
@@ -1092,21 +1093,21 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "25_" + date.getTime();
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-        assertNotNull(collectionId);
+        Assert.assertNotNull(collectionId);
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t25/CollectionData.csv");
         DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         DataLoadManager.addMapping(metadata, new String[]{"AccountID"});
 
         ResponseObj responseObj = dataLoadManager.dataLoadManageGetResponseObject(mapper.writeValueAsString(metadata), dataFile);
-        assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
+        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
 
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
-        assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
     }
 
 
@@ -1142,10 +1143,10 @@ public class LoadDataToMDATest extends NSTestBase {
      */
     private void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
-        assertEquals(statusInfo.getCollectionName(), collectionName);
-        assertEquals(statusInfo.getSuccessCount(), successCount);
-        assertEquals(statusInfo.getFailureCount(), failedCount);
-        assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
+        Assert.assertEquals(statusInfo.getCollectionName(), collectionName);
+        Assert.assertEquals(statusInfo.getSuccessCount(), successCount);
+        Assert.assertEquals(statusInfo.getFailureCount(), failedCount);
+        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
     }
 
     private void verifyData(CollectionInfo actualCollectionInfo, File expFile) throws Exception {
@@ -1153,11 +1154,11 @@ public class LoadDataToMDATest extends NSTestBase {
         List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo);
         Log.info("Actual     : " + mapper.writeValueAsString(actualData));
         Log.info("Expected  : " + mapper.writeValueAsString(expData));
-        assertEquals(actualData.size(), expData.size());
+        Assert.assertEquals(actualData.size(), expData.size());
 
         List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
         Log.info("Diff : " + mapper.writeValueAsString(diffData));
-        assertEquals(0, diffData.size());
+        Assert.assertEquals(0, diffData.size());
 
     }
 
