@@ -307,7 +307,8 @@ public class CollectionInfo {
         private String measureValueBucket;
         private String description;
         private boolean hasLookup=false;
-        
+        private LookUpDetail lookupDetail;
+
 		public boolean isHasLookup() {
 			return hasLookup;
 		}
@@ -320,12 +321,9 @@ public class CollectionInfo {
             this.description = description;
         }
 
-        public String getDatatype() {
-		public void setHasLookup(boolean hasLookup) {
-			this.hasLookup = hasLookup;
-		}
-
-		private LookUpDetail lookupDetail;
+        public void setHasLookup(boolean hasLookup) {
+            this.hasLookup = hasLookup;
+        }
 
 		public LookUpDetail getLookupDetail() {
 			return lookupDetail;
@@ -344,7 +342,7 @@ public class CollectionInfo {
 			this.lookupDetail = lookupDetail;
 		}
 
-		public String getDatatype() {
+        public String getDatatype() {
             return datatype;
         }
 
