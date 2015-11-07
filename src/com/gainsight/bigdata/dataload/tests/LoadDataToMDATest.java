@@ -1115,7 +1115,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @AfterClass
     public void tearDown() {
         if(mongoDBDAO!=null) mongoDBDAO.mongoUtil.closeConnection();
-        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId(), tenantManager);
     }
 
     /**
@@ -1130,7 +1130,7 @@ public class LoadDataToMDATest extends NSTestBase {
                 colList.add(collectionInfo.getCollectionDetails());
             }
         }
-        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList, tenantManager);
     }
 
     /**

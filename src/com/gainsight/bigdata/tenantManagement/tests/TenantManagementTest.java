@@ -23,7 +23,7 @@ public class TenantManagementTest {
 
     @BeforeClass
     public void setup() {
-        tenantManager = TenantManager.getInstance();
+        tenantManager = new TenantManager();
     }
 
     @TestInfo(testCaseIds = {"GS-4271"})

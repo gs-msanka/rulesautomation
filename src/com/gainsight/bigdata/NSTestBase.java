@@ -60,7 +60,7 @@ public class NSTestBase {
 
     @BeforeSuite
     public void init() throws Exception {
-        tenantManager = TenantManager.getInstance();
+        tenantManager = new TenantManager();
         //Initializing Headers
         header = new Header();
         wa = new WebAction();

@@ -635,10 +635,11 @@ public class DataLoadManager  {
 
     /**
      * Clears all the data in the collection and deletes the collection.
-     * @param tenantId - Tenant Id
      * @param collectionsIdsToDelete - Collection Id to delete.
+     * @param tenantId - Tenant Id
+     * @param tenantManager
      */
-    public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId) {
+    public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId, TenantManager tenantManager) {
         Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
         if(collectionsIdsToDelete == null || collectionsIdsToDelete.size() ==0) {
             Log.info("No Collections To Delete");
@@ -652,7 +653,7 @@ public class DataLoadManager  {
             if(collectionInfoMap.containsKey(colId)) {
                 String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
                 waitForDataLoadJobComplete(jobId);
-                if(TenantManager.getInstance().deleteSubjectArea(tenantId, colId)) {
+                if(tenantManager.deleteSubjectArea(tenantId, colId)) {
                     Log.info("Collection Deleted Successfully " +colId);
                 } else {
                     Log.error("Failed to delete collection id : "+colId);
@@ -669,8 +670,9 @@ public class DataLoadManager  {
      * Clears all the data in the collection and deletes the collection.
      * @param tenantId - Tenant Id
      * @param collectionDetailList - CollectionDetails.
+     * @param tenantManager
      */
-    public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList) {
+    public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList, TenantManager tenantManager) {
         Log.info("Total no of collection to delete : " + collectionDetailList.size());
         if(tenantId == null || collectionDetailList == null) {
             throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
@@ -678,7 +680,7 @@ public class DataLoadManager  {
         for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
                 String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
                 if(waitForDataLoadJobComplete(jobId)) {
-                    TenantManager.getInstance().deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                    tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
                 } else {
                     throw new RuntimeException("Data deleting is not completed. i.e. data load job is still running then the max wait time. ");
                 }

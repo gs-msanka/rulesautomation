@@ -1131,7 +1131,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
                 }
             }
         }
-        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId(), tenantManager);
     }
 
     //To Delete All the projects of a tenant - - Run This test case to delete all the accounts in a project..

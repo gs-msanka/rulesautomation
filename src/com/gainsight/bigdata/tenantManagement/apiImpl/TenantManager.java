@@ -51,18 +51,7 @@ public class TenantManager {
      * Logs in to tenant Management SFDC org and sets up the default headers required.
      */
 
-    public static TenantManager tenantManager = null;
-
-    public static TenantManager getInstance() {
-        if(tenantManager ==null) {
-            tenantManager = new TenantManager();
-            return tenantManager;
-        } else {
-            return tenantManager;
-        }
-    }
-
-    private TenantManager() {
+    public TenantManager() {
         sfConnector = new SalesforceConnector(nsConfig.getSfdcUsername(), nsConfig.getSfdcPassword() + nsConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
         if (!sfConnector.connect()) {

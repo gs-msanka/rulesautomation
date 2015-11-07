@@ -133,7 +133,7 @@ public class CreateRuleTest extends BaseTest {
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
-        tenantManager=TenantManager.getInstance();
+        tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
@@ -315,7 +315,7 @@ public class CreateRuleTest extends BaseTest {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
 			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-					tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+                    tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
