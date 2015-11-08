@@ -32,6 +32,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
+import com.gainsight.bigdata.pojo.RuleExecutionDataObject;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
@@ -572,8 +573,9 @@ public class CreateRuleTest extends BaseTest {
 		dataLoadConfiguration.clickOnNativeObjectSelection();
 		Element element = new Element();
 		env.setTimeout(0);
+		Verifier verifier = new Verifier();
 		for (int i = 0; i < jbcxmObjects.size(); i++) {
-			Assert.assertFalse(element.isElementPresent("//li[contains(@class, 'ui-multiselect-option')]/descendant::input[@value='"+jbcxmObjects.get(i)+"']/following-sibling::span"),
+			verifier.verifyFalse((element.isElementPresent("//li[contains(@class, 'ui-multiselect-option')]/descendant::input[@value='"+jbcxmObjects.get(i)+"']/following-sibling::span")),
 					"Check whether Gainsight Package Objects are present under DataLoadConfiguration List !!!");
 		}
 	}
@@ -694,10 +696,10 @@ public class CreateRuleTest extends BaseTest {
 		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
 		String redShiftCollection2=Long.toString(calendar.getTimeInMillis());
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC13.json"), RulesPojo.class);
-		rulesPojo.getSetupRule().setJoinOnCollection(redShiftCollection1 + "1");
-		rulesPojo.getSetupRule().setJoinWithCollection(redShiftCollection2  + "2");
-		rulesPojo.getSetupRule().setSelectObject(redShiftCollection1 + "1");	
-		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(redShiftCollection1 + "1");
+		rulesPojo.getSetupRule().setJoinOnCollection(redShiftCollection1 + "2");
+		rulesPojo.getSetupRule().setJoinWithCollection(redShiftCollection2  + "1");
+		rulesPojo.getSetupRule().setSelectObject(redShiftCollection1 + "2");	
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(redShiftCollection1 + "2");
 		String jsonNode = mapper.writeValueAsString(rulesPojo);
 		Log.info(jsonNode);
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
@@ -743,8 +745,9 @@ public class CreateRuleTest extends BaseTest {
 		CollectionInfo actualCollectionInfoForCollection1 = dataLoadManager.getCollectionInfo(collectionId);
 		CollectionInfo actualCollectionInfoForCollection2 = dataLoadManager.getCollectionInfo(collectionId1);
 		Map<String, String> hm=CollectionUtil.getDisplayAndDBNamesMap(actualCollectionInfoForCollection2);	
-		CollectionUtil.createLookUpAndGetCollectionObject(actualCollectionInfoForCollection1, actualCollectionInfoForCollection2, hm, "ID", "ID");
-		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection1), "check collectionmaster is updated or not via api");
+		// Forming lookup object on ID field of both baseobject and lookup object
+		CollectionUtil.setLookUpDetails(actualCollectionInfoForCollection2, "ID", actualCollectionInfoForCollection1, "ID", false);
+		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection2), "check collectionmaster is updated or not via api");
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
@@ -832,8 +835,13 @@ public class CreateRuleTest extends BaseTest {
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC18.json"), RulesPojo.class);
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
-		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 9, "Verify records fetched are valid or not");
+		rulesEngineUtil.createRuleFromUi(rulesPojo);		
+		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
+		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
+		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
+				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
+		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
 	@Test
@@ -856,7 +864,12 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 9, "Verify records fetched are valid or not");
+		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
+		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
+		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
+				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
+		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
 	@Test
@@ -890,7 +903,12 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 9, "Verify records fetched are valid or not");
+		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
+		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
+		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
+				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
+		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
 	@Test
@@ -922,7 +940,12 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 9, "Verify records fetched are valid or not");
+		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
+		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
+		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
+				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
+		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
 	
@@ -960,7 +983,11 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertEquals(rulesUtil.getTotalRecordsProcessed(rulesPojo.getRuleName()), 6, "Verify records matched or not");
+		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
+		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
+		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
+				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
+		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
 	}
-	
 }
