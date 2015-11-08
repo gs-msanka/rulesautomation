@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.management.RuntimeErrorException;
-
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -272,7 +270,6 @@ public void setupRule(HashMap<String,String> testData){
 			ResponseObj result = webAction.doGet(APP_API_ASYNC_STATUS
 					+ "?ruleId=" + ruleId + "",
 					header.getAllHeaders());
-			System.out.println("result isssssssssssss" +result);
 			ResponseObject res = RulesUtil.convertToObject(result.getContent());
 			List<Object> data = (List<Object>) res.getData();
 			Map<String, Object> map = (Map<String, Object>) data.get(0);

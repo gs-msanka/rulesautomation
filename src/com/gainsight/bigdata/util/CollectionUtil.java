@@ -19,11 +19,6 @@ import com.gainsight.bigdata.rulesengine.pojo.enums.*;
  * Created by gainsight on 05/09/15.
  */
 
-
-/**
- * @author Abhilash Thaduka
- *
- */
 public class CollectionUtil {
 
     /**
