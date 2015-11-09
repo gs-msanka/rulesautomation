@@ -110,7 +110,6 @@ public class CreateRuleTest extends BaseTest {
     private static final String METRICS_CREATE_FILE =  Application.basedir + "/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private static final String SCORECARD_CLEAN_FILE = Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt";
     private ObjectMapper mapper = new ObjectMapper();
-    public static SFDCInfo sfinfo;
     private DBDetail dbDetail = null;
     TenantDetails tenantDetails = null;
     RulesConfigureAndDataSetup rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
