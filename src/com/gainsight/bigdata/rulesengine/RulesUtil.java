@@ -9,21 +9,37 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.management.RuntimeErrorException;
+
+import org.apache.http.HttpStatus;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
+
 import org.testng.Assert;
 
-
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.INTERVAL_TIME;
+import static com.gainsight.sfdc.pages.Constants.MAX_WAIT_TIME;
 
+/**
+ * @author Abhilash Thaduka
+ *
+ */
 public class RulesUtil extends NSTestBase {
 
 	// public static SFDCUtil sfdcUtil = new SFDCUtil();
@@ -601,4 +617,81 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return check;
 	}
+	
+
+	/**
+	 * @param ruleName ruleName to get status
+	 * @return statusId
+	 * @throws Exception
+	 */
+	public String runRuleAndGetStatusId(String ruleName) throws Exception {
+		String statusId = null;
+		String ruleId = getRuleId(ruleName);
+		ResponseObj responseObj = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
+		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+			JsonNode jsonNode = mapper.readTree(responseObj.getContent());
+			statusId = jsonNode.get("data").findValue("statusId").toString().replace("\"", "");
+			Log.info("statusId is " + statusId);
+		}
+		return statusId;		
+	}
+	/**
+	 * @param ruleName ruleName to Execute
+	 * @return RuleExecutionHistory object
+	 * @throws Exception
+	 */
+	public RuleExecutionHistory runRuleAndGetExecutionHistory(String ruleName) throws Exception {
+		String statusId = runRuleAndGetStatusId(ruleName);
+		if (statusId == null) {
+			Log.error("Rule Trigger failed.");
+			throw new RuntimeException("Rule Trigger failed.");
+		}
+		waitForRuleProcessingToComplete(statusId);
+		return getExecutionHistory(statusId);
+	}
+	
+	/**
+	 * @param statusId statusID for rule to complete
+	 */
+	public void waitForRuleProcessingToComplete(final String statusId){
+		Log.info("Waiting for rule with statusID "+statusId + " to Complete");
+		CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isRuleProcessingCompleted(statusId);
+					}
+				});
+	}
+	
+	/**
+	 * @param statusId statusID to get executionHistory
+	 * @return RuleExecutionHistory object
+	 */
+	public RuleExecutionHistory getExecutionHistory(String statusId) {
+		RuleExecutionHistory ruleExecutionHistory=null;
+		try {
+			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + "/" + statusId + "", header.getAllHeaders());
+			if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+				NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+				if (nsResponseObj.isResult()) {
+					ruleExecutionHistory = mapper.convertValue(nsResponseObj.getData(), RuleExecutionHistory.class);
+				}
+			}
+		} catch (Exception e) {
+			Log.error("Rule processing is not completed", e);
+			throw new RuntimeException("Rule processing is not completed" + e.getLocalizedMessage());
+		}
+		return ruleExecutionHistory;
+	}
+	
+	public boolean isRuleProcessingCompleted(String statusId){
+		boolean result = false;
+		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") || 
+				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {		
+				result = true;
+		} 
+		return result;
+	}
 }
+

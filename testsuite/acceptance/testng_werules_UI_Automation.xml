@@ -22,6 +22,8 @@
                <include name="testCloningOFARule" />
                <include name="testDeleteRule" />
                <include name="testEditARule" />
+               <include name="verifyRecordsOnDateFiltersUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
             </methods>
          </class>
       </classes>
@@ -36,6 +38,8 @@
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="loadToMdaActionUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
+               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
       </classes>
@@ -45,13 +49,13 @@
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
-<!--             Commented below two testcases, since calculated measures in redshift is different(Need pawel's input)
-               <include name="testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea" />
-               <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" /> -->
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="loadToMdaActionUsingNativeData" />
                <include name="testCTAActionWithMdaJoins" />
+               <include name="testRedShiftCalculatedMeasuresInSetupRule" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
+               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
       </classes>

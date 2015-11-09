@@ -1,15 +1,26 @@
 package com.gainsight.bigdata.util;
 
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.CollectionInfo.Column;
+import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.Verifier;
 import static org.testng.Assert.*;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.gainsight.bigdata.rulesengine.pojo.enums.*;
 
 /**
  * Created by Giribabu on 05/09/15.
  */
+
 public class CollectionUtil {
 
     /**
@@ -247,7 +258,72 @@ public class CollectionUtil {
         }
         return result;
     }
+    
+    
+    /**
+     * @param collectionInfo - CollectionMaster
+     * @param dBName - Column DB Name
+     * @return
+     */
+    public static Column getColumnByDBName(CollectionInfo collectionInfo, String dBName) {
+        for(CollectionInfo.Column col : collectionInfo.getColumns()) {
+            if(dBName.equals(col.getDbName())) {
+                return col;
+            }
+        }
+        throw new RuntimeException("Column details not found in collection info supplied for the DBName : "+dBName);
+    }
 
+    
+    /**
+     * @param baseObject - collectionmaster for which lookup has to be created 
+     * @param primaryField - column for which lookup has to be created
+     * @param lookUpObject - collectionmaster to  which lookup has to be created 
+     * @param foreignField -  column to which lookup has to be created
+     * @param useDBName 
+     */
+    public static void setLookUpDetails(CollectionInfo baseObject, String primaryField, CollectionInfo lookUpObject, String foreignField, boolean useDBName) {
+        CollectionInfo.LookUpDetail lookUpDetail = new CollectionInfo.LookUpDetail();
+        lookUpDetail.setCollectionId(lookUpObject.getCollectionDetails().getCollectionId());
+        lookUpDetail.setDbCollectionName(lookUpObject.getCollectionDetails().getDbCollectionName());
+        lookUpDetail.setFieldDBName(useDBName ? getColumnByDBName(lookUpObject, foreignField).getDbName() : getColumnByDisplayName(lookUpObject, foreignField).getDbName());
+        if(useDBName) {
+        	Column column=getColumnByDBName(baseObject, primaryField);
+        	column.setHasLookup(true);
+        	column.setLookupDetail(lookUpDetail);
+        } else {
+        	Column column=getColumnByDisplayName(baseObject, primaryField);
+        	column.setHasLookup(true);
+        	column.setLookupDetail(lookUpDetail);
+        }
+    }
+	
+	
+	/**
+	 * @param collectionInfo - collectionmaster on which calculatedExpression has to be created
+	 * @param columnName - column for whih calculated measure has to be created 
+	 * @param column1 
+	 * @param column2
+	 * @param column3
+	 * @param formula - RedShiftFormulaType
+	 * @return
+	 */
+	public static CollectionInfo getcalculatedExpression(CollectionInfo collectionInfo, String columnName,
+			String column1, String column2, String column3, RedShiftFormulaType formula){
+		switch (formula) {
+		case FORMULA1:
+			for (Column column : collectionInfo.getColumns()) {
+				if (column.getDisplayName().equals(columnName)) {
+					column.setCalculatedExpression("(" + column1 + "+"
+							+ column2 + ")" + "*" + column3);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+		return collectionInfo;
+	}
 
 
 }
