@@ -131,7 +131,7 @@ public class DataETL implements IJobExecutor {
 			
 			//Extraction Code
 			SfdcExtract pull = jobInfo.getExtractionRule();
-			if(pull != null && !pull.toString().contains("null")) {
+			if(pull != null) {
                 pull = mapper.readValue(FileUtil.resolveNameSpace(mapper.writeValueAsString(pull), sfdcConfig.getSfdcManagedPackage() ?  sfdcConfig.getSfdcNameSpace() : null), SfdcExtract.class);
 				if(pull.isUseRestApi()) {
 					SfdcRestApi.pullDataFromSfdc(pull.getTable(), pull.getFields().toArray(new String[pull.getFields().size()]), pull.getWhereCondition(), userDir+pull.getOutputFileLoc());
