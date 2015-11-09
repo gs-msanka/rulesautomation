@@ -302,6 +302,8 @@ public class MetaDataUtil {
         String[] fields = new String[]{"Data ExternalId", "Account ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);
         addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
+		metadataClient.createTextFields("Account", new String[]{"Account Ext NU"}, true, false, true, false, false);
+		addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(new String[]{"Account Ext NU"}), sfdc.fetchSFDCinfo(), false);
     }
 
     /**
@@ -315,6 +317,8 @@ public class MetaDataUtil {
         String[] fields = new String[]{"Contact ExternalId"};
         metadataClient.createTextFields("Contact", fields, true, true, true, false, false);
         addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(fields), sfdc.fetchSFDCinfo(), true);
+		metadataClient.createTextFields("Contact", new String[]{"Contact Ext NU"}, true, false, true, false, false);
+		addFieldPermissionsToUsers("Contact", convertFieldNameToAPIName(new String[]{"Contact Ext NU"}), sfdc.fetchSFDCinfo(), false);
     }
 
     public void createFieldsOnContact(SalesforceConnector sfdc) throws Exception {

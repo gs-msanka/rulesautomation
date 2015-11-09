@@ -13,7 +13,6 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
-import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.util.DateUtil;
@@ -59,8 +58,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-
-        dataLoadManager     = new DataLoadManager();
+        dataLoadManager     = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
@@ -90,7 +88,8 @@ public class DataLoadConfigAggTest extends NSTestBase {
             JobInfo customerJobInfo = mapper.readValue(new File(testDataFiles+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
         }
-        dataETL.execute(eventsJobInfo);
+
+
     }
 
     /**
@@ -113,9 +112,9 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t1/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -163,9 +162,9 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t2/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -213,9 +212,9 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t3/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -264,10 +263,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t4/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -316,10 +315,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t5/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -367,10 +366,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t6/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -419,10 +418,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t7/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -471,10 +470,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t8/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -490,7 +489,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t8/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,date);
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t8/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -524,11 +523,11 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t9/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -578,11 +577,11 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t10/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -598,7 +597,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Log.info("endCollectionName: " + endCollectionName);
 
         MDADateProcessor dateProcessor  = mapper.readValue(new File(testDataFiles+"/tests/t10/DateProcess.json"), MDADateProcessor.class);
-        FileProcessor.getDateProcessedFile(dateProcessor,date);
+        FileProcessor.getDateProcessedFile(dateProcessor, date);
 
         JobInfo jobInfo = mapper.readValue(new File(testDataFiles+"/tests/t10/Transform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -630,9 +629,9 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t11/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -681,10 +680,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t12/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -733,10 +732,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t13/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -785,10 +784,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t14/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -837,10 +836,10 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t15/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -890,11 +889,11 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t16/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -944,11 +943,11 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t17/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -998,11 +997,11 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t18/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -1054,16 +1053,16 @@ public class DataLoadConfigAggTest extends NSTestBase {
         AccountDetail accountDetail = mapper.readValue(new File(testDataFiles+"/tests/t19/AccountDetail.json"), AccountDetail.class);
         HashMap<String, String> dBDisplayNamesMap = CollectionUtil.getDisplayAndDBNamesMap(collectionInfo);
 
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getAccountIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getUserIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getEventIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForIdentifier(accountDetail.getGlobalMapping().getTimestampIdentifier(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getCustom(), dBDisplayNamesMap);
 
         List<Mapping> customMapping = accountDetail.getGlobalMapping().getCustom();
         accountDetail.getGlobalMapping().setCustom(new ArrayList<Mapping>());
 
-        setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
+        DataLoadAggConfigManager.setSourceDBNameForCustomAndMeasureFields(accountDetail.getGlobalMapping().getMeasures(), dBDisplayNamesMap);
 
         accountDetail.setDisplayName(accountDetail.getDisplayName() + "_" + date.getTime());
         accountDetail.getProperties().setCollectionId(collectionId);
@@ -1120,8 +1119,6 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
 
-
-
     @AfterClass
     public void tearDown() {
         if(accountIdsToDelete.size() > 0) {
@@ -1134,7 +1131,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
                 }
             }
         }
-        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId(), tenantManager);
     }
 
     //To Delete All the projects of a tenant - - Run This test case to delete all the accounts in a project..
@@ -1159,14 +1156,14 @@ public class DataLoadConfigAggTest extends NSTestBase {
     }
 
     private void verifyCollectionData(CollectionInfo aggCollectionInfo, String expFilePath) throws IOException {
-        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(aggCollectionInfo)));
+        List<Map<String, String>> actualData = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(aggCollectionInfo)));
         Log.info("ActualData Size : " + actualData.size());
         actualData = reportManager.getProcessedReportData(actualData, aggCollectionInfo);
-        //Log.info("Actual Data : " + mapper.writeValueAsString(actualData));
+        Log.debug("Actual Data : " + mapper.writeValueAsString(actualData));
 
         CSVReader expectedReader = new CSVReader(new FileReader(Application.basedir+expFilePath));
         List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
-        //Log.info("Expected Data  " +mapper.writeValueAsString(expectedData));
+        Log.debug("Expected Data  " +mapper.writeValueAsString(expectedData));
 
         List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
         Log.info("Un-Matched Records " + mapper.writeValueAsString(diffData));
@@ -1182,30 +1179,6 @@ public class DataLoadConfigAggTest extends NSTestBase {
         Assert.assertEquals(0, statusInfo.getFailureCount(), "Failed records should be zero.");
     }
 
-    private void setSourceDBNameForIdentifier(Identifier identifier, HashMap<String, String> dBDisplayNamesMap) {
-        String name = identifier.getSource().getDisplayName();
-        if(name == null) {
-            throw new IllegalArgumentException("Source display name can't be null.");
-        }
-        if(dBDisplayNamesMap == null || !dBDisplayNamesMap.containsKey(name)) {
-            throw new IllegalArgumentException("DB Names Map should not be null, db display names map doesn't contains " +name);
-        }
-        identifier.getSource().setDbName(dBDisplayNamesMap.get(name));
-    }
 
-    private void setSourceDBNameForCustomAndMeasureFields(List<Mapping> mappingList, HashMap<String, String> dBDisplayNamesMap) {
-        if(mappingList ==null || mappingList.size() ==0) {
-            return;
-        }
-        if(dBDisplayNamesMap == null) {
-            throw new IllegalArgumentException("DB Names Map should not be null");
-        }
-        for(Mapping mapping : mappingList) {
-            if(!dBDisplayNamesMap.containsKey(mapping.getSource().getDisplayName())) {
-                throw new RuntimeException("DB Names map doesn't contain " +mapping.getSource().getDisplayName());
-            }
-            mapping.getSource().setDbName(dBDisplayNamesMap.get(mapping.getSource().getDisplayName()));
-        }
-    }
 
 }

@@ -26,6 +26,7 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.type.TypeReference;
+
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
@@ -58,10 +59,10 @@ public class LoadDataToMDATest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws IOException {
-        //Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
+        Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails =tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
             if(tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
@@ -1026,7 +1027,7 @@ public class LoadDataToMDATest extends NSTestBase {
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
         ResponseObj responseObj = dataLoadManager.createSubjectAreaGetResponseObj(collectionInfo);
-        Assert.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, responseObj.getStatusCode(), "Internal Server error should be returned."); //This should be bad request.
+        Assert.assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode(), "Was expected bad request.");
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(MDAErrorCodes.SUBJECT_AREA_ALREADY_EXISTS.getGSCode(), nsResponseObj.getErrorCode());
@@ -1060,11 +1061,61 @@ public class LoadDataToMDATest extends NSTestBase {
         verifyData(actualCollectionInfo, expectedFile);
     }
 
+    @TestInfo(testCaseIds = {"GS-8235"})
+    @Test
+    public void loadDataToOnlyFewFieldsOfSubjectArea() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "24_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataFile = new File(testDataFiles+"/tests/t24/CollectionData.csv");
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setMappings(new ArrayList<DataLoadMetadata.Mapping>());
+        DataLoadManager.addMapping(metadata, new String[]{"AccountName", "Date", "PageVisits", "FilesDownloaded", "Active"});
+
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId), "Status of data load should be completed.");
+
+        File expectedFile = new File(testDataFiles+"/tests/t24/ExpectedData.csv");
+        verifyData(actualCollectionInfo, expectedFile);
+    }
+
+    @TestInfo(testCaseIds = {"GS-8236"})
+    @Test
+    public void headerDoesNotExistsInCustomObject() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "25_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataFile = new File(testDataFiles+"/tests/t25/CollectionData.csv");
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        DataLoadManager.addMapping(metadata, new String[]{"AccountID"});
+
+        ResponseObj responseObj = dataLoadManager.dataLoadManageGetResponseObject(mapper.writeValueAsString(metadata), dataFile);
+        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
+
+        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+    }
+
+
 
     @AfterClass
     public void tearDown() {
         if(mongoDBDAO!=null) mongoDBDAO.mongoUtil.closeConnection();
-        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId());
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId(), tenantManager);
     }
 
     /**
@@ -1079,7 +1130,7 @@ public class LoadDataToMDATest extends NSTestBase {
                 colList.add(collectionInfo.getCollectionDetails());
             }
         }
-        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList);
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList, tenantManager);
     }
 
     /**

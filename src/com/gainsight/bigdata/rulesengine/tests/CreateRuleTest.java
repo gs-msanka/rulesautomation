@@ -73,6 +73,15 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.Verifier;
 import com.sforce.soap.partner.sobject.SObject;
 
+import org.apache.commons.io.FileUtils;
+import org.bson.Document;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Created by vmenon on 8/27/2015.
@@ -124,7 +133,7 @@ public class CreateRuleTest extends BaseTest {
         sfdc.connect();
         nsTestBase.init();
         nsTestBase.tenantAutoProvision();
-        tenantManager=new TenantManager();
+        tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
@@ -132,7 +141,7 @@ public class CreateRuleTest extends BaseTest {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, nsTestBase.getDataLoadAccessKey());
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
@@ -306,7 +315,7 @@ public class CreateRuleTest extends BaseTest {
     	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 		try {
 			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-					tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
+                    tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
 		} finally {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
