@@ -32,7 +32,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
-import com.gainsight.bigdata.pojo.RuleExecutionDataObject;
+import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
@@ -587,6 +587,7 @@ public class CreateRuleTest extends BaseTest {
 			verifier.verifyFalse((element.isElementPresent("//li[contains(@class, 'ui-multiselect-option')]/descendant::input[@value='"+jbcxmObjects.get(i)+"']/following-sibling::span")),
 					"Check whether Gainsight Package Objects are present under DataLoadConfiguration List !!!");
 		}
+		verifier.assertVerification();
 	}
 	
 	@Test
@@ -845,10 +846,9 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);		
-		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
-		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
-		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
-				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
+		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
+				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
@@ -873,10 +873,9 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
-		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
-		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
-				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
+		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
+				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
@@ -912,10 +911,9 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
-		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
-		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
-				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
+		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
+				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
@@ -949,10 +947,9 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
-		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
-		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
-				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
+		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
+				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
@@ -992,10 +989,9 @@ public class CreateRuleTest extends BaseTest {
 		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		String executionData=rulesUtil.runRuleAndGetData(rulesPojo.getRuleName());
-		RuleExecutionDataObject[] ruleExecutionDataObject=mapper.readValue(executionData, RuleExecutionDataObject[].class);
-		int totalNumberOfRecordsProcessed=Integer.valueOf(ruleExecutionDataObject[0].getExecutionMessages().get(1).
-				substring(ruleExecutionDataObject[0].getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
+		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
+		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
+				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
 	}

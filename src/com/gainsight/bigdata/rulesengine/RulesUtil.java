@@ -9,12 +9,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.management.RuntimeErrorException;
+
 import org.apache.http.HttpStatus;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.pojo.RuleExecutionDataObject;
+import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -31,6 +36,10 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 import static com.gainsight.sfdc.pages.Constants.INTERVAL_TIME;
 import static com.gainsight.sfdc.pages.Constants.MAX_WAIT_TIME;
 
+/**
+ * @author Abhilash Thaduka
+ *
+ */
 public class RulesUtil extends NSTestBase {
 
 	// public static SFDCUtil sfdcUtil = new SFDCUtil();
@@ -609,60 +618,80 @@ public void setupRule(HashMap<String,String> testData){
 		return check;
 	}
 	
+
 	/**
-	 * This method will run the rule based on rule name.
-	 * @param ruleName, name of the rule.
-	 * @return Data node
-	 * @throws Exception 
+	 * @param ruleName ruleName to get status
+	 * @return statusId
+	 * @throws Exception
 	 */
-	public String runRuleAndGetData(String ruleName) throws Exception {
-		final String ruleId = getRuleId(ruleName);
+	public String runRuleAndGetStatusId(String ruleName) throws Exception {
+		String statusId = null;
+		String ruleId = getRuleId(ruleName);
 		ResponseObj responseObj = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
-		String executionData = null;
 		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-			NsResponseObj nsResponseObj = mapper.readValue(
-					responseObj.getContent(), NsResponseObj.class);
-			if (!nsResponseObj.isResult() || nsResponseObj.getRequestId() == null) {
-				Log.error("Rule Request itself failed!");
-				throw new RuntimeException("Rule processing failed");
-			} else {
-				executionData = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<String>() {
-							@Override
-							public String apply() {
-								return getExecutionData(ruleId, wa, header);
-							}});
-			}
+			JsonNode jsonNode = mapper.readTree(responseObj.getContent());
+			statusId = jsonNode.get("data").findValue("statusId").toString().replace("\"", "");
+			Log.info("statusId is " + statusId);
 		}
-		return executionData;
+		return statusId;		
+	}
+	/**
+	 * @param ruleName ruleName to Execute
+	 * @return RuleExecutionHistory object
+	 * @throws Exception
+	 */
+	public RuleExecutionHistory runRuleAndGetExecutionHistory(String ruleName) throws Exception {
+		String statusId = runRuleAndGetStatusId(ruleName);
+		if (statusId == null) {
+			Log.error("Rule Trigger failed.");
+			throw new RuntimeException("Rule Trigger failed.");
+		}
+		waitForRuleProcessingToComplete(statusId);
+		return getExecutionHistory(statusId);
 	}
 	
+	/**
+	 * @param statusId statusID for rule to complete
+	 */
+	public void waitForRuleProcessingToComplete(final String statusId){
+		Log.info("Waiting for rule with statusID "+statusId + " to Complete");
+		CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isRuleProcessingCompleted(statusId);
+					}
+				});
+	}
 	
 	/**
-	 * @param ruleId - RuleID for which rule needs to be executed
-	 * @param webAction
-	 * @param header
-	 * @return rule data node
+	 * @param statusId statusID to get executionHistory
+	 * @return RuleExecutionHistory object
 	 */
-	public String getExecutionData(String ruleId, WebAction webAction, Header header){
-		String ruleExecutionData = null;
+	public RuleExecutionHistory getExecutionHistory(String statusId) {
+		RuleExecutionHistory ruleExecutionHistory=null;
 		try {
-			ResponseObj responseObj = webAction.doGet(APP_API_ASYNC_STATUS + "?ruleId=" + ruleId + "", header.getAllHeaders());
+			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + "/" + statusId + "", header.getAllHeaders());
 			if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-				ResponseObject res = RulesUtil.convertToObject(responseObj.getContent());
-				String dataNode = mapper.writeValueAsString(res.getData());
-				RuleExecutionDataObject[] ruleExecutionDataObject = mapper.readValue(dataNode, RuleExecutionDataObject[].class);
-				if (ruleExecutionDataObject[0].getStatus() != null) {
-					String status = ruleExecutionDataObject[0].getStatus();
-					if (status.equalsIgnoreCase("completed") || status.equalsIgnoreCase("failed_while_processing")) {
-						ruleExecutionData = mapper.writeValueAsString(ruleExecutionDataObject);
-					}
+				NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+				if (nsResponseObj.isResult()) {
+					ruleExecutionHistory = mapper.convertValue(nsResponseObj.getData(), RuleExecutionHistory.class);
 				}
 			}
 		} catch (Exception e) {
-			Log.error("Rule execution is not completed", e);
-			throw new RuntimeException("Rule execution is not completed" + e.getLocalizedMessage());
+			Log.error("Rule processing is not completed", e);
+			throw new RuntimeException("Rule processing is not completed" + e.getLocalizedMessage());
 		}
-		return ruleExecutionData;
+		return ruleExecutionHistory;
+	}
+	
+	public boolean isRuleProcessingCompleted(String statusId){
+		boolean result = false;
+		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") || 
+				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {		
+				result = true;
+		} 
+		return result;
 	}
 }
 

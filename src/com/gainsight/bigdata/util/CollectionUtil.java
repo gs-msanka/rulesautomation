@@ -288,11 +288,13 @@ public class CollectionUtil {
         lookUpDetail.setDbCollectionName(lookUpObject.getCollectionDetails().getDbCollectionName());
         lookUpDetail.setFieldDBName(useDBName ? getColumnByDBName(lookUpObject, foreignField).getDbName() : getColumnByDisplayName(lookUpObject, foreignField).getDbName());
         if(useDBName) {
-        	getColumnByDBName(baseObject, primaryField).setHasLookup(true);
-            getColumnByDBName(baseObject, primaryField).setLookupDetail(lookUpDetail);
+        	Column column=getColumnByDBName(baseObject, primaryField);
+        	column.setHasLookup(true);
+        	column.setLookupDetail(lookUpDetail);
         } else {
-        	getColumnByDisplayName(baseObject, primaryField).setHasLookup(true);
-            getColumnByDisplayName(baseObject, primaryField).setLookupDetail(lookUpDetail);
+        	Column column=getColumnByDisplayName(baseObject, primaryField);
+        	column.setHasLookup(true);
+        	column.setLookupDetail(lookUpDetail);
         }
     }
 	

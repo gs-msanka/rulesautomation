@@ -14,7 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RuleExecutionDataObject {
+public class RuleExecutionHistory {
 
 	private String createdBy;
 	private String createdByName;
