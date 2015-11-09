@@ -132,9 +132,9 @@ public class CollectionInfo {
 		@JsonProperty("CollectionName")
 		private String collectionName;
 		@JsonProperty("dbType")
-        private String dbType;
+        private String dbType ="DATA";
 		@JsonProperty("dataStoreType")
-        private String dataStoreType;
+        private String dataStoreType ="MONGO";
         @JsonProperty("dbCollectionName")
         private String dbCollectionName;
         @JsonProperty("CollectionID")
@@ -300,10 +300,12 @@ public class CollectionInfo {
         @JsonProperty("columnAttribute")
         private int columnAttribute;
         private int useThousandSeparator;
+        private int maxLength =250;
 
         private String defaultValue;
         private String groupName;
         private String measureValueBucket;
+        private String description;
         private boolean hasLookup=false;
         private String calculatedExpression;
         
@@ -315,15 +317,23 @@ public class CollectionInfo {
 			this.calculatedExpression = calculatedExpression;
 		}
 
+        private LookUpDetail lookupDetail;
+
 		public boolean isHasLookup() {
 			return hasLookup;
 		}
 
-		public void setHasLookup(boolean hasLookup) {
-			this.hasLookup = hasLookup;
-		}
+        public String getDescription() {
+            return description;
+        }
 
-		private LookUpDetail lookupDetail;
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setHasLookup(boolean hasLookup) {
+            this.hasLookup = hasLookup;
+        }
 
 		public LookUpDetail getLookupDetail() {
 			return lookupDetail;
@@ -342,7 +352,7 @@ public class CollectionInfo {
 			this.lookupDetail = lookupDetail;
 		}
 
-		public String getDatatype() {
+        public String getDatatype() {
             return datatype;
         }
 
@@ -392,8 +402,6 @@ public class CollectionInfo {
         public void setFormula(List<ColumnFormula> formula) {
             this.formula = formula;
         }
-
-        private int maxLength;
 
         public int getMaxLength() {
             return maxLength;

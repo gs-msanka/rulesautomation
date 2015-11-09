@@ -13,8 +13,8 @@
   "profiles" : {
     "default" : {
       "sfdc_username" : "gs-ggolla@testing1.com",
-      "sfdc_password" : "1234567JBara",
-      "sfdc_stoken"   : "7T65tgpIuYMvOlGwabrHU3G2"
+      "sfdc_password" : "ggolla@1215",
+      "sfdc_stoken"   : "IIsOiwmoaDvBTse6ahRmiXpuE"
     },
     "marvels" : {
       "sfdc_username" : "marvels@gsautomation.com",
@@ -33,8 +33,8 @@
     },
     "avengers" : {
       "sfdc_username" : "avengers@gsautomation.com",
-      "sfdc_password" : "Auto#Test2015",
-      "sfdc_stoken" : "h12x5Pe1ubIRMmCxp9SWH2Usf"
+      "sfdc_password" : "gsAvgAuto#2015",
+      "sfdc_stoken" : "vuxGsoyE5joLQaS6MRfo6gh7M"
     },
     "11Demo" : {
       "sfdc_username" : "ggolla@11demo.com",

@@ -322,7 +322,7 @@ public class NSTestBase {
             throw new RuntimeException("Failed tenant auto provision " + e.getLocalizedMessage());
         }
         if(result) {
-            updateNSURLInAppSettings(nsConfig.getNsURl());
+            updateNSURLInAppSettings(nsConfig.getNsURl()+"/"+nsConfig.getNsVersion());
         }
         return result;
     }

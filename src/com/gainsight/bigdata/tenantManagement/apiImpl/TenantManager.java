@@ -13,7 +13,6 @@ import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.MongoDBDAO;
 import com.gainsight.util.NsConfig;
 import com.gainsight.util.SfdcConfig;
 import com.gainsight.util.ConfigLoader;
@@ -51,6 +50,7 @@ public class TenantManager {
     /**
      * Logs in to tenant Management SFDC org and sets up the default headers required.
      */
+
     public TenantManager() {
         sfConnector = new SalesforceConnector(nsConfig.getSfdcUsername(), nsConfig.getSfdcPassword() + nsConfig.getSfdcStoken(),
                 sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
@@ -570,32 +570,22 @@ public class TenantManager {
      * @return - true in case of successful db tenant db details update else false.
      */
     public boolean enableRedShift(TenantDetails tenantDetails, TenantDetails.DBDetail dbDetail) {
-        Log.info("Enabling Redshift...");
+        Log.info("Enabling Redshift with db details...");
         boolean result = false;
         tenantDetails.setRedshiftEnabled(true);
         if(dbDetail !=null && testRedShiftDBDetails(dbDetail)) {
             tenantDetails.setRedshiftDBDetail(dbDetail);
             result = updateTenant(tenantDetails);
         } else {
-            TenantDetails.DBDetail existingDBDetail = null;
-            MongoDBDAO mongoDBDAO = null;
-            try {
-                mongoDBDAO   = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                        nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-
-                existingDBDetail = mongoDBDAO.getRedShiftDBDetail(tenantDetails.getTenantId());
-            } finally {
-                mongoDBDAO.mongoUtil.closeConnection();
-            }
-
-            if(existingDBDetail != null && testRedShiftDBDetails(existingDBDetail)) {
-                tenantDetails.setRedshiftDBDetail(existingDBDetail);
-                result = updateTenant(tenantDetails);
-            } else {
-                Log.error("DB Details are not correct, please correct them.");
-            }
+            Log.error("DB Details are not correct, please correct them.");
         }
         return result;
+    }
+
+    public boolean enableRedShift(TenantDetails tenantDetails) {
+        Log.info("Enabling Redshift..");
+        tenantDetails.setRedshiftEnabled(true);
+        return updateTenant(tenantDetails);
     }
 
     /**
@@ -608,6 +598,32 @@ public class TenantManager {
         Log.info("Disabling Redshift...");
         tenantDetails.setRedshiftEnabled(false);
         return updateTenant(tenantDetails);
+    }
+
+    public boolean updatePostgresDBDetails(TenantDetails tenantDetails) {
+        TenantDetails.DBDetail db = new TenantDetails.DBDetail();
+        db.setDbName(env.getProperty("ns_postgres_dbName"));
+        db.setSslEnabled(Boolean.valueOf(env.getProperty("ns_postgres_sslEnabled")));
+        TenantDetails.DBServerDetail serverDetail = new TenantDetails.DBServerDetail();
+        serverDetail.setHost(env.getProperty("ns_postgres_host"));
+        serverDetail.setUserName(env.getProperty("ns_postgres_userName"));
+        serverDetail.setPassword(env.getProperty("ns_postgres_password"));
+        List<TenantDetails.DBServerDetail> dbl = new ArrayList<>();
+        dbl.add(serverDetail);
+        db.setDbServerDetails(dbl);
+        return updatePostgresDBDetails(tenantDetails, db);
+    }
+
+    public boolean updatePostgresDBDetails(TenantDetails tenantDetails, TenantDetails.DBDetail dbDetail) {
+        Log.info("Updating postgres db details...");
+        boolean result = false;
+        if(dbDetail !=null && testPostgresDBDetails(dbDetail)) {
+            tenantDetails.setPostgresDBDetail(dbDetail);
+            result = updateTenant(tenantDetails);
+        } else {
+          Log.error("DB Details are not correct, Please correct them.");
+        }
+        return false;
     }
 
 

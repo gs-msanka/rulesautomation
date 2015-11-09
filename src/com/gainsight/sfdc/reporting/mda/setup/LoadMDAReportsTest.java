@@ -95,7 +95,7 @@ public class LoadMDAReportsTest extends NSTestBase {
         }
 
         reportManager = new ReportManager();
-        dataLoadManager= new DataLoadManager();
+        dataLoadManager= new DataLoadManager(sfinfo, getDataLoadAccessKey());
         //collectionId = "2425c925-5ea4-4893-83a5-3d44341bf8e7"; //Collection name - GIRI_GS_AUTO_1443507290837
 
         dataTransForm = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/jobs/DataProcessJob1.json"), JobInfo.class);

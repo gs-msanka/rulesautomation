@@ -142,10 +142,10 @@ public class JobInfo {
 
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Fields {
-            boolean weekly;
-            boolean daily;
-            boolean dateTime;
-            String dateFormat;
+            boolean weekly = false;
+            boolean daily = false;
+            boolean dateTime = false;
+            String dateFormat = "MM-dd-yyyy";
             String fieldName;
 
             public String getDateFormat() {
@@ -345,9 +345,27 @@ public class JobInfo {
 		String connection;
 		String table;
 		List<String> fields;
+		String whereCondition;
+		boolean useRestApi =false;
 		@JsonProperty("output")
 		String outputFileLoc;
-		
+
+		public boolean isUseRestApi() {
+			return useRestApi;
+		}
+
+		public void setUseRestApi(boolean useRestApi) {
+			this.useRestApi = useRestApi;
+		}
+
+		public String getWhereCondition() {
+			return whereCondition;
+		}
+
+		public void setWhereCondition(String whereCondition) {
+			this.whereCondition = whereCondition;
+		}
+
 		public String getSource() {
 			return source;
 		}
