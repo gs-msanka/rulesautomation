@@ -145,7 +145,7 @@ public class JobInfo {
             boolean weekly = false;
             boolean daily = false;
             boolean dateTime = false;
-            String dateFormat = "MM-dd-yyyy";
+            String dateFormat;
             String fieldName;
 
             public String getDateFormat() {
