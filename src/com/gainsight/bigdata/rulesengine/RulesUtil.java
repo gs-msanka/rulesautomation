@@ -558,6 +558,7 @@ public void setupRule(HashMap<String,String> testData){
 										   String reasonValue, String comment, String ruleName,
 										   String playbookName) {
 
+		populateObjMaps();
 		boolean check = true;
 		SObject[] ctaRecords = sfdc
 				.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"

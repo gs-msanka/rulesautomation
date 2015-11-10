@@ -75,6 +75,7 @@ import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.Verifier;
+import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
 
 import org.apache.commons.io.FileUtils;
@@ -993,5 +994,30 @@ public class CreateRuleTest extends BaseTest {
 				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
+	}
+	
+	@TestInfo(testCaseIds={"GS-4185"})
+	@Test
+	public void cta1() throws Exception{
+		
+        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+        dataETL.execute(jobInfo);
+        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC23.json"), RulesPojo.class);
+        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+        
+        List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+        for (RuleAction ruleAction : ruleActions) {
+            JsonNode actionObject = ruleAction.getAction();
+            CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
+                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()));
+            System.out.println("Doneeeeeeeeeeeeee");
+        }
+		
 	}
 }
