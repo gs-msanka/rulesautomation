@@ -139,9 +139,11 @@ public class SetupRuleActionPage extends BasePage {
 
     public void createCTA(CTAAction ctaAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
-        clickOnActionButton();
-        item.click(xpath + SELECT_BUTTON);
-        selectValueInDropDown("Call To Action");
+        if (!ctaAction.isCtaUpsert()) {
+        	clickOnActionButton();
+            item.click(xpath + SELECT_BUTTON);
+            selectValueInDropDown("Call To Action");
+		}
         item.click(xpath + CREATE_CTA_RADIO_BUTTON);
         field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
         item.click(xpath + PRIORITY_BUTTON);

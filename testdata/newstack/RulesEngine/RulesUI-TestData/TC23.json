@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 23 -  GS-4185 Testcase ID",
-  "ruleDescription": "Rule 23 -  GS-4185 Testcase ID Desc",
+  "ruleName": "Rule-23-GS-4185-Testcase-ID",
+  "ruleDescription": "Rule-23-GS-4185-Testcase-ID Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",
@@ -138,7 +138,7 @@
       "actionType": "createCta",
       "action": {
         "name": "CTA Rule 1 - UI",
-        "priority": "High",
+        "priority": "Low",
         "type": "Risk",
         "status": "New",
         "playbook": "Collections",

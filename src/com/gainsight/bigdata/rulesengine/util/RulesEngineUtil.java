@@ -52,13 +52,19 @@ public class RulesEngineUtil  extends BaseTest{
         EditRulePage editRulePage = new EditRulePage();
         editRulePage.enterRuleDetailsAndClickNext(rulesPojo);
         int i=1;
-		if ((rulesPojo.getSetupActions().size() == 1)
-				&& (rulesPojo.getSetupActions().get(0).getActionType().name()
-						.contains("LoadToCustomers") && rulesPojo.getSetupRule().getDataSource().equalsIgnoreCase("Native"))) {
-            setUpRule(rulesPojo.getSetupRule(), true);
-           } else {
-        	   setUpRule(rulesPojo.getSetupRule(), false);
-           }
+        if (rulesPojo.getSetupRule()!=null) {
+    		if ((rulesPojo.getSetupActions().size() == 1)
+    				&& (rulesPojo.getSetupActions().get(0).getActionType().name()
+    						.contains("LoadToCustomers") && rulesPojo.getSetupRule().getDataSource().equalsIgnoreCase("Native"))) {
+                setUpRule(rulesPojo.getSetupRule(), true);
+               } else {
+            	   setUpRule(rulesPojo.getSetupRule(), false);
+               }
+		}else {
+			SetupRulePage setupRulePage = new SetupRulePage();
+			setupRulePage.clickOnNext();
+		}
+        
           
         if(rulesPojo.getSetupActions()!=null && !rulesPojo.getSetupActions().isEmpty()){
             SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();

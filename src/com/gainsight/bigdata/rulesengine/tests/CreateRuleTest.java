@@ -996,9 +996,9 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
 	}
 	
-	@TestInfo(testCaseIds={"GS-4185"})
+	@TestInfo(testCaseIds={"GS-4185", "GS-4186"})
 	@Test
-	public void cta1() throws Exception{
+	public void testCtaUpsertScenario() throws Exception{
 		
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
@@ -1016,8 +1016,31 @@ public class CreateRuleTest extends BaseTest {
             CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
                     ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()));
-            System.out.println("Doneeeeeeeeeeeeee");
+            //Just incase to verify the count also
+            SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+            int srcObjRecCount = sfdc.getRecordCount(resolveStrNameSpace(setupRuleActionPage.queryString(ruleAction.getCriterias())));
+            Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where JBCXM__Source__c='Rules' and isdeleted=false"))));
         }
-		
+        
+        RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        RulesPojo TC23_Upsert = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC23_Upsert.json"), RulesPojo.class);
+        List<RuleAction> ruleAction = TC23_Upsert.getSetupActions();
+        for (RuleAction ruleActions2 : ruleAction) {
+        	if(ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()){ 
+        		rulesManagerPage2.editRuleByName(TC23_Upsert.getRuleName());
+        		rulesEngineUtil.createRuleFromUi(TC23_Upsert);	
+        	Assert.assertTrue(rulesUtil.runRule(TC23_Upsert.getRuleName()), "Check whether Rule ran successfully or not !");
+        	JsonNode actionObject = ruleActions2.getAction();
+        	CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+   		    Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
+   	                ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()));
+        	}
+            //Just incase to verify the count also
+            SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();   
+            for (RuleAction ruleAction1 : ruleActions) {
+                int srcObjRecCount = sfdc.getRecordCount(resolveStrNameSpace(setupRuleActionPage.queryString(ruleAction1.getCriterias())));
+                Assert.assertEquals(srcObjRecCount, sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where JBCXM__Source__c='Rules' and isdeleted=false"))));
+            }
+		}
 	}
 }

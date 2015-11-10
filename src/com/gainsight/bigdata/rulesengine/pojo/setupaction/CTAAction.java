@@ -1,8 +1,12 @@
 package com.gainsight.bigdata.rulesengine.pojo.setupaction;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Created by vmenon on 9/13/2015.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CTAAction {
 
     private String name = "";
@@ -15,8 +19,17 @@ public class CTAAction {
     private String dueDate = "";
     private String defaultOwner = "";
     private String comments = "";
+    private boolean ctaUpsert=false;
 
-    public String getName() {
+    public boolean isCtaUpsert() {
+		return ctaUpsert;
+	}
+
+	public void setCtaUpsert(boolean ctaUpsert) {
+		this.ctaUpsert = ctaUpsert;
+	}
+
+	public String getName() {
         return name;
     }
 
