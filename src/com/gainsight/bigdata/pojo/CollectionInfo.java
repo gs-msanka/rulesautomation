@@ -266,6 +266,7 @@ public class CollectionInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public static class Column {
         private String name;
         boolean hidden = false;

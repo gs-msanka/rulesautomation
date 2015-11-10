@@ -1,0 +1,40 @@
+{
+
+
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__CustomerInfo__C",
+    "useRestApi" : true,
+    "fields": [
+      "Id",
+      "JBCXM__Account__c",
+      "Account.Name",
+      "Email",
+      "Contact_Ext_NU__c"
+    ],
+    "whereCondition": " where email like '%@gainsighttest.com' and Account.Name like 'Account Agg-21%'",
+    "output": "/testdata/newstack/connectors/dataApi/process/t21/contacts.csv"
+  },
+  "transform": {
+    "query" : "SELECT ISNULL(Contacts.Id, -888) as \"User Id\", ISNULL(Accounts.AccountId,-999) as \"Account Id\", expdata.AccountName as \"Account Name\", expdata.UserName as \"User Name\", expdata.UserEmail as \"User Email\", expdata.SourceUserId as \"Source User Id\", expdata.SourceAccountId as \"Source Account Id\", expdata.Event as \"Event\", expdata.EventCount as \"Event Count\", expdata.Date as \"Date\", expdata.Month as \"Month\", expdata.Quarter as \"Quarter\", expdata.Week as \"Week\", expdata.Year as \"Year\", expdata.Avg_PageLoadTime as \"Avg_PageLoadTime\", expdata.Sum_FileSize as \"Sum_FileSize\" FROM Contacts RIGHT OUTER JOIN ExpectedData as expdata ON Contacts.Email = expdata.UserEmail LEFT OUTER JOIN ( select distinct AccountId, \"Account.Name\" from Contacts ) Accounts on expdata.SourceAccountId = Accounts.\"Account.Name\"",
+    "useQuery" : true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/t21/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Email",
+        "columns": []
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/tests/t21/ExpectedData.csv",
+        "table": "ExpectedData",
+        "joinColumnName": "UserEmail",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/t21/ExpectedData.csv"
+  }
+}

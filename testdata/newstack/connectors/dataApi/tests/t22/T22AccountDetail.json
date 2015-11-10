@@ -1,0 +1,165 @@
+{
+  "globalMapping": {
+    "accountIdentifier": {
+      "source": {
+        "displayName": "GSA_Account_ExternalId__c",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "GSA_Account_ExternalId__c",
+        "dbName": "gsaccountid",
+        "properties": {
+          "sfdcmapping": "account"
+        }
+      },
+      "lookup": true,
+      "directLookup": false,
+      "digitConversionEnable": true,
+      "properties": {
+        "lookupKey": "Account_ExternalId__c",
+        "lookupObject": "Account",
+        "key": "Id"
+      }
+    },
+    "userIdentifier": {
+      "source": {
+        "displayName": "GSA_Contact_ExternalId__c",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "GSA_Contact_ExternalId__c",
+        "dbName": "gsuserid",
+        "properties": {
+          "sfdcmapping": "user"
+        }
+      },
+      "lookup": true,
+      "directLookup": true,
+      "digitConversionEnable": true,
+      "properties": {
+        "lookupKey": "Id",
+        "lookupObject": "Contact",
+        "key": "Contact_ExternalId__c"
+      }},
+    "timestampIdentifier": {
+      "source": {
+        "displayName": "Date",
+        "dbName": "",
+        "properties": {}
+      },
+      "target": {
+        "displayName": "Date",
+        "dbName": "gstimestamp",
+        "properties": {
+          "sfdcmapping": "date"
+        }
+      },
+      "lookup": true,
+      "directLookup": true
+    },
+    "eventIdentifier": {},
+    "custom": [ ],
+    "measures": [
+      {
+        "source": {
+          "displayName": "PageLoadTime",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "Avg_PageLoadTime",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "AVG"
+          }
+        }
+      },
+      {
+        "source": {
+          "displayName": "FileSize",
+          "dbName": "",
+          "properties": {}
+        },
+        "target": {
+          "displayName": "Sum_FileSize",
+          "dbName": "",
+          "properties": {
+            "aggregationFunction": "SUM"
+          }
+        }
+      }
+    ],
+    "systemDefined": [
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "Name",
+          "displayName": "Account Name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsaccountname",
+          "displayName": "Account Name",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "gsidentify_email",
+          "displayName": "Identify $email",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsuseremail",
+          "displayName": "User Email",
+          "properties": {}
+        }
+      },
+      {
+        "source": {
+          "type": "SFDC",
+          "objectName": "account",
+          "dbName": "gsidentify_name",
+          "displayName": "Identify $name",
+          "properties": {}
+        },
+        "target": {
+          "dbName": "gsusername",
+          "displayName": "User Name",
+          "properties": {}
+        }
+      }
+    ]
+  },
+  "usageConfiguration": {
+    "configType": "ACCOUNTLEVEL",
+    "frequency": "MONTHLY",
+    "day": "MONDAY",
+    "weekType": "START"
+  },
+  "writeToSFDC": false,
+  "runNowDetails": {
+    "type": "RUN_NOW",
+    "startDate": "-14",
+    "endDate": "0"
+  },
+  "notificationDetails": {
+    "successRecipients": [
+      "ggolla@gainsight.com"
+    ],
+    "failureRecipients": [
+      "ggolla@gainsight.com"
+    ]
+  },
+  "properties": {
+    "collectionId": "",
+    "timeZone": "UTC"
+  },
+  "accountType": "DATA_API",
+  "displayName": "GS_DATA_API_22"
+}
