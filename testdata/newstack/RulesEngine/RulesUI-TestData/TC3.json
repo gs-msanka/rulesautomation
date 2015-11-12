@@ -96,6 +96,7 @@
         "playbook": "Collections",
         "reason": "Product Issue",
         "ownerField": "",
+	"chatterUpdate": "",
         "dueDate": "10",
         "defaultOwner": "weRules",
         "comments": "These are test comments for CTA"

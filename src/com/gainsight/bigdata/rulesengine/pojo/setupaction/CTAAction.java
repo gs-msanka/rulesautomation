@@ -13,16 +13,25 @@ public class CTAAction {
     private String priority = "";
     private String type = "";
     private String status = "";
-    private String playbook = "";
+    private String playbook;
     private String reason = "";
     private String ownerField = "";
     private String dueDate = "";
     private String defaultOwner = "";
     private String comments = "";
     private boolean ctaUpsert=false;
+    private String chatterUpdate;
 
     public boolean isCtaUpsert() {
 		return ctaUpsert;
+	}
+
+	public String getChatterUpdate() {
+		return chatterUpdate;
+	}
+
+	public void setChatterUpdate(String chatterUpdate) {
+		this.chatterUpdate = chatterUpdate;
 	}
 
 	public void setCtaUpsert(boolean ctaUpsert) {

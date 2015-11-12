@@ -558,7 +558,6 @@ public void setupRule(HashMap<String,String> testData){
 										   String reasonValue, String comment, String ruleName,
 										   String playbookName) {
 
-		populateObjMaps();
 		boolean check = true;
 		SObject[] ctaRecords = sfdc
 				.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
@@ -570,40 +569,38 @@ public void setupRule(HashMap<String,String> testData){
 				Log.error("Priority did not match!!");
 				check = false;
 			}
-			if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+			else if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
 							.getValue().toString())) {
 				Log.error("Status did not match!!");
 				check = false;
 			}
-			if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
+			else if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
 					.getValue().toString())) {
 				Log.error("Assignee did not match!!");
 				check = false;
 			}
-			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+			else if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
 							.getValue().toString())) {
 				Log.error("Type did not match!!");
 				check = false;
 			}
-			if (!comment.equalsIgnoreCase(obj
-					.getChild(resolveStrNameSpace("JBCXM__Comments__c"))
-					.getValue().toString())) {
-				Log.debug("comment:"
-						+ obj.getChild(
-						resolveStrNameSpace("JBCXM__Comments__c"))
-						.getValue().toString());
-				Log.error("Comments did not match!!");
-				check = false;
-			}
-			if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+			
+			else if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
 							.getValue().toString())) {
 				Log.error("Reason did not match!!");
 				check = false;
 			}
-			if (playbookName != null) {
+			else if (playbookName == null) {
+				Object playBookObj = obj.getField("JBCXM__Playbook__c");
+				if (!(playbookName == playBookObj)) {
+					Log.error("playBook is not null !!");
+					check = false;
+				}
+			}
+			else if (playbookName != null && !(playbookName.isEmpty())) {
 				String playBook = sfdc
 						.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__Playbook__c where Name like '"
 								+ playbookName + "'"))[0].getChild("Id")
@@ -612,6 +609,20 @@ public void setupRule(HashMap<String,String> testData){
 						.getChild(resolveStrNameSpace("JBCXM__Playbook__c"))
 						.getValue().toString())) {
 					Log.error("Playbooks do not match!!");
+					check = false;
+				}
+			}
+			
+			else if (comment == null) {
+				Object object = obj.getField("JBCXM__Comments__c");
+				if (!(comment == object)) {
+					Log.error("Comments is not null for update cta comments with never option!!");
+					check = false;
+				}
+			} else if (comment != null) {
+				String comments = (String) obj.getField("JBCXM__Comments__c");
+				if (comments.equalsIgnoreCase(comment)) {
+					Log.error("Comments did not match!!");
 					check = false;
 				}
 			}

@@ -87,6 +87,7 @@
         "status": "New",
         "playbook": "Collections",
         "reason": "Product Issue",
+	"chatterUpdate": "",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",

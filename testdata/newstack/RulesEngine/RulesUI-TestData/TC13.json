@@ -82,6 +82,7 @@
         "type": "Risk",
         "status": "New",
         "playbook": "Collections",
+	"chatterUpdate": "",
         "reason": "Product Issue",
         "ownerField": "",
         "dueDate": "10",

@@ -34,7 +34,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String OWNERFIELD = "//label[contains(text(),'Reason')]/following-sibling::div/select[contains(@class,'OwnerField')]/following-sibling::button";
     private final String DUEDATE = "//div[@class='dueDate']/input";
     private final String DEFAULTOWNER = "//label[contains(text(),'Default Owner')]/following-sibling::div//input";
-    private final String POSTUPDATE_BUTTON = "//label[contains(text(),'Post update')]/..//button";
+    private final String POSTUPDATE_BUTTON = "//select[contains(@class, 'comments_post_frequency')]/following-sibling::button";
     private final String COMMENTS = "//label[contains(text(),'Comments')]/../descendant::div[contains(@class,'form')]";
     private final String SAVE_BUTTON = "//input[@type='button' and @class='gs-btn btn-save']";
     private final String CREATE_CTA_RADIO_BUTTON = "//input[@value='create']";
@@ -152,11 +152,17 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(ctaAction.getType());
         item.click(xpath + STATUS_BUTTON);
         selectValueInDropDown(ctaAction.getStatus());
+        if (!ctaAction.getPlaybook().isEmpty()) {
         item.click(xpath + PLAYBOOK);
         selectValueInDropDown(ctaAction.getPlaybook());
+        }
         item.click(xpath + REASON_BUTTON);
         selectValueInDropDown(ctaAction.getReason());
         field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
+        if (ctaAction.getChatterUpdate().isEmpty()) {
+			item.click(xpath+POSTUPDATE_BUTTON);
+			 selectValueInDropDown(ctaAction.getChatterUpdate(), true);
+		}
         selectTaskOwner(ctaAction.getDefaultOwner(), i);
         element.clearAndSetText(xpath + COMMENTS, ctaAction.getComments());
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);

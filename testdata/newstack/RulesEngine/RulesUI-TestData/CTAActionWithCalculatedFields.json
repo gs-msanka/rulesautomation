@@ -155,6 +155,7 @@
         "reason": "Product Issue",
         "ownerField": "",
         "dueDate": "10",
+	"chatterUpdate": "",
         "defaultOwner": "weRules",
         "comments": "These are test comments for CTA"
       },

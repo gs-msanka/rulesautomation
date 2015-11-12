@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule-23-GS-4185-Testcase-ID",
-  "ruleDescription": "Rule-23-GS-4185-Testcase-ID Desc",
+  "ruleName": "Rule-25-GS-4257-Testcase-ID",
+  "ruleDescription": "Rule-25-GS-4257-Testcase-ID Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",
@@ -137,16 +137,16 @@
     {
       "actionType": "createCta",
       "action": {
-        "name": "CTA Rule 1 - UI",
-        "priority": "Low",
+        "name": "Rule-25-GS-4257-Testcase-ID-UI",
+        "priority": "Medium",
         "type": "Risk",
         "status": "New",
         "playbook": "Collections",
         "reason": "Product Issue",
         "ownerField": "",
-	"chatterUpdate": "",
         "dueDate": "10",
         "defaultOwner": "weRules",
+        "chatterUpdate": "Never",
         "comments": "These are test comments for CTA"
       },
       "criterias": [
