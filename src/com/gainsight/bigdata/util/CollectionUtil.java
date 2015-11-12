@@ -401,6 +401,11 @@ public class CollectionUtil {
 		return collectionInfo;
 	}
 
+    /**
+     * Replaces the display names / tokens in a calculated expression of column.
+     * @param collectionInfo - Collection Info.
+     * @param columns - List of columns to replace the values, if null then it loops through the collection columns & gets the calculated measures and replaces the tokens for them.
+     */
     public static void tokenizeCalculatedExpression(CollectionInfo collectionInfo, String[] columns) {
         if(collectionInfo ==null) {
             throw new RuntimeException("Colleciton info can't be null.");
@@ -432,6 +437,11 @@ public class CollectionUtil {
         }
     }
 
+    /**
+     * Extract's all the display names from the expression. Note the token should be of this form : ${Some Name}
+     * @param text - Text in which the extraction should be done.
+     * @return - List of all the matching tokens.
+     */
     public static List<String> getAllDisplayNamesFromCalculatedExpression(String text) {
         if(text ==null) {
             throw new IllegalArgumentException("Text parameters should not be null.");
@@ -447,16 +457,4 @@ public class CollectionUtil {
         Log.info("Column List : " + values.toString());
         return values;
     }
-
-    public static HashMap<String, CollectionInfo.Column> getDisplayNameColumnsMap(List<CollectionInfo.Column> columns) {
-        HashMap<String, CollectionInfo.Column> result = new HashMap<>();
-        for(CollectionInfo.Column column : columns) {
-            result.put(column.getDisplayName(), column);
-        }
-        return result;
-    }
-
-
-
-
 }
