@@ -159,7 +159,7 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + REASON_BUTTON);
         selectValueInDropDown(ctaAction.getReason());
         field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
-        if (ctaAction.getChatterUpdate().isEmpty()) {
+        if (!ctaAction.getChatterUpdate().isEmpty()) {
 			item.click(xpath+POSTUPDATE_BUTTON);
 			 selectValueInDropDown(ctaAction.getChatterUpdate(), true);
 		}
