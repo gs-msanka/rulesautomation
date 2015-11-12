@@ -88,6 +88,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
             JobInfo customerJobInfo = mapper.readValue(new File(testDataFiles+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
         }
+        dataETL.execute(eventsJobInfo);
 
 
     }

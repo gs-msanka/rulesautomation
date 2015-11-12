@@ -3,6 +3,7 @@ package com.gainsight.bigdata.util;
 import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.ColumnAttributeType;
 import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.Verifier;
@@ -12,9 +13,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import static org.testng.Assert.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Giribabu on 05/09/15.
@@ -349,13 +350,13 @@ public class CollectionUtil {
         }
         return result;
     }
-    
+
     /**
      * @param baseObject - collectionmaster on which lookup field has to be created
      * @param primaryField - Lookup field name.
      * @param lookUpObject - collectionmaster to which lookup has to be created
      * @param foreignField -  column to which lookup has to be created
-     * @param useDBName 
+     * @param useDBName
      */
     public static void setLookUpDetails(CollectionInfo baseObject, String primaryField, CollectionInfo lookUpObject, String foreignField, boolean useDBName) {
         CollectionInfo.LookUpDetail lookUpDetail = new CollectionInfo.LookUpDetail();
@@ -372,12 +373,12 @@ public class CollectionUtil {
         	column.setLookupDetail(lookUpDetail);
         }
     }
-	
-	
+
+
 	/**
 	 * @param collectionInfo - collectionmaster on which calculatedExpression has to be created
-	 * @param columnName - column for whih calculated measure has to be created 
-	 * @param column1 
+	 * @param columnName - column for whih calculated measure has to be created
+	 * @param column1
 	 * @param column2
 	 * @param column3
 	 * @param formula - RedShiftFormulaType
@@ -399,6 +400,63 @@ public class CollectionUtil {
 		}
 		return collectionInfo;
 	}
+
+    public static void tokenizeCalculatedExpression(CollectionInfo collectionInfo, String[] columns) {
+        if(collectionInfo ==null) {
+            throw new RuntimeException("Colleciton info can't be null.");
+        }
+
+        HashMap<String, CollectionInfo.Column> columnHashMap = getDisplayNameColumnsMap(collectionInfo);
+        if(columns == null || columns.length <1) {
+            columns = columnHashMap.keySet().toArray(new String[columnHashMap.keySet().size()]);
+        }
+        for(String columnName : columns) {
+            CollectionInfo.Column column = columnHashMap.get(columnName);
+            if(column ==null) {
+                throw new RuntimeException("Column not found :" +columnName);
+            }
+            if(column.getColumnAttributeType()!= ColumnAttributeType.CALCULATED.getValue()) {
+                Log.info("Not a calculated field "+columnName);
+                continue;
+            }
+            Log.info("Building Calculated expression for : "+columnName);
+            List<String> values = getAllDisplayNamesFromCalculatedExpression(column.getCalculatedExpression());
+            for(String value : values) {
+                CollectionInfo.Column tempColumn = columnHashMap.get(value.substring(2, value.length()-1));
+                if(tempColumn ==null) {
+                    throw new RuntimeException("Column not found :" +value.substring(2, value.length()-1));
+                }
+                Log.info("Replacing : " +value + " With " +tempColumn.getDbName());
+                column.setCalculatedExpression(column.getCalculatedExpression().replace(value, tempColumn.getDbName()));
+            }
+        }
+    }
+
+    public static List<String> getAllDisplayNamesFromCalculatedExpression(String text) {
+        if(text ==null) {
+            throw new IllegalArgumentException("Text parameters should not be null.");
+        }
+        List<String> values = new ArrayList<>();
+        String regex = "\\$\\{.+?\\}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            String value = matcher.group();
+            values.add(value);
+        }
+        Log.info("Column List : " + values.toString());
+        return values;
+    }
+
+    public static HashMap<String, CollectionInfo.Column> getDisplayNameColumnsMap(List<CollectionInfo.Column> columns) {
+        HashMap<String, CollectionInfo.Column> result = new HashMap<>();
+        for(CollectionInfo.Column column : columns) {
+            result.put(column.getDisplayName(), column);
+        }
+        return result;
+    }
+
+
 
 
 }

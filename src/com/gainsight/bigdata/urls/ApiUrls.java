@@ -74,6 +74,7 @@ public interface ApiUrls extends NSURLs {
     String COLLECTION_DATA_VALIDATE         = NS_URL + "/api/dataload/validate";
     String COLLECTION_DATA_LOAD             = NS_URL + "/api/dataload/load";
     String COLLECTION_DATA_ASYNC_IMPORT     = NS_URL + "/api/dataload/import";
+    String COLLECTION_CURL_GENERATE         = NS_URL + "/api/dataload/collections/%s/curl"; //Collection Id.
 
 
     //S3 Connectors API
