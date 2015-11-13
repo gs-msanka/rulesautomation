@@ -12,6 +12,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CTA  implements Cloneable {
 	private String type;
+	private String typeId;
+	public String getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+
 	private String subject;
 	private String customer;
 	private String status = "New";
