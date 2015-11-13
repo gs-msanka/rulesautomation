@@ -44,6 +44,11 @@
                <include name="testCtaWithUpdateCommentsAlwaysOption" />
                <include name="testCtaWithUpdateCommentsNeverOption" />
                <include name="testCtaWithAddOrReplacePlaybook" />
+               <include name="testCtaWithRuleNameChangeOption" />
+               <include name="testCtaUpsertWithSnoozeOption" />
+               <include name="testCtaActionWithDonNotSkipWeekendOption" />
+               <include name="testCtaActionWithSkipAllWeekendsOption" />
+               <include name="testCtaActionWithSkipWeekendIfDueOnWeekEndOption" />
             </methods>
          </class>
       </classes>
