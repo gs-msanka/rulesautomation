@@ -1,0 +1,29 @@
+{
+  "collectionName": "Col-Name",
+  "clearOperation": "CLEAR_SELECTED_DATA",
+  "keyFields": [
+    "Date",
+    "AccountName"
+  ],
+  "mapping": [
+    {
+      "source": "Date",
+      "sourceDateFormat": null,
+      "sourceNumberFormat": null,
+      "target": "Date"
+    },
+    {
+      "source": "AccountName",
+      "sourceDateFormat": null,
+      "sourceNumberFormat": null,
+      "target": "AccountName"
+    }
+  ],
+  "sourceType": "FILE",
+  "targetType": "MONGO",
+  "headerRow": true,
+  "fieldSeparator": ",",
+  "escapeCharacter": "\\",
+  "quoteCharacter": "\"",
+  "dbNameUsed": false
+}

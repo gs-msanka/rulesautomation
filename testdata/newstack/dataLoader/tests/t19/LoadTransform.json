@@ -1,0 +1,35 @@
+{
+  "jobName": "T21",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/global/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t19/CollectionData.csv",
+    "fields" :[
+      {
+      "weekly" : false,
+      "daily"  : true,
+      "dateTime" : false,
+      "dateFormat" : "MM-dd-yyyy",
+      "fieldName" : "Date"
+      },
+      {
+      "weekly" : false,
+      "daily"  : true,
+      "dateTime" : true,
+      "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+      "fieldName" : "EventTimeStamp"
+      }
+    ]
+  },
+  "csvFormatter" : {
+    "inputFile": "/testdata/newstack/dataLoader/process/t19/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t19/Load_CollectionData.csv",
+    "csvProperties" : {
+      "separator" : "|",
+      "quoteChar" : "\"",
+      "escapeChar" : "\\",
+      "lineEnd" : "\n"
+    }
+  }
+}

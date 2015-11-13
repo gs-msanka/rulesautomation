@@ -1,0 +1,86 @@
+{
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Contact_ExternalId__c",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "User Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "Account Id"
+          },
+          {
+            "name": "Name",
+            "alias": "User Name"
+          },
+          {
+            "name": "Email",
+            "alias": "User Email"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/T5_ExpectedData.csv",
+        "table": "TempData",
+        "joinColumnName": "ContactExternalId",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "Account Name"
+          },
+          {
+            "name": "AccountExternalId",
+            "alias": "Source Account Id"
+          },
+          {
+            "name": "ContactExternalId",
+            "alias": "Source User Id"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "GS_SumofLogins",
+            "alias": "GS_SumofLogins"
+          },
+          {
+            "name": "Avg_PageLoadTime",
+            "alias": "Avg_PageLoadTime"
+          },
+          {
+            "name": "Week",
+            "alias": "Week"
+          },
+          {
+            "name": "Month",
+            "alias": "Month"
+          },
+          {
+            "name": "Quarter",
+            "alias": "Quarter"
+          },
+          {
+            "name": "Year",
+            "alias": "Year"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/T5_Final_ExpectedData.csv"
+  }
+}

@@ -49,7 +49,6 @@ public class WorkflowBasePage extends BasePage {
 
     /**
      * Clicks on Show Salesforce icon in Workflow tab.
-     * @return
      */
     public void showSalesForceHeader(){
     	Log.info("Started Method - showSalesForceHeader.");

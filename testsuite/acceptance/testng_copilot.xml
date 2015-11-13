@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Copilot Project" preserve-order="true">
+
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+    </listeners>
+
+    <test verbose="3" name="Copilot Application Test Suite" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.copilot.tests.SmartListTest" />
+        </classes>
+    </test>
+	
+</suite>

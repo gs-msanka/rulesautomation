@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/** Database connection class & utilities **/
+/** Database connection class and utilities **/
 
 abstract class Db {
 

@@ -5,7 +5,9 @@ package com.gainsight.bigdata.tenantManagement.enums;
  */
 public enum  MDAErrorCodes {
     TENANT_ALREADY_EXIST(3005),
-    UN_AUTHORIZED(2401);
+    UN_AUTHORIZED(2401),
+    SUBJECT_AREA_ALREADY_EXISTS(3406),
+    COLUMN_DEF_NOT_EXISTS(3203);
 
     private final int code;
 

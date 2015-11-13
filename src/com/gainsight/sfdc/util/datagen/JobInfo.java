@@ -142,9 +142,9 @@ public class JobInfo {
 
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Fields {
-            boolean weekly;
-            boolean daily;
-            boolean dateTime;
+            boolean weekly = false;
+            boolean daily = false;
+            boolean dateTime = false;
             String dateFormat;
             String fieldName;
 
@@ -340,18 +340,32 @@ public class JobInfo {
 	 * @author Sunand
 	 *
 	 */
-	public class SfdcExtract {
+	public static class SfdcExtract {
 		String source;
 		String connection;
 		String table;
 		List<String> fields;
+		String whereCondition;
+		boolean useRestApi =false;
 		@JsonProperty("output")
-		String output;
+		String outputFileLoc;
 
-		public SfdcExtract() {
-			// TODO Auto-generated constructor stub
+		public boolean isUseRestApi() {
+			return useRestApi;
 		}
-		
+
+		public void setUseRestApi(boolean useRestApi) {
+			this.useRestApi = useRestApi;
+		}
+
+		public String getWhereCondition() {
+			return whereCondition;
+		}
+
+		public void setWhereCondition(String whereCondition) {
+			this.whereCondition = whereCondition;
+		}
+
 		public String getSource() {
 			return source;
 		}
@@ -384,15 +398,15 @@ public class JobInfo {
 			this.fields = fields;
 		}
 
-		public String getOutputFileLoc() {
-			return output;
-		}
+        public String getOutputFileLoc() {
+            return outputFileLoc;
+        }
 
-		public void setOutputFileLoc(String output) {
-			this.output = output;
-		}
-		
-		@Override
+        public void setOutputFileLoc(String outputFileLoc) {
+            this.outputFileLoc = outputFileLoc;
+        }
+
+        @Override
 		public String toString() {
 			return toStringFormat(this);
 		}
@@ -477,9 +491,18 @@ public class JobInfo {
 			String file;
 			String table;
 			String joinColumnName;
+            boolean resolveNameSpace = false;
 			List<Columns> columns;
-			
-			public TableInfo() {
+
+            public boolean isResolveNameSpace() {
+                return resolveNameSpace;
+            }
+
+            public void setResolveNameSpace(boolean resolveNameSpace) {
+                this.resolveNameSpace = resolveNameSpace;
+            }
+
+            public TableInfo() {
 				// TODO Auto-generated constructor stub
 			}
 			

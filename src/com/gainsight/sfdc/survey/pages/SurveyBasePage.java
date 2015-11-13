@@ -11,7 +11,9 @@ import com.gainsight.pageobject.util.Timer;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.testdriver.Log;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -40,6 +42,7 @@ public class SurveyBasePage extends BasePage {
     private final String SURVEY_CREATE_BUTTON           = "//input[contains(@class, 'btn-save') and @value='Create']";
     private final String PRE_PACK_SURVEY_SELECT         = "//select[contains(@class, 'sel-prepack-survey')]/following-sibling::button";
     private final String SURVEY_CREATE_CANCEL_BUTTON    = "//input[contains(@class, 'btn-save') and @value='Cancel']";
+    private final String ANONYMOUS_ACCOUNT_INPUT        = "//input[contains(@class, 'search_input search-field')]";
 
 
     //Drafts Section/View Selectors
@@ -166,6 +169,27 @@ public class SurveyBasePage extends BasePage {
         }
         return result;
     }
+    
+	public void selectaccount(String accountName) {
+        Log.info("Selecting Account for complete Anonymous surveys : " +accountName);
+        boolean selected = false;
+        for(int i=0; i< 5; i++) {
+            item.clearAndSetText(ANONYMOUS_ACCOUNT_INPUT, accountName);
+            element.getElement((ANONYMOUS_ACCOUNT_INPUT)).sendKeys(Keys.ENTER);
+            wait.waitTillElementPresent("//li[@class='ui-menu-item']/a[text()='"+accountName+"']", MIN_TIME, MAX_TIME);
+            for(WebElement ele : element.getAllElement("//li[@class='ui-menu-item']/a[text()='"+accountName+"']")) {
+                if(ele.isDisplayed()) {
+                    ele.click();
+                    selected = true;
+                    return;
+                }
+            }
+        }
+        if(!selected) {
+            throw new RuntimeException("Unable to select Account");
+        }
+        Log.info("Selected Account Successfully: " +accountName);
+    }
 
     public void selectValueFromDropDown(WebElement webEle, List<String> options) {
         Select dropDown = new Select(webEle);
@@ -173,4 +197,15 @@ public class SurveyBasePage extends BasePage {
             dropDown.selectByVisibleText(option);
         }
     }
+    
+    public void selectValueInDropDownList(String value) {
+    	List<WebElement> elelist = element.getAllElement("//div[contains(@class,'ui-multiselect-menu') and contains(@style,'block')]");
+    	Log.info("Size of list is " +elelist.size());
+        for(WebElement ele : elelist)
+            if(ele.isDisplayed()) {
+            	Log.info("//span[contains(text(), '"+value+"')]/ancestor::label");
+            	ele.findElement(By.xpath("//span[contains(text(), '"+value+"')]/ancestor::label")).click();
+                break;
+            }
+    }  
 }

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.gainsight.sfdc.tests.BaseTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -20,12 +21,10 @@ import us.monoid.web.BinaryResource;
 import us.monoid.web.JSONResource;
 import us.monoid.web.Resty;
 
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
 import com.gainsight.utils.DataProviderArguments;
 
-public class Customer360SectionsTest {
-	private SFDCInfo sfinfo;
+public class Customer360SectionsTest extends BaseTest {
+
 	private String endPoint, sessionid;
 	Resty resty;
 	URI uri;
@@ -46,9 +45,9 @@ public class Customer360SectionsTest {
 
 	@BeforeClass
 	public void setup() throws URISyntaxException {
-		sfinfo = SFDCUtil.fetchSFDCinfo();
-		endPoint = sfinfo.getEndpoint();
-		sessionid = sfinfo.getSessionId();
+
+		endPoint = sfdcInfo.getEndpoint();
+		sessionid = sfdcInfo.getSessionId();
 		uri = new URI(endPoint + c360Path);
 		resty = new Resty();
 		resty.withHeader("Content-Type", "application/json");

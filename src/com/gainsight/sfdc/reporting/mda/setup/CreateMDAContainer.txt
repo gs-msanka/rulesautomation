@@ -1,0 +1,14 @@
+String DashboardID = 'LayoutID';
+String UIViewID = 'viewID';
+
+//Creating container
+List<JBCXM__DashboardContainer__c> dcList = new List<JBCXM__DashboardContainer__c>();
+//lc layoutContainer
+JBCXM__DashboardContainer__c lc = new JBCXM__DashboardContainer__c(JBCXM__AllowChange__c = false,
+														JBCXM__Dashboard__c			= DashboardID,
+														JBCXM__ContainerOptions__c	= '{"col":"1","row":"1","size_x":"2","size_y":"1"}',
+														JBCXM__UIView__c			= NULL,
+														JBCXM__SourceType__c		= 'NEW-STACK',
+														JBCXM__SourceId__c          = UIViewID);
+dcList.add(lc);
+insert dcList;

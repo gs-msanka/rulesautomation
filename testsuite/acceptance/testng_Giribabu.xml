@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true">
-
-    <listeners>
-        <listener class-name="com.gainsight.utils.AutTestListener" />
-    </listeners>
-
-    <test verbose="3" name="360 Scorecard Tests" preserve-order="true">
+<suite name="Connectors Project" preserve-order="true">
+    <test name="test1">
         <classes>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsColorTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsNumericTest"/>
-            <class name="com.gainsight.sfdc.customer360.test.Customer360ScorecardsTests"/>
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" >
+                <methods>
+                    <include name="accountContactExternalIDAndCustomFieldsAndMeasuresWithAllSupportedMeasureAggregation" />
+                </methods>
+            </class>
+
         </classes>
     </test>
+
 </suite>

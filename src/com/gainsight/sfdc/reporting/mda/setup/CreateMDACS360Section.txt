@@ -1,0 +1,25 @@
+String SectionName = 'CS360SectionName';
+String CS360objName = 'CollnID';
+//CS360objName - Is the Collection ID
+String collID = 'CollnID';
+String collName = 'CollnName';
+String rID = 'ReptID';
+String rName ='ReptName';
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+
+Integer currentDisplayOrder = [SELECT count() FROM JBCXM__C360Sections__c ];
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName,
+														  JBCXM__DisplayLabel__c = SectionName,
+														  JBCXM__AccountReference__c = NULL,
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = false,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = false,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__isStandardObject__c = false,
+														  JBCXM__ObjectName__c = CS360objName,
+														  //JBCXM__ReportItems__c = {"Collection":{"Id":collID,"Name":collName},"reports":[{"Id":rID,"Name":rName}]},
+														  JBCXM__ReportItems__c = '{"Collection":{"Id":"'+collID+'","Name":"'+collName+'"},"reports":[{"Id":"'+rID+'","Name":"'+rName+'"}]}',
+														  JBCXM__Type__c = 'ExternalReport');
+insert rList;
+

@@ -1,40 +1,47 @@
 package com.gainsight.sfdc.survey.tests;
 
-import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.testdriver.Application;
+
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.stringtemplate.v4.compiler.STParser.element_return;
 import org.testng.Assert;
 
-import com.gainsight.pageobject.core.WebPage;
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.SalesforceConnector;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.survey.pages.SurveyQuestionPage;
 import com.gainsight.sfdc.survey.pojo.SurveyCTARule;
 import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
-import com.gainsight.sfdc.util.bulk.SFDCUtil;
-import com.gainsight.testdriver.Application;
+import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
 
-public class SurveySetup extends BaseTest {
+public class SurveySetup extends BaseTest implements Constants{
 	
 	private final static String PICK_LIST_QUERY  = "Select id, Name, JBCXM__Category__c, JBCXM__SystemName__c from JBCXM__PickList__c Order by JBCXM__Category__c, Name";
 	private final static String CTA_TYPES_QUERY  = "Select id, Name, JBCXM__Type__c, JBCXM__DisplayOrder__c, JBCXM__Color__c from JBCXM__CTATypes__c";
-	private static SFDCInfo sfdcInfo = SFDCUtil.fetchSFDCinfo();
-	private RuleEngineDataSetup ruleEngineDataSetup;
 	private static HashMap<String, String> suveyQus;
 	private static HashMap<String, String> ctaTypesMap;
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> playBook;
 	private static HashMap<String, String> surveyAns;
+	public final String SURVEYDATA_CLEANUP        = "Delete [SELECT Id,Name,JBCXM__Title__c FROM JBCXM__Survey__c];";
 
     /**
      * Populate ths survey Id.
@@ -71,21 +78,44 @@ public class SurveySetup extends BaseTest {
         return pageId;
     }
 
-    public String getRecentAddedQuestionId(SurveyQuestion surQues) {
-        String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where " +
-                "JBCXM__SurveyMaster__c='"+surQues.getSurveyProperties().getsId()+"' order by createdDate desc limit 1 ");
-        Log.info("Query to get survey question ID : "+query);
-        SObject[] sObjects = sfdc.getRecords(query);
-        Log.info("No of records returned : "+sObjects.length);
-        String questId;
-        if(sObjects.length >=1) {
-            questId = sObjects[0].getId();
-            Log.info("Question Id : "+questId);
-        } else {
-            throw new RuntimeException("No Survey Question Found with this name : " +surQues.getQuestionText());
-        }
-        return questId;
-    }
+    public String getRecentAddedQuestionId(final SurveyQuestion surQues) {
+		String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where "
+				+ "JBCXM__SurveyMaster__c='"
+				+ surQues.getSurveyProperties().getsId()
+				+ "' order by createdDate desc limit 1 ");
+		Log.info("Query to get survey question ID : " + query);
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isQuestionExists(surQues);
+					}
+				});
+		SObject[] sObjects = sfdc.getRecords(query);
+		Log.info("No of records returned : " + sObjects.length);
+		String questId = null;
+		if (sObjects.length >= 1) {
+			questId = sObjects[0].getId();
+			Log.info("Question Id : " + questId);
+		} else {
+			Log.info("No Survey Question Found with this name");
+		}
+		return questId;
+	}
+    
+    public boolean isQuestionExists(SurveyQuestion surQues){
+		boolean result = false;
+		String query = resolveStrNameSpace("Select id, Name, JBCXM__ParentQuestion__c, JBCXM__DisplayOrder__c, JBCXM__SurveyMaster__c, JBCXM__Title__c, JBCXM__Type__c From JBCXM__SurveyQuestion__c where "
+				+ "JBCXM__SurveyMaster__c='"
+				+ surQues.getSurveyProperties().getsId()
+				+ "' order by createdDate desc limit 1 ");
+		SObject[] sObjects = sfdc.getRecords(query);
+		Log.info("No of records returned : " + sObjects.length);
+		if (sObjects.length >= 1) {
+			result = true;
+		}
+		return result;
+	}
 
     public String getQuestionType(SurveyQuestion surveyQuestion) {
         String expectedQuestionType = null;
@@ -238,50 +268,54 @@ public class SurveySetup extends BaseTest {
         Assert.assertTrue(surveyQuestionPage.verifySurveyQuestionAnswers(surQuesEle, surQues) , "Checking answers");
     }
     
-    public void Create_Custom_Obj_For_Addparticipants() throws Exception{
-    	
-        metadataClient.createCustomObject("EmailCustomObjct");
-        String TextField[]={"Dis Name", "Dis Role"};
-        String Email[]={"Dis Email"};
-        String C_Reference="C_Reference";
-        String ReferenceTo="Account";  //Reference to User Object
-        String ReleationShipName="Accountss_AutomationnS"; //Relation Name
-        String LookupFieldName[]={C_Reference} , Reference[]={ReferenceTo,ReleationShipName};
-        metadataClient.createTextFields("EmailCustomObjct__c", TextField, false, false,true, false, false);
-        metadataClient.createEmailField("EmailCustomObjct__c", Email);
-        metadataClient.createLookupField("EmailCustomObjct__c", LookupFieldName, Reference );
-        metaUtil.createExtIdFieldForCustomObject(sfdc, sfinfo);
-    }
+    public void customObjectForAddingSurveyParticipants() throws Exception{
+		metadataClient.createCustomObject("EmailCustomObjct");
+		String TextField[] = { "Dis Name", "Dis Role" };
+		String Email[] = { "Dis Email" };
+		String C_Reference = "C_Reference";
+		String ReferenceTo = "Account"; // Reference to User Object
+		String ReleationShipName = "Accountss_AutomationnS"; // Relation Name
+		String LookupFieldName[] = { C_Reference }, Reference[] = {
+				ReferenceTo, ReleationShipName };
+		metadataClient.createTextFields("EmailCustomObjct__c", TextField,
+				false, false, true, false, false);
+		metadataClient.createEmailField("EmailCustomObjct__c", Email);
+		metadataClient.createLookupField("EmailCustomObjct__c",
+				LookupFieldName, Reference);
+		metaUtil.createExtIdFieldForCustomObject(sfdc);
+	}
     
-    public int GetRecordCountFromContactObject(){
-    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where isDeleted=false");
-    	Log.info("Count from Object is" + count);
-		return count;	
-    }
-    
-    public int RecordCountFromContactObjectWithFilterCond(){
-    	int count=sfdc.getRecordCount("SELECT Id,name FROM Contact where  email like '%gainsight.com%'and isDeleted=false");
-    	Log.info("Count from Object is" + count);
+	public int getRecordCountFromContactObject() {
+		int count = sfdc
+				.getRecordCount(resolveStrNameSpace("SELECT Id,name FROM Contact where isDeleted=false"));
+		Log.info("Count from Object is" + count);
 		return count;
-    	
-    }
+	}
+    
+	public int getRecordCountFromContactObjectWithFilterCond() {
+		int count = sfdc
+				.getRecordCount(resolveStrNameSpace(("SELECT Id,name FROM Contact where  email like '%gainsighttest.com%'and isDeleted=false")));
+		Log.info("Count from contact object is" + count);
+		return count;
+	}
     
 	public void updateNSURLInAppSettings(String NSURL) {
 		System.out.println("setting ns url in app settings");
-		sfdc.getRecordCount("select id from JBCXM__ApplicationSettings__c");
+		sfdc.getRecordCount((resolveStrNameSpace("select id from JBCXM__ApplicationSettings__c")));
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__ApplicationSettings__c appSet= [select id,JBCXM__NSURL__c from JBCXM__ApplicationSettings__c];"
-				+ "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
+                + "appSet.JBCXM__NSURL__c='" + NSURL + "';" + "update appSet;"));
 		Log.info("NS URL Updated Successfully");
 	}
 
-	public boolean getBranchingField() {
+	public boolean getBranchingField(SurveyQuestion surveyQuestion) {
 		Log.info("fetching Records from JBCXM__SurveyQuestion__c Object");
-		Timer.sleep(5);
+		Timer.sleep(5); //Added sleep since its taking 2-3 seconds of time to retrive the data from sfdc
 		SObject[] jsondata = sfdc
-				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c order by createdDate asc limit 1"));
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1"));
+		Log.info("Total records are" +sfdc.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__HasRules__c FROM JBCXM__SurveyQuestion__c where JBCXM__Type__c='"+surveyQuestion.getQuestionType()+"' order by createdDate desc limit 1")));
 		boolean result = false;
 		if (jsondata.length > 0) {
-			String sTemp = (String) jsondata[0].getField("JBCXM__HasRules__c");
+			String sTemp = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__HasRules__c"));
 			result = Boolean.valueOf(sTemp);
 		}
 		return result;
@@ -294,7 +328,7 @@ public class SurveySetup extends BaseTest {
 				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,JBCXM__Dependent__c FROM JBCXM__SurveyQuestion__c order by createdDate desc limit 1"));
 		boolean result = false;
 		if (jsondata.length > 0) {
-			String sTemp = (String) jsondata[0].getField("JBCXM__Dependent__c");
+			String sTemp = (String) jsondata[0].getField(resolveStrNameSpace("JBCXM__Dependent__c"));
 			result = Boolean.valueOf(sTemp);
 		}
 		return result;
@@ -387,15 +421,15 @@ public class SurveySetup extends BaseTest {
 	}
    
 	public void populateObjMaps() {
-		suveyQus = getMapFromObject("JBCXM__SurveyQuestion__c",
-				"JBCXM__Title__c", "SQ");
-		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
+		suveyQus = getMapFromObject(resolveStrNameSpace("JBCXM__SurveyQuestion__c"),
+				resolveStrNameSpace("JBCXM__Title__c"), "SQ");
+		ctaTypesMap = getMapFromObject(resolveStrNameSpace("JBCXM__CTATypes__c"), "Name",
 				"CT");
-		PickListMap = getMapFromObject("JBCXM__PickList__c",
-				"JBCXM__SystemName__c", "PL");
-		playBook = getMapFromObject("JBCXM__Playbook__c", "Name", "PB");
-		surveyAns = getMapFromObject("JBCXM__SurveyAllowedAnswers__c",
-				"JBCXM__Title__c", "SA");
+		PickListMap = getMapFromObject(resolveStrNameSpace("JBCXM__PickList__c"),
+				resolveStrNameSpace("JBCXM__SystemName__c"), "PL");
+		playBook = getMapFromObject(resolveStrNameSpace("JBCXM__Playbook__c"), "Name", "PB");
+		surveyAns = getMapFromObject(resolveStrNameSpace("JBCXM__SurveyAllowedAnswers__c"),
+				resolveStrNameSpace("JBCXM__Title__c"), "SA");
 
 	}
 	
@@ -434,5 +468,61 @@ public class SurveySetup extends BaseTest {
 		}
 		return publishURL;
 	}
-}
+	
+	public int getCountFromSurveyParticipantObject(final SurveyProperties surveyProp) {
+		WebDriverWait wait = new WebDriverWait(Application.getDriver(), 30);
+		return wait.until(new ExpectedCondition<Integer>() {
+			@Override
+			public Integer apply(WebDriver driver) {
+				int count = sfdc
+						.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
+								+ setSurveyId(surveyProp)
+								+ "' and isDeleted=false"));
+				Log.info("Count from SurveyParticipant__c object is " + count);
+				return count;
+			}
+		});
+	}
 
+	public int getCountfromCustomObject() {
+		WebDriverWait wait = new WebDriverWait(Application.getDriver(), 30);
+		return wait.until(new ExpectedCondition<Integer>() {
+			@Override
+			public Integer apply(WebDriver driver) {
+				return sfdc
+						.getRecordCount(resolveStrNameSpace("SELECT Id,Name FROM EmailCustomObjct__c where isDeleted=false"));
+			}
+		});
+	}
+	
+	public String getSurveyDistributionID(SurveyProperties surveyProperties) {
+		Log.info("Fetching Records");
+		SObject[] jsondata = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__SurveyId__c FROM JBCXM__SurveyDistributionSchedule__c where JBCXM__SurveyId__c='"
+						+ setSurveyId(surveyProperties)
+						+ "' ORDER BY CreatedDate DESC limit 1"));
+		String temp = null;
+		if (jsondata.length > 0) {
+			String temp2 = (String) jsondata[0].getField("Id");
+			temp = temp2;
+		}
+		return temp;
+	}
+	
+	public boolean QuestionCount(CTA cta){
+		boolean result=false;
+		SObject[] sObject=sfdc.getRecords(resolveStrNameSpace("select Id FROM JBCXM__CTA__c where IsDeleted=false and JBCXM__Priority__r.JBCXM__SystemName__c='"
+				+ cta.getPriority()
+				+ "' and JBCXM__Reason__r.JBCXM__SystemName__c='"
+				+ cta.getReason()
+				+ "' and JBCXM__Type__r.JBCXM__Type__c='"
+				+ cta.getType()
+				+ "' and JBCXM__Stage__r.JBCXM__SystemName__c='"
+				+ cta.getStatus() + "'))"));
+		if (sObject.length>0) {
+			result=true;	
+		}
+		return result;
+	}
+	
+}

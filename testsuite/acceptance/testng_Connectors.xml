@@ -3,14 +3,15 @@
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
     </listeners>
 
-    <test verbose="3" name="Gainsight (Connectors) Application Test Suite" preserve-order="true">
+    <test verbose="3" name="Connectors Test Cases" preserve-order="true">
         <classes>
-
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
-
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
         </classes>
     </test>
+
 </suite>

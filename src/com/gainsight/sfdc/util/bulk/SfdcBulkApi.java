@@ -9,8 +9,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gainsight.sfdc.SalesforceConnector;
+import com.gainsight.sfdc.beans.*;
+import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.db.QueryBuilder;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.SfdcConfig;
 
 /**
  * Standalone class for SFDC push/pull mechanism 
@@ -26,23 +32,17 @@ public class SfdcBulkApi {
 	public static final int BULK_INSERT_LIMIT = 10000;
 	
 	static SfdcBulkOperationImpl op;
-	static SFDCInfo info;
-	
-	//Whenever we want to make a separate login/auth module we can modularize this piece of code.
-	static {
-		info = SFDCUtil.fetchSFDCinfo();
-		op = new SfdcBulkOperationImpl(info.getSessionId());
-		async_job_url = info.getEndpoint() + async_url + api_version + "/job";
-	}
-	
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		//pushDataToSfdc("JBCXM__UsageData__c", "insert", new File("./resources/datagen/process/db_Month11UD_3.csv"));
-	}
+    static SFDCInfo sfdcInfo;
+    static SalesforceConnector sfdc;
+    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+
+    static {
+        sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+sfdcConfig.getSfdcStoken(), sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
+        sfdc.connect();
+        sfdcInfo = sfdc.fetchSFDCinfo();
+        op = new SfdcBulkOperationImpl(sfdcInfo.getSessionId());
+        async_job_url = sfdcInfo.getEndpoint() + async_url + api_version + "/job";
+    }
 
 	/**
 	 * Push data to SFDC
@@ -181,14 +181,18 @@ public class SfdcBulkApi {
 		
 		String async_batch_status_url = async_job_url + "/" + job_id + "/batch/" + batch_id;
 		//Waiting until the batch job is complete
-		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 60);
+		boolean waitResult = waitUntilBatchJobComplete(async_batch_status_url, 10, 600);
 		if(waitResult) {
 			//Fetching result from batch
 			String output = op.fetchResult(async_batch_status_url);
 			Log.info("OUTPUT:\n" + output);
 			try {
 				//Save the file to the respective destination
-				FileOutputStream fos = new FileOutputStream(filePath);
+                File tempFile = new File(filePath);
+                tempFile.getParentFile().mkdirs();
+
+				FileOutputStream fos = new FileOutputStream(tempFile);
+
 				fos.write(output.getBytes());
 				fos.close();
 				op.setJobState(async_job_status_url, "Closed");
@@ -204,29 +208,39 @@ public class SfdcBulkApi {
 			op.setJobState(async_job_status_url, "Aborted");
 	}
 
-	public void cleanUp(String sObject) throws Exception {
-		//I need to write logic considering governor limits
-		int recordCount = SfdcRestApi.countOfRecordsForASObject(sObject);
-		System.out.println("Count of Records : " + recordCount);
-		int calculateBatch = recordCount/BULK_INSERT_LIMIT;
-		System.out.println("Pulling all Records of " + sObject);
-		String query = QueryBuilder.buildSOQLQuery(sObject, "Id");
-		System.out.println("Pull Query : " + query);
-		String path = basedir+"/resources/datagen/process/" + sObject + "_cleanup.csv";
-		System.out.println("Output File Loc : " + path);
-		SfdcBulkApi.pullDataFromSfdc(sObject, query, path);
-		File f = new File(path);
-		if(f.exists())
-			System.out.println("Pull Completed");
-		else
-			System.out.println("Pull Failed");
-		
-		//Here i need to split files 
-		System.out.println("Now Lets Delete some data");
-		SfdcBulkApi.pushDataToSfdc(sObject, "delete", f);
-		System.out.println("push done");
-		
-	}
+    public static void cleanUp(String query) throws IOException {
+        String temp = query.substring(query.toLowerCase().lastIndexOf("from")+4).trim();
+        String sObject;
+        if(temp.indexOf(" ") != -1) {
+            sObject = FileUtil.resolveNameSpace(temp.substring(0, temp.indexOf(" ")).trim(), sfdcConfig.getSfdcNameSpace());
+        } else {
+            sObject = temp;
+        }
+
+        int recordCount = sfdc.getRecordCount(query);
+        Log.info("Count of Records : " + recordCount);
+        if(recordCount == 0) {
+            Log.info("No Records to Delete on Object " +sObject);
+            return;
+        }
+        Log.info("Pulling Records for Query : " + query);
+        String path = basedir+"/resources/datagen/process/"+sObject+"_cleanup.csv";
+        Log.info("Output File Loc : " + path);
+        pullDataFromSfdc(sObject, query, path);
+        File f = new File(path);
+        if(f.exists()) {
+            Log.info("Pull Completed For Object " +sObject);
+        } else {
+            Log.error("Pull Failed For Object " +sObject);
+            throw new RuntimeException("Failed to Pull Data for object " +sObject);
+        }
+
+        Log.info("Now Lets Delete some data...");
+        pushDataToSfdc(sObject, "delete", f);
+        Log.info("Data Delete Completed.");
+
+    }
+
 	/**
 	 *Wait Logic To wait until the batch job status is returned as "Completed"
 	 * 
@@ -277,6 +291,7 @@ public class SfdcBulkApi {
         List<String> batchIds = new ArrayList<String>();
         BufferedReader rdr = new BufferedReader(new FileReader(csvFile));
         File tmpFile =  new File(basedir+"/resources/datagen/process/tempFile.csv");
+        tmpFile.getParentFile().mkdirs();
         // read the CSV header row
         byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;

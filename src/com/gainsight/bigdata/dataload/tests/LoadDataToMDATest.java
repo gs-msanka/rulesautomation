@@ -5,24 +5,31 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
+import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
+import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
-import com.gainsight.utils.DataProviderArguments;
+import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.annotations.TestInfo;
+import org.apache.http.HttpStatus;
+import org.codehaus.jackson.type.TypeReference;
+
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 
 import java.io.File;
 import java.io.FileReader;
@@ -41,263 +48,565 @@ public class LoadDataToMDATest extends NSTestBase {
     private ReportManager reportManager = new ReportManager();
     private DataLoadManager dataLoadManager;
     private Calendar calendar = Calendar.getInstance();
+    private Date date = calendar.getTime();
+    private List<String> collectionsToDelete = new ArrayList<>();
+
+    private String testDataFiles = testDataBasePath + "/dataLoader";
+    MongoDBDAO mongoDBDAO =null;
+    String dataStoreDB = null;
+
 
     @BeforeClass
-    public void setup() {
-        tenantManager.deleteTenant(sfinfo.getOrg(), null);
+    @Parameters("dbStoreType")
+    public void setup(@Optional String dbStoreType) throws IOException {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        dataLoadManager = new DataLoadManager();
+        tenantDetails =tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
+        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
+            if(tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+            }
+        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            if(!tenantDetails.isRedshiftEnabled()) {
+                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+            }
+        }
+        //This will help to run the same suite for multiple data bases.
+        //Please make sure your global db/schema db details are correct.
+        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            dataStoreDB = dbStoreType;
+            mongoDBDAO = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                    nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+        }
+        }
+
+    @TestInfo(testCaseIds = {"GS-4760", "GS-3655", "GS-3681", "GS-4373", "GS-4372", "GS-4369", "GS-3634", "GS-4368"})
+    @Test
+    public void insertCommaSeparatedCSVFileWithDoubleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "1_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @TestInfo(testCaseIds = {"GS-4760"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T2")
-    public void insertCommaSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
-    }
 
     @TestInfo(testCaseIds = {"GS-4790"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T3")
-    public void insertCommaSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertCommaSeparatedCSVFileWithSingleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "2_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3688"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T4")
-    public void insertSpaceSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertSpaceSeparatedCSVFileWithDoubleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "3_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4791"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T5")
-    public void insertSpaceSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertSpaceSeparatedCSVFileWithSingleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "4_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo), getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3687"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T6")
-    public void insertTabSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertTabSeparatedCSVFileWithDoubleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "5_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4792"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T7")
-    public void insertTabSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertTabSeparatedCSVFileWithSingleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "6_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3686"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T8")
-    public void insertSemiColonSeparatedCSVFileWithDoubleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertSemiColonSeparatedCSVFileWithDoubleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "7_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4793"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T9")
-    public void insertSemiColonSeparatedCSVFileWithSingleQuote(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void insertSemiColonSeparatedCSVFileWithSingleQuote() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "8_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
 
     @TestInfo(testCaseIds = {"GS-3682"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T10")
-    public void loadDataWithExtraFieldCreatedFromTenantManagement(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName")+"1";
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
-
-        CollectionInfo.Column col1 = mapper.readValue(testData.get("Column1"), CollectionInfo.Column.class);
-        CollectionInfo.Column col2 = mapper.readValue(testData.get("Column2"), CollectionInfo.Column.class);
-        collectionInfo = addColumnsToCollectionViaTenantMgt(tenantDetails.getTenantId(),
-               collectionInfo.getCollectionDetails().getCollectionId(), new CollectionInfo.Column[]{col1, col2});
-
-        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-
-        List<Map<String, String>> expectedData = getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo);
-        List<Map<String, String>> actualData = getFlatCollectionData(collectionInfo);
-        Assert.assertEquals(0, Comparator.compareListData(expectedData, actualData).size());
-    }
-
-    private CollectionInfo addColumnsToCollectionViaTenantMgt(String tenantId, String collectionId, CollectionInfo.Column[] columns) throws IOException {
-        CollectionInfo collectionInfo = tenantManager.getSubjectAreaMetadata(tenantId, collectionId);
-        for(CollectionInfo.Column column : columns) {
-            collectionInfo.getColumns().add(column);
+    @Test
+    public void loadDataWithExtraFieldCreatedFromTenantManagement() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "9_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
-        Assert.assertTrue(tenantManager.updateSubjectArea(tenantId, collectionInfo));
-        collectionInfo = tenantManager.getSubjectAreaMetadata(tenantId, collectionId);
-        return collectionInfo;
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform.json"), JobInfo.class);
+
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        List<CollectionInfo.Column> columns = mapper.readValue(new File(testDataFiles + "/tests/t9/ExtraColumns.json"), new TypeReference<ArrayList<CollectionInfo.Column>>() {
+        });
+        actualCollectionInfo.getColumns().addAll(columns);
+        Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(), actualCollectionInfo));
+        actualCollectionInfo = dataLoadManager.getCollectionInfo(actualCollectionInfo.getCollectionDetails().getCollectionId());
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 8, 0);
+
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(collectionInfo.getCollectionDetails().getCollectionId());
     }
 
 
     @TestInfo(testCaseIds = {"GS-3673", "GS-3672"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T11")
-    public void loadDataWithJavaScriptAndHtmlCode(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+    @Test
+    public void loadDataWithJavaScriptAndHtmlCode() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t10/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "10_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
-        List<String> failedRecords = dataLoadManager.getFailedRecords(jobId);
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        List<String[]> failedRecords = dataLoadManager.getFailedRecords(jobId);
         Assert.assertNotNull(failedRecords);
-        Assert.assertEquals(failedRecords.size() - 1, Integer.parseInt(testData.get("FailedRecordCount")));
+        Assert.assertEquals(failedRecords.size(), 6);   //5 are actual failed records, 1 is header.
 
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 5);
+        List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo)), actualCollectionInfo);
+        List<Map<String, String>> expData = ReportManager.truncateStringData(ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo), actualCollectionInfo);
+        Log.info("Actual     : " + mapper.writeValueAsString(actualData));
+        Log.info("Expected  : " + mapper.writeValueAsString(expData));
+        Assert.assertEquals(actualData.size(), expData.size());
+
+        List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @TestInfo(testCaseIds = {"GS-3681"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T12")
-    public void loadDataWithNoColumnInformation(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
-    }
 
     @TestInfo(testCaseIds = {"GS-3646"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T13")
-    public void deleteAllCollectionData(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+    @Test
+    public void deleteAllCollectionData() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "11_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
-        jobId = dataLoadManager.clearAllCollectionData(collectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        Assert.assertEquals(statusInfo.getMessage(), "Data truncated successfully");
-        Assert.assertEquals(statusInfo.getCollectionId(), collectionInfo.getCollectionDetails().getCollectionId());
-        Assert.assertEquals(0, getFlatCollectionData(collectionInfo).size());
-        Assert.assertTrue(tenantManager.deleteSubjectArea(tenantDetails.getTenantId(), collectionInfo.getCollectionDetails().getCollectionId()));
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+        verifyData(actualCollectionInfo, expFile);
+
+        jobId = dataLoadManager.clearAllCollectionData(actualCollectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
+        Assert.assertNotNull(jobId, "Job Id (or) status id is null.");
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+        List<Map<String, String>> actualData = reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo));
+        Assert.assertEquals(0, actualData.size());
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
-    @TestInfo(testCaseIds = {"GS-3858"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T14")
-    public void deleteCollectionDataWithDateField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @TestInfo(testCaseIds = {"GS-3858", "GS-4370"})
+    @Test
+    public void deleteCollectionDataWithDateField() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t12/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "12_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t12/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        File file = new File(Application.basedir + "/resources/datagen/process/GS-3858.csv");
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 20, 0);
 
-        CSVWriter writer = new CSVWriter(new FileWriter(file), ',', '"', '\\', "\n");
+
+        String tempFilePath = Application.basedir + "/testdata/newstack/dataLoader/process/t12/temp.csv";
+
+        CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date"});
-        allLines.add(new String[]{DateUtil.addDays(Calendar.getInstance(), -1, "yyyy-MM-dd")});
+        allLines.add(new String[]{DateUtil.addDays(calendar.getTime(), -1, "yyyy-MM-dd")});
         writer.writeAll(allLines);
         writer.flush();
         writer.close();
 
-        DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t12/ClearMetadata.json"), DataLoadMetadata.class);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        jobId = dataLoadManager.dataLoadManage(metadata, file);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
-        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
 
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t12/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3857"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T15")
-    public void deleteCollectionDataWithDateAccountField(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
+    @Test
+    public void deleteCollectionDataWithDateAccountField() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t13/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "13_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t13/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        DataLoadMetadata metadata = mapper.readValue(testData.get("DataLoadMetadata1"), DataLoadMetadata.class);
-        metadata.setCollectionName(testData.get("CollectionName"));
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 15, 0);
 
-        File file = new File(Application.basedir + "/resources/datagen/process/GS-3857.csv");
-        CSVWriter writer = new CSVWriter(new FileWriter(file), ',', '"', '\\', "\n");
+
+        String tempFilePath = Application.basedir + "/testdata/newstack/dataLoader/process/t13/temp.csv";
+
+        CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date", "AccountName"});
         allLines.add(new String[]{DateUtil.addDays(calendar.getTime(), -2, "yyyy-MM-dd"), "A and T unlimit Limited"});
@@ -305,133 +614,532 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.flush();
         writer.close();
 
-        jobId = dataLoadManager.dataLoadManage(metadata, file);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
-        Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
-        Assert.assertEquals(statusInfo.getSuccessCount(), 1); //This seems product issue.
+        DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t13/ClearMetadata.json"), DataLoadMetadata.class);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 6, 0); //it should but 5 there's a product issue that sends 1 record extra.
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t13/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+
     }
 
     @TestInfo(testCaseIds = {"GS-4799", "GS-4801"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T16")
-    public void updateDataWithOneKeyColumnAndViaCommaSeparated(HashMap<String, String> testData) throws IOException {
-        dataInsertAndUpdate(testData);
+    @Test
+    public void updateDataWithOneKeyColumnAndViaCommaSeparated() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "14_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
+        metadata.setKeyFields(new String[]{"Id"});
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3690", "GS-3636"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T17")
-    public void updateDataWithTwoKeyColumnAndViaTabSeparated(HashMap<String, String> testData) throws IOException {
-        dataInsertAndUpdate(testData);
+    @Test
+    public void updateDataWithTwoKeyColumnAndViaTabSeparated() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "15_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
+        metadata.setKeyFields(new String[]{"Id", "AccountName"});
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 7, 0);
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3693", "GS-3653"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T18")
-    public void upsertToUdpateAndInsertRecordsViaSpaceSeparatorSingleKey(HashMap<String, String> testData) throws IOException {
-        dataInsertAndUpdate(testData);
+    @Test
+    public void upsertToUdpateAndInsertRecordsViaSpaceSeparatorSingleKey() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "16_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t16/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t16/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
+        metadata.setKeyFields(new String[]{"Id"});
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t16/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-3696", "GS-3654"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T19")
-    public void upsertToUpdateAllRecordsViaSemiColumnSeparatorMultiKey(HashMap<String, String> testData) throws IOException {
-        dataInsertAndUpdate(testData);
+    @Test
+    public void upsertToUpdateAllRecordsViaSemiColumnSeparatorMultiKey() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "17_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t17/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t17/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
+        metadata.setKeyFields(new String[]{"Id", "AccountName"});
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t17/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
     @TestInfo(testCaseIds = {"GS-4800", "GS-3654"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T20")
-    public void upsertToInsertAllRecordsSingleKey(HashMap<String, String> testData) throws IOException {
-        dataInsertAndUpdate(testData);
-    }
-
-    /**
-     * Load the data to MDA i.e. a test case.
-     *
-     * @param testData
-     * @throws IOException
-     */
-    private void dataInsertAndUpdate(HashMap<String, String> testData) throws IOException {
-        String collectionName = testData.get("CollectionName");
-        CollectionInfo collectionInfo = createAndVerifyCollection(testData.get("CollectionSchema"), collectionName);
-        String jobId = loadDataToCollection(testData.get("ActualDataLoadJob"), testData.get("DataLoadMetadata"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount")), Integer.valueOf(testData.get("FailedRecordCount")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
-
-        ////Update Records..
-        jobId = loadDataToCollection(testData.get("ActualDataLoadJob1"), testData.get("DataLoadMetadata1"), collectionName);
-        Assert.assertNotNull(jobId);
-        dataLoadManager.waitForDataLoadJobComplete(jobId);
-        verifyJobDetails(jobId, collectionName, Integer.valueOf(testData.get("SuccessRecordCount1")), Integer.valueOf(testData.get("FailedRecordCount1")));
-        Assert.assertEquals(0, Comparator.compareListData(getExpectedData(testData.get("ExpectedDataLoadJob1"), collectionInfo),  getFlatCollectionData(collectionInfo)).size());
-    }
-
-    /**
-     * Creates a subject area / Collection & verifies the collection.
-     *
-     * @param collectionSchema
-     * @param collectionName
-     * @return Collection Schema.
-     * @throws IOException
-     */
-    private CollectionInfo createAndVerifyCollection(String collectionSchema, String collectionName) throws IOException {
-        CollectionInfo collectionInfo = mapper.readValue(collectionSchema, CollectionInfo.class);
-        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
-        Log.info("Collection Schema : " + mapper.writeValueAsString(collectionInfo));
-
-        NsResponseObj nsResponseObj = dataLoadManager.createSubjectArea(collectionInfo);
-        Assert.assertNotNull(nsResponseObj);
-        Assert.assertTrue(nsResponseObj.isResult());
-
-        CollectionInfo.CollectionDetails colDetails = dataLoadManager.getCollectionDetail(nsResponseObj.getData());
-        Assert.assertNotNull(colDetails.getDbCollectionName());
-        Assert.assertNotNull(colDetails.getCollectionId());
-
-        CollectionInfo actualCollection = dataLoadManager.getCollectionInfo(colDetails.getCollectionId());
-        Assert.assertNotNull(actualCollection);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollection));
-
-       return actualCollection;
-    }
-
-    /**
-     * Loads the dataFile to MDA & returns the job Id.
-     *
-     * @param jobFile
-     * @param DLMetadata
-     * @param collectionName
-     * @return JOB id of the submitted request.
-     * @throws IOException
-     */
-    private String loadDataToCollection(String jobFile, String DLMetadata, String collectionName) throws IOException {
-        DataLoadMetadata metadata = mapper.readValue(DLMetadata, DataLoadMetadata.class);
-        metadata.setCollectionName(collectionName);
-        Log.info("Metadata : " +mapper.writeValueAsString(metadata));
-
-        JobInfo actualJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
-
-        File dataLoadFile = FileProcessor.getDateProcessedFile(actualJobInfo, calendar.getTime());
-        if(actualJobInfo.getCsvFormatter()!=null) {
-            dataLoadFile = FileProcessor.getFormattedCSVFile(actualJobInfo.getCsvFormatter());
+    @Test
+    public void upsertToInsertAllRecordsSingleKey() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "18_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertNotNull(actualCollectionInfo);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
-        String jobId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
-        return jobId;
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/LoadTransform.json"), JobInfo.class);
+        File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/LoadTransform_1.json"), JobInfo.class);
+        dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
+        metadata.setKeyFields(new String[]{"Id"});
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
+        Assert.assertNotNull(jobId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
+
+        verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/ExpectedTransform.json"), JobInfo.class);
+        File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-3685"})
+    @Test
+    public void loadCSVFilePipeAsSeparator() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "19_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t19/LoadTransform.json"), JobInfo.class);
+
+        File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+        dataLoadFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
+
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
+        metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
+        metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
+
+        String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        File expFile = new File(Application.basedir + loadTransform.getDateProcess().getOutputFile());
+
+        verifyData(actualCollectionInfo, expFile);
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+
+    @TestInfo(testCaseIds = {"GS-3633"})
+    @Test
+    public void insertIntoExistingSubjectArea() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        JobInfo loadTransform1 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform.json"), JobInfo.class);
+        JobInfo loadTransform2 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform_1.json"), JobInfo.class);
+        JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t20/ExpectedTransform.json"), JobInfo.class);
+
+        File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform1, date);
+
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
+
+        dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform2, date);
+        statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
+
+        File expectedFile = FileProcessor.getDateProcessedFile(expTransform, date);
+        verifyData(actualCollectionInfo, expectedFile);
+
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+    //Please be notices the failed expected file if opened in excel & saved.
+    //will change 9999999999999999999999 to 1E+30 due to which test case may fail with one difference.
+    @TestInfo(testCaseIds = {"GS-4398", "GS-5141", "GS-5142", "GS-5145", "GS-4445"})
+    @Test
+    public void failedRecordsFetchForInvalidDataTypes() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "21_" + date.getTime());
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataLoadFile = new File(testDataFiles+"/tests/t21/CollectionData.csv");
+
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
+
+        verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 3, 11);
+
+        List<String[]> failedRecords = dataLoadManager.getFailedRecords(statusId);
+        File outputFile = new File(testDataFiles+"/process/t21/temp.csv");
+        outputFile.getParentFile().mkdirs();
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
+        writer.writeAll(failedRecords);
+        writer.close();
+
+        List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(outputFile)));
+        Assert.assertEquals(actualData.size(), 11);
+        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(testDataFiles+"/tests/t21/FailedExpectedData.csv")));
+        List<Map<String, String>> diffData = Comparator.compareListData(expectedData, actualData);
+        Log.debug("Diff Data : " +mapper.writeValueAsString(diffData));
+        Assert.assertEquals(diffData.size(), 0, "No of difference records should be 0.");
+
+        collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
+    }
+
+    @Test
+    @TestInfo(testCaseIds = {"GS-3683"})
+    public void duplicateCollectionNameVerification() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "22_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        ResponseObj responseObj = dataLoadManager.createSubjectAreaGetResponseObj(collectionInfo);
+        Assert.assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode(), "Was expected bad request.");
+        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        Assert.assertFalse(nsResponseObj.isResult());
+        Assert.assertEquals(MDAErrorCodes.SUBJECT_AREA_ALREADY_EXISTS.getGSCode(), nsResponseObj.getErrorCode());
+        Assert.assertEquals("Subject Area Name Already in use please use a different name.", nsResponseObj.getErrorDesc());
+    }
+
+    @TestInfo(testCaseIds = {"GS-7832"})
+    @Test
+    public void testCaseWithAllTypesOfDateFormat() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t23/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "23_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
+        }
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataFile = new File(testDataFiles+"/tests/t23/CollectionData.csv");
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        Assert.assertNotNull(statusId);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        verifyJobDetails(statusId, collectionName, 45, 0);
+
+        File expectedFile = new File(testDataFiles+"/tests/t23/ExpectedData.csv");
+        verifyData(actualCollectionInfo, expectedFile);
+    }
+
+    @TestInfo(testCaseIds = {"GS-8235"})
+    @Test
+    public void loadDataToOnlyFewFieldsOfSubjectArea() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "24_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataFile = new File(testDataFiles+"/tests/t24/CollectionData.csv");
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        metadata.setMappings(new ArrayList<DataLoadMetadata.Mapping>());
+        DataLoadManager.addMapping(metadata, new String[]{"AccountName", "Date", "PageVisits", "FilesDownloaded", "Active"});
+
+        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId), "Status of data load should be completed.");
+
+        File expectedFile = new File(testDataFiles+"/tests/t24/ExpectedData.csv");
+        verifyData(actualCollectionInfo, expectedFile);
+    }
+
+    @TestInfo(testCaseIds = {"GS-8236"})
+    @Test
+    public void headerDoesNotExistsInCustomObject() throws Exception {
+        CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
+        String collectionName = collectionInfo.getCollectionDetails().getCollectionName() + "25_" + date.getTime();
+        collectionInfo.getCollectionDetails().setCollectionName(collectionName);
+        String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        Assert.assertNotNull(collectionId);
+
+        CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
+        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+
+        File dataFile = new File(testDataFiles+"/tests/t25/CollectionData.csv");
+        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        DataLoadManager.addMapping(metadata, new String[]{"AccountID"});
+
+        ResponseObj responseObj = dataLoadManager.dataLoadManageGetResponseObject(mapper.writeValueAsString(metadata), dataFile);
+        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
+
+        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+    }
+
+
+
+    @AfterClass
+    public void tearDown() {
+        if(mongoDBDAO!=null) mongoDBDAO.mongoUtil.closeConnection();
+        dataLoadManager.deleteAllCollections(collectionsToDelete, tenantDetails.getTenantId(), tenantManager);
+    }
+
+    /**
+     * Just in case used method to delete all the collections.
+     */
+    //@Test
+    public void deleteAllCollection() {
+        String collectionName = "GS";
+        List<CollectionInfo.CollectionDetails> colList = new ArrayList<>();
+        for (CollectionInfo collectionInfo : dataLoadManager.getAllCollections()) {
+            if (collectionInfo.getCollectionDetails().getCollectionName().startsWith(collectionName)) {
+                colList.add(collectionInfo.getCollectionDetails());
+            }
+        }
+        dataLoadManager.deleteAllCollections(tenantDetails.getTenantId(), colList, tenantManager);
     }
 
     /**
      * Verifies the Async Job details.
      *
-     * @param jobId - JobId to verify the details.
+     * @param jobId          - JobId to verify the details.
      * @param collectionName - Collection Name
-     * @param successCount - Number of success records.
-     * @param failedCount - Number of Failed records.
+     * @param successCount   - Number of success records.
+     * @param failedCount    - Number of Failed records.
      */
     private void verifyJobDetails(String jobId, String collectionName, int successCount, int failedCount) {
         DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
@@ -441,38 +1149,18 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertEquals(statusInfo.getStatusType(), DataLoadStatusType.COMPLETED);
     }
 
-    /**
-     * Reads the csv file, does date processing, populated default boolean values, trims the text columns to the size specified.
-     *
-     * @param jobFile - Job File
-     * @param collectionInfo - Collection Info i.e. subject are schema.
-     * @return List of key values i.e. table data parsed as json.
-     * @throws IOException
-     */
-    private List<Map<String,String>>  getExpectedData(String jobFile, CollectionInfo collectionInfo) throws IOException {
-        JobInfo expectedJobInfo = mapper.readValue(new File(Application.basedir+jobFile), JobInfo.class);
-        File expectedDataFile = FileProcessor.getDateProcessedFile(expectedJobInfo, calendar.getTime());
-        CSVReader expectedReader = new CSVReader(new FileReader(expectedDataFile));
+    private void verifyData(CollectionInfo actualCollectionInfo, File expFile) throws Exception {
+        List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager.createDynamicTabularReport(actualCollectionInfo)), actualCollectionInfo);
+        List<Map<String, String>> expData = ReportManager.populateDefaultBooleanValue(Comparator.getParsedCsvData(new CSVReader(new FileReader(expFile))), actualCollectionInfo);
+        Log.info("Actual     : " + mapper.writeValueAsString(actualData));
+        Log.info("Expected  : " + mapper.writeValueAsString(expData));
+        Assert.assertEquals(actualData.size(), expData.size());
 
-        List<Map<String, String>> expectedData = Comparator.getParsedCsvData(expectedReader);
-        expectedData = reportManager.populateDefaultBooleanValue(expectedData, collectionInfo);
-        DataLoadManager.trimStringDataColumns(expectedData, collectionInfo);
+        List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
+        Log.info("Diff : " + mapper.writeValueAsString(diffData));
+        Assert.assertEquals(0, diffData.size());
 
-        Log.info("Expected Data : " + mapper.writeValueAsString(expectedData));
-        return expectedData;
     }
 
-    /**
-     * Creates a flat report, runs the report, changes the DBNames with Display Names & dos date processing.
-     * @param collectionInfo - Collection Schema
-     * @return List<Map> - Table data as list of key values.
-     * @throws IOException
-     */
-    private List<Map<String, String>> getFlatCollectionData(CollectionInfo collectionInfo) throws IOException {
-        List<Map<String,String>> actualData  = reportManager.convertReportData(reportManager.runReport(reportManager.createDynamicTabularReport(collectionInfo)));
-        Log.info("ActualData Size : " + actualData.size());
-        actualData = reportManager.getProcessedReportData(actualData, collectionInfo);
-        Log.info("Actual Data : " +mapper.writeValueAsString(actualData));
-        return actualData;
-    }
+
 }

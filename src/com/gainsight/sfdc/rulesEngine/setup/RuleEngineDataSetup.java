@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Log;
@@ -31,7 +32,6 @@ import com.gainsight.sfdc.rulesEngine.pojos.RuleAlertCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleScorecardCriteria;
 import com.gainsight.sfdc.rulesEngine.pojos.RuleSurveyTriggerCriteria;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.bulk.SFDCInfo;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -114,7 +114,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * SurveyQuestion+SurveyAnswer as Key & Id as value.
+     * SurveyQuestion+SurveyAnswer as Key and Id as value.
      * @param surveyCode
      * @return
      */
@@ -165,7 +165,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Loads account's & Customer's
+     * Loads account's and Customer's
      * @param dataETL
      * @throws IOException
      */
@@ -210,7 +210,7 @@ public class RuleEngineDataSetup extends BaseTest {
         writer.write(code);
         writer.close();
         jobInfo = mapper.readValue(resolveNameSpace(outFile),JobInfo.class);
-        dataETL.cleanUp(USAGE_OBJECT, null);
+        dataETL.cleanUp(resolveStrNameSpace(USAGE_OBJECT), null);
         dataETL.execute(jobInfo);
     }
 
@@ -552,7 +552,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Verifies Account's metric score & comments.
+     * Verifies Account's metric score and comments.
      * @param account
      * @param action
      * @return
@@ -597,7 +597,7 @@ public class RuleEngineDataSetup extends BaseTest {
     }
 
     /**
-     * Verifies the account score & scorecard summary/comments.
+     * Verifies the account score and scorecard summary/comments.
      * @param account
      * @param score
      * @param comments

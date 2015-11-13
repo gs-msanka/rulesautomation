@@ -9,20 +9,37 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.gainsight.bigdata.urls.ApiUrls;
+import javax.management.RuntimeErrorException;
+
+import org.apache.http.HttpStatus;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.PropertyReader;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
+
 import org.testng.Assert;
 
+import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.INTERVAL_TIME;
+import static com.gainsight.sfdc.pages.Constants.MAX_WAIT_TIME;
+
+/**
+ * @author Abhilash Thaduka
+ *
+ */
 public class RulesUtil extends NSTestBase {
 
 	// public static SFDCUtil sfdcUtil = new SFDCUtil();
@@ -31,6 +48,8 @@ public class RulesUtil extends NSTestBase {
 	private static HashMap<String, String> ctaTypesMap;
 	private static HashMap<String, String> PickListMap;
 	private static HashMap<String, String> emailTemplateMap;
+	private static HashMap<String,String> playbookMap;
+	private static HashMap<String,String> milestoneMap;
 	public DataETL dataETL;
 	ResponseObj result = null;
 	private final static String CUSTOMER_DELETE_QUERY = "Delete [Select Id From JBCXM__CustomerInfo__c Where JBCXM__Account__r.AccountNumber='CustomRulesAccount'];";
@@ -48,11 +67,11 @@ public class RulesUtil extends NSTestBase {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		Log.info("request:" + ApiUrls.APP_API_EVENTRULE + "/" + ruleId);
-		result = wa.doPost(ApiUrls.APP_API_EVENTRULE +"/"+ ruleId,
+		Log.info("request:" + APP_API_EVENTRULE + "/" + ruleId);
+		result = wa.doPost(APP_API_EVENTRULE +"/"+ ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ApiUrls.APP_API_EVENTRULE +"/"+ ruleId
+				+APP_API_EVENTRULE +"/"+ ruleId
 				+ "\n Request rawBody:{}");
 		ResponseObject responseObj = RulesUtil.convertToObject(result
 				.getContent());
@@ -61,15 +80,15 @@ public class RulesUtil extends NSTestBase {
 		RulesUtil.waitForCompletion(ruleId, wa, header);
 
 		String LRR = sfdc
-				.getRecords("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
-						+ RuleName + "'")[0]
-				.getChild("JBCXM__LastRunResult__c").getValue().toString();
+				.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '"
+						+ RuleName + "'"))[0]
+				.getChild(resolveStrNameSpace("JBCXM__LastRunResult__c")).getValue().toString();
 		Assert.assertEquals("SUCCESS", LRR);
 
-		int rules1 = sfdc.getRecordCount("Select Id, IsDeleted From Account Where ((IsDeleted = false))");
+		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, IsDeleted From Account Where ((IsDeleted = false))"));
 		Log.info(""+rules1);
 		int rules2 = sfdc
-				.getRecordCount("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false");
+				.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 		Log.info(""+rules2);
 		Assert.assertEquals(rules1, rules2);
 	}
@@ -130,13 +149,14 @@ public void setupRule(HashMap<String,String> testData){
 	 * Method to generate the static maps which contains the Ids to be replaced for tokens, in the test data
 	 */
 	public void populateObjMaps() {
-		featuresMap = getMapFromObject("JBCXM__Features__c",
-				"JBCXM__Feature__c", "FT");
-		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "JBCXM__Type__c",
+		featuresMap = getMapFromObject("JBCXM__Features__c","JBCXM__Feature__c","FT");
+		ctaTypesMap = getMapFromObject("JBCXM__CTATypes__c", "Name",
 				"CT");
 		PickListMap = getMapFromObject("JBCXM__PickList__c",
 				"JBCXM__SystemName__c", "PL");
 		emailTemplateMap = getMapFromObject("EmailTemplate", "Name", "EML");
+		playbookMap=getMapFromObject("JBCXM__Playbook__c","Name","PB");
+		milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c","Name","ML","JBCXM__Category__c", "Milestones");
 	}
 
 	/**
@@ -144,12 +164,12 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return - the string where Ids are replaced with values - like system names
 	 */
 	private String getIdResolvedString(String string) {
-		string = replaceSystemNameInRule(
+		string = replaceSystemNameInRule(replaceSystemNameInRule(
 				replaceSystemNameInRule(
 						replaceSystemNameInRule(
-								replaceSystemNameInRule(string,
+								replaceSystemNameInRule(replaceSystemNameInRule(string,
 										emailTemplateMap), featuresMap),
-						ctaTypesMap), PickListMap);
+						ctaTypesMap), PickListMap),playbookMap),milestoneMap);
 		return string;
 	}
 
@@ -188,32 +208,32 @@ public void setupRule(HashMap<String,String> testData){
 						+ RuleName + "'"));
 		for (SObject obj : CTA_created) {
 			if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
-					obj.getChild("JBCXM__Priority__c").getValue().toString())) {
+					obj.getChild(resolveStrNameSpace("JBCXM__Priority__c")).getValue().toString())) {
 				Log.error("Priority did not match!!");
 				check = false;
 			}
 			if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
-					obj.getChild("JBCXM__Stage__c").getValue().toString())) {
+					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c")).getValue().toString())) {
 				Log.error("Status did not match!!");
 				check = false;
 			}
-			// if(!Assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c").getValue().toString()))
-			// { Log.error("Assignee did not match!!"); check=false; }
+			 if(!Assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c").getValue().toString()))
+			 { Log.error("Assignee did not match!!"); check=false; }
 			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
-					obj.getChild("JBCXM__Type__c").getValue().toString())) {
+					obj.getChild(resolveStrNameSpace("JBCXM__Type__c")).getValue().toString())) {
 				Log.error("Type did not match!!");
 				check = false;
 			}
-			if (!Comment.equalsIgnoreCase(obj.getChild("JBCXM__Comments__c")
+			if (!Comment.equalsIgnoreCase(obj.getChild(resolveStrNameSpace("JBCXM__Comments__c"))
 					.getValue().toString())) {
 				System.out.println("comment:"
-						+ obj.getChild("JBCXM__Comments__c").getValue()
+						+ obj.getChild(resolveStrNameSpace("JBCXM__Comments__c")).getValue()
 								.toString());
 				Log.error("Comments did not match!!");
 				check = false;
 			}
 			if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
-					obj.getChild("JBCXM__Reason__c").getValue().toString())) {
+					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c")).getValue().toString())) {
 				Log.error("Reason did not match!!");
 				check = false;
 			}
@@ -223,7 +243,7 @@ public void setupRule(HashMap<String,String> testData){
 								+ PlaybookName + "'"))[0].getChild("Id")
 						.getValue().toString();
 				if (!Playbook.equalsIgnoreCase(obj
-						.getChild("JBCXM__Playbook__c").getValue().toString())) {
+						.getChild(resolveStrNameSpace("JBCXM__Playbook__c")).getValue().toString())) {
 					Log.error("Playbooks do not match!!");
 					check = false;
 				}
@@ -256,8 +276,8 @@ public void setupRule(HashMap<String,String> testData){
 		long executionTime = 0;
 		while (flag && executionTime < maxWaitingTime) {
 			Thread.sleep(10000);
-			ResponseObj result = webAction.doGet(PropertyReader.nsAppUrl
-					+ "/api/async/process/?ruleId=" + ruleId + "",
+			ResponseObj result = webAction.doGet(APP_API_ASYNC_STATUS
+					+ "?ruleId=" + ruleId + "",
 					header.getAllHeaders());
 			ResponseObject res = RulesUtil.convertToObject(result.getContent());
 			List<Object> data = (List<Object>) res.getData();
@@ -318,7 +338,7 @@ public void setupRule(HashMap<String,String> testData){
         }
         tempQuery += " ORDER BY LastModifiedDate DESC NULLS LAST ";
         Log.info("Query to get Rule Id " +ruleName);
-        SObject[] sObjects = sfdc.getRecords(tempQuery);
+        SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(tempQuery));
         if(sObjects.length >0) {
             return sObjects[0].getId();
         } else {
@@ -379,17 +399,15 @@ public void setupRule(HashMap<String,String> testData){
         Pattern pattern = Pattern.compile("\"\\w{18}\"");
         return replaceStringWithTokens(text, pattern, replacements);
     }
-
+    
 	public Boolean createAndRunRule(HashMap<String,String> testData) throws Exception {
-		populateObjMaps();
 		setupRule(testData);
 		String RuleName = testData.get("Name");
 		String ruleId = getRuleId(RuleName);
-		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+		result = wa.doPost(API_RULE_RUN+"/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ API_RULE_RUN + "/" + ruleId
 				+ "\n Request rawBody:{}");
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -428,43 +446,43 @@ public void setupRule(HashMap<String,String> testData){
 				String fieldType = (String) pair.getKey();
 				if ("DATE".equalsIgnoreCase(fieldType)) {
 					metadataClient.createDateField(object, fieldsMap.get(fieldType), false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("DATETIME".equalsIgnoreCase(fieldType)){
 					metadataClient.createDateField(object, fieldsMap.get(fieldType), true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("BOOLEAN".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), true, false, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("PHONE".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), false, true, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("URL".equalsIgnoreCase(fieldType)){
 					metadataClient.createFields(object, fieldsMap.get(fieldType), false, false, true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("NUMBER".equalsIgnoreCase(fieldType)){
 					metadataClient.createNumberField(object, fieldsMap.get(fieldType), false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("PERCENT".equalsIgnoreCase(fieldType)){
 					metadataClient.createNumberField(object, fieldsMap.get(fieldType), true);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("EMAIL".equalsIgnoreCase(fieldType)){
 					metadataClient.createEmailField(object, fieldsMap.get(fieldType));
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("TEXT".equalsIgnoreCase(fieldType)){
 					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, false, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else if("TEXTAREA".equalsIgnoreCase(fieldType)){
 					metadataClient.createTextFields(object, fieldsMap.get(fieldType), false, false, true, true, false);
-					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo);
+					metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace(object), metaUtil.convertFieldNameToAPIName(fieldsMap.get(fieldType)), sfinfo, true);
 				}
 				else{
 
@@ -480,11 +498,11 @@ public void setupRule(HashMap<String,String> testData){
 
 	public void saveCustomObjectInRulesConfig(String data) throws Exception{
 		Log.info("\n Request URL"
-				+ ApiUrls.APP_API_RULES_LOADABLE_OBJECT
+				+ APP_API_RULES_LOADABLE_OBJECT
 				+ "\n Request rawBody:" + data);
 
 		result = wa.doPost(
-				ApiUrls.APP_API_RULES_LOADABLE_OBJECT,
+				APP_API_RULES_LOADABLE_OBJECT,
 				header.getAllHeaders(), data);
 
 		ResponseObject responseObj = RulesUtil.convertToObject(result
@@ -493,4 +511,187 @@ public void setupRule(HashMap<String,String> testData){
 		Assert.assertNotNull(responseObj.getRequestId());
 
 	}
+
+	/**
+	 * This method will run the rule based on rule name.
+	 *
+	 * @param ruleName, name of the rule.
+	 * @return Returns true if rule ran successfully.
+	 */
+	public Boolean runRule(String ruleName) throws Exception {
+		String ruleId = getRuleId(ruleName);
+		result = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
+		ResponseObject responseObj = RulesUtil.convertToObject(result.getContent());
+		if (!Boolean.valueOf(responseObj.getResult()) || responseObj.getRequestId() == null) {
+			Log.error("Rule Request itself failed!");
+			return false;
+		} else {
+			RulesUtil.waitForCompletion(ruleId, wa, header);
+			String LRR = null;
+			SObject[] jsondata = sfdc
+					.getRecords(resolveStrNameSpace("select JBCXM__LastRunResult__c from JBCXM__AutomatedAlertRules__c where Name like '" + ruleName + "' order by createdDate desc limit 1"));
+			if (jsondata.length > 0) {
+				LRR = jsondata[0].getField(resolveStrNameSpace(("JBCXM__LastRunResult__c"))).toString();
+			}
+			if (!LRR.equalsIgnoreCase("Success")) {
+				Log.error("Rule Processing failed");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Verifies whether a CTA is created successfully
+	 * @param priorityValue - Expected Priority value
+	 * @param statusValue   - Expected Status value of cTA
+	 * @param assignee-     Account name from which contains the Assignee value for the CTA in one of the fields.
+	 * @param typeValue-    Expected CTA Type value
+	 * @param reasonValue-  Expected Reason value for cTA
+	 * @param comment-      Expected Comment
+	 * @param ruleName-     Rule Name from AutomatedAlertRules__c object
+	 * @param playbookName- Expected Playbook id - incase CTA has playbook associated
+	 * @return - true if the CTA is successfully created./ false if any of the CTA criteria do not match with the required values.
+	 */
+	public boolean isCTACreateSuccessfully(String priorityValue,
+										   String statusValue, String assignee, String typeValue,
+										   String reasonValue, String comment, String ruleName,
+										   String playbookName) {
+
+		boolean check = true;
+		SObject[] ctaRecords = sfdc
+				.getRecords(resolveStrNameSpace("Select JBCXM__Priority__c,JBCXM__Stage__c,JBCXM__Assignee__c,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Playbook__c from JBCXM__CTA__c where Name = '"
+						+ ruleName + "'"));
+		for (SObject obj : ctaRecords) {
+			if (!PickListMap.get("PL." + priorityValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Priority__c"))
+							.getValue().toString())) {
+				Log.error("Priority did not match!!");
+				check = false;
+			}
+			if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
+							.getValue().toString())) {
+				Log.error("Status did not match!!");
+				check = false;
+			}
+			if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
+					.getValue().toString())) {
+				Log.error("Assignee did not match!!");
+				check = false;
+			}
+			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
+							.getValue().toString())) {
+				Log.error("Type did not match!!");
+				check = false;
+			}
+			if (!comment.equalsIgnoreCase(obj
+					.getChild(resolveStrNameSpace("JBCXM__Comments__c"))
+					.getValue().toString())) {
+				Log.debug("comment:"
+						+ obj.getChild(
+						resolveStrNameSpace("JBCXM__Comments__c"))
+						.getValue().toString());
+				Log.error("Comments did not match!!");
+				check = false;
+			}
+			if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
+							.getValue().toString())) {
+				Log.error("Reason did not match!!");
+				check = false;
+			}
+			if (playbookName != null) {
+				String playBook = sfdc
+						.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__Playbook__c where Name like '"
+								+ playbookName + "'"))[0].getChild("Id")
+						.getValue().toString();
+				if (!playBook.equalsIgnoreCase(obj
+						.getChild(resolveStrNameSpace("JBCXM__Playbook__c"))
+						.getValue().toString())) {
+					Log.error("Playbooks do not match!!");
+					check = false;
+				}
+			}
+		}
+		return check;
+	}
+	
+
+	/**
+	 * @param ruleName ruleName to get status
+	 * @return statusId
+	 * @throws Exception
+	 */
+	public String runRuleAndGetStatusId(String ruleName) throws Exception {
+		String statusId = null;
+		String ruleId = getRuleId(ruleName);
+		ResponseObj responseObj = wa.doPost(API_RULE_RUN + "/" + ruleId, header.getAllHeaders(), "{}");
+		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+			JsonNode jsonNode = mapper.readTree(responseObj.getContent());
+			statusId = jsonNode.get("data").findValue("statusId").toString().replace("\"", "");
+			Log.info("statusId is " + statusId);
+		}
+		return statusId;		
+	}
+	/**
+	 * @param ruleName ruleName to Execute
+	 * @return RuleExecutionHistory object
+	 * @throws Exception
+	 */
+	public RuleExecutionHistory runRuleAndGetExecutionHistory(String ruleName) throws Exception {
+		String statusId = runRuleAndGetStatusId(ruleName);
+		if (statusId == null) {
+			Log.error("Rule Trigger failed.");
+			throw new RuntimeException("Rule Trigger failed.");
+		}
+		waitForRuleProcessingToComplete(statusId);
+		return getExecutionHistory(statusId);
+	}
+	
+	/**
+	 * @param statusId statusID for rule to complete
+	 */
+	public void waitForRuleProcessingToComplete(final String statusId){
+		Log.info("Waiting for rule with statusID "+statusId + " to Complete");
+		CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isRuleProcessingCompleted(statusId);
+					}
+				});
+	}
+	
+	/**
+	 * @param statusId statusID to get executionHistory
+	 * @return RuleExecutionHistory object
+	 */
+	public RuleExecutionHistory getExecutionHistory(String statusId) {
+		RuleExecutionHistory ruleExecutionHistory=null;
+		try {
+			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + "/" + statusId + "", header.getAllHeaders());
+			if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+				NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+				if (nsResponseObj.isResult()) {
+					ruleExecutionHistory = mapper.convertValue(nsResponseObj.getData(), RuleExecutionHistory.class);
+				}
+			}
+		} catch (Exception e) {
+			Log.error("Rule processing is not completed", e);
+			throw new RuntimeException("Rule processing is not completed" + e.getLocalizedMessage());
+		}
+		return ruleExecutionHistory;
+	}
+	
+	public boolean isRuleProcessingCompleted(String statusId){
+		boolean result = false;
+		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") || 
+				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {		
+				result = true;
+		} 
+		return result;
+	}
 }
+

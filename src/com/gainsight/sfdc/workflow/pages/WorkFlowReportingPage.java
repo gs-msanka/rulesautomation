@@ -44,7 +44,7 @@ public class WorkFlowReportingPage extends BasePage {
 
     public WorkFlowReportingPage clickOnLeaderBoard() {
         item.click(LEADER_BOARD_TAB);
-        waitTillNoLoadingIcon();
+        waitForNoLoadingIconDisplayed();
         return this;
     }
 
@@ -135,12 +135,15 @@ public class WorkFlowReportingPage extends BasePage {
         try {
             if(type.equalsIgnoreCase("Risk")) {
                 String tmp = field.getText(LEADER_TABLE_CLOSED_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Risk')]");
+                Log.info(tmp);
                 return Integer.valueOf(tmp.trim());
             } else if (type.equalsIgnoreCase("Event")) {
                 String tmp = field.getText(LEADER_TABLE_CLOSED_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Event')]");
+                Log.info(tmp);
                 return Integer.valueOf(tmp.trim());
             } else if (type.equalsIgnoreCase("Opportunity")){
                 String tmp = field.getText(LEADER_TABLE_CLOSED_COLUMN+"/div[@class='bGraph-leaderboard' and @data-username='"+assignee+"']/div[contains(@title, 'Opportunity')]");
+                Log.info(tmp);
                 return Integer.valueOf(tmp.trim());
             }
         } catch (Exception e)  {
@@ -189,6 +192,7 @@ public class WorkFlowReportingPage extends BasePage {
     	int count = 0;
         try {
             String temp = field.getText(LEADER_TABLE_TASK_COLUMN+"/div[@class='cta-tc' and @data-username='"+assignee+"']");
+            Log.info(temp);
             if(temp.split("\\(").length>1) {
                 if(isAll) {
                     count = Integer.valueOf(temp.split("\\(")[0].trim());
@@ -196,7 +200,7 @@ public class WorkFlowReportingPage extends BasePage {
                     if(isOpenTask)
                         count = Integer.valueOf(temp.split("\\(")[1].split("/")[0].trim());
                     else
-                        count = Integer.valueOf(temp.split("\\(")[1].split("/")[1].trim().substring(0, 1));
+                    	count=Integer.valueOf(temp.substring(temp.lastIndexOf("/")+1, temp.lastIndexOf(")")).trim());
                 }
             } else {
                 count = Integer.valueOf(temp.trim());

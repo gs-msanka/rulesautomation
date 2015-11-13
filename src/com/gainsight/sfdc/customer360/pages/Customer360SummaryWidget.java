@@ -57,11 +57,11 @@ public class Customer360SummaryWidget extends Customer360Page {
 	item.getText(value);
 			
 		if(isElementPresentAndDisplay(By.xpath("//span[contains(@class,'gs-label-name') and contains(text(),'"+lName+"')]"))) {
-			if(label.equals(lName) && value.equals(lValue)){
+			if(label.equalsIgnoreCase(lName) && value.equalsIgnoreCase(lValue)){
 				Log.info("Widget and Value is correct");
-			}else if(label.equals(lName) || value.equals(lValue)) {
+			}else if(label.equalsIgnoreCase(lName) || value.equalsIgnoreCase(lValue)) {
 				Log.info("Widget is Present but value is not correct");
-			}else if(label.equals(lName)&& value.equals(lValue)){
+			}else if(label.equalsIgnoreCase(lName)&& value.equalsIgnoreCase(lValue)){
 			   Log.info("stage is correct and Value is not correct");
 		   }
 		 }else {

@@ -1,13 +1,10 @@
 package com.gainsight.sfdc.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.util.*;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.gainsight.testdriver.Log;
 import org.apache.commons.io.FilenameUtils;
 
@@ -92,5 +89,32 @@ public class FileUtil {
         }else {
             return str;
         }
+    }
+
+    public static File writeToCSV(List<HashMap<String, String>> data,  String filePath) throws IOException {
+        if(data ==null || data.size() <1) {
+            throw new IllegalStateException("You need to have atleast one record.");
+        }
+        Log.info("Writing to csv file.");
+        File outputFile = new File(filePath);
+        outputFile.getParentFile().mkdirs();
+        CSVWriter writer = new CSVWriter(new FileWriter(outputFile), ',', '"', '\\', "\n");
+        int headerCount = data.get(0).keySet().size();
+        String[] headers = new String[headerCount];
+        List<String[]> values =new ArrayList<>();
+        values.add(data.get(0).keySet().toArray(headers));
+        int i = 0;
+        for(Map<String, String> map : data) {
+            String[] temp = new String[headerCount];
+            for(String header : headers) {
+                temp[i]= map.get(header);
+                i++;
+            }
+            i = 0;
+            values.add(temp);
+        }
+        writer.writeAll(values);
+        writer.flush();
+        return outputFile;
     }
 }

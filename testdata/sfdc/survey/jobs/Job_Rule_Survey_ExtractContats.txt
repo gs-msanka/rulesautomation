@@ -1,0 +1,20 @@
+{
+    "jobName": "Job_Contacts",
+    "jobType" : "AccountUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+    "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "contact",
+        "fields": [
+            "Name",
+            "Email",
+	     "Title",
+	     "ID"
+
+        ],
+        "output": "/testdata/sfdc/survey/SurveyContactsWithIDS.csv"
+	}
+
+}

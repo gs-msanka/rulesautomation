@@ -1,0 +1,25 @@
+{
+  "jobName": "GS-4800-4",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/tests/t18/ExpectedData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t18/ExpectedData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "fieldName" : "CreatedDateTime"
+      }
+    ]
+  }
+}

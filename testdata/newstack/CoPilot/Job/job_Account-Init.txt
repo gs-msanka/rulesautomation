@@ -1,0 +1,14 @@
+{
+    "jobName": "Load Initial Datas to Account Object",
+    "namespacePrefix": "JBCXM",
+    "useNameSpace": false,
+    "load": {
+        "target": "sfdc",
+        "sObject": "Account",
+        "operation": "upsert",
+        "contentType": "CSV",
+        "cleanUp": true,
+		"externalIDField": "p_c_ExternalID__c",
+		"file": "/testdata/newstack/CoPilot/Data/Input/Account-Init.csv"
+    }
+}

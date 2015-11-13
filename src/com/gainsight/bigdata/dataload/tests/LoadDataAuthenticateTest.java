@@ -4,6 +4,7 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.http.ResponseObj;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Created by gainsight on 24/05/15.
+ * Created by Giribabu on 24/05/15.
  */
 public class LoadDataAuthenticateTest extends NSTestBase {
     private TenantDetails tenantDetails;
@@ -27,10 +28,10 @@ public class LoadDataAuthenticateTest extends NSTestBase {
     public void setup() {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
     }
 
-    @TestInfo(testCaseIds = {"GS-3626"})
+    @TestInfo(testCaseIds = {"GS-3626", "GS-3631"})
     @Test
     public void mdaAuthorizeCheckingWithValidDetails() {
         NsResponseObj nsResponseObj = dataLoadManager.mdaDataLoadAuthenticate(sfinfo.getOrg(), accessKey, sfinfo.getUserName());
@@ -46,6 +47,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
     @Test
     public void mdaAuthorizeCheckingWithInvalidAccessKey() throws IOException {
         String key = accessKey;
+        accessKey = null;
         accessKey = getDataLoadAccessKey(); //re-generating another accessKey to verify that old one is discarded.
         dataLoadManager.headers.removeHeader("accessKey");
         dataLoadManager.headers.addHeader("accessKey", accessKey);  //As the access token is reset here, it should be updated at global level else all other test cases with fail.
@@ -54,7 +56,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3628"})
@@ -65,7 +67,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3629"})
@@ -76,7 +78,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult());
         Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.UN_AUTHORIZED.getGSCode());
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Error occurred while authenticating.");
+        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Invalid authentication credentials. Authentication failed.");
     }
 
     @TestInfo(testCaseIds = {"GS-3630"})

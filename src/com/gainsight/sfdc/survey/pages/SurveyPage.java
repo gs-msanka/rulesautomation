@@ -67,9 +67,9 @@ public class SurveyPage extends SurveyBasePage {
         return new SurveyDistributePage(surveyProp.getSurveyName());
     }
 	
-	public SurveyAnalyzePage clickOnAnalyze(SurveyProperties sData) {
+	public SurveyAnalyzePage clickOnAnalyze() {
     	item.click(ANALYZE_SECTION_LINK);
-        return new SurveyAnalyzePage(sData);
+        return new SurveyAnalyzePage();
     }
 
     public SurveyBasePage goToSurveyBasePage() {

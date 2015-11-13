@@ -1,20 +1,21 @@
 package com.gainsight.bigdata.dataload.apiimpl;
 
-import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.util.NSUtil;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
-import com.gainsight.pageobject.util.Timer;
-import com.gainsight.sfdc.util.DateUtil;
-import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.http.WebAction;
+import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
@@ -22,34 +23,33 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import static com.gainsight.bigdata.urls.AdminURLs.*;
 import static com.gainsight.bigdata.urls.ApiUrls.*;
+import static com.gainsight.sfdc.pages.Constants.*;
 
 /**
  * Created by Giribabu on 13/05/15.
  */
-public class DataLoadManager extends NSTestBase {
+public class DataLoadManager  {
 
     public Header headers = new Header();
+    ObjectMapper mapper = new ObjectMapper();
+    WebAction wa = new WebAction();
 
-    public DataLoadManager() {
-        accessKey = getDataLoadAccessKey();
+
+    public DataLoadManager(SFDCInfo sfdcInfo, String accessKey) {
         headers.addHeader("Content-Type", "application/json");
         headers.addHeader("accessKey", accessKey);
-        headers.addHeader("appOrgId", sfinfo.getOrg());
-        headers.addHeader("loginName", sfinfo.getUserName());
+        headers.addHeader("appOrgId", sfdcInfo.getOrg());
+        headers.addHeader("loginName", sfdcInfo.getUserName());
     }
-
 
     /**
      * Performs MDA authentication used via data load tool.
@@ -57,7 +57,7 @@ public class DataLoadManager extends NSTestBase {
      * @param sfOrgId - Salesforce Organisation ID - 15 (or) 18 digits.
      * @param accessKey - AccessKey to load data.
      * @param loginName - Salesforce User Login Name.
-     * @return NSResponseObj - if authentication is successful with the given params & NULL on failure.
+     * @return NSResponseObj - if authentication is successful with the given params and NULL on failure.
      */
     public NsResponseObj mdaDataLoadAuthenticate(String sfOrgId, String accessKey, String loginName) {
         NsResponseObj nsResponseObj = null;
@@ -89,7 +89,8 @@ public class DataLoadManager extends NSTestBase {
         head.addHeader("accessKey", accessKey);
         head.addHeader("loginName", loginName);
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_AUTHENTICATE, head.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_AUTHENTICATE, head.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             return responseObj;
         } catch (Exception e) {
             Log.error("Failed to perform authentication.", e);
@@ -110,16 +111,39 @@ public class DataLoadManager extends NSTestBase {
         }
         NsResponseObj nsResponseObj = null;
         try {
-            ResponseObj responseObj = wa.doPost(ADMIN_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
+            ResponseObj responseObj = createSubjectAreaGetResponseObj(collectionInfo);
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             }
         } catch (Exception e) {
-            Log.error("Failed to created subject area", e);
-            throw new RuntimeException("Failed to created subject area" + e.getLocalizedMessage());
+            Log.error("Failed to create subject area ", e);
+            throw new RuntimeException("Failed to create subject area " + e.getLocalizedMessage());
         }
         Log.info("Returning after subject create.");
         return nsResponseObj;
+    }
+
+    public ResponseObj createSubjectAreaGetResponseObj(CollectionInfo collectionInfo) throws Exception {
+        ResponseObj responseObj = wa.doPost(DATA_LOAD_COLLECTIONS, headers.getAllHeaders(), mapper.writeValueAsString(collectionInfo));
+        Log.info("Response Obj : " +responseObj.toString());
+        return responseObj;
+    }
+
+    /**
+     * Creates a collection and returns the collection Id.
+     *
+     * @param collectionInfo - Collection to be created.
+     * @return collection id on success, null on failure.
+     */
+    public String createSubjectAreaAndGetId(CollectionInfo collectionInfo ){
+        String collectionId = null;
+        NsResponseObj nsResponseObj = createSubjectArea(collectionInfo);
+        if(nsResponseObj.isResult()) {
+            CollectionInfo.CollectionDetails colDetails = getCollectionDetail(nsResponseObj.getData());
+            collectionId = colDetails.getCollectionId();
+        }
+        Log.info("Collection Id : " +collectionId);
+        return collectionId;
     }
 
     /**
@@ -135,7 +159,8 @@ public class DataLoadManager extends NSTestBase {
         }
         DataLoadStatusInfo statusInfo = null;
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_STATUS + jobId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_STATUS + jobId, headers.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
@@ -155,26 +180,63 @@ public class DataLoadManager extends NSTestBase {
      *
      * @param jobId - JobId/StatusId to wait for its completion i.e status != IN_PROGRESS.
      */
-    public void waitForDataLoadJobComplete(String jobId) {
-        Log.info("Wait for the "+jobId + " to complete...");
-        for (int i = 0; i < MAX_NO_OF_REQUESTS; i++) {
-            DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
-            if (statusInfo != null) {
-                if (statusInfo.getStatusType().equals(DataLoadStatusType.IN_PROGRESS)) {
-                    Log.info("Data Load Under Progress...");
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    Timer.sleep(10); //Sleep for 10 seconds and try again.
-                } else {
-                    Log.info("Data Load Status :" + statusInfo.getStatusType());
-                    Log.info("FailureCount :" + statusInfo.getFailureCount() + " ::: " + "SuccessCount : " + statusInfo.getSuccessCount());
-                    break;
-                }
-            } else {
-                Log.error("Wait for data load failed for Job Id : " + jobId);
-                throw new RuntimeException("Wait for data load for Job Id - " + jobId + " failed.");
-            }
+    public boolean waitForDataLoadJobComplete(final String jobId) {
+        if(jobId == null || jobId.isEmpty()) {
+            throw new IllegalArgumentException("Job Id should not be null");
         }
+        Log.info("Wait for the "+jobId + " to complete...");
+        boolean result = CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+            @Override
+            public Boolean apply() {
+                return isdataLoadJobDone(jobId);
+            }
+        });
+        return result;
     }
+
+    /**
+     * Returns true id job is completed, failed, partial success else false.
+     * @param jobId - Job Id to check the status.
+     * @return
+     */
+    public boolean isdataLoadJobDone(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
+        }
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.FAILED)
+                                    || statusInfo.getStatusType().equals(DataLoadStatusType.PARTIAL_SUCCESS)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
+        }
+        if(!result) {
+            Log.info("Data Load Job status is not completed : " +jobId);
+            Log.info(("Status of Job : " +statusInfo.getStatusType()));
+        }
+
+        return result;
+    }
+
+    public boolean isdataLoadJobCompleted(String jobId) {
+        boolean result = false;
+        DataLoadStatusInfo statusInfo = getDataLoadJobStatus(jobId);
+        if(statusInfo == null) {
+            throw new RuntimeException("Failed to get Data Load Job Status : " +jobId);
+        }
+        if(statusInfo.getStatusType().equals(DataLoadStatusType.COMPLETED)) {
+            result = true;
+            Log.info("Data Load Job : " +jobId + " is complete.");
+        }
+        if(!result) {
+            Log.info("Data Load Job status is not Success : " +jobId);
+            Log.info("Status of Job : " +statusInfo.getStatusType());
+            Log.info("Error Message : " +statusInfo.getMessage());
+        }
+        return result;
+    }
+
 
     /**
      * Load the CSV file by using the metadata information provided.
@@ -233,25 +295,11 @@ public class DataLoadManager extends NSTestBase {
      * @param file - File to be loaded to MDA.
      * @return - Status/JobID after the data load.
      */
+
     public String dataLoadManage(String metadata, File file) {
-        Log.info("Started Loading Data to MDA...");
-        if(metadata==null || file==null) {
-            throw new RuntimeException("Metadata & file are not null");
-        }
-
-        headers.removeHeader("Content-Type");
         String jobId = null;
-
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        StringBody value = new StringBody(metadata, ContentType.APPLICATION_JSON);
-        builder.addPart("metadata", value);
-
-        FileBody body = new FileBody(file, ContentType.MULTIPART_FORM_DATA);
-        builder.addPart("file", body);
-        HttpEntity reqEntity = builder.build();
-        Log.info(ADMIN_DATA_LOAD_IMPORT);
         try {
-            ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            ResponseObj responseObj = dataLoadManageGetResponseObject(metadata, file);
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
@@ -265,15 +313,37 @@ public class DataLoadManager extends NSTestBase {
         } catch (Exception e) {
             Log.error("Failed to load data", e);
             throw new RuntimeException("Failed to load data, "+e.getLocalizedMessage());
-        } finally {
-            headers.addHeader("Content-Type","application/json");
         }
-        Log.info("Data Load Successful, returning job Id" +jobId);
+        Log.info("Data Load Successful, returning job Id " +jobId);
         return jobId;
     }
 
+    public ResponseObj dataLoadManageGetResponseObject(String metadata, File file) throws Exception {
+        Log.info("Started Loading Data to MDA...");
+        if(metadata==null || file==null) {
+            throw new RuntimeException("Metadata & file are not null");
+        }
+
+        headers.removeHeader("Content-Type");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        StringBody value = new StringBody(metadata, ContentType.APPLICATION_JSON);
+        builder.addPart("metadata", value);
+
+        FileBody body = new FileBody(file, ContentType.MULTIPART_FORM_DATA);
+        builder.addPart("file", body);
+        HttpEntity reqEntity = builder.build();
+        try {
+            ResponseObj responseObj = wa.doPost(DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            Log.info("Response Obj : " + responseObj.toString());
+            return responseObj;
+        }finally {
+            headers.addHeader("Content-Type","application/json");
+        }
+    }
+
+
     /**
-     * Exports all the failed records as string with new line as line separator & with headers.
+     * Exports all the failed records as string with new line as line separator and with headers.
      *
      * @param statusId - The StatusId(JobId) to retrieve the failed records
      * @return StringContent returned by server.
@@ -281,7 +351,8 @@ public class DataLoadManager extends NSTestBase {
     public String exportFailedRecords(String statusId) {
         String result= null;
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + statusId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_EXPORT_FAILURES + statusId, headers.getAllHeaders());
+            Log.info("Response Obj : " + responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                   result = responseObj.getContent();
             }
@@ -331,7 +402,7 @@ public class DataLoadManager extends NSTestBase {
         Log.info("Getting All the Collections...");
         List<CollectionInfo> collectionInfoList = new ArrayList<>();
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_GET_COLLECTIONS_ALL, header.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_GET_COLLECTIONS_ALL, headers.getAllHeaders());
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
 
             HashMap<String, List<CollectionInfo>> collectionInfoMap = mapper.convertValue(nsResponseObj.getData(), new TypeReference<HashMap<String, ArrayList<CollectionInfo>>>() {});
@@ -354,7 +425,7 @@ public class DataLoadManager extends NSTestBase {
      * @return - Subject/Collection schema.
      */
     public CollectionInfo getCollection(String subjectAreaName) {
-        Log.info("Getting Single Collection...");
+        Log.info("Getting Single Collection..." +subjectAreaName);
         if(subjectAreaName ==null && subjectAreaName.equals("")) {
             throw new RuntimeException("Subject Area is Required.");
         }
@@ -378,6 +449,7 @@ public class DataLoadManager extends NSTestBase {
         Log.info("Get Collection Schema...");
         try {
             ResponseObj responseObj = wa.doGet(APP_API_GET_COLLECTION+collectionId, headers.getAllHeaders());
+            Log.info("Response Obj : " +responseObj.toString());
             if(responseObj.getStatusCode()==HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
@@ -387,7 +459,7 @@ public class DataLoadManager extends NSTestBase {
             }
         } catch (Exception e) {
             Log.error("Failed to get collection schema..."+e.getLocalizedMessage());
-            throw new RuntimeException("Failed to get collection schema..."+e.getLocalizedMessage());
+            throw new RuntimeException("Failed to get collection schema...", e);
         }
         return null;
     }
@@ -396,18 +468,21 @@ public class DataLoadManager extends NSTestBase {
      * Fetches the failed records for the job id.
      *
      * @param jobId - Job Id to get failed records.
-     * @return - List<String></> data rows.
+     * @return - List of String - data rows.
      */
-    public List<String> getFailedRecords(String jobId) {
+    public List<String[]> getFailedRecords(String jobId) {
         Log.info("Fetching Failed records...");
-        List<String> dataList = null;
+        List<String[]> dataList = new ArrayList<>();
         if(jobId == null) {
             throw new RuntimeException("Job Id is Mandatory");
         }
         try {
-            ResponseObj responseObj = wa.doGet(ADMIN_DATA_LOAD_EXPORT_FAILURES + jobId, headers.getAllHeaders());
+            ResponseObj responseObj = wa.doGet(DATA_LOAD_EXPORT_FAILURES + jobId, headers.getAllHeaders());
             if(responseObj.getContent()!=null || responseObj.getContent()!="") {
-                dataList = Arrays.asList(responseObj.getContent().split("\n"));
+                for(String rowData : responseObj.getContent().split("\n")) {
+                    String[] row = rowData.split(",");  //We are splitting by "," this may result in inappropriate values if there's "," in the data(Please use with caution).
+                    dataList.add(row);
+                }
             }
         } catch (Exception e) {
             Log.error("Failed to fetch records " ,e);
@@ -448,14 +523,15 @@ public class DataLoadManager extends NSTestBase {
         String jobId = null;
         try {
             headers.removeHeader("Content-Type");
-            System.out.println(mapper.writeValueAsString(metadata));
+            Log.info(mapper.writeValueAsString(metadata));
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             StringBody value = new StringBody(mapper.writeValueAsString(metadata), ContentType.APPLICATION_JSON);
             builder.addPart("metadata", value);
 
             HttpEntity reqEntity = builder.build();
 
-            ResponseObj responseObj = wa.doPost(ADMIN_DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            ResponseObj responseObj = wa.doPost(DATA_LOAD_IMPORT, headers.getAllHeaders(), reqEntity);
+            Log.info("Response Obj : " +responseObj.toString());
             if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if (nsResponseObj.isResult()) {
@@ -473,12 +549,12 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Verifies the Collection Columns, Column Data Type & checks DB Name is not null in actual collection.
+     * Verifies the Collection Columns, Column Data Type and checks DB Name is not null in actual collection.
      *
      * @param expected - Expected Collection Info.
      * @param actual - Actual Collection Info.
      */
-    public boolean verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
+    public static boolean verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
         if(!expected.getCollectionDetails().getCollectionName().equals(actual.getCollectionDetails().getCollectionName())) {
             throw new RuntimeException("Collection Name doesn't match, Expected Collection Name : " +
                     expected.getCollectionDetails().getCollectionName()+" Found Collection Name : "+
@@ -527,7 +603,7 @@ public class DataLoadManager extends NSTestBase {
     }
 
     /**
-     * Trims the string fields to 250 characters & appends "...".
+     * Trims the string fields to 250 characters and appends "...".
      * @param dataList - Data List to trim.
      * @param collectionInfo
      */
@@ -542,7 +618,7 @@ public class DataLoadManager extends NSTestBase {
                 columnsToTrim.put(column.getDisplayName(), column.getMaxLength());
             }
         }
-        Log.info("Total String Columns Found : " +columnsToTrim.size());
+        Log.info("Total String Columns Found : " + columnsToTrim.size());
         if(columnsToTrim.size() == 0) {
             Log.info("No String Fields Found to trim.");
             return;
@@ -557,6 +633,108 @@ public class DataLoadManager extends NSTestBase {
         }
     }
 
+    /**
+     * Clears all the data in the collection and deletes the collection.
+     * @param collectionsIdsToDelete - Collection Id to delete.
+     * @param tenantId - Tenant Id
+     * @param tenantManager
+     */
+    public void deleteAllCollections(List<String> collectionsIdsToDelete, String tenantId, TenantManager tenantManager) {
+        Log.info("Total no of collection to delete : " + collectionsIdsToDelete.size());
+        if(collectionsIdsToDelete == null || collectionsIdsToDelete.size() ==0) {
+            Log.info("No Collections To Delete");
+            return;
+        }
+        Map<String, CollectionInfo.CollectionDetails> collectionInfoMap = new HashMap<>();
+        for(CollectionInfo collectionInfo : getAllCollections() ) {
+            collectionInfoMap.put(collectionInfo.getCollectionDetails().getCollectionId(), collectionInfo.getCollectionDetails());
+        }
+        for(String colId : collectionsIdsToDelete) {
+            if(collectionInfoMap.containsKey(colId)) {
+                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
+                waitForDataLoadJobComplete(jobId);
+                if(tenantManager.deleteSubjectArea(tenantId, colId)) {
+                    Log.info("Collection Deleted Successfully " +colId);
+                } else {
+                    Log.error("Failed to delete collection id : "+colId);
+                }
+            } else {
+                Log.error("Collection Id Doesn't Exists to delete : " +colId);
+            }
+        }
+        Log.info("Deleted all collection data & collections");
+    }
 
+
+    /**
+     * Clears all the data in the collection and deletes the collection.
+     * @param tenantId - Tenant Id
+     * @param collectionDetailList - CollectionDetails.
+     * @param tenantManager
+     */
+    public void deleteAllCollections(String tenantId, List<CollectionInfo.CollectionDetails> collectionDetailList, TenantManager tenantManager) {
+        Log.info("Total no of collection to delete : " + collectionDetailList.size());
+        if(tenantId == null || collectionDetailList == null) {
+            throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
+        }
+        for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
+                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
+                if(waitForDataLoadJobComplete(jobId)) {
+                    tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
+                } else {
+                    throw new RuntimeException("Data deleting is not completed. i.e. data load job is still running then the max wait time. ");
+                }
+            }
+        Log.info("Deleted all collection data & collections");
+    }
+
+    /**
+     * Returns the metadata that to be used for loading the data via data load api.
+     * @param collectionInfo - CollectionInfo Pojo class
+     * @return metadata to be used while loading data.
+     */
+    public DataLoadMetadata getDefaultDataLoadMetaData(CollectionInfo collectionInfo) {
+        DataLoadMetadata metadata = new DataLoadMetadata();
+        metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
+        metadata.setDataLoadOperation(DataLoadOperationType.INSERT.name());
+
+
+        List<DataLoadMetadata.Mapping> mappings = new ArrayList<>();
+        DataLoadMetadata.Mapping mapping = null;
+        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
+            mapping = new DataLoadMetadata.Mapping();
+            mapping.setSource(column.getDisplayName());
+            mapping.setTarget(column.getDisplayName());
+            mappings.add(mapping);
+        }
+        metadata.setMappings(mappings);
+        return metadata;
+    }
+
+
+    /**
+     * Add the data load DTO mapping for fields.
+     * When you are using display names as mapping then this helps.
+     * @param metadata
+     * @param keys
+     */
+    public static void addMapping(DataLoadMetadata metadata, String[] keys) {
+        if(metadata ==null || keys ==null) {
+            throw new IllegalArgumentException("metadata or keys can't be null");
+        }
+        if(metadata.getMappings()==null) {
+            metadata.setMappings(new ArrayList<DataLoadMetadata.Mapping>());
+        }
+        for(String key : keys) {
+            DataLoadMetadata.Mapping mapping = new DataLoadMetadata.Mapping();
+            mapping.setSource(key);
+            mapping.setTarget(key);
+            metadata.getMappings().add(mapping);
+        }
+    }
 
 }
+
+
+
+

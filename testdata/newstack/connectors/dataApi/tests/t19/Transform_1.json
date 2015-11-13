@@ -1,0 +1,117 @@
+{
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/connectors/dataApi/process/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Contact_ExternalId__c",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "User Id"
+          },
+          {
+            "name": "AccountId",
+            "alias": "Account Id"
+          },
+          {
+            "name": "Email",
+            "alias": "User Email"
+          },
+          {
+            "name": "Name",
+            "alias": "User Name"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/t19/DateProcess_ExpectedData_1.csv",
+        "table": "TempData",
+        "joinColumnName": "ContactExternalId",
+        "columns": [
+          {
+            "name": "ContactExternalId",
+            "alias": "Source User Id"
+          },
+          {
+            "name": "AccountExternalId",
+            "alias": "Source Account Id"
+          },
+          {
+            "name": "AccountName",
+            "alias": "Account Name"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "GSA_AccountName",
+            "alias": "GSA_AccountName"
+          },
+          {
+            "name": "GSA_ContactName",
+            "alias": "GSA_ContactName"
+          },
+          {
+            "name": "GSA_Email",
+            "alias": "GSA_Email"
+          },
+          {
+            "name": "Event",
+            "alias": "Event"
+          },
+          {
+            "name": "EventCount",
+            "alias": "Event Count"
+          },
+          {
+            "name": "Week",
+            "alias": "Week"
+          },
+          {
+            "name": "Month",
+            "alias": "Month"
+          },
+          {
+            "name": "Quarter",
+            "alias": "Quarter"
+          },
+          {
+            "name": "Year",
+            "alias": "Year"
+          }, {
+            "name": "AVG_FileSize",
+            "alias": "AVG_FileSize"
+          },
+          {
+            "name": "SUM_Logins",
+            "alias": "SUM_Logins"
+          },
+          {
+            "name": "MAX_PageLoadTime",
+            "alias": "MAX_PageLoadTime"
+          },
+          {
+            "name": "MIN_Price",
+            "alias": "MIN_Price"
+          } ,
+          {
+            "name": "COUNT_UniqueLogins",
+            "alias": "COUNT_UniqueLogins"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/t19/Final_ExpectedData_1.csv"
+  }
+}

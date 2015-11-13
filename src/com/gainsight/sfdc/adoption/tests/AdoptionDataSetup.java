@@ -19,9 +19,10 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
  */
 public class AdoptionDataSetup extends BaseTest {
     public final String resDir                      = env.basedir + "/testdata/sfdc/usageData/";
-    private final String STATE_PRESERVATION_SCRIPT  = "DELETE [SELECT ID, Name FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
+    private final String STATE_PRESERVATION_SCRIPT  = "DELETE [SELECT ID FROM JBCXM__StatePreservation__c where name ='AdoptionTab'];";
     private final String CUST_SET_DELETE            = "JBCXM.ConfigBroker.resetActivityLogInfo('DataLoadUsage', null, true);";
-    private final String MEASURES_FILE                = resDir+"scripts/Usage_Measure_Create.txt";
+    private final String DELETE_ACCOUNT_SCRIPT      = "DELETE [SELECT ID FROM Account where Name Like 'Adoption Test - Account%'];";
+    private final String MEASURES_FILE              = resDir+"scripts/Usage_Measure_Create.txt";
     private final String JOB_Account                = resDir + "jobs/Job_Adop_Accounts.txt";
     private final String JOB_Customers              = resDir + "jobs/Job_Adop_Customers.txt";
 
@@ -34,13 +35,11 @@ public class AdoptionDataSetup extends BaseTest {
     }
 
     public void initialSetup() {
-        sfdc.runApexCode(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT));
-        sfdc.runApexCode(resolveStrNameSpace(CUST_SET_DELETE));
+        sfdc.runApexCode(resolveStrNameSpace(STATE_PRESERVATION_SCRIPT + "\n" + CUST_SET_DELETE +"\n"+ DELETE_ACCOUNT_SCRIPT));
         try {
             metaUtil.createExtIdFieldOnAccount(sfdc);
             metaUtil.createFieldsOnUsageData(sfdc);
             sfdc.runApexCode(resolveStrNameSpace(FileUtil.getFileContents(MEASURES_FILE)));
-            dataLoader.cleanUp(resolveStrNameSpace("Account"), "Name Like 'Adoption Test - Account%'");
         } catch (Exception e) {
             Log.error(e.getLocalizedMessage(), e);
             throw new RuntimeException("Failed to delete accounts related to adoption data");
@@ -78,8 +77,7 @@ public class AdoptionDataSetup extends BaseTest {
      * @param usesEndDate - Week label is based on start of week or end of week.
      * @param weekStartsOn - Week starts on Sun, Mon, Tue
      * @param noOfPeriods - No of weeks/months to run aggregation.  {Good to send multiples of 5}
-     * @throws java.io.IOException
-     * @throws InterruptedException
+     *
      */
     public void runAdoptionAggregation(int noOfPeriods, Boolean isWeekly, boolean usesEndDate, String weekStartsOn) {
         try {
@@ -112,7 +110,7 @@ public class AdoptionDataSetup extends BaseTest {
                         Log.info("Running Aggregation On : " + year + "-" + month + "-" + day);
                         sfdc.runApexCode(resolveStrNameSpace(code));
                     }
-                    Thread.sleep(15000L);
+                    //Thread.sleep(15000L);
                     waitForBatchExecutionToComplete("AdoptionAggregation");
                 }
             } else {
@@ -126,7 +124,7 @@ public class AdoptionDataSetup extends BaseTest {
                         sfdc.runApexCode(resolveStrNameSpace(code));
                         cal.add(Calendar.MONTH, -1);
                     }
-                    Thread.sleep(15000L);
+                    //Thread.sleep(15000L);
                     waitForBatchExecutionToComplete("AdoptionAggregation");
                 }
             }
@@ -135,6 +133,17 @@ public class AdoptionDataSetup extends BaseTest {
             Log.info(e.getLocalizedMessage());
             throw new RuntimeException("Failed to run aggregation");
         }
+    }
+
+    public void updateUtilizationAndUserDisplayInGrid(String value, boolean displayUsers) {
+        StringBuffer apexCode = new StringBuffer("JBCXM__ApplicationSettings__c appSettings = [SELECT ID, JBCXM__AdoptionAggregationType__c, JBCXM__UsageUtilizationCalc__c, JBCXM__AdoptionGranularity__c,\n" +
+                "JBCXM__AdoptionAggregationColumns__c, JBCXM__AdoptionMeasureColMap__c, JBCXM__WeekStartsOn__c,\n" +
+                "JBCXM__UsesEndDateAsWeekName__c from JBCXM__ApplicationSettings__c LIMIT 1];\n");
+
+        apexCode.append((value != null) ? "appSettings.JBCXM__UsageUtilizationCalc__c = '"+value+"';" : "appSettings.JBCXM__UsageUtilizationCalc__c = null;\n");
+        apexCode.append("appSettings.JBCXM__LicensedUserNotInAdoptionGrid__c = "+!(displayUsers)+"\n;");
+        apexCode.append("update appSettings;");
+        sfdc.runApexCode(resolveStrNameSpace(apexCode.toString()));
     }
 
     public void updateUtilizationCal(String val) {

@@ -1,0 +1,25 @@
+{
+  "jobName": "T1",
+  "namespacePrefix" : "JBCXM",
+  "useNameSpace" : false,
+  "dateProcess" : {
+    "inputFile" : "/testdata/newstack/dataLoader/global/CollectionData.csv",
+    "outputFile" : "/testdata/newstack/dataLoader/process/t1/Exp_CollectionData.csv",
+    "fields" :[
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date"
+      },
+      {
+        "weekly" : false,
+        "daily"  : true,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:00",
+        "fieldName" : "EventTimeStamp"
+      }
+    ]
+  }
+}

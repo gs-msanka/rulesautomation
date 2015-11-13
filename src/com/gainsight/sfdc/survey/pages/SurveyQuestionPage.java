@@ -7,6 +7,9 @@ import com.gainsight.sfdc.survey.pojo.SurveyProperties;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion;
 import com.gainsight.sfdc.survey.pojo.SurveyQuestion.SurveyAllowedAnswer;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.wait.CommonWait;
+import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
+import com.sforce.soap.partner.sobject.SObject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -41,7 +44,7 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String PAGE_EDIT_FORM_CANCEL_BUTTON   = "//button[@class='gs-btn btn-cancel' and text()='Cancel']";
 
     //Question Edit View Selectors
-    private final String QUESTION_BLOCK                 = ".//div[contains(@class, 'qtn-div') and @data-id='%s']";
+    private final String QUESTION_BLOCK                 = "//div[contains(@class, 'qtn-div') and @data-id='%s']";
     private final String QUESTION_TEXT_INPUT            = ".//div[contains(@id, '_qtn_entry')]/textarea[contains(@class, 'form-control')]";
     private final String SECTION_TITLE_INPUT            = ".//h3[@class='section-title drag-handle']/input[@class='form-control']";
     private final String SECTION_TITLE_VIEW             = ".//h3[@class='section-title drag-handle']";
@@ -49,7 +52,7 @@ public class SurveyQuestionPage extends SurveyPage {
     private final String NPS_SHOW_HEADERS_CHECKBOX_CSS  = "input[id$=_show_header_check][type=checkbox]";
     private final String NPS_HEADER_SELECT_CSS          = "select[class*='form-control header-type-select']";
     private final String RATING_SELECT              = ".//div[contains(@id, 'ans_entry')]/select[@class='form-control']";
-    private final String SHORT_TEXT_SIZE_SELECT     = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-size show']";
+    private final String SHORT_TEXT_SIZE_SELECT     = "//div[contains(@id, 'ans_entry')]/div/select[contains(@class, 'selectstyle select-size')]";
     private final String LONG_TEXT_ROWS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-rows show']";
     private final String LONG_TEXT_COLS_SELECT      = ".//div[contains(@id, 'ans_entry')]/div/select[@class='selectstyle select-cols show']";
     private final String QUESTION_SURVEY_BRANCHING      = "a[class=qtn-link-a]";
@@ -129,15 +132,33 @@ public class SurveyQuestionPage extends SurveyPage {
         return getWebElement(By.xpath(PAGE_TITLE_PATH));
     }
 
-    public WebElement getQuestionElement(SurveyQuestion surveyQuestion) {
-        WebElement surveyQuestionEle;
-        try {
-            surveyQuestionEle= getPageElement(surveyQuestion).findElement(By.xpath(String.format(QUESTION_BLOCK, surveyQuestion.getQuestionId())));
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to find survey Question");
-        }
-        return surveyQuestionEle;
+    public WebElement getQuestionElement(final SurveyQuestion surveyQuestion) {
+		WebElement surveyQuestionEle;
+		CommonWait.waitForCondition(MAX_TIME, MIN_TIME,
+				new ExpectedCommonWaitCondition<Boolean>() {
+					@Override
+					public Boolean apply() {
+						return isQuestionExists(surveyQuestion);
+					}
+				});
+		surveyQuestionEle = getPageElement(surveyQuestion).findElement(
+				By.xpath(String.format(QUESTION_BLOCK,
+						surveyQuestion.getQuestionId())));
+		return surveyQuestionEle;
     }
+    
+	public boolean isQuestionExists(SurveyQuestion surveyQuestion) {
+		boolean result = false;
+		WebElement surveyQuestionEle = getPageElement(surveyQuestion)
+				.findElement(
+						By.xpath(String.format(QUESTION_BLOCK,
+								surveyQuestion.getQuestionId())));
+		if (surveyQuestionEle.isEnabled()) {
+			result = true;
+		}
+	//	surveyQuestionEle.isDisplayed();
+		return result;
+	}
 
     public SurveyQuestionPage clickOnAddNewQuestion(SurveyQuestion surveyQuestion) {
         WebElement surQuestionsPageEle = getPageElement(surveyQuestion);
@@ -156,6 +177,7 @@ public class SurveyQuestionPage extends SurveyPage {
 	} */
 
 	public void fillQuestionFormInfo(SurveyQuestion surveyQuestion) {
+		Timer.sleep(5); // This is required since Survey page is inconsistent, kindof disturbed UI
         WebElement surQuestionEle = getQuestionElement(surveyQuestion);
         Log.info("Entering Question Title");
         surQuestionEle.findElement(By.xpath(QUESTION_TEXT_INPUT)).clear();
@@ -273,10 +295,7 @@ public class SurveyQuestionPage extends SurveyPage {
         }
 
         else if(surveyQuestion.getQuestionType().equals("NPS")) {
-            if(surveyQuestion.getAllowedAnswers().size() ==1) {
-                surQuestionEle.findElement(By.cssSelector(NPS_SHOW_HEADERS_CHECKBOX_CSS)).click();
-                surQuestionEle.findElement(By.cssSelector(NPS_HEADER_SELECT_CSS)).sendKeys(surveyQuestion.getAllowedAnswers().get(0).getAnswerText());
-            }
+        	item.click("//input[@class='header-smiley-check']");
         }
 
         else if(surveyQuestion.getQuestionType().equals("CHECKBOX") || surveyQuestion.getQuestionType().equals("SELECT")
@@ -321,6 +340,7 @@ public class SurveyQuestionPage extends SurveyPage {
     }
     
 	public String getSectionAttribute() {
+		wait.waitTillElementDisplayed(SECTION_HEADER_TEXTINPUT, MIN_TIME, MAX_TIME);
 		String attribute = element.getElement(SECTION_HEADER_TEXTINPUT)
 				.getAttribute("value");
 		Log.info("Attribute value is" + attribute);

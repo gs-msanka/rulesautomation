@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name=" RulesEngineUI Automation Suite" preserve-order="true">
+   <listeners>
+      <listener class-name="com.gainsight.utils.AutTestListener" />
+   </listeners>
+   <test verbose="3" name="RulesEngine UI Automation Test Suite" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest" />
+      </classes>
+   </test>
+</suite>

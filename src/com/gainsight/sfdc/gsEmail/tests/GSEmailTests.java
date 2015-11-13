@@ -49,29 +49,19 @@ public class GSEmailTests extends NSTestBase {
 	public void testMandrillAccountCreation() throws Exception {
 		updateNSURLInAppSettings(NSURL);
 		gse.enableOAuthForOrg();
-		gse.createSurveyWithGSEmail();
+		gse.updateAccessKeyInApplicationSettingForGSEmail();
 		HashMap<String, String> records = new HashMap<String, String>();
 		HashMap<String, String> fieldDetails = new HashMap<String, String>();
-
 		records.put("ExternalTenantID", sfinfo.getOrg());
 		fieldDetails.put("TenantId", "");
 		fieldDetails.put("TenantName", "");
-		mUtil.getFieldValueFromDoc("tenantmaster", records, fieldDetails);
+		//mUtil.getFieldValueFromDoc("tenantmaster", records, fieldDetails);
 		Assert.assertTrue(
 				gse.checkSubAccountInMandrill(
 						env.getProperty("mandrill.APIKey"),
 						fieldDetails.get("TenantId"),
 						fieldDetails.get("TenantName")),
 				"Account registration successful in mandrill!");
-	}
-
-	@Test
-	public void testSendEmailSingleRecipient() {
-		// gse.updateNSURLInAppSettings(NSURL);
-		// gse.enableOAuthForOrg();
-		gse.createSurveyWithGSEmail();
-		gse.sendTestEmail();
-		// gse.deleteOldEmailActivityLogFromMongo();
 	}
 
 	@AfterClass

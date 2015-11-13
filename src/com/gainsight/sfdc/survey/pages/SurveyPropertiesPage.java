@@ -75,10 +75,7 @@ public class SurveyPropertiesPage extends SurveyPage {
 					&& surveyProp.getType().equals(
 							"Anonymous without account tracking")) {
 				if (surveyProp.getAnonymousAccount() != null) {
-					field.setText(ANONYMOUS_ACCOUNT_INPUT,
-							surveyProp.getAnonymousAccount());
-					Log.info("Selecting Account");
-					link.click("SURVEY Account 1");
+					selectaccount(surveyProp.getAnonymousAccount());
 				}
 			}
 		}

@@ -12,6 +12,7 @@ import com.gainsight.sfdc.survey.pojo.SurveyResponseAns;
 import com.gainsight.sfdc.workflow.pojos.CTA;
 import com.gainsight.testdriver.Log;
 import com.gainsight.pageobject.core.WebPage;
+import com.gainsight.pageobject.util.Timer;
 
 import static com.gainsight.sfdc.pages.Constants.*;
 
@@ -24,6 +25,7 @@ public class SurveyResponsePage extends WebPage {
 	private final String MATRIX_SINGLEANSWER_RADIO_XPATH="//table[contains(@class, 'matrix-table')]/descendant::tbody/descendant::td[contains(text(), '%s')]/ancestor::tr/descendant::div/descendant::input";
 	private final String SINGLE_SELECT_ANSWER_XPATH="//div[@class='preview-answr']/descendant::select/option[contains(text(),'%s')]";
 	private final String MATRIX_MULTISELECT_XPATH="//table[contains(@class, 'matrix-table')]/descendant::tbody/descendant::td[contains(text(), '%s')]/following-sibling::td/div[@class='text-center']/input";
+	private final String SURVEY_RESPONSE_MESSAGE_DIV  ="//div[contains(@class, 'msg alert alert-success')]";
 	
 	SurveySetup surveysetup=new SurveySetup();
 	public String homePageURL = null;
@@ -86,6 +88,8 @@ public class SurveyResponsePage extends WebPage {
 			}
 		}
 		item.click(SURVEY_FORM_SUBMIT_BUTTON);
+		Timer.sleep(5);
+		wait.waitTillElementDisplayed(SURVEY_RESPONSE_MESSAGE_DIV, MIN_TIME, MAX_TIME);
 		URL = homePageURL;
 		open(); /*Navigating back to the Gainsight home page*/
 	}

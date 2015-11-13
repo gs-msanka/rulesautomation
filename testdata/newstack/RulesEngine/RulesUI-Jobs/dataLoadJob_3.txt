@@ -1,0 +1,119 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/resources/datagen/process/RulesUIAccounts.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/RulesUIAccounts.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "ID"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-Data/Mda_Data_3.csv",
+        "table": "accounts",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Name",
+            "alias": "Name"
+          },
+          {
+            "name": "Date1",
+            "alias": "Date1"
+          },
+          {
+            "name": "Date2",
+            "alias": "Date2"
+          },
+          {
+            "name": "Date3",
+            "alias": "Date3"
+          },
+          {
+            "name": "Date4",
+            "alias": "Date4"
+          },
+          {
+            "name": "Date5",
+            "alias": "Date5"
+          },
+          {
+            "name": "Date6",
+            "alias": "Date6"
+          },
+          {
+            "name": "Date7",
+            "alias": "Date7"
+          },
+          {
+            "name": "Date8",
+            "alias": "Date8"
+          },
+          {
+            "name": "Date9",
+            "alias": "Date9"
+          },
+          {
+            "name": "DateTime1",
+            "alias": "DateTime1"
+          },
+          {
+            "name": "DateTime2",
+            "alias": "DateTime2"
+          },
+          {
+            "name": "DateTime3",
+            "alias": "DateTime3"
+          },
+          {
+            "name": "DateTime4",
+            "alias": "DateTime4"
+          },
+          {
+            "name": "DateTime5",
+            "alias": "DateTime5"
+          },
+          {
+            "name": "DateTime6",
+            "alias": "DateTime6"
+          },
+          {
+            "name": "DateTime7",
+            "alias": "DateTime7"
+          },
+          {
+            "name": "DateTime8",
+            "alias": "DateTime8"
+          },
+          {
+            "name": "DateTime9",
+            "alias": "DateTime9"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-Data/LoadToMDA-Output_3.csv"
+  }
+}

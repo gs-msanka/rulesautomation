@@ -1,0 +1,78 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 19 - Date type verification in Setip Rule Using Native Data",
+  "ruleDescription": "Rule 19 - Date type verification in Setip Rule Using Native Data",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Account Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "DateTime Auto",
+            "operator": "greater or equal",
+            "value": "select_Last Day of Next Month"
+          },
+          {
+            "fieldName": "DateTimeField6",
+            "operator": "greater than",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "DateTimeField0",
+            "operator": "greater or equal",
+            "value": "select_First Day of Previous Week"
+          },
+          {
+            "fieldName": "InputDateTime",
+            "operator": "equals",
+            "value": "select_First Day of Next Month"
+          },
+          {
+            "fieldName": "DateTimeField1",
+            "operator": "less or equal",
+            "value": "select_First Day of Current Week"
+          },
+          {
+            "fieldName": "DateTimeField2",
+            "operator": "not equal to",
+            "value": "select_Last Day of Next Month"
+          },
+          {
+            "fieldName": "DateTimeField3",
+            "operator": "not equal to",
+            "value": "select_Last Day of Current Month"
+          },
+          {
+            "fieldName": "DateTimeField4",
+            "operator": "equals",
+            "value": "select_First Day of Current Week"
+          },
+          {
+            "fieldName": "DateTimeField5",
+            "operator": "greater or equal",
+            "value": "select_First Day of Previous Week"
+          },
+          {
+            "fieldName": "Account Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account "
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "((A and B and E) or (C and H) or (D and F)) or (I and J)",
+    "timeIdentifier": "Created Date"
+  }
+}

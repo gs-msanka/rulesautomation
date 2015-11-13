@@ -16,7 +16,6 @@ import org.testng.annotations.Test;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
-import com.gainsight.util.PropertyReader;
 import com.gainsight.utils.DataProviderArguments;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -63,13 +62,13 @@ public class SendEmail extends RulesUtil {
 		RulesUtil ru = new RulesUtil();
 		ru.setupRule(testData);
 		String ruleId = getRuleId(testData.get("JBCXM__AutomatedAlertRules__c"));
-		System.out.println("request:" + PropertyReader.nsAppUrl
+		Log.info("request:" + nsConfig.getNsURl()
 				+ "/api/eventrule/" + ruleId);
 		result = wa.doPost(
-				PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId,
+                nsConfig.getNsURl() + "/api/eventrule/" + ruleId,
 				header.getAllHeaders(), "{}");
 		Log.info("Rule ID:" + ruleId + "\n Request URL"
-				+ PropertyReader.nsAppUrl + "/api/eventrule/" + ruleId
+				+ nsConfig.getNsURl() + "/api/eventrule/" + ruleId
 				+ "\n Request rawBody:{}");
 		ResponseObject responseObj = RulesUtil.convertToObject(result
 				.getContent());
