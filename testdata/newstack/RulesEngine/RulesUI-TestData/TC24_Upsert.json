@@ -19,6 +19,7 @@
         "dueDate": "10",
         "defaultOwner": "weRules",
         "chatterUpdate": "Always",
+	"dueDateType": "",
         "comments": "These are test comments for CTA"
       }
     }

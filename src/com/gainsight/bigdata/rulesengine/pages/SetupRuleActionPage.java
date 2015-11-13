@@ -40,6 +40,7 @@ public class SetupRuleActionPage extends BasePage {
     private final String CREATE_CTA_RADIO_BUTTON = "//input[@value='create']";
     private final String CTA_NAME_INPUT = "//div[contains(@class, 'ctaName')]";
     private final String SCORECARD_COMMENTS = "//div[contains(@class, 'setup-action-body create-score-card')]/descendant::textarea[contains(@class, 'scorecardComment')]";
+    private final String DUE_DATE_TYPE = "//select[contains(@class, 'due_date_type')]/following-sibling::button";
 
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
     private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/../button";
@@ -162,6 +163,10 @@ public class SetupRuleActionPage extends BasePage {
         if (!ctaAction.getChatterUpdate().isEmpty()) {
 			item.click(xpath+POSTUPDATE_BUTTON);
 			 selectValueInDropDown(ctaAction.getChatterUpdate(), true);
+		}
+        if (ctaAction.getDueDateType()!=null || !ctaAction.getDueDateType().isEmpty()) {
+			item.click(DUE_DATE_TYPE);
+			selectValueInDropDown(ctaAction.getDueDateType(), true);
 		}
         selectTaskOwner(ctaAction.getDefaultOwner(), i);
         element.clearAndSetText(xpath + COMMENTS, ctaAction.getComments());

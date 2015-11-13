@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule-23-GS-4185-Testcase-ID",
-  "ruleDescription": "Rule-23-GS-4185-Testcase-ID Desc",
+  "ruleName": "Rule-29-GS-4261-Testcase-ID-DoNotSkipWeekends",
+  "ruleDescription": "Rule-29-GS-4261-Testcase-ID-DoNotSkipWeekends Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",
@@ -14,23 +14,7 @@
             "showAdvancedName": ""
           },
           {
-            "fieldName": "C_Checkbox",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_Currency",
-            "showAdvancedName": ""
-          },
-          {
             "fieldName": "Date Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "DateTime Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Email Auto",
             "showAdvancedName": ""
           },
           {
@@ -43,38 +27,6 @@
           },
           {
             "fieldName": "Account Name",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_Phone",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "PickList Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "MultiPicklist Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_Text",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_TextArea",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "URL Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_Number",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_URL",
             "showAdvancedName": ""
           },
           {
@@ -119,15 +71,6 @@
             "value": "input_797946"
           }
         ]
-      },
-      {
-        "sourceObject": "Customer Info",
-        "showFields": [
-          {
-            "fieldName": "ASV",
-            "showAdvancedName": ""
-          }
-        ]
       }
     ],
     "advancedLogic": "A and B and (C or D or E) and F and G",
@@ -137,17 +80,17 @@
     {
       "actionType": "createCta",
       "action": {
-        "name": "CTA Rule 1 - UI",
-        "priority": "Low",
-        "type": "Risk",
+        "name": "Rule-29-GS-4261-Testcase-ID-DoNotSkipWeekends-UI",
+        "priority": "Medium",
+        "type": "Opportunity",
         "status": "New",
-        "playbook": "Collections",
+        "playbook": "NPS Promoter",
         "reason": "Product Issue",
         "ownerField": "",
-	"chatterUpdate": "",
         "dueDate": "10",
         "defaultOwner": "weRules",
-	"dueDateType": "",
+        "chatterUpdate": "Once",
+	"dueDateType": "Do not skip weekend",
         "comments": "These are test comments for CTA"
       },
       "criterias": [

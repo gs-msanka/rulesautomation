@@ -20,7 +20,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by vmenon on 9/15/2015.
@@ -194,5 +197,64 @@ public class RulesEngineUtil  extends BaseTest{
 			setupRulePage.unCheckApplyToGSCustomers();
 		}
 		setupRulePage.clickOnNext();
+	}
+    
+    
+
+	/**
+	 * @param number of days to add
+	 * @return returns numbers of days based on weekday
+	 */
+	public static int getDays(int  amount){
+		int days = 0;
+		Calendar c1 = Calendar.getInstance(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
+		c1.add(Calendar.DATE, amount);
+		Log.info("Date and Time is " +c1.getTime());
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			Log.info("Today is Saturday");
+			// returns two days to adjust cta due date accordingly
+			days = 2;
+		}
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			Log.info("Today is Sunday");
+			// returns one day to adjust cta due date accordingly
+			days = 1;
+		}
+		return days;
+	}
+    
+	/**
+	 * @param start startDate
+	 * @param end endDate
+	 * @return returns number of bussiness days between two dates
+	 */
+	public static int getTotalBusinessDays(Date start, Date end) {
+		Calendar c1 = Calendar.getInstance(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
+		c1.setTime(start);
+		int week1 = c1.get(Calendar.DAY_OF_WEEK);
+		c1.add(Calendar.DAY_OF_WEEK, -week1);
+		Calendar c2 = Calendar.getInstance(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
+		c2.setTime(end);
+		int week2 = c2.get(Calendar.DAY_OF_WEEK);
+		c2.add(Calendar.DAY_OF_WEEK, -week2);
+		// total date count between start date and end date, both are inclusive
+		// 60 * 1000 = 60 second, 60* (60 * 1000) = 60 mins which is 1 hour, 24*(60* (60 * 1000)) = 1 day which is 24 hours
+		int days = (int) ((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24));
+		Log.info("total days is" + days);
+		// Adjusting days, so that Saturday and Sunday are not included
+		int daysWithoutWeekendDays = (int) (days - (days * 2 / 7));
+		Log.info("DaysWithoutWeekendDays are " + daysWithoutWeekendDays);
+		if (week1 == Calendar.SUNDAY && week2 != Calendar.SATURDAY) {
+			week1 = Calendar.MONDAY;
+		} else if (week1 == Calendar.SATURDAY && week2 != Calendar.SUNDAY) {
+			week1 = Calendar.FRIDAY;
+		}
+		if (week2 == Calendar.SUNDAY) {
+			week2 = Calendar.MONDAY;
+		} else if (week2 == Calendar.SATURDAY) {
+			week2 = Calendar.FRIDAY;
+		}
+		System.out.println(daysWithoutWeekendDays - week1 + week2);
+		return daysWithoutWeekendDays - week1 + week2;
 	}
 }

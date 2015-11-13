@@ -21,8 +21,9 @@ public class CTAAction {
     private String comments = "";
     private boolean ctaUpsert=false;
     private String chatterUpdate;
+    private String dueDateType;
 
-    public boolean isCtaUpsert() {
+	public boolean isCtaUpsert() {
 		return ctaUpsert;
 	}
 
@@ -32,6 +33,14 @@ public class CTAAction {
 
 	public void setChatterUpdate(String chatterUpdate) {
 		this.chatterUpdate = chatterUpdate;
+	}
+
+	public String getDueDateType() {
+		return dueDateType;
+	}
+
+	public void setDueDateType(String dueDateType) {
+		this.dueDateType = dueDateType;
 	}
 
 	public void setCtaUpsert(boolean ctaUpsert) {

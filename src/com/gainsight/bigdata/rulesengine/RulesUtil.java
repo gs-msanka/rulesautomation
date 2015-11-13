@@ -569,38 +569,37 @@ public void setupRule(HashMap<String,String> testData){
 				Log.error("Priority did not match!!");
 				check = false;
 			}
-			else if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
+			if (!PickListMap.get("PL." + statusValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
 							.getValue().toString())) {
 				Log.error("Status did not match!!");
 				check = false;
 			}
-			else if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
+			if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
 					.getValue().toString())) {
 				Log.error("Assignee did not match!!");
 				check = false;
 			}
-			else if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
+			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
 							.getValue().toString())) {
 				Log.error("Type did not match!!");
 				check = false;
 			}
-			
-			else if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
+			if (!PickListMap.get("PL." + reasonValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
 							.getValue().toString())) {
 				Log.error("Reason did not match!!");
 				check = false;
 			}
-			else if (playbookName == null) {
+			if (playbookName == null) {
 				Object playBookObj = obj.getField("JBCXM__Playbook__c");
 				if (!(playbookName == playBookObj)) {
 					Log.error("playBook is not null !!");
 					check = false;
 				}
 			}
-			else if (playbookName != null && !(playbookName.isEmpty())) {
+			if (playbookName != null && !(playbookName.isEmpty())) {
 				String playBook = sfdc
 						.getRecords(resolveStrNameSpace("SELECT Id, Name FROM JBCXM__Playbook__c where Name like '"
 								+ playbookName + "'"))[0].getChild("Id")
@@ -612,16 +611,16 @@ public void setupRule(HashMap<String,String> testData){
 					check = false;
 				}
 			}
-			
-			else if (comment == null) {
+			if (comment == null) {
 				Object object = obj.getField("JBCXM__Comments__c");
 				if (!(comment == object)) {
 					Log.error("Comments is not null for update cta comments with never option!!");
 					check = false;
 				}
-			} else if (comment != null) {
+			}
+			if (comment != null) {
 				String comments = (String) obj.getField("JBCXM__Comments__c");
-				if (comments.equalsIgnoreCase(comment)) {
+				if (!(comments.equalsIgnoreCase(comment))) {
 					Log.error("Comments did not match!!");
 					check = false;
 				}
