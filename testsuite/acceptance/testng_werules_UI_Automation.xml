@@ -1,13 +1,63 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project" preserve-order="true">
-    <listeners>
-        <listener class-name="com.gainsight.utils.AutTestListener" />
-        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
-    </listeners>
-    <test verbose="3" name="RulesEngine UI Automation Tests"
-		preserve-order="true">
-        <classes>
-            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest" />
-        </classes>
-    </test>
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="RulesEngine UI Automation Project" preserve-order="true">
+   <listeners>
+      <listener class-name="com.gainsight.utils.AutTestListener" />
+      <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+   </listeners>
+   <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+            <methods>
+               <include name="testAdditionAndRemovalOFFieldsInDataLoadConfig" />
+               <include name="testGainsightObjectsArePresentInDataLoadConfigurationList" />
+               <include name="dailyScheduler" />
+               <include name="weeklyScheduler" />
+               <include name="monthlyScheduler" />
+               <include name="yearlyScheduler" />
+               <include name="testAllActionsUsingNativeData" />
+               <include name="testLoadToCustomersWithNativeData" />
+               <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
+               <include name="verifyDataLoadConfiguration" />
+               <include name="testRuleInactive" />
+               <include name="testCloningOFARule" />
+               <include name="testDeleteRule" />
+               <include name="testEditARule" />
+               <include name="verifyRecordsOnDateFiltersUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
+            </methods>
+         </class>
+      </classes>
+   </test>
+   <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+      <parameter name="dbStoreType" value="Mongo" />
+      <classes>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+            <methods>
+               <include name="testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea" />
+               <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
+               <include name="testAllActionsUsingMdaData" />
+               <include name="testLoadToCustomersWithMatrixData" />
+               <include name="loadToMdaActionUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
+               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
+            </methods>
+         </class>
+      </classes>
+   </test>
+   <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+      <parameter name="dbStoreType" value="Redshift" />
+      <classes>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+            <methods>
+               <include name="testAllActionsUsingMdaData" />
+               <include name="testLoadToCustomersWithMatrixData" />
+               <include name="loadToMdaActionUsingNativeData" />
+               <include name="testCTAActionWithMdaJoins" />
+               <include name="testRedShiftCalculatedMeasuresInSetupRule" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
+               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
+            </methods>
+         </class>
+      </classes>
+   </test>
 </suite>

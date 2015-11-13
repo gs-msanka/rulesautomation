@@ -1,0 +1,75 @@
+{
+  "jobName": "Load Account For Custom Rules",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-Data/RulesUI_Account2.csv",
+    "outputFile": "/resources/datagen/process/RulesUI_Account.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Date_Auto__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Date_Auto1__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "InputDate__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField0__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField1__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField2__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField3__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField4__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "DateField5__c"
+      }
+    ]
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "Account",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "Data_ExternalId__c",
+    "cleanUp": false,
+    "file": "/resources/datagen/process/RulesUI_Account.csv"
+  }
+}

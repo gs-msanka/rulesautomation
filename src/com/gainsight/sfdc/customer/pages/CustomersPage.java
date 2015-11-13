@@ -3,6 +3,7 @@ package com.gainsight.sfdc.customer.pages;
 import java.util.List;
 
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -55,6 +56,7 @@ public class CustomersPage extends CustomerBasePage {
             item.click(TAGS_INPUT);
             wait.waitTillElementDisplayed(TAGS_LIST, MIN_TIME, MAX_TIME);
             item.click(String.format(TAG_SELECT, tag));
+            Timer.sleep(Constants.STALE_PAUSE);     //Require this as this testcase is failing quite often.
         }
         setCustomerNameFilterOnTag(customer);
         item.click(TAG_APPLY_BUTTON);

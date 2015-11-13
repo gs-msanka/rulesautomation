@@ -1,0 +1,10 @@
+Name,Description,Date_Auto1__c,Date_Auto__c,InputDate__c,DateField0__c,DateField1__c,DateField2__c,DateField3__c,DateField4__c,DateField5__c,C_Text__c,C_TextArea__c,C_Number__c,C_URL__c,Data_ExternalId__c
+RULESUI Account 1,Necessity is the mother of invention,15,-15,9,9,-15,9,-15,9,9,ACCOUNTLEVEL,Test TextArea input,1234,https://www.google.com,RULESUI Account 1
+RULESUI Account 2,Necessity is the mother of invention,2,-2,8,8,-2,8,-2,8,8,ACCOUNTLEVEL,Test TextArea input,50,https://www.gainsight.com,RULESUI Account 2
+RULESUI Account 3,Necessity is the mother of invention,3,-3,7,7,-3,7,-3,7,7,ACCOUNTLEVEL,Test TextArea input,10000,https://www.gmail.com,RULESUI Account 3
+RULESUI Account 4,Necessity is the mother of invention,4,-4,6,6,-4,6,-4,6,6,ACCOUNTLEVEL,Test TextArea input,100,https://www.yahoo.com,RULESUI Account 4
+RULESUI Account 5,Necessity is the mother of invention,5,-5,5,5,-5,5,-5,5,5,ACCOUNTLEVEL,Test TextArea input,50,https://www.google.com,RULESUI Account 5
+RULESUI Account 6,Necessity is the mother of invention,6,-6,4,4,-6,4,-6,4,4,ACCOUNTLEVEL,Test TextArea input,1234,https://www.gainsight.com,RULESUI Account 6
+RULESUI Account 7,Necessity is the mother of invention,7,-7,3,3,-7,3,-7,3,3,ACCOUNTLEVEL,Test TextArea input,50,https://www.gmail.com,RULESUI Account 7
+RULESUI Account 8,Necessity is the mother of invention,8,-8,2,2,-8,2,-8,2,2,ACCOUNTLEVEL,Test TextArea input,10000,https://www.yahoo.com,RULESUI Account 8
+RULESUI Account 9,Necessity is the mother of invention,9,-9,1,1,-9,1,-9,1,1,ACCOUNTLEVEL,Test TextArea input,100,https://www.google.com,RULESUI Account 9

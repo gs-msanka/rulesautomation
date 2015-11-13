@@ -1,0 +1,38 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 17 - Edit Rule",
+  "ruleDescription": "Rule 17 - Edit Rule",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Currency",
+            "showAdvancedName": ""
+          }
+        ]
+      },
+      {
+        "sourceObject": "Customer Info",
+        "showFields": [
+          {
+            "fieldName": "ASV",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "timeIdentifier": "Created Date"
+  }
+}

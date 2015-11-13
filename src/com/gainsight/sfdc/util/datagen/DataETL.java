@@ -15,6 +15,7 @@ import java.util.Map;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.sfdc.util.bulk.SfdcRestApi;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.SfdcConfig;
@@ -60,7 +61,7 @@ public class DataETL implements IJobExecutor {
 		// TODO Auto-generated method stub
 		try {
 			DataETL gen = new DataETL();
-			jobInfo = mapper.readValue(new FileReader( "./testdata/sfdc/reporting/jobs/Job_Reports.txt"), JobInfo.class);
+			jobInfo = mapper.readValue(new File("./testdata/newstack/connectors/dataApi/tests/t21/Transform.json"), JobInfo.class);
 			gen.execute(jobInfo);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
@@ -130,10 +131,14 @@ public class DataETL implements IJobExecutor {
 			
 			//Extraction Code
 			SfdcExtract pull = jobInfo.getExtractionRule();
-			if(pull != null && !pull.toString().contains("null")) {
+			if(pull != null) {
                 pull = mapper.readValue(FileUtil.resolveNameSpace(mapper.writeValueAsString(pull), sfdcConfig.getSfdcManagedPackage() ?  sfdcConfig.getSfdcNameSpace() : null), SfdcExtract.class);
-				String query = QueryBuilder.buildSOQLQuery(pull.getTable(), pull.getFields());
-				SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, userDir+pull.getOutputFileLoc());
+				if(pull.isUseRestApi()) {
+					SfdcRestApi.pullDataFromSfdc(pull.getTable(), pull.getFields().toArray(new String[pull.getFields().size()]), pull.getWhereCondition(), userDir+pull.getOutputFileLoc());
+				} else {
+					String query = QueryBuilder.buildSOQLQuery(pull.getTable(), pull.getFields(),pull.getWhereCondition());
+					SfdcBulkApi.pullDataFromSfdc(pull.getTable(), query, userDir+pull.getOutputFileLoc());
+				}
 			}
 			else {
 				System.out.println("Nothing to extract. Check the Job Details");
@@ -225,11 +230,12 @@ public class DataETL implements IJobExecutor {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			//Closing Db Connection
 			db.close();
-            new File(System.getProperty("user.home")+"/"+jobInfo.getJobName()+".h2.db").delete();
+            //new File(System.getProperty("user.home")+"/"+jobInfo.getJobName()+".h2.db").delete();
 		}
 	}
 	

@@ -1,0 +1,58 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 22 - RedShift calculated measures verification in setup RulePage via api",
+  "ruleDescription": "Rule 22 - RedShift calculated measures verification in setup RulePage via api",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "RedShift",
+    "setupData": [
+      {
+        "sourceObject": "RedShift",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "calculatedMeasure1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "number4",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Score",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "calculatedMeasure1",
+            "operator": "greater than",
+            "value": "input_30000"
+          },
+          {
+            "fieldName": "number4",
+            "operator": "greater or equal",
+            "value": "input_300"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B",
+    "timeIdentifier": "CreatedDateTime"
+  }
+}

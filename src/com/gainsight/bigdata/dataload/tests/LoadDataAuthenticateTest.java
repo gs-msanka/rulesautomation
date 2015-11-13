@@ -28,7 +28,7 @@ public class LoadDataAuthenticateTest extends NSTestBase {
     public void setup() {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        dataLoadManager = new DataLoadManager();
+        dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
     }
 
     @TestInfo(testCaseIds = {"GS-3626", "GS-3631"})

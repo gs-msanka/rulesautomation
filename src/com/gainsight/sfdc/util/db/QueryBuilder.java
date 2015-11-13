@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.gainsight.sfdc.util.datagen.JobInfo.Transform.TableInfo.Columns;
+import com.gainsight.testdriver.Log;
 
 public class QueryBuilder {
 
@@ -156,6 +157,15 @@ public class QueryBuilder {
 		}
 		query.append("FROM").append(" ").append(sObject);
 		return query.toString();
+	}
+
+	public static String buildSOQLQuery(String sObject, List<String> fields, String whereCondition) {
+		String query = buildSOQLQuery(sObject, fields);
+		if(whereCondition !=null && !whereCondition.isEmpty()) {
+			query = query.concat(" "+whereCondition);
+		}
+		Log.info("Query : " +query);
+		return query;
 	}
 
 }

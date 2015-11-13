@@ -4,6 +4,8 @@ package com.gainsight.bigdata.dataLoadConfiguartion.apiImpl;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.DataAggProcessJobStatus;
 import com.gainsight.bigdata.dataLoadConfiguartion.enums.DataAggProcessStatusType;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.AccountDetail;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.Identifier;
+import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.Mapping;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -327,6 +329,32 @@ public class DataLoadAggConfigManager {
             throw new RuntimeException("Failed to get Aggregation Job Status for Id : " + statusId);
         }
         return nsResponseObj;
+    }
+
+    public static void setSourceDBNameForIdentifier(Identifier identifier, HashMap<String, String> dBDisplayNamesMap) {
+        String name = identifier.getSource().getDisplayName();
+        if(name == null) {
+            throw new IllegalArgumentException("Source display name can't be null.");
+        }
+        if(dBDisplayNamesMap == null || !dBDisplayNamesMap.containsKey(name)) {
+            throw new IllegalArgumentException("DB Names Map should not be null, db display names map doesn't contains " +name);
+        }
+        identifier.getSource().setDbName(dBDisplayNamesMap.get(name));
+    }
+
+    public static void setSourceDBNameForCustomAndMeasureFields(List<Mapping> mappingList, HashMap<String, String> dBDisplayNamesMap) {
+        if(mappingList ==null || mappingList.size() ==0) {
+            return;
+        }
+        if(dBDisplayNamesMap == null) {
+            throw new IllegalArgumentException("DB Names Map should not be null");
+        }
+        for(Mapping mapping : mappingList) {
+            if(!dBDisplayNamesMap.containsKey(mapping.getSource().getDisplayName())) {
+                throw new RuntimeException("DB Names map doesn't contain " +mapping.getSource().getDisplayName());
+            }
+            mapping.getSource().setDbName(dBDisplayNamesMap.get(mapping.getSource().getDisplayName()));
+        }
     }
 
 
