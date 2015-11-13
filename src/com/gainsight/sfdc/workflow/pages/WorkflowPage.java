@@ -59,10 +59,10 @@ public class WorkflowPage extends WorkflowBasePage {
 
     //CTA Form Page Elements
     private final String CREATE_CTA_ICON        = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
-    private final String CREATE_RISK_LINK       = "//a[@data-action='RISK']";
+    private final String CREATE_CTA_LINK       = "//a[@data-action='%s']";
     private final String CREATE_OPPOR_LINK      = "//a[@data-action='OPPORTUNITY']";
     private final String CREATE_EVENT_LINK      = "//a[@data-action='EVENT']";
-    private final String RISK_CTA_FORM_TITLE    = "//span[text()='Add Risk']";
+    private final String CTA_FORM_TITLE    = "//span[text()='Add %s']";
     private final String OPPO_CTA_FORM_TITLE    = "//span[text()='Add Opportunity']";
     private final String EVENT_CTA_FORM_TITLE   = "//span[text()='Add Event']";
     private final String CREATE_FORM_SUBJECT    = "//input[@class='form-control cta-subject']";
@@ -104,7 +104,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private enum WEEKDAY{Sun,Mon,Tue,Wed,Thu,Fri,Sat};
 
     //CTA Expanded View Elements
-    private final String EXP_VIEW_HEADER                = "//div[@class='wf-details-header']";
+    private final String EXP_VIEW_HEADER                = "//div[@class='wf-details-header can-cls-disable']";
     private final String EXP_VIEW_CTA_MORE_OPTIONS      = "//a[@class='more-edit more-options']";
     private final String EXP_VIEW_ADD_NEW_TASK          = "//a[@data-action='ADD_TASK']/span[@class='add']";
     private final String EXP_VIEW_APPLY_PLAYBOOK        = "//a[@data-action='APPLY_PlAYBOOK']/span[text()='Apply Playbook']";
@@ -118,7 +118,7 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_CUSTOMER              = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accountname')]";
     private final String EXP_VIEW_TYPE                  = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accounttype')]";
     private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
-    private final String EXP_VIEW_DUE_DATE_INPUT        = "frmDateCtrl";
+    private final String EXP_VIEW_DUE_DATE_INPUT        = "//div[@class='ac-statu-date']/input[@class='form-control cta-dateCtrl require-tooltip']";
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
     private final String EXP_VIEW_SET_SNOOZE_DATE       = "//input[@class='form-control cta-snooze-input']";
 	private final String EXP_VIEW_SNOOZE_REASON_BUTTON  = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
@@ -135,14 +135,14 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String DESYNC_AND_DELETE      = "//div[@class='modal_footer']/input[@data-action='Delete']";
     
     //Task Expanded View Elements
-    private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header']/descendant::label[@class='task-username']";
+    private final String TASK_EXP_ASSIGNEE          = "//div[@class='wf-details-header can-cls-disable']/descendant::label[@class='task-username']";
     private final String TASK_EXP_ASSIGNEE_SEARCH   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
     private final String TASK_EXP_ASSIGNEE_SELECT   = "//div[@class='task-detail-set']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
     private final String TASK_EXP_SUBJECT           = "//input[contains(@class, 'editblue_title_input task-title')]";
     private final String TASK_EXP_PRIORITY          = "//select[contains(@class, 'task-select-priority')]/following-sibling::button";
     private final String TASK_EXP_STATUS            = "//select[contains(@class, 'task-select-status')]/following-sibling::button";
     private final String TASK_COMMENTS              = "//div[contains(@class, 'task-description-textarea')]";
-    private final String TASK_DUE_DATE              = "task-date-id";
+    private final String TASK_DUE_DATE              = "//input[@class='form-control task-dateCtrl']";
     private final String TASK_EXP_SLIDE_ICON        = "//div[@class='task-detail-set']/div[@class='slide-icon']";
     private final String TASK_EXP_MORE_OPTIONS      = "//div[@class='task-detail-set']/descendant::a[contains(@class, 'more-options')]";
     private final String TASK_EXP_EDIT_OPTION       = "//div[@class='task-detail-set']/descendant::a[@data-action='EDIT_TASK']";
@@ -220,15 +220,16 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage createCTA(CTA cta){
     	item.click(CREATE_CTA_ICON);
-    	if(cta.getType().equals("Risk"))
-    	{
-            Log.info("Adding CTA of Type - RISK");
-    		item.click(CREATE_RISK_LINK);
-    		wait.waitTillElementDisplayed(RISK_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
+    	/*if(cta.getType().equals("Risk"))
+    	{*/
+    		
+            Log.info("Adding CTA of Type - "+cta.getType());
+    		item.click(String.format(CREATE_CTA_LINK, cta.getTypeId()));
+    		wait.waitTillElementDisplayed(String.format(CTA_FORM_TITLE,cta.getType()), MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
 
-    	}
-    	if(cta.getType().equals("Opportunity")){
+    	//}
+    	/*if(cta.getType().equals("Opportunity")){
             Log.info("Adding CTA of Type - Opportunity");
     		item.click(CREATE_OPPOR_LINK);
     		wait.waitTillElementDisplayed(OPPO_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
@@ -240,7 +241,7 @@ public class WorkflowPage extends WorkflowBasePage {
     		item.click(CREATE_EVENT_LINK);
     		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
-    	}
+    	}*/
     	return this;
 	}
     
@@ -813,7 +814,7 @@ public class WorkflowPage extends WorkflowBasePage {
         } else {
             throw new RuntimeException("Assignee should be specified.");
         }
-        Log.info("CTA Path : " + xPath);
+	        Log.info("CTA Path : " + xPath);
         return xPath;
     }
 
