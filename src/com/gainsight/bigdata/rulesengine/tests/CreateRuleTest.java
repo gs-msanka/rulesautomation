@@ -205,6 +205,7 @@ public class CreateRuleTest extends BaseTest {
     	finally{
     	mongoDBDAO.mongoUtil.closeConnection();
     	}
+    	rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -358,6 +359,7 @@ public class CreateRuleTest extends BaseTest {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
+        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
         rulesManagerPage.clickOnAddRule();
