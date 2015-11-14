@@ -257,4 +257,26 @@ public class RulesEngineUtil  extends BaseTest{
 		System.out.println(daysWithoutWeekendDays - week1 + week2);
 		return daysWithoutWeekendDays - week1 + week2;
 	}
+	
+	/**
+	 * @param number of days to add
+	 * @return returns numbers of days based on weekend
+	 */
+	public static int getCountOfDaysToAddIfCtaCreatedOnWeekend(int  amount){
+		int days = 0;
+		Calendar c1 = Calendar.getInstance(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
+		c1.add(Calendar.DATE, amount);
+		Log.info("Date and Time is " +c1.getTime());
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			Log.info("Today is Saturday");
+			// returns three, since we have adjust duedate if cta created on weekend
+			days = 3;
+		}
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			Log.info("Today is Sunday");
+			// returns two, since we have adjust duedate if cta created on weekend
+			days = 2;
+		}
+		return days;
+	}
 }

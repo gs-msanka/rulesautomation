@@ -205,7 +205,6 @@ public class CreateRuleTest extends BaseTest {
     	finally{
     	mongoDBDAO.mongoUtil.closeConnection();
     	}
-        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -359,7 +358,6 @@ public class CreateRuleTest extends BaseTest {
 			mongoDBDAO.mongoUtil.closeConnection();
 		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
-        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
         rulesManagerPage.clickOnAddRule();
@@ -1012,7 +1010,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4185", "GS-4186", "GS-4257"})
 	@Test
 	public void testCtaWithUpsertProrityOption() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1119,7 +1116,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4256", "GS-4257" })
 	@Test
 	public void testCtaWithUpdateCommentsAlwaysOption() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1191,7 +1187,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4257" })
 	@Test
 	public void testCtaWithUpdateCommentsNeverOption() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1226,7 +1221,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4258"})
 	@Test
 	public void testCtaWithAddOrReplacePlaybook() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1339,7 +1333,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = {"GS-6247"})
 	@Test
 	public void testCtaWithRuleNameChangeOption() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1409,7 +1402,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4264"})
 	@Test
 	public void testCtaUpsertWithSnoozeOption() throws Exception {
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1479,7 +1471,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithDonNotSkipWeekendOption() throws Exception{
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1513,7 +1504,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithSkipAllWeekendsOption() throws Exception{
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -1537,10 +1527,11 @@ public class CreateRuleTest extends BaseTest {
 			dateFormat.setTimeZone(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
 			String StartDate=DateUtil.getDateWithRequiredFormat(0, 0,  "yyyy-MM-dd");
 			String endDate=DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate()), 0, "yyyy-MM-dd");
-			int bussinessDays=RulesEngineUtil.getTotalBusinessDays(dateFormat.parse(StartDate), dateFormat.parse(endDate));
-			System.out.println("bussinessDays are" +bussinessDays);
+			int bussinessDays=RulesEngineUtil.getTotalBusinessDays(dateFormat.parse(StartDate), dateFormat.parse(endDate));	
+			int weekEndDays=RulesEngineUtil.getCountOfDaysToAddIfCtaCreatedOnWeekend(0);
+			System.out.println("BussinessDays are " +bussinessDays);
 			int actualDays=Integer.valueOf(ctaAction.getDueDate());
-			String date = DateUtil.getDateWithRequiredFormat(actualDays+(actualDays-bussinessDays), 0, "yyyy-MM-dd");
+			String date = DateUtil.getDateWithRequiredFormat(actualDays+(actualDays-bussinessDays+weekEndDays), 0, "yyyy-MM-dd");
 			Log.info("Duedate is " + date);
 			SObject[] objRecords = sfdc
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
@@ -1554,7 +1545,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception{
-		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
