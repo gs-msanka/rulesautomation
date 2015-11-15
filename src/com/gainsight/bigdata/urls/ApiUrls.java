@@ -69,11 +69,12 @@ public interface ApiUrls extends NSURLs {
     //Custom Object Management [COM]
     String COLLECTION_DETAILS_POST          = NS_URL + "/api/collections/details";    //total records count.
     String COLLECTION_DETAIL                = NS_URL + "/api/collections/collectionDetail";
-    String COLLECTION_CREATE_OR_UPDATE      = NS_URL + "api/collections/";
+    String COLLECTION_CREATE_OR_UPDATE      = NS_URL + "/api/collections/";
     String COLLECTION_DATA_MAPPING          = NS_URL + "/api/dataload/mapping";
     String COLLECTION_DATA_VALIDATE         = NS_URL + "/api/dataload/validate";
     String COLLECTION_DATA_LOAD             = NS_URL + "/api/dataload/load";
     String COLLECTION_DATA_ASYNC_IMPORT     = NS_URL + "/api/dataload/import";
+    String COLLECTION_CURL_GENERATE         = NS_URL + "/api/dataload/collections/%s/curl"; //Collection Id.
 
 
     //S3 Connectors API

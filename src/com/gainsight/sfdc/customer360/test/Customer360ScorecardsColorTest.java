@@ -129,7 +129,7 @@ public class Customer360ScorecardsColorTest extends BaseTest {
         Assert.assertTrue(customer360Scorecard.verifyOverallScore("NA"));
     }
 
-    @TestInfo(testCaseIds={"GS-794", "795", "797"})
+    @TestInfo(testCaseIds={"GS-794", "GS-795", "GS-797"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "T-4")
     public void scorecardUpdates(HashMap<String, String> testData) {

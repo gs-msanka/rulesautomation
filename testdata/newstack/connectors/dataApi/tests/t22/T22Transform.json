@@ -1,0 +1,94 @@
+{
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Contact",
+    "useRestApi" : true,
+    "fields": [
+      "Id",
+      "AccountId",
+      "Contact_ExternalId__c"
+    ],
+    "whereCondition": " where email like '%@gainsighttest.com' and Account.Name like 'Account Agg-22%'",
+    "output": "/testdata/newstack/connectors/dataApi/process/t22/T22contacts.csv"
+  },
+  "transform": {
+    "query" : "",
+    "useQuery" : false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/t22/T22Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Contact_ExternalId__c",
+        "columns": [
+          {
+            "name":"Id",
+            "alias":"User Id"
+          },
+          {
+            "name":"AccountId",
+            "alias":"Account Id"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/tests/t22/T22ExpectedData.csv",
+        "table": "ExpectedData",
+        "joinColumnName": "SourceUserId",
+        "columns": [
+          {
+            "name":"AccountName",
+            "alias":"Account Name"
+          },
+          {
+            "name":"SourceAccountId",
+            "alias":"Source Account Id"
+          },
+          {
+            "name":"SourceUserId",
+            "alias":"Source User Id"
+          },
+          {
+            "name":"UserName",
+            "alias":"User Name"
+          },
+          {
+            "name":"UserEmail",
+            "alias":"User Email"
+          },
+          {
+            "name":"Date",
+            "alias":"Date"
+          },
+          {
+            "name":"Month",
+            "alias":"Month"
+          },
+          {
+            "name":"Quarter",
+            "alias":"Quarter"
+          },
+          {
+            "name":"Week",
+            "alias":"Week"
+          },
+          {
+            "name":"Year",
+            "alias":"Year"
+          },
+          {
+            "name":"Avg_PageLoadTime",
+            "alias":"Avg_PageLoadTime"
+          },
+          {
+            "name":"Sum_FileSize",
+            "alias":"Sum_FileSize"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/t22/T22ExpectedData.csv"
+  }
+}
