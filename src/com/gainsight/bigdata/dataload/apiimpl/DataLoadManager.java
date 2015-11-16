@@ -509,8 +509,18 @@ public class DataLoadManager  {
         metadata.setCollectionName(collectionName);
         metadata.setClearOperation("CLEAR_ALL_DATA");
         metadata.setDbNameUsed(useDBName);
-
         return clearAllCollectionData(metadata);
+    }
+
+    /**
+     * Initiates clear all collection.
+     * @param collectionName
+     * @param sourceType
+     * @param targetType
+     * @return
+     */
+    public String clearAllCollectionData(String collectionName, String sourceType, String targetType) {
+        return clearAllCollectionData(collectionName, sourceType, targetType, false);
     }
 
     /**
@@ -613,7 +623,7 @@ public class DataLoadManager  {
         }
         for(String colId : collectionsIdsToDelete) {
             if(collectionInfoMap.containsKey(colId)) {
-                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType(), false);
+                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
                 waitForDataLoadJobComplete(jobId);
                 if(tenantManager.deleteSubjectArea(tenantId, colId)) {
                     Log.info("Collection Deleted Successfully " +colId);
@@ -640,7 +650,7 @@ public class DataLoadManager  {
             throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
         }
         for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
-                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType(), false);
+                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
                 if(waitForDataLoadJobComplete(jobId)) {
                     tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
                 } else {
