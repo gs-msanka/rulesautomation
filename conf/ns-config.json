@@ -37,13 +37,13 @@
       "ns_version"        : "v1.0",
       "mongo_global_host"       : "54.204.251.136",
       "mongo_global_port"       : "27017",
-      "mongo_global_db"         : "test_gsglobaldb",
+      "mongo_global_db"         : "multi_tenant_gsdatadb_1",
       "mongo_global_username"   : "mdaqa02",
       "mongo_global_password"   : "fgFByS5D",
       "mongo_global_ssl_enable" : "false",
       "mongo_scheduler_host"       : "54.204.251.136",
       "mongo_scheduler_port"       : "27017",
-      "mongo_scheduler_db"         : "test_gsglobaldb",
+      "mongo_scheduler_db"         : "multi_tenant_gsdatadb_1",
       "mongo_scheduler_username"   : "mdaqa02",
       "mongo_scheduler_password"   : "fgFByS5D",
       "mongo_scheduler_ssl_enable" : "false"
@@ -102,25 +102,34 @@
       "mongo_global_password"   : "T4Fa36Hr",
       "mongo_global_ssl_enable" : "false"
     },
-      "autoqa01" : {
-      "ns_sfdc_username"  : "athaduka@nsautoqa01.com",
-      "ns_sfdc_password"  : "Abhilash1.",
-      "ns_sfdc_stoken"    : "lo0FdILI6WkRWZaHRuDnwgnT",
-      "ns_appUrl"         : "https://autoqa01-api-router.herokuapp.com",
-      "ns_adminUrl"       : "https://autoqa01-api-router.herokuapp.com",
-      "ns_version"        : "v1.0",
-      "mongo_global_host"       : "54.165.93.124",
-      "mongo_global_port"       : "27017",
-      "mongo_global_db"         : "qa_automation_db1",
-      "mongo_global_username"   : "qauser",
-      "mongo_global_password"   : "pass",
-      "mongo_global_ssl_enable" : "false",
-      "mongo_scheduler_host"       : "54.165.93.124",
-      "mongo_scheduler_port"       : "27017",
-      "mongo_scheduler_db"         : "qa_automation_db1",
-      "mongo_scheduler_username"   : "qauser",
-      "mongo_scheduler_password"   : "pass",
-      "mongo_scheduler_ssl_enable" : "false"
+    "autoqa01" : {
+            "ns_sfdc_username"  : "athaduka@nsautoqa01.com",
+            "ns_sfdc_password"  : "Abhilash1.",
+            "ns_sfdc_stoken"    : "lo0FdILI6WkRWZaHRuDnwgnT",
+            "ns_appUrl"         : "https://autoqa01-api-router.herokuapp.com",
+            "ns_adminUrl"       : "https://autoqa01-api-router.herokuapp.com",
+            "ns_version"        : "v1.0",
+            "mongo_global_host"       : "54.165.93.124",
+            "mongo_global_port"       : "27017",
+            "mongo_global_db"         : "qa_automation_db1",
+            "mongo_global_username"   : "qauser",
+            "mongo_global_password"   : "pass",
+            "mongo_global_ssl_enable" : "false",
+            "mongo_scheduler_host"       : "54.165.93.124",
+            "mongo_scheduler_port"       : "27017",
+            "mongo_scheduler_db"         : "qa_automation_db1",
+            "mongo_scheduler_username"   : "qauser",
+            "mongo_scheduler_password"   : "pass",
+            "mongo_scheduler_ssl_enable" : "false"
+    },
+
+    "pprod" :{
+      "ns_sfdc_username"  : "awspprd@gainsighttest.com",
+      "ns_sfdc_password"  : "pprd@123",
+      "ns_sfdc_stoken"    : "4m6UWKAmfj0LYrd25qYZiSvZL",
+      "ns_appUrl"         : "https://app-ppd1-web-lbr-eas.gainsight.com",
+      "ns_adminUrl"       : "https://app-ppd1-web-lbr-eas.gainsight.com",
+      "ns_version"        : "v1.0"
     }
   }
 }
