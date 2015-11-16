@@ -1,0 +1,7 @@
+AccountId,AccountName,Active,Date,EventTimeStamp,PageViews,Description,Failure reason,Error Code
+<script><script>,Gallo Ernst & Julio Winery,TRUE,2016-01-01,2016-01-01,10,Script HTML,[Malicious content] HTML tags like <script> and special chars < > are not allowed at row number 2,GS_3235
+AccountId3,PacDevco Inc,NAN,2016-01-01,2016-01-01,10,invalid boolean,Unable to parse boolean value : NAN at row number 4,GS_3232
+AccountId4,UniAmerica Inc,0,asf,2016-01-01,10,Invalid date,Unable to parse date: asf at row number 5,GS_3229
+AccountId5,East Coast Traders,TRUE,2016-01-01,2124c,10,Invalid datetime,Unable to parse date: 2124c at row number 6,GS_3229
+AccountId6,UBAF Arab American Bank,FALSE,2016-01-01,2016-01-01,sas,Invalid number,Unable to parse number: sas at row number 7,GS_3231
+AccountId7,Veritas Software,,2016-01-01,2016-01-01,1E+22,Invalid long number,For value 1E+22 - number size overflow. Gainsight supported range is from -999999999999999999 to 999999999999999999 at row number 8,GS_3231

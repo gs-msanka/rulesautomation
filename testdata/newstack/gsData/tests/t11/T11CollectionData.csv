@@ -1,0 +1,13 @@
+AccountId,AccountName,Active,Date,EventTimeStamp,PageViews,Description
+<script><script>,Gallo Ernst & Julio Winery,TRUE,2016-01-01,2016-01-01,10,Script HTML
+AccountId2,Facts on File Newsletter,TRUE,2016-01-01,2016-01-01,10,Nothing
+AccountId3,PacDevco Inc,NAN,2016-01-01,2016-01-01,10,invalid boolean
+AccountId4,UniAmerica Inc,0,asf,2016-01-01,10,Invalid date
+AccountId5,East Coast Traders,TRUE,2016-01-01,2124c,10,Invalid datetime
+AccountId6,UBAF Arab American Bank,FALSE,2016-01-01,2016-01-01,sas,Invalid number
+AccountId7,Veritas Software,,2016-01-01,2016-01-01,1E+22,Invalid long number
+"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked.There are m.",Quinn/Brein Inc,TRUE,,2016-01-01,10,LongText
+AccountId9,Nardon Mfg Company Incorporated,FALSE,,,10,Empty value for data & time.
+AccountId10,Abberley Kooiman,TRUE,2016-01-01,2016-01-01,0,Zero's for numbers.
+AccountId11,IBM Corp Data Systems Div,FALSE,2016-01-01,2016-01-01,,NULL for numbers.
+,Via Systems,TRUE,2016-01-01,2016-01-01,-1,Negative values for numbers.

@@ -1,0 +1,14 @@
+AccountId,AccountName,Active,Date,EventTimeStamp,PageViews,PageVisits,FilesDownloaded,NoofReportsRun,Description
+AccountId1,Gallo Ernst & Julio Winery,TRUE,0,0,10,-10.1,10.02,-10.003,All Columns have data.
+,Facts on File Newsletter,TRUE,0,0,10,-10.1,10.02,-10.003,"Account Id Null, String field null."
+AccountId2,PacDevco Inc,1,0,0,10,-10.1,10.02,-10.003,1 for boolean field which is true
+AccountId3,UniAmerica Inc,0,0,0,10,-10.1,10.02,-10.003,0 for boolean field which is false.
+AccountId4,East Coast Traders,TRUE,0,0,10,-10.1,10.02,-10.003,true for boolean field
+AccountId5,UBAF Arab American Bank,FALSE,0,0,10,-10.1,10.02,-10.003,false for boolean field.
+AccountId6,Veritas Software,,0,0,10,-10.1,10.02,-10.003,Empty Value for boolean
+AccountId7,Quinn/Brein Inc,TRUE,,0,10,-10.1,10.02,-10.003,Empty Value for date.
+AccountId8,Nardon Mfg Company Incorporated,FALSE,0,,10,-10.1,10.02,-10.003,Empty value for data & time.
+AccountId10,IBM Corp Data Systems Div,FALSE,-1,-1,,,,,NULL for numbers.
+AccountId11,Via Systems,TRUE,-2,-2,-1,-8.9,-100.99,-2000.822,Negative values for numbers.
+~!@#$%^&*(10283091892371298_)(*&^%#@$%^*,Back Stage Magazine,,,,,,,,Account Id with some special characters.
+">?>?>?""]][]1][][2]]1<21212~~!~11``1233_))((+__+__)(&&^%$",Cadbury Beverages Div Cadbury,,,,,,,,Account Id with some special characters.

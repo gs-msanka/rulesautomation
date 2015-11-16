@@ -22,17 +22,12 @@
       "measureValueBucket": null,
       "decimalPlaces": 0,
       "deleted": false,
-      "mappings": {
-        "SFDC": {
-          "key": "SFDC_ACCOUNT",
-          "dataType": "string"
-        }
-      },
+      "mappings": null,
       "maxLength": 250,
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Id",
+      "DisplayName": "AccountId",
       "colattribtype": 0
     },
     {
@@ -48,12 +43,7 @@
       "measureValueBucket": null,
       "decimalPlaces": 0,
       "deleted": false,
-      "mappings": {
-        "SFDC": {
-          "key": "SFDC_ACCOUNT_NAME",
-          "dataType": "string"
-        }
-      },
+      "mappings": null,
       "maxLength": 250,
       "dataType": "string",
       "columnAttribute": 0,
@@ -79,7 +69,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Type",
+      "DisplayName": "Description",
       "colattribtype": 0
     },
     {
@@ -102,48 +92,6 @@
       "DBName": null,
       "DisplayName": "Active",
       "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "boolean",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "boolean",
-      "columnAttribute": 0,
-      "DBName": null,
-      "DisplayName": "isDeleted",
-      "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "number",
-      "columnAttribute": 1,
-      "DBName": null,
-      "DisplayName": "AnnualRevenue",
-      "colattribtype": 1
     },
     {
       "name": null,
@@ -184,12 +132,12 @@
       "dataType": "dateTime",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "CreatedDateTime",
+      "DisplayName": "EventTimeStamp",
       "colattribtype": 0
     },
     {
       "name": null,
-      "datatype": "string",
+      "datatype": "number",
       "hidden": false,
       "indexed": false,
       "format": null,
@@ -201,16 +149,15 @@
       "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
-      "maxLength": 250,
-      "dataType": "string",
-      "columnAttribute": 0,
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Regions",
-      "colattribtype": 0
-    },
-    {
+      "DisplayName": "PageViews",
+      "colattribtype": 1
+    }, {
       "name": null,
-      "datatype": "string",
+      "datatype": "number",
       "hidden": false,
       "indexed": false,
       "format": null,
@@ -219,15 +166,56 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 0,
+      "decimalPlaces": 1,
       "deleted": false,
       "mappings": null,
-      "maxLength": 250,
-      "dataType": "string",
-      "columnAttribute": 0,
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Industry",
-      "colattribtype": 0
+      "DisplayName": "PageVisits",
+      "colattribtype": 1
+    },
+    {
+      "name": null,
+      "datatype": "number",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 2,
+      "deleted": false,
+      "mappings": null,
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
+      "DBName": null,
+      "DisplayName": "FilesDownloaded",
+      "colattribtype": 1
+    }, {
+      "name": null,
+      "datatype": "number",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 3,
+      "deleted": false,
+      "mappings": null,
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
+      "DBName": null,
+      "DisplayName": "NoofReportsRun",
+      "colattribtype": 1
     }
   ]
 }

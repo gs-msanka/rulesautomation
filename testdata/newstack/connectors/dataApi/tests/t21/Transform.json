@@ -4,11 +4,11 @@
   "extract": {
     "source": "sfdc",
     "connection": "conf/application.conf",
-    "table": "JBCXM__CustomerInfo__C",
+    "table": "Contact",
     "useRestApi" : true,
     "fields": [
       "Id",
-      "JBCXM__Account__c",
+      "AccountId",
       "Account.Name",
       "Email",
       "Contact_Ext_NU__c"

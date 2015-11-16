@@ -32,7 +32,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Id",
+      "DisplayName": "Account Id",
       "colattribtype": 0
     },
     {
@@ -50,7 +50,7 @@
       "deleted": false,
       "mappings": {
         "SFDC": {
-          "key": "SFDC_ACCOUNT_NAME",
+          "key": "SFDC_USER",
           "dataType": "string"
         }
       },
@@ -58,7 +58,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "AccountName",
+      "DisplayName": "Contact Id",
       "colattribtype": 0
     },
     {
@@ -74,76 +74,18 @@
       "measureValueBucket": null,
       "decimalPlaces": 0,
       "deleted": false,
-      "mappings": null,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER_EMAIL",
+          "dataType": "string"
+        }
+      },
       "maxLength": 250,
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Type",
+      "DisplayName": "Contact Email",
       "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "boolean",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "boolean",
-      "columnAttribute": 0,
-      "DBName": null,
-      "DisplayName": "Active",
-      "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "boolean",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "boolean",
-      "columnAttribute": 0,
-      "DBName": null,
-      "DisplayName": "isDeleted",
-      "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "number",
-      "columnAttribute": 1,
-      "DBName": null,
-      "DisplayName": "AnnualRevenue",
-      "colattribtype": 1
     },
     {
       "name": null,
@@ -168,6 +110,195 @@
     },
     {
       "name": null,
+      "datatype": "date",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_WEEK",
+          "dataType": "string",
+          "format": "mm-dd-yyyy"
+        }
+      },
+      "maxLength": 250,
+      "dataType": "date",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "Week",
+      "colattribtype": 0
+    },
+    {
+      "name": "",
+      "hidden": false,
+      "indexed": false,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "dimensionBrowserCollection": "SELF",
+      "alignment": "LEFT",
+      "aggFunction": "SUM",
+      "numberType": "NUMBER",
+      "decimalPlaces": 0,
+      "thousandSeparatorUsed": false,
+      "negativeNumber": "MINUSVALUE",
+      "systemDefined": false,
+      "encrypted": false,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_MONTH",
+          "dataType": "string",
+          "format": "mm-dd-yyyy"
+        }
+      },
+      "hasLookup": false,
+      "DBName": "",
+      "datatype": "date",
+      "colattribtype": 0,
+      "DisplayName": "Month"
+    },
+    {
+      "name": null,
+      "datatype": "date",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_QUARTER",
+          "dataType": "string",
+          "format": "mm-dd-yyyy"
+        }
+      },
+      "maxLength": 250,
+      "dataType": "date",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "Quarter",
+      "colattribtype": 0
+    },
+    {
+      "name": "",
+      "hidden": false,
+      "indexed": false,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "dimensionBrowserCollection": "SELF",
+      "alignment": "LEFT",
+      "aggFunction": "SUM",
+      "numberType": "NUMBER",
+      "decimalPlaces": 0,
+      "thousandSeparatorUsed": false,
+      "negativeNumber": "MINUSVALUE",
+      "systemDefined": false,
+      "encrypted": false,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_YEAR",
+          "dataType": "number"
+        }
+      },
+      "hasLookup": false,
+      "DBName": "",
+      "datatype": "number",
+      "colattribtype": 0,
+      "DisplayName": "Year"
+    },
+    {
+      "name": null,
+      "datatype": "string",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER_USER",
+          "dataType": "string"
+        }
+      },
+      "maxLength": 250,
+      "dataType": "string",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "User Id",
+      "colattribtype": 0
+    },
+    {
+      "name": null,
+      "datatype": "string",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER_USER_EMAIL",
+          "dataType": "string"
+        }
+      },
+      "maxLength": 250,
+      "dataType": "string",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "User Email",
+      "colattribtype": 0
+    },
+    {
+      "name": null,
+      "datatype": "string",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_RELATIONSHIP_ID",
+          "dataType": "string"
+        }
+      },
+      "maxLength": 250,
+      "dataType": "string",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "Relationship Id",
+      "colattribtype": 0
+    },
+    {
+      "name": null,
       "datatype": "dateTime",
       "hidden": false,
       "indexed": false,
@@ -184,12 +315,12 @@
       "dataType": "dateTime",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "CreatedDateTime",
+      "DisplayName": "EventTimeStamp",
       "colattribtype": 0
     },
     {
       "name": null,
-      "datatype": "string",
+      "datatype": "number",
       "hidden": false,
       "indexed": false,
       "format": null,
@@ -201,16 +332,16 @@
       "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
-      "maxLength": 250,
-      "dataType": "string",
-      "columnAttribute": 0,
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Regions",
-      "colattribtype": 0
+      "DisplayName": "PageViews",
+      "colattribtype": 1
     },
     {
       "name": null,
-      "datatype": "string",
+      "datatype": "number",
       "hidden": false,
       "indexed": false,
       "format": null,
@@ -221,13 +352,18 @@
       "measureValueBucket": null,
       "decimalPlaces": 0,
       "deleted": false,
-      "mappings": null,
-      "maxLength": 250,
-      "dataType": "string",
-      "columnAttribute": 0,
+      "mappings": {
+        "SFDC" :{
+          "dataType" : "number",
+          "key" : "JBCXM__PageVisits__c"
+        }
+      },
+      "maxLength": null,
+      "dataType": "number",
+      "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Industry",
-      "colattribtype": 0
+      "DisplayName": "PageVisits",
+      "colattribtype": 1
     }
   ]
 }

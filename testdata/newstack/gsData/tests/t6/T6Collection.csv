@@ -1,0 +1,7 @@
+AccountId,AccountName,Active,Date,PageViews
+AccountId1,Gallo Ernst & Julio Winery,TRUE,2015-01-01,1
+AccountId2,Facts on File Newsletter,FALSE,2015-01-01,-1
+AccountId3,PacDevco Inc,TRUE,2015-01-01,0
+AccountId4,UniAmerica Inc,FALSE,2015-01-01,100
+AccountId5,East Coast Traders,TRUE,2015-01-01,
+AccountId6,UBAF Arab American Bank,FALSE,2015-01-01,-1000

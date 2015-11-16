@@ -8,8 +8,10 @@ import com.gainsight.bigdata.dataLoadConfiguartion.enums.AccountActionType;
 import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.*;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
+import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.MDADateProcessor;
+import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
@@ -24,6 +26,7 @@ import com.gainsight.util.Comparator;
 
 import static org.testng.Assert.*;
 
+import com.gainsight.util.DBStoreType;
 import com.gainsight.utils.annotations.TestInfo;
 import org.testng.annotations.Optional;
 import org.testng.annotations.*;
@@ -49,24 +52,29 @@ public class DataLoadAggTest extends NSTestBase {
 
     final String COLLECTION_MASTER_SCHEMA = Application.basedir+"/testdata/newstack/connectors/dataApi/data/CollectionInfo.json";
     private String testDataFiles = testDataBasePath+"/connectors/dataApi";
+    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    GSDataImpl gsDataImpl;
+
 
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
+        dataBaseType = dbStoreType == null ? DBStoreType.MONGO : DBStoreType.valueOf(dbStoreType);
+        //dataBaseType = DBStoreType.REDSHIFT;
         assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-        tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        gsDataImpl = new GSDataImpl(header);
+        TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
+        tenantDetails       = tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         dataLoadManager     = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
-
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+        if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
                 assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
-        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+        } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {
                 assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }

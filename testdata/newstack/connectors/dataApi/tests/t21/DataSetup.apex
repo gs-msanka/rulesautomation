@@ -1,4 +1,4 @@
-DELETE [SELECT id from Account where Name like 'Account Agg-21%' OR Account_exteranlId__c Like 'Account Agg-21%'];
+DELETE [SELECT id from Account where Name like 'Account Agg-21%' OR Account_ExternalId__c Like 'Account Agg-21%'];
 DELETE [SELECT id from Contact  where email like '%gainsighttest.com' and account.name like 'Account Agg-21%'];
 
 List<Account> accList = new List<Account>();
