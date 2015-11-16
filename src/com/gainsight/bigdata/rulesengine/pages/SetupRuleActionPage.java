@@ -34,12 +34,13 @@ public class SetupRuleActionPage extends BasePage {
     private final String OWNERFIELD = "//label[contains(text(),'Reason')]/following-sibling::div/select[contains(@class,'OwnerField')]/following-sibling::button";
     private final String DUEDATE = "//div[@class='dueDate']/input";
     private final String DEFAULTOWNER = "//label[contains(text(),'Default Owner')]/following-sibling::div//input";
-    private final String POSTUPDATE_BUTTON = "//label[contains(text(),'Post update')]/..//button";
+    private final String POSTUPDATE_BUTTON = "//select[contains(@class, 'comments_post_frequency')]/following-sibling::button";
     private final String COMMENTS = "//label[contains(text(),'Comments')]/../descendant::div[contains(@class,'form')]";
     private final String SAVE_BUTTON = "//input[@type='button' and @class='gs-btn btn-save']";
     private final String CREATE_CTA_RADIO_BUTTON = "//input[@value='create']";
     private final String CTA_NAME_INPUT = "//div[contains(@class, 'ctaName')]";
     private final String SCORECARD_COMMENTS = "//div[contains(@class, 'setup-action-body create-score-card')]/descendant::textarea[contains(@class, 'scorecardComment')]";
+    private final String DUE_DATE_TYPE = "//select[contains(@class, 'due_date_type')]/following-sibling::button";
 
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
     private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/../button";
@@ -139,9 +140,11 @@ public class SetupRuleActionPage extends BasePage {
 
     public void createCTA(CTAAction ctaAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
-        clickOnActionButton();
-        item.click(xpath + SELECT_BUTTON);
-        selectValueInDropDown("Call To Action");
+        if (!ctaAction.isCtaUpsert()) {
+        	clickOnActionButton();
+            item.click(xpath + SELECT_BUTTON);
+            selectValueInDropDown("Call To Action");
+		}
         item.click(xpath + CREATE_CTA_RADIO_BUTTON);
         field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
         item.click(xpath + PRIORITY_BUTTON);
@@ -150,11 +153,21 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(ctaAction.getType());
         item.click(xpath + STATUS_BUTTON);
         selectValueInDropDown(ctaAction.getStatus());
+        if (!ctaAction.getPlaybook().isEmpty()) {
         item.click(xpath + PLAYBOOK);
         selectValueInDropDown(ctaAction.getPlaybook());
+        }
         item.click(xpath + REASON_BUTTON);
         selectValueInDropDown(ctaAction.getReason());
         field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
+        if (!ctaAction.getChatterUpdate().isEmpty()) {
+			item.click(xpath+POSTUPDATE_BUTTON);
+			 selectValueInDropDown(ctaAction.getChatterUpdate(), true);
+		}
+        if (ctaAction.getDueDateType()!=null || !ctaAction.getDueDateType().isEmpty()) {
+			item.click(DUE_DATE_TYPE);
+			selectValueInDropDown(ctaAction.getDueDateType(), true);
+		}
         selectTaskOwner(ctaAction.getDefaultOwner(), i);
         element.clearAndSetText(xpath + COMMENTS, ctaAction.getComments());
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);

@@ -44,6 +44,7 @@ public class BaseTest {
     public static NsConfig nsConfig = ConfigLoader.getNsConfig();
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
+    public static final String CTA_DUEDATE_FORMAT = "yyyy-MM-dd";
 
 
     @BeforeSuite

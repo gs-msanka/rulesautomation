@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 17 - Edit Rule",
-  "ruleDescription": "Rule 17 - Edit Rule",
+  "ruleName": "Rule-17-Edit-Rule",
+  "ruleDescription": "Rule-17-Edit-Rule",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",

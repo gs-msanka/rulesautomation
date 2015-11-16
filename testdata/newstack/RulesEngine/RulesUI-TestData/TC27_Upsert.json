@@ -1,0 +1,27 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-6247-Testcase-ID",
+  "ruleDescription": "GS-6247-Testcase-ID Desc",
+  "setupRule": null,
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "upsert": true,
+      "action": {
+        "ctaUpsert": true,
+        "name": "GS-6247-Testcase-ID-UI",
+        "priority": "Low",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Once",
+	"dueDateType": "",
+        "comments": "These are test comments for CTA"
+      }
+    }
+  ]
+}

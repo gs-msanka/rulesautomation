@@ -2,9 +2,11 @@ package com.gainsight.bigdata.rulesengine.pojo.setupaction;
 
 import com.gainsight.bigdata.rulesengine.pojo.enums.ActionType;
 import com.google.gson.JsonObject;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -16,14 +18,26 @@ import java.util.List;
 /**
  * Created by vmenon on 9/13/2015.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class RuleAction {
 
     @JsonDeserialize(using = ActionTypeDeserializer.class )
     private ActionType actionType;
+    private boolean upsert;
     private JsonNode action ;
     private List<Criteria> criterias = new ArrayList<>();
+    
 
-    public ActionType getActionType() {
+    public boolean isUpsert() {
+		return upsert;
+	}
+
+	public void setUpsert(boolean upsert) {
+		this.upsert = upsert;
+	}
+
+	public ActionType getActionType() {
         return actionType;
     }
 

@@ -3,16 +3,21 @@ package com.gainsight.bigdata.rulesengine.tests;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -66,6 +71,7 @@ import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.rulesEngine.setup.RuleEngineDataSetup;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -75,6 +81,7 @@ import com.gainsight.util.Comparator;
 import com.gainsight.util.DBStoreType;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.Verifier;
+import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
 
 import org.apache.commons.io.FileUtils;
@@ -135,6 +142,7 @@ public class CreateRuleTest extends BaseTest {
         basepage.login();
         sfdc.connect();
         nsTestBase.init();
+        rulesUtil.populateObjMaps();
         nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
@@ -197,7 +205,7 @@ public class CreateRuleTest extends BaseTest {
     	finally{
     	mongoDBDAO.mongoUtil.closeConnection();
     	}
-        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+    	rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
@@ -286,7 +294,8 @@ public class CreateRuleTest extends BaseTest {
             JsonNode actionObject = ruleAction.getAction();
             CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
-                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), rulesPojo.getRuleName(), ctaAction.getPlaybook()));
+                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()),
+                    "verify whether cta action configured resulted in  correct cta or not");
         }
     }
 
@@ -309,7 +318,8 @@ public class CreateRuleTest extends BaseTest {
             JsonNode actionObject = ruleAction.getAction();
             CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
-                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), rulesPojo.getRuleName(), ctaAction.getPlaybook()));
+                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()),
+                    "verify whether cta action configured resulted in  correct cta or not");
         }
     }
 
@@ -334,7 +344,8 @@ public class CreateRuleTest extends BaseTest {
             JsonNode actionObject = ruleAction.getAction();
             CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
             Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
-                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), rulesPojo.getRuleName(), ctaAction.getPlaybook()));
+                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()),
+                    "verify whether cta action configured resulted in  correct cta or not");
         }
     }
 
@@ -367,7 +378,8 @@ public class CreateRuleTest extends BaseTest {
                     CTAAction ctaAction = objectMapper.readValue(actionObject, CTAAction.class);
                     verifier.verifyTrue((rulesUtil.isCTACreateSuccessfully(
                             ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(), ctaAction.getType(),
-                            ctaAction.getReason(), ctaAction.getComments(), rulesPojo.getRuleName(), ctaAction.getPlaybook())));
+                            ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook())),
+                            "verify whether cta action configured resulted in  correct cta or not");
                     Log.info("Verification done for cta");
                     break;
                 case LoadToCustomers:
@@ -476,7 +488,8 @@ public class CreateRuleTest extends BaseTest {
                 case CTA:
                     CTAAction ctaAction = objectMapper.readValue(actionObject, CTAAction.class);
                     verifier.verifyTrue((rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(),
-                            sfdcInfo.getUserId(), ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), rulesPojo.getRuleName(), ctaAction.getPlaybook())));
+                            sfdcInfo.getUserId(), ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook())),
+                            "verify whether cta action configured resulted in  correct cta or not");
                     Log.info("Verification done for cta");
                     break;
                 case LoadToCustomers:
@@ -766,7 +779,8 @@ public class CreateRuleTest extends BaseTest {
 			JsonNode actionObject = ruleAction.getAction();
 			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
 			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(),
-					sfdcInfo.getUserId(), ctaAction.getType(),ctaAction.getReason(), ctaAction.getComments(),rulesPojo.getRuleName(), ctaAction.getPlaybook()));
+					sfdcInfo.getUserId(), ctaAction.getType(),ctaAction.getReason(), ctaAction.getComments(),rulesPojo.getRuleName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted in  correct cta or not");
 		}
 	}
 	
@@ -993,5 +1007,569 @@ public class CreateRuleTest extends BaseTest {
 				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
 		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4185", "GS-4186", "GS-4257"})
+	@Test
+	public void testCtaWithUpsertProrityOption() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		// Creating cta with Low priority
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC23.json"),
+				RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+
+		RuleAction action = null;
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			action = ruleAction;
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+
+		// Updating cta with high priority
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
+				.clickOnRulesEnginePage();
+		RulesPojo TC23_Upsert = mapper
+				.readValue(
+						new File(
+								Application.basedir
+										+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC23_Upsert.json"),
+						RulesPojo.class);
+		List<RuleAction> ruleAction = TC23_Upsert.getSetupActions();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA")
+					&& ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				rulesManagerPage2.editRuleByName(TC23_Upsert.getRuleName());
+				rulesEngineUtil.createRuleFromUi(TC23_Upsert);
+				Assert.assertTrue(rulesUtil.runRule(TC23_Upsert.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaAction.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments(),
+						ctaAction.getName(), ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+
+		}
+
+		// Updating same cta with Low priority
+		RulesManagerPage rulesManagerPage3 = basepage.clickOnAdminTab()
+				.clickOnRulesEnginePage();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA")
+					&& ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				// Setting cta priority to Low
+				ctaAction.setPriority("Low");
+				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
+				rulesManagerPage3.editRuleByName(TC23_Upsert.getRuleName());
+				rulesEngineUtil.createRuleFromUi(TC23_Upsert);
+				Assert.assertTrue(rulesUtil.runRule(TC23_Upsert.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully("High",
+						ctaAction.getStatus(), sfdcInfo.getUserId(),
+						ctaAction.getType(), ctaAction.getReason(),
+						ctaAction.getComments(), ctaAction.getName(),
+						ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4256", "GS-4257" })
+	@Test
+	public void testCtaWithUpdateCommentsAlwaysOption() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+
+		RuleAction action = null;
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			action = ruleAction;
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
+				.clickOnRulesEnginePage();
+		RulesPojo TC24_Upsert = mapper
+				.readValue(
+						new File(
+								Application.basedir
+										+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24_Upsert.json"),
+						RulesPojo.class);
+		List<RuleAction> ruleAction = TC24_Upsert.getSetupActions();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				rulesManagerPage2.editRuleByName(TC24_Upsert.getRuleName());
+				rulesEngineUtil.createRuleFromUi(TC24_Upsert);
+				Assert.assertTrue(rulesUtil.runRule(TC24_Upsert.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaAction.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments() + "\n"
+								+ "\n" + ctaAction.getComments(),
+						ctaAction.getName(), ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted in  correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4257" })
+	@Test
+	public void testCtaWithUpdateCommentsNeverOption() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC25.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), null, ctaAction.getName(),
+					ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4258"})
+	@Test
+	public void testCtaWithAddOrReplacePlaybook() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		// Creating cta with no playbook
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC26.json"),
+				RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+		RuleAction action = null;
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			action = ruleAction;
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), null),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+
+		// Updating cta with a playbook
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
+				.clickOnRulesEnginePage();
+		RulesPojo upsertJson = mapper
+				.readValue(
+						new File(
+								Application.basedir
+										+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC26_Upsert.json"),
+						RulesPojo.class);
+		CTAAction ctaActionObject=null;
+		List<RuleAction> ruleAction = upsertJson.getSetupActions();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA")
+					&& ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				ctaActionObject=ctaAction;
+				rulesManagerPage2.editRuleByName(upsertJson.getRuleName());
+				rulesEngineUtil.createRuleFromUi(upsertJson);
+				Assert.assertTrue(rulesUtil.runRule(upsertJson.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaAction.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments(),
+						ctaAction.getName(), ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+
+		}
+
+		// updating cta to other playbook
+		RulesManagerPage rulesManagerPage3 = basepage.clickOnAdminTab()
+				.clickOnRulesEnginePage();
+		RulesPojo upsert_Cta = mapper
+				.readValue(new File(Application.basedir
+										+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC26_Upsert_2.json"), RulesPojo.class);
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA")
+					&& ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				// Setting playbook to other
+				ctaAction.setPlaybook("Decline in usage");
+				
+				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
+				rulesManagerPage3.editRuleByName(upsert_Cta.getRuleName());
+				rulesEngineUtil.createRuleFromUi(upsert_Cta);
+				Assert.assertTrue(rulesUtil.runRule(upsert_Cta.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaAction.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments(),
+						ctaAction.getName(), ctaActionObject.getPlaybook()),
+						"verify whether cta action configured resulted correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = {"GS-6247"})
+	@Test
+	public void testCtaWithRuleNameChangeOption() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+		RuleAction action = null;
+		CTAAction ctaActionObj=null;
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			action = ruleAction;
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			ctaActionObj=ctaAction;
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo TC27_Upsert = mapper
+				.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27_Upsert.json"),RulesPojo.class);
+		List<RuleAction> ruleAction = TC27_Upsert.getSetupActions();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				// Changing cta name
+				ctaAction.setName(ctaAction.getName()+ "NewName");
+				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
+				rulesManagerPage2.editRuleByName(TC27_Upsert.getRuleName());
+				rulesEngineUtil.createRuleFromUi(TC27_Upsert);
+				Assert.assertTrue(rulesUtil.runRule(TC27_Upsert.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaAction.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments(),
+						ctaActionObj.getName(), ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted in  correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaActionObj.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4264"})
+	@Test
+	public void testCtaUpsertWithSnoozeOption() throws Exception {
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
+				"Check whether Rule ran successfully or not !");
+		RuleAction action = null;
+		CTAAction  ctaRule1=null;
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			action = ruleAction;
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			ctaRule1=ctaAction;
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(ruleAction.getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
+		}
+		
+		// Updating all Cta's to snooze till Date.today()+5 via script
+		sfdc.runApexCode(resolveStrNameSpace("JBCXM__PickList__c pick=[SELECT Id,JBCXM__SystemName__c,JBCXM__ShortName__c  FROM JBCXM__PickList__c where JBCXM__SystemName__c like '%snooze%' and JBCXM__ShortName__c like '%Other%' limit 1];List<JBCXM__CTA__c> cta = [select Id,JBCXM__SnoozedUntil__c, JBCXM__SnoozeReason__c from JBCXM__CTA__c];for(JBCXM__CTA__c snooze :cta){snooze.JBCXM__SnoozeReason__c = pick.Id;snooze.JBCXM__SnoozedUntil__c=Date.today()+5;}update cta;"));
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo TC28_Upsert = mapper
+				.readValue(
+						new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28_Upsert.json"), RulesPojo.class);
+		List<RuleAction> ruleAction = TC28_Upsert.getSetupActions();
+		for (RuleAction ruleActions2 : ruleAction) {
+			if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
+				JsonNode actionObject = ruleActions2.getAction();
+				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+				rulesManagerPage2.editRuleByName(TC28_Upsert.getRuleName());
+				rulesEngineUtil.createRuleFromUi(TC28_Upsert);
+				Assert.assertTrue(rulesUtil.runRule(TC28_Upsert.getRuleName()),
+						"Check whether Rule ran successfully or not !");
+				Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+						ctaRule1.getPriority(), ctaAction.getStatus(),
+						sfdcInfo.getUserId(), ctaAction.getType(),
+						ctaAction.getReason(), ctaAction.getComments(),
+						ctaAction.getName(), ctaAction.getPlaybook()),
+						"verify whether cta action configured resulted in  correct cta or not");
+				int srcObjRecCount = sfdc
+						.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+								.queryString(action.getCriterias())));
+				Assert.assertEquals(
+						srcObjRecCount,
+						sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+								+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and isdeleted=false"))));
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4261"})
+	@Test
+	public void testCtaActionWithDonNotSkipWeekendOption() throws Exception{
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC29.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");
+			String date = DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate()), 0, "yyyy-MM-dd");
+			Log.info("Duedate is " + date);
+			SObject[] objRecords = sfdc
+					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
+			Log.info("Total Records : " + objRecords.length);
+			for (SObject sObject : objRecords) {
+				Assert.assertEquals(date, sObject.getField("JBCXM__DueDate__c"), "Check DueDate is not matching !!");
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4261"})
+	@Test
+	public void testCtaActionWithSkipAllWeekendsOption() throws Exception{
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC30.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions(); 
+		for (RuleAction ruleAction : ruleActions) {
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");		
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			dateFormat.setTimeZone(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));		
+			int weekEndDays=RulesEngineUtil.getcountOfDaysIfCtaCreatedOnWeekend(0);
+			System.out.println(weekEndDays);
+			String dueDate=RulesEngineUtil.getCtaDateForCTASkipAllWeekendsOption(Integer.valueOf(ctaAction.getDueDate())-weekEndDays);
+			Log.info("Duedate is " + dueDate);
+			SObject[] objRecords = sfdc
+					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
+			Log.info("Total Records : " + objRecords.length);
+			for (SObject sObject : objRecords) {
+				Assert.assertEquals(dueDate, sObject.getField("JBCXM__DueDate__c"),"Check DueDate is not matching !!");
+			}
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4261"})
+	@Test
+	public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception{
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC31.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		List<RuleAction> ruleActions = rulesPojo.getSetupActions();
+		for (RuleAction ruleAction : ruleActions) {
+			JsonNode actionObject = ruleAction.getAction();
+			CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(
+					ctaAction.getPriority(), ctaAction.getStatus(),
+					sfdcInfo.getUserId(), ctaAction.getType(),
+					ctaAction.getReason(), ctaAction.getComments(),
+					ctaAction.getName(), ctaAction.getPlaybook()),
+					"verify whether cta action configured resulted correct cta or not");		
+			int days=RulesEngineUtil.getcountOfDaysIfCtaCreatedOnWeekend(Integer.valueOf(ctaAction.getDueDate()));
+			String date = DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate())+days, 0,  "yyyy-MM-dd");
+			SObject[] objRecords = sfdc
+					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
+			Log.info("Total Records : " + objRecords.length);
+			for (SObject sObject : objRecords) {
+				Assert.assertEquals(date, sObject.getField("JBCXM__DueDate__c"), "Check DueDate is not matching !!");
+			}
+		}
 	}
 }
