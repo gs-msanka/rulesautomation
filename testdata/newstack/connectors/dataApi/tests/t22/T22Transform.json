@@ -10,7 +10,7 @@
       "Contact_ExternalId__c"
     ],
     "whereCondition": " where email like '%@gainsighttest.com' and Account.Name like 'Account Agg-22%'",
-    "output": "/testdata/newstack/connectors/dataApi/process/t22/T22contacts.csv"
+    "output": "/testdata/newstack/connectors/dataApi/process/t22/T22Contacts.csv"
   },
   "transform": {
     "query" : "",
