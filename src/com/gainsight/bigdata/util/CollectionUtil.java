@@ -2,6 +2,7 @@ package com.gainsight.bigdata.util;
 
 import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
+import com.gainsight.bigdata.gsData.pojos.CollectionDependency;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.ColumnAttributeType;
 import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
@@ -13,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import static org.testng.Assert.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,9 +212,9 @@ public class CollectionUtil {
         return true;
     }
 
-    public DataLoadMetadata getDBDataLoadMetaData(CollectionInfo collectionInfo, DataLoadOperationType loadType) {
+    public static DataLoadMetadata getDBDataLoadMetaData(CollectionInfo collectionInfo, DataLoadOperationType loadType) throws IOException {
         DataLoadMetadata metadata = new DataLoadMetadata();
-        metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionId());
+        metadata.setCollectionName(collectionInfo.getCollectionDetails().getDbCollectionName());
         metadata.setDataLoadOperation(loadType.name());
         metadata.setDbNameUsed(true);
 
@@ -225,19 +227,24 @@ public class CollectionUtil {
             mappings.add(mapping);
         }
         metadata.setMappings(mappings);
+        Log.info("Metadata : " + mapper.writeValueAsString(metadata));
         return metadata;
     }
 
-    public DataLoadMetadata getDBDataLoadMetaData(CollectionInfo collectionInfo, String[] fields, DataLoadOperationType loadType) {
+    public static DataLoadMetadata getDBDataLoadMetaData(CollectionInfo collectionInfo, String[] fields, DataLoadOperationType loadType) {
         DataLoadMetadata metadata = new DataLoadMetadata();
-        metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionId());
+        metadata.setCollectionName(collectionInfo.getCollectionDetails().getDbCollectionName());
         metadata.setDataLoadOperation(loadType.name());
         metadata.setDbNameUsed(true);
 
         List<DataLoadMetadata.Mapping> mappings = new ArrayList<>();
+        HashMap<String, CollectionInfo.Column> columnHashMap = getDisplayNameColumnsMap(collectionInfo);
         DataLoadMetadata.Mapping mapping = null;
         for(String field : fields) {
-            CollectionInfo.Column column = CollectionUtil.getColumnByDisplayName(collectionInfo, field);
+            CollectionInfo.Column column = columnHashMap.get(field);
+            if(column == null) {
+                throw new RuntimeException("Column not found." +field);
+            }
             mapping = new DataLoadMetadata.Mapping();
             mapping.setSource(column.getDisplayName());
             mapping.setTarget(column.getDbName());
@@ -283,9 +290,17 @@ public class CollectionUtil {
         if(expected.getLookupDetail() !=null) {
             Log.info("Verifying lookup Details...");
             if(actual.getLookupDetail() !=null) {
-                verifier.verifyEquals(expected.getLookupDetail().getCollectionId(), actual.getLookupDetail().getCollectionId());
-                verifier.verifyEquals(expected.getLookupDetail().getDbCollectionName(), actual.getLookupDetail().getDbCollectionName());
-                verifier.verifyEquals(expected.getLookupDetail().getFieldDBName(), actual.getLookupDetail().getFieldDBName());
+                verifier.verifyEquals(expected.getLookupDetail().getCollectionId(), actual.getLookupDetail().getCollectionId(), "Collection Id Not Matched.");
+                verifier.verifyEquals(expected.getLookupDetail().getDbCollectionName(), actual.getLookupDetail().getDbCollectionName(), "DB Collection Name Not Matched.");
+                verifier.verifyEquals(expected.getLookupDetail().getFieldDBName(), actual.getLookupDetail().getFieldDBName(), "Field DB Name Not Matched.");
+                if(expected.getLookupDetail().getCollectionName() != null || !expected.getLookupDetail().getCollectionName().isEmpty()) {
+                    Log.debug("Verifying Lookup Collection Name..");
+                    verifier.verifyEquals(expected.getLookupDetail().getCollectionName(), actual.getLookupDetail().getCollectionName(), "Look Up - Column Name not Matched.");
+                }
+                if(expected.getLookupDetail().getColumnDisplayName() != null || !expected.getLookupDetail().getColumnDisplayName().isEmpty()) {
+                    Log.debug("Verifying Lookup Column Name..");
+                    verifier.verifyEquals(expected.getLookupDetail().getColumnDisplayName(), actual.getLookupDetail().getColumnDisplayName(), "Look Up - Column Name not Matched.");
+                }
             } else {
                 verifier.fail("Actual lookup details are null.");
             }
@@ -306,6 +321,7 @@ public class CollectionUtil {
         CollectionInfo.MappingsSFDC sfdcMapping = expected.getMappings();
         if(sfdcMapping !=null && sfdcMapping.getSfdc()!=null) {
             assertNotNull(actual.getMappings(), "SFDC mapping in actual should not be null.");
+            //This is map equals - in case if you have an extra key in map then this will fail.
             verifier.verifyTrue(sfdcMapping.getSfdc().equals(actual.getMappings().getSfdc()), "SFDC mapping is not matched.");
         }
         result = !verifier.isVerificationFailed();
@@ -363,15 +379,28 @@ public class CollectionUtil {
         lookUpDetail.setCollectionId(lookUpObject.getCollectionDetails().getCollectionId());
         lookUpDetail.setDbCollectionName(lookUpObject.getCollectionDetails().getDbCollectionName());
         lookUpDetail.setFieldDBName(useDBName ? getColumnByDBName(lookUpObject, foreignField).getDbName() : getColumnByDisplayName(lookUpObject, foreignField).getDbName());
-        if(useDBName) {
-        	CollectionInfo.Column column=getColumnByDBName(baseObject, primaryField);
-        	column.setHasLookup(true);
-        	column.setLookupDetail(lookUpDetail);
-        } else {
-        	CollectionInfo.Column column=getColumnByDisplayName(baseObject, primaryField);
-        	column.setHasLookup(true);
-        	column.setLookupDetail(lookUpDetail);
-        }
+        CollectionInfo.Column column= useDBName ? getColumnByDBName(baseObject, primaryField) :getColumnByDisplayName(baseObject, primaryField);
+        column.setHasLookup(true);
+        column.setLookupDetail(lookUpDetail);
+    }
+
+    /**
+     * Set up lookup details for a column.
+     * @param column - Column to set the lookup details for.
+     * @param lookUpObject - Object which the look up field ca be created.
+     * @param foreignField - Column which the look up in target object.
+     */
+    public static void setLookUpDetails(CollectionInfo.Column column, CollectionInfo lookUpObject, String foreignField) {
+        CollectionInfo.LookUpDetail lookUpDetail = new CollectionInfo.LookUpDetail();
+        lookUpDetail.setCollectionId(lookUpObject.getCollectionDetails().getCollectionId());
+        lookUpDetail.setDbCollectionName(lookUpObject.getCollectionDetails().getDbCollectionName());
+        lookUpDetail.setCollectionName(lookUpObject.getCollectionDetails().getCollectionName());
+        CollectionInfo.Column lookedUpColumn = getColumnByDisplayName(lookUpObject, foreignField);
+        lookUpDetail.setFieldDBName(lookedUpColumn.getDbName());
+        lookUpDetail.setColumnDisplayName(lookedUpColumn.getDisplayName());
+        column.setHasLookup(true);
+        column.setLookupDetail(lookUpDetail);
+        Log.info("Look Up Details : " + lookUpDetail.toString());
     }
 
 
@@ -400,6 +429,15 @@ public class CollectionUtil {
 		}
 		return collectionInfo;
 	}
+
+    /**
+     * Replaces the display names / tokens in a calculated expression of column.
+     * Can be used on all redshift collections.
+     * @param collectionInfo - Collection Info.
+     */
+    public static void tokenizeCalculatedExpression(CollectionInfo collectionInfo) {
+        tokenizeCalculatedExpression(collectionInfo, null);
+    }
 
     /**
      * Replaces the display names / tokens in a calculated expression of column.
@@ -456,5 +494,23 @@ public class CollectionUtil {
         }
         Log.info("Column List : " + values.toString());
         return values;
+    }
+
+    public static boolean isDependencyExists(List<CollectionDependency> dependencyList, CollectionDependency collectionDependency) {
+
+        boolean result = false;
+        for(CollectionDependency dependency : dependencyList) {
+            Verifier verifier = new Verifier();
+            verifier.verifyEquals(dependency.getEntityId(), collectionDependency.getEntityId(), "Entity Id Not Matched.");
+            verifier.verifyEquals(dependency.getEntityName(), collectionDependency.getEntityName(), "Entity Name Not Matched.");
+            verifier.verifyEquals(dependency.getEntityType(), collectionDependency.getEntityType(), "Entity Type not Matched.");
+
+            if(!verifier.isVerificationFailed()) {
+                result = true;
+                Log.info("Collection Dependency Found.");
+                break;
+            }
+        }
+        return result;
     }
 }
