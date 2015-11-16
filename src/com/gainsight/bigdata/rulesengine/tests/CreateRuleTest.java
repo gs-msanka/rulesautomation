@@ -1526,20 +1526,16 @@ public class CreateRuleTest extends BaseTest {
 					ctaAction.getName(), ctaAction.getPlaybook()),
 					"verify whether cta action configured resulted correct cta or not");		
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			dateFormat.setTimeZone(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));
-			String StartDate=DateUtil.getDateWithRequiredFormat(0, 0,  "yyyy-MM-dd");
-			String endDate=DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate()), 0, "yyyy-MM-dd");
-			int bussinessDays=RulesEngineUtil.getTotalBusinessDays(dateFormat.parse(StartDate), dateFormat.parse(endDate));	
-			int weekEndDays=RulesEngineUtil.getCountOfDaysToAddIfCtaCreatedOnWeekend(0);
-			System.out.println("BussinessDays are " +bussinessDays);
-			int actualDays=Integer.valueOf(ctaAction.getDueDate());
-			String date = DateUtil.getDateWithRequiredFormat(actualDays+(actualDays-bussinessDays+weekEndDays), 0, "yyyy-MM-dd");
-			Log.info("Duedate is " + date);
+			dateFormat.setTimeZone(TimeZone.getTimeZone(sfdcInfo.getUserTimeZone()));		
+			int weekEndDays=RulesEngineUtil.getcountOfDaysIfCtaCreatedOnWeekend(0);
+			System.out.println(weekEndDays);
+			String dueDate=RulesEngineUtil.getCtaDateForCTASkipAllWeekendsOption(Integer.valueOf(ctaAction.getDueDate())-weekEndDays);
+			Log.info("Duedate is " + dueDate);
 			SObject[] objRecords = sfdc
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
 			Log.info("Total Records : " + objRecords.length);
 			for (SObject sObject : objRecords) {
-				Assert.assertEquals(date, sObject.getField("JBCXM__DueDate__c"),"Check DueDate is not matching !!");
+				Assert.assertEquals(dueDate, sObject.getField("JBCXM__DueDate__c"),"Check DueDate is not matching !!");
 			}
 		}
 	}
@@ -1566,7 +1562,7 @@ public class CreateRuleTest extends BaseTest {
 					ctaAction.getReason(), ctaAction.getComments(),
 					ctaAction.getName(), ctaAction.getPlaybook()),
 					"verify whether cta action configured resulted correct cta or not");		
-			int days=RulesEngineUtil.getDays(Integer.valueOf(ctaAction.getDueDate()));
+			int days=RulesEngineUtil.getcountOfDaysIfCtaCreatedOnWeekend(Integer.valueOf(ctaAction.getDueDate()));
 			String date = DateUtil.getDateWithRequiredFormat(Integer.valueOf(ctaAction.getDueDate())+days, 0,  "yyyy-MM-dd");
 			SObject[] objRecords = sfdc
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
