@@ -9,9 +9,11 @@ import com.gainsight.bigdata.dataLoadConfiguartion.pojo.accountdetails.*;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
+import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.MDADateProcessor;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
@@ -22,6 +24,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
+import com.gainsight.util.DBStoreType;
 import com.gainsight.utils.annotations.TestInfo;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
@@ -32,6 +35,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by Giribabu on 07/07/15.
@@ -49,27 +54,31 @@ public class DataLoadConfigAggTest extends NSTestBase {
 
     final String COLLECTION_MASTER_SCHEMA = Application.basedir+"/testdata/newstack/connectors/dataApi/data/CollectionInfo.json";
     private String testDataFiles = testDataBasePath+"/connectors/dataApi";
-
+    GSDataImpl gsDataImpl;
     JobInfo eventsJobInfo;
+    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+
 
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
+        dataBaseType = dataBaseType == null ? DBStoreType.MONGO : DBStoreType.valueOf(dbStoreType);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-        tenantDetails       = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        tenantDetails       = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        gsDataImpl = new GSDataImpl(header);
+        TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
+        tenantDetails       = tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         dataLoadManager     = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         dataETL             = new DataETL();
         reportManager       = new ReportManager();
         dataLoadAggConfigManager = new DataLoadAggConfigManager(header);
 
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+        if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+                assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
-        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+        } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {
-                Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+                assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
         }
 
@@ -88,6 +97,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
             JobInfo customerJobInfo = mapper.readValue(new File(testDataFiles+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
         }
+        dataETL.execute(eventsJobInfo);
 
 
     }

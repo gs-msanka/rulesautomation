@@ -1,0 +1,6 @@
+AccountId,AccountName,Description,Active,Date,eventtimestamp,PageViews,PageVisits
+AccountId1,Gallo Ernst & Julio Winery,AccountId1 Gallo Ernst & Julio Winery,TRUE,2016-01-01,2016-01-01,2,21
+AccountId2,Facts on File Newsletter,AccountId2 Facts on File Newsletter,FALSE,2016-01-01,2016-01-01,1,-21
+AccountId3,PacDevco Inc,AccountId3 PacDevco Inc,FALSE,2016-01-01,2016-01-01,0,0
+AccountId4,UniAmerica Inc,AccountId4 UniAmerica Inc,,2016-01-01,2016-01-01,,12
+AccountId5,East Coast Traders,AccountId5 East Coast Traders,TRUE,2016-01-01,2016-01-01,-1,21

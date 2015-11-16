@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 14 - Turn OFF Rule (InActive)",
-  "ruleDescription": "Rule 14 - Turn OFF Rule (InActive)",
+  "ruleName": "Rule-14-Turn-OFF-Rule-InActive",
+  "ruleDescription": "Rule-14-Turn-OFF-Rule-InActive",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",

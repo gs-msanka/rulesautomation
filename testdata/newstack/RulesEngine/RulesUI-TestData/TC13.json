@@ -82,10 +82,12 @@
         "type": "Risk",
         "status": "New",
         "playbook": "Collections",
+	"chatterUpdate": "",
         "reason": "Product Issue",
         "ownerField": "",
         "dueDate": "10",
         "defaultOwner": "weRules",
+	"dueDateType": "",
         "comments": "These are test comments for CTA"
       },
       "criterias": [

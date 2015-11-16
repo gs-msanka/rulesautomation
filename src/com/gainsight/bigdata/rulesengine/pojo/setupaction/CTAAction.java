@@ -1,22 +1,53 @@
 package com.gainsight.bigdata.rulesengine.pojo.setupaction;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * Created by vmenon on 9/13/2015.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CTAAction {
 
     private String name = "";
     private String priority = "";
     private String type = "";
     private String status = "";
-    private String playbook = "";
+    private String playbook;
     private String reason = "";
     private String ownerField = "";
     private String dueDate = "";
     private String defaultOwner = "";
     private String comments = "";
+    private boolean ctaUpsert=false;
+    private String chatterUpdate;
+    private String dueDateType;
 
-    public String getName() {
+	public boolean isCtaUpsert() {
+		return ctaUpsert;
+	}
+
+	public String getChatterUpdate() {
+		return chatterUpdate;
+	}
+
+	public void setChatterUpdate(String chatterUpdate) {
+		this.chatterUpdate = chatterUpdate;
+	}
+
+	public String getDueDateType() {
+		return dueDateType;
+	}
+
+	public void setDueDateType(String dueDateType) {
+		this.dueDateType = dueDateType;
+	}
+
+	public void setCtaUpsert(boolean ctaUpsert) {
+		this.ctaUpsert = ctaUpsert;
+	}
+
+	public String getName() {
         return name;
     }
 

@@ -1,0 +1,86 @@
+{
+  "CollectionDetails": {
+    "dataStoreType": "REDSHIFT",
+    "dbType": "DATA",
+    "assetType": "ANALYTICS",
+    "dbCollectionName": "",
+    "CollectionID": "",
+    "CollectionName": "GSUSER"
+  },
+  "Columns": [
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER",
+          "dataType": "string"
+        }
+      },
+      "DisplayName": "Id"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER_NAME",
+          "dataType": "string"
+        }
+      },
+      "DisplayName": "Name"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "boolean",
+      "colattribtype": 0,
+      "DisplayName": "Active"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "number",
+      "colattribtype": 1,
+      "mappings": {
+        "SFDC" :{
+          "dataType" : "number",
+          "key" : "JBCXM__WorkExp__c"
+        }
+      },
+      "DisplayName": "Work Experience"
+    },
+    {
+      "name": "",
+      "format": {
+        "dateFormat": "MM-dd-yyyy'T'HH-MM-ss"
+      },
+      "DBName": "",
+      "datatype": "dateTime",
+      "colattribtype": 0,
+      "DisplayName": "User EventTime"
+    },
+    {
+      "name": "",
+      "format": {
+        "dateFormat": "MM-dd-yyyy"
+      },
+      "DBName": "",
+      "datatype": "date",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_WEEK",
+          "dataType": "string",
+          "format": "mm-dd-yyyy"
+        }
+      },
+      "DisplayName": "User Date"
+    }
+  ],
+  "CollectionDescription": "GS User - User Object."
+}

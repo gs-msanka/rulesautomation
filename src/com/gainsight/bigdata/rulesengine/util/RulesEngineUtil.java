@@ -20,7 +20,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by vmenon on 9/15/2015.
@@ -52,13 +57,19 @@ public class RulesEngineUtil  extends BaseTest{
         EditRulePage editRulePage = new EditRulePage();
         editRulePage.enterRuleDetailsAndClickNext(rulesPojo);
         int i=1;
-		if ((rulesPojo.getSetupActions().size() == 1)
-				&& (rulesPojo.getSetupActions().get(0).getActionType().name()
-						.contains("LoadToCustomers") && rulesPojo.getSetupRule().getDataSource().equalsIgnoreCase("Native"))) {
-            setUpRule(rulesPojo.getSetupRule(), true);
-           } else {
-        	   setUpRule(rulesPojo.getSetupRule(), false);
-           }
+        if (rulesPojo.getSetupRule()!=null) {
+    		if ((rulesPojo.getSetupActions().size() == 1)
+    				&& (rulesPojo.getSetupActions().get(0).getActionType().name()
+    						.contains("LoadToCustomers") && rulesPojo.getSetupRule().getDataSource().equalsIgnoreCase("Native"))) {
+                setUpRule(rulesPojo.getSetupRule(), true);
+               } else {
+            	   setUpRule(rulesPojo.getSetupRule(), false);
+               }
+		}else {
+			SetupRulePage setupRulePage = new SetupRulePage();
+			setupRulePage.clickOnNext();
+		}
+        
           
         if(rulesPojo.getSetupActions()!=null && !rulesPojo.getSetupActions().isEmpty()){
             SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
@@ -188,5 +199,43 @@ public class RulesEngineUtil  extends BaseTest{
 			setupRulePage.unCheckApplyToGSCustomers();
 		}
 		setupRulePage.clickOnNext();
+	}
+
+	/**
+	 * @param number of days
+	 * @return returns numbers of days based on weekday
+	 */
+	public static int getcountOfDaysIfCtaCreatedOnWeekend(int  amount){
+		int days = 0;
+		Calendar c1 = Calendar.getInstance(userTimezone);
+		c1.add(Calendar.DATE, amount);
+		Log.info("Date and Time is " +c1.getTime());
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			Log.info("Today is Saturday");
+			// returns two days to adjust cta due date accordingly
+			days = 2;
+		}
+		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			Log.info("Today is Sunday");
+			// returns one day to adjust cta due date accordingly
+			days = 1;
+		}
+		return days;
+	}
+    
+	public static String getCtaDateForCTASkipAllWeekendsOption(int day) {
+		Calendar sDate = Calendar.getInstance(userTimezone);
+		Calendar eDate = Calendar.getInstance(userTimezone);
+		eDate.add(Calendar.DATE, day);
+		while (sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
+			if (sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+				Log.info("Today is Saturday/Sunday");
+				eDate.add(Calendar.DATE, 1);
+			}
+			sDate.add(Calendar.DATE, 1);
+		}
+		DateFormat dateFormat = new SimpleDateFormat(CTA_DUEDATE_FORMAT);
+		dateFormat.setTimeZone(userTimezone);
+		return dateFormat.format(eDate.getTime());
 	}
 }

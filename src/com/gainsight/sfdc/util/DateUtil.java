@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.gainsight.sfdc.tests.BaseTest;
+
 import org.apache.commons.lang3.time.DateUtils;
 
 import com.gainsight.testdriver.Log;
@@ -540,6 +541,13 @@ public class DateUtil {
             currentMonth = 9;
         }
         return currentMonth;
+    }
+    
+    public static String  getDateWithRequiredFormat(int days, int months, String format) {
+		String date = null;
+		date = DateUtil.addDays(DateUtil.addMonths(timeZone, months), days, format);
+		Log.info("Formatted Date :" + date);
+		return date;
     }
 
 }

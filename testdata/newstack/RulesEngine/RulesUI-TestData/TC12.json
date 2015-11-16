@@ -40,7 +40,9 @@
         "reason": "Product Issue",
         "ownerField": "",
         "dueDate": "10",
+	"chatterUpdate": "",
         "defaultOwner": "weRules",
+	"dueDateType": "",
         "comments": "These are test comments for CTA"
       },
       "criterias": []

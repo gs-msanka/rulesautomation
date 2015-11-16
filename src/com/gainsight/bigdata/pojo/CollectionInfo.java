@@ -266,6 +266,7 @@ public class CollectionInfo {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public static class Column {
         private String name;
         boolean hidden = false;
@@ -649,5 +650,18 @@ public class CollectionInfo {
 		public void setFieldDBName(String fieldDBName) {
 			this.fieldDBName = fieldDBName;
 		}
-	}
+
+        @Override
+        public String toString() {
+            return "LookUpDetail{" +
+                    "name='" + name + '\'' +
+                    ", lookupId='" + lookupId + '\'' +
+                    ", collectionId='" + collectionId + '\'' +
+                    ", dbCollectionName='" + dbCollectionName + '\'' +
+                    ", fieldDBName='" + fieldDBName + '\'' +
+                    ", collectionName='" + collectionName + '\'' +
+                    ", columnDisplayName='" + columnDisplayName + '\'' +
+                    '}';
+        }
+    }
 }

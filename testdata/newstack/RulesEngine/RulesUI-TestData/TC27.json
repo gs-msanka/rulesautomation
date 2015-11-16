@@ -1,0 +1,124 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-6247-Testcase-ID",
+  "ruleDescription": "GS-6247-Testcase-ID Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Number Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Percent Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Account Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Picklist",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Account Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account "
+          },
+          {
+            "fieldName": "C_Picklist",
+            "operator": "includes",
+            "value": "select_Pvalue1"
+          },
+          {
+            "fieldName": "Date Auto",
+            "operator": "less or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "Number Auto",
+            "operator": "greater than",
+            "value": "input_10"
+          },
+          {
+            "fieldName": "Email Auto",
+            "operator": "equals",
+            "value": "input_athaduka@gainsight.com"
+          },
+          {
+            "fieldName": "Currency Auto",
+            "operator": "greater than",
+            "value": "input_100"
+          },
+          {
+            "fieldName": "Percent Auto",
+            "operator": "not equal to",
+            "value": "input_797946"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A and B and (C or D or E) and F and G",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "GS-6247-Testcase-ID-UI",
+        "priority": "Low",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Once",
+	"dueDateType": "",
+        "comments": "These are test comments for CTA"
+      },
+      "criterias": [
+        {
+          "showField": "Account::Id",
+          "operator": "equals",
+          "field": "field",
+          "value": "Account::Id"
+        },
+        {
+          "showField": "Account::Date Auto",
+          "operator": "less or equal",
+          "field": "value",
+          "value": "Rule Date"
+        },
+        {
+          "showField": "Account::C_Picklist",
+          "operator": "equals",
+          "field": "value",
+          "value": "Pvalue1"
+        },
+        {
+          "showField": "Account::Number Auto",
+          "operator": "greater or equal",
+          "field": "value",
+          "value": "input_10"
+        }
+      ]
+    }
+  ]
+}

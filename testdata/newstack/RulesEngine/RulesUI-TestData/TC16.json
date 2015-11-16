@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 16 - Delete Rule",
-  "ruleDescription": "Rule 16 - Delete Rule",
+  "ruleName": "Rule-16-Delete-Rule",
+  "ruleDescription": "Rule-16-Delete-Rule",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",

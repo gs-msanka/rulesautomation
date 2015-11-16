@@ -1,0 +1,27 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-24-GS-4256-Testcase-ID",
+  "ruleDescription": "Rule-24-GS-4256-Testcase-ID Desc",
+  "setupRule": null,
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "upsert": true,
+      "action": {
+        "ctaUpsert": true,
+        "name": "CTA-Rule-24-GS-4256-Testcase-ID-UI",
+        "priority": "Low",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "",
+        "dueDate": "10",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Always",
+	"dueDateType": "",
+        "comments": "These are test comments for CTA"
+      }
+    }
+  ]
+}

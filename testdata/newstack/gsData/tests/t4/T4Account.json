@@ -1,0 +1,127 @@
+{
+  "CollectionDetails": {
+    "dataStoreType": "REDSHIFT",
+    "dbType": "DATA",
+    "assetType": "ANALYTICS",
+    "dbCollectionName": "",
+    "CollectionID": "",
+    "CollectionName": "GSACCOUNT"
+  },
+  "Columns": [
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_ACCOUNT",
+          "dataType": "string"
+        }
+      },
+      "DisplayName": "Id"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_ACCOUNT_NAME",
+          "dataType": "string"
+        }
+      },
+      "DisplayName": "Name"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER",
+          "dataType": "string"
+        }
+      },
+      "lookupDetail": {
+        "collectionId": "GSUser",
+        "fieldDBName": "Id"
+      },
+      "DisplayName": "User Id"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "string",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_USER_NAME",
+          "dataType": "string"
+        }
+      },
+      "lookupDetail": {
+        "collectionId": "GSUser",
+        "fieldDBName": "Name"
+      },
+      "DisplayName": "User Name"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "boolean",
+      "colattribtype": 0,
+      "DisplayName": "Active"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "number",
+      "colattribtype": 1,
+      "mappings": {
+        "SFDC" :{
+          "dataType" : "number",
+          "key" : "JBCXM__AnnualRevenue__c"
+        }
+      },
+      "DisplayName": "Annual Revenue"
+    },
+    {
+      "name": "",
+      "DBName": "",
+      "datatype": "number",
+      "colattribtype": 1,
+      "DisplayName": "Annaul Revenue Per User"
+    },
+    {
+      "name": "",
+      "format": {
+        "dateFormat": "MM-dd-yyyy'T'HH-MM-ss"
+      },
+      "DBName": "",
+      "datatype": "dateTime",
+      "colattribtype": 0,
+      "DisplayName": "EventTime"
+    },
+    {
+      "name": "",
+      "format": {
+        "dateFormat": "MM-dd-yyyy"
+      },
+      "DBName": "",
+      "datatype": "date",
+      "colattribtype": 0,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_WEEK",
+          "dataType": "string",
+          "format": "mm-dd-yyyy"
+        }
+      },
+      "DisplayName": "Date"
+    }
+  ],
+  "CollectionDescription": "GS Account - Custom Object that has look up on user object."
+}
