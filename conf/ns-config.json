@@ -102,7 +102,7 @@
       "mongo_global_password"   : "T4Fa36Hr",
       "mongo_global_ssl_enable" : "false"
     },
-      "autoqa01" : {
+    "autoqa01" : {
       "ns_sfdc_username"  : "athaduka@nsautoqa01.com",
       "ns_sfdc_password"  : "Abhilash1.",
       "ns_sfdc_stoken"    : "lo0FdILI6WkRWZaHRuDnwgnT",
@@ -121,6 +121,14 @@
       "mongo_scheduler_username"   : "qauser",
       "mongo_scheduler_password"   : "pass",
       "mongo_scheduler_ssl_enable" : "false"
+    },
+    "pprod" :{
+      "ns_sfdc_username"  : "awspprd@gainsighttest.com",
+      "ns_sfdc_password"  : "pprd@123",
+      "ns_sfdc_stoken"    : "4m6UWKAmfj0LYrd25qYZiSvZL",
+      "ns_appUrl"         : "https://app-ppd1-web-lbr-eas.gainsight.com",
+      "ns_adminUrl"       : "https://app-ppd1-web-lbr-eas.gainsight.com",
+      "ns_version"        : "v1.0"
     }
   }
 }

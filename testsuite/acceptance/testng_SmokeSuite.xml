@@ -104,7 +104,6 @@
                     <include name="updateDataWithOneKeyColumnAndViaCommaSeparated" />
                     <include name="deleteCollectionDataWithDateAccountField"/>
                     <include name="failedRecordsFetchForInvalidDataTypes" />
-                    <include name="testCaseWithAllTypesOfDateFormat" />
                 </methods>
             </class>
             <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" >

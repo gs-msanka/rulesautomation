@@ -62,7 +62,7 @@ public class DataLoadConfigAggTest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        dataBaseType = dataBaseType == null ? DBStoreType.MONGO : DBStoreType.valueOf(dbStoreType);
+        dataBaseType = dbStoreType == null ? DBStoreType.MONGO : DBStoreType.valueOf(dbStoreType);
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         gsDataImpl = new GSDataImpl(header);
         TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());

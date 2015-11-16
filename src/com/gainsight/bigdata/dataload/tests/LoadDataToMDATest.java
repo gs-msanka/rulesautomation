@@ -84,8 +84,24 @@ public class LoadDataToMDATest extends NSTestBase {
         //This will help to run the same suite for multiple data bases.
         //Please make sure your global db/schema db details are correct.
         if(dataBaseType == DBStoreType.POSTGRES) {
+            Log.info("Connection to global db...");
             mongoDBDAO = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                     nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+            TenantDetails.DBDetail schemaDBDetails =null;
+            try {
+                schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantInfo.getTenantId());
+            }  finally {
+                mongoDBDAO.mongoUtil.closeConnection();
+            }
+            if(schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null ||
+                    schemaDBDetails.getDbServerDetails().get(0) == null) {
+                throw new RuntimeException("Some thing is not write with schema db details fetched, please check it.");
+            }
+            Log.info("Collecting to schema db....");
+            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0],
+                    Integer.valueOf(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[1]),
+                    schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(),
+                    schemaDBDetails.getDbName());
         }
     }
 
