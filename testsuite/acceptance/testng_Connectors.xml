@@ -11,6 +11,65 @@
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" />
             <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" />
             <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" />
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadAggTest" />
+        </classes>
+    </test>
+
+    <test verbose="3" name="COM MONGO" preserve-order="true">
+        <parameter name="dbStoreType" value="MONGO"/>
+        <classes>
+            <class name="com.gainsight.bigdata.gsData.tests.GSDataTest">
+                <methods>
+                    <include name="createCustomObject" />
+                    <include name="createFieldsOnCustomObject" />
+                    <include name="createCustomObjectWithHiddenFields" />
+                    <include name="createCustomObjectWithMoreThan100Fields" />
+                    <include name="createFieldsWithSFDCMapping" />
+                    <include name="createFormulaFieldsOnMongo" />
+                    <include name="verifyCURL" />
+                    <include name="verifyDuplicateHeaderInCSVFileHeader" />
+                    <include name="sameCSVHeaderMappedToTwoDifferentColumns" />
+                    <include name="verifyMoreThanOneMBFileError" />
+                    <include name="dataLoadToFormulaFieldShouldNotBeAllowed" />
+                    <include name="verifyDependentReportsAndRules" />
+                    <include name="verifyAutoInferMapping" />
+                    <include name="loadDataToMDA" />
+                    <include name="failedRecordsVerification" />
+                    <include name="csvHavingBlankHeader" />
+                    <include name="verifyDisplayNameMandatoryWhileCreatingField" />
+                    <include name="changeOfDisplayNamesOfFields" />
+                    <include name="verifyAllSupportedDateFormat" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="3" name="COM REDSHIFT" preserve-order="true">
+        <parameter name="dbStoreType" value="REDSHIFT"/>
+        <classes>
+            <class name="com.gainsight.bigdata.gsData.tests.GSDataTest">
+                <methods>
+                    <include name="createCustomObject" />
+                    <include name="createFieldsOnCustomObject" />
+                    <include name="createCustomObjectWithHiddenFields" />
+                    <include name="createCustomObjectWithMoreThan100Fields" />
+                    <include name="createFieldsWithSFDCMapping" />
+                    <include name="createFormulaFieldsOnRedshift" />
+                    <include name="createLookupFieldsOnRedshift" />
+                    <include name="verifyCURL" />
+                    <include name="verifyDuplicateHeaderInCSVFileHeader" />
+                    <include name="sameCSVHeaderMappedToTwoDifferentColumns" />
+                    <include name="verifyMoreThanOneMBFileError" />
+                    <include name="dataLoadToFormulaFieldShouldNotBeAllowed" />
+                    <include name="verifyDependentReportsAndRules" />
+                    <include name="verifyAutoInferMapping" />
+                    <include name="loadDataToMDA" />
+                    <include name="failedRecordsVerification" />
+                    <include name="csvHavingBlankHeader" />
+                    <include name="verifyDisplayNameMandatoryWhileCreatingField" />
+                    <include name="changeOfDisplayNamesOfFields" />
+                    <include name="verifyAllSupportedDateFormat" />
+                </methods>
+            </class>
         </classes>
     </test>
 
