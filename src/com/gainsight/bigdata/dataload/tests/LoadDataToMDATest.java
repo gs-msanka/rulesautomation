@@ -9,11 +9,14 @@ import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.dataload.pojo.DataLoadStatusInfo;
+import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.pojo.TenantInfo;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
+import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
@@ -53,33 +56,38 @@ public class LoadDataToMDATest extends NSTestBase {
 
     private String testDataFiles = testDataBasePath + "/dataLoader";
     MongoDBDAO mongoDBDAO =null;
-    String dataStoreDB = null;
+    boolean useDBName = true;
+    private static DBStoreType dataBaseType = DBStoreType.MONGO;
+    GSDataImpl gsDataImpl;
+
 
 
     @BeforeClass
-    @Parameters("dbStoreType")
-    public void setup(@Optional String dbStoreType) throws IOException {
+    @Parameters({"dbStoreType", "useDBName"})
+    public void setup(@Optional String dbStoreType, @Optional String useDBName) throws Exception {
+        dataBaseType = dbStoreType !=null ? DBStoreType.valueOf(dbStoreType) : DBStoreType.MONGO;
+        this.useDBName = (useDBName == null ? false : Boolean.valueOf(useDBName));
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
-        tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-        tenantDetails =tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+        gsDataImpl = new GSDataImpl(header);
+        TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
+        tenantDetails =tenantManager.getTenantDetail(null, tenantInfo.getTenantId());
         dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
+        if(dataBaseType == DBStoreType.MONGO) {
             if(tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
-        } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+        } else if(dataBaseType == DBStoreType.REDSHIFT) {
             if(!tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
         }
         //This will help to run the same suite for multiple data bases.
         //Please make sure your global db/schema db details are correct.
-        if(dbStoreType !=null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
-            dataStoreDB = dbStoreType;
+        if(dataBaseType == DBStoreType.POSTGRES) {
             mongoDBDAO = new  MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                     nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         }
-        }
+    }
 
     @TestInfo(testCaseIds = {"GS-4760", "GS-3655", "GS-3681", "GS-4373", "GS-4372", "GS-4369", "GS-3634", "GS-4368"})
     @Test
@@ -87,24 +95,31 @@ public class LoadDataToMDATest extends NSTestBase {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "1_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         Assert.assertNotNull(collectionId);
-
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -120,17 +135,22 @@ public class LoadDataToMDATest extends NSTestBase {
     public void insertCommaSeparatedCSVFileWithSingleQuote() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "2_" + date.getTime());
+
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         Assert.assertNotNull(collectionId);
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t2/ExpectedTransform.json"), JobInfo.class);
@@ -138,8 +158,8 @@ public class LoadDataToMDATest extends NSTestBase {
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
 
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -161,23 +181,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "3_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t3/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -200,23 +225,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "4_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t4/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -238,22 +268,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "5_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t5/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -277,23 +313,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "6_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t6/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -316,23 +357,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "7_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t7/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -355,23 +401,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "8_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t8/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -395,20 +446,26 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "9_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform.json"), JobInfo.class);
 
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -423,7 +480,9 @@ public class LoadDataToMDATest extends NSTestBase {
 
         loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t9/LoadTransform_1.json"), JobInfo.class);
         dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -444,24 +503,33 @@ public class LoadDataToMDATest extends NSTestBase {
     public void loadDataWithJavaScriptAndHtmlCode() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/tests/t10/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "10_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "ID").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t10/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
 
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -491,21 +559,28 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "11_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/LoadTransform.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t1/ExpectedTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -513,7 +588,7 @@ public class LoadDataToMDATest extends NSTestBase {
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
         verifyData(actualCollectionInfo, expFile);
 
-        jobId = dataLoadManager.clearAllCollectionData(actualCollectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType());
+        jobId = dataLoadManager.clearAllCollectionData(useDBName ? actualCollectionInfo.getCollectionDetails().getDbCollectionName() : actualCollectionInfo.getCollectionDetails().getCollectionName(), "FILE", collectionInfo.getCollectionDetails().getDataStoreType(), useDBName);
         Assert.assertNotNull(jobId, "Job Id (or) status id is null.");
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -531,28 +606,31 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "12_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if (dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t12/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 20, 0);
 
-
         String tempFilePath = Application.basedir + "/testdata/newstack/dataLoader/process/t12/temp.csv";
-
         CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date"});
@@ -561,18 +639,27 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.flush();
         writer.close();
 
-        DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t12/ClearMetadata.json"), DataLoadMetadata.class);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata = mapper.readValue(new File(testDataFiles + "/tests/t12/ClearMetadata.json"), DataLoadMetadata.class);
+        //Building the Metadata to use dBNames.
+        if(useDBName) {
+            metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getDbCollectionName());
+            CollectionInfo.Column column = CollectionUtil.getColumnByDisplayName(actualCollectionInfo, metadata.getKeyFields()[0]);
+            metadata.setKeyFields(new String[]{column.getDbName()});
+            metadata.getMappings().get(0).setTarget(column.getDbName());
+            metadata.setDbNameUsed(true);
+        } else {
+            metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        }
+
+        Log.info("Metadata : " + mapper.writeValueAsString(metadata));
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
 
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t12/ExpectedTransform.json"), JobInfo.class);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-
         verifyData(actualCollectionInfo, expFile);
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
@@ -584,28 +671,32 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "13_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t13/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 15, 0);
 
-
         String tempFilePath = Application.basedir + "/testdata/newstack/dataLoader/process/t13/temp.csv";
-
         CSVWriter writer = new CSVWriter(new FileWriter(tempFilePath), ',', '"', '\\', "\n");
         List<String[]> allLines = new ArrayList<>();
         allLines.add(new String[]{"Date", "AccountName"});
@@ -614,21 +705,30 @@ public class LoadDataToMDATest extends NSTestBase {
         writer.flush();
         writer.close();
 
-        DataLoadMetadata metadata = mapper.readValue(new File(testDataFiles + "/tests/t13/ClearMetadata.json"), DataLoadMetadata.class);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        //To run the test case with dbNames as mapping i.e CURL behaviour
+        metadata = mapper.readValue(new File(testDataFiles + "/tests/t13/ClearMetadata.json"), DataLoadMetadata.class);
+        if(useDBName) {
+            metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getDbCollectionName());
+            CollectionInfo.Column c1 = CollectionUtil.getColumnByDisplayName(actualCollectionInfo, metadata.getKeyFields()[0]);
+            CollectionInfo.Column c2 = CollectionUtil.getColumnByDisplayName(actualCollectionInfo, metadata.getKeyFields()[1]);
+            metadata.setKeyFields(new String[]{c1.getDbName(), c2.getDbName()});
+            metadata.getMappings().get(0).setTarget(c1.getDbName());
+            metadata.getMappings().get(1).setTarget(c2.getDbName());
+            metadata.setDbNameUsed(true);
+        } else  {
+            metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        }
+
         jobId = dataLoadManager.dataLoadManage(metadata, tempFilePath);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 6, 0); //it should but 5 there's a product issue that sends 1 record extra.
 
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t13/ExpectedTransform.json"), JobInfo.class);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-
         verifyData(actualCollectionInfo, expFile);
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
-
     }
 
     @TestInfo(testCaseIds = {"GS-4799", "GS-4801"})
@@ -636,21 +736,30 @@ public class LoadDataToMDATest extends NSTestBase {
     public void updateDataWithOneKeyColumnAndViaCommaSeparated() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "14_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "Id").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        String jobId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
@@ -659,19 +768,23 @@ public class LoadDataToMDATest extends NSTestBase {
 
         loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/LoadTransform_1.json"), JobInfo.class);
         dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
-        metadata.setKeyFields(new String[]{"Id"});
+
+        metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.UPDATE) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        if(useDBName) {
+            metadata.setKeyFields(new String[]{CollectionUtil.getColumnByDisplayName(actualCollectionInfo, "Id").getDbName()});
+        } else {
+            metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
+            metadata.setKeyFields(new String[]{"Id"});
+        }
+        Log.info("Metadata : " + mapper.writeValueAsString(metadata));
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 5, 0);
 
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t14/ExpectedTransform.json"), JobInfo.class);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-
         verifyData(actualCollectionInfo, expFile);
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
@@ -681,23 +794,30 @@ public class LoadDataToMDATest extends NSTestBase {
     public void updateDataWithTwoKeyColumnAndViaTabSeparated() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "15_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "Id").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -708,22 +828,27 @@ public class LoadDataToMDATest extends NSTestBase {
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
 
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
-
         loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/LoadTransform_1.json"), JobInfo.class);
         dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
-        metadata.setKeyFields(new String[]{"Id", "AccountName"});
+
+        metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.UPDATE) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        if(useDBName) {
+            CollectionInfo.Column c1 = CollectionUtil.getColumnByDisplayName(actualCollectionInfo, "Id");
+            CollectionInfo.Column c2 = CollectionUtil.getColumnByDisplayName(actualCollectionInfo, "AccountName");
+            metadata.setKeyFields(new String[]{c1.getDbName(), c2.getDbName()});
+        } else {
+            metadata.setDataLoadOperation(DataLoadOperationType.UPDATE.name());
+            metadata.setKeyFields(new String[]{"Id", "AccountName"});
+        }
+
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(jobId));
-
         verifyJobDetails(jobId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 7, 0);
 
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t15/ExpectedTransform.json"), JobInfo.class);
         File expFile = FileProcessor.getDateProcessedFile(expTransform, date);
-
         verifyData(actualCollectionInfo, expFile);
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
@@ -733,23 +858,30 @@ public class LoadDataToMDATest extends NSTestBase {
     public void upsertToUdpateAndInsertRecordsViaSpaceSeparatorSingleKey() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "16_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "Id").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t16/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        //To run the test case with dbNames as map i.e CURL behaviour
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -790,23 +922,30 @@ public class LoadDataToMDATest extends NSTestBase {
     public void upsertToUpdateAllRecordsViaSemiColumnSeparatorMultiKey() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "17_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "Id").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t17/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         dataFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
 
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -847,22 +986,29 @@ public class LoadDataToMDATest extends NSTestBase {
     public void upsertToInsertAllRecordsSingleKey() throws Exception {
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo_1.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "18_" + date.getTime());
+        if(dataBaseType == DBStoreType.MONGO) {
+            CollectionUtil.getColumnByDisplayName(collectionInfo, "Id").setIndexed(true);
+        }
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
         Assert.assertNotNull(actualCollectionInfo);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/LoadTransform.json"), JobInfo.class);
         File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
 
         String jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
@@ -873,11 +1019,14 @@ public class LoadDataToMDATest extends NSTestBase {
 
         loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t18/LoadTransform_1.json"), JobInfo.class);
         dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-        metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
+        metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.UPSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        if(useDBName) {
+            metadata.setKeyFields(new String[]{CollectionUtil.getColumnByDisplayName(actualCollectionInfo, "Id").getDbName()});
+        } else {
+            metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
+            metadata.setKeyFields(new String[]{"Id"});
+        }
 
-        metadata.setDataLoadOperation(DataLoadOperationType.UPSERT.name());
-        metadata.setKeyFields(new String[]{"Id"});
         jobId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(jobId);
         Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(jobId), "Wait for the data load complete failed.");
@@ -900,20 +1049,24 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "19_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform = mapper.readValue(new File(testDataFiles + "/tests/t19/LoadTransform.json"), JobInfo.class);
 
         File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform, date);
         dataLoadFile = FileProcessor.getFormattedCSVFile(loadTransform.getCsvFormatter());
 
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
         metadata.setFieldSeparator(loadTransform.getCsvFormatter().getCsvProperties().getSeparator());
         metadata.setEscapeCharacter(loadTransform.getCsvFormatter().getCsvProperties().getEscapeChar());
         metadata.setQuoteCharacter(loadTransform.getCsvFormatter().getCsvProperties().getQuoteChar());
@@ -939,38 +1092,40 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "20_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
         JobInfo loadTransform1 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform.json"), JobInfo.class);
         JobInfo loadTransform2 = mapper.readValue(new File(testDataFiles + "/tests/t20/LoadTransform_1.json"), JobInfo.class);
         JobInfo expTransform = mapper.readValue(new File(testDataFiles + "/tests/t20/ExpectedTransform.json"), JobInfo.class);
 
         File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform1, date);
 
-        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
-
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 9, 0);
 
         dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform2, date);
-        statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
-
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 10, 0);
 
         File expectedFile = FileProcessor.getDateProcessedFile(expTransform, date);
         verifyData(actualCollectionInfo, expectedFile);
-
         collectionsToDelete.add(actualCollectionInfo.getCollectionDetails().getCollectionId());
     }
 
@@ -983,22 +1138,26 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + "21_" + date.getTime());
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataLoadFile = new File(testDataFiles+"/tests/t21/CollectionData.csv");
 
-        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataLoadFile);
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId));
-
         verifyJobDetails(statusId, actualCollectionInfo.getCollectionDetails().getCollectionName(), 3, 11);
 
         List<String[]> failedRecords = dataLoadManager.getFailedRecords(statusId);
@@ -1042,17 +1201,23 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
         //In order to load data to postgres we need to change the dbstore type from back end.
         //Please make sure your global db/schema db details are correct.
-        if(dataStoreDB !=null && dataStoreDB.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+        if(dataBaseType == DBStoreType.POSTGRES) {
             Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-            collectionInfo.getCollectionDetails().setDbType(DBStoreType.POSTGRES.name());
         }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t23/CollectionData.csv");
-        String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+
+        String statusId = dataLoadManager.dataLoadManage(metadata, dataFile);
         Assert.assertNotNull(statusId);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
         verifyJobDetails(statusId, collectionName, 45, 0);
@@ -1069,14 +1234,30 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataBaseType == DBStoreType.POSTGRES) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+        }
 
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t24/CollectionData.csv");
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        metadata.setMappings(new ArrayList<DataLoadMetadata.Mapping>());
-        DataLoadManager.addMapping(metadata, new String[]{"AccountName", "Date", "PageVisits", "FilesDownloaded", "Active"});
+
+        DataLoadMetadata metadata = null;
+        if(useDBName) {
+            metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, new String[]{"AccountName", "Date", "PageVisits", "FilesDownloaded", "Active"}, DataLoadOperationType.INSERT );
+        } else {
+            metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+            metadata.setMappings(new ArrayList<DataLoadMetadata.Mapping>());
+            DataLoadManager.addMapping(metadata, new String[]{"AccountName", "Date", "PageVisits", "FilesDownloaded", "Active"});
+        }
 
         String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo), dataFile);
         dataLoadManager.waitForDataLoadJobComplete(statusId);
@@ -1094,20 +1275,40 @@ public class LoadDataToMDATest extends NSTestBase {
         collectionInfo.getCollectionDetails().setCollectionName(collectionName);
         String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
         Assert.assertNotNull(collectionId);
-
+        /* This line should always be after creating the subject area.
+            If redshift is displayed & we try to create a subject area then tables gets created with what ever db store types is supplied.
+            Used especially while testing postgres data load.
+            To Run on  different DB's - MONGO / REDSHIFT*/
+        collectionInfo.getCollectionDetails().setDataStoreType(dataBaseType.name());
+        //In order to load data to postgres we need to change the dbstore type from back end.
+        //Please make sure your global db/schema db details are correct.
+        if(dataBaseType == DBStoreType.POSTGRES) {
+            Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+        }
         CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-        Assert.assertTrue(dataLoadManager.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
+        Assert.assertTrue(CollectionUtil.verifyCollectionInfo(collectionInfo, actualCollectionInfo));
 
         File dataFile = new File(testDataFiles+"/tests/t25/CollectionData.csv");
-        DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-        DataLoadManager.addMapping(metadata, new String[]{"AccountID"});
+        DataLoadMetadata metadata = useDBName ? CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT) : dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
+        if(useDBName) {
+            DataLoadMetadata.Mapping mapping = new DataLoadMetadata.Mapping();
+            mapping.setSource("AccountID");
+            mapping.setTarget("gsd00001");
+            metadata.getMappings().add(mapping);
+            String jobId  = dataLoadManager.dataLoadManage(metadata, dataFile);
+            Assert.assertNotNull(jobId);
+            dataLoadManager.waitForDataLoadJobComplete(jobId);
+            DataLoadStatusInfo statusInfo = dataLoadManager.getDataLoadJobStatus(jobId);
+            Assert.assertEquals("Target field name: gsd00001 does not exist.", statusInfo.getMessage());
+        } else {
+            DataLoadManager.addMapping(metadata, new String[]{"AccountID"});
+            ResponseObj responseObj = dataLoadManager.dataLoadManageGetResponseObject(mapper.writeValueAsString(metadata), dataFile);
+            Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
 
-        ResponseObj responseObj = dataLoadManager.dataLoadManageGetResponseObject(mapper.writeValueAsString(metadata), dataFile);
-        Assert.assertEquals(responseObj.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Http status code should be 400");
-
-        NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-        Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
-        Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            Assert.assertEquals(nsResponseObj.getErrorCode(), MDAErrorCodes.COLUMN_DEF_NOT_EXISTS.getGSCode(), "Error code should be GS_3203");
+            Assert.assertEquals(nsResponseObj.getErrorDesc(), "Column definition does not exist. Message: Column does not exists for target field name: AccountID");
+        }
     }
 
 

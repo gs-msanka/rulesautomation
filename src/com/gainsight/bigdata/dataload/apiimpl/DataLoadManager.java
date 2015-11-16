@@ -319,6 +319,7 @@ public class DataLoadManager  {
     }
 
     public ResponseObj dataLoadManageGetResponseObject(String metadata, File file) throws Exception {
+        Log.info("Metadata : " +metadata);
         Log.info("Started Loading Data to MDA...");
         if(metadata==null || file==null) {
             throw new RuntimeException("Metadata & file are not null");
@@ -497,16 +498,17 @@ public class DataLoadManager  {
      * @param collectionName - Collection Name / Subject Area Name.
      * @param sourceType
      * @param targetType
+     * @param useDBName
      * @return JOB ID of the operation triggered.
      */
-    public String clearAllCollectionData(String collectionName, String sourceType, String targetType) {
+    public String clearAllCollectionData(String collectionName, String sourceType, String targetType, boolean useDBName) {
         DataLoadMetadata metadata = new DataLoadMetadata();
         metadata.setSourceType(sourceType);
         metadata.setTargetType(targetType);
         metadata.setHeaderRow(false);
         metadata.setCollectionName(collectionName);
         metadata.setClearOperation("CLEAR_ALL_DATA");
-        metadata.setDbNameUsed(false);
+        metadata.setDbNameUsed(useDBName);
 
         return clearAllCollectionData(metadata);
     }
@@ -546,46 +548,6 @@ public class DataLoadManager  {
             headers.addHeader("Content-Type", "application/json");
         }
         return jobId;
-    }
-
-    /**
-     * Verifies the Collection Columns, Column Data Type and checks DB Name is not null in actual collection.
-     *
-     * @param expected - Expected Collection Info.
-     * @param actual - Actual Collection Info.
-     */
-    public static boolean verifyCollectionInfo(CollectionInfo expected, CollectionInfo actual) {
-        if(!expected.getCollectionDetails().getCollectionName().equals(actual.getCollectionDetails().getCollectionName())) {
-            throw new RuntimeException("Collection Name doesn't match, Expected Collection Name : " +
-                    expected.getCollectionDetails().getCollectionName()+" Found Collection Name : "+
-                    actual.getCollectionDetails().getCollectionName());
-        }
-        if(expected.getColumns().size() != actual.getColumns().size() ) {
-            throw new RuntimeException("No of Columns doesn't match, Expected no of columns : "+
-                    expected.getColumns().size()+ " Found no of columns : "+
-                    actual.getColumns().size());
-        }
-
-        boolean result = false;
-        for(CollectionInfo.Column expColumn : expected.getColumns()) {
-            for(CollectionInfo.Column actualColumn : actual.getColumns()) {
-                if(expColumn.getDisplayName().equals(actualColumn.getDisplayName())) {
-                    if(actualColumn.getDbName()==null) {
-                        throw new RuntimeException("DB Found empty on Column - " +actualColumn.getDisplayName());
-                    }
-                    if(expColumn.getDatatype().equals(actualColumn.getDatatype())) {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            if(!result) {
-                throw new RuntimeException("Column Data Type Not Matched, Expected Data Type : "+expColumn.getDatatype() +
-                " on Column " + expColumn.getDisplayName());
-            }
-            result =false;
-        }
-        return true;
     }
 
     /**
@@ -651,7 +613,7 @@ public class DataLoadManager  {
         }
         for(String colId : collectionsIdsToDelete) {
             if(collectionInfoMap.containsKey(colId)) {
-                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType());
+                String jobId = clearAllCollectionData(collectionInfoMap.get(colId).getCollectionName(), "FILE", collectionInfoMap.get(colId).getDataStoreType(), false);
                 waitForDataLoadJobComplete(jobId);
                 if(tenantManager.deleteSubjectArea(tenantId, colId)) {
                     Log.info("Collection Deleted Successfully " +colId);
@@ -678,7 +640,7 @@ public class DataLoadManager  {
             throw new RuntimeException("Tenant Id, Collection Details List should not be null.");
         }
         for(CollectionInfo.CollectionDetails collectionDetail : collectionDetailList) {
-                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType());
+                String jobId = clearAllCollectionData(collectionDetail.getCollectionName(), "FILE", collectionDetail.getDataStoreType(), false);
                 if(waitForDataLoadJobComplete(jobId)) {
                     tenantManager.deleteSubjectArea(tenantId, collectionDetail.getCollectionId());
                 } else {
@@ -697,7 +659,6 @@ public class DataLoadManager  {
         DataLoadMetadata metadata = new DataLoadMetadata();
         metadata.setCollectionName(collectionInfo.getCollectionDetails().getCollectionName());
         metadata.setDataLoadOperation(DataLoadOperationType.INSERT.name());
-
 
         List<DataLoadMetadata.Mapping> mappings = new ArrayList<>();
         DataLoadMetadata.Mapping mapping = null;
