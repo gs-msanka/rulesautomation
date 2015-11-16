@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Automation Project">
-	<test name="Acceptance Tests">
+<suite name="Automation - Marvels Tests" preserve-order="true" >
+
+	<listeners>
+		<listener class-name="com.gainsight.utils.AutTestListener" />
+		<listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+	</listeners>
+
+
+	<test verbose="3" name="Workflow - Tab Tests" preserve-order="true">
 		<classes>
-			<class name="com.gainsight.sfdc.acceptance.tests.TransactionsAcceptanceTest">
-				<methods>
-					<include name="testAddNewCustomer" />
-					<include name="testAddNewCustomerAndTransaction" />
-					<include name="testChurnTransaction" />
-					<include name="testOpportunityWithoutSettings" />
-					<include name="testTransactionFlow"></include>
-					<include name="testStatusAfterChurn"></include>
-					<include name="testC360Operations"></include>
-					<include name="testAddBookingTypeDebook"></include>
-					<include name="testAddBookingTypeUpsell"></include>
-					<include name="testAddBookingTypeDownsell"></include>
-				</methods>
-			</class>
+			<class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
 		</classes>
+
 	</test>
-</suite>
+	<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+	<suite name="Automation - Marvels Tests" preserve-order="true" >
+
+		<listeners>
+			<listener class-name="com.gainsight.utils.AutTestListener" />
+			<listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+		</listeners>
+
+
+		<test verbose="3" name="Workflow - Tab Tests" preserve-order="true">
+			<classes>
+				<class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest" />
+			</classes>
+
+		</test>
+
+
+	</suite>

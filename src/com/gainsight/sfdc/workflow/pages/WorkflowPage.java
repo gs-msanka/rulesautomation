@@ -59,7 +59,7 @@ public class WorkflowPage extends WorkflowBasePage {
 
     //CTA Form Page Elements
     private final String CREATE_CTA_ICON        = "//a[@class='dashboard-addcta-btn more-options cta-create-btn']";
-    private final String CREATE_CTA_LINK       = "//a[@data-action='%s']";
+    private final String CREATE_CTA_LINK = "//span[@class='addCTA']/parent::a[contains(text(),'%s')]";
     private final String CREATE_OPPOR_LINK      = "//a[@data-action='OPPORTUNITY']";
     private final String CREATE_EVENT_LINK      = "//a[@data-action='EVENT']";
     private final String CTA_FORM_TITLE    = "//span[text()='Add %s']";
@@ -220,28 +220,10 @@ public class WorkflowPage extends WorkflowBasePage {
 
     public WorkflowPage createCTA(CTA cta){
     	item.click(CREATE_CTA_ICON);
-    	/*if(cta.getType().equals("Risk"))
-    	{*/
-    		
-            Log.info("Adding CTA of Type - "+cta.getType());
-    		item.click(String.format(CREATE_CTA_LINK, cta.getTypeId()));
+    	    Log.info("Adding CTA of Type - "+cta.getType());
+    		item.click(String.format(CREATE_CTA_LINK, cta.getType()));
     		wait.waitTillElementDisplayed(String.format(CTA_FORM_TITLE,cta.getType()), MIN_TIME, MAX_TIME);
     		fillAndSaveCTAForm(cta);
-
-    	//}
-    	/*if(cta.getType().equals("Opportunity")){
-            Log.info("Adding CTA of Type - Opportunity");
-    		item.click(CREATE_OPPOR_LINK);
-    		wait.waitTillElementDisplayed(OPPO_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
-    		fillAndSaveCTAForm(cta);
-
-    	}
-    	if(cta.getType().equals("Event")){
-            Log.info("Adding CTA of Type - Event");
-    		item.click(CREATE_EVENT_LINK);
-    		wait.waitTillElementDisplayed(EVENT_CTA_FORM_TITLE, MIN_TIME, MAX_TIME);
-    		fillAndSaveCTAForm(cta);
-    	}*/
     	return this;
 	}
     
