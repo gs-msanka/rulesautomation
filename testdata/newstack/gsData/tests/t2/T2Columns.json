@@ -1,0 +1,194 @@
+[
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "DIVIDE",
+    "formula": [
+      {
+        "calculationType": "operateAgg",
+        "measureName": "DIVIDE",
+        "level": 1,
+        "operation": {
+          "operands": [
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "FilesDownloaded"
+            },
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "NoofReportsRun"
+            }
+          ],
+          "operator": "divide",
+          "aggregateFunction": "sum"
+        }
+      }
+    ]
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "SUBSTRACT",
+    "formula": [
+      {
+        "calculationType": "operateAgg",
+        "measureName": "SUBSTRACT",
+        "level": 1,
+        "operation": {
+          "operands": [
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "FilesDownloaded"
+            },
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "NoofReportsRun"
+            }
+          ],
+          "operator": "subtract",
+          "aggregateFunction": "sum"
+        }
+      }
+    ]
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "ADD",
+    "formula": [
+      {
+        "calculationType": "operateAgg",
+        "measureName": "ADD",
+        "level": 1,
+        "operation": {
+          "operands": [
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "FilesDownloaded"
+            },
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "NoofReportsRun"
+            }
+          ],
+          "operator": "add",
+          "aggregateFunction": "sum"
+        }
+      }
+    ]
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "MULTIPLE",
+    "formula": [
+      {
+        "calculationType": "operateAgg",
+        "measureName": "MULTIPLE",
+        "level": 1,
+        "operation": {
+          "operands": [
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "FilesDownloaded"
+            },
+            {
+              "fieldType": "field",
+              "dataType": "number",
+              "value": "NoofReportsRun"
+            }
+          ],
+          "operator": "multiply",
+          "aggregateFunction": "sum"
+        }
+      }
+    ]
+  }
+]

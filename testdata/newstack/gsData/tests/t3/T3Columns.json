@@ -1,0 +1,107 @@
+[
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "DIVIDE",
+    "calculatedExpression" : "case ${NoofReportsRun} when 0 then 0 else ${FilesDownloaded} / ${NoofReportsRun} end"
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "SUBSTRACT",
+    "calculatedExpression" : "${FilesDownloaded} - ${NoofReportsRun}"
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "ADD",
+    "calculatedExpression" : "${FilesDownloaded} + ${NoofReportsRun}"
+  },
+  {
+    "name": "",
+    "hidden": false,
+    "indexed": false,
+    "format": {
+      "dateFormat": "MM-dd-yyyy"
+    },
+    "primary": false,
+    "distinctMemberCount": 0,
+    "dimensionBrowserCollection": "SELF",
+    "alignment": "LEFT",
+    "aggFunction": "SUM",
+    "numberType": "NUMBER",
+    "decimalPlaces": 0,
+    "thousandSeparatorUsed": false,
+    "negativeNumber": "MINUSVALUE",
+    "systemDefined": false,
+    "encrypted": false,
+    "deleted": false,
+    "hasLookup": false,
+    "DBName": "",
+    "datatype": "number",
+    "colattribtype": 2,
+    "DisplayName": "MULTIPLE",
+    "calculatedExpression" : "${FilesDownloaded} * ${NoofReportsRun}"
+
+  }
+]
