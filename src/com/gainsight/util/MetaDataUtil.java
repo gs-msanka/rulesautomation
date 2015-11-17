@@ -178,15 +178,17 @@ public class MetaDataUtil {
 			 for(HashMap<String,String[]> hmPickLists : objF.getPickLists()){
 			 metadataClient.createPickListField(resolveStrNameSpace(Object), hmPickLists, false);
 			 //permFieldsList.add(hmPickLists)
-			 Log.info("PickList Field Name is " + hmPickLists.keySet().toString());
-			 permFieldsList.add(hmPickLists.keySet().toString());			 
+				 String picklistName = hmPickLists.keySet().toArray()[0].toString();
+				 Log.info("PickList Field Name is " + picklistName);
+				 permFieldsList.add(picklistName);
 			 }
 		 }
 		 if(objF.getMultiPickLists().size() > 0){
 			 for(HashMap<String,String[]> hmMultiPickLists : objF.getMultiPickLists()){
 			 metadataClient.createPickListField(resolveStrNameSpace(Object),hmMultiPickLists,true);
-			 Log.info("MultiPickList Field Name is " + hmMultiPickLists.keySet().toString());
-			 permFieldsList.add(hmMultiPickLists.keySet().toString());
+				 String multiPLName = hmMultiPickLists.keySet().toArray()[0].toString();
+			 Log.info("MultiPickList Field Name is " + multiPLName);
+			 permFieldsList.add(multiPLName);
 			 }
 		 }
 		 
@@ -214,7 +216,7 @@ public class MetaDataUtil {
 		 }
 		 if(objF.getTextAreas().size() > 0){
 			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextAreas().toArray(new String[objF.getTextAreas().size()]), false, false, false, true, false);
-			 permFieldsList.addAll(objF.getTextFields());
+			 permFieldsList.addAll(objF.getTextAreas());
 		 }
 		 if(objF.getEncryptedStrings().size() > 0){
 			 metadataClient.createEncryptedTextFields(resolveStrNameSpace(Object), objF.getEncryptedStrings().toArray(new String[objF.getEncryptedStrings().size()]));

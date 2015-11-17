@@ -30,6 +30,7 @@ if(extuser != null && !(extuser.size() == userNamesMap.size())) {
         sampleUser.LanguageLocaleKey = 'en_US';
         sampleUser.UserPermissionsMobileUser = false;
         sampleUser.UserPermissionsSFContentUser = false;
+        sampleUser.User_ExternalId__c = s ;
         newUsers.add(sampleUser);
         insert sampleUser;
     }
