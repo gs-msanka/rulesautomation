@@ -188,7 +188,7 @@ public class SetupRuleActionPage extends BasePage {
 				element.setText(COMMENTS, token);
 				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 			} else {
-				element.setText(xpath + COMMENTS, token);
+				element.clearAndSetText(xpath + COMMENTS, token);
 			}
 		}
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
