@@ -737,7 +737,7 @@ public void setupRule(HashMap<String,String> testData){
 				check = false;
 				throw new RuntimeException("cta stage did not match");
 			}
-			if (closeCtaAction.getSetCtaStatusTo() != null) {
+			if (closeCtaAction.getSource() != null) {
 				String sourceValue = (String) obj
 						.getField(resolveStrNameSpace("JBCXM__Source__c"));
 				if (!closeCtaAction.getSource().contains(sourceValue)) {

@@ -100,7 +100,6 @@ public class SetupRuleActionPage extends BasePage {
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";
     private final String NEWRULE_PART2 = "]";
     
-    // "//div[contains(@class, 'form-control alertComment')]/following-sibling::div[@class='showFieldList']/descendant::span[text()='%s']";
     private final String COMMENTS_TOKENS_DIV = "//div[contains(@class, 'form-control alertComment')]/following-sibling::div[@class='showFieldList']/descendant::span[text()='%s']";
 
     /**
