@@ -239,15 +239,15 @@ public class MetaDataUtil {
     public void setupPermissionsToStandardObjectAndFields(SFDCInfo sfdcInfo) throws Exception {
         String[] standObjects = new String[]{"Account", "Opportunity", "Case", "Contact"};
         String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description",
-                                                    "NumberOfEmployees", "Fax", "Industry", "NaicsCode", "NaicsDesc", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
-                                                    "TickerSymbol", "Tradestyle","Type", "Website", "YearStarted"};
+                                                    "NumberOfEmployees", "Fax", "Industry", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
+                                                    "TickerSymbol","Type", "Website"};
         String[] oppObjectFields = new String[]{"Amount", "Description", "LeadSource", "NextStep", "IsPrivate", "Probability", "Type"};
         String[] caseObjectFields = new String[]{"Origin", "Reason", "IsSelfServiceClosed",
                                                         "Description", "IsEscalated", "Priority", "Subject", "Type", "IsVisibleInSelfService",
                                                         "SuppliedCompany", "SuppliedEmail", "SuppliedName", "SuppliedPhone"};
         String[] contactObjectFields = new String[]{ "AssistantName", "AssistantPhone", "Birthdate", "Department", "Description", "DoNotCall",
                                                     "Email", "HasOptedOutOfEmail", "Fax", "HasOptedOutOfFax", "HomePhone", "LeadSource", "MailingAddress",
-                                                        "MobilePhone", "OtherAddress", "OtherPhone", "Phone", "ReportsTo", "Title"};
+                                                        "MobilePhone", "OtherAddress", "OtherPhone", "Phone", "Title"};
         addFieldPermissionsToUsers(standObjects[0], accObjectFields, sfdcInfo, true);
         addFieldPermissionsToUsers(standObjects[1], oppObjectFields, sfdcInfo, true);
         addFieldPermissionsToUsers(standObjects[2], caseObjectFields, sfdcInfo, true);
