@@ -169,7 +169,7 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(ctaAction.getReason());
         field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
         
-        if (ctaAction.getOwnerField()!=null || !ctaAction.getOwnerField().isEmpty()) {
+        if (ctaAction.getOwnerField()!=null && !ctaAction.getOwnerField().isEmpty()) {
 			item.click(xpath+OWNERFIELD);
 			selectValueInDropDown(ctaAction.getOwnerField(), true);
 		}
@@ -469,18 +469,15 @@ public class SetupRuleActionPage extends BasePage {
 		}
 		item.click(xpath + CTASTATUS_CCTA);
 		selectValueInDropDown(closeCta.getSetCtaStatusTo(), true);
-		element.clearAndSetText(xpath + CLOSECTA_COMMENTS, closeCta.getComments());
-		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
-    }
-    
-    public void tokenComments(String tokens){
-    	List<String> tokenList=Arrays.asList(tokens.split(","));
-        for (String token : tokenList) {
+		List<String> tokenList = Arrays.asList(closeCta.getComments().split(","));
+		for (String token : tokenList) {
 			if (token.startsWith("@")) {
-				element.setText(COMMENTS, token);
-				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@")+1)));
+				element.setText(CLOSECTA_COMMENTS, token);
+				item.click(String.format("//div[contains(@class, 'close_ctn')]/descendant::div[contains(@class, 'alertComment')]/following-sibling::div/descendant::span[text()='%s']", token.substring(token.indexOf("@") + 1)));
+			} else {
+				element.setText(xpath + CLOSECTA_COMMENTS, token);
 			}
 		}
-    	
+		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 }

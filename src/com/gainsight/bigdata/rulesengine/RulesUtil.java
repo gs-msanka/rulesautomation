@@ -706,7 +706,7 @@ public void setupRule(HashMap<String,String> testData){
 		return result;
 	}
 	
-	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction, String createCtaComments) {
+	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction) {
 		boolean check = true;
 		SObject[] closedCtaRecords = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Name,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Source__c,JBCXM__Stage__c,JBCXM__ClosedDate__c FROM JBCXM__CTA__c where JBCXM__ClosedDate__c!=null"));
@@ -737,21 +737,13 @@ public void setupRule(HashMap<String,String> testData){
 				check = false;
 				throw new RuntimeException("cta stage did not match");
 			}
-			if (createCtaComments != null) {
-				String comments = (String) obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
-				if (!(comments.equalsIgnoreCase(createCtaComments))) {
-					Log.error("Comments did not match!!");
-					check = false;
-					throw new RuntimeException("Comments did not match");
-				}
-			}
 			if (closeCtaAction.getSetCtaStatusTo() != null) {
 				String sourceValue = (String) obj
 						.getField(resolveStrNameSpace("JBCXM__Source__c"));
-				if (!sourceValue.contains(closeCtaAction.getSource())) {
-					Log.error("Comments did not match!!");
+				if (!closeCtaAction.getSource().contains(sourceValue)) {
+					Log.error("Source did not match!!");
 					check = false;
-					throw new RuntimeException("Comments did not match");
+					throw new RuntimeException("Source did not match");
 				}
 			}
 		}
