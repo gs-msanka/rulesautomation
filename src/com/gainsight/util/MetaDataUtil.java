@@ -238,7 +238,7 @@ public class MetaDataUtil {
      */
     public void setupPermissionsToStandardObjectAndFields(SFDCInfo sfdcInfo) throws Exception {
         String[] standObjects = new String[]{"Account", "Opportunity", "Case", "Contact"};
-        String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description", "DunsNumber",
+        String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description",
                                                     "NumberOfEmployees", "Fax", "Industry", "NaicsCode", "NaicsDesc", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
                                                     "TickerSymbol", "Tradestyle","Type", "Website", "YearStarted"};
         String[] oppObjectFields = new String[]{"Amount", "Description", "LeadSource", "NextStep", "IsPrivate", "Probability", "Type"};
