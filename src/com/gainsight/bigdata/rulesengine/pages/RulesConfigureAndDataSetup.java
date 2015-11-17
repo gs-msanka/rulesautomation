@@ -98,7 +98,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
                 "Russia", "Africa", "Arab "});
         metadataClient.createPickListField("Account", fields, true);
         //Field was getting creating on account object but permission are set on other object.
-        metaUtil.addFieldPermissionsToUsers("Account", fields.keySet().toArray(new String[fields.size()]), sfinfo, false);
+        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(fields.keySet().toArray(new String[fields.size()])), sfinfo, false);
         ArrayList<HashMap<String, String>> fFields = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> fField1 = new HashMap<String, String>();
         fField1.put("Type", "CheckBox");
