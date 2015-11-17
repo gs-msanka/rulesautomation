@@ -39,6 +39,7 @@ import com.gainsight.bigdata.pojo.CollectionInfo.Column;
 import com.gainsight.bigdata.pojo.CollectionInfo.LookUpDetail;
 import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.rulesengine.CreateCTA;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.DataLoadConfigPojo;
 import com.gainsight.bigdata.rulesengine.dataLoadConfiguration.pojo.LoadableObjects;
@@ -52,6 +53,7 @@ import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.pojo.enums.ActionType;
 import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CTAAction;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.CloseCtaAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDAAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMileStoneAction;
@@ -1498,7 +1500,7 @@ public class CreateRuleTest extends BaseTest {
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
 			Log.info("Total Records : " + objRecords.length);
 			for (SObject sObject : objRecords) {
-				Assert.assertEquals(date, sObject.getField("JBCXM__DueDate__c"), "Check DueDate is not matching !!");
+				Assert.assertEquals(date, sObject.getField(resolveStrNameSpace("JBCXM__DueDate__c")), "Check DueDate is not matching !!");
 			}
 		}
 	}
@@ -1535,7 +1537,7 @@ public class CreateRuleTest extends BaseTest {
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
 			Log.info("Total Records : " + objRecords.length);
 			for (SObject sObject : objRecords) {
-				Assert.assertEquals(dueDate, sObject.getField("JBCXM__DueDate__c"),"Check DueDate is not matching !!");
+				Assert.assertEquals(dueDate, sObject.getField(resolveStrNameSpace("JBCXM__DueDate__c")),"Check DueDate is not matching !!");
 			}
 		}
 	}
@@ -1568,8 +1570,185 @@ public class CreateRuleTest extends BaseTest {
 					.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__DueDate__c FROM JBCXM__CTA__c"));
 			Log.info("Total Records : " + objRecords.length);
 			for (SObject sObject : objRecords) {
-				Assert.assertEquals(date, sObject.getField("JBCXM__DueDate__c"), "Check DueDate is not matching !!");
+				Assert.assertEquals(date, sObject.getField(resolveStrNameSpace("JBCXM__DueDate__c")), "Check DueDate is not matching !!");
 			}
 		}
 	}
+	
+	@TestInfo(testCaseIds = { "GS-3873"})
+	@Test
+	public void testCloseCtaFromSpecificSource() throws Exception{
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32-CloseCta.json"), RulesPojo.class);
+		CloseCtaAction closeCtaAction=null;
+		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
+			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
+			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
+			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
+			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
+					"Check whether Rule ran successfully or not !");
+			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction, ctaAction.getComments() + "\n"+ "\n" 
+			+ closeCtaAction.getComments()));
+			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(closeCtaPojo.getSetupActions().get(0).getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
+		}
+	}
+	
+	@TestInfo(testCaseIds = { "GS-3874"})
+	@Test
+	public void testCloseCtaFromAllSources() throws Exception{
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33-CloseCta.json"), RulesPojo.class);
+		CloseCtaAction closeCtaAction=null;
+		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
+			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
+			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
+			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
+			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
+					"Check whether Rule ran successfully or not !");
+			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction, ctaAction.getComments() + "\n"+ "\n" 
+			+ closeCtaAction.getComments()));
+			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(closeCtaPojo.getSetupActions().get(0).getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
+		}
+	}
+	
+	
+	@TestInfo(testCaseIds = { "GS-3874"})
+	@Test
+	public void dummy() throws Exception{
+		
+/*		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+		dataETL.execute(jobInfo);*/
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/dummy.json"), RulesPojo.class);
+		/*RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		*/
+		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+		SObject[] records = sfdc.getRecords((resolveStrNameSpace(setupRuleActionPage
+						.queryString(rulesPojo.getSetupActions().get(0).getCriterias()))));
+		System.out.println((resolveStrNameSpace(setupRuleActionPage
+						.queryString(rulesPojo.getSetupActions().get(0).getCriterias()))));
+		// Since UI names and API names are different, writing a common util will be error prone.
+		for (SObject sObject : records) {
+			String accountName=(String) sObject.getField(resolveStrNameSpace("Name"));
+			System.out.println(accountName);
+			SObject[] ctaComments =sfdc.getRecords(resolveStrNameSpace("SELECT ID,JBCXM__Account__r.Name,JBCXM__Comments__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name='"+accountName+"' and isDeleted=false"));
+				String ctaComment=(String) ctaComments[0].getField(resolveStrNameSpace("JBCXM__Comments__c"));
+				SObject[] records1 =sfdc.getRecords(resolveStrNameSpace("SELECT C_Picklist__c,Percent_Auto__c,Id,Name FROM Account where name='"+accountName+"' and isDeleted=false"));
+					String actualTokenComments=(String) records1[0].getField(resolveStrNameSpace("C_Picklist__c"))+records1[0].getField(resolveStrNameSpace("Percent_Auto__c"))+records1[0].getField(resolveStrNameSpace("Id"))+records1[0].getField(resolveStrNameSpace("Name"));
+					Assert.assertEquals(ctaComment, actualTokenComments);
+		}
+	}
 }
+		
+		
+		
+		
+		
+		
+		
+/*		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33-CloseCta.json"), RulesPojo.class);
+		CloseCtaAction closeCtaAction=null;
+		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
+			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
+			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
+			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
+			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
+					"Check whether Rule ran successfully or not !");
+			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction, ctaAction.getComments() + "\n"+ "\n" 
+			+ closeCtaAction.getComments()));
+			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(rulesPojo.getSetupActions().get(0).getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
+		*/
+
+		/*RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/dummy.json"), RulesPojo.class);
+		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		*/
+		
+		
+		/*Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
+		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
+				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33-CloseCta.json"), RulesPojo.class);
+		CloseCtaAction closeCtaAction=null;
+		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
+			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
+			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
+			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
+			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
+					"Check whether Rule ran successfully or not !");
+			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
+			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction, ctaAction.getComments() + "\n"+ "\n" 
+			+ closeCtaAction.getComments()));
+			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
+			int srcObjRecCount = sfdc
+					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
+							.queryString(closeCtaPojo.getSetupActions().get(0).getCriterias())));
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));*/
+		
+	
+
+	
+

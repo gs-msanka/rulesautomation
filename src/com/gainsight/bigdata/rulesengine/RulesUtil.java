@@ -20,6 +20,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.RuleExecutionHistory;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.CloseCtaAction;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -593,7 +594,7 @@ public void setupRule(HashMap<String,String> testData){
 				check = false;
 			}
 			if (playbookName == null) {
-				Object playBookObj = obj.getField("JBCXM__Playbook__c");
+				Object playBookObj = obj.getField(resolveStrNameSpace("JBCXM__Playbook__c"));
 				if (!(playbookName == playBookObj)) {
 					Log.error("playBook is not null !!");
 					check = false;
@@ -612,14 +613,14 @@ public void setupRule(HashMap<String,String> testData){
 				}
 			}
 			if (comment == null) {
-				Object object = obj.getField("JBCXM__Comments__c");
+				Object object = obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
 				if (!(comment == object)) {
 					Log.error("Comments is not null for update cta comments with never option!!");
 					check = false;
 				}
 			}
 			if (comment != null) {
-				String comments = (String) obj.getField("JBCXM__Comments__c");
+				String comments = (String) obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
 				if (!(comments.equalsIgnoreCase(comment))) {
 					Log.error("Comments did not match!!");
 					check = false;
@@ -704,5 +705,58 @@ public void setupRule(HashMap<String,String> testData){
 		} 
 		return result;
 	}
+	
+	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction, String createCtaComments) {
+		boolean check = true;
+		SObject[] closedCtaRecords = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Name,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Source__c,JBCXM__Stage__c,JBCXM__ClosedDate__c FROM JBCXM__CTA__c where JBCXM__ClosedDate__c!=null"));
+		for (SObject obj : closedCtaRecords) {
+			if (!ctaTypesMap.get("CT." + closeCtaAction.getType())
+					.equalsIgnoreCase(
+							obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
+									.getValue().toString())) {
+				Log.error("Type did not match!!");
+				check = false;
+				throw new RuntimeException("cta type did not match");
+			}
+			if (!PickListMap.get("PL." + closeCtaAction.getReason())
+					.equalsIgnoreCase(
+							obj.getChild(
+									resolveStrNameSpace("JBCXM__Reason__c"))
+									.getValue().toString())) {
+				Log.error("Reason did not match!!");
+				check = false;
+				throw new RuntimeException("cta Reason did not match");
+			}
+			if (!PickListMap
+					.get("PL." + closeCtaAction.getSetCtaStatusTo())
+					.equalsIgnoreCase(
+							obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
+									.getValue().toString())) {
+				Log.error("Status did not match!!");
+				check = false;
+				throw new RuntimeException("cta stage did not match");
+			}
+			if (createCtaComments != null) {
+				String comments = (String) obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
+				if (!(comments.equalsIgnoreCase(createCtaComments))) {
+					Log.error("Comments did not match!!");
+					check = false;
+					throw new RuntimeException("Comments did not match");
+				}
+			}
+			if (closeCtaAction.getSetCtaStatusTo() != null) {
+				String sourceValue = (String) obj
+						.getField(resolveStrNameSpace("JBCXM__Source__c"));
+				if (!sourceValue.contains(closeCtaAction.getSource())) {
+					Log.error("Comments did not match!!");
+					check = false;
+					throw new RuntimeException("Comments did not match");
+				}
+			}
+		}
+		return check;
+	}
+	
 }
 

@@ -145,8 +145,12 @@ public class RulesEngineUtil  extends BaseTest{
                 	LoadToMDAAction loadToMDAAction = objectMapper.readValue(actionObject, LoadToMDAAction.class);
                     setupRuleActionPage.loadToMdaCollection(loadToMDAAction, i);
                     break;
-                default:
-                    break;
+                case CloseCTA:
+                	CloseCtaAction closeCtaAction = objectMapper.readValue(actionObject, CloseCtaAction.class);
+                    setupRuleActionPage.closeCTA(closeCtaAction, i);
+				break;
+			default:
+				break;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
