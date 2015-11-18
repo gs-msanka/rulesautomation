@@ -717,7 +717,6 @@ public void setupRule(HashMap<String,String> testData){
 									.getValue().toString())) {
 				Log.error("Type did not match!!");
 				check = false;
-				throw new RuntimeException("cta type did not match");
 			}
 			if (!PickListMap.get("PL." + closeCtaAction.getReason())
 					.equalsIgnoreCase(
@@ -726,7 +725,6 @@ public void setupRule(HashMap<String,String> testData){
 									.getValue().toString())) {
 				Log.error("Reason did not match!!");
 				check = false;
-				throw new RuntimeException("cta Reason did not match");
 			}
 			if (!PickListMap
 					.get("PL." + closeCtaAction.getSetCtaStatusTo())
@@ -735,7 +733,6 @@ public void setupRule(HashMap<String,String> testData){
 									.getValue().toString())) {
 				Log.error("Status did not match!!");
 				check = false;
-				throw new RuntimeException("cta stage did not match");
 			}
 			if (closeCtaAction.getSource() != null) {
 				String sourceValue = (String) obj
@@ -743,7 +740,6 @@ public void setupRule(HashMap<String,String> testData){
 				if (!closeCtaAction.getSource().contains(sourceValue)) {
 					Log.error("Source did not match!!");
 					check = false;
-					throw new RuntimeException("Source did not match");
 				}
 			}
 		}

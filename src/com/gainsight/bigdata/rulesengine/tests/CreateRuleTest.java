@@ -1601,7 +1601,9 @@ public class CreateRuleTest extends BaseTest {
 			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
 					"Check whether Rule ran successfully or not !");
 			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
-			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction));
+			Verifier verifier = new Verifier();
+			verifier.verifyTrue((rulesUtil.isCTAclosedSuccessfully(closeCtaAction)), "check cta is closed with correct parammers or not");
+			verifier.assertVerification();
 			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 			SObject[] records = sfdc
 					.getRecords((resolveStrNameSpace(setupRuleActionPage
@@ -1667,7 +1669,9 @@ public class CreateRuleTest extends BaseTest {
 			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
 					"Check whether Rule ran successfully or not !");
 			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
-			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction));
+			Verifier verifier = new Verifier();
+			verifier.verifyTrue((rulesUtil.isCTAclosedSuccessfully(closeCtaAction)), "check cta is closed with correct parammers or not");
+			 verifier.assertVerification();
 			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 			int srcObjRecCount = sfdc
 					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
