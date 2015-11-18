@@ -145,7 +145,7 @@ public class CreateRuleTest extends BaseTest {
 		sfdc.connect();
 		nsTestBase.init();
 		rulesUtil.populateObjMaps();
-        nsTestBase.tenantAutoProvision();
+	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
@@ -1603,37 +1603,39 @@ public class CreateRuleTest extends BaseTest {
 			CTAAction ctaAction = mapper.readValue(closeCtaPojo.getSetupActions().get(0).getAction(), CTAAction.class);
 			Assert.assertTrue(rulesUtil.isCTAclosedSuccessfully(closeCtaAction));
 			SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
-			int srcObjRecCount = sfdc
-					.getRecordCount(resolveStrNameSpace(setupRuleActionPage
-							.queryString(rulesPojo.getSetupActions().get(0).getCriterias())));
-			Assert.assertEquals(
-					srcObjRecCount,
-					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
-							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
-			
 			SObject[] records = sfdc
 					.getRecords((resolveStrNameSpace(setupRuleActionPage
 							.queryString(rulesPojo.getSetupActions().get(0)
 									.getCriterias()))));
+			int srcObjRecCount = records.length;
+			Assert.assertEquals(
+					srcObjRecCount,
+					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
+							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));		
+			List<String> accounts=new ArrayList<String>();
+			String accountNames ="";
+			for (SObject record : records) {
+				accountNames+= record.getField("Name")+",";
+			}
+			if (accountNames.endsWith(",")) {
+				accountNames = accountNames.substring(0, accountNames.length()-1);
+			}
+			List<String> temp=Arrays.asList(accountNames.split(","));
+			for (int i = 0; i < temp.size(); i++) {
+				accounts.add("'"+temp.get(i)+"'");		
+			}
+			String names=accounts.toString().substring(accounts.toString().indexOf("'"), accounts.toString().length()-1);
+			SObject[] ctarecords = sfdc.getRecords(resolveStrNameSpace("SELECT Id,Name,JBCXM__Account__r.Name,JBCXM__Account__r.Id,JBCXM__Comments__c,JBCXM__Account__r.C_Picklist__c,"
+					+ "JBCXM__Account__r.Percent_Auto__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name in ("+names+") and isDeleted=false"));
 			// Since UI names and API names are different, writing a common util will be error prone always.
-			for (SObject sObject : records) {
-				String accountName = (String) sObject
-						.getField(resolveStrNameSpace("Name"));
-				Log.info(accountName);
-				SObject[] ctaComments = sfdc
-						.getRecords(resolveStrNameSpace("SELECT ID,JBCXM__Account__r.Name,JBCXM__Comments__c FROM JBCXM__CTA__c where JBCXM__Account__r.Name='"
-								+ accountName + "' and isDeleted=false"));
-				String ctaComment = (String) ctaComments[0]
-						.getField(resolveStrNameSpace("JBCXM__Comments__c"));
-				SObject[] records1 = sfdc
-						.getRecords(resolveStrNameSpace("SELECT C_Picklist__c,Percent_Auto__c,Id,Name FROM Account where name='"
-								+ accountName + "' and isDeleted=false"));
-				String actualTokenComments = (String) records1[0]
-						.getField(resolveStrNameSpace("C_Picklist__c"))
-						+ records1[0]
-								.getField(resolveStrNameSpace("Percent_Auto__c"))
-						+ records1[0].getField(resolveStrNameSpace("Id"))
-						+ records1[0].getField(resolveStrNameSpace("Name"));
+			for (SObject tokenRecords : ctarecords) {
+				String ctaComment =  (String) tokenRecords.getField(resolveStrNameSpace("JBCXM__Comments__c"));	
+				String actualTokenComments = (String) tokenRecords
+						.getChild("JBCXM__Account__r").getChild("C_Picklist__c").getValue()
+						+ tokenRecords.getChild("JBCXM__Account__r").getChild("Percent_Auto__c").getValue()
+						+ tokenRecords.getChild("JBCXM__Account__r").getChild("Id").getValue()
+						+ tokenRecords.getChild("JBCXM__Account__r").getChild("Name").getValue();
+				
 				// Asserting both create cta and close cta comments
 				Assert.assertEquals(ctaComment, actualTokenComments+ "\n"+ "\n" +actualTokenComments);
 			}
