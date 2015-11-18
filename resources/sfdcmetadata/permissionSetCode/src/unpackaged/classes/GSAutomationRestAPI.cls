@@ -1,6 +1,10 @@
 @RestResource(urlMapping='/GSAutomation/*')
 global without sharing class GSAutomationRestAPI {
 
+    global class AutomationScriptException extends Exception {
+
+    }
+
     @HttpPost
     global static void orgInfo(String params) {
         RestRequest req = RestContext.request;
@@ -122,6 +126,7 @@ global without sharing class GSAutomationRestAPI {
                             System.debug('Creating Field Permissions : ' +fieldName);
                             if(!sOjectFieldDescribeMap.containsKey(tempField)) {
                                 System.debug('Skipping Field Permission for  ' +fieldName);
+                                throw new AutomationScriptException('No field found :' +fieldName);
                                 continue;
                             }
                             Schema.SObjectField field = sOjectFieldDescribeMap.get(tempField);
@@ -139,7 +144,7 @@ global without sharing class GSAutomationRestAPI {
                                 existingFieldPermissions.add(fieldName.toLowerCase());
                             }                                 
                         } else {
-                            System.debug('Field Permissions exists for : ' +fieldName);
+                            System.debug('Field Permissions exists for : ' +fieldName);                        
                         }
                     }
                 }
@@ -176,7 +181,7 @@ global without sharing class GSAutomationRestAPI {
             }
         } catch(System.Exception e) {
             resObject = new Map<String, Object>{'status' => 'FAILED', 'errMsg' => e.getMessage()+e.getStackTraceString()};
-        }
+                }        
         System.debug(resObject);
         return resObject;
     }    

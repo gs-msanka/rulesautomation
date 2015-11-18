@@ -224,18 +224,13 @@ public class DataETL implements IJobExecutor {
                 }
             }
 		}
-		catch (IOException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		catch (Exception e) {
+			Log.error(e.getMessage() + e.getLocalizedMessage());
+			throw new RuntimeException(e);
 		} finally {
 			//Closing Db Connection
 			db.close();
-            //new File(System.getProperty("user.home")+"/"+jobInfo.getJobName()+".h2.db").delete();
+            new File(System.getProperty("user.home")+"/"+jobInfo.getJobName()+".h2.db").delete();
 		}
 	}
 	

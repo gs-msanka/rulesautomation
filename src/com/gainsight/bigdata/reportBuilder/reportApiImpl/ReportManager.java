@@ -85,6 +85,7 @@ public class ReportManager extends NSTestBase {
             dimension = new ReportInfo.Dimension();
             dimension.setCol(column.getDbName());
             dimension.setAxis("measure");
+            dimension.setDecimalPlaces(column.getDecimalPlaces());
             dimension.setType(column.getColumnAttributeType());
             dimension.setDataType(column.getDatatype());
             dimension.setAgg_func("count");
@@ -149,7 +150,11 @@ public class ReportManager extends NSTestBase {
             for (Map<String, String> data : dataList) {
                 for (String key : keyToUpdate) {
                     if (data.containsKey(key) && data.get(key) != null && !data.get(key).equals("") && !data.get(key).isEmpty()) {
-                        data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
+                        if("1".equals(data.get(key))) {   //1 is treated a true in data load for boolean fields.
+                            data.put(key, "true");
+                        } else {
+                            data.put(key, String.valueOf(Boolean.valueOf(data.get(key))));
+                        }
                     }
                 }
             }
@@ -444,6 +449,7 @@ public class ReportManager extends NSTestBase {
      */
     public NsResponseObj saveReportGetNsResponse(String reportMaster) throws Exception {
         ResponseObj responseObj = saveReportGetResponsObj(reportMaster);
+        Log.info("Response Obj :" +responseObj.toString());
         NsResponseObj nsResponseObj =null;
         if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST) {
             nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);

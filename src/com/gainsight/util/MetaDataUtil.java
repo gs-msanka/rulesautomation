@@ -178,15 +178,17 @@ public class MetaDataUtil {
 			 for(HashMap<String,String[]> hmPickLists : objF.getPickLists()){
 			 metadataClient.createPickListField(resolveStrNameSpace(Object), hmPickLists, false);
 			 //permFieldsList.add(hmPickLists)
-			 Log.info("PickList Field Name is " + hmPickLists.keySet().toString());
-			 permFieldsList.add(hmPickLists.keySet().toString());			 
+				 String picklistName = hmPickLists.keySet().toArray()[0].toString();
+				 Log.info("PickList Field Name is " + picklistName);
+				 permFieldsList.add(picklistName);
 			 }
 		 }
 		 if(objF.getMultiPickLists().size() > 0){
 			 for(HashMap<String,String[]> hmMultiPickLists : objF.getMultiPickLists()){
 			 metadataClient.createPickListField(resolveStrNameSpace(Object),hmMultiPickLists,true);
-			 Log.info("MultiPickList Field Name is " + hmMultiPickLists.keySet().toString());
-			 permFieldsList.add(hmMultiPickLists.keySet().toString());
+				 String multiPLName = hmMultiPickLists.keySet().toArray()[0].toString();
+			 Log.info("MultiPickList Field Name is " + multiPLName);
+			 permFieldsList.add(multiPLName);
 			 }
 		 }
 		 
@@ -214,7 +216,7 @@ public class MetaDataUtil {
 		 }
 		 if(objF.getTextAreas().size() > 0){
 			 metadataClient.createTextFields(resolveStrNameSpace(Object), objF.getTextAreas().toArray(new String[objF.getTextAreas().size()]), false, false, false, true, false);
-			 permFieldsList.addAll(objF.getTextFields());
+			 permFieldsList.addAll(objF.getTextAreas());
 		 }
 		 if(objF.getEncryptedStrings().size() > 0){
 			 metadataClient.createEncryptedTextFields(resolveStrNameSpace(Object), objF.getEncryptedStrings().toArray(new String[objF.getEncryptedStrings().size()]));
@@ -236,16 +238,16 @@ public class MetaDataUtil {
      */
     public void setupPermissionsToStandardObjectAndFields(SFDCInfo sfdcInfo) throws Exception {
         String[] standObjects = new String[]{"Account", "Opportunity", "Case", "Contact"};
-        String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description", "DunsNumber",
-                                                    "NumberOfEmployees", "Fax", "Industry", "NaicsCode", "NaicsDesc", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
-                                                    "TickerSymbol", "Tradestyle","Type", "Website", "YearStarted"};
+        String[] accObjectFields = new String[] {"AccountNumber",  "Site", "AccountSource", "AnnualRevenue", "BillingAddress", "Description",
+                                                    "NumberOfEmployees", "Fax", "Industry", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
+                                                    "TickerSymbol","Type", "Website"};
         String[] oppObjectFields = new String[]{"Amount", "Description", "LeadSource", "NextStep", "IsPrivate", "Probability", "Type"};
         String[] caseObjectFields = new String[]{"Origin", "Reason", "IsSelfServiceClosed",
                                                         "Description", "IsEscalated", "Priority", "Subject", "Type", "IsVisibleInSelfService",
                                                         "SuppliedCompany", "SuppliedEmail", "SuppliedName", "SuppliedPhone"};
         String[] contactObjectFields = new String[]{ "AssistantName", "AssistantPhone", "Birthdate", "Department", "Description", "DoNotCall",
                                                     "Email", "HasOptedOutOfEmail", "Fax", "HasOptedOutOfFax", "HomePhone", "LeadSource", "MailingAddress",
-                                                        "MobilePhone", "OtherAddress", "OtherPhone", "Phone", "ReportsTo", "Title"};
+                                                        "MobilePhone", "OtherAddress", "OtherPhone", "Phone", "Title"};
         addFieldPermissionsToUsers(standObjects[0], accObjectFields, sfdcInfo, true);
         addFieldPermissionsToUsers(standObjects[1], oppObjectFields, sfdcInfo, true);
         addFieldPermissionsToUsers(standObjects[2], caseObjectFields, sfdcInfo, true);
@@ -405,6 +407,7 @@ public class MetaDataUtil {
         metadataClient.createNumberField(resolveStrNameSpace(object), numberFields2, false);
         addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields1), sfdc.fetchSFDCinfo(), true);
         addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(numberFields2), sfdc.fetchSFDCinfo(), true);
+      //  addFieldPermissionsToUsers(resolveStrNameSpace(object), convertFieldNameToAPIName(ArrayUtils.addAll(numberFields1, numberFields2)), sfdc.fetchSFDCinfo(), true);
     }
 
     //same method is used by rules engine test cases also.

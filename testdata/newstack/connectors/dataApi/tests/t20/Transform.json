@@ -1,0 +1,38 @@
+{
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "whereCondition" : " where Name Like 'Account Agg Test Case(20)%'",
+    "output": "/testdata/newstack/connectors/dataApi/process/t20/Accounts.csv"
+  },
+  "transform": {
+    "query": "SELECT ISNULL(Accounts.Id, -999) as \"Account Id\", AggData.AccountName as \"Account Name\", AggData.SourceAccountId as \"Source Account Id\",  AggData.Event as \"Event\", AggData.EventCount as \"Event Count\", AggData.Date as \"Date\", AggData.Quarter as \"Quarter\", AggData.Month as \"Month\", AggData.Week as \"Week\", AggData.Year as \"Year\", AggData.Avg_FileSize as \"Avg_FileSize\", AggData.SUM_Logins as \"SUM_Logins\" FROM Accounts as Accounts RIGHT OUTER JOIN AggData ON AggData.AccountName=Accounts.Name",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/connectors/dataApi/process/t20/Accounts.csv",
+        "table": "Accounts",
+        "joinColumnName": "Name",
+        "columns": []
+      },
+      {
+        "file": "/testdata/newstack/connectors/dataApi/tests/t20/ExpectedData.csv",
+        "table": "AggData",
+        "joinColumnName": "AccountName",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/connectors/dataApi/process/t20/ExpectedData.csv"
+  }
+}

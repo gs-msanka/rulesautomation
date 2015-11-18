@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Connectors Project" preserve-order="true">
+
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+    </listeners>
+
+    <test verbose="3" name="C360 Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360FeaturesTests">
+                <methods>
+                    <include name="verifyEditFeatures" />
+                </methods>
+            </class>
+            <class name="com.gainsight.sfdc.customer360.test.Customer360MilestonesTests">
+                <methods>
+                    <include name="verifyAddAndEditMilestones" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Customers Tab Tests" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer.tests.CustomerTest">
+                <methods>
+                    <include name="editCustomer" />
+                    <include name="applyMultipleTagToCustomer" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Adoption Test Cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_User_Monthly_Test">
+                <methods>
+                    <include name="T3_UserMonth_1MeasureNPeriodsCurrentPeriod" />
+                    <include name="T9_UserMonth_GSUtilCalcNPeriod" />
+                    <include name="T17_UserMonth_Trend_NMeasure6PeriodsCurrentPeriod" />
+                </methods>
+            </class>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Instance_Weekly_Test">
+                <methods>
+                    <include name="T3_InsWeek_1MeasureNPeriodsCurrentPeriod" />
+                    <include name="T5_InsWeek_NMeasures1PeriodCurrentPeriod" />
+                    <include name="T8_InsWeek_GSUtilCalc1Period" />
+                    <include name="T17_InsWeek_Trend_NMeasureNPeriodsCurrentPeriod" />
+                </methods>
+            </class>
+            <class name="com.gainsight.sfdc.adoption.tests.Adoption_Account_Weekly_Test">
+                <methods>
+                    <include name="T3_AccWeek_1MeasureNPeriodsCurrentPeriod" />
+                    <include name="T6_AccWeek_NMeasures1PeriodPreviousPeriod" />
+                    <include name="T8_AccWeek_GSUtilCalc1Period" />
+                    <include name="T17_AccWeek_Trend_NMeasure6PeriodsCurrentPeriod" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Survey Test Cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.survey.tests.SurveyQuestionsTest" >
+                <methods>
+                    <include name="surveyAllQuestionTypes" />
+                </methods>
+            </class>
+            <class name="com.gainsight.sfdc.survey.tests.SurveyDistributionListTest" >
+                <methods>
+                    <include name="distributeNonAnonymousSurveyUsingGSEmail" />
+                    <include name="ScheduleCompleteAnonymousSurveyUsingGSEmail"/>
+                    <include name="testDisrtibutionWithContactObjectAndFilter" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Copilot Test Cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.copilot.tests.SmartListTest" >
+                <methods>
+                    <include name="accStrategySFData_filterOnOtherObj" />
+                    <include name="accountStrategyPowerListUsingRedShiftSubjectArea"/>
+                    <include name="contactStrategyPowerListUsingMongoSubjectArea" />
+                    <include name="emailStrategyPowerListUsingPostgresSubjectArea" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Connectors Test Cases" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataAuthenticateTest" >
+                <methods>
+                    <include name="mdaAuthorizeCheckingWithValidDetails" />
+                    <include name="mdaAuthorizeCheckingWithInvalidAccessKey" />
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.dataload.tests.LoadDataToMDATest" >
+                <methods>
+                    <include name="insertCommaSeparatedCSVFileWithDoubleQuote" />
+                    <include name="updateDataWithOneKeyColumnAndViaCommaSeparated" />
+                    <include name="deleteCollectionDataWithDateAccountField"/>
+                    <include name="failedRecordsFetchForInvalidDataTypes" />
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.dataLoadConfiguartion.tests.DataLoadConfigAggTest" >
+                <methods>
+                    <include name="accountIdDateMappedAndMeasureAsSum" />
+                    <include name="accExtIdContactExtIdTimeStampEventMeasureSumAvg" />
+                    <include name="accountAndContactExternalIDWithCustomFieldsAndMeasuresWithAllAggregationTypes" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="Gainsight Application Test Suite" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.LoadToCustomers" >
+                <methods>
+                    <include name="loadToCustomers6" />
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.rulesengine.LoadToFeature" >
+                <methods>
+                    <include name="loadToFeature3" />
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.rulesengine.LoadToSFDC" >
+                <methods>
+                    <include name="upsertOperation" />
+                    <include name="insertOperation" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+                <methods>
+                    <include name="testAllActionsUsingNativeData" />
+                    <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo" />
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+                <methods>
+                    <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
+                    <include name="testAllActionsUsingMdaData" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Redshift" />
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+                <methods>
+                    <include name="testAllActionsUsingMdaData" />
+                    <include name="testCTAActionWithMdaJoins" />
+                    <include name="testRedShiftCalculatedMeasuresInSetupRule" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

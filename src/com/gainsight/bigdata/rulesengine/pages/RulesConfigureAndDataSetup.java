@@ -97,6 +97,8 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
                 "France", "Italy", "Germany", "Japan", "China", "Australia",
                 "Russia", "Africa", "Arab "});
         metadataClient.createPickListField("Account", fields, true);
+        //Field was getting creating on account object but permission are set on other object.
+        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(fields.keySet().toArray(new String[fields.size()])), sfinfo, false);
         ArrayList<HashMap<String, String>> fFields = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> fField1 = new HashMap<String, String>();
         fField1.put("Type", "CheckBox");
@@ -151,7 +153,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         fFields.add(fField7);
         String[] permFields = new String[]{"Data ExternalId", "IsActive",
                 "InputDate", "InputDateTime", "AccPercentage", "ActiveUsers",
-                "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime",
+                "FIsActive", "FCurrency", "FDate", "FDateTime",
                 "FNumber", "FPercent", "FText", "C_Text", "C_Number",
                 "C_Checkbox", "C_Currency", "C_Email", "C_Percent", "C_Phone",
                 "C_Picklist", "C_MultiPicklist", "C_TextArea",

@@ -25,8 +25,7 @@
       "mappings": {
         "SFDC": {
           "key": "SFDC_ACCOUNT",
-          "dataType": "string",
-          "format": null
+          "dataType": "string"
         }
       },
       "maxLength": 250,
@@ -52,8 +51,7 @@
       "mappings": {
         "SFDC": {
           "key": "SFDC_ACCOUNT_NAME",
-          "dataType": "string",
-          "format": null
+          "dataType": "string"
         }
       },
       "maxLength": 250,

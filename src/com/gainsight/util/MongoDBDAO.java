@@ -165,12 +165,14 @@ public class MongoDBDAO  {
         Log.info("Updating collection db store type to : " + dbStoreType + " for collection : " + collectionId);
 
         Document document = mongoUtil.getFirstRecord(COLLECTION_MASTER, new Document().append("TenantId", tenantId).append("CollectionDetails.CollectionID", collectionId));
+        Log.info("Document to Update :" +document);
         if(document ==null) {
             throw new RuntimeException("Failed to get collection master record.");
         }
 
         Document updateDocument = new Document();
         updateDocument.append("$set", new Document().append("CollectionDetails.dataStoreType", dbStoreType.name()));
+        Log.info("To Update : "+updateDocument);
 
         return mongoUtil.updateSingleRecord(COLLECTION_MASTER, document, updateDocument);
     }

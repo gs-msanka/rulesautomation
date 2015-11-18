@@ -71,7 +71,7 @@ public class SurveyDistributePage extends SurveyBasePage{
 	public void clickingToBeContacted() {
 		item.click(CLICKON_TOBECONTACTED_CIRCLE);
 		wait.waitTillElementDisplayed(CLICKON_TOBECONTACTED_CIRCLE, MIN_TIME, MAX_TIME);
-		Timer.sleep(5); // Added since in linux box its not recognizing particular webelement.
+		wait.waitTillElementPresent(SELECT_CONTACTS_CHECKBOX, MIN_TIME, MAX_TIME);
 		item.click(SELECT_CONTACTS_CHECKBOX);
 	}
 

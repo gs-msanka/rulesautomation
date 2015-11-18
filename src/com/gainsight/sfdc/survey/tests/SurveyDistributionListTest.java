@@ -1,6 +1,7 @@
 package com.gainsight.sfdc.survey.tests;
 
 import com.gainsight.bigdata.Integration.utils.PlainEmailConnector;
+import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.survey.pages.*;
 import com.gainsight.sfdc.survey.pojo.SurveyAddParticipants;
 import com.gainsight.sfdc.survey.pojo.SurveyDistribution;
@@ -43,6 +44,8 @@ public class SurveyDistributionListTest extends SurveySetup {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_CONTACTS));
 		sfdc.runApexCode(resolveStrNameSpace("List<JBCXM__SurveyDistributionSchedule__c> distribution = [SELECT Id, JBCXM__Status__c FROM JBCXM__SurveyDistributionSchedule__c];for(JBCXM__SurveyDistributionSchedule__c acct :distribution){acct.JBCXM__Status__c = 'Completed';}update distribution;"));
+		GSEmailSetup gsEmailSetup=new GSEmailSetup();
+		gsEmailSetup.updateAccessKeyInApplicationSettingForGSEmail();
 	}
 	
 	@BeforeMethod
