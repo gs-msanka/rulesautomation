@@ -35,7 +35,7 @@ public class RulesManagerPage extends BasePage {
     private final String ADD_RULE_LINK = "//input[contains(@class, 'add-rule') and @value='+ Rule']";
 
     public RulesManagerPage() {
-        wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+
     }
 
     public void waitForPageLoad() {
@@ -223,5 +223,15 @@ public class RulesManagerPage extends BasePage {
      */
     public boolean isEditRulePagePresent(){
     	 return element.isElementPresent(READY_INDICATOR);
+	}
+    
+	/**
+	 * @param rulesUrl
+	 */
+	public void openRulesManagerPage(String rulesUrl) {
+		URL = rulesUrl;
+		open();
+		wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+
 	}
 }

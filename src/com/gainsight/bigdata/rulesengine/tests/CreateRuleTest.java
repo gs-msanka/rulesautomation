@@ -136,6 +136,9 @@ public class CreateRuleTest extends BaseTest {
     public List<String> collectionNames = new ArrayList<String>();
     private TenantManager tenantManager;
     private Calendar calendar = Calendar.getInstance();
+    private RulesManagerPage rulesManagerPage;
+    private String rulesManagerPageUrl;
+    
 
 
     @BeforeClass
@@ -144,6 +147,8 @@ public class CreateRuleTest extends BaseTest {
 		basepage.login();
 		sfdc.connect();
 		nsTestBase.init();
+		rulesManagerPageUrl=visualForcePageUrl+"Rulesmanager";
+		rulesManagerPage = new RulesManagerPage();
 		rulesUtil.populateObjMaps();
 	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
@@ -212,7 +217,7 @@ public class CreateRuleTest extends BaseTest {
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
         dataETL.execute(jobInfo);
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC1.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -225,7 +230,7 @@ public class CreateRuleTest extends BaseTest {
         JobInfo jobInfo = mapper.readValue((new FileReader(ACCOUNTS_JOB_FOR_LOAD_TO_CUSTOMERS_ACTION)), JobInfo.class);
         dataETL.execute(jobInfo);
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC4.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -246,7 +251,7 @@ public class CreateRuleTest extends BaseTest {
 		}
         rulesConfigureAndDataSetup.createEmptySubjectArea();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule Created and Ran Successfully!");
@@ -287,7 +292,7 @@ public class CreateRuleTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
         ruleEngineDataSetup.loadUsageData(dataETL, USAGE_DATA_FILE, false);
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFields.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule Created and Ran Successfully!");
@@ -311,7 +316,7 @@ public class CreateRuleTest extends BaseTest {
 		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -336,7 +341,7 @@ public class CreateRuleTest extends BaseTest {
 		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -363,7 +368,7 @@ public class CreateRuleTest extends BaseTest {
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -466,7 +471,7 @@ public class CreateRuleTest extends BaseTest {
         dataETL.execute(jobInfo);
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -562,7 +567,7 @@ public class CreateRuleTest extends BaseTest {
 		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnConfigure();
 		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
 			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
@@ -589,7 +594,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
 		List<String> jbcxmObjects=BaseSalesforceConnector.getAllGainSightObjects(sfdc.getPartnerConnection());
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnConfigure();
 		DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
 		dataLoadConfiguration.selectSourceObjectFromNativeData();
@@ -615,7 +620,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnConfigure();
 		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
 			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
@@ -640,7 +645,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void dailyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC9.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
@@ -660,7 +665,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void weeklyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC10.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
@@ -679,7 +684,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void monthlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC11.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
@@ -698,7 +703,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void yearlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC12.json"), RulesPojo.class);
-        RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesPojo.getShowScheduler().setStartDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getStartDate()), 0, false)));
         rulesPojo.getShowScheduler().setEndDate((getDateWithFormat(Integer.valueOf(rulesPojo.getShowScheduler().getEndDate()), 0, false)));
         rulesManagerPage.clickOnAddRule();
@@ -772,7 +777,7 @@ public class CreateRuleTest extends BaseTest {
 		// Forming lookup object on ID field of both baseobject and lookup object
 		CollectionUtil.setLookUpDetails(actualCollectionInfoForCollection2, "ID", actualCollectionInfoForCollection1, "ID", false);
 		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfoForCollection2), "check collectionmaster is updated or not via api");
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -790,7 +795,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void testRuleInactive() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC14.json"),RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		EditRulePage editRulePage=new EditRulePage();
@@ -802,7 +807,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void testCloningOFARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC15.json"),RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		EditRulePage editRulePage=new EditRulePage();
@@ -818,7 +823,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void testDeleteRule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC16.json"),RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		EditRulePage editRulePage=new EditRulePage();
@@ -832,7 +837,7 @@ public class CreateRuleTest extends BaseTest {
 	@Test
 	public void testEditARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC17.json"),RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		EditRulePage editRulePage=new EditRulePage();
@@ -858,7 +863,7 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC18.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);		
 		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
@@ -885,7 +890,7 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC19.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
@@ -923,7 +928,7 @@ public class CreateRuleTest extends BaseTest {
 		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
 		dataETL.execute(jobInfo);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
@@ -959,7 +964,7 @@ public class CreateRuleTest extends BaseTest {
 		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
 		dataETL.execute(jobInfo);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
@@ -1001,7 +1006,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfo), "check collectionmaster is updated or not via api");
 		String schemaWithCalculatedFields = mapper.writeValueAsString(calculatedFeildsSchema);
 		Log.info("Updated Collection schema is " + schemaWithCalculatedFields);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
@@ -1022,7 +1027,7 @@ public class CreateRuleTest extends BaseTest {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC23.json"),
 				RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1050,8 +1055,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 
 		// Updating cta with high priority
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
-				.clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo TC23_Upsert = mapper
 				.readValue(
 						new File(
@@ -1064,7 +1068,7 @@ public class CreateRuleTest extends BaseTest {
 					&& ruleActions2.isUpsert()) {
 				JsonNode actionObject = ruleActions2.getAction();
 				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
-				rulesManagerPage2.editRuleByName(TC23_Upsert.getRuleName());
+				rulesManagerPage.editRuleByName(TC23_Upsert.getRuleName());
 				rulesEngineUtil.createRuleFromUi(TC23_Upsert);
 				Assert.assertTrue(rulesUtil.runRule(TC23_Upsert.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1086,8 +1090,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 
 		// Updating same cta with Low priority
-		RulesManagerPage rulesManagerPage3 = basepage.clickOnAdminTab()
-				.clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		for (RuleAction ruleActions2 : ruleAction) {
 			if (ruleActions2.getActionType().name().contains("CTA")
 					&& ruleActions2.isUpsert()) {
@@ -1096,7 +1099,7 @@ public class CreateRuleTest extends BaseTest {
 				// Setting cta priority to Low
 				ctaAction.setPriority("Low");
 				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
-				rulesManagerPage3.editRuleByName(TC23_Upsert.getRuleName());
+				rulesManagerPage.editRuleByName(TC23_Upsert.getRuleName());
 				rulesEngineUtil.createRuleFromUi(TC23_Upsert);
 				Assert.assertTrue(rulesUtil.runRule(TC23_Upsert.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1126,7 +1129,7 @@ public class CreateRuleTest extends BaseTest {
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1153,8 +1156,7 @@ public class CreateRuleTest extends BaseTest {
 							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
 		}
 
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
-				.clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo TC24_Upsert = mapper
 				.readValue(
 						new File(
@@ -1166,7 +1168,7 @@ public class CreateRuleTest extends BaseTest {
 			if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
 				JsonNode actionObject = ruleActions2.getAction();
 				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
-				rulesManagerPage2.editRuleByName(TC24_Upsert.getRuleName());
+				rulesManagerPage.editRuleByName(TC24_Upsert.getRuleName());
 				rulesEngineUtil.createRuleFromUi(TC24_Upsert);
 				Assert.assertTrue(rulesUtil.runRule(TC24_Upsert.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1197,7 +1199,7 @@ public class CreateRuleTest extends BaseTest {
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC25.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1233,7 +1235,7 @@ public class CreateRuleTest extends BaseTest {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC26.json"),
 				RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1261,8 +1263,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 
 		// Updating cta with a playbook
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab()
-				.clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo upsertJson = mapper
 				.readValue(
 						new File(
@@ -1277,7 +1278,7 @@ public class CreateRuleTest extends BaseTest {
 				JsonNode actionObject = ruleActions2.getAction();
 				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
 				ctaActionObject=ctaAction;
-				rulesManagerPage2.editRuleByName(upsertJson.getRuleName());
+				rulesManagerPage.editRuleByName(upsertJson.getRuleName());
 				rulesEngineUtil.createRuleFromUi(upsertJson);
 				Assert.assertTrue(rulesUtil.runRule(upsertJson.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1299,8 +1300,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 
 		// updating cta to other playbook
-		RulesManagerPage rulesManagerPage3 = basepage.clickOnAdminTab()
-				.clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo upsert_Cta = mapper
 				.readValue(new File(Application.basedir
 										+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC26_Upsert_2.json"), RulesPojo.class);
@@ -1313,7 +1313,7 @@ public class CreateRuleTest extends BaseTest {
 				ctaAction.setPlaybook("Decline in usage");
 				
 				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
-				rulesManagerPage3.editRuleByName(upsert_Cta.getRuleName());
+				rulesManagerPage.editRuleByName(upsert_Cta.getRuleName());
 				rulesEngineUtil.createRuleFromUi(upsert_Cta);
 				Assert.assertTrue(rulesUtil.runRule(upsert_Cta.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1343,7 +1343,7 @@ public class CreateRuleTest extends BaseTest {
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1371,7 +1371,7 @@ public class CreateRuleTest extends BaseTest {
 							+ ctaAction.getName() + "' and JBCXM__Source__c='Rules' and isdeleted=false"))));
 		}
 
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo TC27_Upsert = mapper
 				.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27_Upsert.json"),RulesPojo.class);
 		List<RuleAction> ruleAction = TC27_Upsert.getSetupActions();
@@ -1382,7 +1382,7 @@ public class CreateRuleTest extends BaseTest {
 				// Changing cta name
 				ctaAction.setName(ctaAction.getName()+ "NewName");
 				ruleActions2.setAction(mapper.convertValue(ctaAction, JsonNode.class));
-				rulesManagerPage2.editRuleByName(TC27_Upsert.getRuleName());
+				rulesManagerPage.editRuleByName(TC27_Upsert.getRuleName());
 				rulesEngineUtil.createRuleFromUi(TC27_Upsert);
 				Assert.assertTrue(rulesUtil.runRule(TC27_Upsert.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1412,7 +1412,7 @@ public class CreateRuleTest extends BaseTest {
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),
@@ -1442,7 +1442,7 @@ public class CreateRuleTest extends BaseTest {
 		
 		// Updating all Cta's to snooze till Date.today()+5 via script
 		sfdc.runApexCode(resolveStrNameSpace("JBCXM__PickList__c pick=[SELECT Id,JBCXM__SystemName__c,JBCXM__ShortName__c  FROM JBCXM__PickList__c where JBCXM__SystemName__c like '%snooze%' and JBCXM__ShortName__c like '%Other%' limit 1];List<JBCXM__CTA__c> cta = [select Id,JBCXM__SnoozedUntil__c, JBCXM__SnoozeReason__c from JBCXM__CTA__c];for(JBCXM__CTA__c snooze :cta){snooze.JBCXM__SnoozeReason__c = pick.Id;snooze.JBCXM__SnoozedUntil__c=Date.today()+5;}update cta;"));
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo TC28_Upsert = mapper
 				.readValue(
 						new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28_Upsert.json"), RulesPojo.class);
@@ -1451,7 +1451,7 @@ public class CreateRuleTest extends BaseTest {
 			if (ruleActions2.getActionType().name().contains("CTA") && ruleActions2.isUpsert()) {
 				JsonNode actionObject = ruleActions2.getAction();
 				CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
-				rulesManagerPage2.editRuleByName(TC28_Upsert.getRuleName());
+				rulesManagerPage.editRuleByName(TC28_Upsert.getRuleName());
 				rulesEngineUtil.createRuleFromUi(TC28_Upsert);
 				Assert.assertTrue(rulesUtil.runRule(TC28_Upsert.getRuleName()),
 						"Check whether Rule ran successfully or not !");
@@ -1480,7 +1480,7 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC29.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -1513,7 +1513,7 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC30.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -1550,7 +1550,7 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC31.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
@@ -1584,19 +1584,19 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32-CloseCta.json"), RulesPojo.class);
 		CloseCtaAction closeCtaAction=null;
 		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
 			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
 			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
-			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesManagerPage.editRuleByName(closeCtaPojo.getRuleName());
 			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
 			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
 					"Check whether Rule ran successfully or not !");
@@ -1650,19 +1650,19 @@ public class CreateRuleTest extends BaseTest {
 		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33.json"), RulesPojo.class);
-		RulesManagerPage rulesManagerPage = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		// Again Editing same cta, since scenario is to create close cta action for the cta which is already existing
-		RulesManagerPage rulesManagerPage2 = basepage.clickOnAdminTab().clickOnRulesEnginePage();
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		RulesPojo closeCtaPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33-CloseCta.json"), RulesPojo.class);
 		CloseCtaAction closeCtaAction=null;
 		if (closeCtaPojo.getSetupActions().get(0).getActionType().name().contains("CloseCTA")) {
 			JsonNode actionObject=closeCtaPojo.getSetupActions().get(0).getAction();
 			closeCtaAction = mapper.readValue(actionObject, CloseCtaAction.class);
-			rulesManagerPage2.editRuleByName(closeCtaPojo.getRuleName());
+			rulesManagerPage.editRuleByName(closeCtaPojo.getRuleName());
 			rulesEngineUtil.createRuleFromUi(closeCtaPojo);
 			Assert.assertTrue(rulesUtil.runRule(closeCtaPojo.getRuleName()),
 					"Check whether Rule ran successfully or not !");

@@ -45,6 +45,8 @@ public class BaseTest {
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
     public static final String CTA_DUEDATE_FORMAT = "yyyy-MM-dd";
+    public static String visualForcePageUrl = ".visual.force.com/apex/";
+    
 
 
     @BeforeSuite
@@ -60,7 +62,15 @@ public class BaseTest {
         packageUtil = new PackageUtil(sfdc.getMetadataConnection(), Double.valueOf(sfdcConfig.getSfdcApiVersion()));
         //Uninstall Application.
         sfdcInfo = sfdc.fetchSFDCinfo();
+		visualForcePageUrl = "https://"
+				+ (sfdcConfig.getSfdcManagedPackage() ? sfdcConfig
+						.getSfdcNameSpace().toLowerCase() : "c")
+				+ "."
+				+ sfdcInfo.getEndpoint().substring(8,
+						sfdcInfo.getEndpoint().indexOf("."))
+				+ visualForcePageUrl;
 
+		System.out.println("page issssss" +visualForcePageUrl);
         if(sfdcConfig.getSfdcUnInstallApp()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
             packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
