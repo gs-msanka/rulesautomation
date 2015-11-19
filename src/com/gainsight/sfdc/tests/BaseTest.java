@@ -70,7 +70,7 @@ public class BaseTest {
 						sfdcInfo.getEndpoint().indexOf("."))
 				+ visualForcePageUrl;
 
-		System.out.println("page issssss" +visualForcePageUrl);
+		Log.info("visualForcePage is " +visualForcePageUrl);
         if(sfdcConfig.getSfdcUnInstallApp()) {
             sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
             packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
