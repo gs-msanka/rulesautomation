@@ -27,6 +27,7 @@ import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.Verifier;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
@@ -707,44 +708,50 @@ public void setupRule(HashMap<String,String> testData){
 	}
 	
 	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction) {
-		boolean check = true;
+		boolean result = false;
 		SObject[] closedCtaRecords = sfdc
 				.getRecords(resolveStrNameSpace("SELECT Name,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Source__c,JBCXM__Stage__c,JBCXM__ClosedDate__c FROM JBCXM__CTA__c where JBCXM__ClosedDate__c!=null"));
+		Verifier verifier = new Verifier();
 		for (SObject obj : closedCtaRecords) {
-			if (!ctaTypesMap.get("CT." + closeCtaAction.getType())
-					.equalsIgnoreCase(
-							obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
-									.getValue().toString())) {
-				Log.error("Type did not match!!");
-				check = false;
+			verifier.verifyEquals(
+					ctaTypesMap.get("CT." + closeCtaAction.getType()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
+							.getValue().toString(),
+					"Type is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
 			}
-			if (!PickListMap.get("PL." + closeCtaAction.getReason())
-					.equalsIgnoreCase(
-							obj.getChild(
-									resolveStrNameSpace("JBCXM__Reason__c"))
-									.getValue().toString())) {
-				Log.error("Reason did not match!!");
-				check = false;
+			verifier.verifyEquals(
+					PickListMap.get("PL." + closeCtaAction.getReason()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
+							.getValue().toString(),
+					"Reason is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
 			}
-			if (!PickListMap
-					.get("PL." + closeCtaAction.getSetCtaStatusTo())
-					.equalsIgnoreCase(
-							obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
-									.getValue().toString())) {
-				Log.error("Status did not match!!");
-				check = false;
+			verifier.verifyEquals(
+					PickListMap.get("PL." + closeCtaAction.getSetCtaStatusTo()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
+							.getValue().toString(),
+					"Stage/status is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
 			}
 			if (closeCtaAction.getSource() != null) {
 				String sourceValue = (String) obj
 						.getField(resolveStrNameSpace("JBCXM__Source__c"));
-				if (!closeCtaAction.getSource().contains(sourceValue)) {
-					Log.error("Source did not match!!");
-					check = false;
-				}
+				verifier.verifyTrue(
+						closeCtaAction.getSource().contains(sourceValue),
+						"Source is not matching for CTA - +" + " "
+								+ obj.getField("Name"));
 			}
 		}
-		return check;
-	}
-	
+		result = !verifier.isVerificationFailed();
+		if (!result) {
+			Log.error("Failed due to : "
+					+ verifier.getAssertMessages().toString());
+		}
+		return result;
+	}	
 }
 
