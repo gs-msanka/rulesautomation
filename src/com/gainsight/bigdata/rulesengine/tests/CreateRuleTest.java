@@ -146,10 +146,10 @@ public class CreateRuleTest extends BaseTest {
     public void setUp(@Optional String dbStoreType) throws Exception {
 		basepage.login();
 //		sfdc.connect();
-		nsTestBase.init();
+	//	nsTestBase.init();
 		rulesManagerPageUrl=visualForcePageUrl+"Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
-		rulesUtil.populateObjMaps();
+	//	rulesUtil.populateObjMaps();
 /*	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();

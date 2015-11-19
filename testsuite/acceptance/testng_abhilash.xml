@@ -6,6 +6,13 @@
    <test verbose="3" name="RulesEngine UI Automation Test Suite" preserve-order="true">
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest" />
+                     <methods>
+               <include name="testRuleInactive" />
+               <include name="testCloningOFARule" />
+               <include name="testDeleteRule" />
+               <include name="testEditARule" />
+             
+            </methods>
       </classes>
    </test>
 </suite>
