@@ -43,13 +43,9 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String FILTER_FROM_TYPE               = "//div[@class='type cta-types-filter']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
     private final String FILTER_FROM_SELECT_TYPE        = "//ul/li/label/span[text()='%s']";
     private final String TYPE_CTA_ACTIVE                = "//div[@class='type cta-types-filter']/button/span[(@class='ui-multiselect-selected-label') and contains(text(),'%s')]";
-    //private final String TYPE_CTA_ACTIVE              = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and contains(@class, 'active') and @name='%s']";
-    //private final String TYPE_CTA                     = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and @name='%s']";
     private final String FILTER_FROM_PRIORITY           = "//div[@class='priority cta-priority-filter']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
     private final String FILTER_FROM_SELECT_PRIORITY    = "//ul/li/label/span[text()='%s']";
     private final String PRIORITY_CTA_ACTIVE            = "//div[@class='priority cta-priority-filter']/button/span[(@class='ui-multiselect-selected-label') and contains(text(),'%s')]";
-    //private final String PRIORITY_CTA                 = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority')]";
-    //private final String PRIORITY_CTA_ACTIVE          = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority') and contains(@class, 'active')]";
 
     private final String OWNER              = "//div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
     private final String OWNER_SEARCH       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@type='text' and @name='search_text']";
@@ -1171,41 +1167,34 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(String.format(FILTER_FROM_TYPE));
         item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
         item.click(String.format(FILTER_FROM_TYPE));
-        //item.click(String.format(TYPE_CTA, type));
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_TYPE), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTATypeFilter( String type) {
-        //item.click(String.format(TYPE_CTA_ACTIVE, type));
         item.click(String.format(FILTER_FROM_TYPE));
         item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
         item.click(String.format(FILTER_FROM_TYPE));
         waitTillNoSearchIcon();
-        //wait.waitTillElementDisplayed(String.format(TYPE_CTA, type), MIN_TIME, MAX_TIME);
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_TYPE, type), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage selectCTAPriorityFilter(String priority) {
-        //item.click(String.format(PRIORITY_CTA, priority));
         item.click(String.format(FILTER_FROM_PRIORITY));
         item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
         item.click(String.format(FILTER_FROM_PRIORITY));
         waitTillNoSearchIcon();
-        //wait.waitTillElementDisplayed(String.format(PRIORITY_CTA_ACTIVE, priority), MIN_TIME, MAX_TIME);
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTAPriorityFilter(String priority) {
-        //item.click(String.format(PRIORITY_CTA_ACTIVE, priority));
         item.click(String.format(FILTER_FROM_PRIORITY));
         item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
         item.click(String.format(FILTER_FROM_PRIORITY));
         waitTillNoSearchIcon();
-        //wait.waitTillElementDisplayed(String.format(PRIORITY_CTA, priority), MIN_TIME, MAX_TIME);
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
     }
@@ -1225,7 +1214,6 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     
     public boolean  isOverDueCTADisplayed(CTA cta) {
-        //String xPath = getCTAXPath(cta)+"/descendant::div[contains(@class,'cta-overdue widget-alert')]";
         String xPath = getCTAXPath(cta)+"/descendant::div[contains(@class,'cta-overdue require-tooltip widget-alert')]";
         item.click(xPath);
         return  isCTAExpandedViewLoaded(cta);
