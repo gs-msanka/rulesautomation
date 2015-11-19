@@ -8,7 +8,8 @@ import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
 public enum ActionType {
     CTA("createCta"), LoadToMileStone("loadToMileStone"),
     LoadToCustomers("loadToCustomers"), LoadToFeature("loadToFeature"),
-    LoadToUsage("loadToUsage"), SendEmail("sendEmail"), SetScore("setScore"),LoadToSFDCObject("loadToSFDCObject"),LoadToMDASubjectArea("loadToMDASubjectArea");
+    LoadToUsage("loadToUsage"), SendEmail("sendEmail"), SetScore("setScore"),LoadToSFDCObject("loadToSFDCObject"),LoadToMDASubjectArea("loadToMDASubjectArea"),
+    CloseCTA("closeCta");
 
     private String type;
 

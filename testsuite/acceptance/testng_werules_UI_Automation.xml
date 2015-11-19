@@ -49,6 +49,8 @@
                <include name="testCtaActionWithDonNotSkipWeekendOption" />
                <include name="testCtaActionWithSkipAllWeekendsOption" />
                <include name="testCtaActionWithSkipWeekendIfDueOnWeekEndOption" />
+               <include name="testCloseCtaFromSpecificSource" />
+               <include name="testCloseCtaFromAllSources" />
             </methods>
          </class>
       </classes>

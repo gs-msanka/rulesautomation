@@ -1,0 +1,19 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromAllSources",
+  "ruleDescription": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromSpecificSources Desc",
+  "setupRule": null,
+  "setupActions": [
+    {
+      "actionType": "closeCta",
+      "action": {
+        "name": "Rule-33-GS-3874-Testcase-ID-CloseCtaFromAllSources-UI",
+        "type": "Opportunity",
+        "source": "Rules,Manual,Survey",
+        "setCtaStatusTo": "Closed Risk",
+        "reason": "Product Issue",
+        "comments": "These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA-These are test comments for CTA"
+      }
+    }
+  ]
+}
