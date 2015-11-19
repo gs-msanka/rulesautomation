@@ -3,7 +3,7 @@
   "jobType": "EventProcess",
   "namespacePrefix": "JBCXM",
   "dateProcess" : {
-    "inputFile" : "/testdata/newstack/reporting/data/ReportData1.csv",
+    "inputFile" : "/testdata/newstack/reporti",
     "outputFile" : "/testdata/newstack/reporting/process/ReportData1.csv",
     "fields" :[
       {
@@ -14,10 +14,10 @@
         "fieldName" : "Date"
       },
       {
-        "weekly" : true,
+        "weekly" : false,
         "daily"  : false,
         "dateTime" : true,
-        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "dateFormat" : "testttttt",
         "fieldName" : "EventTimeStamp"
       }
     ]
