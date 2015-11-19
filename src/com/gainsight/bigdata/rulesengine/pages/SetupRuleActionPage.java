@@ -386,12 +386,12 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + CRITERIA_SHOWFIELD);
         selectValueInDropDown(fieldName);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
-        selectValueInDropDown(criteria.getOperator());
+        selectValueInDropDown(criteria.getOperator() , true);
         if (criteria.getField().equalsIgnoreCase("field")) {
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
             selectValueInDropDown("field");
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH_VALUE);
-            selectValueInDropDown(criteria.getValue());
+            selectValueInDropDown(criteria.getValue(), true);
         } else {
             // item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
             // selectValueInDropDown("value");
