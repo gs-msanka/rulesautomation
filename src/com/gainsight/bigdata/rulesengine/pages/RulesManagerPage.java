@@ -86,7 +86,6 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + ruleNameOFF);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-	//	element.mouseOverAndClickOnIdentifier(ruleNameOFF);
 		item.click(ruleNameOFF);
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
@@ -151,7 +150,6 @@ public class RulesManagerPage extends BasePage {
 		String ruleNameToDelete = String.format(RULE_LISTING_ACTIONS, ruleName, "Delete");
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-	//	element.mouseOverAndClickOnIdentifier(ruleNameToDelete);
 		item.click(ruleNameToDelete);
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
@@ -169,8 +167,6 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + ruleNameToEdit);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-		
-	//	element.mouseOverAndClickOnIdentifier(ruleNameToEdit);
 		item.click(ruleNameToEdit);
 		return new EditRulePage();
     }
@@ -203,7 +199,6 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + cloneRuleLink);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-	//	element.mouseOverAndClickOnIdentifier(cloneRuleLink);
 		item.click(cloneRuleLink);
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
 		element.clearAndSetText(CLONE_RULE_INPUT, newRuleName);
