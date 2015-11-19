@@ -128,8 +128,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         fField4.put("Description", "Formula InputDateTime__c");
         fField4.put("HelpText", "Formula InputDateTime__c");
         fFields.add(fField4);
-        metadataClient.createFormulaFields("Account", fFields);
-        fFields.clear();
         HashMap<String, String> fField5 = new HashMap<String, String>();
         fField5.put("Type", "Number");
         fField5.put("Formula", "ActiveUsers__c");
@@ -151,14 +149,17 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         fField7.put("Description", "Formula Name");
         fField7.put("HelpText", "Formula Name");
         fFields.add(fField7);
-        String[] permFields = new String[]{"Data ExternalId", "IsActive",
-                "InputDate", "InputDateTime", "AccPercentage", "ActiveUsers",
-                "FIsActive", "FCurrency", "FDate", "FDateTime",
-                "FNumber", "FPercent", "FText", "C_Text", "C_Number",
-                "C_Checkbox", "C_Currency", "C_Email", "C_Percent", "C_Phone",
-                "C_Picklist", "C_MultiPicklist", "C_TextArea",
-                "C_EncryptedString", "C_URL", "C_Reference"};
+        metadataClient.createFormulaFields("Account", fFields);
+		String[] permFields = new String[] { "Data ExternalId", "IsActive",
+				"InputDate", "InputDateTime", "AccPercentage", "ActiveUsers",
+				"C_Text", "C_Number", "C_Checkbox", "C_Currency", "C_Email",
+				"C_Percent", "C_Phone", "C_Picklist", "C_MultiPicklist",
+				"C_TextArea", "C_EncryptedString", "C_URL", "C_Reference" };
+		String[] permFieldsForAccountObject = new String[] { "FIsActive",
+				"FCurrency", "FDate", "FDateTime", "InputDateTime",
+				"AccPercentage", "ActiveUsers", "FNumber", "FPercent", "FText" };
         metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", metaUtil.convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
+        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), sfdc.fetchSFDCinfo(), true);
         //	metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace("RulesSFDCCustom__c"), permFields,sfdc.fetchSFDCinfo(), true);
         String configData = "{\"type\":\"SFDC\",\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\",\"fields\":[{\"name\":\"C_Checkbox__c\",\"dataType\":\"boolean\"},{\"name\":\"InputDate__c\",\"dataType\":\"date\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"dateTime\"},{\"name\":\"C_Number__c\",\"dataType\":\"double\"},{\"name\":\"C_Email__c\",\"dataType\":\"string\"},{\"name\":\"C_Text__c\",\"dataType\":\"string\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"},{\"name\":\"C_Reference__c\",\"dataType\":\"string\"}]}";
         

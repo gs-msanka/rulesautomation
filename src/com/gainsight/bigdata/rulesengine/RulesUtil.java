@@ -20,12 +20,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.RuleExecutionHistory;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.CloseCtaAction;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.Verifier;
 import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
@@ -593,7 +595,7 @@ public void setupRule(HashMap<String,String> testData){
 				check = false;
 			}
 			if (playbookName == null) {
-				Object playBookObj = obj.getField("JBCXM__Playbook__c");
+				Object playBookObj = obj.getField(resolveStrNameSpace("JBCXM__Playbook__c"));
 				if (!(playbookName == playBookObj)) {
 					Log.error("playBook is not null !!");
 					check = false;
@@ -612,14 +614,14 @@ public void setupRule(HashMap<String,String> testData){
 				}
 			}
 			if (comment == null) {
-				Object object = obj.getField("JBCXM__Comments__c");
+				Object object = obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
 				if (!(comment == object)) {
 					Log.error("Comments is not null for update cta comments with never option!!");
 					check = false;
 				}
 			}
 			if (comment != null) {
-				String comments = (String) obj.getField("JBCXM__Comments__c");
+				String comments = (String) obj.getField(resolveStrNameSpace("JBCXM__Comments__c"));
 				if (!(comments.equalsIgnoreCase(comment))) {
 					Log.error("Comments did not match!!");
 					check = false;
@@ -704,5 +706,52 @@ public void setupRule(HashMap<String,String> testData){
 		} 
 		return result;
 	}
+	
+	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction) {
+		boolean result = false;
+		SObject[] closedCtaRecords = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Name,JBCXM__Type__c,JBCXM__Comments__c,JBCXM__Reason__c,JBCXM__Source__c,JBCXM__Stage__c,JBCXM__ClosedDate__c FROM JBCXM__CTA__c where JBCXM__ClosedDate__c!=null"));
+		Verifier verifier = new Verifier();
+		for (SObject obj : closedCtaRecords) {
+			verifier.verifyEquals(
+					ctaTypesMap.get("CT." + closeCtaAction.getType()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Type__c"))
+							.getValue().toString(),
+					"Type is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
+			}
+			verifier.verifyEquals(
+					PickListMap.get("PL." + closeCtaAction.getReason()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Reason__c"))
+							.getValue().toString(),
+					"Reason is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
+			}
+			verifier.verifyEquals(
+					PickListMap.get("PL." + closeCtaAction.getSetCtaStatusTo()),
+					obj.getChild(resolveStrNameSpace("JBCXM__Stage__c"))
+							.getValue().toString(),
+					"Stage/status is not matching for CTA - +" + " "
+							+ obj.getField("Name"));
+			{
+			}
+			if (closeCtaAction.getSource() != null) {
+				String sourceValue = (String) obj
+						.getField(resolveStrNameSpace("JBCXM__Source__c"));
+				verifier.verifyTrue(
+						closeCtaAction.getSource().contains(sourceValue),
+						"Source is not matching for CTA - +" + " "
+								+ obj.getField("Name"));
+			}
+		}
+		result = !verifier.isVerificationFailed();
+		if (!result) {
+			Log.error("Failed due to : "
+					+ verifier.getAssertMessages().toString());
+		}
+		return result;
+	}	
 }
 

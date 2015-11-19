@@ -16,6 +16,8 @@ import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Log;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
@@ -52,8 +54,11 @@ public class RulesEngineUtil  extends BaseTest{
     /**
      * Creates a rule on the ui based on the input configuration file path
      * @param rulesPojo RulesPojo configuration object for creation of the rule.
+     * @throws IOException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
      */
-    public void createRuleFromUi(RulesPojo rulesPojo ) {
+    public void createRuleFromUi(RulesPojo rulesPojo ) throws JsonParseException, JsonMappingException, IOException {
         EditRulePage editRulePage = new EditRulePage();
         editRulePage.enterRuleDetailsAndClickNext(rulesPojo);
         int i=1;
@@ -91,8 +96,11 @@ public class RulesEngineUtil  extends BaseTest{
      * Creates a rule action on the ui using the given rule action object provided. This method should be used for creationg of the 1st action on the page.
      * @param ruleAction RuleAction class object containing the action to be created configuration
      * @param setupRuleActionPage SetupRuleActionPage object
+     * @throws IOException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
      */
-    public void createRuleActionOnUi(RuleAction ruleAction, SetupRuleActionPage setupRuleActionPage) {
+    public void createRuleActionOnUi(RuleAction ruleAction, SetupRuleActionPage setupRuleActionPage) throws JsonParseException, JsonMappingException, IOException {
         createRuleActionOnUi(ruleAction, setupRuleActionPage, 1);
     }
 
@@ -101,12 +109,14 @@ public class RulesEngineUtil  extends BaseTest{
      * @param ruleAction RuleAction class object containing the action to be created configuration
      * @param setupRuleActionPage SetupRuleActionPage object
      * @param i Number of the action that is being created for a particular rule. for ex. You are creating a rule with 4 actions then for 1st action this value will be 1 for 2nd action 2 and so on.
+     * @throws IOException 
+     * @throws JsonMappingException 
+     * @throws JsonParseException 
      */
-    public void createRuleActionOnUi(RuleAction ruleAction, SetupRuleActionPage setupRuleActionPage, int i){
+    public void createRuleActionOnUi(RuleAction ruleAction, SetupRuleActionPage setupRuleActionPage, int i) throws JsonParseException, JsonMappingException, IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         ActionType actionType = ruleAction.getActionType();
         JsonNode actionObject = ruleAction.getAction();
-        try {
             switch (actionType) {
                 case CTA:
                     CTAAction ctaAction = objectMapper.readValue(actionObject, CTAAction.class);
@@ -145,12 +155,11 @@ public class RulesEngineUtil  extends BaseTest{
                 	LoadToMDAAction loadToMDAAction = objectMapper.readValue(actionObject, LoadToMDAAction.class);
                     setupRuleActionPage.loadToMdaCollection(loadToMDAAction, i);
                     break;
-                default:
-                    break;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                case CloseCTA:
+                	CloseCtaAction closeCtaAction = objectMapper.readValue(actionObject, CloseCtaAction.class);
+                    setupRuleActionPage.closeCTA(closeCtaAction, i);
+				break;
+            }     
 		int j = 1;
 		for (Criteria criteria : ruleAction.getCriterias()) {
 			setupRuleActionPage.addCriteria(criteria, i, j);

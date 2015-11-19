@@ -120,7 +120,7 @@ public class MetaDataUtil {
 	        String[] permFields = new String[]{"Data ExternalId", "IsActive", "InputDate", "InputDateTime",
 	                                    "AccPercentage", "ActiveUsers", "InRegions", "FIsActive", "FCurrency", "FDate", "FDateTime", "FNumber", "FPercent", "FText","C_Text",
 	                                    "C_Number","C_Checkbox","C_Currency","C_Email","C_Percent","C_Phone","C_Picklist","C_MultiPicklist","C_TextArea","C_EncryptedString",
-	                                    "C_URL","C_Reference"};
+	                                    "C_URL"};
 	        addFieldPermissionsToUsers("Account", convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
 	    }
 	 

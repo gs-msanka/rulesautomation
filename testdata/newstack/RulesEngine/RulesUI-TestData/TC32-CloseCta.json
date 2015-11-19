@@ -1,0 +1,19 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource",
+  "ruleDescription": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource Desc",
+  "setupRule": null,
+  "setupActions": [
+    {
+      "actionType": "closeCta",
+      "action": {
+        "name": "Rule-32-GS-3873-Testcase-ID-CloseCtaFromSpecificSource-UI",
+        "type": "Opportunity",
+        "source": "Rules",
+        "setCtaStatusTo": "Closed Success",
+        "reason": "Product Issue",
+        "comments": "@Account::Account Name,@Account::Id,@Account::Percent Auto,@Account::C_Picklist"
+      }
+    }
+  ]
+}

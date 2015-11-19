@@ -1,12 +1,14 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -72,6 +74,9 @@ public class SetupRuleActionPage extends BasePage {
     private final String REASON_CCTA = "//div[@class='close_ctn']//label[contains(text(),'Reason')]/following-sibling::div//button";
     private final String SOURCE_CCTA = "//div[@class='close_ctn']//label[contains(text(),'Source')]/following-sibling::div/select[contains(@class,'Source')]/following-sibling::button";
     private final String CTASTATUS_CCTA = "//div[@class='close_ctn']//label[contains(text(),'status')]/following-sibling::div//button";
+    private final String CLOSECTA_COMMENTS = "//div[contains(@class, 'close_ctn')]/descendant::div[contains(@class, 'alertComment')]";
+    private final String CLOSE_CTA_RADIO_BUTTON = "//input[@value='close' and @value='close']";
+    private final String CLOSE_CTA_SETSTATUS = "//input[@title='%s' and @value='%s']";
 
     private final String FIELD_MAPPING_LTU1 = "//span[contains(text(),'%s') and ";
     private final String FIELD_MAPPING_LTU2 = "contains(text(),'%s')]/../following-sibling::div/select";
@@ -94,6 +99,8 @@ public class SetupRuleActionPage extends BasePage {
 
     private final String NEWRULE_PART1 = "//div[contains(@class,'setup-action-ctn')]/div[";
     private final String NEWRULE_PART2 = "]";
+    
+    private final String COMMENTS_TOKENS_DIV = "//div[contains(@class, 'form-control alertComment')]/following-sibling::div[@class='showFieldList']/descendant::span[text()='%s']";
 
     /**
      * Selects the given action type
@@ -160,6 +167,12 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + REASON_BUTTON);
         selectValueInDropDown(ctaAction.getReason());
         field.clearAndSetText(xpath + DUEDATE, ctaAction.getDueDate());
+        
+        if (ctaAction.getOwnerField()!=null && !ctaAction.getOwnerField().isEmpty()) {
+			item.click(xpath+OWNERFIELD);
+			selectValueInDropDown(ctaAction.getOwnerField(), true);
+		}
+        
         if (!ctaAction.getChatterUpdate().isEmpty()) {
 			item.click(xpath+POSTUPDATE_BUTTON);
 			 selectValueInDropDown(ctaAction.getChatterUpdate(), true);
@@ -169,7 +182,15 @@ public class SetupRuleActionPage extends BasePage {
 			selectValueInDropDown(ctaAction.getDueDateType(), true);
 		}
         selectTaskOwner(ctaAction.getDefaultOwner(), i);
-        element.clearAndSetText(xpath + COMMENTS, ctaAction.getComments());
+		List<String> tokenList = Arrays.asList(ctaAction.getComments().split(","));
+		for (String token : tokenList) {
+			if (token.startsWith("@")) {
+				element.setText(COMMENTS, token);
+				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
+			} else {
+				element.clearAndSetText(xpath + COMMENTS, token);
+			}
+		}
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 
@@ -365,12 +386,12 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + CRITERIA_SHOWFIELD);
         selectValueInDropDown(fieldName);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
-        selectValueInDropDown(criteria.getOperator());
+        selectValueInDropDown(criteria.getOperator() , true);
         if (criteria.getField().equalsIgnoreCase("field")) {
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
             selectValueInDropDown("field");
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH_VALUE);
-            selectValueInDropDown(criteria.getValue());
+            selectValueInDropDown(criteria.getValue(), true);
         } else {
             // item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
             // selectValueInDropDown("value");
@@ -398,7 +419,7 @@ public class SetupRuleActionPage extends BasePage {
                 str = str + showField + "   " + operator + "  " + value + " AND  ";
             }
         }
-        str = "SELECT Id  FROM " + " Account " + " Where " + str
+        str = "SELECT Id, Name   FROM " + " Account " + " Where " + str
                 + " isDeleted=false";
         return str;
     }
@@ -428,5 +449,34 @@ public class SetupRuleActionPage extends BasePage {
             symbol = "'" + value + "'";
         }
         return symbol;
+    }
+    
+    public void closeCTA(CloseCtaAction closeCta, int i) {
+    	String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
+		item.click(xpath + CLOSE_CTA_RADIO_BUTTON);
+		item.click(xpath + TYPE_CCTA);
+		selectValueInDropDown(closeCta.getType(), true);
+		item.click(xpath + REASON_CCTA);
+		selectValueInDropDown(closeCta.getReason(), true);
+		item.click(xpath + SOURCE_CCTA);	
+		if (closeCta.getSource()!=null) {
+			List<String> sources=Arrays.asList(closeCta.getSource().split(","));
+			Log.info("Number of sources selected is " +sources.size());
+			for (String source : sources) {
+				item.click(String.format(CLOSE_CTA_SETSTATUS, source, source));
+			}		
+		}
+		item.click(xpath + CTASTATUS_CCTA);
+		selectValueInDropDown(closeCta.getSetCtaStatusTo(), true);
+		List<String> tokenList = Arrays.asList(closeCta.getComments().split(","));
+		for (String token : tokenList) {
+			if (token.startsWith("@")) {
+				element.setText(CLOSECTA_COMMENTS, token);
+				item.click(String.format("//div[contains(@class, 'close_ctn')]/descendant::div[contains(@class, 'alertComment')]/following-sibling::div/descendant::span[text()='%s']", token.substring(token.indexOf("@") + 1)));
+			} else {
+				element.setText(xpath + CLOSECTA_COMMENTS, token);
+			}
+		}
+		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 }
