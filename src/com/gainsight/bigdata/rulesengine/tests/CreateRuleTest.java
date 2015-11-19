@@ -145,11 +145,11 @@ public class CreateRuleTest extends BaseTest {
     @Parameters("dbStoreType")
     public void setUp(@Optional String dbStoreType) throws Exception {
 		basepage.login();
-	//	sfdc.connect();
-	//	nsTestBase.init();
+		sfdc.connect();
+		nsTestBase.init();
 		rulesManagerPageUrl=visualForcePageUrl+"Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
-	/*	rulesUtil.populateObjMaps();
+		rulesUtil.populateObjMaps();
 	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
@@ -195,7 +195,7 @@ public class CreateRuleTest extends BaseTest {
 				&& dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
 			Assert.assertTrue(tenantManager
 					.enabledRedShiftWithDBDetails(tenantDetails));
-		}*/
+		}
 	}
 
     @BeforeMethod
