@@ -17,12 +17,14 @@ import com.sforce.soap.metadata.Report;
 public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     private static final String PB_SEARCH_OUTPUT = null;
-	private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add']";
-    private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='add-playbtn-ctn']/input[@class='gs-btn btn-add']";
+	private final String READY_INDICATOR            = "//input[@class='gs-btn btn-add btn-addpb']";
+    private final String ADD_PLAYBOOK_BUTTON        = "//div[@class='add-playbtn-ctn']/input[@class='gs-btn btn-add btn-addpb']";
     private final String SAVE_PLAYBOOK_BUTTON		= "//input[contains(@class, 'btn-save-playbook') and @value='Save']";
     private final String PLAYBOOK_NAME_INPUT		= "//input[@class='form-control pb-subject']";
     private final String PLAYBOOK_COMMENTS_INPUT	= "//textarea[@class='form-control  pb-description']";
     private final String PB_ADD_TASK_BUTTON			= "//input[contains(@class,'btn-add-task') and @type='button']";
+    private final String PLAYBOOK_ADD_SELECTTYPE    = "//select[@class='sel-cta-type']/following-sibling::button[@type='button']/span[contains(text(),'Select an Option')]";
+    private final String PLAYBOOK_EDIT_SELECTTYPE    = "//select[@class='sel-cta-type']/following-sibling::button[@type='button']/span[contains(text(),'%s')]";
     private final String TASK_OWNER_INPUT           = "//div[contains(@class, 'task-owner')]/descendant::input[@class='search_input ui-autocomplete-input']";
     private final String TASK_SUBJECT_INPUT		    = "//input[contains(@class, 'Subject__cInputCls taskParamControlDataInput')]";
     private final String TASK_DATE_INPUT	        = "//input[contains(@class, 'Date__cInputCls taskParamControlDataInput')]";
@@ -54,7 +56,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     public WorkflowPlaybooksPage addPlaybook(Playbook pb) {
         item.click(ADD_PLAYBOOK_BUTTON);
-        fillPlaybookDetails(pb,false);
+        fillPlaybookDetails(pb,false,null);
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(3);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
@@ -69,16 +71,22 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     	item.click(String.format(PB_SEARCH_OUTPUT, pb.getName()));  	
     	return true;
     }
-    public void fillPlaybookDetails(Playbook pb,boolean isEdit) {
+    public void fillPlaybookDetails(Playbook pb,boolean isEdit,String oldPlaybookType) {
         wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
         if(isEdit) {
         	for(int i=0;i<3;i++){
         		if(item.getText(PLAYBOOK_NAME_INPUT).equalsIgnoreCase(pb.getName())) break;
         		else Timer.sleep(2);        		
         	}
+            item.click(String.format(PLAYBOOK_EDIT_SELECTTYPE,oldPlaybookType));
+        }
+        else {
+            item.click(PLAYBOOK_ADD_SELECTTYPE);
         }
         if(pb.getType() != null && pb.getType() != "") {
-            item.click("//input[@type='radio' and @value='"+pb.getType()+"']");
+           for(WebElement we : driver.findElements(By.xpath("//input[@type='radio']/following-sibling::span[text()='"+pb.getType()+"']"))){
+               if(we.isDisplayed()) we.click();
+           }
         }
         if(pb.getName() != null) {
             field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
@@ -161,7 +169,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage editPlaybook(Playbook pb, Playbook newPB) {
         expandPlaybookView(pb);
         item.click(PLAYBOOK_EDIT);
-        fillPlaybookDetails(newPB,true);
+        fillPlaybookDetails(newPB,true,pb.getType());
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(4);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
