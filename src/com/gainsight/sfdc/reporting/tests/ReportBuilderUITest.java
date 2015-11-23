@@ -105,4 +105,225 @@ public class ReportBuilderUITest extends BaseTest {
 		}
 
 	}
+
+	@Test
+	public void barReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/barReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void pieReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/pieReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void columnReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/columnReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void bubbleReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/bubbleReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void scatterReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/scatterReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void lineReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/lineReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void areaReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/areaReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void stackedBarReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/stackedBarReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void stackedColumnReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(
+							Application.basedir + "/testdata/newstack/reporting/data/stackedColumnReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
+
+	@Test
+	public void columnLineReportWith1M2D() throws Exception {
+		try {
+
+			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
+
+			ReportMaster reportMaster = mapper.readValue(
+					new File(Application.basedir + "/testdata/newstack/reporting/data/columnLineReportWith1M2D.json"),
+					ReportMaster.class);
+			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+
+			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		} finally {
+			mongoUtil.closeConnection();
+			mongoDBDAO.mongoUtil.closeConnection();
+		}
+
+	}
 }

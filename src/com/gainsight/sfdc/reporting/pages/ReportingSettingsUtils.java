@@ -21,6 +21,9 @@ public class ReportingSettingsUtils extends BasePage {
 	private final String CLEAR_RANKING_BTN_XPATH = "//div[@class='gs-rb-report-close pull-right']";
 	private final String RANKING_APPLY_BTN_POPUP = "//span[contains(text(),'Please wait while we crunch your data')]";
 
+	private final String CHART_ICON = "//ul[contains(@class,'selectedType')]//span[@class='table-chart-icon']";
+	private final String CHART_LABEL = "//span[@class='gs-rb-chart-label' and contains(text(),'%s')]";
+
 	private final String EXPORTASEXCEL_BTN_XPATH = "//label[@class='gs-rb-settings-label' and contains(text(),'Export as Excel')]";
 	private final String EXPORTASCSV_BTN_XPATH = "";
 	private final String EXPORRASIMAGE_BTN_XPATH = "//label[@class='gs-rb-settings-label' and contains(text(),'Export as Image')]";
@@ -38,61 +41,36 @@ public class ReportingSettingsUtils extends BasePage {
 	 * @return , true/false
 	 * @throws InterruptedException
 	 */
-	public boolean applyRanking(String fieldName, String operator, String value) {
+	public void applyRanking(String fieldName, String operator, String value) {
 		Log.info("Apply Raking for field: " + fieldName + ",with Operator: " + operator + ",with value: " + value);
 		item.click(SETTINGS_BTN_XPATH);
-		boolean isRankingApplied = false;
 		item.click(RANKING_BTN_XPATH);
-		isRankingApplied = applyRankingOnFieldName(fieldName);
-		if (isRankingApplied) {
-			if (operator.contains("desc")) {
-				operator = "Top";
-			} else {
-				operator = "Bottom";
-			}
-			isRankingApplied = applyRankingOperator(operator);
-			if (isRankingApplied) {
-				isRankingApplied = setRankingValue(value);
-				if (isRankingApplied) {
-					item.click(RANKING_APPLY_BTN_XPATH);
-					wait.waitTillElementNotDisplayed(RANKING_APPLY_BTN_POPUP, 1, 5);
-				} else {
-					item.click(RANKING_CANCEL_BTN_XAPTH);
-				}
-			}
+		applyRankingOnFieldName(fieldName);
+		if (operator.contains("desc")) {
+			operator = "Top";
+		} else {
+			operator = "Bottom";
 		}
-		return isRankingApplied;
+		applyRankingOperator(operator);
+		setRankingValue(value);
+		item.click(RANKING_APPLY_BTN_XPATH);
+		env.setTimeout(3);
+		wait.waitTillElementNotDisplayed(RANKING_APPLY_BTN_POPUP, 1, 5);
+		env.setTimeout(30);
 	}
 
-	private boolean applyRankingOnFieldName(String fieldName) {
-		try {
-			item.click(CLICK_RANKING_FIELDNAME_XPATH);
-			item.click(String.format(SELECT_RANKING_FEILDNAME_XPATH, fieldName));
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-
+	private void applyRankingOnFieldName(String fieldName) {
+		item.click(CLICK_RANKING_FIELDNAME_XPATH);
+		item.click(String.format(SELECT_RANKING_FEILDNAME_XPATH, fieldName));
 	}
 
-	private boolean applyRankingOperator(String operator) {
-		try {
-			item.click(CLICK_RANKING_OPERATOR_XPATH);
-			item.click(String.format(SELECT_RANKING_OPERATOR_XPATH, operator));
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+	private void applyRankingOperator(String operator) {
+		item.click(CLICK_RANKING_OPERATOR_XPATH);
+		item.click(String.format(SELECT_RANKING_OPERATOR_XPATH, operator));
 	}
 
-	private boolean setRankingValue(String value) {
-		try {
-			item.setText(RANKING_VALUE_XPATH, value);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-
+	private void setRankingValue(String value) {
+		item.setText(RANKING_VALUE_XPATH, value);
 	}
 
 	/**
@@ -105,4 +83,40 @@ public class ReportingSettingsUtils extends BasePage {
 		item.click(RANKING_APPLY_BTN_XPATH);
 	}
 
+	public void selectReportType(String chartType) {
+		chartType = convertChartType(chartType);
+		item.click(CHART_ICON);
+		item.click(String.format(CHART_LABEL, chartType));
+		env.setTimeout(3);
+		wait.waitTillElementNotDisplayed(RANKING_APPLY_BTN_POPUP, 1, 5);
+		env.setTimeout(30);
+	}
+
+	private String convertChartType(String chartType) {
+		// TODO Auto-generated method stub
+		if (chartType.contains("PIE")) {
+			return "Pie";
+		} else if (chartType.contains("STACKED_BAR")) {
+			return "Stacked Bar";
+		} else if (chartType.contains("STACKED_COLUMN")) {
+			return "Stacked Column";
+		} else if (chartType.contains("COLUMN_LINE")) {
+			return "Column Line";
+		} else if (chartType.contains("GRID")) {
+			return "Table";
+		} else if (chartType.contains("BAR")) {
+			return "Bar";
+		} else if (chartType.contains("COLUMN")) {
+			return "Column";
+		} else if (chartType.contains("BUBBLE")) {
+			return "Bubble";
+		} else if (chartType.contains("SCATTER")) {
+			return "Scatter";
+		} else if (chartType.contains("LINE")) {
+			return "Line";
+		} else if (chartType.contains("AREA")) {
+			return "Area";
+		}
+		return chartType;
+	}
 }

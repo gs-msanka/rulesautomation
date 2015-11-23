@@ -55,15 +55,10 @@ public class ReportingBasePage extends BasePage {
 	 * @param ObjName
 	 */
 	public void addShowMeField(String fieldName, String ObjName) {
-		try {
-			Log.info("Adding field into Show Me section: " + fieldName);
-			item.click(XPathConstants.getXPath("ADDSHOWME"));
-			item.setText(XPathConstants.getXPath("SEARCHSHOWMEField"), fieldName);
-			item.click(String.format(XPathConstants.getXPath("CLICKSEARCHSHOWMEFIELd"), fieldName, ObjName));
-		} catch (Exception e) {
-			throw e;
-		}
-
+		Log.info("Adding field into Show Me section: " + fieldName);
+		item.click(XPathConstants.getXPath("ADDSHOWME"));
+		item.setText(XPathConstants.getXPath("SEARCHSHOWMEField"), fieldName);
+		item.click(String.format(XPathConstants.getXPath("CLICKSEARCHSHOWMEFIELd"), fieldName, ObjName));
 	}
 
 	/**
@@ -85,24 +80,20 @@ public class ReportingBasePage extends BasePage {
 	 * @param aggregation
 	 * @param decimalPlaces
 	 */
-	public void showMeFieldSettings(String oldDisplayName, String newDisplayName, String aggregation, String decimalPlaces) {
-		try {
-			Log.info("Changing field display name and aggregation for: " + oldDisplayName);
-			item.click(String.format(XPathConstants.getXPath("SHOWMESETTINGS"), oldDisplayName));
+	public void showMeFieldSettings(String oldDisplayName, String newDisplayName, String aggregation,
+			String decimalPlaces) {
+		Log.info("Changing field display name and aggregation for: " + oldDisplayName);
+		item.click(String.format(XPathConstants.getXPath("SHOWMESETTINGS"), oldDisplayName));
 
-			if ((newDisplayName != "") || (newDisplayName != null)) {
-				item.clearAndSetText(XPathConstants.getXPath("FIELDDISPLAYNAME"), newDisplayName);
-			}
-			// Need to write a little bit logic here
-			if (aggregation != null) {
-				item.clearAndSetText(XPathConstants.getXPath("AGGREGATION"), aggregation);
-			}
-			if (decimalPlaces != null) {
-				item.clearAndSetText(XPathConstants.getXPath("DISPLAY"), decimalPlaces);
-			}
-
-		} catch (Exception e) {
-			throw e;
+		if ((newDisplayName != "") || (newDisplayName != null)) {
+			item.clearAndSetText(XPathConstants.getXPath("FIELDDISPLAYNAME"), newDisplayName);
+		}
+		// Need to write a little bit logic here
+		if (aggregation != null) {
+			item.clearAndSetText(XPathConstants.getXPath("AGGREGATION"), aggregation);
+		}
+		if (decimalPlaces != null) {
+			item.clearAndSetText(XPathConstants.getXPath("DISPLAY"), decimalPlaces);
 		}
 
 	}
@@ -154,8 +145,8 @@ public class ReportingBasePage extends BasePage {
 				element.getElement(XPathConstants.getXPath("REPORTNAME")).sendKeys(Keys.TAB);
 			}
 
-			item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
 		}
+		item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
 
 	}
 
@@ -163,14 +154,9 @@ public class ReportingBasePage extends BasePage {
 	 * Run the report by clickig on Apply button
 	 */
 	public void runReport() {
-		// String[] filterValues = {"10"};
-		// reportingSettingsUtils.applyRanking("Sum of Age", "Bottom", "5");
-		// reportingFilterUtils.addFilter("Age", "GREATER_THAN", filterValues,
-		// "");
 		Log.info("Clicking on apply button to run the report");
 		if (item.isElementPresent(XPathConstants.getXPath("APPLY_BTN_XPATH"))) {
 			item.click(XPathConstants.getXPath("APPLY_BTN_XPATH"));
-			// Timer.sleep(30); // Need to change the timer value
 		}
 
 	}
@@ -196,9 +182,7 @@ public class ReportingBasePage extends BasePage {
 	public void deleteReport(String reportName) {
 		Log.info("Deleting the report: " + reportName);
 		item.click(XPathConstants.getXPath("DELETE_BTN_XPATH"));
-		// Timer.sleep(2);
 		item.click(XPathConstants.getXPath("DELETE_YES_BTN_XPATH"));
-		// Timer.sleep(2);
 	}
 
 	/**
@@ -207,20 +191,11 @@ public class ReportingBasePage extends BasePage {
 	 * @param reportName
 	 * @return true/fasle
 	 */
-	public boolean loadReportFromRepo(String reportName) {
-		try {
-			Log.info("Loading the report from Rep: " + reportName);
-			item.click(XPathConstants.getXPath("REPOSITORY_BTN_XPATH"));
-			// Timer.sleep(5);
-			item.clearAndSetText(XPathConstants.getXPath("REPOSITORY_SEARCH_TXT_XPATH"), reportName);
-			item.click(String.format(XPathConstants.getXPath("CLICK_SEARCHREPORTNAME_REPOSITORY"), reportName));
-			// Timer.sleep(5);
-			return true;
-		} catch (Exception e) {
-			Log.info("Unable to find the report name : " + reportName);
-			e.printStackTrace();
-			return false;
-		}
+	public void loadReportFromRepo(String reportName) {
+		Log.info("Loading the report from Rep: " + reportName);
+		item.click(XPathConstants.getXPath("REPOSITORY_BTN_XPATH"));
+		item.clearAndSetText(XPathConstants.getXPath("REPOSITORY_SEARCH_TXT_XPATH"), reportName);
+		item.click(String.format(XPathConstants.getXPath("CLICK_SEARCHREPORTNAME_REPOSITORY"), reportName));
 	}
 
 }

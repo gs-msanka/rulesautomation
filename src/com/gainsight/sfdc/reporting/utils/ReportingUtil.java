@@ -39,7 +39,7 @@ public class ReportingUtil extends BaseTest {
 	public void createReportFromUiAndVerifyBackedJSON(ReportMaster reportMaster, ReportingBasePage reportingBasePage, MongoUtil mongoUtil) {
 
 		for (ReportInfo reportInfo : reportMaster.getReportInfo()) {
-			createReportFromUi(reportInfo, reportingBasePage);
+			createReportFromUi(reportInfo, reportingBasePage, reportMaster.getDisplayType());
 			mdaConnectBackend.connectDbAndCompareJSON(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), reportInfo, mongoUtil,
 					reportMaster);
@@ -52,8 +52,9 @@ public class ReportingUtil extends BaseTest {
 	 * Creates a rule on the ui based on the json input configuration file path
 	 * @param reportInfo
 	 * @param reportingBasePage
+	 * @param disPlayType
 	 */
-	public void createReportFromUi(ReportInfo reportInfo, ReportingBasePage reportingBasePage) {
+	public void createReportFromUi(ReportInfo reportInfo, ReportingBasePage reportingBasePage, String disPlayType) {
 
 		reportingBasePage.selectObjectFromSource(reportInfo.getSchemaName());
 
@@ -95,6 +96,7 @@ public class ReportingUtil extends BaseTest {
 			}
 		}
 
+		reportingSettingsUtils.selectReportType(disPlayType);
 		reportingBasePage.saveReport(reportInfo.getReportName());
 
 	}

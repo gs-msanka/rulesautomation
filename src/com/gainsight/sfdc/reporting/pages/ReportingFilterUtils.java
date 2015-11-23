@@ -49,30 +49,18 @@ public class ReportingFilterUtils extends BasePage {
 	 * @param filterType
 	 */
 
-	public boolean addFilter(String filterName, String filterOPerator, List<Object> filterValues, String filterType) {
+	public void addFilter(String filterName, String filterOPerator, List<Object> filterValues, String filterType) {
 		// open filter pop up
 		item.click(FILTER_BTN_XPATH);
-		boolean isSuccess = false;
-		isSuccess = selectFilterName(filterName);
-		if (isSuccess) {
-			isSuccess = selectFilterOperator(filterOPerator);
-			if (isSuccess) {
-				isSuccess = selectFilterValues(filterOPerator, filterValues);
-				if (isSuccess) {
-					// Click Apply button
-					item.click(FILTER_APPLY_BTN_XPATH);
-					wait.waitTillElementNotDisplayed(FILTER_APPLY_BTN_POPUP, 0, 5);
-					// Timer.sleep(5);
-					if ((filterType).toUpperCase() == "LOCKED") {
-						item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
-					}
-				} else {
-					// Click Cancel button
-					item.click(FILTER_CANCEL_BTN_XPATH);
-				}
-			}
+		selectFilterName(filterName);
+		selectFilterOperator(filterOPerator);
+		selectFilterValues(filterOPerator, filterValues);
+		// Click Apply button
+		item.click(FILTER_APPLY_BTN_XPATH);
+		wait.waitTillElementNotDisplayed(FILTER_APPLY_BTN_POPUP, 0, 5);
+		if ((filterType).toUpperCase() == "LOCKED") {
+			item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
 		}
-		return isSuccess;
 	}
 
 	/**
@@ -86,37 +74,27 @@ public class ReportingFilterUtils extends BasePage {
 	 * @throws InterruptedException
 	 */
 
-	public boolean addFilterMDA(String aggFilterName, String filterDataType, String filterName, String filterOPerator,
+	public void addFilterMDA(String aggFilterName, String filterDataType, String filterName, String filterOPerator,
 			List<Object> filterValues, String filterType) {
 
 		filterOPerator = modifyFilterOperator(filterOPerator);
 		// open filter pop up
 		item.click(FILTER_BTN_XPATH);
-		boolean isSuccess = false;
-		isSuccess = selectFilterNameMda(filterName, aggFilterName);
-		if (isSuccess) {
-			isSuccess = selectFilterOperator(filterOPerator);
-			if (isSuccess) {
-				if (filterDataType.contains("date")) {
-					isSuccess = selectFilterValuesForDate(filterOPerator, filterValues);
-				} else {
-					isSuccess = selectFilterValues(filterOPerator, filterValues);
-				}
-
-				if (isSuccess) {
-					// Click Apply button
-					item.click(FILTER_APPLY_BTN_XPATH);
-					wait.waitTillElementNotDisplayed(FILTER_APPLY_BTN_POPUP, 1, 5);
-					if ((filterType).toUpperCase() == "LOCKED") {
-						item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
-					}
-				} else {
-					// Click Cancel button
-					item.click(FILTER_CANCEL_BTN_XPATH);
-				}
-			}
+		selectFilterNameMda(filterName, aggFilterName);
+		selectFilterOperator(filterOPerator);
+		if (filterDataType.contains("date")) {
+			selectFilterValuesForDate(filterOPerator, filterValues);
+		} else {
+			selectFilterValues(filterOPerator, filterValues);
 		}
-		return isSuccess;
+		// Click Apply button
+		item.click(FILTER_APPLY_BTN_XPATH);
+		env.setTimeout(1);
+		wait.waitTillElementNotDisplayed(FILTER_APPLY_BTN_POPUP, 1, 5);
+		env.setTimeout(30);
+		if ((filterType).toUpperCase() == "LOCKED") {
+			item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
+		}
 	}
 
 	/**
@@ -128,117 +106,73 @@ public class ReportingFilterUtils extends BasePage {
 	 * @throws InterruptedException
 	 */
 
-	public boolean addAggregateFilter(String filterName, String filterOPerator, List<Object> filterValues,
+	public void addAggregateFilter(String filterName, String filterOPerator, List<Object> filterValues,
 			String filterType) throws InterruptedException {
 		// open filter pop up
 		item.click(FILTER_BTN_XPATH);
-		boolean isSuccess = false;
-		isSuccess = selectFilterNameMda(filterName, null);
-		if (isSuccess) {
-			isSuccess = selectFilterOperator(filterOPerator);
-			if (isSuccess) {
-				isSuccess = selectFilterValues(filterOPerator, filterValues);
-				if (isSuccess) {
-					// Click Apply button
-					item.click(FILTER_APPLY_BTN_XPATH);
-					wait.wait(5);
-					if ((filterType).toUpperCase() == "LOCKED") {
-						item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
-					}
-				} else {
-					// Click Cancel button
-					item.click(FILTER_CANCEL_BTN_XPATH);
-				}
-			}
-		}
-		return isSuccess;
-	}
-
-	private boolean selectFilterName(String filterName) {
-		try {
-			// Click filter name
-			item.click(FILTER_NAME_SELECT_XPATH);
-			item.setText(SEARCH_FILTER_NAME_XPATH, filterName);
-			item.click(String.format(CLICK_FILTER_NAME_XPATH, filterName));
-			return true;
-		} catch (Exception e) {
-			return false;
+		selectFilterNameMda(filterName, null);
+		selectFilterOperator(filterOPerator);
+		selectFilterValues(filterOPerator, filterValues);
+		// Click Apply button
+		item.click(FILTER_APPLY_BTN_XPATH);
+		wait.wait(5);
+		if ((filterType).toUpperCase() == "LOCKED") {
+			item.click(String.format(FILTER_LOCKED_BTN_XPATH, filterName, filterName));
 
 		}
 	}
 
-	private boolean selectFilterNameMda(String filterName, String aggFilterName) {
-		try {
-			// Click filter name
-			item.click(FILTER_NAME_SELECT_XPATH);
-			item.setText(SEARCH_FILTER_NAME_XPATH_MDA, filterName);
-			if (aggFilterName != null) {
-				filterName = aggFilterName;
-				item.click(String.format(CLICK_FILTER_NAME_XPATH_MDA_AGGREGATED, filterName));
-			} else {
-				item.click(String.format(CLICK_FILTER_NAME_XPATH_MDA, filterName));
-			}
+	private void selectFilterName(String filterName) {
+		// Click filter name
+		item.click(FILTER_NAME_SELECT_XPATH);
+		item.setText(SEARCH_FILTER_NAME_XPATH, filterName);
+		item.click(String.format(CLICK_FILTER_NAME_XPATH, filterName));
+	}
 
-			return true;
-		} catch (Exception e) {
-			return false;
-
+	private void selectFilterNameMda(String filterName, String aggFilterName) {
+		// Click filter name
+		item.click(FILTER_NAME_SELECT_XPATH);
+		item.setText(SEARCH_FILTER_NAME_XPATH_MDA, filterName);
+		if (aggFilterName != null) {
+			filterName = aggFilterName;
+			item.click(String.format(CLICK_FILTER_NAME_XPATH_MDA_AGGREGATED, filterName));
+		} else {
+			item.click(String.format(CLICK_FILTER_NAME_XPATH_MDA, filterName));
 		}
 	}
 
-	private boolean selectFilterOperator(String filterOperator) {
-		try {
-			// Click filter operator
-			item.click(FILTER_OPERATOR_SELECT_XPATH);
-			item.click(String.format(CLICK_FILTER_OPERATOR_XPATH, filterOperator.toLowerCase().replace("_", " ")));
-			return true;
-		} catch (Exception e) {
-			return false;
+	private void selectFilterOperator(String filterOperator) {
+		// Click filter operator
+		item.click(FILTER_OPERATOR_SELECT_XPATH);
+		item.click(String.format(CLICK_FILTER_OPERATOR_XPATH, filterOperator.toLowerCase().replace("_", " ")));
+	}
 
+	private void selectFilterValues(String filterOperator, List<Object> filterValues) {
+		// Click filter values
+		if (filterOperator == filterOPerators.INCLUDES.name() || filterOperator == filterOPerators.EXCLUDES.name()) {
+			for (int i = 0; i < filterValues.size(); i++) {
+				item.selectCheckBox(String.format("//input[@type='checkbox' and @title='%s']", filterValues.get(i)));
+			}
+		} else {
+			item.setText(FILTER_VALUE_XPATH + "/div/input", filterValues.get(0).toString());
 		}
 	}
 
-	private boolean selectFilterValues(String filterOperator, List<Object> filterValues) {
-		try {
-			// Click filter values
-			if (filterOperator == filterOPerators.INCLUDES.name()
-					|| filterOperator == filterOPerators.EXCLUDES.name()) {
-				for (int i = 0; i < filterValues.size(); i++) {
-					item.selectCheckBox(
-							String.format("//input[@type='checkbox' and @title='%s']", filterValues.get(i)));
-				}
-			} else {
-				item.setText(FILTER_VALUE_XPATH + "/div/input", filterValues.get(0).toString());
-			}
-			return true;
-		} catch (Exception e) {
-			return false;
+	private void selectFilterValuesForDate(String filterOperator, List<Object> filterValues) {
+		item.click(FILTER_VALUE_DATE_XPATH);
+		if (filterOperator.contains("equals")) {
 
+			item.setText(FILTER_AVALUE_DATE_XPATH, filterValues.get(0).toString());
+			item.click(String.format(FILTER_AVALUE_DATE_FIT_XPATH, filterValues.get(0).toString().toUpperCase(),
+					filterValues.get(0).toString()));
+
+		} else {
+			item.click(String.format(FILTER_AVALUE_DATE_FIT_XPATH, filterValues.get(0).toString().toUpperCase(),
+					filterValues.get(0).toString()));
 		}
-	}
 
-	private boolean selectFilterValuesForDate(String filterOperator, List<Object> filterValues) {
-		try {
-			item.click(FILTER_VALUE_DATE_XPATH);
-			if (filterOperator.contains("equals")) {
-
-				item.setText(FILTER_AVALUE_DATE_XPATH, filterValues.get(0).toString());
-				item.click(String.format(FILTER_AVALUE_DATE_FIT_XPATH, filterValues.get(0).toString().toUpperCase(),
-						filterValues.get(0).toString()));
-
-			} else {
-				item.click(String.format(FILTER_AVALUE_DATE_FIT_XPATH, filterValues.get(0).toString().toUpperCase(),
-						filterValues.get(0).toString()));
-			}
-
-			if (filterValues.get(0).toString().contains("Custom")) {
-				item.setText(FILTER_AVALUE_DATE_INPUT_XPATH, "");
-			}
-
-			return true;
-		} catch (Exception e) {
-			return false;
-
+		if (filterValues.get(0).toString().contains("Custom")) {
+			item.setText(FILTER_AVALUE_DATE_INPUT_XPATH, "");
 		}
 	}
 
