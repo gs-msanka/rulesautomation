@@ -13,9 +13,12 @@ import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.Header;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.PackageUtil;
-import com.gainsight.util.ConfigLoader;
-import com.gainsight.util.NsConfig;
-import com.gainsight.util.SfdcConfig;
+
+import com.gainsight.util.config.NSConfigProvider;
+import com.gainsight.util.config.NsConfig;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.http.HttpStatus;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -51,8 +54,8 @@ public class NSTestBase {
     public static String accessKey = null;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
-    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static PackageUtil packageUtil;
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
