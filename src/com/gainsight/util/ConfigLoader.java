@@ -83,7 +83,7 @@ public class ConfigLoader {
      * @return SfdcConfig object of the said loaded config
      */
     public static SfdcConfig getSfdcConfig(){
-        String env = System.getProperty("sfdc_env" , "default");
+        String env = System.getProperty("sfdc_env" , "marvels");
         return getSfdcConfig(env);
     }
 
