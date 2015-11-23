@@ -53,7 +53,7 @@ public class TenantManager {
 
     public TenantManager() {
         sfConnector = new SalesforceConnector(nsConfig.getSfdcUsername(), nsConfig.getSfdcPassword() + nsConfig.getSfdcStoken(),
-                sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
+                nsConfig.getSfdcPartnerUrl(), nsConfig.getSfdcApiVersion());
         if (!sfConnector.connect()) {
             throw new RuntimeException("Failed to Connect to salesforce - Check your admin credentials.");
         }

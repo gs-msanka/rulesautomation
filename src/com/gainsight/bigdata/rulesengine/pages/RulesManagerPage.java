@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -27,7 +28,7 @@ public class RulesManagerPage extends BasePage {
 	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/following::div[contains(@class, 'pull-right gs-re-action-list')]/descendant::div[contains(@class, 'onoffswitch-ctn pull-left')]/descendant::label";
     private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
     private final String RULES_CONFIGURE_LINK = "//div[contains(@class, 'configure-settings')]/descendant::span";
-    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'gs-re-rule-name') and (contains(text(),'%s'))]/following::span[@title='%s']";
+    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'gs-re-rule-name') and (contains(text(),'%s'))]/parent::div[@class='pull-left']/following-sibling::div/div[@class='gs-re-actions']/descendant::span[@title='%s']";
     private final String CLONE_RULE_INPUT = "//div[contains(@class, 'template-saveAs-popup')]/descendant::input[@placeholder='Name your Rule']";
     private final String SAVE_OK_BUTTON = "//input[contains(@class, 'btn_save') and @data-action='OK']";
 
@@ -86,7 +87,8 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + ruleNameOFF);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-		element.mouseOverAndClickOnIdentifier(ruleNameOFF);
+		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(ruleNameOFF));
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
 		item.click(CONFIRMATION_BUTTON);
@@ -150,7 +152,8 @@ public class RulesManagerPage extends BasePage {
 		String ruleNameToDelete = String.format(RULE_LISTING_ACTIONS, ruleName, "Delete");
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-		element.mouseOverAndClickOnIdentifier(ruleNameToDelete);
+		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(ruleNameToDelete));
 		wait.waitTillElementDisplayed(
 				"//div[contains(@class, 'layout_popup ui-dialog-content ui-widget-content')]", MIN_TIME, MAX_TIME);
 		item.click(CONFIRMATION_BUTTON);
@@ -167,7 +170,8 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + ruleNameToEdit);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-		element.mouseOverAndClickOnIdentifier(ruleNameToEdit);
+		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(ruleNameToEdit));	
 		return new EditRulePage();
     }
 
@@ -199,7 +203,8 @@ public class RulesManagerPage extends BasePage {
 		Log.info("Rule xpath is" + " " + cloneRuleLink);
 		item.click(String.format(RULE_WITH_NAME, ruleName));
 		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
-		element.mouseOverAndClickOnIdentifier(cloneRuleLink);
+		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
+		executor.executeScript("arguments[0].click();", element.getElement(cloneRuleLink));
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
 		element.clearAndSetText(CLONE_RULE_INPUT, newRuleName);
 		item.click(SAVE_OK_BUTTON);
