@@ -86,7 +86,7 @@ public class NsConfig {
         return getConfigValue(INsProperties.SchedulerDBUserName);
     }
 
-    public String getSchedulerDconfigObjectBPassword() {
+    public String getSchedulerDBPassword() {
         return getConfigValue(INsProperties.SchedulerDBPassword);
     }
 
