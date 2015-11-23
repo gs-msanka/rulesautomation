@@ -1,4 +1,6 @@
 {
+  "ns_sfdc_partnerUrl" : "https://login.salesforce.com/services/Soap/u/32.0",
+  "ns_sfdc_apiVersion" : "32.0",
   "profiles" : {
     "prod" : {
       "ns_sfdc_username"  : "giri@gainsight.com",
