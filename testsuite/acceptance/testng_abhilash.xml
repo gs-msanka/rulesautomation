@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name=" RulesEngineUI Automation Suite" preserve-order="true">
+<suite name="RulesEngine UI Automation Project" preserve-order="true">
    <listeners>
       <listener class-name="com.gainsight.utils.AutTestListener" />
+      <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
    </listeners>
-   <test verbose="3" name="RulesEngine UI Automation Test Suite" preserve-order="true">
+   <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest" />
-                     <methods>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+            <methods>
                <include name="testRuleInactive" />
                <include name="testCloningOFARule" />
                <include name="testDeleteRule" />
                <include name="testEditARule" />
-             
+               <include name="testCtaWithUpsertProrityOption" />
+               <include name="testCtaWithUpdateCommentsAlwaysOption" />
+               <include name="testCtaWithAddOrReplacePlaybook" />
+               <include name="testCtaWithRuleNameChangeOption" />
+               <include name="testCtaUpsertWithSnoozeOption" />
+               <include name="testCloseCtaFromSpecificSource" />
+               <include name="testCloseCtaFromAllSources" />
             </methods>
+         </class>
       </classes>
    </test>
 </suite>
