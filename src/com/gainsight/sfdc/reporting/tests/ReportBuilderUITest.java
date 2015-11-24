@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -35,13 +36,16 @@ public class ReportBuilderUITest extends BaseTest {
 	private String port = null;
 	private String userName = null;
 	private String passWord = null;
+	private String reportingBuilderPageUrl;
 
 	@BeforeClass
 	public void setup() throws Exception {
 		sfdc.connect();
 		basepage.login();
 		nsTestBase.init();
-		MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+		reportingBuilderPageUrl=visualForcePageUrl+"ReportBuilder";
+		reportingBasePage = new ReportingBasePage();
+		mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
 				nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
 		TenantDetails tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
 
@@ -82,37 +86,30 @@ public class ReportBuilderUITest extends BaseTest {
 			dataLoadManager.waitForDataLoadJobComplete(statusId);
 		}*/
 
+		mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		
 	}
 
 	@Test
 	public void reportingUIWithBackedJson() throws Exception {
-		try {
 
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		    mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
 					new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomation.json"),
 					ReportMaster.class);
-			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
+			reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
+	
 
 	}
 
 	@Test
 	public void barReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -121,20 +118,13 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
+	
 
 	}
 
 	@Test
 	public void pieReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -143,20 +133,12 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
 
 	}
 
 	@Test
 	public void columnReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -165,20 +147,11 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
 	}
 
 	@Test
 	public void bubbleReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -187,20 +160,12 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
+	
 	}
 
 	@Test
 	public void scatterReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -209,20 +174,11 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
 	}
 
 	@Test
 	public void lineReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -231,19 +187,10 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
 	}
 
 	@Test
 	public void areaReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
@@ -253,20 +200,12 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
+	
 	}
 
 	@Test
 	public void stackedBarReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
 			ReportMaster reportMaster = mapper.readValue(
@@ -275,19 +214,11 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
 
 	}
 
 	@Test
 	public void stackedColumnReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
@@ -298,19 +229,10 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
 	}
 
 	@Test
 	public void columnLineReportWith1M2D() throws Exception {
-		try {
-
-			mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-			mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 			mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
 					tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
 
@@ -320,10 +242,12 @@ public class ReportBuilderUITest extends BaseTest {
 			reportingBasePage = basepage.clickOnAdminTab().clickOnReportsTab();
 
 			reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-		} finally {
-			mongoUtil.closeConnection();
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-
+		
+	}
+	
+	@AfterClass
+	public void quit(){
+		mongoUtil.closeConnection();
+		mongoDBDAO.mongoUtil.closeConnection();
 	}
 }

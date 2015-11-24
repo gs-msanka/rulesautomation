@@ -20,7 +20,8 @@ public class ReportingBasePage extends BasePage {
 	private String type = "FORCE";
 
 	public ReportingBasePage() {
-		wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"), MIN_TIME, MAX_TIME);
+		// wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"),
+		// MIN_TIME, MAX_TIME);
 	}
 
 	public void setType(String type) {
@@ -141,9 +142,13 @@ public class ReportingBasePage extends BasePage {
 		Log.info("Saving the Report : " + reportName);
 		if (reportName != "") {
 			item.setText(XPathConstants.getXPath("REPORTNAME"), reportName);
-			if (element.getElement(XPathConstants.getXPath("REPORTNAME")).isDisplayed()) {
-				element.getElement(XPathConstants.getXPath("REPORTNAME")).sendKeys(Keys.TAB);
-			}
+			element.getElement(XPathConstants.getXPath("REPORTNAME")).sendKeys(Keys.TAB);
+			/*
+			 * if (element.getElement(XPathConstants.getXPath("REPORTNAME")).
+			 * isDisplayed()) {
+			 * element.getElement(XPathConstants.getXPath("REPORTNAME")).
+			 * sendKeys(Keys.TAB); }
+			 */
 
 		}
 		item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
@@ -196,6 +201,16 @@ public class ReportingBasePage extends BasePage {
 		item.click(XPathConstants.getXPath("REPOSITORY_BTN_XPATH"));
 		item.clearAndSetText(XPathConstants.getXPath("REPOSITORY_SEARCH_TXT_XPATH"), reportName);
 		item.click(String.format(XPathConstants.getXPath("CLICK_SEARCHREPORTNAME_REPOSITORY"), reportName));
+	}
+
+	/**
+	 * @param rulesUrl
+	 */
+	public void openReportingPage(String rulesUrl) {
+		URL = rulesUrl;
+		open();
+		wait.waitTillElementDisplayed(XPathConstants.getXPath("READY_INDICATOR"), MIN_TIME, MAX_TIME);
+
 	}
 
 }

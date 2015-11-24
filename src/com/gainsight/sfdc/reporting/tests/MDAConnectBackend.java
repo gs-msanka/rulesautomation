@@ -42,6 +42,7 @@ public class MDAConnectBackend extends BaseTest {
 	/**
 	 * This method will connect to DB to get the JSON, and compares that to inpt
 	 * JSON.
+	 * 
 	 * @param tenantId
 	 * @param reportInfo
 	 * @param mongoUtil
@@ -49,7 +50,8 @@ public class MDAConnectBackend extends BaseTest {
 	 * @throws IOException
 	 */
 
-	public void connectDbAndCompareJSON(String tenantId, ReportInfo reportInfo, MongoUtil mongoUtil, ReportMaster reportMaster)  {
+	public void connectDbAndCompareJSON(String tenantId, ReportInfo reportInfo, MongoUtil mongoUtil,
+			ReportMaster reportMaster) {
 		try {
 			Document document = new Document();
 			document.append("TenantId", tenantId);
@@ -70,7 +72,6 @@ public class MDAConnectBackend extends BaseTest {
 			ObjectMapper mapper = new ObjectMapper();
 
 			mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-			mongoUtil.closeConnection();
 
 			DataLoadManager dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
 			CollectionInfo collectionInfo = dataLoadManager.getCollection(reportInfo.getSchemaName());
