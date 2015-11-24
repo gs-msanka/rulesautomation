@@ -28,7 +28,7 @@ public class RulesManagerPage extends BasePage {
 	private final String SWITCH_ON_OFF_RULE = "//span[contains(@class, 'gs-re-rule-name') and normalize-space(text())='%s']/following::div[contains(@class, 'pull-right gs-re-action-list')]/descendant::div[contains(@class, 'onoffswitch-ctn pull-left')]/descendant::label";
     private final String RULE_INACTIVE = "//span[contains(@class, 'gs-re-rule-name inactive') and normalize-space(text())='%s']";
     private final String RULES_CONFIGURE_LINK = "//div[contains(@class, 'configure-settings')]/descendant::span";
-    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'gs-re-rule-name') and (contains(text(),'%s'))]/following::span[@title='%s']";
+    private final String RULE_LISTING_ACTIONS = "//span[contains(@class, 'gs-re-rule-name') and (contains(text(),'%s'))]/parent::div[@class='pull-left']/following-sibling::div/div[@class='gs-re-actions']/descendant::span[@title='%s']";
     private final String CLONE_RULE_INPUT = "//div[contains(@class, 'template-saveAs-popup')]/descendant::input[@placeholder='Name your Rule']";
     private final String SAVE_OK_BUTTON = "//input[contains(@class, 'btn_save') and @data-action='OK']";
 

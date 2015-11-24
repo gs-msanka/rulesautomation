@@ -18,8 +18,8 @@
     },
     "marvels" : {
       "sfdc_username" : "marvels@gsautomation.com",
-      "sfdc_password" : "Gainsight12345",
-      "sfdc_stoken" : "Mpsjf2ds28VSasOrFbsVfpFE"
+      "sfdc_password" : "Marvel123#",
+      "sfdc_stoken" : "6Nt0VC5ofRixlCUJph0Ng8KA"
     },
     "connectors" : {
       "sfdc_username" : "connectors@gsautomation.com",
@@ -43,8 +43,8 @@
     },
     "58Demo" : {
       "sfdc_username" : "athaduka@58demo.com",
-      "sfdc_password" : "Abhilash123!",
-      "sfdc_stoken"   : "olIgOZD3mySN7Q3uHjq4D1De"
+      "sfdc_password" : "Abhilash1#",
+      "sfdc_stoken"   : "CNZBJ1vviBEfc7u4pYfXm7gDc"
     },
     "copilot" : {
       "sfdc_username" : "copilot@gsautomation.com",
