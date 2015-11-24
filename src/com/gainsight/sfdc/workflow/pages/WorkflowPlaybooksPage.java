@@ -56,7 +56,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
 
     public WorkflowPlaybooksPage addPlaybook(Playbook pb) {
         item.click(ADD_PLAYBOOK_BUTTON);
-        fillPlaybookDetails(pb,false,null);
+        fillPlaybookDetails_Add(pb);
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(3);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
@@ -71,22 +71,31 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     	item.click(String.format(PB_SEARCH_OUTPUT, pb.getName()));  	
     	return true;
     }
-    public void fillPlaybookDetails(Playbook pb,boolean isEdit,String oldPlaybookType) {
+    public void fillPlaybookDetails_Edit(Playbook pb,String oldPlaybookType) {
         wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
-        if(isEdit) {
-        	for(int i=0;i<3;i++){
+        for(int i=0;i<3;i++){
         		if(item.getText(PLAYBOOK_NAME_INPUT).equalsIgnoreCase(pb.getName())) break;
         		else Timer.sleep(2);        		
         	}
-            item.click(String.format(PLAYBOOK_EDIT_SELECTTYPE,oldPlaybookType));
-        }
-        else {
-            item.click(PLAYBOOK_ADD_SELECTTYPE);
-        }
+        item.click(String.format(PLAYBOOK_EDIT_SELECTTYPE,oldPlaybookType));
         if(pb.getType() != null && pb.getType() != "") {
-           for(WebElement we : driver.findElements(By.xpath("//input[@type='radio']/following-sibling::span[text()='"+pb.getType()+"']"))){
+           for(WebElement we : element.getAllElement("//input[@type='radio']/following-sibling::span[text()='"+pb.getType()+"']")){
                if(we.isDisplayed()) we.click();
            }
+        }
+        if(pb.getName() != null) {
+            field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
+        }
+        field.clearAndSetText(PLAYBOOK_COMMENTS_INPUT, pb.getComments());
+    }
+
+    public void fillPlaybookDetails_Add(Playbook pb) {
+        wait.waitTillElementDisplayed(PLAYBOOK_NAME_INPUT, MIN_TIME, MAX_TIME);
+        item.click(PLAYBOOK_ADD_SELECTTYPE);
+        if(pb.getType() != null && pb.getType() != "") {
+            for(WebElement we : element.getAllElement("//input[@type='radio']/following-sibling::span[text()='"+pb.getType()+"']")){
+                if(we.isDisplayed()) we.click();
+            }
         }
         if(pb.getName() != null) {
             field.clearAndSetText(PLAYBOOK_NAME_INPUT, pb.getName());
@@ -169,7 +178,7 @@ public class WorkflowPlaybooksPage extends WorkflowBasePage {
     public WorkflowPlaybooksPage editPlaybook(Playbook pb, Playbook newPB) {
         expandPlaybookView(pb);
         item.click(PLAYBOOK_EDIT);
-        fillPlaybookDetails(newPB,true,pb.getType());
+        fillPlaybookDetails_Edit(newPB,pb.getType());
         item.click(SAVE_PLAYBOOK_BUTTON);
         Timer.sleep(4);
         wait.waitTillElementDisplayed(ALL_BLOCK, MIN_TIME, MAX_TIME);
