@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class SfdcRestApi {
 
-    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
     static SalesforceConnector sfdc;
     static SFDCInfo sfdcInfo;
     static String uri;

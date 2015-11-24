@@ -47,8 +47,8 @@ public class TenantManager {
     private Header header = new Header();
     private WebAction wa = new WebAction();
     private ObjectMapper mapper = new ObjectMapper();
-    private SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
-    private NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
+    private SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
+    private NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
 
     /**
      * Logs in to tenant Management SFDC org and sets up the default headers required.

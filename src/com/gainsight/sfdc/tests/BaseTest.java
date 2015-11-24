@@ -38,12 +38,12 @@ public class BaseTest {
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static TimeZone userTimezone;
-    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static final String NAMESPACE = sfdcConfig.getSfdcNameSpace();
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
-    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
+    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
     public static final String CTA_DUEDATE_FORMAT = "yyyy-MM-dd";

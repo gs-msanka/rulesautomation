@@ -53,7 +53,7 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
 
-	public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+	public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
 
 
 	/**

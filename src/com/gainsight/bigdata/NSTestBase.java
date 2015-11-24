@@ -54,8 +54,8 @@ public class NSTestBase {
     public static String accessKey = null;
     public static int MAX_NO_OF_REQUESTS = 30; //Max number of attempts to check the status on server for async jobs.
     public static TenantManager tenantManager;
-    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
-    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NSConfigProvider.name);
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
+    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static PackageUtil packageUtil;
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";

@@ -62,7 +62,7 @@ public class BasePage extends WebPage implements Constants {
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
     public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
-    SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);;
+    SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);;
 
 	public BasePage login() {
 		if(!driver.getCurrentUrl().contains("login")){

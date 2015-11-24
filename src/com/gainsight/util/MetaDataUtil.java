@@ -25,7 +25,7 @@ import com.gainsight.bigdata.pojo.ObjectFields;
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
 	 public static final Application env = new Application();
-	public SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);
+	public SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
 
 	   
 	   public void createFieldsOnAccount(SalesforceConnector sfdc) throws Exception {

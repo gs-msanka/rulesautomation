@@ -35,7 +35,7 @@ public class SfdcBulkApi {
 	static SfdcBulkOperationImpl op;
     static SFDCInfo sfdcInfo;
     static SalesforceConnector sfdc;
-    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfigProvider.name);;
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);;
 
     static {
         sfdc = new SalesforceConnector(sfdcConfig.getSfdcUsername(), sfdcConfig.getSfdcPassword()+sfdcConfig.getSfdcStoken(), sfdcConfig.getSfdcPartnerUrl(), sfdcConfig.getSfdcApiVersion());
