@@ -37,6 +37,14 @@ public class NsConfig {
         return getConfigValue(INsProperties.sfdcStoken);
     }
 
+    public String getSfdcPartnerUrl() {
+        return getConfigValue(INsProperties.sfdcPartnerUrl);
+    }
+
+    public String getSfdcApiVersion() {
+        return getConfigValue(INsProperties.sfdcApiVersion);
+    }
+
 
     public String getGlobalDBHost() {
         return getConfigValue(INsProperties.globalDBHost);
@@ -104,6 +112,8 @@ public class NsConfig {
         public static final String sfdcUsername = "ns_sfdc_username";
         public static final String sfdcPassword = "ns_sfdc_password";
         public static final String sfdcStoken = "ns_sfdc_stoken";
+        public static final String sfdcPartnerUrl = "ns_sfdc_partnerUrl";
+        public static final String sfdcApiVersion = "ns_sfdc_apiVersion";
         public static final String globalDBHost = "mongo_global_host";
         public static final String globalDBPort = "mongo_global_port";
         public static final String globalDBDatabase = "mongo_global_db";
