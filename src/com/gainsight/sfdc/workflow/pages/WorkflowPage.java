@@ -1164,36 +1164,36 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public WorkflowPage selectCTATypeFilter(String type) {
-        item.click(String.format(FILTER_FROM_TYPE));
+        item.click(FILTER_FROM_TYPE);
         item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
-        item.click(String.format(FILTER_FROM_TYPE));
+        item.click(FILTER_FROM_TYPE);
         waitTillNoSearchIcon();
-        wait.waitTillElementDisplayed(String.format(FILTER_FROM_TYPE), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(FILTER_FROM_TYPE, MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTATypeFilter( String type) {
-        item.click(String.format(FILTER_FROM_TYPE));
+        item.click(FILTER_FROM_TYPE);
         item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
-        item.click(String.format(FILTER_FROM_TYPE));
+        item.click(FILTER_FROM_TYPE);
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_TYPE, type), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage selectCTAPriorityFilter(String priority) {
-        item.click(String.format(FILTER_FROM_PRIORITY));
+        item.click(FILTER_FROM_PRIORITY);
         item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
-        item.click(String.format(FILTER_FROM_PRIORITY));
+        item.click(FILTER_FROM_PRIORITY);
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTAPriorityFilter(String priority) {
-        item.click(String.format(FILTER_FROM_PRIORITY));
+        item.click(FILTER_FROM_PRIORITY);
         item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
-        item.click(String.format(FILTER_FROM_PRIORITY));
+        item.click(FILTER_FROM_PRIORITY);
         waitTillNoSearchIcon();
         wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
