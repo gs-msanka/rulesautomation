@@ -1,0 +1,74 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-37-Load-To-Features-UI",
+  "ruleDescription": "Rule-37-Load-To-Features-UI-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "C_lookup Name",
+            "operator": "equals",
+            "value": "input_RULESUI Account 2"
+          },
+          {
+            "fieldName": "rules_c_ExternalID",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3"
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3 Text 2"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A or B or C",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToFeature",
+      "action": {
+        "product": "One",
+        "feature": "Two",
+        "comments": "@C_Custom Object::C_lookup Name,@C_Custom Object::rules_c_Number,@C_Custom Object::rules_c_Checkbox",
+        "licensed": {
+          "type": "Constant",
+          "updateType": "Licenced"
+        },
+        "enabled": {
+          "type": "Constant",
+          "updateType": "Enabled"
+        }
+      },
+      "criterias": []
+    }
+  ]
+}

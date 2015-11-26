@@ -1,0 +1,53 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-38-Load-To-Features-UI",
+  "ruleDescription": "Rule-38-Load-To-Features-UI-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_ExternalID",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3"
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3 Text 2"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A or B",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToFeature",
+      "action": {
+        "product": "One",
+        "feature": "Two",
+        "comments": "",
+        "licensed": {
+          "type": "Constant",
+          "updateType": "Not Licenced"
+        },
+        "enabled": {
+          "type": "Constant",
+          "updateType": "Disabled"
+        }
+      },
+      "criterias": []
+    }
+  ]
+}

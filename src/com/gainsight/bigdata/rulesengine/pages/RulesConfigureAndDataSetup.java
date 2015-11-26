@@ -3,7 +3,6 @@ package com.gainsight.bigdata.rulesengine.pages;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,14 +15,13 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 
 import org.bson.Document;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDACollection;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
@@ -33,14 +31,6 @@ import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 
 
 /**
@@ -327,5 +317,73 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 			mongoUtil.closeConnection();
 		}
 		return cronExpression;
+	}
+	
+
+	/** Method which creates custom object "C_Custom" and fields using metadata api
+	 * @throws Exception
+	 */
+	public void createCustomObjectAndFields() throws Exception {
+		ObjectFields objField = new ObjectFields();
+		// creating CustomObject
+		metadataClient.createCustomObject("C_Custom");
+
+		List<String> externalID_Text = new ArrayList<String>();
+		externalID_Text.add("rules_c_ExternalID");
+		objField.setExternalID_Text(externalID_Text);
+
+		List<String> textFields = new ArrayList<String>();
+		textFields.add("rules_c_Text");
+		objField.setTextFields(textFields);
+
+		List<String> numberFields = new ArrayList<String>();
+		numberFields.add("rules_c_Number");
+		objField.setNumberFields(numberFields);
+
+		List<String> checkBoxes = new ArrayList<String>();
+		checkBoxes.add("rules_c_Checkbox");
+		objField.setCheckBoxes(checkBoxes);
+
+		List<String> Email = new ArrayList<String>();
+		Email.add("rules_c_Email");
+		objField.setEmails(Email);
+
+		List<String> Percent = new ArrayList<String>();
+		Percent.add("rules_c_Percent");
+		objField.setPercents(Percent);
+
+		List<HashMap<String, String[]>> pickLists = new ArrayList<HashMap<String, String[]>>();
+		HashMap<String, String[]> hmPickList1 = new HashMap<String, String[]>();
+		hmPickList1.put("rules_c_Picklist", new String[] { "Pvalue1", "Pvalue2", "Pvalue3" });
+		pickLists.add(hmPickList1);
+		objField.setPickLists(pickLists);
+
+		List<HashMap<String, String[]>> multiPickLists = new ArrayList<HashMap<String, String[]>>();
+		HashMap<String, String[]> hmMultiPickList1 = new HashMap<String, String[]>();
+		hmMultiPickList1.put("rules_c_MultiPicklist", new String[] {
+				"MPvalue1", "MPvalue2", "MPvalue3" });
+		multiPickLists.add(hmMultiPickList1);
+		objField.setMultiPickLists(multiPickLists);
+
+		List<String> Date = new ArrayList<String>();
+		Date.add("rules_c_Date");
+		objField.setDates(Date);
+
+		List<String> DateTime = new ArrayList<String>();
+		DateTime.add("rules_c_DateTime");
+		objField.setDateTimes(DateTime);
+
+		List<String> textArea = new ArrayList<String>();
+		textArea.add("rules_c_TextArea");
+		objField.setTextAreas(textArea);
+
+		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
+		Customer_lookupListMap.put("Name", "C_lookup");
+		Customer_lookupListMap.put("ReferenceTo", "Account");
+		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesUI_Automation");
+		lookup.add(Customer_lookupListMap);
+		objField.setLookups(lookup);
+		metaUtil.createFieldsOnObject(sfdc, "C_Custom__c", objField);
 	}
 }

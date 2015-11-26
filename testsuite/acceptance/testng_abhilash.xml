@@ -8,8 +8,8 @@
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
-               <include name="testRuleInactive" />
-               <include name="testCloningOFARule" />
+                <include name="testRuleInactive" />
+   <!--            <include name="testCloningOFARule" />
                <include name="testDeleteRule" />
                <include name="testEditARule" />
                <include name="testCtaWithUpsertProrityOption" />
@@ -18,9 +18,10 @@
                <include name="testCtaWithRuleNameChangeOption" />
                <include name="testCtaUpsertWithSnoozeOption" />
                <include name="testCloseCtaFromSpecificSource" />
-               <include name="testCloseCtaFromAllSources" />
+               <include name="testCloseCtaFromAllSources" /> -->
             </methods>
          </class>
+          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
       </classes>
    </test>
 </suite>

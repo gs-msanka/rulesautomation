@@ -21,6 +21,8 @@ import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CloseCtaAction;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMileStoneAction;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -752,6 +754,117 @@ public void setupRule(HashMap<String,String> testData){
 					+ verifier.getAssertMessages().toString());
 		}
 		return result;
-	}	
-}
+	}
+	
+	public boolean isMileStoneCreatedSuccessfully(String mileStone, String milestoneDate, String mileStoneComments, String accountName){
+		boolean result = false;
+		SObject[] milseStoneRecords = sfdc
+				.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Account__r.Name,JBCXM__CreatedDate__c,JBCXM__Milestone__c,JBCXM__Milestone__r.Name,JBCXM__Comment__c,JBCXM__Account__c from JBCXM__Milestone__c where IsDeleted = false"
+						+ " and JBCXM__Account__r.Name='" + accountName + "'"));
+		Verifier verifier = new Verifier();
+		for (SObject obj : milseStoneRecords) {
+			verifier.verifyEquals(mileStone,
+					obj.getChild(resolveStrNameSpace("JBCXM__Milestone__r"))
+							.getChild("Name").getValue().toString(),
+					"MileStone is not matching for Account - " + " "
+							+ accountName);
+			verifier.verifyEquals(milestoneDate,
+					obj.getChild(resolveStrNameSpace("JBCXM__CreatedDate__c"))
+							.getValue().toString(),
+					"MileStone createdDate is not matching for Account  - "
+							+ " " + accountName);
+			if (mileStoneComments != null && !mileStoneComments.isEmpty()) {
+				verifier.verifyEquals(mileStoneComments,
+						obj.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
+								.getValue().toString(),
+						"MileStone Comments is not matching for Account  - "
+								+ " " + accountName);
 
+			}
+			if (mileStoneComments == null || !mileStoneComments.isEmpty()) {
+				Object comment = obj
+						.getField(resolveStrNameSpace("JBCXM__Comment__c"));
+				verifier.verifyEquals((String) comment, mileStoneComments,
+						"MileStone Comments is not matching for Account  - "
+								+ " " + accountName);
+			}	
+		}
+		result = !verifier.isVerificationFailed();
+		if (!result) {
+			Log.error("Failed due to : "
+					+ verifier.getAssertMessages().toString());
+		}
+		return result;
+	}
+	
+	public boolean isFeatureCreatedSuccessfully(LoadToFeatureAction loadToFeatureAction, String accountName){
+		boolean result = false;
+		SObject[] features = sfdc
+				.getRecords(resolveStrNameSpace("SELECT JBCXM__Features__r.JBCXM__Feature__c,JBCXM__Features__r.JBCXM__Product__c,JBCXM__Account__r.Name,Id,JBCXM__Comment__c,JBCXM__Enabled__c,JBCXM__Features__c,JBCXM__Licensed__c FROM JBCXM__CustomerFeatures__c where IsDeleted = false"
+						+ " and JBCXM__Account__r.Name='" + accountName + "'"));
+		Verifier verifier = new Verifier();
+		for (SObject obj : features) {
+			verifier.verifyEquals(loadToFeatureAction.getFeature(), obj
+					.getChild(resolveStrNameSpace("JBCXM__Features__r"))
+					.getChild(resolveStrNameSpace("JBCXM__Feature__c"))
+					.getValue().toString(),
+					"Feature is not matching for Account - " + " "	+ accountName);
+			verifier.verifyEquals(loadToFeatureAction.getProduct(), obj
+					.getChild(resolveStrNameSpace("JBCXM__Features__r"))
+					.getChild(resolveStrNameSpace("JBCXM__Product__c"))
+					.getValue().toString(),
+					"product is not matching for Account - " + " " + accountName);
+			if (loadToFeatureAction.getComments() != null
+					&& !loadToFeatureAction.getComments().isEmpty()) {
+				Log.info(obj
+						.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
+						.getValue().toString());
+				verifier.verifyEquals(loadToFeatureAction.getComments(), obj
+						.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
+						.getValue().toString(),
+						"Features Comments is not matching for Account  - "	+ " " + accountName);
+			}
+			if (loadToFeatureAction.getComments() == null
+					|| !loadToFeatureAction.getComments().isEmpty()) {
+				Object comment = obj
+						.getField(resolveStrNameSpace("JBCXM__Comment__c"));
+				verifier.verifyEquals((String) comment,
+						loadToFeatureAction.getComments(),
+						"Features Comments is not matching for Account  - "	+ " " + accountName);
+			}  
+			boolean licenced = false;
+			if (loadToFeatureAction.getLicensed().getUpdateType()
+					.equalsIgnoreCase("Licenced")
+					|| loadToFeatureAction.getLicensed().getUpdateType()
+							.equalsIgnoreCase("Do not update existing value")
+					|| loadToFeatureAction.getLicensed().getUpdateType()
+							.equalsIgnoreCase("true")) {
+				licenced = true;
+			} else {
+				licenced = false;
+			}
+			boolean enabled = false;
+			if (loadToFeatureAction.getEnabled().getUpdateType()
+					.equalsIgnoreCase("Enabled")
+					|| loadToFeatureAction.getEnabled().getUpdateType()
+							.equalsIgnoreCase("true")) {
+				enabled = true;
+			} else {
+				enabled = false;
+			}
+			verifier.verifyEquals(
+					obj.getField(resolveStrNameSpace("JBCXM__Licensed__c")),
+					Boolean.toString(licenced),
+					"JBCXM__Licensed__c is not matching for Account  - " + " " + accountName);
+			verifier.verifyEquals(
+					obj.getField(resolveStrNameSpace("JBCXM__Enabled__c")),
+					Boolean.toString(enabled),
+					"JBCXM__Enabled__c is not matching for Account  - " + " "	+ accountName);
+		}
+		result = !verifier.isVerificationFailed();
+		if (!result) {
+			Log.error("Failed due to : " + verifier.getAssertMessages().toString());
+		}
+		return result;
+	}
+}
