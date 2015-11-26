@@ -38,10 +38,14 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String SHOW_SNOOZE_CTA    = "//li[contains(@class, 'cta-snooze baseFilter cta-snooze-filter')]";
     private final String HIDE_SNOOZE_CTA    = "//li[starts-with(@class, 'cta-snooze') and contains(@class, 'active')]";
 
-    private final String TYPE_CTA           = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and @name='%s']";
-    private final String TYPE_CTA_ACTIVE    = "//div[@class='type cta-types-filter']/descendant::li[starts-with(@class, 'cta-types') and contains(@class, 'active') and @name='%s']";
-    private final String PRIORITY_CTA       = "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority')]";
-    private final String PRIORITY_CTA_ACTIVE= "//div[@class='priority cta-priority-filter']/ul/li[@name='%s' and contains(@class, 'cta-priority') and contains(@class, 'active')]";
+
+
+    private final String FILTER_FROM_TYPE               = "//div[@class='type cta-types-filter']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String FILTER_FROM_SELECT_TYPE        = "//ul/li/label/span[text()='%s']";
+    private final String TYPE_CTA_ACTIVE                = "//div[@class='type cta-types-filter']/button/span[(@class='ui-multiselect-selected-label') and contains(text(),'%s')]";
+    private final String FILTER_FROM_PRIORITY           = "//div[@class='priority cta-priority-filter']/button/span[@class='ui-icon ui-icon-triangle-2-n-s']";
+    private final String FILTER_FROM_SELECT_PRIORITY    = "//ul/li/label/span[text()='%s']";
+    private final String PRIORITY_CTA_ACTIVE            = "//div[@class='priority cta-priority-filter']/button/span[(@class='ui-multiselect-selected-label') and contains(text(),'%s')]";
 
     private final String OWNER              = "//div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
     private final String OWNER_SEARCH       = "//div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@type='text' and @name='search_text']";
@@ -119,13 +123,14 @@ public class WorkflowPage extends WorkflowBasePage {
     private final String EXP_VIEW_TYPE                  = "//div[@class='wf-ac-details']/descendant::label[contains(@class, 'cta-accounttype')]";
     private final String EXP_VIEW_COMMENTS_DIV          = "//div[@class='cta-comments']/div[contains(@class, 'cta-comments-textarea')]";
     private final String EXP_VIEW_DUE_DATE_INPUT        = "//div[@class='ac-statu-date']/input[@class='form-control cta-dateCtrl require-tooltip']";
+    private final String EXP_VIEW_DUE_DATE_INPUT2        = ".ac-statu-date .cta-dateCtrl";
     private final String EXP_VIEW_SNOOZE                = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'wf-snooze')]";
     private final String EXP_VIEW_SET_SNOOZE_DATE       = "//input[@class='form-control cta-snooze-input']";
 	private final String EXP_VIEW_SNOOZE_REASON_BUTTON  = "//select[@class='gs-snooze-reason cockpit-multiselect']/following-sibling::button";
     private final String EXP_VIEW_MILESTONE             = "//ul[@class='panal-tools']/descendant::a[contains(@class, 'landmark')]";
     private final String EXP_VIEW_ASSIGNEE              = "//div[@class='workflow-cta-details']/descendant::div[@class='wf-owner-search']/span/label[contains(@class, 'cta-username')]";
-    private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
-    private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
+    private final String EXP_VIEW_ASSIGNEE_SEARCH_INPUT = "//div[@class='wf-details-header can-cls-disable']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::input[@name='search_text']";
+    private final String EXP_VIEW_ASSIGNEE_SELECT       = "//div[@class='wf-details-header can-cls-disable']/descendant::div[@class='gs-dropdown gs-dropdown-profile pull-left open']/descendant::label[contains(text(), '%s')]";
     private final String CTA_EXP_SLIDE_ICON             = "//div[@class='cta-detail-set']//div[@class='slide-icon']";
     
     private final String VIEW_TASKS             = "//div[contains(@class,'task require-tooltip workflow-taskscnt  task-hyper')]";
@@ -479,7 +484,7 @@ public class WorkflowPage extends WorkflowBasePage {
         }
         if(newCta.getDueDate() != null && !newCta.getDueDate().equalsIgnoreCase(ExpectedCta.getDueDate())) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
-            String a = "j$('#"+EXP_VIEW_DUE_DATE_INPUT+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
+            String a = "j$('"+EXP_VIEW_DUE_DATE_INPUT2+"').val(\""+newCta.getDueDate()+"\").trigger(\"change\")" ;
             js.executeScript(a);
         }
         if(!ExpectedCta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
@@ -1159,30 +1164,38 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public WorkflowPage selectCTATypeFilter(String type) {
-        item.click(String.format(TYPE_CTA, type));
+        item.click(FILTER_FROM_TYPE);
+        item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
+        item.click(FILTER_FROM_TYPE);
         waitTillNoSearchIcon();
-        wait.waitTillElementDisplayed(String.format(TYPE_CTA_ACTIVE, type), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(FILTER_FROM_TYPE, MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTATypeFilter( String type) {
-        item.click(String.format(TYPE_CTA_ACTIVE, type));
+        item.click(FILTER_FROM_TYPE);
+        item.click(String.format(FILTER_FROM_SELECT_TYPE,type));
+        item.click(FILTER_FROM_TYPE);
         waitTillNoSearchIcon();
-        wait.waitTillElementDisplayed(String.format(TYPE_CTA, type), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(String.format(FILTER_FROM_TYPE, type), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage selectCTAPriorityFilter(String priority) {
-        item.click(String.format(PRIORITY_CTA, priority));
+        item.click(FILTER_FROM_PRIORITY);
+        item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
+        item.click(FILTER_FROM_PRIORITY);
         waitTillNoSearchIcon();
-        wait.waitTillElementDisplayed(String.format(PRIORITY_CTA_ACTIVE, priority), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
     }
 
     public WorkflowPage unSelectCTAPriorityFilter(String priority) {
-        item.click(String.format(PRIORITY_CTA_ACTIVE, priority));
+        item.click(FILTER_FROM_PRIORITY);
+        item.click(String.format(FILTER_FROM_SELECT_PRIORITY,priority));
+        item.click(FILTER_FROM_PRIORITY);
         waitTillNoSearchIcon();
-        wait.waitTillElementDisplayed(String.format(PRIORITY_CTA, priority), MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(String.format(FILTER_FROM_PRIORITY, priority), MIN_TIME, MAX_TIME);
         return this;
     }
 
@@ -1201,7 +1214,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     
     public boolean  isOverDueCTADisplayed(CTA cta) {
-        String xPath = getCTAXPath(cta)+"/descendant::div[contains(@class,'cta-overdue widget-alert')]";
+        String xPath = getCTAXPath(cta)+"/descendant::div[contains(@class,'cta-overdue require-tooltip widget-alert')]";
         item.click(xPath);
         return  isCTAExpandedViewLoaded(cta);
     }

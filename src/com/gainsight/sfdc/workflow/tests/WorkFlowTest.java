@@ -935,9 +935,8 @@ public class WorkFlowTest extends WorkflowSetup {
        Assert.assertTrue(workflowPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
    }
 
-   /*
-   Commenting as Hitesh mentioned that this feature is failing in 4.22 & will not be supported going further.
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA28")
    public void createAndEditCTATasks(HashMap<String,String> testData) throws IOException{
 	   WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -963,7 +962,7 @@ public class WorkFlowTest extends WorkflowSetup {
        Assert.assertTrue(workflowPage.isTaskDisplayed(updatedTask),"Verified that the task is updated successfully");
    }
    
-   
+
     @TestInfo(testCaseIds={"GS-2121"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -989,7 +988,7 @@ public class WorkFlowTest extends WorkflowSetup {
         int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
         Assert.assertTrue(sfTask==1, "Verified that the task is created successfully in SF");
     }
-    
+
     @TestInfo(testCaseIds={"GS-2124"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -1020,7 +1019,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue((sfTask==1 &&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF..but SF task still exists");
         Assert.assertEquals(1, sfTask);
     }
-    
+
     @TestInfo(testCaseIds={"GS-2125"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -1050,7 +1049,7 @@ public class WorkFlowTest extends WorkflowSetup {
         int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
         Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task desynced from SF and SF task is deleted too");
     }
-    
+
     @TestInfo(testCaseIds={"GS-5561"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -1077,7 +1076,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
         disableSFAutoSync();
     }
-    
+
     @TestInfo(testCaseIds={"GS-5562"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -1108,7 +1107,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(((sfTask==1)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF but remains in SF");
         disableSFAutoSync();
     }
-    
+
     @TestInfo(testCaseIds={"GS-5563"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA29")
@@ -1139,7 +1138,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
         disableSFAutoSync();
     }
-    
+
 	@TestInfo(testCaseIds={"GS-5560"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA30")
@@ -1153,7 +1152,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(workflowPage.isOverDueCTADisplayed(cta), "Verifying risk CTA is created - which is overdue");
     }
     
-    
+
     @TestInfo(testCaseIds={"GS-2065"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA31")
@@ -1191,6 +1190,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(1)));
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(2)));
     }
+
 
     @TestInfo(testCaseIds={"GS-2066"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1300,11 +1300,11 @@ public class WorkFlowTest extends WorkflowSetup {
         for(CTA ct : ctaList1) {
             Assert.assertTrue(workflowPage.isCTADisplayed(ct));
         }
-        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));*/ /*
+        Assert.assertTrue(workflowPage.isCTADisplayed(updateCta1));*/
     }
 
     @TestInfo(testCaseIds={"GS-2063"})
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=false)
+	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA34")
     public void verifyHeaderShowFilter(HashMap<String,String> testData) throws IOException {
         WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
@@ -1351,6 +1351,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertFalse(workflowPage.isCTADisplayed(ctaList.get(0)));
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(1)));
     }
+
 
     @TestInfo(testCaseIds={"GS-2069"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
@@ -1401,6 +1402,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertEquals(9, workflowPage.countOfCTASInGroup("Today", null));
     }
 
+
     @TestInfo(testCaseIds={"GS-2102"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA36")
@@ -1441,7 +1443,8 @@ public class WorkFlowTest extends WorkflowSetup {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
     }
-    
+
+
     @TestInfo(testCaseIds={"GS-2126"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA37")
@@ -1464,7 +1467,8 @@ public class WorkFlowTest extends WorkflowSetup {
         //verify if cta is displayed along with the score
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
-    
+
+
     @TestInfo(testCaseIds={"GS-2126"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA38")
@@ -1487,7 +1491,8 @@ public class WorkFlowTest extends WorkflowSetup {
         //verify if cta is displayed along with the score
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
-    
+
+
     @TestInfo(testCaseIds={"GS-2126"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA39")
@@ -1509,6 +1514,7 @@ public class WorkFlowTest extends WorkflowSetup {
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
     }
 
+    /*
     @TestInfo(testCaseIds={"GS-4682"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA43")
@@ -1539,7 +1545,9 @@ public class WorkFlowTest extends WorkflowSetup {
 		Assert.assertTrue(temp == null);
 
 	}
-    
+	*/
+
+    /*
 	@TestInfo(testCaseIds={"GS-4680"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA44")
