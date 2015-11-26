@@ -1,6 +1,7 @@
 package com.gainsight.util.config;
 
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.config.IConfig;
 import com.google.gson.JsonObject;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by vmenon on 1/6/15.
  */
-public class SfdcConfig  {
+public class SfdcConfig implements IConfig {
 
    /* private String sfdcUsername;
     private String sfdcPassword;

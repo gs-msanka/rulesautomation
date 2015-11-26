@@ -1,12 +1,13 @@
 package com.gainsight.util.config;
 
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.config.IConfig;
 import com.google.gson.JsonObject;
 
 /**
  * Created by Giribabu on 03/07/15.
  */
-public class NsConfig {
+public class NsConfig implements IConfig {
 
     private JsonObject configObject;
     public NsConfig(JsonObject configObject){

@@ -19,10 +19,6 @@ public class NSConfigProvider extends AbstractConfigProvider<NsConfig> {
     JsonObject loadedJsonObject;
     public static final String name = "nsConfig";
 
-    static {
-        ConfigProviderFactory.registerConfig(NSConfigProvider.name, new NSConfigProvider());
-    }
-
     @Override
     public NsConfig getConfig() {
         String profileName = System.getProperty("ns_env" , "test");

@@ -18,10 +18,6 @@ public class SfdcConfigProvider extends AbstractConfigProvider<SfdcConfig> {
     JsonObject loadedJsonObject;
     public static final String name = "sfdcConfig";
 
-    static {
-        ConfigProviderFactory.registerConfig(SfdcConfigProvider.name, new SfdcConfigProvider());
-    }
-
     @Override
     public SfdcConfig getConfig() {
         String profileName = System.getProperty("sfdc_env" , "default");
