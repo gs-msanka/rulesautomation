@@ -198,7 +198,7 @@ public class BaseTest {
     public String getDateWithFormat(int days, int months, boolean bulkFormat) {
         String date = null;
          date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-         System.out.println("Formatted Date :" +date);
+        Log.info("Formatted Date :" +date);
         return date;
     }
 
