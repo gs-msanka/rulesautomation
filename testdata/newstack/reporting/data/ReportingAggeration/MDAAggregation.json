@@ -1,0 +1,186 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of Active",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductCode",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of ProductCode",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count_distinct",
+          "fieldDisplayName": "Count_distinct of ProductName",
+          "collectionId": ""
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "AccountName",
+          "collectionId": ""
+        },
+        {
+          "col": "Industry",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Industry",
+          "collectionId": ""
+        }
+      ],
+      "reportName": "New Report",
+      "assetType": "ANALYTICS",
+      "whereAdvanceFilter": {
+        "expression": "A AND B",
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "A",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "logicalOperator": "AND",
+            "filterValues": [
+              "A"
+            ],
+            "locked": false,
+            "collectionId": "",
+            "type": 0
+          },
+          {
+            "dbName": "ProductCode",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "logicalOperator": "AND",
+            "filterValues": [
+              "B"
+            ],
+            "locked": false,
+            "collectionId": "",
+            "type": 0
+          }
+        ]
+      },
+      "havingAdvanceFilter": {
+        "expression": "1 AND 2",
+        "filters": [
+          {
+            "dbName": "Active",
+            "alias": "1",
+            "dataType": "boolean",
+            "filterOperator": "EQ",
+            "logicalOperator": "AND",
+            "filterValues": [
+              4
+            ],
+            "locked": false,
+            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "type": 0,
+            "aggregateFunction": "count"
+          },
+          {
+            "dbName": "ProductCode",
+            "alias": "2",
+            "dataType": "string",
+            "filterOperator": "GT",
+            "logicalOperator": "AND",
+            "filterValues": [
+              90
+            ],
+            "locked": false,
+            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "type": 0,
+            "aggregateFunction": "count"
+          }
+        ]
+      },
+      "skip": 0,
+      "SchemaName": "MDAdataForReporting",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "order": "asc"
+        },
+        {
+          "col": "Industry",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "Industry",
+          "collectionId": ""
+        },
+        {
+          "col": "Active",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of Active",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductCode",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of ProductCode",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count_distinct",
+          "fieldDisplayName": "Count_distinct of ProductName",
+          "collectionId": ""
+        }
+      ],
+      "ReportReadLimit": 5,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}
