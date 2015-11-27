@@ -15,6 +15,8 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 
 import org.bson.Document;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -176,7 +178,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
      * Creates MDA subject area with data for rule sui automation
      * @throws Exception
      */
-    public void createMdaSubjectAreaWithData() throws Exception {
+    public CollectionInfo createMdaSubjectAreaWithData() throws Exception {
         DataLoadManager dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
         dataLoad.execute(load);
@@ -193,7 +195,12 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
         String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(statusId);
-        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
+		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");
+		return actualCollectionInfo;
+    }
+    
+    public void createDataLoadConfigurationForMdaSubjectAreaWithData(CollectionInfo actualCollectionInfo) throws JsonGenerationException, JsonMappingException, IOException{   	
         LoadToMDACollection loadToMDACollection =new LoadToMDACollection();
         loadToMDACollection.setType("MDA"); 
         loadToMDACollection.setObjectName(actualCollectionInfo.getCollectionDetails().getCollectionId());

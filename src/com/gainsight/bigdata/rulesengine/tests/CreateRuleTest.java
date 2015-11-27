@@ -203,6 +203,8 @@ public class CreateRuleTest extends BaseTest {
 					.enabledRedShiftWithDBDetails(tenantDetails));
 		}
 		mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
+		rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
 	}
 
     @BeforeMethod
@@ -237,8 +239,6 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void loadToMdaActionUsingNativeData() throws Exception {
-    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-        Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
         rulesConfigureAndDataSetup.createEmptySubjectArea();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -295,8 +295,6 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
-	    Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-        rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
@@ -314,9 +312,6 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
-		Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-                    tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-        rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
@@ -335,9 +330,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
     	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-        rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -432,8 +425,6 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testLoadToCustomersWithMatrixData() throws Exception {
-    	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-        rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
