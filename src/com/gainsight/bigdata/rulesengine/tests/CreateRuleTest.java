@@ -141,7 +141,7 @@ public class CreateRuleTest extends BaseTest {
     
 
 
-    @BeforeTest
+    @BeforeClass
     @Parameters("dbStoreType")
     public void setUp(@Optional String dbStoreType) throws Exception {
 		basepage.login();
