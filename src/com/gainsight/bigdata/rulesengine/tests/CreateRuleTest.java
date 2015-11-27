@@ -231,7 +231,6 @@ public class CreateRuleTest extends BaseTest {
         rulesManagerPage.clickOnAddRule();
         rulesEngineUtil.createRuleFromUi(rulesPojo);
         Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-        assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
     @Test
