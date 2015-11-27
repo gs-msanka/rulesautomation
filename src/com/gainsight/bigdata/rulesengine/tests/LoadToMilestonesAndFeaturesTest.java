@@ -58,9 +58,9 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		 * same are invoked in before test, need to uncomment when we run only
 		 * this particular class
 		 */
-		// basepage.login();
-		// sfdc.connect();
-		// nsTestBase.init();
+	//	 basepage.login();
+	//	 sfdc.connect();
+	//	 nsTestBase.init();
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
 		rulesConfigureAndDataSetup.createCustomObjectAndFields();
@@ -108,7 +108,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 					milestoneRecord.getField("Name");
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(loadToMileStoneAction
 					.getSelectMilestone(), loadToMileStoneAction
-					.getMilestoneDate().getDateFieldValue(), actualTokenComments, accountName), "Check Milestone is created with correct confifuration or not");		
+					.getMilestoneDate().getDateFieldValue(), actualTokenComments, accountName), "Check Milestone is created with correct configuration or not for account "+accountName+"");		
 		}
 		
 		// GS-3700 testcase starts here
@@ -119,7 +119,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 					milestoneRecord.getField("Name");
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(loadToMileStoneAction
 					.getSelectMilestone(), loadToMileStoneAction
-					.getMilestoneDate().getDateFieldValue(), actualTokenComments+"\n"+" "+actualTokenComments, accountName), "Check Milestone is created with correct confifuration or not");		
+					.getMilestoneDate().getDateFieldValue(), actualTokenComments+"\n"+" "+actualTokenComments, accountName), "Check Milestone is created with correct configuration or not for account "+accountName+"");		
 		}
 	}
 	
@@ -130,10 +130,13 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !"); 
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		LoadToMileStoneAction loadToMileStoneAction = mapper.readValue(
-				rulesPojo.getSetupActions().get(0).getAction(), LoadToMileStoneAction.class);	
+				rulesPojo.getSetupActions().get(0).getAction(), LoadToMileStoneAction.class);
+		// setting milestone comments to null, since no comments are entered for this testcase
+		loadToMileStoneAction.setComments("null");
+		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToMileStoneAction, JsonNode.class));
 		SObject[] records2 = sfdc
 				.getRecords((resolveStrNameSpace(setupRuleActionPage
 						.queryString(rulesPojo.getSetupActions().get(0)
@@ -145,7 +148,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 			String formattedDate;
 			formattedDate = (String) accountRecord2.getField("Date_Auto__c");
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(loadToMileStoneAction
-					.getSelectMilestone(), formattedDate, loadToMileStoneAction.getComments(), accountName), "Check Milestone is created with correct confifuration or not");
+					.getSelectMilestone(), formattedDate, loadToMileStoneAction.getComments(), accountName), "Check Milestone is created with correct configuration or not for account "+accountName+"");
 		}
 	}
 	
@@ -177,7 +180,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 			Log.info("Date from DateTime field is " + dateString);
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(
 					loadToMileStoneAction.getSelectMilestone(), dateString, loadToMileStoneAction.getComments(), accountName),
-					"Check Milestone is created with correct confifuration or not");
+					"Check Milestone is created with correct configuration or not for account "+accountName+"");
 		}	
 	}
 	
@@ -190,7 +193,9 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-		
+		//setting comments to null, since we havn't entered any comments for this testcase
+		loadToFeatureAction.setComments("null");
+		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 		// Targeting 1 customer -> 2 records belong to one account where one record has account lookup as null and other record with valid lookup
 		// Below query will run in heroku app, to find out how many accounts satisfying the criteria given in rule, so below query is hardcoded based upon testdata
 	    SObject[] accounts=sfdc.getRecords("SELECT C_lookup__r.Data_ExternalId__c FROM C_Custom__c where (C_lookup__r.Data_ExternalId__c='RULESUI Account 3'  or rules_c_Text__c='RULESUI Account 3 Text 2')");

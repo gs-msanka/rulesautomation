@@ -224,17 +224,19 @@ public class SetupRuleActionPage extends BasePage {
             item.click(xpath + ENABLED_SHOWFIELD_LTF);
             item.click(xpath + LOADTOFEATURE_SHOWFIELD_ENABLED_DROPDOWN);
             selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
-        }  
-		List<String> tokenList = Arrays.asList(loadToFeatureAction.getComments().split(","));
-		for (String token : tokenList) {
-			if (token.startsWith("@")) {
-				element.setText(COMMENTS, token);
-				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
-			} else {
-				element.clearAndSetText(xpath + COMMENTS, token);
+		}
+		if (loadToFeatureAction.getComments() != null) {
+			List<String> tokenList = Arrays.asList(loadToFeatureAction.getComments().split(","));
+			for (String token : tokenList) {
+				if (token.startsWith("@")) {
+					element.setText(COMMENTS, token);
+					item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
+				} else {
+					element.clearAndSetText(xpath + COMMENTS, token);
+				}
 			}
 		}
-    }
+	}
 
     public void fillLoadToUsage(String object, String field, String mapField) {
         String fieldMapping = String.format(FIELD_MAPPING_LTU1, object);
@@ -311,16 +313,18 @@ public class SetupRuleActionPage extends BasePage {
         }
         item.click(xpath + MILESTONE_LTM);
         selectValueInDropDown(loadToMileStoneAction.getSelectMilestone());
-		List<String> tokenList = Arrays.asList(loadToMileStoneAction.getComments().split(","));
-		for (String token : tokenList) {
-			if (token.startsWith("@")) {
-				element.setText(COMMENTS, token);
-				item.click(String.format(xpath+COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
-			} else {
-				element.clearAndSetText(xpath + COMMENTS, token);
+		if (loadToMileStoneAction.getComments() != null) {
+			List<String> tokenList = Arrays.asList(loadToMileStoneAction.getComments().split(","));
+			for (String token : tokenList) {
+				if (token.startsWith("@")) {
+					element.setText(COMMENTS, token);
+					item.click(String.format(xpath + COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
+				} else {
+					element.clearAndSetText(xpath + COMMENTS, token);
+				}
 			}
 		}
-    }
+	}
 
     public void loadToSfdcObject(LoadToSFDCAction loadToSFDCAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";

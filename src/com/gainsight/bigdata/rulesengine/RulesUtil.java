@@ -763,31 +763,22 @@ public void setupRule(HashMap<String,String> testData){
 						+ " and JBCXM__Account__r.Name='" + accountName + "'"));
 		Verifier verifier = new Verifier();
 		for (SObject obj : milseStoneRecords) {
-			verifier.verifyEquals(mileStone,
-					obj.getChild(resolveStrNameSpace("JBCXM__Milestone__r"))
-							.getChild("Name").getValue().toString(),
+			verifier.verifyEquals(
+					mileStone,
+					String.valueOf(obj
+							.getChild(resolveStrNameSpace("JBCXM__Milestone__r"))
+							.getChild("Name").getValue()),
 					"MileStone is not matching for Account - " + " "
 							+ accountName);
-			verifier.verifyEquals(milestoneDate,
-					obj.getChild(resolveStrNameSpace("JBCXM__CreatedDate__c"))
-							.getValue().toString(),
+			verifier.verifyEquals(milestoneDate, String.valueOf(obj.getChild(
+					resolveStrNameSpace("JBCXM__CreatedDate__c")).getValue()),
 					"MileStone createdDate is not matching for Account  - "
 							+ " " + accountName);
-			if (mileStoneComments != null && !mileStoneComments.isEmpty()) {
-				verifier.verifyEquals(mileStoneComments,
-						obj.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
-								.getValue().toString(),
-						"MileStone Comments is not matching for Account  - "
-								+ " " + accountName);
-
-			}
-			if (mileStoneComments == null || !mileStoneComments.isEmpty()) {
-				Object comment = obj
-						.getField(resolveStrNameSpace("JBCXM__Comment__c"));
-				verifier.verifyEquals((String) comment, mileStoneComments,
-						"MileStone Comments is not matching for Account  - "
-								+ " " + accountName);
-			}	
+			verifier.verifyEquals(mileStoneComments, String.valueOf(obj
+					.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
+					.getValue()),
+					"MileStone Comments is not matching for Account  - " + " "
+							+ accountName);
 		}
 		result = !verifier.isVerificationFailed();
 		if (!result) {
@@ -804,34 +795,30 @@ public void setupRule(HashMap<String,String> testData){
 						+ " and JBCXM__Account__r.Name='" + accountName + "'"));
 		Verifier verifier = new Verifier();
 		for (SObject obj : features) {
-			verifier.verifyEquals(loadToFeatureAction.getFeature(), obj
-					.getChild(resolveStrNameSpace("JBCXM__Features__r"))
-					.getChild(resolveStrNameSpace("JBCXM__Feature__c"))
-					.getValue().toString(),
-					"Feature is not matching for Account - " + " "	+ accountName);
-			verifier.verifyEquals(loadToFeatureAction.getProduct(), obj
-					.getChild(resolveStrNameSpace("JBCXM__Features__r"))
-					.getChild(resolveStrNameSpace("JBCXM__Product__c"))
-					.getValue().toString(),
-					"product is not matching for Account - " + " " + accountName);
-			if (loadToFeatureAction.getComments() != null
-					&& !loadToFeatureAction.getComments().isEmpty()) {
-				Log.info(obj
-						.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
-						.getValue().toString());
-				verifier.verifyEquals(loadToFeatureAction.getComments(), obj
-						.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
-						.getValue().toString(),
-						"Features Comments is not matching for Account  - "	+ " " + accountName);
-			}
-			if (loadToFeatureAction.getComments() == null
-					|| !loadToFeatureAction.getComments().isEmpty()) {
-				Object comment = obj
-						.getField(resolveStrNameSpace("JBCXM__Comment__c"));
-				verifier.verifyEquals((String) comment,
-						loadToFeatureAction.getComments(),
-						"Features Comments is not matching for Account  - "	+ " " + accountName);
-			}  
+			verifier.verifyEquals(
+					loadToFeatureAction.getFeature(),
+					String.valueOf(obj
+							.getChild(resolveStrNameSpace("JBCXM__Features__r"))
+							.getChild(resolveStrNameSpace("JBCXM__Feature__c"))
+							.getValue()),
+					"Feature is not matching for Account - " + " "
+							+ accountName);
+			verifier.verifyEquals(
+					loadToFeatureAction.getProduct(),
+					String.valueOf(obj
+							.getChild(resolveStrNameSpace("JBCXM__Features__r"))
+							.getChild(resolveStrNameSpace("JBCXM__Product__c"))
+							.getValue()),
+					"product is not matching for Account - " + " "
+							+ accountName);
+			Log.info(String.valueOf(obj.getChild(
+					resolveStrNameSpace("JBCXM__Comment__c")).getValue()));
+			verifier.verifyEquals(loadToFeatureAction.getComments(), String
+					.valueOf(obj.getChild(
+							resolveStrNameSpace("JBCXM__Comment__c"))
+							.getValue()),
+					"Features Comments is not matching for Account  - " + " "
+							+ accountName);
 			boolean licenced = false;
 			if (loadToFeatureAction.getLicensed().getUpdateType()
 					.equalsIgnoreCase("Licenced")
@@ -840,8 +827,6 @@ public void setupRule(HashMap<String,String> testData){
 					|| loadToFeatureAction.getLicensed().getUpdateType()
 							.equalsIgnoreCase("true")) {
 				licenced = true;
-			} else {
-				licenced = false;
 			}
 			boolean enabled = false;
 			if (loadToFeatureAction.getEnabled().getUpdateType()
@@ -849,17 +834,17 @@ public void setupRule(HashMap<String,String> testData){
 					|| loadToFeatureAction.getEnabled().getUpdateType()
 							.equalsIgnoreCase("true")) {
 				enabled = true;
-			} else {
-				enabled = false;
 			}
 			verifier.verifyEquals(
 					obj.getField(resolveStrNameSpace("JBCXM__Licensed__c")),
 					Boolean.toString(licenced),
-					"JBCXM__Licensed__c is not matching for Account  - " + " " + accountName);
+					"JBCXM__Licensed__c is not matching for Account  - " + " "
+							+ accountName);
 			verifier.verifyEquals(
 					obj.getField(resolveStrNameSpace("JBCXM__Enabled__c")),
 					Boolean.toString(enabled),
-					"JBCXM__Enabled__c is not matching for Account  - " + " "	+ accountName);
+					"JBCXM__Enabled__c is not matching for Account  - " + " "
+							+ accountName);
 		}
 		result = !verifier.isVerificationFailed();
 		if (!result) {
