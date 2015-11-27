@@ -158,11 +158,11 @@ public class CreateRuleTest extends BaseTest {
         GSEmailSetup gs=new GSEmailSetup();
         gs.enableOAuthForOrg();
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        try {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
+        sfdc.runApexCode("Delete [SELECT Id FROM RulesSFDCCustom__c];");
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
@@ -185,9 +185,6 @@ public class CreateRuleTest extends BaseTest {
             userName=dbServerDetail.getUserName();
 			passWord=dbServerDetail.getPassword();
 			}
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
@@ -1580,5 +1577,10 @@ public class CreateRuleTest extends BaseTest {
 					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
 							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
 		}
+	}
+	
+	@AfterClass
+	public void tearDown(){
+		mongoConnection.mongoUtil.closeConnection();
 	}
 }
