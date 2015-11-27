@@ -203,7 +203,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	    SObject[] temp=sfdc.getRecords("SELECT C_lookup__r.Data_ExternalId__c FROM C_Custom__c where C_lookup__r.Data_ExternalId__c in ("+names+")");
 	    for (SObject sObject : temp) {
 			Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-					"Check cta is created correctly or not with given configuration");		
+					"Check Feature is created correctly or not with given configuration");		
 		}
 	    // Finally Asserting number of records created also, for this scenario/testdata
 	    Assert.assertEquals(accounts.length, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__CustomerFeatures__c where isDeleted=false")),
@@ -227,7 +227,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	    SObject[] temp=sfdc.getRecords("SELECT C_lookup__r.Data_ExternalId__c FROM C_Custom__c where C_lookup__r.Data_ExternalId__c in ("+names+")");
 	    for (SObject sObject : temp) {
 			Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-					"Check cta is created correctly or not with given configuration");		
+					"Check Feature is created correctly or not with given configuration");		
 		}
 	    // Finally Asserting number of records created also, for this scenario/testdata
 	    Assert.assertEquals(accounts.length, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__CustomerFeatures__c where isDeleted=false")),
@@ -257,14 +257,14 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	    	loadToFeatureAction.getEnabled().setUpdateType((String) sObject.getField("rules_c_Checkbox__c"));
 	    	rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 			Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-					"Check cta is created correctly or not with given configuration");
+					"Check Feature is created correctly or not with given configuration");
 			// TestCase GS-3712 starts here
 			// Running rule for second time for - update existing features scenario
 			Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 			loadToFeatureAction.setComments(tokenComments+"\n"+" "+tokenComments);
 			rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 			Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-					"Check cta is created correctly or not with given configuration");
+					"Check Feature is created correctly or not with given configuration");
 		}
 	    // Finally Asserting number of records created also, for this scenario/testdata
 	    Assert.assertEquals(accounts.length, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id FROM JBCXM__CustomerFeatures__c where isDeleted=false")),
@@ -292,7 +292,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 				loadToFeatureAction.setComments(comments);
 				rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 				Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, temp[0].getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-						"Check cta is created correctly or not with given configuration");
+						"Check Feature is created correctly or not with given configuration");
 			}else {
 				SObject sObjectTemp = null;
 				for (SObject sObject2 : temp) {
@@ -306,7 +306,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 				loadToFeatureAction.setComments(commentsList.get(0)+"\n"+" "+commentsList.get(1));
 				rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 				Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, sObjectTemp.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
-						"Check cta is created correctly or not with given configuration");
+						"Check Feature is created correctly or not with given configuration");
 			}
 		}
 	    // Finally Asserting number of records created also, for this scenario/testdata

@@ -54,12 +54,12 @@
               {
                 "fieldType": "field",
                 "dataType": "number",
-                "value": "AnnualRevenue"
+                "value": "CustomAnnualRevenue"
               },
               {
                 "fieldType": "field",
                 "dataType": "long",
-                "value": "Score"
+                "value": "CustomScore"
               }
             ],
             "operator": "add",
@@ -102,12 +102,12 @@
               {
                 "fieldType": "field",
                 "dataType": "number",
-                "value": "AnnualRevenue"
+                "value": "CustomAnnualRevenue"
               },
               {
                 "fieldType": "field",
                 "dataType": "long",
-                "value": "Score"
+                "value": "CustomScore"
               }
             ],
             "operator": "subtract",
@@ -156,7 +156,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Name",
+      "DisplayName": "CustomName",
       "colattribtype": 0
     },
     {
@@ -177,7 +177,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Description",
+      "DisplayName": "CustomDescription",
       "colattribtype": 0
     },
     {
@@ -198,7 +198,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "LongTextArea",
+      "DisplayName": "CustomLongTextArea",
       "colattribtype": 0
     },
     {
@@ -219,7 +219,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "AnnualRevenue",
+      "DisplayName": "CustomAnnualRevenue",
       "colattribtype": 1
     },
     {
@@ -240,7 +240,7 @@
       "dataType": "date",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Date",
+      "DisplayName": "CustomDate",
       "colattribtype": 0
     },
     {
@@ -261,7 +261,7 @@
       "dataType": "dateTime",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "CreatedDateTime",
+      "DisplayName": "CustomCreatedDateTime",
       "colattribtype": 0
     },
     {
@@ -282,7 +282,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Email",
+      "DisplayName": "CustomEmail",
       "colattribtype": 0
     },
     {
@@ -292,7 +292,7 @@
       "hidden": false,
       "indexed": false,
       "colattribtype": 0,
-      "DisplayName": "BooleanField",
+      "DisplayName": "CustomBooleanField",
       "format": {
         "dateFormat": "MM-dd-yyyy"
       },
@@ -328,7 +328,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Score",
+      "DisplayName": "CustomScore",
       "colattribtype": 1
     }
   ]

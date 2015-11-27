@@ -15,6 +15,8 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 
 import org.bson.Document;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.NSTestBase;
@@ -35,6 +37,10 @@ import com.gainsight.testdriver.Log;
 
 /**
  * @author Abhilash Thaduka
+ */
+/**
+ * @author Abhilash Thaduka
+ *
  */
 public class RulesConfigureAndDataSetup extends NSTestBase {
 
@@ -149,27 +155,30 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 				"FCurrency", "FDate", "FDateTime", "InputDateTime",
 				"AccPercentage", "ActiveUsers", "FNumber", "FPercent", "FText" };
         metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", metaUtil.convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
-        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), sfdc.fetchSFDCinfo(), true);
-        //	metaUtil.addFieldPermissionsToUsers(resolveStrNameSpace("RulesSFDCCustom__c"), permFields,sfdc.fetchSFDCinfo(), true);
-        String configData = "{\"type\":\"SFDC\",\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\",\"fields\":[{\"name\":\"C_Checkbox__c\",\"dataType\":\"boolean\"},{\"name\":\"InputDate__c\",\"dataType\":\"date\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"dateTime\"},{\"name\":\"C_Number__c\",\"dataType\":\"double\"},{\"name\":\"C_Email__c\",\"dataType\":\"string\"},{\"name\":\"C_Text__c\",\"dataType\":\"string\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"},{\"name\":\"C_Reference__c\",\"dataType\":\"string\"}]}";
-        
-        try {
-            Log.info("Saving CustomWeRules object and fields info in MDA to load data using Load To SFDC action. Config Data: "
-                    + configData);
-            rulesUtil.saveCustomObjectInRulesConfig(configData);
-        } catch (Exception e) {
-            Log.error(
-                    "Exception occurred while saving CustomWeRules object configuration in MDA ",
-                    e);
-            throw new RuntimeException(e);
-        }
+        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), sfdc.fetchSFDCinfo(), true);     
     }
+    
+    /** creates dataLoad Configuration for Object "RulesSFDCCustom__c"
+     * 
+     */
+    public void createDataLoadConfiguration(){	
+		String configData = "{\"type\":\"SFDC\",\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\",\"fields\":[{\"name\":\"C_Checkbox__c\",\"dataType\":\"boolean\"},{\"name\":\"InputDate__c\",\"dataType\":\"date\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"dateTime\"},{\"name\":\"C_Number__c\",\"dataType\":\"double\"},{\"name\":\"C_Email__c\",\"dataType\":\"string\"},{\"name\":\"C_Text__c\",\"dataType\":\"string\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"},{\"name\":\"C_Reference__c\",\"dataType\":\"string\"}]}";
+		try {
+			Log.info("Saving CustomWeRules object and fields info in MDA to load data using Load To SFDC action. Config Data: "
+					+ configData);
+			rulesUtil.saveCustomObjectInRulesConfig(configData);
+		} catch (Exception e) {
+			Log.error(
+					"Exception occurred while saving CustomWeRules object configuration in MDA ", e);
+			throw new RuntimeException(e);
+		}
+	}
 
     /**
      * Creates MDA subject area with data for rule sui automation
      * @throws Exception
      */
-    public void createMdaSubjectAreaWithData() throws Exception {
+    public CollectionInfo createMdaSubjectAreaWithData() throws Exception {
         DataLoadManager dataLoadManager = new DataLoadManager(sfinfo, getDataLoadAccessKey());
         JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"), JobInfo.class);
         dataLoad.execute(load);
@@ -186,7 +195,12 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
         String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
         Assert.assertNotNull(statusId);
-        dataLoadManager.waitForDataLoadJobComplete(statusId);
+        Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
+		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");
+		return actualCollectionInfo;
+    }
+    
+    public void createDataLoadConfigurationForMdaSubjectAreaWithData(CollectionInfo actualCollectionInfo) throws JsonGenerationException, JsonMappingException, IOException{   	
         LoadToMDACollection loadToMDACollection =new LoadToMDACollection();
         loadToMDACollection.setType("MDA"); 
         loadToMDACollection.setObjectName(actualCollectionInfo.getCollectionDetails().getCollectionId());

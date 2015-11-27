@@ -4,6 +4,7 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
         "extract": {
+	"useRestApi":true,
         "source": "sfdc",
         "connection": "conf/application.conf",
         "table": "Account",
@@ -31,43 +32,43 @@
             {
                 "file": "/testdata/newstack/RulesEngine/RulesUI-Data/LoadToMDA.csv",
                 "table": "accounts",
-                "joinColumnName": "Name",
+                "joinColumnName": "CustomName",
                 "columns": [
                 	{
-                        "name": "Name",
-                        "alias": "Name"
+                        "name": "CustomName",
+                        "alias": "CustomName"
                     },
 		    {
-                        "name": "Description",
-                        "alias": "Description"
+                        "name": "CustomDescription",
+                        "alias": "CustomDescription"
                     },
 		     {
-                        "name": "LongTextArea",
-                        "alias": "LongTextArea"
+                        "name": "CustomLongTextArea",
+                        "alias": "CustomLongTextArea"
                     },
 		    {
-                        "name": "AnnualRevenue",
-                        "alias": "AnnualRevenue"
+                        "name": "CustomAnnualRevenue",
+                        "alias": "CustomAnnualRevenue"
                     },  
 		     {
-                        "name": "Date",
-                        "alias": "Date"
+                        "name": "CustomDate",
+                        "alias": "CustomDate"
                     },
 		     {
-                        "name": "CreatedDateTime",
-                        "alias": "CreatedDateTime"
+                        "name": "CustomCreatedDateTime",
+                        "alias": "CustomCreatedDateTime"
                     },
 		    {
-                        "name": "Email",
-                        "alias": "Email"
+                        "name": "CustomEmail",
+                        "alias": "CustomEmail"
                     },
 		    {
-                        "name": "BooleanField",
-                        "alias": "BooleanField"
+                        "name": "CustomBooleanField",
+                        "alias": "CustomBooleanField"
                     },
 		    {
-                        "name": "Score",
-                        "alias": "Score"
+                        "name": "CustomScore",
+                        "alias": "CustomScore"
                     }     
                 ]
             }

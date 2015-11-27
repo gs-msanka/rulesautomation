@@ -1,4 +1,4 @@
-ID,Name,Description,LongTextArea,AnnualRevenue,Date,CreatedDateTime,Email,BooleanField,Score
+ID,CustomName,CustomDescription,CustomLongTextArea,CustomAnnualRevenue,CustomDate,CustomCreatedDateTime,CustomEmail,CustomBooleanField,CustomScore
 ,RULESUI Account 1,ACCOUNTLEVEL,RULESUI Account 1 longtextarea,12345,5,2,athaduka@gainsight.com,TRUE,33
 ,RULESUI Account 2,ACCOUNTLEVEL,RULESUI Account 2 longtextarea,12345,2,1,athaduka1@gainsighttest.com,FALSE,54
 ,RULESUI Account 3,ACCOUNTLEVEL,RULESUI Account 3 longtextarea,34534,1,2,athaduka1@gainsighttest.com,TRUE,92
