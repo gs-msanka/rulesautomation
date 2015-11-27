@@ -1581,9 +1581,4 @@ public class CreateRuleTest extends BaseTest {
 							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
 		}
 	}
-	
-	@AfterClass
-	private void tearDown() {
-		mongoDBDAO.mongoUtil.closeConnection();
-	}
 }
