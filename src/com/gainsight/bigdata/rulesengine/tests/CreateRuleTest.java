@@ -221,7 +221,7 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
-    @Test
+    @Test(enabled=false)
     public void testLoadToCustomersWithNativeData() throws Exception {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
         JobInfo jobInfo = mapper.readValue((new FileReader(ACCOUNTS_JOB_FOR_LOAD_TO_CUSTOMERS_ACTION)), JobInfo.class);
