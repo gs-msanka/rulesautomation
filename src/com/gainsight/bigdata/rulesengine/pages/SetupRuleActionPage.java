@@ -406,7 +406,7 @@ public class SetupRuleActionPage extends BasePage {
         String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
         item.click(criteriaButton + CRITERIA);
         item.click(xpath + CRITERIA_SHOWFIELD);
-        selectValueInDropDown(fieldName);
+        selectValueInDropDown(fieldName, true);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
         selectValueInDropDown(criteria.getOperator() , true);
         if (criteria.getField().equalsIgnoreCase("field")) {
