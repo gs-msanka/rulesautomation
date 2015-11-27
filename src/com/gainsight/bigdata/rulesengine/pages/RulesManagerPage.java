@@ -85,8 +85,8 @@ public class RulesManagerPage extends BasePage {
     public void switchOffRuleByName(String ruleName) {
 		String ruleNameOFF = String.format(SWITCH_ON_OFF_RULE, ruleName);
 		Log.info("Rule xpath is" + " " + ruleNameOFF);
-		String ruleNameLink = String.format(RULE_WITH_NAME, ruleName);
-		element.mouseOver(ruleNameLink);
+		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameOFF));
 		wait.waitTillElementDisplayed(
@@ -150,8 +150,8 @@ public class RulesManagerPage extends BasePage {
      */
     public void deleteRuleByName(String ruleName) {
 		String ruleNameToDelete = String.format(RULE_LISTING_ACTIONS, ruleName, "Delete");
-		String ruleNameLink = String.format(RULE_WITH_NAME, ruleName);
-		element.mouseOver(ruleNameLink);
+		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameToDelete));
 		wait.waitTillElementDisplayed(
@@ -168,8 +168,8 @@ public class RulesManagerPage extends BasePage {
     public EditRulePage editRuleByName(String ruleName) {
 		String ruleNameToEdit = String.format(RULE_LISTING_ACTIONS, ruleName, "Edit");
 		Log.info("Rule xpath is" + " " + ruleNameToEdit);
-		String ruleNameLink = String.format(RULE_WITH_NAME, ruleName);
-		element.mouseOver(ruleNameLink);
+		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(ruleNameToEdit));	
 		return new EditRulePage();
@@ -201,8 +201,8 @@ public class RulesManagerPage extends BasePage {
     public void cloneARuleByName(String ruleName, String newRuleName) {
 		String cloneRuleLink = String.format(RULE_LISTING_ACTIONS, ruleName, "Clone");
 		Log.info("Rule xpath is" + " " + cloneRuleLink);
-		String ruleNameLink = String.format(RULE_WITH_NAME, ruleName);
-		element.mouseOver(ruleNameLink);
+		item.click(String.format(RULE_WITH_NAME, ruleName));
+		wait.waitTillElementDisplayed("//div[@name='"+ruleName+"']/following-sibling::div[contains(@class, 'details-cnt')]", MIN_TIME, MAX_TIME);
 		JavascriptExecutor executor = (JavascriptExecutor)Application.getDriver();
 		executor.executeScript("arguments[0].click();", element.getElement(cloneRuleLink));
 		wait.waitTillElementDisplayed(CLONE_RULE_INPUT, MIN_TIME, MAX_TIME);
