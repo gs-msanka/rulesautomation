@@ -21,6 +21,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -118,6 +119,7 @@ public class CreateRuleTest extends BaseTest {
     private static final String SCHEME = "Score";
     private static final String METRICS_CREATE_FILE =  Application.basedir + "/apex_scripts/scorecard/Create_ScorecardMetrics.apex";
     private static final String SCORECARD_CLEAN_FILE = Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt";
+    private static final String CLEANUP_DATA = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Cleanup.apex";
     private ObjectMapper mapper = new ObjectMapper();
     private DBDetail dbDetail = null;
     TenantDetails tenantDetails = null;
@@ -138,6 +140,7 @@ public class CreateRuleTest extends BaseTest {
     private Calendar calendar = Calendar.getInstance();
     private RulesManagerPage rulesManagerPage;
     private String rulesManagerPageUrl;
+    private MongoDBDAO mongoConnection;
     
 
 
@@ -188,6 +191,9 @@ public class CreateRuleTest extends BaseTest {
         Log.info("Host is" + host + " and Port is " + port);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
+        dataETL.execute(jobInfo);
 		if (dbStoreType != null
 				&& dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
 			Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
@@ -196,26 +202,18 @@ public class CreateRuleTest extends BaseTest {
 			Assert.assertTrue(tenantManager
 					.enabledRedShiftWithDBDetails(tenantDetails));
 		}
+		mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 	}
 
     @BeforeMethod
     public void rulesCleanup() {
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEAN_UP_FOR_RULES));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_DATA));
     }
 
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-    	try{
-    	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-    	}
-    	finally{
-    	mongoDBDAO.mongoUtil.closeConnection();
-    	}
+    	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
     	rulesConfigureAndDataSetup.createDataLoadConfiguration();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC1.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();
@@ -239,16 +237,8 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void loadToMdaActionUsingNativeData() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-    	try{
     	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
         Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
         rulesConfigureAndDataSetup.createEmptySubjectArea();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -284,9 +274,6 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_MEASURE_FILE));
@@ -308,12 +295,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		try {
-			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
+	    Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -332,13 +314,8 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		try {
-			Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
+		Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
                     tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -358,13 +335,8 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-    	try{
     	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
     	Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
@@ -460,15 +432,7 @@ public class CreateRuleTest extends BaseTest {
 
     @Test
     public void testLoadToCustomersWithMatrixData() throws Exception {
-    	MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-    	try{
     	Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
         rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -557,13 +521,8 @@ public class CreateRuleTest extends BaseTest {
     
    // @Test // TODO - WIP
 	public void verifyDataLoadConfiguration() throws Exception{
-		MongoDBDAO mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		try{
 		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
 		Assert.assertTrue(mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
 		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
@@ -611,13 +570,8 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
-		MongoDBDAO mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		try {
-			Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
+		Assert.assertTrue(mongoDBDAO.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
 					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-		} finally {
-			mongoDBDAO.mongoUtil.closeConnection();
-		}
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -731,9 +685,6 @@ public class CreateRuleTest extends BaseTest {
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(redShiftCollection1 + "2");
 		String jsonNode = mapper.writeValueAsString(rulesPojo);
 		Log.info(jsonNode);
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)),JobInfo.class);
-		dataETL.execute(jobInfo);
 		JobInfo load = mapper.readValue(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob.txt"),JobInfo.class);
 		dataETL.execute(load);
 		String collectionName = redShiftCollection1 + "1";
@@ -857,7 +808,6 @@ public class CreateRuleTest extends BaseTest {
 		}
 		objField.setDates(Date);
 		metaUtil.createFieldsOnObject(sfdc, "Account", objField);
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -884,7 +834,6 @@ public class CreateRuleTest extends BaseTest {
 		}
 		objField.setDateTimes(DateTime);
 		metaUtil.createFieldsOnObject(sfdc, "Account", objField);
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		String LOAD_ACCOUNTS_JOB = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_DateTimeFiltersUsingNativeData.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -923,8 +872,6 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertNotNull(statusId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
 		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");
-		
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -960,7 +907,6 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertNotNull(statusId);
 		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
 		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");		
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
 		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
 		dataETL.execute(jobInfo);
@@ -977,7 +923,6 @@ public class CreateRuleTest extends BaseTest {
 	
 	@Test
 	public void testRedShiftCalculatedMeasuresInSetupRule() throws Exception{
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC22.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject("TC22" + calendar.getTimeInMillis());
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject("TC22" + calendar.getTimeInMillis());
@@ -1019,9 +964,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4185", "GS-4186", "GS-4257"})
 	@Test
 	public void testCtaWithUpsertProrityOption() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		// Creating cta with Low priority
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
@@ -1123,9 +1065,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4256", "GS-4257" })
 	@Test
 	public void testCtaWithUpdateCommentsAlwaysOption() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC24.json"), RulesPojo.class);
@@ -1193,9 +1132,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4257" })
 	@Test
 	public void testCtaWithUpdateCommentsNeverOption() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC25.json"), RulesPojo.class);
@@ -1227,9 +1163,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4258"})
 	@Test
 	public void testCtaWithAddOrReplacePlaybook() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		// Creating cta with no playbook
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
@@ -1337,9 +1270,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = {"GS-6247"})
 	@Test
 	public void testCtaWithRuleNameChangeOption() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC27.json"), RulesPojo.class);
@@ -1406,9 +1336,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4264"})
 	@Test
 	public void testCtaUpsertWithSnoozeOption() throws Exception {
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		SetupRuleActionPage setupRuleActionPage = new SetupRuleActionPage();
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC28.json"), RulesPojo.class);
@@ -1475,9 +1402,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithDonNotSkipWeekendOption() throws Exception{
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC29.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -1508,9 +1432,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithSkipAllWeekendsOption() throws Exception{
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC30.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -1545,9 +1466,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-4261"})
 	@Test
 	public void testCtaActionWithSkipWeekendIfDueOnWeekEndOption() throws Exception{
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC31.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -1579,9 +1497,6 @@ public class CreateRuleTest extends BaseTest {
     @Test
     // This testcase handles owner field userlookup and cta token also for create cta action
     public void testCloseCtaFromSpecificSource() throws Exception{
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
                 + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC32.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -1645,9 +1560,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-3874"})
 	@Test
 	public void testCloseCtaFromAllSources() throws Exception{
-		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
 				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC33.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -1677,5 +1589,10 @@ public class CreateRuleTest extends BaseTest {
 					sfdc.getRecordCount(resolveStrNameSpace(("select id, name FROM JBCXM__CTA__c where Name='"
 							+ ctaAction.getName() + "' and  JBCXM__Source__c='Rules' and JBCXM__ClosedDate__c!=null and isdeleted=false"))));
 		}
+	}
+	
+	@AfterClass
+	private void tearDown() {
+		mongoDBDAO.mongoUtil.closeConnection();
 	}
 }

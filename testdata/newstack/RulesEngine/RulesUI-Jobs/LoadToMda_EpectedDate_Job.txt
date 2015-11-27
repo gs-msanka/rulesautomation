@@ -5,6 +5,7 @@
   "useNameSpace": false,
   "extract": {
     "source": "sfdc",
+    "useRestApi":true,
     "connection": "conf/application.conf",
     "table": "account",
     "fields": [

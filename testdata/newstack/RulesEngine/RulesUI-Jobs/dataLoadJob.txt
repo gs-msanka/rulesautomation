@@ -4,6 +4,7 @@
     "namespacePrefix" : "JBCXM",
     "useNameSpace" : false,
         "extract": {
+	"useRestApi":true,
         "source": "sfdc",
         "connection": "conf/application.conf",
         "table": "Account",
