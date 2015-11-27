@@ -14,60 +14,60 @@
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Name",
+            "fieldName": "CustomName",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Description",
+            "fieldName": "CustomDescription",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "LongTextArea",
+            "fieldName": "CustomLongTextArea",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Date",
+            "fieldName": "CustomDate",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "CreatedDateTime",
+            "fieldName": "CustomCreatedDateTime",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Email",
+            "fieldName": "CustomEmail",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "BooleanField",
+            "fieldName": "CustomBooleanField",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "AnnualRevenue",
+            "fieldName": "CustomAnnualRevenue",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Score",
+            "fieldName": "CustomScore",
             "showAdvancedName": ""
           }
         ],
         "filterFields": [
           {
-            "fieldName": "Name",
+            "fieldName": "CustomName",
             "operator": "starts with",
             "value": "input_RULESUI Account"
           },
           {
-            "fieldName": "Date",
+            "fieldName": "CustomDate",
             "operator": "greater or equal",
             "value": "select_Rule Date"
           },
           {
-            "fieldName": "CreatedDateTime",
+            "fieldName": "CustomCreatedDateTime",
             "operator": "greater or equal",
             "value": "select_Rule Date"
           },
           {
-            "fieldName": "Score",
+            "fieldName": "CustomScore",
             "operator": "greater than",
             "value": "input_1"
           }
@@ -90,13 +90,13 @@
           },
           {
             "sourceObject": "MONGO",
-            "sourceField": "Date",
+            "sourceField": "CustomDate",
             "destination": "Renewal Date",
             "isCustom": "true"
           },
           {
             "sourceObject": "MONGO",
-            "sourceField": "Description",
+            "sourceField": "CustomDescription",
             "destination": "Comments",
             "isCustom": "true"
           }
@@ -104,19 +104,19 @@
       },
       "criterias": [
         {
-          "showField": "Name",
+          "showField": "CustomName",
           "operator": "starts with",
           "field": "value",
           "value": "input_RULESUI Account"
         },
         {
-          "showField": "Date",
+          "showField": "CustomDate",
           "operator": "greater or equal",
           "field": "value",
           "value": "Rule Date"
         },
         {
-          "showField": "Score",
+          "showField": "CustomScore",
           "operator": "greater or equal",
           "field": "value",
           "value": "input_4"
