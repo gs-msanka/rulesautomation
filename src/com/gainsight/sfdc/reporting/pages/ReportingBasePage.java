@@ -2,6 +2,7 @@ package com.gainsight.sfdc.reporting.pages;
 
 import com.gainsight.sfdc.reporting.constants.XPathConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -80,22 +81,28 @@ public class ReportingBasePage extends BasePage {
 	 * @param newDisplayName
 	 * @param aggregation
 	 * @param decimalPlaces
+	 * @param dataType
 	 */
 	public void showMeFieldSettings(String oldDisplayName, String newDisplayName, String aggregation,
-			String decimalPlaces) {
-		Log.info("Changing field display name and aggregation for: " + oldDisplayName);
-		item.click(String.format(XPathConstants.getXPath("SHOWMESETTINGS"), oldDisplayName));
+			String decimalPlaces, String dataType) {
 
-		if ((newDisplayName != "") || (newDisplayName != null)) {
+		Log.info("Changing field display name and aggregation for: " + oldDisplayName);
+		if (dataType.contains("number")) {
+			oldDisplayName = "Sum " + oldDisplayName.substring(oldDisplayName.indexOf("of"));
+		} else {
+			oldDisplayName = "Count " + oldDisplayName.substring(oldDisplayName.indexOf("of"));
+		}
+		item.click(String.format(XPathConstants.getXPath("SHOWMESETTINGS"), oldDisplayName));
+		if ((newDisplayName != "") && (newDisplayName != null)) {
 			item.clearAndSetText(XPathConstants.getXPath("FIELDDISPLAYNAME"), newDisplayName);
 		}
-		// Need to write a little bit logic here
-		if (aggregation != null) {
-			item.clearAndSetText(XPathConstants.getXPath("AGGREGATION"), aggregation);
-		}
-		if (decimalPlaces != null) {
+		item.click(XPathConstants.getXPath("AGGREGATION"));
+		aggregation = convertAggeration(aggregation);
+		item.click(String.format(XPathConstants.getXPath("AGGREGATION_VALUE"), aggregation));
+		if (!decimalPlaces.contains("0")) {
 			item.clearAndSetText(XPathConstants.getXPath("DISPLAY"), decimalPlaces);
 		}
+		item.click(XPathConstants.getXPath("AGGREGATION_VALUE_CLOSE"));
 
 	}
 
@@ -123,15 +130,22 @@ public class ReportingBasePage extends BasePage {
 	 *
 	 * @param oldDisplayName
 	 * @param newDisplayName
+	 * @param summarizedBy
 	 */
-	public void byFieldSettings(String oldDisplayName, String newDisplayName) {
+	public void byFieldSettings(String oldDisplayName, String newDisplayName, String summarizedBy) {
 
 		Log.info("Changing field display name for: " + oldDisplayName);
 		item.click(String.format(XPathConstants.getXPath("SHOWMESETTINGS"), oldDisplayName));
 
-		if ((newDisplayName != "") || (newDisplayName != null)) {
+		if ((newDisplayName != "") && (newDisplayName != null)) {
 			item.clearAndSetText(XPathConstants.getXPath("FIELDDISPLAYNAME"), newDisplayName);
 		}
+		item.click(XPathConstants.getXPath("SUMMARIZEDBY"));
+		item.click((String.format(XPathConstants.getXPath("SUMMARIZEDBY_OPTION"), summarizedBy)));
+		if(element.getElement(XPathConstants.getXPath("SUMMARIZEDBY_CLOSE")).isDisplayed()){
+			item.click(XPathConstants.getXPath("SUMMARIZEDBY_CLOSE"));
+		}
+		
 	}
 
 	/**
@@ -141,14 +155,10 @@ public class ReportingBasePage extends BasePage {
 	public void saveReport(String reportName) {
 		Log.info("Saving the Report : " + reportName);
 		if (reportName != "") {
-			item.setText(XPathConstants.getXPath("REPORTNAME"), reportName);
-			element.getElement(XPathConstants.getXPath("REPORTNAME")).sendKeys(Keys.TAB);
-			/*
-			 * if (element.getElement(XPathConstants.getXPath("REPORTNAME")).
-			 * isDisplayed()) {
-			 * element.getElement(XPathConstants.getXPath("REPORTNAME")).
-			 * sendKeys(Keys.TAB); }
-			 */
+
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
+			js.executeScript(a);
 
 		}
 		item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
@@ -211,6 +221,24 @@ public class ReportingBasePage extends BasePage {
 		open();
 		wait.waitTillElementDisplayed(XPathConstants.getXPath("READY_INDICATOR"), MIN_TIME, MAX_TIME);
 
+	}
+	
+	
+	private String convertAggeration(String aggegationType) {
+		if(aggegationType.equalsIgnoreCase("count")){
+			return "COUNT";
+		} else if(aggegationType.equalsIgnoreCase("count_distinct")){
+			return "COUNT_DISTINCT";
+		} else if(aggegationType.equalsIgnoreCase("Min")){
+			return "MIN";
+		} else if(aggegationType.equalsIgnoreCase("Max")){
+			return "MAX";
+		} else if(aggegationType.equalsIgnoreCase("Avg")){
+			return "AVG";
+		} else if(aggegationType.equalsIgnoreCase("Sum")){
+			return "SUM";
+		} 
+		return aggegationType;
 	}
 
 }

@@ -30,13 +30,15 @@ public class ReportingUtil extends BaseTest {
 	TenantManager tenantManager = new TenantManager();
 
 	/**
-	 * Creates a rule on the ui based on the json input configuration file path and then validates the JSon saved at the backend
+	 * Creates a rule on the ui based on the json input configuration file path
+	 * and then validates the JSon saved at the backend
 	 *
 	 * @param reportMaster
 	 * @param reportingBasePage
 	 * @param mongoUtil
 	 */
-	public void createReportFromUiAndVerifyBackedJSON(ReportMaster reportMaster, ReportingBasePage reportingBasePage, MongoUtil mongoUtil) {
+	public void createReportFromUiAndVerifyBackedJSON(ReportMaster reportMaster, ReportingBasePage reportingBasePage,
+			MongoUtil mongoUtil) {
 
 		for (ReportInfo reportInfo : reportMaster.getReportInfo()) {
 			createReportFromUi(reportInfo, reportingBasePage, reportMaster.getDisplayType());
@@ -64,6 +66,19 @@ public class ReportingUtil extends BaseTest {
 				reportingBasePage.addShowMeFieldMDA(dimension.getCol());
 			} else {
 				reportingBasePage.addByFieldMDA(dimension.getCol(), reportInfo.getSchemaName());
+				if (dimension.getSummarizedBy() != null) {
+					reportingBasePage.byFieldSettings(dimension.getFieldDisplayName(), "", dimension.getSummarizedBy());
+				}
+			}
+		}
+
+		for (Dimension dimension : dimensions) {
+			if (dimension.getAgg_func() != null) {
+				if (!dimension.getAgg_func().equalsIgnoreCase("Count")) {
+					reportingBasePage.showMeFieldSettings(dimension.getFieldDisplayName(), null,
+							dimension.getAgg_func(), dimension.getDecimalPlaces() + "", dimension.getDataType());
+				}
+
 			}
 		}
 
