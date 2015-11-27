@@ -36,6 +36,7 @@
                <include name="testCtaUpsertWithSnoozeOption" />
                <include name="testCloseCtaFromSpecificSource" />
                <include name="testCloseCtaFromAllSources" />
+               <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
             </methods>
          </class>
       </classes>
