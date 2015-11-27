@@ -47,9 +47,11 @@ public class SetupRuleActionPage extends BasePage {
     private final String SHOWFIELD_LTM = "//label[contains(text(),'Date')]/..//input[@value='show_field']";
     private final String CONSTANT_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/../button";
     private final String CONSTANT_SELECT_LTM_VALUE = "//label[contains(text(),'Date')]/..//select[contains(@class,'constant')]/..//input";
-    private final String SHOEFIELD_SELECT_LTM = "//label[contains(text(),'Date')]/..//select[contains(@class,'show')]/../button";
+    private final String SHOEFIELD_SELECT_LTM = "//select[@class='form-select']/following-sibling::button";
     private final String MILESTONE_LTM = "//label[contains(text(),'Milestone')]/..//button";
 
+    private final String LOADTOFEATURE_SHOWFIELD_LICENCED_DROPDOWN = "//div[contains(@class, 'feature-lic-showfield-block')]/descendant::select/following-sibling::button";
+    private final String LOADTOFEATURE_SHOWFIELD_ENABLED_DROPDOWN = "//div[contains(@class, 'feature-enabled-showfield-block')]/descendant::select/following-sibling::button";
     private final String PRODUCT_LTF = "//label[contains(text(),'Product')]/..//button";
     private final String FEATURE_LTF = "//label[contains(text(),'Feature')]/..//button";
     private final String LICENSED_SHOWFIELD_LTF = "//label[contains(text(),'Licensed')]/..//input[@value='show_field']";
@@ -210,7 +212,7 @@ public class SetupRuleActionPage extends BasePage {
             selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
         } else {
             item.click(xpath + LICENSED_SHOWFIELD_LTF);
-            item.click(xpath + LICENCED_DROPDOWN_LOADTOFATURE);
+            item.click(xpath + LOADTOFEATURE_SHOWFIELD_LICENCED_DROPDOWN);
             selectValueInDropDown(loadToFeatureAction.getLicensed().getUpdateType());
         }
 
@@ -220,11 +222,21 @@ public class SetupRuleActionPage extends BasePage {
             selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
         } else {
             item.click(xpath + ENABLED_SHOWFIELD_LTF);
-            item.click(xpath + ENABLED_DROPDOWN_LOADTOFATURE);
+            item.click(xpath + LOADTOFEATURE_SHOWFIELD_ENABLED_DROPDOWN);
             selectValueInDropDown(loadToFeatureAction.getEnabled().getUpdateType());
-        }
-        element.clearAndSetText(xpath + COMMENTS, loadToFeatureAction.getComments());
-    }
+		}
+		if (loadToFeatureAction.getComments() != null) {
+			List<String> tokenList = Arrays.asList(loadToFeatureAction.getComments().split(","));
+			for (String token : tokenList) {
+				if (token.startsWith("@")) {
+					element.setText(COMMENTS, token);
+					item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
+				} else {
+					element.clearAndSetText(xpath + COMMENTS, token);
+				}
+			}
+		}
+	}
 
     public void fillLoadToUsage(String object, String field, String mapField) {
         String fieldMapping = String.format(FIELD_MAPPING_LTU1, object);
@@ -301,8 +313,18 @@ public class SetupRuleActionPage extends BasePage {
         }
         item.click(xpath + MILESTONE_LTM);
         selectValueInDropDown(loadToMileStoneAction.getSelectMilestone());
-        element.setText(xpath + COMMENTS, loadToMileStoneAction.getComments());
-    }
+		if (loadToMileStoneAction.getComments() != null) {
+			List<String> tokenList = Arrays.asList(loadToMileStoneAction.getComments().split(","));
+			for (String token : tokenList) {
+				if (token.startsWith("@")) {
+					element.setText(COMMENTS, token);
+					item.click(String.format(xpath + COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
+				} else {
+					element.clearAndSetText(xpath + COMMENTS, token);
+				}
+			}
+		}
+	}
 
     public void loadToSfdcObject(LoadToSFDCAction loadToSFDCAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";

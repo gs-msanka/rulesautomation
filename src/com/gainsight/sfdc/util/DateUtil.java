@@ -1,5 +1,6 @@
 package com.gainsight.sfdc.util;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -550,4 +551,42 @@ public class DateUtil {
 		return date;
     }
 
+	/**
+	 * @param date - date as string
+	 * @param format - dateformat {eg: yyyy-MM-dd}
+	 * @param timeZone - timezone
+	 * @return - date in particular timezone
+	 * @throws ParseException
+	 */
+	public static String getFormattedDate(String date,String format, String timeZone) throws ParseException{	
+		DateFormat dateFormat = new SimpleDateFormat(format);
+		Date parsedDate = dateFormat.parse(date);
+		Log.info("Epoch time is " + parsedDate.getTime());
+		dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return dateFormat.format(new Date(parsedDate.getTime()));		
+	}
+	
+	/**
+	 * @param date - date as string 
+	 * @param format - dateformat {eg: yyyy-MM-dd}
+	 * @return - date as string in required format
+	 * @throws ParseException
+	 */
+	public static String addDays(String date, String format, int days) throws ParseException{
+		DateFormat dateFormat = new SimpleDateFormat(format);
+		Date parsedDate = dateFormat.parse(date);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(parsedDate);
+		calendar.add(Calendar.DATE, days);
+		Log.info("Actual Date is " + calendar.getTime());
+		Log.info(dateFormat.format(calendar.getTime()));
+		return dateFormat.format(calendar.getTime());
+	}
+	
+    public static String getDateWithFormat(int days, int months ,TimeZone timeZone, String format) {
+        String date = null;
+         date = DateUtil.addDays(DateUtil.addMonths(timeZone, months), days, format);
+        Log.info("Date :" +date);
+        return date;
+    }
 }

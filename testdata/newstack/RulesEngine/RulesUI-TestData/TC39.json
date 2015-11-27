@@ -1,0 +1,53 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-39-Load-To-Features-UI-GS-3709",
+  "ruleDescription": "Rule-39-Load-To-Features-UI-GS-3709-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_ExternalID",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3"
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3 Text 2"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A or B",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToFeature",
+      "action": {
+        "product": "One",
+        "feature": "Two",
+        "comments": "Plain comments for GS-3709",
+        "licensed": {
+          "type": "Constant",
+          "updateType": "Do not update existing value"
+        },
+        "enabled": {
+          "type": "Constant",
+          "updateType": "Do not update existing value"
+        }
+      },
+      "criterias": []
+    }
+  ]
+}

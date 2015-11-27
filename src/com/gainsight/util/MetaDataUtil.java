@@ -357,7 +357,7 @@ public class MetaDataUtil {
         String[] CusObj_ExtId = new String[]{"CusObj ExternalID"};
         metadataClient.createTextFields(resolveStrNameSpace(EmailCustomObj), CusObj_ExtId, true, true, true, false, false);
         addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), convertFieldNameToAPIName(CusObj_ExtId), sfdc.fetchSFDCinfo(), true);
-        String[] Allfields = {"Dis_Email__c", "Dis_Name__c", "Dis_Role__c", "C_Reference__c"};
+        String[] Allfields = {"Dis_Email__c", "Dis_Name__c", "Dis_Role__c"};
         addFieldPermissionsToUsers(resolveStrNameSpace(EmailCustomObj), Allfields, sfdc.fetchSFDCinfo(), true);
         String[] fields = new String[]{"Data ExternalId"};
         metadataClient.createTextFields("Account", fields, true, true, true, false, false);

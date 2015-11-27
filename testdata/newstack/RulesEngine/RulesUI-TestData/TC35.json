@@ -1,0 +1,65 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-35-Create Milestone-UI",
+  "ruleDescription": "Rule-35-Create Milestone-UI-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "DateTime Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Number Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Account Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToMileStone",
+      "action": {
+        "selectMilestone": "Training",
+        "comments": "",
+        "milestoneDate": {
+          "type": "Show Field",
+          "dateField": "Account::Date Auto",
+          "dateFieldValue": ""
+        }
+      },
+      "criterias": [
+        {
+          "showField": "Account::Number Auto",
+          "operator": "equals",
+          "field": "value",
+          "value": "input_30"
+        }
+      ]
+    }
+  ]
+}

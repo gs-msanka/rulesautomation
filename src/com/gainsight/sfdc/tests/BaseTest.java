@@ -35,6 +35,7 @@ public class BaseTest {
     public static SFDCInfo sfdcInfo;
     public static String USER_DATE_FORMAT;
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
+    public static final String RULES_DATE_FORMAT= "yyyy-MM-dd";
     public static TimeZone userTimezone;
     public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
@@ -197,7 +198,7 @@ public class BaseTest {
     public String getDateWithFormat(int days, int months, boolean bulkFormat) {
         String date = null;
          date = DateUtil.addDays(DateUtil.addMonths(userTimezone, months), days, bulkFormat ? BULK_DATE_FORMAT : USER_DATE_FORMAT);
-        System.out.println("Formatted Date :" +date);
+        Log.info("Formatted Date :" +date);
         return date;
     }
 

@@ -1,0 +1,65 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule-40-Load-To-Features-UI-GS-3710",
+  "ruleDescription": "Rule-40-Load-To-Features-UI-GS-3710-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_ExternalID",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3"
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "operator": "equals",
+            "value": "input_RULESUI Account 3 Text 2"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A or B",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToFeature",
+      "action": {
+        "product": "One",
+        "feature": "Two",
+        "comments": "@C_Custom Object::C_lookup Name,@C_Custom Object::rules_c_Number,@C_Custom Object::rules_c_Checkbox",
+        "licensed": {
+          "type": "Show Field",
+          "updateType": "C_Custom Object::rules_c_Checkbox"
+        },
+        "enabled": {
+          "type": "Show Field",
+          "updateType": "C_Custom Object::rules_c_Checkbox"
+        }
+      },
+      "criterias": []
+    }
+  ]
+}

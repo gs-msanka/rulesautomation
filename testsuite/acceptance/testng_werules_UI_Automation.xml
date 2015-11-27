@@ -53,6 +53,7 @@
                <include name="testCloseCtaFromAllSources" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
