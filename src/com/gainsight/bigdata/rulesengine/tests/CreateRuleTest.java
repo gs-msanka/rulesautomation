@@ -922,7 +922,7 @@ public class CreateRuleTest extends BaseTest {
 		String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
 		Assert.assertNotNull(collectionId);
 		CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-		JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob1.txt"), JobInfo.class);
+		JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob2.txt"), JobInfo.class);
 		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,calendar.getTime());
 		DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
 		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
