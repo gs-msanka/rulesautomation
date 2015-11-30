@@ -53,14 +53,9 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 
 	@BeforeClass
 	public void setUpData() throws Exception {
-		/*
-		 * Commented below browser instantiation and sfdc connections, since
-		 * same are invoked in before test, need to uncomment when we run only
-		 * this particular class
-		 */
-	//	 basepage.login();
-	//	 sfdc.connect();
-	//	 nsTestBase.init();
+		basepage.login();
+		sfdc.connect();
+		nsTestBase.init();
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
 		rulesConfigureAndDataSetup.createCustomObjectAndFields();
