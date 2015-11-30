@@ -86,7 +86,7 @@ public class SmartListTest extends LoadTestData {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         boolean isRedshiftEnabled= tenantManager.enabledRedShiftWithDBDetails(tenantDetails);
-        Log.info("Is RedShift Enabled????" + " " +isRedshiftEnabled);
+        Log.info("Is RedShift Enabled????" + " " + isRedshiftEnabled);
         dbDetail=mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
         List<DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
         for (DBServerDetail dbServerDetail : dbDetails) {
@@ -106,7 +106,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4610" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC1")
-	public void accountStrategySFData(HashMap<String, String> testData) throws Exception {
+	public void accountStrategy_BaseObjAccount(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -141,7 +141,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4611" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC6")
-	public void accStrategySFData_filterOnOtherObj(HashMap<String, String> testData) throws Exception {
+	public void accountStrategy_BaseObjAccount2(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -174,7 +174,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4612" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC7")
-	public void contactStrategySFData_FilterOnOtherObjs(HashMap<String, String> testData) throws Exception {
+	public void contactStrategy_BaseObjAccount(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -207,7 +207,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4613" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC8")
-	public void emailStrategySFData(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObjectAccount(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -240,7 +240,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4614" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC2")
-	public void userStrategySFData(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObjCustInfo(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -275,7 +275,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4615" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC9")
-	public void list1(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObjAccount_CustFields(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -308,7 +308,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4616" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC10")
-	public void createList10(HashMap<String, String> testData) throws Exception {
+	public void emailStrategy_BaseObjAccount(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -341,7 +341,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4617" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC3")
-	public void caseBaseOb_AccStrategy(HashMap<String, String> testData) throws Exception {
+	public void accountStrategy_BaseObjCase(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -375,7 +375,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4618" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC11")
-	public void caseBaseObj_ContStr_SFData(HashMap<String, String> testData) throws Exception {
+	public void contactStrategy_BaseObjCase(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		String requestPayload=null;
@@ -409,7 +409,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4619" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC35")
-	public void caseStrategyOnSFData(
+	public void emailStrategy_BaseObj_Case(
 			HashMap<String, String> testData) throws Exception {
 		
 		CopilotUtil CoUtil = new CopilotUtil();
@@ -444,7 +444,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4620" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC4")
-	public void caseStrategy_SFData(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObjCase(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -478,7 +478,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4621" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC21")
-	public void caseStrategy_SFData2(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObj_Case_CustomField(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -512,7 +512,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4622" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC22")
-	public void caseStrategy_SFData3(HashMap<String, String> testData) throws Exception {
+	public void emailStrategy_BaseObjCase2(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -546,7 +546,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4623" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC23")
-	public void custInfoStrategy_SFData1(HashMap<String, String> testData) throws Exception {
+	public void accountStrategy_BaseObjCustInfo(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -580,7 +580,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4624" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC24")
-	public void custInfoStrategy_SFData2(HashMap<String, String> testData) throws Exception {
+	public void contactStrategy_BaseObjCustInfo(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -614,7 +614,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4625" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC25")
-	public void custInfoStrategy_SFData3(HashMap<String, String> testData) throws Exception {
+	public void emailStrategy_BaseObjCustInfo(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -648,7 +648,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4626" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC26")
-	public void custInfoStrategy_SFData4(HashMap<String, String> testData) throws Exception {
+	public void userStrategy_BaseObjCustInfo_CustomField(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -682,7 +682,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4627" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC27")
-	public void custInfoStrategy_SFData5(HashMap<String, String> testData) throws Exception {
+	public void emailStrategy_BaseObjAccount2(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -713,43 +713,11 @@ public class SmartListTest extends LoadTestData {
 				testData.get("numberOfCustomers")); // Customer Count
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4628" })
-	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
-	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC28")
-	public void custInfoStrategy_SFData6(HashMap<String, String> testData) throws Exception {
 
-		CopilotUtil CoUtil = new CopilotUtil();
-		JsonNode nodeContent = CoUtil.createSmartList(testData);
-		JsonNode nodeData = nodeContent.get("data");
-
-		// Verifying Response
-		smartListID = nodeData.get("smartListId").asText();
-
-		if (smartListID != null
-				&& nodeContent.get("result").toString()
-						.equalsIgnoreCase("true"))
-			Log.info("SmartList is created. ID is " + smartListID);
-
-		RulesUtil.waitForCompletion(smartListID, wa, header);
-		// Verify the Stats : Contact Count and Customer Count
-		JsonNode jsonNodeStats = CoUtil.getListStats(nodeData
-				.get("smartListId").asText());
-		Log.info("ContactCount is " + jsonNodeStats.get("contactCount").asInt());
-		Log.info("CustomerCount is "
-				+ jsonNodeStats.get("customerCount").asInt());
-
-		// Targetting 2 Accounts using OR Condition-> Case created by filters 1
-		// user-2 Accounts.
-		// Expected : Contact Count : 1 , Customer Count : 2
-		Assert.assertEquals(jsonNodeStats.get("contactCount").asText(),
-				testData.get("numberOfContacts")); // Contact Count
-		Assert.assertEquals(jsonNodeStats.get("customerCount").asText(),
-				testData.get("numberOfCustomers")); // Customer Count
-	}
 	@TestInfo(testCaseIds = { "GS-4629" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC29")
-	public void accBaseObj_EmailStr(HashMap<String, String> testData) throws Exception {
+	public void emailStrategy_BaseObjAccount_CustField(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -782,7 +750,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4630" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC5")
-	public void contactStrategy(HashMap<String, String> testData) throws Exception {
+	public void noStrategy_BaseObj_Contact(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
@@ -816,7 +784,7 @@ public class SmartListTest extends LoadTestData {
 	@TestInfo(testCaseIds = { "GS-4631" })
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
 	@DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "TC30")
-	public void usingCustomFields(HashMap<String, String> testData) throws Exception {
+	public void NoStrategy_usingCustomFields(HashMap<String, String> testData) throws Exception {
 
 		CopilotUtil CoUtil = new CopilotUtil();
 		JsonNode nodeContent = CoUtil.createSmartList(testData);
