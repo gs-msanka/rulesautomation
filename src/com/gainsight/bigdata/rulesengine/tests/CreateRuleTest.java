@@ -221,18 +221,6 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
-    @Test(enabled=false)
-    public void testLoadToCustomersWithNativeData() throws Exception {
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(ACCOUNTS_JOB_FOR_LOAD_TO_CUSTOMERS_ACTION)), JobInfo.class);
-        dataETL.execute(jobInfo);
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC4.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-    }
-
     @Test
     public void loadToMdaActionUsingNativeData() throws Exception {
         rulesConfigureAndDataSetup.createEmptySubjectArea();

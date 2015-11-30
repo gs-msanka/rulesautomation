@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
+import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping.PickListMappings;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -292,6 +293,13 @@ public class SetupRuleActionPage extends BasePage {
             item.click(xpath + fieldMapping);
             String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
             item.click(xpath + fieldMapping + fieldMappingDestination);
+            if (fieldMappingObject.isPickList()) {
+                for (PickListMappings pickListMappings : fieldMappingObject.getPickListMappings()) {
+                    item.click(xpath + fieldMapping+"//parent::div/following-sibling::div/descendant::li[@data-value='"+pickListMappings.getSource()+"']/descendant::select");
+                    String pickListDestination = "//parent::div/following-sibling::div/descendant::li[@data-value='"+pickListMappings.getSource()+"']/descendant::option[text()='"+pickListMappings.getDestination()+"']";
+                    item.click(xpath + fieldMapping + pickListDestination);
+                }
+            }
         }
     }
 
