@@ -1,0 +1,91 @@
+{
+  "jobName": "Pull CustomerInfo Records",
+  "jobType": "Pull CustomerInfo Records",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__CustomerInfo__c",
+    "fields": [
+      "JBCXM__ASV__c",
+      "JBCXM__CustomerName__c",
+      "JBCXM__OriginalContractDate__c",
+      "JBCXM__RevenueBand__c",
+      "JBCXM__ScorecardComment__c",
+      "JBCXM__Stage__c",
+      "JBCXM__Status__c",
+      "JBCXM__Users__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData.csv"
+  },
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData2.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData4.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "dateFormat": "yyyy-MM-dd",
+        "fieldName": "JBCXM__OriginalContractDate__c"
+      }
+    ]
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData.csv",
+        "table": "account",
+        "joinColumnName": "JBCXM__CustomerName__c",
+        "columns": [
+          {
+            "name": "JBCXM__ASV__c",
+            "alias": "JBCXM__ASV__c"
+          },
+          {
+            "name": "JBCXM__CustomerName__c",
+            "alias": "JBCXM__CustomerName__c"
+          },
+          {
+            "name": "JBCXM__RevenueBand__c",
+            "alias": "JBCXM__RevenueBand__c"
+          },
+          {
+            "name": "JBCXM__ScorecardComment__c",
+            "alias": "JBCXM__ScorecardComment__c"
+          },
+          {
+            "name": "JBCXM__Stage__c",
+            "alias": "JBCXM__Stage__c"
+          },
+          {
+            "name": "JBCXM__Status__c",
+            "alias": "JBCXM__Status__c"
+          },
+          {
+            "name": "JBCXM__Users__c",
+            "alias": "JBCXM__Users__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData4.csv",
+        "table": "accounts",
+        "joinColumnName": "JBCXM__CustomerName__c",
+        "columns": [
+          {
+            "name": "JBCXM__OriginalContractDate__c",
+            "alias": "JBCXM__OriginalContractDate__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData5.csv"
+  }
+}

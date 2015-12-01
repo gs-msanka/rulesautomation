@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "Rule 41 - Load To Customers Using Native Data",
-  "ruleDescription": "Rule 41 - Load To Customers Using Native Data",
+  "ruleName": "Rule 43 - Load To Customers Using Native Data",
+  "ruleDescription": "Rule 43 - Load To Customers Using Native Data",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Account",
@@ -19,6 +19,26 @@
           },
           {
             "fieldName": "C_Picklist",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Currency Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Date Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Number Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_TextArea",
             "showAdvancedName": ""
           }
         ],
@@ -98,6 +118,31 @@
               }
             ],
             "isCustom": "false"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Currency Auto",
+            "destination": "ASV"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Date Auto",
+            "destination": "Orig. Contr. Date"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_Text",
+            "destination": "Revenue Band"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_TextArea",
+            "destination": "Scorecard Comment"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Number Auto",
+            "destination": "Users"
           }
         ]
       },
