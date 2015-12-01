@@ -54,6 +54,7 @@
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
