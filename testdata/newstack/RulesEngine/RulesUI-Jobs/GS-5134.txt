@@ -14,8 +14,6 @@
       "JBCXM__OriginalContractDate__c",
       "JBCXM__RevenueBand__c",
       "JBCXM__ScorecardComment__c",
-      "JBCXM__Stage__c",
-      "JBCXM__Status__c",
       "JBCXM__Users__c"
     ],
     "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData.csv"
@@ -57,14 +55,6 @@
           {
             "name": "JBCXM__ScorecardComment__c",
             "alias": "JBCXM__ScorecardComment__c"
-          },
-          {
-            "name": "JBCXM__Stage__c",
-            "alias": "JBCXM__Stage__c"
-          },
-          {
-            "name": "JBCXM__Status__c",
-            "alias": "JBCXM__Status__c"
           },
           {
             "name": "JBCXM__Users__c",

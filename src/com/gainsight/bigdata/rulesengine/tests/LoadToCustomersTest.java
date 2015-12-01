@@ -117,11 +117,20 @@ public class LoadToCustomersTest extends BaseTest {
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
+		
+		JobInfo jobInfo2 = mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5134-2.txt"),JobInfo.class);	
+		dataETL.execute(jobInfo2);
+		List<Map<String, String>> expectedData2 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ExpectedData-2.csv"), NAMESPACE)));
+		List<Map<String, String>> actualData2 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData3.csv"), NAMESPACE)));
+		List<Map<String, String>> differenceData2 = Comparator.compareListData(expectedData2, actualData2);
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData2));
+		Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}
 	
 	@TestInfo(testCaseIds = {"GS-5152"})
     @Test()
     public void testLoadToCustomers4() throws Exception {
+		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from Account where name like '%rule%'];"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
 		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from C_Custom__c];"));
 		JobInfo loadData = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5152.txt")), JobInfo.class);

@@ -9,10 +9,10 @@
     "connection": "conf/application.conf",
     "table": "JBCXM__CustomerInfo__c",
     "fields": [
-      "JBCXM__CustomerName__c",
       "JBCXM__Stage__r.Name",
-      "JBCXM__ScorecardComment__c"
+      "JBCXM__CustomerName__c",
+      "JBCXM__Status__r.Name"
     ],
-    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5152-ActualData.csv"
+    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-5134-ActualData3.csv"
   }
 }

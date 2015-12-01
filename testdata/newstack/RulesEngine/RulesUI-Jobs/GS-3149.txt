@@ -10,8 +10,8 @@
     "table": "JBCXM__CustomerInfo__c",
     "fields": [
       "JBCXM__CustomerName__c",
-      "JBCXM__Stage__c",
-      "JBCXM__Status__c"
+      "JBCXM__Stage__r.Name",
+      "JBCXM__Status__r.Name"
     ],
     "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/GS-3149-ActualData.csv"
   }
