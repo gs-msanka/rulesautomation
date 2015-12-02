@@ -26,8 +26,9 @@ import com.gainsight.sfdc.adoption.pages.AdoptionBasePage;
 import com.gainsight.sfdc.churn.pages.ChurnPage;
 import com.gainsight.sfdc.customer.pages.CustomerBasePage;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
-import com.gainsight.sfdc.transactions.pages.Transactions;
+import com.gainsight.sfdc.reporting.pages.ReportingBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
+import com.gainsight.sfdc.transactions.pages.Transactions;
 import com.gainsight.sfdc.transactions.pages.TransactionsBasePage;
 import com.gainsight.sfdc.workflow.pages.WorkflowBasePage;
 
@@ -62,7 +63,10 @@ public class BasePage extends WebPage implements Constants {
     protected final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
-    public Transactions transactionUtil     = new Transactions();
+	private final String REPORTS_TAB = "//a[@href='ReportBuilder']/span[contains(text(),'Reports 2.0')]";
+	private final String REPORTS_TAB_POPUP = "//a[@href='ReportBuilder']/span[contains(text(),'Reports 2.0')]";
+
+	public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
     SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
 
@@ -122,7 +126,7 @@ public class BasePage extends WebPage implements Constants {
         }
         return this;
     }
-	
+
 
 	public OpportunityPage gotoOpportunityPageWithId(String Id){
 		driver.get(env.getDefaultUrl() + "/" + Id);
@@ -132,6 +136,12 @@ public class BasePage extends WebPage implements Constants {
 	public CustomerBasePage clickOnCustomersTab() {
         clickOnTab(CUSTOMER_TAB);
 		return new CustomerBasePage();
+	}
+
+	public ReportingBasePage clickOnReportsTab() {
+		clickOnTab(REPORTS_TAB);
+		wait.waitTillElementNotDisplayed(REPORTS_TAB_POPUP, 1, 4);
+		return new ReportingBasePage();
 	}
 
 	public TransactionsBasePage clickOnTransactionTab() {
@@ -204,7 +214,7 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
         env.setTimeout(30);
     }
-	
+
 	public void waitForNoLoadingIconDisplayed() {
 		env.setTimeout(1);
 		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
@@ -224,7 +234,7 @@ public class BasePage extends WebPage implements Constants {
     }
 	public void goBack() {
 		driver.navigate().back();
-		
+
 	}
 	public void enterDate(String identifier, String date) {
 		//field.click(identifier);
@@ -305,16 +315,16 @@ public class BasePage extends WebPage implements Constants {
         wait.waitTillElementDisplayed("thePage:form:thePageBlock:pageBlockButtons:edit", MIN_TIME, MAX_TIME);
         return this;
     }
-    
+
 	public static void open(String url) {
 		Application.getDriver().get(url);
 		Log.info("Opening" + " " + url);
 	}
-	
+
 	public static void navigateBack() {
-		Application.getDriver().navigate().back();	
+		Application.getDriver().navigate().back();
 	}
-	
+
 	public static String getCurrentUrl(){
 		return Application.getDriver().getCurrentUrl();
 	}

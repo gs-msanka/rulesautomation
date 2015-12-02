@@ -1,0 +1,112 @@
+{
+  "query": {
+    "select": {
+      "items": [
+        {
+          "label": "Account Name",
+          "uniqueName": "Account__r.Name",
+          "parentObj": "CTA__c"
+        },
+        {
+          "label": "Age",
+          "uniqueName": "Age__c",
+          "parentObj": "CTA__c"
+        }
+      ],
+      "objectName":"Calls To Action"
+    },
+    "where": {
+      "items": [
+        {
+          "lhs": {
+            "value": "10",
+            "objectName": "CTA__c",
+            "locked": false,
+            "label": "Age"
+          },
+          "operator": "g",
+          "logicalOperator": "equals",
+          "rhs": {
+            "value": "10",
+            "valueType": "value",
+            "isNull": false
+          },
+          "alias": "A",
+          "locked": false
+        }
+      ],
+      "expression": "A  "
+    },
+    "having": {
+      "items": [
+        {
+          "lhs": {
+            "value": "10",
+            "objectName": "CTA__c",
+            "locked": false,
+            "label": "Count of Account Name"
+          },
+          "operator": "g",
+          "logicalOperator": "equals",
+          "rhs": {
+            "value": "10",
+            "valueType": "value",
+            "isNull": false
+          },
+          "alias": "A",
+          "locked": "LOCKED"
+        }
+      ],
+        "expression": "A  "
+    },
+    "groupBy": {
+      "items": [
+        {
+          "label": "Reason Name",
+          "parentObj": "CTA__c"
+        }
+      ]
+    },
+    "orderBy": {
+      "items": [
+        {
+          "label": "Age"
+        }
+      ]
+    },
+    "ranking": {
+      "items": [
+        {
+          "fieldName": "Count of Account Name",
+          "operator": "Top",
+          "value": "5"
+        },
+        {
+          "fieldName": "Sum of Age",
+          "operator": "Top",
+          "value": "5"
+        },
+        {
+          "fieldName": "Reason Name",
+          "operator": "Bottom",
+          "value": "5"
+        }
+      ]
+    },
+    "limit": 5,
+    "offset": 0
+  },
+  "reportReadLimit": 2000,
+  "source": {
+    "meta": {
+      "label": "Call To Action",
+      "accountReferenceFieldName": "Account__c",
+      "name": "CTA__c",
+      "object": "CTA__c"
+    },
+    "type": "FORCE"
+  },
+  "title": "Test UI JSON",
+  "id": "a0zo0000001iAOvAAM",
+  "renderType": "LIST"
+}
