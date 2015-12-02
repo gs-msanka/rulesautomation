@@ -28,6 +28,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
+import com.gainsight.utils.annotations.TestInfo;
 
 public class ReportBuilderUITest extends BaseTest {
 
@@ -51,6 +52,7 @@ public class ReportBuilderUITest extends BaseTest {
 	private String userName = null;
 	private String passWord = null;
 	private String reportingBuilderPageUrl;
+	private static final String COLLECTION_MASTER = "collectionmaster";
 
 	@BeforeClass
 	public void setup() throws Exception {
@@ -74,14 +76,21 @@ public class ReportBuilderUITest extends BaseTest {
 		}
 
 		tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-		if (!tenantDetails.isRedshiftEnabled()) {
-			Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-		}
+		/*
+		 * if (!tenantDetails.isRedshiftEnabled()) {
+		 * Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(
+		 * tenantDetails)); }
+		 */
+		Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+		mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 
 		// Till now it is one time job. We are not loading the whole MDA data
 		// for every test case.
 		// But i have written the code so that in future if we need we can un
 		// comment the code.
+		// mongoDBDAO.deleteParticularCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(),
+		// COLLECTION_MASTER, "MDARedShiftData");
 		/*reportManager = new ReportManager();
 		dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
 
@@ -95,6 +104,7 @@ public class ReportBuilderUITest extends BaseTest {
 					CollectionInfo.class);
 			collectionInfo.getCollectionDetails().setCollectionName(
 					collectionInfo.getCollectionDetails().getCollectionName() + "_" + date.getTime());
+			// collectionInfo.getCollectionDetails().getCollectionName());
 			collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
 			Assert.assertNotNull(collectionId);
 
@@ -105,11 +115,9 @@ public class ReportBuilderUITest extends BaseTest {
 			dataLoadManager.waitForDataLoadJobComplete(statusId);
 		}*/
 
-		mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-
 	}
 
+	@TestInfo(testCaseIds = { "GS-9040" })
 	@Test
 	public void reportingUIWithBackedJson() throws Exception {
 
@@ -125,6 +133,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9030"})
 	@Test
 	public void barReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -139,6 +148,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9031"})
 	@Test
 	public void pieReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -153,6 +163,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9032"})
 	@Test
 	public void columnReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -166,6 +177,7 @@ public class ReportBuilderUITest extends BaseTest {
 		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 	}
 
+	@TestInfo(testCaseIds={"GS-9033"})
 	@Test
 	public void bubbleReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -180,6 +192,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9034"})
 	@Test
 	public void scatterReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -193,6 +206,7 @@ public class ReportBuilderUITest extends BaseTest {
 		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 	}
 
+	@TestInfo(testCaseIds={"GS-9035"})
 	@Test
 	public void lineReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -206,6 +220,7 @@ public class ReportBuilderUITest extends BaseTest {
 		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 	}
 
+	@TestInfo(testCaseIds={"GS-9036"})
 	@Test
 	public void areaReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -220,6 +235,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9037"})
 	@Test
 	public void stackedBarReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -234,6 +250,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9038"})
 	@Test
 	public void stackedColumnReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -247,6 +264,7 @@ public class ReportBuilderUITest extends BaseTest {
 		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 	}
 
+	@TestInfo(testCaseIds={"GS-9039"})
 	@Test
 	public void columnLineReportWith1M2D() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -261,6 +279,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9041"})
 	@Test
 	public void reportUsingRedShiftCW() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -275,6 +294,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9042"})
 	@Test
 	public void reportUsingRedShiftCM() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -290,6 +310,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9043"})
 	@Test
 	public void reportUsingRedShiftCQ() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -305,6 +326,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9044"})
 	@Test
 	public void reportUsingRedShiftCY() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -320,6 +342,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9045"})
 	@Test
 	public void dateTimeSummarizedByCW() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -334,6 +357,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9046"})
 	@Test
 	public void dateTimeSummarizedByCM() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -348,6 +372,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9047"})
 	@Test
 	public void dateTimeSummarizedByCQ() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -362,6 +387,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9048"})
 	@Test
 	public void dateTimeSummarizedByCY() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -376,6 +402,7 @@ public class ReportBuilderUITest extends BaseTest {
 
 	}
 
+	@TestInfo(testCaseIds={"GS-9058"})
 	@Test
 	public void stringAggregation() throws Exception {
 		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
@@ -390,21 +417,6 @@ public class ReportBuilderUITest extends BaseTest {
 		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
 	}
-
-	/*@Test
-	public void numberAggregation() throws Exception {
-		mongoDBDAO.deleteCollectionSchemaFromCollectionMaster(
-				tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster");
-
-		ReportMaster reportMaster = mapper.readValue(
-				new File(Application.basedir
-						+ "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationNumber.json"),
-				ReportMaster.class);
-		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
-
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-
-	}*/
 
 	@AfterClass
 	public void quit() {
