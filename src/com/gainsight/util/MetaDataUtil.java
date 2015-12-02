@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -22,7 +25,7 @@ import com.gainsight.bigdata.pojo.ObjectFields;
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
 	 public static final Application env = new Application();
-	public SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+	public SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
 
 	   
 	   public void createFieldsOnAccount(SalesforceConnector sfdc) throws Exception {

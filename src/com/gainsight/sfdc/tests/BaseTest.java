@@ -10,10 +10,12 @@ import java.util.*;
 
 import com.gainsight.sfdc.util.PackageUtil;
 
-import com.gainsight.util.NsConfig;
-import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.config.NSConfigProvider;
+import com.gainsight.util.config.NsConfig;
+import com.gainsight.util.config.SfdcConfig;
 
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -37,12 +39,12 @@ public class BaseTest {
     public static final String BULK_DATE_FORMAT = "yyyy-mm-dd";
     public static final String RULES_DATE_FORMAT= "yyyy-MM-dd";
     public static TimeZone userTimezone;
-    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
     public static final Boolean isPackage = sfdcConfig.getSfdcManagedPackage();
     public static final String NAMESPACE = sfdcConfig.getSfdcNameSpace();
     public static SalesforceMetadataClient metadataClient;
     public static PackageUtil packageUtil;
-    public static NsConfig nsConfig = ConfigLoader.getNsConfig();
+    public static NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
     public static MetaDataUtil metaUtil = new MetaDataUtil();
     public static String LOAD_SETUP_DATA_SCRIPT = "JBCXM.CEHandler.loadSetupData();";
     public static final String CTA_DUEDATE_FORMAT = "yyyy-MM-dd";
@@ -73,7 +75,7 @@ public class BaseTest {
 
 		Log.info("visualForcePage is " +visualForcePageUrl);
         if(sfdcConfig.getSfdcUnInstallApp()) {
-            sfdc.runApexCodeFromFile(new File(Application.basedir+"/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
+            sfdc.runApexCodeFromFile(new File(Application.basedir + "/resources/sfdcmetadata/permissionSetScripts/DeletePermissionAssignment.txt"));
             packageUtil.unInstallApplication(sfdcConfig.getSfdcManagedPackage(), sfdcConfig.getSfdcNameSpace());
         }
         //Install Application.

@@ -5,8 +5,9 @@ import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
-import com.gainsight.util.ConfigLoader;
-import com.gainsight.util.SfdcConfig;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class SfdcRestApi {
 
-    public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+    public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
     static SalesforceConnector sfdc;
     static SFDCInfo sfdcInfo;
     static String uri;
