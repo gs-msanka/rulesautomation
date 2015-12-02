@@ -47,7 +47,9 @@ class BaseXPathConstants {
 		XPATHCONSTANTS.put("CLICK_SEARCHREPORTNAME_REPOSITORY",
 				"//li[@class='layout_list ui-report-compo' and @title='%s']");
 		XPATHCONSTANTS.put("SAVEBUTTON_XPATH", "//div[@title='Save']");
+		XPATHCONSTANTS.put("SAVEBUTTON_POPUP_XPATH", "//span[contains(text(),'Saving report')]");
 		XPATHCONSTANTS.put("SAVEAS_BTN_XPATH", "//div[@title='Save as']");
+		XPATHCONSTANTS.put("SAVE_SUCCESS_POPUP_XPATH", "//div[contains(text(),'Success')]");
 
 		XPATHCONSTANTS.put("NEW", "//div[@title='New']");
 		XPATHCONSTANTS.put("RESET", "//div[@title='Reset']");

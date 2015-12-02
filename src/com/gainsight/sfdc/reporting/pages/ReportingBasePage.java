@@ -142,10 +142,10 @@ public class ReportingBasePage extends BasePage {
 		}
 		item.click(XPathConstants.getXPath("SUMMARIZEDBY"));
 		item.click((String.format(XPathConstants.getXPath("SUMMARIZEDBY_OPTION"), summarizedBy)));
-		if(element.getElement(XPathConstants.getXPath("SUMMARIZEDBY_CLOSE")).isDisplayed()){
+		if (element.getElement(XPathConstants.getXPath("SUMMARIZEDBY_CLOSE")).isDisplayed()) {
 			item.click(XPathConstants.getXPath("SUMMARIZEDBY_CLOSE"));
 		}
-		
+
 	}
 
 	/**
@@ -154,15 +154,13 @@ public class ReportingBasePage extends BasePage {
 	 */
 	public void saveReport(String reportName) {
 		Log.info("Saving the Report : " + reportName);
-		if (reportName != "") {
-
-			JavascriptExecutor js = (JavascriptExecutor) driver;
-			String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
-			js.executeScript(a);
-
-		}
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
+		js.executeScript(a);
 		item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
-
+		if (!element.getElement(XPathConstants.getXPath("SAVE_SUCCESS_POPUP_XPATH")).isDisplayed()) {
+			item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
+		}
 	}
 
 	/**
