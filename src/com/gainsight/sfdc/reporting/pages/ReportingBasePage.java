@@ -21,8 +21,7 @@ public class ReportingBasePage extends BasePage {
 	private String type = "FORCE";
 
 	public ReportingBasePage() {
-		// wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"),
-		// MIN_TIME, MAX_TIME);
+		wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"), MIN_TIME, MAX_TIME);
 	}
 
 	public void setType(String type) {
