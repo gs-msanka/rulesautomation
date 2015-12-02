@@ -172,7 +172,6 @@
             </class>
         </classes>
     </test>
-<<<<<<< Updated upstream
     <test verbose="3" name="Cockpit Test Cases" preserve-order="true">
         <classes>
             <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest">
@@ -231,11 +230,8 @@
                 <include name="createAndReplacePlaybook_RiskCTA" />
                 <include name="createAndDeleteCTA" />
                 <include name="createAndUpdateCTATasks" />
-                <include name="deSyncTaskFromSFButKeepTask_Manual" />
+                <include name="deSyncTaskFromSFButKeepTask_Manual"  />
             </methods>
         </classes>
     </test>
-=======
-
->>>>>>> Stashed changes
 </suite>
