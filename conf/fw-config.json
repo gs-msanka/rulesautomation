@@ -1,0 +1,10 @@
+{
+  "fw_browser" : "firefox",
+  "fw_timeout" : "30",
+  "fw_defaultUrl" : "https://login.salesforce.com",
+  "profiles" : {
+    "default" : {
+
+    }
+  }
+}

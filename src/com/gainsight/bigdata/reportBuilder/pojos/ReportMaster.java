@@ -3,6 +3,7 @@ package com.gainsight.bigdata.reportBuilder.pojos;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * Created by Giribabu on 21/05/15.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ReportMaster {
 
     private boolean newReport;

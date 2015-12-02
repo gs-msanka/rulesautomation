@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Created by Giribabu on 21/05/15.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportInfo {
 
@@ -31,7 +32,7 @@ public class ReportInfo {
     private String reportId;
     private String reportName;
     private String assetType;
-    private boolean nonAggregatedResult = true;
+   // private boolean nonAggregatedResult;
     @JsonProperty("whereAdvanceFilter")
     private ReportAdvanceFilter whereAdvanceFilter;
 
@@ -55,12 +56,12 @@ public class ReportInfo {
         this.whereAdvanceFilter = whereAdvanceFilter;
     }
 
-    @JsonIgnore
+   // @JsonIgnore
     public String getAssetType() {
         return assetType;
     }
 
-    @JsonProperty("assetType")
+   // @JsonProperty("assetType")
     public void setAssetType(String assetType) {
         this.assetType = assetType;
     }
@@ -147,13 +148,13 @@ public class ReportInfo {
         this.reportName = reportName;
     }
 
-    public boolean isNonAggregatedResult() {
+   /* public boolean isNonAggregatedResult() {
         return nonAggregatedResult;
     }
 
     public void setNonAggregatedResult(boolean nonAggregatedResult) {
         this.nonAggregatedResult = nonAggregatedResult;
-    }
+    }*/
 
 
     public int getSkip() {
@@ -164,6 +165,7 @@ public class ReportInfo {
         this.skip = skip;
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Dimension {
         private String col;
@@ -174,6 +176,9 @@ public class ReportInfo {
         private String agg_func;
         private String fieldDisplayName;
         private String collectionId;
+        private String summarizedBy;
+        private String order;
+
 
         public int getDecimalPlaces() {
             return decimalPlaces;
@@ -238,6 +243,23 @@ public class ReportInfo {
         public void setFieldDisplayName(String fieldDisplayName) {
             this.fieldDisplayName = fieldDisplayName;
         }
+
+        public String getSummarizedBy() {
+            return summarizedBy;
+        }
+
+        public void setSummarizedBy(String summarizedBy) {
+            this.summarizedBy = summarizedBy;
+        }
+
+        public String getOrder() {
+            return order;
+        }
+
+        public void setOrder(String order) {
+            this.order = order;
+        }
+
     }
 
 

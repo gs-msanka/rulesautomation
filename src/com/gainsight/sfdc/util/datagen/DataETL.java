@@ -18,8 +18,10 @@ import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.bulk.SfdcRestApi;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.SfdcConfig;
-import com.gainsight.util.ConfigLoader;
+import com.gainsight.util.config.SfdcConfig;
+
+import com.gainsight.util.config.SfdcConfigProvider;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -51,7 +53,7 @@ public class DataETL implements IJobExecutor {
 	static ObjectMapper mapper = new ObjectMapper();
 	static H2Db db;
 
-	public static SfdcConfig sfdcConfig = ConfigLoader.getSfdcConfig();
+	public static SfdcConfig sfdcConfig = ConfigProviderFactory.getConfig(SfdcConfig.class);
 
 
 	/**

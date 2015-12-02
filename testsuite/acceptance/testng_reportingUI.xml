@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<suite name="Connectors Project" preserve-order="true">
+
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener" />
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
+    </listeners>
+
+
+
+    <test name="Reporting UI Automation" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.reporting.tests.ReportBuilderUITest" />
+        </classes>
+    </test>
+
+   
+
+</suite>

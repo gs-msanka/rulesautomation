@@ -147,6 +147,7 @@
             </class>
         </classes>
     </test>
+
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Mongo" />
         <classes>
@@ -158,6 +159,7 @@
             </class>
         </classes>
     </test>
+
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
         <parameter name="dbStoreType" value="Redshift" />
         <classes>
@@ -175,50 +177,30 @@
             <class name="com.gainsight.sfdc.workflow.tests.WorkFlowTest">
                 <methods>
                     <include name="createRiskCTAWithTasks_AssignedToDifferentUsers" />
-                    <include name="createRiskCTAWithPlaybook_DifferentAssignees" />
-                    <include name="createAndReplacePlaybook_RiskCTA" />
-                    <include name="createMilestoneForRiskCTA" />
                     <include name="createMilestoneForRiskCTA_Resolved" />
                     <include name="snoozeRiskCTA" />
-                    <include name="markCTAAsImp" />
                     <include name="create_CloseAndRe_OpenCTANoOpenTasks" />
                     <include name="createClose_AndRe_OpenRiskCTA_WithTasks" />
-                    <include name="createAndUpdateCTA" />
-                    <include name="createAndDeleteCTA" />
-                    <include name="createAndUpdateCTATasks" />
                     <include name="createAndEditCTATasks" />
                     <include name="syncTaskToSF_Manual" />
-                    <include name="deSyncTaskFromSFButKeepTask_Manual" />
-                    <include name="syncTaskToSF_AutoSync" />
                     <include name="deSyncTaskFromSFButKeepTask_AutoSync" />
-                    <include name="deSyncTaskFromSFAndDeleteTask_AutoSync"/>
-                    <include name="createRiskCTA_Overdue" />
                     <include name="verifyHeaderTypeFilter" />
                     <include name="verifyHeaderPriorityFilter" />
                     <include name="changeAssigneeViewAndVerify" />
                     <include name="verifyHeaderShowFilter" />
                     <include name="verifyCalenderView" />
                     <include name="createRiskCTA_WithScore" />
-                    <include name="deSyncTaskFromSFButKeepTask_AutoSync" />
-                    <include name="deSyncTaskFromSFAndDeleteTask_AutoSync"/>
                 </methods>
             </class>
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowReportingTests">
-            <methods>
-                <include name="reportForLast7Days" />
-                <include name="reportForLast30Days" />
-                <include name="reportForCurrentQuarter" />
-                <include name="reportForCustomDateRange"/>
-                <include name="reportForCustomDateRange_NoData" />
-            </methods>
+                <methods>
+                    <include name="reportForCurrentQuarter" />
+                    <include name="reportForCustomDateRange"/>
+                </methods>
             </class>
             <class name="com.gainsight.sfdc.workflow.tests.WorkflowPlaybooksTest">
                 <methods>
                     <include name="crud_RiskPlaybook_WithTasks" />
-                    <include name="duplicate_RiskPlaybook" />
-                    <include name="errorMessageForMandatoryFields" />
-                    <include name="duplicatePlaybookWithoutTasks"/>
-                    <include name="noPlaybooksMessage" />
                 </methods>
             </class>
             <class name="com.gainsight.sfdc.customer360.test.Workflow360Tests">
@@ -226,45 +208,29 @@
                     <include name="createAndReplacePlaybook_RiskCTA_in360" />
                     <include name="createMilestoneForRiskCTA_in360" />
                     <include name="createMilestoneForRiskCTA_Resolved_in360" />
-                    <include name="snoozeRiskCTA_in360"/>
                     <include name="markCTAAsImp" />
-                    <include name="create_CloseAndRe_OpenCTANoOpenTasks" />
                     <include name="createAndCloseCTA_ClosedRiskStatus" />
                     <include name="createAndCloseCTAWithTasks" />
                     <include name="createAndUpdateCTA"/>
-                    <include name="createAndDeleteCTA" />
                     <include name="createCTAWithTasks_AndDeleteTasks" />
-                    <include name="syncTaskToSF_Manual" />
-                    <include name="deSyncTaskFromSFButKeepTask_Manual" />
                     <include name="syncTaskToSF_AutoSync"/>
-                    <include name="deSyncTaskFromSFAndDeleteTask_AutoSync" />
                     <include name="createRiskCTA_Overdue" />
                 </methods>
             </class>
             <class name="com.gainsight.sfdc.sfWidgets.accWidget.tests.AccWidget_CockpitTests">
-            <methods>
-                <include name="createRiskCTAWithPlaybook_DifferentAssignees" />
-                <include name="createAndReplacePlaybook_RiskCTA" />
-                <include name="createMilestoneForRiskCTA" />
-                <include name="createMilestoneForOpportunityCTA_Won" />
-                <include name="snoozeRiskCTA"/>
-                <include name="createAndDeleteCTA" />
-                <include name="createAndUpdateCTATasks" />
-                <include name=" deSyncTaskFromSFButKeepTask_Manual" />
-                <include name="deSyncTaskFromSFAndDeleteTask_AutoSync" />
-            </methods>
+                <methods>
+                    <include name="createRiskCTAWithPlaybook_DifferentAssignees" />
+                    <include name="createMilestoneForRiskCTA" />
+                    <include name="createMilestoneForOpportunityCTA_Won" />
+                    <include name="deSyncTaskFromSFAndDeleteTask_AutoSync" />
+                </methods>
             </class>
             <class name="com.gainsight.sfdc.sfWidgets.oppWidget.tests.OppWidget_CockpitTests"/>
             <methods>
-                <include name="createRiskCTAWithPlaybook_DifferentAssignees" />
                 <include name="createAndReplacePlaybook_RiskCTA" />
-                <include name="createMilestoneForRiskCTA" />
-                <include name="createMilestoneForOpportunityCTA_Won" />
-                <include name="snoozeRiskCTA"/>
                 <include name="createAndDeleteCTA" />
                 <include name="createAndUpdateCTATasks" />
-                <include name=" deSyncTaskFromSFButKeepTask_Manual" />
-                <include name="deSyncTaskFromSFAndDeleteTask_AutoSync" />
+                <include name="deSyncTaskFromSFButKeepTask_Manual"  />
             </methods>
         </classes>
     </test>

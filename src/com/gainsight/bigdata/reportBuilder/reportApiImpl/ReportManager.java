@@ -288,7 +288,7 @@ public class ReportManager extends NSTestBase {
      * @param collectionInfo - Collection Master.
      * @return - report master - with display names replaced with db names.
      */
-    public ReportMaster getDBNamesPopulatedReportMaster(ReportMaster reportMaster, CollectionInfo collectionInfo) {
+    public static ReportMaster getDBNamesPopulatedReportMaster(ReportMaster reportMaster, CollectionInfo collectionInfo) {
         HashMap<String, String> displayDBNamesMap = getDisplayAndDBNamesMap(collectionInfo);
         ReportInfo reportInfo = reportMaster.getReportInfo().get(0);
         if(reportInfo == null) {
