@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gainsight.util.config.NsConfig;
+import com.gainsight.utils.config.ConfigProviderFactory;
 import org.bson.Document;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -21,8 +23,7 @@ import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.util.ConfigLoader;
-import com.gainsight.util.NsConfig;
+
 import com.gainsight.utils.MongoUtil;
 
 import net.javacrumbs.jsonunit.core.Option;
@@ -36,7 +37,7 @@ import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
 public class MDAConnectBackend extends BaseTest {
 
-	NsConfig nsConfig = ConfigLoader.getNsConfig();
+	NsConfig nsConfig = ConfigProviderFactory.getConfig(NsConfig.class);
 	NSTestBase nsTestBase = new NSTestBase();
 
 	/**
