@@ -13,7 +13,6 @@
                <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="loadToMdaActionUsingNativeData" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
@@ -31,7 +30,6 @@
                <include name="monthlyScheduler" />
                <include name="yearlyScheduler" />
                <include name="testAllActionsUsingNativeData" />
-               <include name="testLoadToCustomersWithNativeData" />
                <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
                <include name="verifyDataLoadConfiguration" />
                <include name="testRuleInactive" />
@@ -64,7 +62,6 @@
             <methods>
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="loadToMdaActionUsingNativeData" />
                <include name="testCTAActionWithMdaJoins" />
                <include name="testRedShiftCalculatedMeasuresInSetupRule" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />

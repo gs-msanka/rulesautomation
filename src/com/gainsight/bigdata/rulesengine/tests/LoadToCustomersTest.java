@@ -63,9 +63,10 @@ public class LoadToCustomersTest extends BaseTest {
 		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from JBCXM__CustomerInfo__c];"));
 		
 	}
-	@TestInfo(testCaseIds = {"GS-3149"})
-    @Test()
-    public void testLoadToCustomers() throws Exception {
+
+	@TestInfo(testCaseIds = { "GS-3149" })
+	@Test()
+	public void testLoadToCustomers() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC41.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
@@ -81,9 +82,9 @@ public class LoadToCustomersTest extends BaseTest {
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
     }
 	
-	@TestInfo(testCaseIds = {"GS-5135"})
-    @Test()
-    public void testLoadToCustomers2() throws Exception {
+	@TestInfo(testCaseIds = { "GS-5135" })
+	@Test()
+	public void testLoadToCustomers2() throws Exception {
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/AccountsAndCustomersForLoadtoCustomerAction.txt"));
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC42.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -101,9 +102,9 @@ public class LoadToCustomersTest extends BaseTest {
     }
 	
 	
-	@TestInfo(testCaseIds = {"GS-5134"})
-    @Test()
-    public void testLoadToCustomers3() throws Exception {
+	@TestInfo(testCaseIds = { "GS-5134" })
+	@Test()
+	public void testLoadToCustomers3() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC43.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
@@ -127,9 +128,9 @@ public class LoadToCustomersTest extends BaseTest {
 		Assert.assertEquals(differenceData2.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
 	}
 	
-	@TestInfo(testCaseIds = {"GS-5152"})
-    @Test()
-    public void testLoadToCustomers4() throws Exception {
+	@TestInfo(testCaseIds = { "GS-5152" })
+	@Test()
+	public void testLoadToCustomers4() throws Exception {
 		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from Account where name like '%rule%'];"));
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
 		sfdc.runApexCode(resolveStrNameSpace("Delete [select id from C_Custom__c];"));
@@ -148,6 +149,5 @@ public class LoadToCustomersTest extends BaseTest {
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above which is not matching between expected testdata from csv and actual data from csv");
-	}
-	
+	}	
 }

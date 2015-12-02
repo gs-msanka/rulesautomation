@@ -1,0 +1,125 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "loadToMdaActionUsingNativeData",
+  "ruleDescription": "loadToMdaActionUsingNativeData - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Text2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Date2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_DateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_DateTime2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Checkbox2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number4",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToMDASubjectArea",
+      "action": {
+        "objectName": "GS-3977-1449068538726",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "Account",
+            "sourceField": "Id",
+            "destination": "ID",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Account Name",
+            "destination": "Name",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_Text",
+            "destination": "Description",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_TextArea",
+            "destination": "LongTextArea",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Number Auto",
+            "destination": "AnnualRevenue",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Email Auto",
+            "destination": "Email",
+            "isCustom": "true"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "Date Auto",
+            "destination": "Date",
+            "isCustom": "true"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

@@ -222,41 +222,6 @@ public class CreateRuleTest extends BaseTest {
     }
 
     @Test
-    public void loadToMdaActionUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.createEmptySubjectArea();
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule Created and Ran Successfully!");
-        String subjectArea = null;
-        List<RuleAction> ruleActions = rulesPojo.getSetupActions();
-        for (RuleAction ruleAction : ruleActions) {
-            JsonNode actionObject = ruleAction.getAction();
-            LoadToMDAAction loadToMDAAction = mapper.readValue(actionObject, LoadToMDAAction.class);
-            subjectArea = loadToMDAAction.getObjectName();
-        }
-        CollectionInfo actualCollectionInfo = dataLoadManager.getCollection(subjectArea);
-        collectionDBName = actualCollectionInfo.getCollectionDetails().getDbCollectionName();
-        Log.info(collectionDBName);
-        String subjectAreaName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-        Log.info("subjectAreaName is " + subjectAreaName);
-        collectionNames.add(subjectAreaName);
-        JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/LoadToMda_EpectedDate_Job.txt"), JobInfo.class);
-        dataETL.execute(loadTransform);
-        String list[] = {"ID", "Name", "Description", "LongTextArea", "AnnualRevenue", "Email"};
-        List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager
-                .createTabularReport(actualCollectionInfo, list)), actualCollectionInfo);
-        List<Map<String, String>> expData = Comparator
-                .getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/LoadToMDA-Output.csv")));
-        Log.info("Actual : " + mapper.writeValueAsString(actualData));
-        Log.info("Expected : " + mapper.writeValueAsString(expData));
-        List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
-        Log.info("Diff : " + mapper.writeValueAsString(diffData));
-        Assert.assertEquals(diffData.size(), 0);
-    }
-
-    @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SET_USAGE_DATA_LEVEL_FILE));

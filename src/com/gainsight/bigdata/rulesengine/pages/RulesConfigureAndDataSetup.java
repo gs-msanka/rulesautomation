@@ -348,14 +348,19 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 
 		List<String> textFields = new ArrayList<String>();
 		textFields.add("rules_c_Text");
+		textFields.add("Custom_Text2");
 		objField.setTextFields(textFields);
 
 		List<String> numberFields = new ArrayList<String>();
 		numberFields.add("rules_c_Number");
+		numberFields.add("Custom_Number2");
+		numberFields.add("Custom_Number3");
+		numberFields.add("Custom_Number4");
 		objField.setNumberFields(numberFields);
 
 		List<String> checkBoxes = new ArrayList<String>();
 		checkBoxes.add("rules_c_Checkbox");
+		checkBoxes.add("Custom_Checkbox2");
 		objField.setCheckBoxes(checkBoxes);
 
 		List<String> Email = new ArrayList<String>();
@@ -381,10 +386,12 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 
 		List<String> Date = new ArrayList<String>();
 		Date.add("rules_c_Date");
+		Date.add("Custom_Date2");
 		objField.setDates(Date);
 
 		List<String> DateTime = new ArrayList<String>();
 		DateTime.add("rules_c_DateTime");
+		DateTime.add("Custom_DateTime2");
 		objField.setDateTimes(DateTime);
 
 		List<String> textArea = new ArrayList<String>();
