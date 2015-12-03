@@ -221,6 +221,7 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
+    @TestInfo(testCaseIds = { "GS-9068"})
     @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
@@ -242,6 +243,7 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+    @TestInfo(testCaseIds = { "GS-9069"})
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
@@ -259,6 +261,7 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+    @TestInfo(testCaseIds = { "GS-9070"})
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
@@ -490,6 +493,7 @@ public class CreateRuleTest extends BaseTest {
 	 * Rules Team is not handling this case)
 	 * @throws IOException 
 	 */
+	@TestInfo(testCaseIds = { "GS-9067" })
 	@Test
 	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
 		List<String> jbcxmObjects=BaseSalesforceConnector.getAllGainSightObjects(sfdc.getPartnerConnection());
@@ -508,6 +512,7 @@ public class CreateRuleTest extends BaseTest {
 		verifier.assertVerification();
 	}
 	
+	@TestInfo(testCaseIds = { "GS-9066" })
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
 		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
@@ -536,6 +541,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3158" })
 	@Test
 	public void dailyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC9.json"), RulesPojo.class);
@@ -555,7 +561,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3159" })
 	@Test
 	public void weeklyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC10.json"), RulesPojo.class);
@@ -575,6 +581,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!"); 
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3160" })
 	@Test
 	public void monthlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC11.json"), RulesPojo.class);
@@ -594,6 +601,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");   
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3161" })
 	@Test
 	public void yearlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC12.json"), RulesPojo.class);
@@ -614,6 +622,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5018", "GS-5019", "GS-9065" })
 	@Test
 	public void testCTAActionWithMdaJoins() throws Exception{
 		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
@@ -682,7 +691,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3153" })
 	@Test
 	public void testRuleInactive() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC14.json"),RulesPojo.class);
@@ -695,6 +704,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(rulesManagerPage.isRuleInActive(rulesPojo.getRuleName()), "Check whether rule is active or inactive!! ");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-4115" })
 	@Test
 	public void testCloningOFARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC15.json"),RulesPojo.class);
@@ -710,7 +720,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(rule1Criteria[0].getField("JBCXM__TriggerCriteria__c"), rule2Criteria[0].getField("JBCXM__TriggerCriteria__c"), "verify json data for autual rule and cloned rule");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3152" })
 	@Test
 	public void testDeleteRule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC16.json"),RulesPojo.class);
@@ -725,6 +735,7 @@ public class CreateRuleTest extends BaseTest {
 		
 	}
 
+	@TestInfo(testCaseIds = { "GS-3151" })
 	@Test
 	public void testEditARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC17.json"),RulesPojo.class);
@@ -737,7 +748,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-9064" })
 	@Test
 	public void verifyRecordsOnDateFiltersUsingNativeData() throws Exception {
 		ObjectFields objField = new ObjectFields();
@@ -763,6 +774,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
+	@TestInfo(testCaseIds = { "GS-9064" })
 	@Test
 	public void verifyRecordsOnDateTimeFiltersUsingNativeData() throws Exception {
 		ObjectFields objField = new ObjectFields();
@@ -789,6 +801,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5647"})
 	@Test
 	public void verifyRecordsOnDateFiltersUsingMdaData() throws Exception {	
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC20.json"), RulesPojo.class);
@@ -825,6 +838,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5647" })
 	@Test
 	public void verifyRecordsOnDateTimeFiltersUsingMdaData() throws Exception {	
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC21.json"), RulesPojo.class);
@@ -860,7 +874,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
-	
+	@TestInfo(testCaseIds = { "GS-9063" })
 	@Test
 	public void testRedShiftCalculatedMeasuresInSetupRule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC22.json"), RulesPojo.class);
