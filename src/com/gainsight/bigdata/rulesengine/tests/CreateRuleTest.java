@@ -209,6 +209,8 @@ public class CreateRuleTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_DATA));
     }
 
+	// TestCase Id's mapped belongs to setscore and load to usage, other actions are covered seperately
+	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075" })
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
     	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
@@ -280,6 +282,8 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+	// TestCase Id's mapped belongs to setscore and load to usage, other actions are covered seperately
+	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075" })
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
     	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
