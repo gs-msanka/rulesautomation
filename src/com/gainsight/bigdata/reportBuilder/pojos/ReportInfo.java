@@ -32,7 +32,7 @@ public class ReportInfo {
     private String reportId;
     private String reportName;
     private String assetType;
-   // private boolean nonAggregatedResult;
+    private boolean nonAggregatedResult;
     @JsonProperty("whereAdvanceFilter")
     private ReportAdvanceFilter whereAdvanceFilter;
 
@@ -148,13 +148,13 @@ public class ReportInfo {
         this.reportName = reportName;
     }
 
-   /* public boolean isNonAggregatedResult() {
+    public boolean isNonAggregatedResult() {
         return nonAggregatedResult;
     }
 
     public void setNonAggregatedResult(boolean nonAggregatedResult) {
         this.nonAggregatedResult = nonAggregatedResult;
-    }*/
+    }
 
 
     public int getSkip() {
