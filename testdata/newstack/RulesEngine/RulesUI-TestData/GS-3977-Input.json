@@ -4,7 +4,7 @@
   "ruleDescription": "loadToMdaActionUsingNativeData - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "Account",
+    "selectObject": "C_Custom Object",
     "setupData": [
       {
         "sourceObject": "C_Custom Object",
@@ -76,46 +76,73 @@
         "operation": "Insert",
         "fieldMappings": [
           {
-            "sourceObject": "Account",
-            "sourceField": "Id",
-            "destination": "ID",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup",
+            "destination": "ID"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "Account Name",
-            "destination": "Name",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Checkbox",
+            "destination": "CustomBooleanField1"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "C_Text",
-            "destination": "Description",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Text",
+            "destination": "CustomString1"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "C_TextArea",
-            "destination": "LongTextArea",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Date",
+            "destination": "CustomeDate1"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "Number Auto",
-            "destination": "AnnualRevenue",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_DateTime",
+            "destination": "CustomDateTime1"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "Email Auto",
-            "destination": "Email",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Number",
+            "destination": "CustomNumber1"
           },
           {
-            "sourceObject": "Account",
-            "sourceField": "Date Auto",
-            "destination": "Date",
-            "isCustom": "true"
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number3",
+            "destination": "CustomNumberWithDecimals1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Text2",
+            "destination": "CustomString2",
+            "defaultValue": true,
+            "defaultValueInput": "defaultString"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Checkbox2",
+            "destination": "CustomBooleanField2",
+            "defaultValue": true,
+            "defaultBooleanValue": true,
+            "defaultValueInput": "defaultBoolean"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number2",
+            "destination": "CustomNumber2",
+            "defaultValue": true,
+            "defaultValueInput": "100"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number4",
+            "destination": "CustomNumberWithDecimals2",
+            "defaultValue": true,
+            "defaultValueInput": "10.95"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup Name",
+            "destination": "Name"
           }
         ]
       },

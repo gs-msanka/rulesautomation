@@ -9,14 +9,42 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * Created by vmenon on 9/14/2015.
  */
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FieldMapping {
-    private String sourceObject = "";
-    private String sourceField = "";
-    private String destination = "";
-    private boolean pickList=false;
-    private boolean custom = false;
+	private String sourceObject = "";
+	private String sourceField = "";
+	private String destination = "";
+	private boolean pickList = false;
+	private boolean custom = false;
+	private boolean defaultValue = false;
+	private String defaultValueInput;
+	private boolean defaultBooleanValue;
+	
+	public boolean isDefaultBooleanValue() {
+		return defaultBooleanValue;
+	}
+
+	public void setDefaultBooleanValue(boolean defaultBooleanValue) {
+		this.defaultBooleanValue = defaultBooleanValue;
+	}
+
 	private List<PickListMappings> pickListMappings = new ArrayList<>();
+
+	public boolean isDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(boolean defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public String getDefaultValueInput() {
+		return defaultValueInput;
+	}
+
+	public void setDefaultValueInput(String defaultValueInput) {
+		this.defaultValueInput = defaultValueInput;
+	}
 
 	public List<PickListMappings> getPickListMappings() {
 		return pickListMappings;
@@ -50,21 +78,21 @@ public class FieldMapping {
 		this.sourceField = sourceField;
 	}
 
-    public String getSourceObject() {
-        return sourceObject;
-    }
+	public String getSourceObject() {
+		return sourceObject;
+	}
 
-    public void setSourceObject(String source) {
-        this.sourceObject = source;
-    }
+	public void setSourceObject(String source) {
+		this.sourceObject = source;
+	}
 
-    public String getDestination() {
-        return destination;
-    }
+	public String getDestination() {
+		return destination;
+	}
 
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
 
 	public static class PickListMappings {
 
