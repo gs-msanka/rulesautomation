@@ -1,0 +1,2 @@
+com.gainsight.util.config.NSConfigProvider
+com.gainsight.util.config.SfdcConfigProvider
