@@ -210,7 +210,7 @@ public class CreateRuleTest extends BaseTest {
     }
 
 	// TestCase Id's mapped belongs to setscore and load to usage, other actions are covered seperately
-	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075" })
+	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075","GS-4974" })
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
     	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
@@ -223,7 +223,7 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
-    @TestInfo(testCaseIds = { "GS-9068"})
+    @TestInfo(testCaseIds = { "GS-9068", "GS-4187", "GS-4239"})
     @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
@@ -245,7 +245,7 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
-    @TestInfo(testCaseIds = { "GS-9069"})
+    @TestInfo(testCaseIds = { "GS-9069","GS-4232","GS-4742","GS-4749"})
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
