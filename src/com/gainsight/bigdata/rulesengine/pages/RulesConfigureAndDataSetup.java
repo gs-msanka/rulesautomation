@@ -69,7 +69,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
         String LookupFieldName[] = {C_Reference}, Reference[] = {
                 ReferenceTo, ReleationShipName};
         metadataClient.createTextFields("RulesSFDCCustom__c", TextField, false, false, true, false, false);
-        metadataClient.createTextFields("RulesSFDCCustom__c", TextField, false, false, true, false, false);
         metadataClient.createNumberField("RulesSFDCCustom__c", NumberField, false);
         metadataClient.createFields("RulesSFDCCustom__c", Checkbox, true, false, false);
         metadataClient.createCurrencyField("RulesSFDCCustom__c", Currency);
