@@ -1,0 +1,10 @@
+C_lookup__r.Data_ExternalId__c,rules_c_Text__c,Custom_Text2__c,rules_c_Date__c,Custom_Date2__c,rules_c_DateTime__c,Custom_DateTime2__c,rules_c_Checkbox__c,Custom_Checkbox2__c,rules_c_Number__c,Custom_Number2__c,Custom_Number3__c,Custom_Number4__c,rules_c_ExternalID__c,date1,datetime1
+RULESUI Account 1,RULESUI Account 1 text,RULESUI Account 1 text2,-15,-15,-15,-15,TRUE,TRUE,30,1000,10.11,15.16,RULESUI Account 1,-15,-15
+RULESUI Account 2,RULESUI Account 2 text,RULESUI Account 2 text2,-2,-2,-2,-2,TRUE,TRUE,31,100,11.12,16.17,RULESUI Account 2,-2,-2
+RULESUI Account 3,RULESUI Account 3 text,RULESUI Account 3 text2,-3,-3,-3,-3,FALSE,FALSE,32,12,12.13,18.19,RULESUI Account 3,-3,-3
+RULESUI Account 4,RULESUI Account 4 text,RULESUI Account 4 text2,-4,-4,-4,-4,FALSE,FALSE,33,50,13.14,11.15,RULESUI Account 4,-4,-4
+RULESUI Account 5,RULESUI Account 5 text,RULESUI Account 5 text2,-5,-5,-5,-5,TRUE,TRUE,34,1000,14.15,12.13,RULESUI Account 5,-5,-5
+RULESUI Account 6,RULESUI Account 6 text,RULESUI Account 6 text2,-6,-6,-6,-6,TRUE,TRUE,35,100,15.16,13.14,RULESUI Account 6,-6,-6
+RULESUI Account 7,RULESUI Account 7 text,RULESUI Account 7 text2,-7,-7,-7,-7,FALSE,TRUE,36,12,16.17,14.15,RULESUI Account 7,-7,-7
+RULESUI Account 8,RULESUI Account 8 text,RULESUI Account 8 text2,-8,-8,-8,-8,FALSE,FALSE,37,50,18.19,15.16,RULESUI Account 8,-8,-8
+RULESUI Account 9,RULESUI Account 9 text,RULESUI Account 9 text2,-9,-9,-9,-9,TRUE,FALSE,38,1000,11.15,11.15,RULESUI Account 9,-9,-9

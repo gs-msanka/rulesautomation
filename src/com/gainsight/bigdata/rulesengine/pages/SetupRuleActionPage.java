@@ -378,6 +378,9 @@ public class SetupRuleActionPage extends BasePage {
 					element.getElement(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input").sendKeys(Keys.ENTER);
 				}
 			}
+            if (fieldMappingObject.isIdentifier()) {
+            	item.click(xpath + fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-isIdentifier')]");
+			}
         }
     }
 

@@ -1,0 +1,141 @@
+{
+  "jobName": "Load Account For Custom Rules",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA4.csv"
+  },
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/RulesUI_CustomObjectDataLoad.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/RulesUI_CustomObjectDataLoad-output.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "rules_c_Date__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Custom_Date2__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "rules_c_DateTime__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime2__c"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "dateFormat": "MM-dd-yyyy",
+        "fieldName": "date1"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "dateFormat": "MM-dd-yyyy HH:mm:ss",
+        "fieldName": "datetime1"
+      }
+    ]
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/RulesUI_CustomObjectDataLoad-output.csv",
+        "table": "account",
+        "joinColumnName": "rules_c_ExternalID__c",
+        "columns": [
+          {
+            "name": "rules_c_ExternalID__c",
+            "alias": "rules_c_ExternalID__c"
+          },
+          {
+            "name": "rules_c_Text__c",
+            "alias": "rules_c_Text__c"
+          },
+          {
+            "name": "Custom_Text2__c",
+            "alias": "Custom_Text2__c"
+          },
+          {
+            "name": "rules_c_Checkbox__c",
+            "alias": "rules_c_Checkbox__c"
+          },
+          {
+            "name": "Custom_Checkbox2__c",
+            "alias": "Custom_Checkbox2__c"
+          },
+          {
+            "name": "rules_c_Date__c",
+            "alias": "rules_c_Date__c"
+          },
+          {
+            "name": "rules_c_DateTime__c",
+            "alias": "rules_c_DateTime__c"
+          },
+          {
+            "name": "rules_c_Number__c",
+            "alias": "rules_c_Number__c"
+          },
+          {
+            "name": "Custom_Number2__c",
+            "alias": "Custom_Number2__c"
+          },
+          {
+            "name": "Custom_Number3__c",
+            "alias": "Custom_Number3__c"
+          },
+          {
+            "name": "Custom_Number4__c",
+            "alias": "Custom_Number4__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA4.csv",
+        "table": "accounts",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "C_lookup__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA5.csv"
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "C_Custom__c",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "rules_c_ExternalID__c",
+    "cleanUp": false,
+    "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA5.csv"
+  }
+}

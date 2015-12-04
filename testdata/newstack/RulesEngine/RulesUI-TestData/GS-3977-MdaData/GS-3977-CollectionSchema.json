@@ -196,7 +196,6 @@
       "datatype": "dateTime",
       "hidden": false,
       "indexed": false,
-      "format": null,
       "defaultValue": null,
       "primary": false,
       "distinctMemberCount": 0,

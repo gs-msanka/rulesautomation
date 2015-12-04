@@ -17,6 +17,7 @@
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
@@ -68,6 +69,7 @@
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
       </classes>
    </test>
 </suite>

@@ -14,6 +14,10 @@
             "showAdvancedName": ""
           },
           {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
             "fieldName": "rules_c_Text",
             "showAdvancedName": ""
           },
@@ -115,7 +119,7 @@
             "sourceField": "Custom_Text2",
             "destination": "CustomString2",
             "defaultValue": true,
-            "defaultValueInput": "defaultString"
+            "defaultValueInput": "RULESUI Account 1 text2"
           },
           {
             "sourceObject": "C_Custom__c",
@@ -130,14 +134,14 @@
             "sourceField": "Custom_Number2",
             "destination": "CustomNumber2",
             "defaultValue": true,
-            "defaultValueInput": "100"
+            "defaultValueInput": "1000"
           },
           {
             "sourceObject": "C_Custom__c",
             "sourceField": "Custom_Number4",
             "destination": "CustomNumberWithDecimals2",
             "defaultValue": true,
-            "defaultValueInput": "10.95"
+            "defaultValueInput": "15.16"
           },
           {
             "sourceObject": "C_Custom__c",

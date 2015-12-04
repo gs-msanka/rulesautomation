@@ -1,0 +1,5 @@
+C_Custom__c records=[SELECT Id,Custom_Text2__c,Custom_Checkbox2__c,Custom_Number2__c,Custom_Number4__c,rules_c_ExternalID__c FROM C_Custom__c where rules_c_ExternalID__c ='RULESUI Account 1' limit 1];
+records.Custom_Number2__c=null;
+records.Custom_Text2__c=null;
+records.Custom_Number4__c=null;
+update records;

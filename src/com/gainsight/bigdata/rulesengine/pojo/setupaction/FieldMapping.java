@@ -19,7 +19,16 @@ public class FieldMapping {
 	private boolean defaultValue = false;
 	private String defaultValueInput;
 	private boolean defaultBooleanValue;
+	private boolean identifier;
 	
+	public boolean isIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(boolean identifier) {
+		this.identifier = identifier;
+	}
+
 	public boolean isDefaultBooleanValue() {
 		return defaultBooleanValue;
 	}
