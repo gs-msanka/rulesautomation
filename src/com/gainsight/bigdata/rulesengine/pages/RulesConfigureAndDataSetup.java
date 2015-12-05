@@ -165,6 +165,7 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		try {
 			Log.info("Saving CustomWeRules object and fields info in MDA to load data using Load To SFDC action. Config Data: "
 					+ configData);
+			rulesUtil.deleteObjectInRulesConfig("RulesSFDCCustom__c", "SFDC");
 			rulesUtil.saveCustomObjectInRulesConfig(configData);
 		} catch (Exception e) {
 			Log.error(

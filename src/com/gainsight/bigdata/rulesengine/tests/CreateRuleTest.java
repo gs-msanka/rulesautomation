@@ -213,7 +213,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075","GS-4974" })
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
-    	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
     	rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC1.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -286,7 +285,6 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075" })
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-    	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -519,8 +517,8 @@ public class CreateRuleTest extends BaseTest {
 	@TestInfo(testCaseIds = { "GS-9066" })
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
-		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
-					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		//Deleting sfdc RulesSFDCCustom__c object
+		rulesUtil.deleteObjectInRulesConfig("RulesSFDCCustom__c", "SFDC");
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
