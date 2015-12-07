@@ -162,7 +162,7 @@ public class LoadToMdaTest extends BaseTest {
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),"Rule Created and Ran Successfully!");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/GS-3977-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
@@ -210,7 +210,7 @@ public class LoadToMdaTest extends BaseTest {
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo1);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()),"Rule Created and Ran Successfully!");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()), "Check whether Rule ran successfully or not ");
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/GS-3978-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
@@ -289,7 +289,7 @@ public class LoadToMdaTest extends BaseTest {
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()),"Rule Created and Ran Successfully!");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977-MdaData/GS-3977-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
@@ -337,7 +337,7 @@ public class LoadToMdaTest extends BaseTest {
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo1);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()),"Rule Created and Ran Successfully!");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()), "Check whether Rule ran successfully or not !");
 		dataETL.execute(mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3979-MdaData/GS-3979-ExpectedJob.txt")),JobInfo.class));
 
 		// Below are the list of all datatypes verifying for actual data
