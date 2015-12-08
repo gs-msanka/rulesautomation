@@ -1,0 +1,18 @@
+{
+  "jobName": "3966",
+  "jobType": "transform",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "RulesSFDCCustom__c",
+    "fields": [
+      "custom_lookup__r.Name",
+      "C_MultiPicklist__c",
+      "C_Picklist__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/GS3966-ActualData.csv"
+  }
+}

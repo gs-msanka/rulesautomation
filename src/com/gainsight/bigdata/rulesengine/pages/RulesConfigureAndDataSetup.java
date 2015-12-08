@@ -154,14 +154,24 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 				"FCurrency", "FDate", "FDateTime", "InputDateTime",
 				"AccPercentage", "ActiveUsers", "FNumber", "FPercent", "FText" };
         metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", metaUtil.convertFieldNameToAPIName(permFields), sfdc.fetchSFDCinfo(), true);
-        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), sfdc.fetchSFDCinfo(), true);     
+        metaUtil.addFieldPermissionsToUsers("Account", metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), sfdc.fetchSFDCinfo(), true);
+        
+        ObjectFields objField = new ObjectFields();
+		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
+		Customer_lookupListMap.put("Name", "custom_lookup");
+		Customer_lookupListMap.put("ReferenceTo", "Account");
+		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesengineUI_Automation");
+		lookup.add(Customer_lookupListMap);
+		objField.setLookups(lookup);
+		metaUtil.createFieldsOnObject(sfdc, "RulesSFDCCustom__c", objField);
     }
     
     /** creates dataLoad Configuration for Object "RulesSFDCCustom__c"
      * 
      */
     public void createDataLoadConfiguration(){	
-		String configData = "{\"type\":\"SFDC\",\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\",\"fields\":[{\"name\":\"C_Checkbox__c\",\"dataType\":\"boolean\"},{\"name\":\"InputDate__c\",\"dataType\":\"date\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"dateTime\"},{\"name\":\"C_Number__c\",\"dataType\":\"double\"},{\"name\":\"C_Email__c\",\"dataType\":\"string\"},{\"name\":\"C_Text__c\",\"dataType\":\"string\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"string\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"string\"},{\"name\":\"C_Reference__c\",\"dataType\":\"string\"}]}";
+		String configData = "{\"type\":\"SFDC\",\"fields\":[{\"name\":\"custom_lookup__c\",\"dataType\":\"STRING\"},{\"name\":\"AccPercentage__c\",\"dataType\":\"DOUBLE\"},{\"name\":\"ActiveUsers__c\",\"dataType\":\"DOUBLE\"},{\"name\":\"C_Checkbox__c\",\"dataType\":\"BOOLEAN\"},{\"name\":\"C_Currency__c\",\"dataType\":\"DOUBLE\"},{\"name\":\"C_Email__c\",\"dataType\":\"STRING\"},{\"name\":\"C_EncryptedString__c\",\"dataType\":\"STRING\"},{\"name\":\"C_MultiPicklist__c\",\"dataType\":\"STRING\"},{\"name\":\"C_Number__c\",\"dataType\":\"DOUBLE\"},{\"name\":\"C_Percent__c\",\"dataType\":\"DOUBLE\"},{\"name\":\"C_Phone__c\",\"dataType\":\"STRING\"},{\"name\":\"C_Picklist__c\",\"dataType\":\"STRING\"},{\"name\":\"C_Reference__c\",\"dataType\":\"STRING\"},{\"name\":\"C_Reference__c\",\"dataType\":\"STRING\"},{\"name\":\"C_Text__c\",\"dataType\":\"STRING\"},{\"name\":\"C_TextArea__c\",\"dataType\":\"STRING\"},{\"name\":\"C_URL__c\",\"dataType\":\"STRING\"},{\"name\":\"Data_ExternalId__c\",\"dataType\":\"STRING\"},{\"name\":\"Id\",\"dataType\":\"STRING\"},{\"name\":\"InputDate__c\",\"dataType\":\"DATE\"},{\"name\":\"InputDateTime__c\",\"dataType\":\"DATETIME\"},{\"name\":\"IsActive__c\",\"dataType\":\"BOOLEAN\"},{\"name\":\"Name\",\"dataType\":\"STRING\"},{\"name\":\"OwnerId\",\"dataType\":\"STRING\"},{\"name\":\"OwnerId\",\"dataType\":\"STRING\"}],\"objectName\":\"RulesSFDCCustom__c\",\"objectLabel\":\"RulesSFDCCustom Object\"}";
 		try {
 			Log.info("Saving CustomWeRules object and fields info in MDA to load data using Load To SFDC action. Config Data: "
 					+ configData);

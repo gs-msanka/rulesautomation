@@ -1,0 +1,143 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "loadToMdaActionUsingMdaData",
+  "ruleDescription": "loadToMdaActionUsingMdaData - Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "GS-3964-MDA1449227441617",
+    "setupData": [
+      {
+        "sourceObject": "GS-3964-MDA1449227441617",
+        "showFields": [
+          {
+            "fieldName": "CustomName",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomBooleanField1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDate",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomCurrency",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomPercentage",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomEmail",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomText",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomTextArea",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomUrl",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Update",
+        "fieldMappings": [
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomName",
+            "destination": "Name",
+            "identifier": true
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomBooleanField1",
+            "destination": "C_Checkbox",
+            "defaultValue": true,
+            "defaultBooleanValue": true,
+            "defaultValueInput": "defaultBoolean"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomDate",
+            "destination": "InputDate",
+            "identifier": true
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomDateTime",
+            "destination": "InputDateTime"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomCurrency",
+            "destination": "C_Currency"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomNumber",
+            "destination": "C_Number",
+            "defaultValue": true,
+            "defaultValueInput": "1000"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomPercentage",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomEmail",
+            "destination": "C_Email"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomText",
+            "destination": "C_Text"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomUrl",
+            "destination": "C_URL"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomTextArea",
+            "destination": "C_TextArea",
+            "defaultValue": true,
+            "defaultValueInput": "RULESUI Account 9 text2"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}
