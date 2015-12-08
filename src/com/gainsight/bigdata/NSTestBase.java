@@ -108,8 +108,8 @@ public class NSTestBase {
             } else {
                 sfdc.runApexCode("AdminHandler.assignPermissionToallGainsightObject();"); //To give permissions to all the object & fields in the org.
             }
-      //      packageUtil.deployPermissionSetCode();
-      //      metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
+            packageUtil.deployPermissionSetCode();
+            metaUtil.setupPermissionsToStandardObjectAndFields(sfinfo);
         }
     }
 
