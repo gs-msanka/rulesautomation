@@ -70,6 +70,7 @@
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
       </classes>
    </test>
 </suite>

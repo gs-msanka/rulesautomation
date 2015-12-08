@@ -7,13 +7,13 @@
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
       <parameter name="dbStoreType" value="Redshift" />
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest" />
       </classes>
    </test>
       <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
       <parameter name="dbStoreType" value="Mongo" />
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest" />
       </classes>
    </test>
 </suite>
