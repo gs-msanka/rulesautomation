@@ -515,6 +515,22 @@ public void setupRule(HashMap<String,String> testData){
 		Assert.assertNotNull(responseObj.getRequestId());
 
 	}
+	
+	/**
+	 * @param objectName - sfdc object/mda collection name
+	 * @param dataStorage - accepted argument are SFDC and MDA
+	 * @throws Exception
+	 */
+	public void deleteObjectInRulesConfig(String objectName, String dataStorage)throws Exception {
+		String uri = APP_API_RULES_LOADABLE_OBJECT + "?objectName="+ objectName + "&type=" + dataStorage;
+		Log.info("uri is " +uri);
+		ResponseObj response = wa.doDelete(uri, header.getAllHeaders());
+		if (response.getStatusCode() == HttpStatus.SC_OK) {
+			Log.info(objectName + " Deleted successfully ");
+		} else {
+			throw new RuntimeException("Deletion Failed");
+		}
+	}
 
 	/**
 	 * This method will run the rule based on rule name.

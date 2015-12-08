@@ -13,11 +13,11 @@
                <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="loadToMdaActionUsingNativeData" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
@@ -31,7 +31,6 @@
                <include name="monthlyScheduler" />
                <include name="yearlyScheduler" />
                <include name="testAllActionsUsingNativeData" />
-               <include name="testLoadToCustomersWithNativeData" />
                <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
                <include name="verifyDataLoadConfiguration" />
                <include name="testRuleInactive" />
@@ -54,6 +53,7 @@
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
@@ -63,13 +63,13 @@
             <methods>
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="loadToMdaActionUsingNativeData" />
                <include name="testCTAActionWithMdaJoins" />
                <include name="testRedShiftCalculatedMeasuresInSetupRule" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
       </classes>
    </test>
 </suite>

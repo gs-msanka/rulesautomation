@@ -1,0 +1,169 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "loadToMdaActionUsingMdaData",
+  "ruleDescription": "loadToMdaActionUsingMdaData - Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "GS-3977-MDA1449227441617",
+    "setupData": [
+      {
+        "sourceObject": "GS-3977-MDA1449227441617",
+        "showFields": [
+          {
+            "fieldName": "Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumberWithDecimals1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomString1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomString2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomeDate1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDateTime1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomeDate2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomDateTime2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomBooleanField1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomBooleanField2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumberWithDecimals2",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomeDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToMDASubjectArea",
+      "action": {
+        "objectName": "GS-3977-MDA1449227441617",
+        "operation": "Upsert",
+        "fieldMappings": [
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "Name",
+            "destination": "Name",
+            "identifier": true
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomString1",
+            "destination": "CustomString1"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomString2",
+            "destination": "CustomString2"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomeDate1",
+            "destination": "CustomeDate1",
+            "identifier": true
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomDateTime1",
+            "destination": "CustomDateTime1"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomNumber1",
+            "destination": "CustomNumber1",
+            "identifier": true
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomNumberWithDecimals1",
+            "destination": "CustomNumberWithDecimals1"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomString2",
+            "destination": "CustomString2",
+            "defaultValue": true,
+            "defaultValueInput": "RULESUI Account 1 text2"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomBooleanField1",
+            "destination": "CustomBooleanField1"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomBooleanField2",
+            "destination": "CustomBooleanField2",
+            "defaultValue": true,
+            "defaultBooleanValue": true,
+            "defaultValueInput": "defaultBoolean"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomNumber2",
+            "destination": "CustomNumber2",
+            "defaultValue": true,
+            "defaultValueInput": "1000"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomNumberWithDecimals2",
+            "destination": "CustomNumberWithDecimals2",
+            "defaultValue": true,
+            "defaultValueInput": "15.16"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomeDate2",
+            "destination": "CustomeDate2"
+          },
+          {
+            "sourceObject": "GS-3977-MDA1449227441617",
+            "sourceField": "CustomDateTime2",
+            "destination": "CustomDateTime2"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

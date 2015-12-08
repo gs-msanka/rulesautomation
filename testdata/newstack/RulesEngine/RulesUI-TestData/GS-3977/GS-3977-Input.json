@@ -1,0 +1,156 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "loadToMdaActionUsingNativeData",
+  "ruleDescription": "loadToMdaActionUsingNativeData - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Text2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Date2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_DateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_DateTime2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Checkbox2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number4",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToMDASubjectArea",
+      "action": {
+        "objectName": "GS-3977-1449068538726",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup",
+            "destination": "ID"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Checkbox",
+            "destination": "CustomBooleanField1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Text",
+            "destination": "CustomString1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Date",
+            "destination": "CustomeDate1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_DateTime",
+            "destination": "CustomDateTime1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Number",
+            "destination": "CustomNumber1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number3",
+            "destination": "CustomNumberWithDecimals1"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Text2",
+            "destination": "CustomString2",
+            "defaultValue": true,
+            "defaultValueInput": "RULESUI Account 1 text2"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Checkbox2",
+            "destination": "CustomBooleanField2",
+            "defaultValue": true,
+            "defaultBooleanValue": true,
+            "defaultValueInput": "defaultBoolean"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number2",
+            "destination": "CustomNumber2",
+            "defaultValue": true,
+            "defaultValueInput": "1000"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number4",
+            "destination": "CustomNumberWithDecimals2",
+            "defaultValue": true,
+            "defaultValueInput": "15.16"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup Name",
+            "destination": "Name"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

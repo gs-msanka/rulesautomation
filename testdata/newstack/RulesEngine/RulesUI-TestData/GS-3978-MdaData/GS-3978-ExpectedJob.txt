@@ -1,0 +1,81 @@
+{
+  "jobName": "3977",
+  "jobType": "transform",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/ProcessedData2.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Name",
+            "alias": "Name"
+          },
+          {
+            "name": "CustomString1",
+            "alias": "CustomString1"
+          },
+          {
+            "name": "CustomeDate1",
+            "alias": "CustomeDate1"
+          },
+          {
+            "name": "CustomDateTime1",
+            "alias": "CustomDateTime1"
+          },
+          {
+            "name": "CustomeDate2",
+            "alias": "CustomeDate2"
+          },
+          {
+            "name": "CustomDateTime2",
+            "alias": "CustomDateTime2"
+          },
+          {
+            "name": "CustomBooleanField1",
+            "alias": "CustomBooleanField1"
+          },
+          {
+            "name": "CustomNumber1",
+            "alias": "CustomNumber1"
+          },
+          {
+            "name": "CustomNumberWithDecimals1",
+            "alias": "CustomNumberWithDecimals1"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/ExpectedData1.csv",
+        "table": "accounts",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "CustomString2",
+            "alias": "CustomString2"
+          },
+          {
+            "name": "CustomBooleanField2",
+            "alias": "CustomBooleanField2"
+          },
+          {
+            "name": "CustomNumber2",
+            "alias": "CustomNumber2"
+          },
+          {
+            "name": "CustomNumberWithDecimals2",
+            "alias": "CustomNumberWithDecimals2"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3978-MdaData/ExpectedData2.csv"
+  }
+}

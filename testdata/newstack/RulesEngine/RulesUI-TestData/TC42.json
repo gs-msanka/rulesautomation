@@ -1,0 +1,107 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 41 - Load To Customers Using Native Data",
+  "ruleDescription": "Rule 41 - Load To Customers Using Native Data",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Account",
+    "setupData": [
+      {
+        "sourceObject": "Account",
+        "showFields": [
+          {
+            "fieldName": "Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "PickList Auto",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_Picklist",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "Account Name",
+            "operator": "starts with",
+            "value": "input_Custom RULESUI Account"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToCustomers",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "Account",
+            "sourceField": "Id",
+            "destination": "Account",
+            "isCustom": "false"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "PickList Auto",
+            "destination": "Status",
+            "pickList": true,
+            "pickListMappings": [
+              {
+                "source": "Excellent",
+                "destination": "Active"
+              },
+              {
+                "source": "Vgood",
+                "destination": "Active"
+              },
+              {
+                "source": "Good",
+                "destination": "Active"
+              },
+              {
+                "source": "Average",
+                "destination": "Active"
+              },
+              {
+                "source": "Poor",
+                "destination": "Active"
+              },
+              {
+                "source": "Vpoor",
+                "destination": "Active"
+              }
+            ],
+            "isCustom": "false"
+          },
+          {
+            "sourceObject": "Account",
+            "sourceField": "C_Picklist",
+            "destination": "Stage",
+            "pickList": true,
+            "pickListMappings": [
+              {
+                "source": "Pvalue1",
+                "destination": "Go Live"
+              },
+              {
+                "source": "Pvalue2",
+                "destination": "Expert"
+              },
+              {
+                "source": "Pvalue3",
+                "destination": "Need to watch"
+              }
+            ],
+            "isCustom": "false"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+//Create Account
+delete [SELECT Name FROM Account where name  like '%Custom RULESUI Account%'];
+List<Account> accList = new List<Account>();
+   Account acc = new Account(Name ='Custom RULESUI Account',Data_ExternalID__c='Custom RULESUI Account');
+   accList.add(acc);
+insert accList;
+
+delete [select id from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c  like 'Custom RULESUI Account%'];
+//Add Accounts to Customers
+List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Status' AND
+                                 JBCXM__SystemName__c = 'ActiveCustomer'];
+
+
+List<JBCXM__PickList__c> pkList2 = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM__Category__c = 'Customer Stage' AND
+                                 JBCXM__ShortName__c = 'Go Live'];
+
+
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+JBCXM__CustomerInfo__c cust = null;
+for(Account accounts : [SELECT id FROM Account where name like 'Custom RULESUI Account%']) {
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = accounts.id, JBCXM__Status__c  = (pkList.get(0)).id, JBCXM__Stage__c  = (pkList2.get(0)).id);
+			custList.add(cust);
+    
+}
+
+insert custList;

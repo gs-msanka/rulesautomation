@@ -1,0 +1,82 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Rule 44 - Load To Customers Using Native Data",
+  "ruleDescription": "Rule 44 - Load To Customers Using Native Data",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Picklist",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_ExternalID",
+            "operator": "equals",
+            "value": "input_RULESUI Account 1"
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "operator": "equals",
+            "value": "input_1"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A OR B",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToCustomers",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup ",
+            "destination": "Account"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Picklist ",
+            "destination": "Stage",
+            "pickList": true,
+            "pickListMappings": [
+              {
+                "source": "Pvalue1",
+                "destination": "Go Live"
+              },
+              {
+                "source": "Pvalue2",
+                "destination": "Expert"
+              },
+              {
+                "source": "Pvalue3",
+                "destination": "Need to watch"
+              }
+            ]
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Text",
+            "destination": "Scorecard Comment"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

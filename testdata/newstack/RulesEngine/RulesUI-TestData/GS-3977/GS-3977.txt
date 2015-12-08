@@ -1,0 +1,72 @@
+{
+  "jobName": "extrating data from two objects",
+  "jobType": "load to custom object",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/RulesUI_CustomObjectDataLoad-output.csv",
+        "table": "account",
+        "joinColumnName": "rules_c_ExternalID__c",
+        "columns": [
+          {
+            "name": "rules_c_ExternalID__c",
+            "alias": "Name"
+          },
+          {
+            "name": "rules_c_Text__c",
+            "alias": "CustomString1"
+          },
+          {
+            "name": "Custom_Text2__c",
+            "alias": "CustomString2"
+          },
+          {
+            "name": "date1",
+            "alias": "CustomeDate1"
+          },
+          {
+            "name": "datetime1",
+            "alias": "CustomDateTime1"
+          },
+          {
+            "name": "rules_c_Checkbox__c",
+            "alias": "CustomBooleanField1"
+          },
+          {
+            "name": "Custom_Checkbox2__c",
+            "alias": "CustomBooleanField2"
+          },
+          {
+            "name": "rules_c_Number__c",
+            "alias": "CustomNumber1"
+          },
+          {
+            "name": "Custom_Number2__c",
+            "alias": "CustomNumber2"
+          },
+          {
+            "name": "Custom_Number3__c",
+            "alias": "CustomNumberWithDecimals1"
+          },
+          {
+            "name": "Custom_Number4__c",
+            "alias": "CustomNumberWithDecimals2"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA4.csv",
+        "table": "accounts",
+        "joinColumnName": "Name",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3977/LoadToMDA3.csv"
+  }
+}

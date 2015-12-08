@@ -209,9 +209,10 @@ public class CreateRuleTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_DATA));
     }
 
+	// TestCase Id's mapped belongs to setscore and load to usage, other actions are covered seperately
+	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075","GS-4974" })
     @Test
     public void testAllActionsUsingNativeData() throws Exception {
-    	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
     	rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC1.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -221,53 +222,7 @@ public class CreateRuleTest extends BaseTest {
         assertForAllActionsUsingSFDCData(rulesPojo);
     }
 
-    @Test(enabled=false)
-    public void testLoadToCustomersWithNativeData() throws Exception {
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
-        JobInfo jobInfo = mapper.readValue((new FileReader(ACCOUNTS_JOB_FOR_LOAD_TO_CUSTOMERS_ACTION)), JobInfo.class);
-        dataETL.execute(jobInfo);
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC4.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-    }
-
-    @Test
-    public void loadToMdaActionUsingNativeData() throws Exception {
-        rulesConfigureAndDataSetup.createEmptySubjectArea();
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/loadToMdaActionUsingNativeData.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule Created and Ran Successfully!");
-        String subjectArea = null;
-        List<RuleAction> ruleActions = rulesPojo.getSetupActions();
-        for (RuleAction ruleAction : ruleActions) {
-            JsonNode actionObject = ruleAction.getAction();
-            LoadToMDAAction loadToMDAAction = mapper.readValue(actionObject, LoadToMDAAction.class);
-            subjectArea = loadToMDAAction.getObjectName();
-        }
-        CollectionInfo actualCollectionInfo = dataLoadManager.getCollection(subjectArea);
-        collectionDBName = actualCollectionInfo.getCollectionDetails().getDbCollectionName();
-        Log.info(collectionDBName);
-        String subjectAreaName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-        Log.info("subjectAreaName is " + subjectAreaName);
-        collectionNames.add(subjectAreaName);
-        JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/LoadToMda_EpectedDate_Job.txt"), JobInfo.class);
-        dataETL.execute(loadTransform);
-        String list[] = {"ID", "Name", "Description", "LongTextArea", "AnnualRevenue", "Email"};
-        List<Map<String, String>> actualData = ReportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(reportManager
-                .createTabularReport(actualCollectionInfo, list)), actualCollectionInfo);
-        List<Map<String, String>> expData = Comparator
-                .getParsedCsvData(new CSVReader(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/LoadToMDA-Output.csv")));
-        Log.info("Actual : " + mapper.writeValueAsString(actualData));
-        Log.info("Expected : " + mapper.writeValueAsString(expData));
-        List<Map<String, String>> diffData = Comparator.compareListData(expData, actualData);
-        Log.info("Diff : " + mapper.writeValueAsString(diffData));
-        Assert.assertEquals(diffData.size(), 0);
-    }
-
+    @TestInfo(testCaseIds = { "GS-9068", "GS-4187", "GS-4239"})
     @Test
     public void testCTAActionWithCalculatedFieldsOnUsageDataObject() throws Exception {
         RuleEngineDataSetup ruleEngineDataSetup = new RuleEngineDataSetup();
@@ -289,6 +244,7 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+    @TestInfo(testCaseIds = { "GS-9069","GS-4232","GS-4742","GS-4749"})
     @Test
     public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
@@ -306,6 +262,7 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+    @TestInfo(testCaseIds = { "GS-9070"})
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CTAActionWithCalculatedFieldsAndMeasures.json"), RulesPojo.class);
@@ -324,9 +281,10 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
+	// TestCase Id's mapped belongs to setscore and load to usage, other actions are covered seperately
+	@TestInfo(testCaseIds = { "GS-5148", "GS-5155", "GS-9075" })
     @Test
     public void testAllActionsUsingMdaData() throws Exception {
-    	Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC2.json"), RulesPojo.class);
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -537,6 +495,7 @@ public class CreateRuleTest extends BaseTest {
 	 * Rules Team is not handling this case)
 	 * @throws IOException 
 	 */
+	@TestInfo(testCaseIds = { "GS-9067" })
 	@Test
 	public void testGainsightObjectsArePresentInDataLoadConfigurationList() throws IOException {
 		List<String> jbcxmObjects=BaseSalesforceConnector.getAllGainSightObjects(sfdc.getPartnerConnection());
@@ -555,10 +514,11 @@ public class CreateRuleTest extends BaseTest {
 		verifier.assertVerification();
 	}
 	
+	@TestInfo(testCaseIds = { "GS-9066" })
 	@Test
 	public void testAdditionAndRemovalOFFieldsInDataLoadConfig() throws Exception{
-		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(
-					tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
+		//Deleting sfdc RulesSFDCCustom__c object
+		rulesUtil.deleteObjectInRulesConfig("RulesSFDCCustom__c", "SFDC");
 		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
 				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC7.json"),DataLoadConfigPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
@@ -583,6 +543,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3158" })
 	@Test
 	public void dailyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC9.json"), RulesPojo.class);
@@ -602,7 +563,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3159" })
 	@Test
 	public void weeklyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC10.json"), RulesPojo.class);
@@ -622,6 +583,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!"); 
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3160" })
 	@Test
 	public void monthlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC11.json"), RulesPojo.class);
@@ -641,6 +603,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");   
 	}
 	
+	@TestInfo(testCaseIds = { "GS-3161" })
 	@Test
 	public void yearlyScheduler() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC12.json"), RulesPojo.class);
@@ -661,6 +624,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5018", "GS-5019", "GS-9065" })
 	@Test
 	public void testCTAActionWithMdaJoins() throws Exception{
 		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
@@ -729,7 +693,7 @@ public class CreateRuleTest extends BaseTest {
 		}
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3153" })
 	@Test
 	public void testRuleInactive() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC14.json"),RulesPojo.class);
@@ -742,6 +706,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(rulesManagerPage.isRuleInActive(rulesPojo.getRuleName()), "Check whether rule is active or inactive!! ");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-4115" })
 	@Test
 	public void testCloningOFARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC15.json"),RulesPojo.class);
@@ -757,7 +722,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(rule1Criteria[0].getField("JBCXM__TriggerCriteria__c"), rule2Criteria[0].getField("JBCXM__TriggerCriteria__c"), "verify json data for autual rule and cloned rule");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-3152" })
 	@Test
 	public void testDeleteRule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC16.json"),RulesPojo.class);
@@ -772,6 +737,7 @@ public class CreateRuleTest extends BaseTest {
 		
 	}
 
+	@TestInfo(testCaseIds = { "GS-3151" })
 	@Test
 	public void testEditARule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC17.json"),RulesPojo.class);
@@ -784,7 +750,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
 	}
 	
-	
+	@TestInfo(testCaseIds = { "GS-9064" })
 	@Test
 	public void verifyRecordsOnDateFiltersUsingNativeData() throws Exception {
 		ObjectFields objField = new ObjectFields();
@@ -810,6 +776,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
+	@TestInfo(testCaseIds = { "GS-9064" })
 	@Test
 	public void verifyRecordsOnDateTimeFiltersUsingNativeData() throws Exception {
 		ObjectFields objField = new ObjectFields();
@@ -836,6 +803,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5647"})
 	@Test
 	public void verifyRecordsOnDateFiltersUsingMdaData() throws Exception {	
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC20.json"), RulesPojo.class);
@@ -872,6 +840,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 	
+	@TestInfo(testCaseIds = { "GS-5647" })
 	@Test
 	public void verifyRecordsOnDateTimeFiltersUsingMdaData() throws Exception {	
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC21.json"), RulesPojo.class);
@@ -907,7 +876,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
-	
+	@TestInfo(testCaseIds = { "GS-9063" })
 	@Test
 	public void testRedShiftCalculatedMeasuresInSetupRule() throws Exception{
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC22.json"), RulesPojo.class);
