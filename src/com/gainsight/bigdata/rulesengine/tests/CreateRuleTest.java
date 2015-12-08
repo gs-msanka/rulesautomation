@@ -160,7 +160,6 @@ public class CreateRuleTest extends BaseTest {
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-        tenantManager.disableRedShift(tenantDetails);
         dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
         sfdc.runApexCode("Delete [SELECT Id FROM RulesSFDCCustom__c];");
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
