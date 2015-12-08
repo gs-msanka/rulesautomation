@@ -7,6 +7,7 @@ import com.gainsight.sfdc.pages.Constants;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 
@@ -71,10 +72,48 @@ public class CustomersPage extends CustomerBasePage {
      */
 
     private void setCustomerNameFilterOnTag(String customer) {
-        field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']", customer);
-        driver.findElement(By.xpath("//div[@class='ui-state-default slick-headerrow-column l2 r2']/input[@type='text']")).sendKeys(Keys.ENTER);
-        Timer.sleep(2);
-        item.click("//a[contains(text(), '"+customer+"')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
+        setCustomerFilter(customer);
+        int index = -1;
+        if(isScrollExists()) {
+            item.click("//a[contains(text(), '" + customer + "')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
+        } else {
+            List<WebElement> gridRows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[@class='ui-widget-content slick-row']");
+            for(WebElement row : gridRows) {
+                try {
+                    element.getElement(row, "//a[contains(@href, 'customersuccess360')] and text()='"+customer+"'").isDisplayed();
+                    index++;
+                    break;
+                } catch (NoSuchElementException e) {
+                    Log.error("Just ignore...");
+                }
+            }
+            if(index != -1) {
+                item.click("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div["+index+1+"]/div/input");
+            } else {
+                throw new RuntimeException("Failed to check customer for applying tag.");
+            }
+        }
+    }
+
+    /**
+     * Checks the customer search input box in slick grid has this is the only way to find if the grid has scroll or not.
+     * @return
+     */
+    private boolean isScrollExists() {
+        String CUSTOMER_SEARCH_DIV = "//div[@class='slick-headerrow-columns slick-headerrow-columns-left']/div[@gridcolid='Customer']";
+        return isElementPresentAndDisplay(By.xpath(CUSTOMER_SEARCH_DIV));
+    }
+
+    private void setCustomerFilter(String custName) {
+        String CUSTOMER_SEARCH_DIV;
+        if(isScrollExists()) {
+            CUSTOMER_SEARCH_DIV = "//div[@class='slick-headerrow-columns slick-headerrow-columns-left']/div[@gridcolid='Customer']";
+        } else {
+            CUSTOMER_SEARCH_DIV = "//div[@class='slick-headerrow-columns slick-headerrow-columns-right']/div[@gridcolid='Customer']";
+        }
+        item.clearAndSetText(CUSTOMER_SEARCH_DIV+"/input[@class='filter_input']", custName);
+        driver.findElement(By.xpath(CUSTOMER_SEARCH_DIV+"/input[@class='filter_input']")).sendKeys(Keys.ENTER);
+        Timer.sleep(Constants.STALE_PAUSE);
     }
 
     private void selectAccount(String customerName) {
@@ -119,10 +158,7 @@ public class CustomersPage extends CustomerBasePage {
         }
     }
 
-    private void setCustomerFilter(String custName) {
-        field.clearAndSetText("//div[@class='ui-state-default slick-headerrow-column l1 r1']/input[@class='filter_input']", custName);
-        Timer.sleep(2);
-    }
+
 
     private int getNoOfCustomersRecords(String custName) {
         Timer.sleep(2);
