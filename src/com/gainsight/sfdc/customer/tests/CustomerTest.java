@@ -1,11 +1,14 @@
 package com.gainsight.sfdc.customer.tests;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.annotations.TestInfo;
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -38,9 +41,9 @@ public class CustomerTest extends BaseTest {
         CustomersPage customersPage = basepage.clickOnCustomersTab().clickOnCustomersSubTab();
         customersPage = customersPage.selectUIView(testData.get("UIView"));
         customersPage = customersPage.addCustomer(testData.get("Customer"), testData.get("Status"), testData.get("Stage"), testData.get("Comments"));
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|" +
-                testData.get("Status") + "|" + testData.get("Stage") + "|" +
-                testData.get("Comments")), "Checking Customer add successfully.");
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(),
+                new String[]{testData.get("Customer"), testData.get("Status"), testData.get("Stage"), testData.get("Comments")}), "Checking is customer details are updated.");
     }
 
     @TestInfo(testCaseIds={"GS-64"})
@@ -52,11 +55,14 @@ public class CustomerTest extends BaseTest {
         HashMap<String, String> customerData = getMapFromData(testData.get("Customer"));
         HashMap<String, String> customerUpdatedData = getMapFromData(testData.get("Updated"));
         customersPage = customersPage.addCustomer(customerData.get("Customer"), customerData.get("Status"), customerData.get("Stage"), customerData.get("Comments"));
-        Assert.assertTrue(customersPage.isDataPresentInGrid(customerData.get("Customer") + "|" + customerData.get("Status") + "|" + customerData.get("Stage") + "|" + customerData.get("Comments")));
+        customersPage.setCustomerNameFilter(customerData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(),
+                new String[]{customerData.get("Customer"), customerData.get("Status"), customerData.get("Stage"), customerData.get("Comments")}), "Checking is customer details are updated.");
+
         customersPage = customersPage.editCustomer(customerUpdatedData.get("Customer"), customerUpdatedData.get("Status"), customerUpdatedData.get("Stage"), customerUpdatedData.get("Comments"));
-        Assert.assertTrue(customersPage.isDataPresentInGrid(customerUpdatedData.get("Customer") + "|" +
-                customerUpdatedData.get("Status") + "|" + customerUpdatedData.get("Stage") + "|" +
-                customerUpdatedData.get("Comments")), "Checking is customer details are updated.");
+        customersPage.setCustomerNameFilter(customerUpdatedData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(),
+                new String[]{customerUpdatedData.get("Customer"), customerUpdatedData.get("Status"), customerUpdatedData.get("Stage"), customerUpdatedData.get("Comments")}), "Checking is customer details are updated.");
     }
 
     @TestInfo(testCaseIds={"GS-66"})
@@ -66,13 +72,13 @@ public class CustomerTest extends BaseTest {
         CustomersPage customersPage = basepage.clickOnCustomersTab().clickOnCustomersSubTab();
         customersPage = customersPage.selectUIView(testData.get("UIView"));
         customersPage = customersPage.addCustomer(testData.get("Customer"), testData.get("Status"), testData.get("Stage"), testData.get("Comments"));
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|" +
-                testData.get("Status") + "|" + testData.get("Stage") + "|" +
-                testData.get("Comments")), "Checking customer added successfully.");
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(),
+                new String[]{testData.get("Customer"), testData.get("Status"), testData.get("Stage"), testData.get("Comments")}), "Checking is customer details are updated.");
         customersPage.deleteCustomer(testData.get("Customer"));
-        Assert.assertFalse(customersPage.isDataPresentInGrid(testData.get("Customer") + "|" + testData.get("Status") +
-                "|" + testData.get("Stage") + "|" + testData.get("Comments")), "Checking is customer delete successful.");
-
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertFalse(customersPage.isDataPresent(customersPage.getGridData(),
+                new String[]{testData.get("Customer"), testData.get("Status"), testData.get("Stage"), testData.get("Comments")}), "Checking is customer details are updated.");
     }
 
     @TestInfo(testCaseIds={"GS-5096"})
@@ -83,7 +89,8 @@ public class CustomerTest extends BaseTest {
         customersPage = customersPage.selectUIView(testData.get("UIView"));
         String[] tags = testData.get("Tags").split("\\|");
         customersPage = customersPage.applyTags(testData.get("Customer"), tags);
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(), new String[]{testData.get("Customer"), arrayToString(tags)}), "Checking is customer details are updated.");
     }
 
     @TestInfo(testCaseIds={"GS-5097"})
@@ -94,7 +101,8 @@ public class CustomerTest extends BaseTest {
         customersPage = customersPage.selectUIView(testData.get("UIView"));
         String[] tags = testData.get("Tags").split("\\|");
         customersPage = customersPage.applyTags(testData.get("Customer"), tags);
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(), new String[]{testData.get("Customer"), arrayToString(tags)}), "Checking is customer details are updated.");
     }
 
     @TestInfo(testCaseIds={"GS-5098"})
@@ -105,22 +113,26 @@ public class CustomerTest extends BaseTest {
         customersPage = customersPage.selectUIView(testData.get("UIView"));
         String[] tags = testData.get("Tags").split("\\|");
         customersPage = customersPage.applyTags(testData.get("Customer"), tags);
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(tags)));
-        customersPage = customersPage.applyTags(testData.get("Customer"), testData.get("UpdatedTags").split("\\|"));
-        Assert.assertTrue(customersPage.isDataPresentInGrid(testData.get("Customer") + "|"+arrayToString(testData.get("UpdatedTags").split("\\|"))));
-    }
 
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(), new String[]{testData.get("Customer"), arrayToString(tags)}), "Checking is customer details are updated.");
+
+        String[] tags1 = testData.get("UpdatedTags").split("\\|");
+        customersPage = customersPage.applyTags(testData.get("Customer"), tags1);
+        customersPage.setCustomerNameFilter(testData.get("Customer"));
+        Assert.assertTrue(customersPage.isDataPresent(customersPage.getGridData(), new String[]{testData.get("Customer"), arrayToString(tags)+";"+arrayToString(tags1)}), "Checking is customer details are updated.");
+
+    }
 
     private String arrayToString(String[] values) {
         String value = "";
         for(String s : values) {
             value +=s+";";
         }
-        value = value.substring(0, value.length()-1);
-        Log.info("Value : "+value);
+        value = value.substring(0, value.length() - 1);
+        Log.info("Value : " + value);
         return value;
     }
-
     @AfterClass
     public void tearDown() {
         basepage.logout();
