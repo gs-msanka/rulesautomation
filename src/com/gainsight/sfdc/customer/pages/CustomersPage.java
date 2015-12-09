@@ -1,5 +1,7 @@
 package com.gainsight.sfdc.customer.pages;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.gainsight.pageobject.util.Timer;
@@ -57,11 +59,9 @@ public class CustomersPage extends CustomerBasePage {
             item.click(TAGS_INPUT);
             wait.waitTillElementDisplayed(TAGS_LIST, MIN_TIME, MAX_TIME);
             item.click(String.format(TAG_SELECT, tag));
-            Timer.sleep(Constants.STALE_PAUSE);     //Require this as this testcase is failing quite often.
         }
         setCustomerNameFilterOnTag(customer);
         item.click(TAG_APPLY_BUTTON);
-        Timer.sleep(2);
         waitForLoadingImagesNotPresent();
         return this;
     }
@@ -77,10 +77,10 @@ public class CustomersPage extends CustomerBasePage {
         if(isScrollExists()) {
             item.click("//a[contains(text(), '" + customer + "')]/parent::div/preceding-sibling::div[contains(@class, 'checkboxsel')]/input");
         } else {
-            List<WebElement> gridRows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[@class='ui-widget-content slick-row']");
+            List<WebElement> gridRows = element.getAllElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class, 'ui-widget-content slick-row')]");
             for(WebElement row : gridRows) {
                 try {
-                    element.getElement(row, "//a[contains(@href, 'customersuccess360')] and text()='"+customer+"'").isDisplayed();
+                    element.getElement(row, "//a[contains(@href, 'customersuccess360') and text()='"+customer+"']").isDisplayed();
                     index++;
                     break;
                 } catch (NoSuchElementException e) {
@@ -113,7 +113,6 @@ public class CustomersPage extends CustomerBasePage {
         }
         item.clearAndSetText(CUSTOMER_SEARCH_DIV+"/input[@class='filter_input']", custName);
         driver.findElement(By.xpath(CUSTOMER_SEARCH_DIV+"/input[@class='filter_input']")).sendKeys(Keys.ENTER);
-        Timer.sleep(Constants.STALE_PAUSE);
     }
 
     private void selectAccount(String customerName) {
@@ -154,25 +153,8 @@ public class CustomersPage extends CustomerBasePage {
         }
 
         if(comments != null && comments !="") {
-            field.setTextField(COMMENTS_INPUT, comments);
+            field.clearAndSetText(COMMENTS_INPUT, comments);
         }
-    }
-
-
-
-    private int getNoOfCustomersRecords(String custName) {
-        Timer.sleep(2);
-        setCustomerFilter(custName);
-        int recordCount = element.getElementCount("//div[@class='slick-cell l1 r1 slick-customer-format']/a[contains(text(), '"+custName+"')]");
-        return recordCount;
-    }
-
-    public boolean isCustomerPresent(String customerName) {
-        Timer.sleep(2);
-        if(getNoOfCustomersRecords(customerName)>0) {
-            return true;
-        }
-        return false;
     }
 
     private WebElement getCustomerRow(String customerName, String values) {
@@ -223,16 +205,7 @@ public class CustomersPage extends CustomerBasePage {
         WebElement ele = getCustomerRow(customerName, null);
         if(ele!=null) {
             ele.findElement(By.cssSelector("div>a[data-action='DELETE']")).click();
-            Timer.sleep(2);
             modal.accept();
-            Timer.sleep(2);
-            try {
-                modal.accept();
-                Log.info("Modal dialog present ,Customer can't be deleted");
-            } catch (Exception e) { //need to change it to exact exception type
-                Log.info("Modal dialog not present ,Customer can be deleted");
-                status = true;
-            }
         } else {
             throw new RuntimeException("Customer not found");
         }
@@ -240,85 +213,57 @@ public class CustomersPage extends CustomerBasePage {
         return status;
     }
 
-    public boolean isDataPresentInGrid(String values) {
-        Log.info("Data to Verify : " +values);
-        boolean result = false;
-        String[] cellValues = values.split("\\|");
-        setCustomerNameFilter(cellValues[0].trim());
-        WebElement ele = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-left']");
-        List<WebElement> rows = ele.findElements(By.cssSelector("div[class*='ui-widget-content slick-row']"));
-        Log.info("Rows :" +rows.size());
-        int a=1;  boolean hasScroll = false;
-        for(WebElement row : rows) {
-            Log.info("Checking Row : " +row.getText());
-            boolean inRowData = true;
-            WebElement rightRow= null;
-            try {
-                element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']");
-                rightRow = element.getElement("//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class,'ui-widget-content slick-row')]["+a+"]");
-                hasScroll = true;
-                Log.info("Checking Row : "+rightRow.getText());
-                Log.info("Grid has scroll bar");
-            } catch (Exception e) {
-                Log.info("Grid Doesn't have scroll bar");
+    public List<List<String>> getGridData() {
+        List<List<String>>  tableData = new ArrayList<>();
+        env.setTimeout(1);
+        if(isScrollExists()) {
+            String left = "//div[@class='grid-canvas grid-canvas-top grid-canvas-left']/div[contains(@class, 'ui-widget-content slick-row')]";
+            List<WebElement> leftNav = element.getAllElement(left);
+            for (WebElement leftEle : leftNav) {
+                List<String> rowData = new ArrayList<>();
+                String customerName = leftEle.findElement(By.cssSelector("a[href^='customersuccess360']")).getText();
+                Log.info(customerName);
+                rowData.add(customerName);
+                tableData.add(rowData);
             }
-            List<WebElement> cells = null;
-            if(hasScroll) {
-                cells = rightRow.findElements(By.cssSelector("div[class*='slick-cell']"));
-            } else {
-                cells = row.findElements(By.cssSelector("div[class*='slick-cell']"));
-            }
-
-            Log.info("No of Cells :" +cells.size());
-            int i=1;
-            outerloop:
-            for(String val : cellValues) {
-                //i=1;
-                boolean valTemp  =false;
-                for(WebElement cell : cells) {
-                    if(i==1) {
-                        ++i;
-                        if(!hasScroll) {
-                            Log.info(cell.getText());
-                            Log.info(String.valueOf(cell.getText().contains(val.trim())));
-                            if(cell.getText().contains(val.trim())) { valTemp=true; break;}
-                            if(cell.getText().contains(val.trim())) { break outerloop;}
-                        } else {
-                            if(row.getText().contains(val.trim())) { valTemp=true; break;}
-                            if(row.getText().contains(val.trim())) { break outerloop;}
-                        }
-                    } else {
-                        Log.info(val);
-                        Log.info(cell.getText());
-                        if(cell.getText().contains(val.trim())) {
-                            valTemp = true;
-                            Log.info("Value is found in cell");
-                            break;
-                        }
-                    }
-                }
-                if(!valTemp) {
-                    inRowData = false;
-                    break;
-                }
-            }
-            if(inRowData) {
-                result = true;
-            }
-            if(result) {
-                break;
-            }
-            ++a;
         }
-        return result;
+
+        String right = "//div[@class='grid-canvas grid-canvas-top grid-canvas-right']/div[contains(@class, 'ui-widget-content slick-row')]";
+        List<WebElement> rightNav = element.getAllElement(right);
+        int i=0;
+        for(WebElement rightEle: rightNav) {
+            List<WebElement> gridCells= rightEle.findElements(By.tagName("div"));
+            for(WebElement gridCell: gridCells) {
+                if(tableData.size()-1 != i) {
+                    tableData.add(new ArrayList<String>());
+                }
+                List<String> rowData = tableData.get(i);
+                String cellValue = gridCell.getText();
+                Log.info("Cell Value :" +cellValue);
+                rowData.add(cellValue);
+            }
+            i++;
+        }
+        env.setTimeout(30);
+        return tableData;
     }
 
-    private void setCustomerNameFilter(String customerName) {
+    public boolean isDataPresent(List<List<String>> gridData, String[] data) {
+        for(List<String> rowData :  gridData) {
+            if(rowData.containsAll(Arrays.asList(data))) {
+                return true;
+            }
+        }
+        Log.error("Data is not matched.");
+        return false;
+    }
+
+    public void setCustomerNameFilter(String customerName) {
         field.clearText(CUSTOMER_NAME_GIRD_FILTER_INPUT);
         if(customerName !=null) {
             field.setTextField(CUSTOMER_NAME_GIRD_FILTER_INPUT, customerName);
             driver.findElement(By.xpath(CUSTOMER_NAME_GIRD_FILTER_INPUT)).sendKeys(Keys.ENTER);
-            Timer.sleep(2);
+            Timer.sleep(1);  //Grid need to be filtered.
         }
     }
 
