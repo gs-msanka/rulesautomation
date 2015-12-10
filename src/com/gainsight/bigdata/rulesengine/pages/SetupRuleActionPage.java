@@ -458,7 +458,10 @@ public class SetupRuleActionPage extends BasePage {
             // selectValueInDropDown("value");
             if (criteria.getValue().startsWith("input_")) {
                 item.clearAndSetText(xpath + CRITERIA_SHOWFIELD_INPUT, criteria.getValue().substring(6));
-            } else {
+			} else if (criteria.isNullCheck()) {
+				item.click(xpath + "//descendant::input[@data-control='NULL-CHECKBOX']");
+			}
+            else {
                 item.click(xpath + CRITERIA_SHOWFIELD_INPUT_DROPDOWN);
                 selectValueInDropDown(criteria.getValue(), true);
             }

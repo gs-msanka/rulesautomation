@@ -359,6 +359,9 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		List<String> textFields = new ArrayList<String>();
 		textFields.add("rules_c_Text");
 		textFields.add("Custom_Text2");
+		textFields.add("Custom_Aggregation_Name");
+		textFields.add("Custom_Instance_Name");
+		textFields.add("Custom_Instance_Id");
 		objField.setTextFields(textFields);
 
 		List<String> numberFields = new ArrayList<String>();
