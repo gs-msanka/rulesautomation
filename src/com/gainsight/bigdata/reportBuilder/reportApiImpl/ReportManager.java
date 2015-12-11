@@ -436,7 +436,7 @@ public class ReportManager extends NSTestBase {
      */
     public ResponseObj saveReportGetResponsObj(String reportMaster) throws Exception {
         Log.info("Saving Report...");
-        ResponseObj responseObj = wa.doPut(API_REPORT_PUT, reportMaster, header.getAllHeaders());
+        ResponseObj responseObj = wa.doPut(API_REPORT, reportMaster, header.getAllHeaders());
         return responseObj;
     }
 
@@ -492,7 +492,7 @@ public class ReportManager extends NSTestBase {
             throw new IllegalArgumentException("Report Id Can't be null");
         }
         try {
-            ResponseObj responseObj = wa.doDelete(API_REPORT_DELETE+reportId, header.getAllHeaders());
+            ResponseObj responseObj = wa.doDelete(API_REPORT+reportId, header.getAllHeaders());
             if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
                 NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 result = nsResponseObj.isResult();

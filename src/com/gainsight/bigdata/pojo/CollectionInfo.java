@@ -139,6 +139,24 @@ public class CollectionInfo {
         private String dbCollectionName;
         @JsonProperty("CollectionID")
         private String collectionId;
+        private String assetType;
+        private String entityType;
+
+        public String getAssetType() {
+            return assetType;
+        }
+
+        public void setAssetType(String assetType) {
+            this.assetType = assetType;
+        }
+
+        public String getEntityType() {
+            return entityType;
+        }
+
+        public void setEntityType(String entityType) {
+            this.entityType = entityType;
+        }
 
         public String getDbCollectionName() {
             return dbCollectionName;
@@ -183,13 +201,13 @@ public class CollectionInfo {
 
     public static class MappingsSFDC {
         @JsonProperty("SFDC")
-        private Map<String, String> sfdc;
+        private Map<String, Object> sfdc;
 
-        public Map<String, String> getSfdc() {
+        public Map<String, Object> getSfdc() {
             return sfdc;
         }
 
-        public void setSfdc(Map<String, String> sfdc) {
+        public void setSfdc(Map<String, Object> sfdc) {
             this.sfdc = sfdc;
         }
     }

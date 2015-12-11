@@ -8,14 +8,14 @@
       "Name",
       "Account_ExternalId__c"
     ],
-    "output": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv"
+    "output": "/testdata/newstack/CoPilot/dataSet/process/Final_Accounts.csv"
   },
   "transform": {
     "query" : "",
     "useQuery" : false,
     "tableInfo": [
       {
-        "file": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv",
+        "file": "/testdata/newstack/CoPilot/dataSet/process/Final_Accounts.csv",
         "table": "TempAccount",
         "joinColumnName": "Name",
         "columns": [
@@ -26,7 +26,7 @@
         ]
       },
       {
-        "file": "/testdata/newstack/connectors/dataApi/data/Contacts.csv",
+        "file": "/testdata/newstack/CoPilot/dataSet/data/CopilotContacts.csv",
         "table": "ConnAccount",
         "joinColumnName": "AccountName",
         "columns": [
@@ -51,7 +51,7 @@
     ],
     "join": true,
     "picklist": false,
-    "output": "/testdata/newstack/connectors/dataApi/process/Final_Contacts.csv"
+    "output": "/testdata/newstack/CoPilot/dataSet/process/Final_Contacts.csv"
   },
   "load": {
     "target": "sfdc",
@@ -59,6 +59,6 @@
     "operation": "upsert",
     "contentType": "CSV",
     "externalIDField": "Contact_ExternalId__c",
-    "file": "/testdata/newstack/connectors/dataApi/process/Final_Contacts.csv"
+    "file": "/testdata/newstack/CoPilot/dataSet/process/Final_Contacts.csv"
   }
 }

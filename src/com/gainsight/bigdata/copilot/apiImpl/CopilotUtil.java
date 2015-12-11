@@ -3,6 +3,7 @@ package com.gainsight.bigdata.copilot.apiImpl;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -12,14 +13,16 @@ import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
-import com.sforce.soap.partner.sobject.SObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CopilotUtil extends NSTestBase {
 
 	ResponseObj resp;
 	String req = null;
-	private static HashMap<String,String> userMap;
+
+
+
+
 	
 	public JsonNode createSmartList(HashMap<String, String> testData,String automatedRulePayLoad)
 			throws Exception {
@@ -31,12 +34,11 @@ public class CopilotUtil extends NSTestBase {
 		smList.setType(testData.get("type"));
 		smList.setStatus(testData.get("status"));
 		Stats stats = mapper.readValue(testData.get("stats"), Stats.class);
-		smList.setStats(stats);
-			smList.setAutomatedRule(mapper.readValue(automatedRulePayLoad,
-					AutomatedRule.class));
+		//smList.setStats(stats);
+			//smList.setAutomatedRule(mapper.readValue(automatedRulePayLoad,		AutomatedRule.class));
 		Log.info("automatedRule json is " + mapper.writeValueAsString(smList));
 		
-		smList.setRefreshList(testData.get("refreshList"));
+		//smList.setRefreshList(testData.get("refreshList"));
 		smList.setDataSourceType(testData.get("dataSourceType"));
 
 		req = mapper.writeValueAsString(smList);
@@ -58,16 +60,15 @@ public class CopilotUtil extends NSTestBase {
 		smList.setType(testData.get("type"));
 		smList.setStatus(testData.get("status"));
 		Stats stats = mapper.readValue(testData.get("stats"), Stats.class);
-		smList.setStats(stats);
+		//smList.setStats(stats);
 		automatedRule = testData.get("automatedRule1")
 				+ testData.get("automatedRule2");
 		RulesUtil ru=new RulesUtil();
 		automatedRule = getResolvedCriteria(automatedRule);
-		smList.setAutomatedRule(mapper.readValue(automatedRule,
-				AutomatedRule.class));
+		//smList.setAutomatedRule(mapper.readValue(automatedRule,		AutomatedRule.class));
 		Log.info("automatedRule json is " + mapper.writeValueAsString(smList));
 		
-		smList.setRefreshList(testData.get("refreshList"));
+		//smList.setRefreshList(testData.get("refreshList"));
 		smList.setDataSourceType(testData.get("dataSourceType"));
 
 		req = mapper.writeValueAsString(smList);
