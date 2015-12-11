@@ -30,7 +30,7 @@ public class EditRulePage extends BasePage {
 
     public void waitForPageLoad() {
         Log.info("Refreshing the Page");
-   //     wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
 
     /**
