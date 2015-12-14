@@ -1,0 +1,17 @@
+{
+  "jobName": "GS-3837.",
+  "jobType": "GS-3837.",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__ScorecardFact__c",
+    "useRestApi": true,
+    "fields": [
+      "JBCXM__Account__r.Name",
+      "JBCXM__CurScoreId__r.Name"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/ActualData.csv"
+  }
+}

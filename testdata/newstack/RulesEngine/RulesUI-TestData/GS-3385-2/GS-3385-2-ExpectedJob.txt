@@ -1,0 +1,32 @@
+{
+  "jobName": "GS-3385-2",
+  "jobType": "GS-3385-2",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__CustomerInfo__c",
+    "useRestApi": true,
+    "fields": [
+      "JBCXM__CustomerName__c",
+      "JBCXM__CurScoreId__r.JBCXM__Score__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385-2/ActualData.csv"
+  },
+  "transform": {
+    "query": "Select \"C_lookup__r.Data_ExternalId__c\" as \"JBCXM__CustomerName__c\", rules_c_Number__c as \"JBCXM__CurScoreId__r.JBCXM__Score__c\" from demo",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385-2/LoadDataIntoCustomObject.csv",
+        "table": "demo",
+        "joinColumnName": "Email",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385-2/ExpectedData.csv"
+  }
+}

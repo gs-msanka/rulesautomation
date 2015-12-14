@@ -409,7 +409,7 @@ public class Customer360Scorecard extends Customer360Page  {
         return this;
 	}
 	
-	private int getOffsetForScore(String score, boolean add) {
+	public int getOffsetForScore(String score, boolean add) {
         int returnVal       = 0;
         int sliderStart     = 10;
 		int sliderEnd       = 243;
@@ -543,4 +543,9 @@ public class Customer360Scorecard extends Customer360Page  {
         }
         return new AdminScorecardSection();
     }
+    
+	public Customer360Scorecard(String s) {
+		super("Dummy Constructor");
+		Log.info("Dummy Constructor, since default constructor is used here to wait for a locator");
+	}
 }

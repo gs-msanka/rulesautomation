@@ -1,0 +1,48 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Create a rule with set score by static score using numeric scheme",
+  "ruleDescription": "Create a rule with set score by static score using numeric scheme",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "calculatedFields": [
+      {
+        "fieldName": "Aggregated Field",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "SUM",
+          "sourceField": "rules_c_Number",
+          "periodType": "Past",
+          "noOfPeriods": "30",
+          "granularity": "Days"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "rules_c_Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "setScore",
+      "action": {
+        "selectMeasure": "Cases Closed",
+        "setScoreFrom": "Aggregated Field",
+        "isScaleFieldValue": true,
+        "sourceRangeFrom": 0,
+        "sourceRangeTo": 100,
+        "comments": "Test comments for Set Score"
+      }
+    }
+  ]
+}
