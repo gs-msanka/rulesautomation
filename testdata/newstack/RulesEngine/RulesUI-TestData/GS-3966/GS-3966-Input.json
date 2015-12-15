@@ -1,0 +1,88 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "loadToSFDCActionUsingNativeData",
+  "ruleDescription": "loadToSFDCActionUsingNativeData - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Picklist",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_MultiPicklist",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup",
+            "destination": "custom_lookup"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Picklist",
+            "destination": "C_Picklist",
+            "pickList": true,
+            "pickListMappings": [
+              {
+                "source": "Pvalue1",
+                "destination": "Pvalue1"
+              },
+              {
+                "source": "Pvalue2",
+                "destination": "Pvalue2"
+              },
+              {
+                "source": "Pvalue3",
+                "destination": "Pvalue3"
+              }
+            ]
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_MultiPicklist",
+            "destination": "C_MultiPicklist",
+            "pickList": true,
+            "pickListMappings": [
+              {
+                "source": "MPvalue1",
+                "destination": "MPvalue1"
+              },
+              {
+                "source": "MPvalue2",
+                "destination": "MPvalue2"
+              },
+              {
+                "source": "MPvalue3",
+                "destination": "MPvalue3"
+              }
+            ]
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "jobName": "GS-3963",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/DataLoadToMda.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3965/ProcessedData-DataLoadToMda-GS3965.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "dateFormat": "yyyy-MM-dd",
+        "fieldName": "CustomDate"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "CustomDateTime",
+        "dateFormat": "yyyy-MM-dd'T'HH:mm:ss'.000Z'"
+      }
+    ]
+  }
+}

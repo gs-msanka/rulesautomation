@@ -54,6 +54,10 @@
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToUsageTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest" />
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
@@ -70,6 +74,7 @@
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
       </classes>
    </test>
 </suite>

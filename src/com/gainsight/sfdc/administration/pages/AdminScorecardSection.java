@@ -1,10 +1,12 @@
 package com.gainsight.sfdc.administration.pages;
 
 import com.gainsight.pageobject.util.Timer;
+
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.TimeoutException;
 
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.testdriver.Log;
 
 import java.sql.Time;
 
@@ -89,4 +91,31 @@ public class AdminScorecardSection extends BasePage {
 				
 			}
 		}
+		
+	/**
+	 * Method to enable only "Enable Scorecard" option in Scorecard Configuration
+	 */
+	public void enableOnlyScorecardOptionInGlobalSettings() {
+		item.click(GLOBAL_SETTINGS);
+		wait.waitTillElementPresent("//div[@class='global-settings']", MIN_TIME, MAX_TIME);
+		item.selectCheckBox(ENABLE_SCORECARD);
+		if (element.getElement(CUST_ROLLUP).isSelected()) {
+			item.click(CUST_ROLLUP);
+		}
+		item.click(APPLY_GLOBAL_SETTINGS);
+		waitTillNoLoadingIcon();
+	}
+	
+	public AdminScorecardSection(String s) {
+		Log.info("Dummy Parameterized Constructor to call any method from this class, Since Default constructor is used for other purpose");
+	}
+
+	/** Method to open scoreCardPage directly
+	 * @param - page url
+	 */
+	public void openScoreCardSectionPage(String scoreCardPage) {
+		URL = scoreCardPage;
+		open();
+		wait.waitTillElementDisplayed("//div[contains(@class, 'Score-configuration-tab')]", MIN_TIME, MAX_TIME);
+	}	
 }		

@@ -1,0 +1,108 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Load To UsageAction - Instance Level - Monthly with advanced criteria",
+  "ruleDescription": "Load To UsageAction - Instance Level - Monthly with advanced criteria - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Aggregation_Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number4",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Instance_Id",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Instance_Name",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToUsage",
+      "action": {
+        "fieldMappings": [
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "C_lookup",
+            "destination": "Account"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Date",
+            "destination": "Date"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Aggregation_Name ",
+            "destination": "Usage Data Aggregation Level  Name"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "rules_c_Number",
+            "destination": "Active Users"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number2",
+            "destination": "DB Size"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number3",
+            "destination": "Emails Sent Count"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Number4",
+            "destination": "Files Downloaded"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Instance_Id",
+            "destination": "Instance Id"
+          },
+          {
+            "sourceObject": "C_Custom__c",
+            "sourceField": "Custom_Instance_Name",
+            "destination": "Instance Name"
+          }
+        ]
+      }
+    }
+  ]
+}

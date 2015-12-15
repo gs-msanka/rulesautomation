@@ -242,4 +242,19 @@ public class MongoDBDAO  {
 		andQuery.put("$and", obj);
         return mongoUtil.removeMany(mongoCollection, andQuery);
     }
+    
+	/**
+	 * Method to delete a particular document based on collectionName from collectionMaster
+	 * @param tenantID - Tenant id
+	 * @param mongoCollection - collectionName
+	 * @param documentMatcher - collectionName Matcher
+	 * @return
+	 */
+	public boolean deleteMongoDocumentFromCollectionMaster(String tenantID, String mongoCollection, String documentMatcher) {
+		Document whereQuery = new Document();
+		whereQuery.put("TenantId", tenantID);
+		whereQuery.put("CollectionDetails.CollectionName", new Document("$regex", documentMatcher).append("$options", "i"));
+		Log.info(whereQuery.toString());
+		return mongoUtil.removeMany(mongoCollection, whereQuery);
+    }
 }

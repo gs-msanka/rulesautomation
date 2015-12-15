@@ -199,7 +199,8 @@ public class CreateRuleTest extends BaseTest {
 					.enabledRedShiftWithDBDetails(tenantDetails));
 		}
 		mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-		mongoConnection.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER);
+		mongoConnection.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "MONGO");
+		mongoConnection.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "RedShift");
 		rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
 	}
 
@@ -376,19 +377,7 @@ public class CreateRuleTest extends BaseTest {
         verifier.assertVerification();
     }
 
-    @Test
-    public void testLoadToCustomersWithMatrixData() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC5.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-        int expectedCount = 9;
-        int actualRecordCount = sfdc
-                .getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
-        Log.info("Load to customers records count" + " " + actualRecordCount);
-        Assert.assertEquals(expectedCount, actualRecordCount);
-    }
+
 
     public void assertForAllActionsUsingSFDCData(RulesPojo rulesPojo) throws Exception {
         List<RuleAction> ruleActions = rulesPojo.getSetupActions();

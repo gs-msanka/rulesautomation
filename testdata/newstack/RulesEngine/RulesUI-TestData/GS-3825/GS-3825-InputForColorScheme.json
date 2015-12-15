@@ -1,0 +1,41 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Create a rule with set score by static score using grading scheme",
+  "ruleDescription": "Create a rule with set score by static score using grading scheme",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "setScore",
+      "action": {
+        "selectMeasure": "Cases Closed",
+        "scoringSchemeType": "Color",
+        "isStaticScore": true,
+        "staticScoreValue": "#eba638",
+        "comments": "Test comments for Set Score , Test comments for Set Score, Test comments for Set Score, Test comments for Set Score"
+      },
+      "criterias": [
+        {
+          "showField": "C_Custom Object::C_lookup",
+          "operator": "not equal to",
+          "isNullCheck": true
+        }
+      ]
+    }
+  ]
+}
