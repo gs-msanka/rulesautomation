@@ -19,7 +19,7 @@ public class SetupRulePage extends BasePage {
     private final String SOURCE_OBJECT_DRPDWN_ITEM_LOCATOR = "//li[@class='ui-multiselect-option']/label/input[@value='%s']";
     private final String SOURCE_FIELD_SEARCH = "//div[contains(@class, 'ui-multiselect-single')]/descendant::input[@placeholder='Search']";
     private final String FIELD_LIST_DRAG_ITEM = "//li[@class='list-group-item' and @data-parent='%s']/span[contains(@class,'field-name') and text()='%s']/../span[contains(@class,'pull-right')]";
-    private final String ADVANCE_LOGIC_INPUT = "//div[@class='advanced-logic']/input";
+    private final String ADVANCE_LOGIC_INPUT = "//div[@class='advanced-logic']/span[@class='expression']";
     private final String NEXT_BUTTON = "//span[contains(@class, 'visual-query-build') and text()='Next']";
     private final String PRIVIEW_RESULTS_BUTTON = "//span[contains(@class, 'visual-show-results') and text()='Preview Results']";
     private final String LOADING_ICON = "//div[contains(@class, 'gs-loader-image')]";
