@@ -75,11 +75,10 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		header.addHeader("appUserId", sfdcInfo.getUserId());
 		header.addHeader("appSessionId", sfdcInfo.getSessionId());
 		gsDataImpl = new GSDataImpl(header);
-/*		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
-		sfdc.runApexCode("Delete [SELECT Id FROM C_Custom__c];");
-		
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+		sfdc.runApexCode("Delete [SELECT Id FROM C_Custom__c];");		
 		JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/LoadDataIntoCustomObject.txt"),JobInfo.class);
-		dataETL.execute(jobInfo);*/
+		dataETL.execute(jobInfo);
 	}
 
 	@BeforeMethod
@@ -251,15 +250,37 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		
-/*		//Verifying the agrregated field vales with the expected data and actual aggregated data
-		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-ExpectedJob.txt"),JobInfo.class));	
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ExpectedData.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ActualData.csv")));
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ActualData.csv")));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
-		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");*/
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+
+	}
+	
+	
+	@TestInfo(testCaseIds = { "GS-4042" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with Average as the aggregation over time for any SFDC object")
+	public void testCalculatedFieldsUsingAggregationOverTimeType() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/GS-4042-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and then 4 Years 
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/GS-4042-ExpectedJob.txt"), JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 
 	}
 
