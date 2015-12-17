@@ -85,12 +85,12 @@ public class SfdcRestApi {
                         JsonNode innerNode  = record.get(split[0]);
                         String val = "";
                         if(innerNode !=null) {
-                            val = innerNode.get(split[1]) ==null ? "" : innerNode.get(split[1]).asText();
+                            val = innerNode.get(split[1]).isNull() ? "" : innerNode.get(split[1]).asText();
                         }
                         dataRecord.put(field, val);
 
                     } else {
-                        dataRecord.put(field, record.get(field) == null ? "" : record.get(field).asText());
+                        dataRecord.put(field, record.get(field).isNull()  ? "" : record.get(field).asText());
                     }
                 }
                 queryData.add(dataRecord);

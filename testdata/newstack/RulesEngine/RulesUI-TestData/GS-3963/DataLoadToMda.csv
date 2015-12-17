@@ -1,0 +1,10 @@
+CustomName,CustomText,CustomTextArea,CustomDate,CustomDateTime,CustomBooleanField1,CustomNumber,CustomPickList,CustomMultiPickList,CustomPercentage,CustomCurrency,CustomEmail,CustomUrl
+RULESUI Account 1,RULESUI Account 1 text,RULESUI Account 1 text2,-15,-15,TRUE,30,Pvalue1,MPvalue1,10,15,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 2,RULESUI Account 2 text,RULESUI Account 2 text2,-2,-2,TRUE,31,Pvalue2,MPvalue2,11,16,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 3,RULESUI Account 3 text,RULESUI Account 3 text2,-3,-3,FALSE,32,Pvalue3,MPvalue3,12,18.15,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 4,RULESUI Account 4 text,RULESUI Account 4 text2,-4,-4,FALSE,33,Pvalue1,MPvalue1,13,11.11,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 5,RULESUI Account 5 text,RULESUI Account 5 text2,-5,-5,TRUE,34,Pvalue2,MPvalue2,14,16,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 6,RULESUI Account 6 text,RULESUI Account 6 text2,-6,-6,TRUE,35,Pvalue3,MPvalue3,15,18.15,athaduka@gainsight.com,Junk url
+RULESUI Account 7,RULESUI Account 7 text,RULESUI Account 7 text2,-7,-7,FALSE,36,Pvalue1,MPvalue1,16,11.11,junk email,https://gainsight.com
+RULESUI Account 8,RULESUI Account 8 text,RULESUI Account 8 text2,-8,-8,FALSE,37,Pvalue2,MPvalue2,17,16,athaduka@gainsight.com,https://gainsight.com
+RULESUI Account 9,RULESUI Account 9 text,,-9,-9,,,Pvalue3,MPvalue3,18,18.15,athaduka@gainsight.com,https://gainsight.com

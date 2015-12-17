@@ -13,8 +13,10 @@ import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping.PickListM
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.gainsight.pageobject.util.Timer;
+import com.gainsight.sfdc.customer360.pages.Customer360Scorecard;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Application;
@@ -63,6 +65,8 @@ public class SetupRuleActionPage extends BasePage {
     private final String LICENCED_DROPDOWN_LOADTOFATURE = "//div[contains(@class, 'feature-lic-constant-block')]/descendant::select/following-sibling::button";
     private final String ENABLED_DROPDOWN_LOADTOFATURE = "//div[contains(@class, 'feature-enabled-constant')]/descendant::select/following-sibling::button";
     private final String ENABLED_CONSTANT_RADIO_BUTTON = "//input[@class='feature_enabled_radio']";
+    private final String SCORECARD_SCALE_FIELD_CHECKBOX="//div[contains(@class, 'scale_score_head')]/descendant::input";
+    private final String SCALING_RANGE = "//input[contains(@class, '%s')]";
 
     private final String SCORE_MEASURE = "//label[contains(text(),'Measure')]/..//button";
 
@@ -350,8 +354,27 @@ public class SetupRuleActionPage extends BasePage {
             item.click(xpath + fieldMapping);
             String fieldMappingDestination = String.format(FIELD_MAPPING_DESTINATION, fieldMappingObject.getDestination());
             item.click(xpath + fieldMapping + fieldMappingDestination);
-        }
-    }
+			if (fieldMappingObject.isDefaultValue()) {
+				item.click(xpath+ fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-hasDefaultValue')]");
+				if (fieldMappingObject.isDefaultBooleanValue()) {
+					item.click(xpath+ fieldMapping+ "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
+				} else {
+					element.setText(xpath+ fieldMapping + "//parent::div/following-sibling::div/descendant::input", fieldMappingObject.getDefaultValueInput());
+					element.getElement(xpath+ fieldMapping + "//parent::div/following-sibling::div/descendant::input").sendKeys(Keys.ENTER);
+				}
+			}
+			if (fieldMappingObject.isIdentifier()) {
+				item.click(xpath+ fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-isIdentifier')]");
+			}
+			if (fieldMappingObject.isPickList()) {
+				for (PickListMappings pickListMappings : fieldMappingObject.getPickListMappings()) {
+					item.click(xpath+ fieldMapping+ "//parent::div/following-sibling::div/descendant::li[@data-value='"+ pickListMappings.getSource()+ "']/descendant::select");
+					String pickListDestination = "//parent::div/following-sibling::div/descendant::li[@data-value='"+ pickListMappings.getSource()+ "']/descendant::option[text()='"+ pickListMappings.getDestination() + "']";
+					item.click(xpath + fieldMapping + pickListDestination);
+				}
+			}
+		}
+	}
 
     public void loadToMdaCollection(LoadToMDAAction loadToMDAAction, int i) {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + i + "]";
@@ -411,11 +434,21 @@ public class SetupRuleActionPage extends BasePage {
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Set Score");
         item.click(xpath + SCORE_MEASURE);
-        selectValueInDropDown(setScoreAction.getSelectMeasure());
-        item.clearAndSetText(xpath + SCORECARD_COMMENTS, setScoreAction.getComments());
-        item.click(xpath + "//div[contains(@class, 'overallscore')]/descendant::select/following-sibling::button");
-        selectValueInDropDown(setScoreAction.getSetScoreFrom());
-    }
+        selectValueInDropDown(setScoreAction.getSelectMeasure(), true);
+        item.clearAndSetText(xpath + SCORECARD_COMMENTS, setScoreAction.getComments()); 
+		if (setScoreAction.getSetScoreFrom() != null && !setScoreAction.getSetScoreFrom().isEmpty()) {
+			item.click(xpath + "//div[contains(@class, 'overallscore')]/descendant::select/following-sibling::button");
+			selectValueInDropDown(setScoreAction.getSetScoreFrom(), true);
+		}
+		if (setScoreAction.isStaticScore()) {
+			updateMeasureScore(setScoreAction.getStaticScoreValue(),setScoreAction.getScoringSchemeType());
+		}
+		if (setScoreAction.isScaleFieldValue()) {
+			item.selectCheckBox(SCORECARD_SCALE_FIELD_CHECKBOX);
+			element.clearAndSetText(String.format(SCALING_RANGE, "scaleFrom"), String.valueOf(setScoreAction.getSourceRangeFrom()));
+			element.clearAndSetText(String.format(SCALING_RANGE, "scaleTo"), String.valueOf(setScoreAction.getSourceRangeTo()));
+		}
+	}
 
     public void addCriteria(Criteria criteria, int r, int c) {
     	String fieldName=criteria.getShowField();
@@ -439,7 +472,10 @@ public class SetupRuleActionPage extends BasePage {
             // selectValueInDropDown("value");
             if (criteria.getValue().startsWith("input_")) {
                 item.clearAndSetText(xpath + CRITERIA_SHOWFIELD_INPUT, criteria.getValue().substring(6));
-            } else {
+			} else if (criteria.isNullCheck()) {
+				item.click(xpath + "//descendant::input[@data-control='NULL-CHECKBOX']");
+			}
+            else {
                 item.click(xpath + CRITERIA_SHOWFIELD_INPUT_DROPDOWN);
                 selectValueInDropDown(criteria.getValue(), true);
             }
@@ -521,4 +557,24 @@ public class SetupRuleActionPage extends BasePage {
 		}
 		wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
     }
+    
+	/**
+	 * @param score - schrome value
+	 * @param scoringScheme - scoring scheme like numeric/color/grade
+	 */
+	public void updateMeasureScore(String score, String scoringScheme){
+		item.click("//div[@class='score-area']/descendant::li");
+		Actions builder = new Actions(Application.getDriver());
+		List<WebElement> svgObject = element.getAllElement(MEASURE_SCORE_SLIDER_CIRCLE);
+		for (WebElement svg : svgObject) {
+			if (svg.isDisplayed())
+			{
+				builder.moveToElement(svg);
+				Customer360Scorecard scoreCards=new Customer360Scorecard("test");
+				scoreCards.setScheme(scoringScheme);
+				builder.dragAndDropBy(svg, scoreCards.getOffsetForScore(score, true), 0).build().perform();
+			}
+		}
+		item.click("//div[@class='sliderH' and contains(@id, 'gs')]/descendant::a[@data-action='SAVE']/div[@class='save-mark']");
+	}
 }

@@ -1,0 +1,44 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Create a rule with set score from field value using numeric scheme",
+  "ruleDescription": "Create a rule with set score from field value - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "setScore",
+      "action": {
+        "selectMeasure": "Cases Closed",
+        "setScoreFrom": "Custom_Number3",
+        "comments": "Test comments for Set Score , Test comments for Set Score, Test comments for Set Score, Test comments for Set Score"
+      }
+    }
+  ]
+}

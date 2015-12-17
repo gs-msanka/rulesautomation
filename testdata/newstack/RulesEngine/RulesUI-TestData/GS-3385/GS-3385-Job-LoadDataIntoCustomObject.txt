@@ -1,0 +1,27 @@
+{
+  "jobName": "Load Data into custom object",
+  "jobType": "Load Data into custom object",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "load": {
+    "target": "sfdc",
+    "sObject": "C_Custom__c",
+    "operation": "insert",
+    "contentType": "CSV",
+    "externalIDField": "rules_c_ExternalID__c",
+    "cleanUp": false,
+    "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/LoadDataIntoCustomObject-Output.csv"
+  },
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/LoadDataIntoCustomObject.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/LoadDataIntoCustomObject-Output.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "rules_c_Date__c"
+      }
+    ]
+  }
+}

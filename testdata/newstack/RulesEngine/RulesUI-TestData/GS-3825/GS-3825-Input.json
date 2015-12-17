@@ -1,0 +1,39 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Create a rule with set score by static score using numeric scheme",
+  "ruleDescription": "Create a rule with set score by static score using numeric scheme",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "setScore",
+      "action": {
+        "selectMeasure": "Cases Closed",
+        "setScoreFrom": "Scoring scheme",
+        "scoringSchemeType": "Score",
+        "isStaticScore": true,
+        "staticScoreValue": "61",
+        "comments": "Test comments for Set Score , Test comments for Set Score, Test comments for Set Score, Test comments for Set Score"
+      }
+    }
+  ]
+}

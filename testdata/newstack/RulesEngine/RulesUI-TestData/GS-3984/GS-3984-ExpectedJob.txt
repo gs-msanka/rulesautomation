@@ -1,0 +1,93 @@
+{
+  "jobName": "3984",
+  "jobType": "transform",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": false,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "RulesSFDCCustom__c",
+    "fields": [
+      "C_Checkbox__c",
+      "C_Currency__c",
+      "C_Email__c",
+      "C_Number__c",
+      "C_Percent__c",
+      "C_TextArea__c",
+      "C_Text__c",
+      "C_URL__c",
+      "InputDateTime__c",
+      "InputDate__c",
+      "Name"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ActualData.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ExpectedData1.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Name",
+            "alias": "Name"
+          },
+          {
+            "name": "C_URL__c",
+            "alias": "C_URL__c"
+          },
+          {
+            "name": "C_Text__c",
+            "alias": "C_Text__c"
+          },
+          {
+            "name": "C_TextArea__c",
+            "alias": "C_TextArea__c"
+          },
+          {
+            "name": "C_Percent__c",
+            "alias": "C_Percent__c"
+          },
+          {
+            "name": "C_Number__c",
+            "alias": "C_Number__c"
+          },
+          {
+            "name": "C_Email__c",
+            "alias": "C_Email__c"
+          },
+          {
+            "name": "C_Checkbox__c",
+            "alias": "C_Checkbox__c"
+          },
+          {
+            "name": "C_Currency__c",
+            "alias": "C_Currency__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/ProcessedData-DataLoadToMda-GS3984.csv",
+        "table": "accounts",
+        "joinColumnName": "CustomName",
+        "columns": [
+          {
+            "name": "CustomDate",
+            "alias": "InputDate__c"
+          },
+          {
+            "name": "CustomDateTime",
+            "alias": "InputDateTime__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3984/GS3984-ExpectedData2.csv"
+  }
+}

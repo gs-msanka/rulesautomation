@@ -1,0 +1,15 @@
+{
+  "jobName": "Load Account For Custom Rules",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "load": {
+    "target": "sfdc",
+    "sObject": "C_Custom__c",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "rules_c_ExternalID__c",
+    "cleanUp": false,
+    "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3966/RulesUI_CustomObjectDataLoad.csv"
+  }
+}
