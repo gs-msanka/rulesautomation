@@ -464,7 +464,7 @@ public class SetupRuleActionPage extends BasePage {
         selectValueInDropDown(criteria.getOperator() , true);
         if (criteria.getField().equalsIgnoreCase("field")) {
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH);
-            selectValueInDropDown("field");
+            selectValueInDropDown("field", true);
             item.click(xpath + CRITERIA_SHOWFIELD_FORWIDTH_VALUE);
             selectValueInDropDown(criteria.getValue(), true);
         } else {

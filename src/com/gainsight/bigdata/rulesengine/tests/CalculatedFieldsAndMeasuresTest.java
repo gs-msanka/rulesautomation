@@ -91,7 +91,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 
 	@TestInfo(testCaseIds = { "GS-4200" })
 	@Test(description = "Test case to verify if the calculated Fields for comparision calculation type with percentage is working fine when Fields A and B are from Show Fields")
-	public void testCalculatedFields() throws Exception {
+	public void testCalculatedFieldsWithBothFieldsFromShowFieldsWithPercentageFormula() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/GS-4200-Input.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
@@ -112,7 +112,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 
 	@TestInfo(testCaseIds = { "GS-4204" })
 	@Test(description = "Test case to verify if the calculation type is comparision when Both fields are aggregated over time")
-	public void testCalculatedFields2() throws Exception {
+	public void testCalculatedFieldsWithBothFieldsFromShowFieldsWithAggregation() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-Input.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
@@ -168,6 +168,72 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/GS-4232-ExpectedJob.txt"),JobInfo.class));	
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/ExpectedData.csv")));
 		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4234" })
+	@Test(description = "Test case tries to verify if the calculation for Comparative fields with percentage is working fine when Field A is from Aggregated Fields and field B is from Show Field using matrix data")
+	public void testCalculatedFieldsWithAggregatedAndShowFieldUsingMatrixData() throws Exception {
+		
+		// Creating collection with data as source collection
+		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/CollectionSchema.json")),CollectionInfo.class);
+		collectionInfo.getCollectionDetails().setCollectionName("GS-4234-" + date.getTime());
+		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
+		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
+		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
+		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
+		
+		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/DataloadJob.txt")), JobInfo.class);
+		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
+		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
+		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
+		Assert.assertTrue(nsResponseObj.isResult());
+		
+		// Setting the collectionName value to the source object selection and others in input json
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/GS-4234-Input.json"), RulesPojo.class);
+		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
+		loadToSFDCAction.getFieldMappings().get(1).setSourceObject(collectionName);
+		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToSFDCAction, JsonNode.class));
+		rulesPojo.getSetupRule().setSelectObject(collectionName);
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));
+				
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/GS-4234-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4236" })
+	@Test(description = "Test case to verify if the calculated Fields for comparision calculation type with Actual Value is working fine when Fields A and B are from Show Fields")
+	public void testCalculatedFieldsWithBothFieldsFromShowFieldsWithActualValue() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/GS-4236-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/GS-4236-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/ActualData.csv")));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));

@@ -162,7 +162,7 @@ public class SetupRulePage extends BasePage {
         element.dragAndDrop(sourceXpath, ACTION_FIELDS_DIV);     
 		String filterOperator = String.format(ACTION_FILTER_OPERATOR, object+ "::" + fields);
 		item.click(filterOperator);
-		selectValueInDropDown(operator);
+		selectValueInDropDown(operator, true);
 		if (value.startsWith("select_")) {
 			value = value.substring(7);
 			String filterSValue = String.format(ACTION_FILTER_SVALUE, object+ "::" + fields);
