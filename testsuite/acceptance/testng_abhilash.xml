@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="RulesEngine UI Automation Project" preserve-order="true">
-   <listeners>
-      <listener class-name="com.gainsight.utils.AutTestListener" />
-      <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
-   </listeners>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithNumericSchemeTest" />

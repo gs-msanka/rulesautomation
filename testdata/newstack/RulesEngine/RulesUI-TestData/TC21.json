@@ -72,7 +72,7 @@
         ]
       }
     ],
-    "advancedLogic": "((A and B and E) or (C and H) or (D and F)) or (I and J)",
+    "advancedLogic": "(A AND B AND E) OR (C AND H) OR (D AND F) OR (I AND J) OR G",
     "timeIdentifier": "DateTime1"
   }
 }
