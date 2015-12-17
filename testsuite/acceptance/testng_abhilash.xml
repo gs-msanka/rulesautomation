@@ -4,16 +4,18 @@
       <listener class-name="com.gainsight.utils.AutTestListener" />
       <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
    </listeners>
-   <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
-      <parameter name="dbStoreType" value="Redshift" />
-      <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
-      </classes>
-   </test>
-      <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+   <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
       <parameter name="dbStoreType" value="Mongo" />
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
+            <methods>
+               <include name="verifyRecordsOnDateFiltersUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
+               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
+            </methods>
+         </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
       </classes>
    </test>
 </suite>
