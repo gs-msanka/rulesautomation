@@ -1,24 +1,41 @@
 package com.gainsight.bigdata.copilot.apiImpl;
 
+import com.gainsight.bigdata.copilot.bean.emailProp.EmailProperties;
 import com.gainsight.bigdata.copilot.bean.emailTemplate.EmailTemplate;
 import com.gainsight.bigdata.copilot.bean.outreach.OutReach;
+import com.gainsight.bigdata.copilot.bean.outreach.OutReachExecutionHistory;
 import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
+import com.gainsight.bigdata.copilot.bean.webhook.mandrill.MandrillWebhookEvent;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.RuleExecutionHistory;
 import com.gainsight.bigdata.pojo.Schedule;
+import com.gainsight.bigdata.segmentio.EventManager;
+import com.gainsight.bigdata.segmentio.EventSubmitter;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.CryptHandler;
 import com.gainsight.utils.Verifier;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.message.BasicNameValuePair;
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static com.gainsight.bigdata.urls.ApiUrls.*;
 
@@ -30,10 +47,14 @@ public class CopilotAPIImpl {
     private Header header;
     WebAction wa = new WebAction();
     ObjectMapper mapper = new ObjectMapper();
+    Header tempHeader = new Header();
+    private static final String MANDRILL_POST_PARAM_NAME = "mandrill_events";
+
 
     public CopilotAPIImpl(Header header) {
         Log.info("Initializing copilot...");
         this.header = header;
+        tempHeader.addHeader("Content-Type", "application/json");
     }
 
     public String createSmartListExecuteAndGetId(String payload) throws Exception {
@@ -263,6 +284,7 @@ public class CopilotAPIImpl {
 
     public NsResponseObj getAllOutReachNsResponse() throws Exception {
         ResponseObj responseObj = getAllOutreachResponseObj();
+        Log.info("Response Obj :" + responseObj.toString());
         if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             return nsResponseObj;
@@ -351,12 +373,25 @@ public class CopilotAPIImpl {
         return responseObj;
     }
 
-    public ResponseObj getOutreachExecutionHistory(String outreachId) throws Exception {
+    public List<OutReachExecutionHistory> getOutReachExecutionHistory(String outreachId) throws Exception {
+        ResponseObj responseObj = getOutreachExecutionHistoryResponseObj(outreachId);
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if(nsResponseObj.isResult()) {
+                List<OutReachExecutionHistory> outReachExecutionHistoryList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<OutReachExecutionHistory>>(){});
+                return outReachExecutionHistoryList;
+            }
+        }
+        Log.error("Response Obj :" + responseObj.toString());
+        throw new RuntimeException("Response Obj :" +responseObj.toString());
+    }
+
+    public ResponseObj getOutreachExecutionHistoryResponseObj(String outreachId) throws Exception {
         if(outreachId == null || outreachId.isEmpty()) {
             throw new IllegalArgumentException("OutreachId Id is mandatory");
         }
         ResponseObj responseObj = wa.doGet(String.format(API_OUTREACH_EXECUTION_HISTORY, outreachId), header.getAllHeaders());
-        Log.debug("Response Obj : " +responseObj.toString());
+        Log.debug("Response Obj : " + responseObj.toString());
         return responseObj;
     }
 
@@ -395,6 +430,9 @@ public class CopilotAPIImpl {
                 HashMap<String, String> resultSet = mapper.convertValue(nsResponseObj.getData(), HashMap.class);
                 statusId = resultSet.get("statusId");
             }
+        }
+        if(statusId ==null) {
+            throw new RuntimeException(responseObj.toString());
         }
         return statusId;
     }
@@ -447,16 +485,63 @@ public class CopilotAPIImpl {
 
     public ResponseObj getAllSchedulesResposeObj(String payload) throws Exception {
         ResponseObj responseObj = wa.doPost(API_SCHEDULES_ALL, header.getAllHeaders(), payload);
-        Log.debug("Response Obj : " +responseObj.toString());
+        Log.debug("Response Obj : " + responseObj.toString());
         return responseObj;
     }
 
-    public ResponseObj scheduleOutReach(String payload) throws Exception {
+    public Schedule scheduleOutReach(String payload) throws Exception {
+        ResponseObj responseObj = scheduleOutReachResponseObj(payload);
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if(nsResponseObj.isResult()) {
+                Schedule schedule = mapper.convertValue(nsResponseObj.getData(), Schedule.class);
+                return schedule;
+            }
+        }
+        throw new RuntimeException("Response Obj :" +responseObj.toString());
+    }
+
+    public ResponseObj scheduleOutReachResponseObj(String payload) throws Exception {
         ResponseObj responseObj = wa.doPost(API_SCHEDULE, header.getAllHeaders(), payload);
         Log.debug("Response Obj : " +responseObj.toString());
         return responseObj;
     }
 
+    public Schedule updateSchedule(String payload) throws Exception {
+        ResponseObj responseObj = wa.doPut(API_SCHEDULE, payload, header.getAllHeaders());
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if(nsResponseObj.isResult()) {
+                Schedule schedule = mapper.convertValue(nsResponseObj.getData(), Schedule.class);
+                return schedule;
+            }
+        }
+        throw new RuntimeException("Failed to Update Scdhuele : " +responseObj.toString());
+    }
+
+    public ResponseObj checkUnScribeLink(String postFixUrl) throws Exception {
+        Header tempHeader = new Header();
+        tempHeader.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+
+        ResponseObj responseObj = wa.doGet(API_SUBSCRIBE_EMAIL + postFixUrl, tempHeader.getAllHeaders());
+        Log.debug("Response Obj :" + responseObj.toString());
+        return responseObj;
+    }
+
+    public ResponseObj unSubcribe(List<org.apache.http.NameValuePair> nameValuePairList) throws Exception {
+        Header tempHeader = new Header();
+        tempHeader.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+
+        ResponseObj responseObj = wa.doPost(API_SUBSCRIBE_EMAIL,tempHeader.getAllHeaders(), new UrlEncodedFormEntity(nameValuePairList));
+        return responseObj;
+    }
+
+    /*public ResponseObj unSubscribe(HttpEntity httpEntity) {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        //StringBody value = new StringBody(metadata, ContentType.APPLICATION_JSON);
+        builder.addPart("metadata", value);
+    }
+*/
     public List<HashMap<String, Object>> getSmartListData(String smartListId, int records) throws Exception {
         ResponseObj responseObj = getSmartListDataResponseObj(smartListId, records);
         if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
@@ -555,13 +640,14 @@ public class CopilotAPIImpl {
         return responseObj;
     }
 
-    public HashMap<String, RuleExecutionHistory> getAllSmartListStatus() throws Exception {
+    public HashMap<String, List<RuleExecutionHistory>> getAllSmartListStatus() throws Exception {
         ResponseObj responseObj = getAllSmartListStatusResponseObj();
         if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
             JsonNode content = mapper.readTree(responseObj.getContent());
             if(content.get("result").asBoolean()) {
                 JsonNode statusDetails = content.get("data").get("statusDetails");
-                HashMap<String, RuleExecutionHistory> executionHistory = mapper.readValue(statusDetails, HashMap.class);
+                HashMap<String, List<RuleExecutionHistory>> executionHistory = mapper.readValue(statusDetails, new TypeReference<HashMap<String, ArrayList<RuleExecutionHistory>>>() {
+                });
                 return executionHistory;
             }
         }
@@ -659,6 +745,7 @@ public class CopilotAPIImpl {
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             if(nsResponseObj.isResult()) {
                 EmailTemplate emailTemplate = mapper.convertValue(nsResponseObj.getData(), EmailTemplate.class);
+                return emailTemplate;
             }
         }
         Log.error("Failed to update Email Template Name, ReponseObj " +responseObj.toString());
@@ -677,6 +764,7 @@ public class CopilotAPIImpl {
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             if(nsResponseObj.isResult()) {
                 OutReach outReach = mapper.convertValue(nsResponseObj.getData(), OutReach.class);
+                return outReach;
             }
         }
         Log.error("Failed to update Email Template Name, ReponseObj " +responseObj.toString());
@@ -684,7 +772,7 @@ public class CopilotAPIImpl {
     }
 
     public ResponseObj updateOutReachNameResponseObj(String outReachId, String outReachName) throws Exception {
-        String payload = "{campaignId: \""+outReachId+"\", name: \""+outReachName+"\"}";
+        String payload = "{\"campaignId\": \""+outReachId+"\", \"name\": \""+outReachName+"\"}";
         ResponseObj responseObj = wa.doPut(API_OUTREACH_NAME_UPDATE, payload, header.getAllHeaders());
         return responseObj;
     }
@@ -736,8 +824,103 @@ public class CopilotAPIImpl {
         throw new NoSuchElementException("Template Id Not found : " +tempateId);
     }
 
+    public boolean sendSendGridWebHookEvents(String payload) throws Exception {
+        ResponseObj responseObj = wa.doPost(API_WEB_HOOK_SENDGRID, tempHeader.getAllHeaders(), payload);
+        Log.info("Response Obj :" +responseObj.toString());
+        return responseObj.getStatusCode() == HttpStatus.SC_OK;
+    }
 
+    public boolean sendSendGridWebHookEvents(List<String> events) throws Exception {
+        List<HttpEntity> entities = new ArrayList<>();
+        for(String s : events) {
+            entities.add(new StringEntity(s));
+        }
+        boolean result = false;
+        int successEvents = EventManager.submitEvents(tempHeader.getAllHeaders(), API_WEB_HOOK_SENDGRID, entities);
+        if(successEvents == events.size()) {
+            result = true;
+        }
+        return result;
+    }
 
+    public boolean sendMandrillWebHookEventsOneByOne(List<MandrillWebhookEvent> events) throws Exception {
+        boolean result = false;
+        int successCount = 0;
+        for(MandrillWebhookEvent event : events) {
+            String actualJson = "["+mapper.writeValueAsString(event)+"]";
+
+            Header tempHeader = new Header();
+            List<BasicNameValuePair> nameValuePairs = new ArrayList<>();
+
+            nameValuePairs.add(new BasicNameValuePair(MANDRILL_POST_PARAM_NAME, actualJson));
+            String url = NS_URL.substring(0, NS_URL.indexOf(".com")+4)+EMAIL_WEB_HOOK_MANDRILL;
+            Log.debug("URL :" +url);
+            Log.debug("Event :" + actualJson);
+            Log.debug("Mandrill :" +nsConfig.getMandrillWebHookSecret());
+            StringBuilder signedData = new StringBuilder(actualJson.length() + 200);
+            signedData.append(url);
+            signedData.append(MANDRILL_POST_PARAM_NAME);
+            signedData.append(actualJson);
+            tempHeader.addHeader("X-Mandrill-Signature", CryptHandler.calculateRFC2104HMAC(signedData.toString(), nsConfig.getMandrillWebHookSecret()));
+            ResponseObj responseObj = wa.doPost(API_WEB_HOOK_MANDRILL, tempHeader.getAllHeaders(), new UrlEncodedFormEntity(nameValuePairs));
+            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                successCount++;
+            } else {
+                Log.error("Missed Event : "+ event+"Response Data : "+responseObj.toString());
+            }
+        }
+        if(events.size()==successCount) {
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean sendMandrillWebHookEventsInBulk(List<MandrillWebhookEvent> events) throws Exception {
+        Header tempHeader = new Header();
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<>();
+        String actualJson = mapper.writeValueAsString(events);
+        nameValuePairs.add(new BasicNameValuePair(MANDRILL_POST_PARAM_NAME, actualJson));
+        String url = NS_URL.substring(0, NS_URL.indexOf(".com")+4)+EMAIL_WEB_HOOK_MANDRILL;
+        StringBuilder signedData = new StringBuilder(actualJson.length() + 200).append(url).append(MANDRILL_POST_PARAM_NAME).append(actualJson);
+        tempHeader.addHeader("X-Mandrill-Signature", CryptHandler.calculateRFC2104HMAC(signedData.toString(), nsConfig.getMandrillWebHookSecret()));
+        ResponseObj responseObj = wa.doPost(API_WEB_HOOK_MANDRILL, tempHeader.getAllHeaders(), new UrlEncodedFormEntity(nameValuePairs));
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            return true;
+        } else {
+            Log.error("Reponse Objec :" +responseObj.toString());
+            return false;
+        }
+    }
+
+    public List<EmailProperties> getEmailValidateProperties(List<String> emailList) throws Exception {
+        if(emailList ==null) {
+            throw new IllegalArgumentException("Email List can be null.");
+        }
+
+        ResponseObj responseObj = wa.doPost(API_EMAIL_VALIDATE, header.getAllHeaders(), mapper.writeValueAsString(emailList));
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if(nsResponseObj.isResult()) {
+                List<EmailProperties> emailPropertiesList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<EmailProperties>>() {
+                });
+                return emailPropertiesList;
+            }
+        }
+        throw new RuntimeException("Failed to get email properties :" +responseObj.toString());
+    }
+
+    public boolean knockOffEmail(List<EmailProperties> emailPropertiesList) throws Exception {
+        if(emailPropertiesList == null) {
+            throw new IllegalArgumentException("Email Properties should not be null.");
+        }
+        ResponseObj responseObj = wa.doPost(API_EMAIL_KNOCK_OFF, header.getAllHeaders(), mapper.writeValueAsString(emailPropertiesList));
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            return nsResponseObj.isResult();
+        }
+        Log.error("Response Obj :" +responseObj.toString());
+        return false;
+    }
 
 
 

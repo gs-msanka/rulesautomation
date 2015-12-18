@@ -752,7 +752,10 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return RuleExecutionHistory object
 	 */
 	public RuleExecutionHistory getExecutionHistory(String statusId) {
-		RuleExecutionHistory ruleExecutionHistory=null;
+		if(statusId == null) {
+			throw new IllegalArgumentException("Status Id can be null.");
+		}
+			RuleExecutionHistory ruleExecutionHistory=null;
 		try {
 			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + statusId, header.getAllHeaders());
 			Log.info("Response : " +responseObj.toString());

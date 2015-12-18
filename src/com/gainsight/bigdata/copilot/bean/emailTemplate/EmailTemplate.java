@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Giribabu on 05/12/15.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EmailTemplate {
     String createdBy;
     String createdByName;

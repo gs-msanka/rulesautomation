@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Giriabu on 05/11/15.
@@ -107,7 +108,7 @@ public class SfdcRestApi {
     * @throws Exception
     */
     public static void  pullDataFromSfdc(String sObject, String[] fields, String whereCondition, String filePath) throws Exception {
-        List<HashMap<String, String>> data = pullDataFromSfdc(sObject, fields, whereCondition);
+        List<Map<String, String>> data = (List)pullDataFromSfdc(sObject, fields, whereCondition);
         FileUtil.writeToCSV(data, filePath);
     }
 

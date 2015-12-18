@@ -1,0 +1,17 @@
+{
+  "title": "*****************",
+  "inactive": false,
+  "description": "*****************",
+  "type": "CRON",
+  "cronExpression": "0 0 15 ? * 2-6 *",
+  "timeZoneName": "America/Los_Angeles",
+  "pastRunsAlso": false,
+  "emailIdList": [],
+  "startTime": 1,
+  "endTime": 3,
+  "jobType": "CAMPAIGN",
+  "jobIdentifier": "27c31b6f-6446-4740-a0b0-8abe65cc9105",
+  "jobContext": {
+    "scheduleType": "RECURRING"
+  }
+}

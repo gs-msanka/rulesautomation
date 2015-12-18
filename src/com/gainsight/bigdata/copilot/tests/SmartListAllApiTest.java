@@ -1,38 +1,55 @@
 package com.gainsight.bigdata.copilot.tests;
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.apiImpl.CopilotAPIImpl;
+import com.gainsight.bigdata.copilot.bean.emailProp.EmailProperties;
 import com.gainsight.bigdata.copilot.bean.emailTemplate.EmailTemplate;
 import com.gainsight.bigdata.copilot.bean.outreach.OutReach;
-import com.gainsight.bigdata.copilot.bean.smartlist.ActionDetails;
+import com.gainsight.bigdata.copilot.bean.outreach.OutReachExecutionHistory;
 import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
-import com.gainsight.bigdata.copilot.bean.smartlist.SmartListRule;
+import com.gainsight.bigdata.copilot.bean.webhook.mandrill.MandrillEvent;
+import com.gainsight.bigdata.copilot.bean.webhook.mandrill.MandrillWebhookEvent;
+import com.gainsight.bigdata.copilot.bean.webhook.mandrill.Message;
+import com.gainsight.bigdata.copilot.bean.webhook.mandrill.Metadata;
+import com.gainsight.bigdata.copilot.bean.webhook.sendgrid.SendgridWebhookEvent;
+import com.gainsight.bigdata.copilot.enums.UnSubscribeCategory;
+import com.gainsight.bigdata.copilot.enums.UnSubscribeReason;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.*;
+import com.gainsight.bigdata.reportBuilder.pojos.ReportAdvanceFilter;
+import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
-import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionFieldInfo;
 import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInfo;
 import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInnerCondition;
 import com.gainsight.bigdata.rulesengine.bean.RuleSetup.Criteria;
 import com.gainsight.bigdata.rulesengine.bean.RuleSetup.TriggerCriteria;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
-import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.http.ResponseObj;
+import com.gainsight.sfdc.util.DateUtil;
+import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.sfdc.util.db.H2Db;
 import com.gainsight.testdriver.Application;
-import com.gainsight.utils.MongoUtil;
-import org.apache.http.HttpStatus;
-import org.bson.Document;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.Comparator;
+import com.gainsight.utils.Verifier;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.ws.commons.util.Base64;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileReader;
+import java.sql.ResultSet;
 import java.util.*;
 
 
@@ -46,13 +63,16 @@ public class SmartListAllApiTest extends NSTestBase {
     DataETL dataETL     = new DataETL();
     RulesUtil rulesUtil = new RulesUtil();
     TenantInfo tenantInfo;
+    ReportManager reportManager = new ReportManager();
+    Calendar calendar = Calendar.getInstance();
 
     @BeforeClass
     public void setUp() throws Exception {
         copilotAPI = new CopilotAPIImpl(header);
         gsDataAPI = new GSDataImpl(header);
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
-        if(false) {
+
+        if(true) {
             sfdc.runApexCode("delete [select id from jbcxm__customerInfo__c];");
             sfdc.runApexCode("delete [select id from contact];");
             metaUtil.createExtIdFieldOnAccount(sfdc);
@@ -83,8 +103,6 @@ public class SmartListAllApiTest extends NSTestBase {
         actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
         Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
         Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
-
-        ResponseObj responseObj = copilotAPI.saveSmartList(mapper.writeValueAsString(actualSmartList));
 
         //Update the smart list trigger criteria & action info criteria and execute the smart list and verify the smartlist stats.
         List<TriggerCriteria> triggerCriteriaList = mapper.readValue(actualSmartList.getAutomatedRule().getTriggerCriteria(), new TypeReference<ArrayList<TriggerCriteria>>() {});
@@ -220,7 +238,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(emailLogCollection.getCollectionDetails().getEntityType(), "EMAIL_LOG");
         Assert.assertEquals(emailLogCollection.getCollectionDetails().getCollectionName(), "Email Logs");
         Assert.assertEquals(emailLogCollection.getCollectionDetails().getDataStoreType(), "MONGO");
-        Assert.assertEquals(emailLogCollection.getCollectionDetails().getDbType(), "dbType");
+        Assert.assertEquals(emailLogCollection.getCollectionDetails().getDbType(), "DATA");
         Assert.assertNotNull(emailLogCollection.getCollectionDetails().getCollectionId(), "Collection Id should not be null.");
         Assert.assertEquals(emailLogCollection.getTenantId(), tenantInfo.getTenantId());
         Assert.assertTrue(emailLogCollection.getColumns().size() > 1, "No of columns should be atleast more than 1."); //TODO - Just leave with count verification now.
@@ -251,12 +269,12 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertNotNull(actualSmartList1.getSmartListId(), "Smart list should not be null.");
         Assert.assertNotNull(actualSmartList2.getSmartListId(), "Smart list should not be null.");
 
-        HashMap<String, RuleExecutionHistory> statsMap = copilotAPI.getAllSmartListStatus();
+        HashMap<String, List<RuleExecutionHistory>> statsMap = copilotAPI.getAllSmartListStatus();
         Assert.assertNotNull(statsMap.get(actualSmartList1.getSmartListId()));
         Assert.assertNotNull(statsMap.get(actualSmartList2.getSmartListId()));
 
-        Assert.assertNotNull(statsMap.get(actualSmartList1.getSmartListId()).getStatus(), "Smart list Execution status should not be null.");
-        Assert.assertNotNull(statsMap.get(actualSmartList2.getSmartListId()).getStatus(), "Smart list Execution status should not be null.");
+        Assert.assertNotNull(statsMap.get(actualSmartList1.getSmartListId()).get(0).getStatus(), "Smart list Execution status should not be null.");
+        Assert.assertNotNull(statsMap.get(actualSmartList2.getSmartListId()).get(0).getStatus(), "Smart list Execution status should not be null.");
 
         List<SmartList> smartListList = copilotAPI.getAllSmartList();
         Assert.assertTrue(smartListList.size() >= 2, "We Should have got atleast 2 smart list that we created.");
@@ -312,14 +330,421 @@ public class SmartListAllApiTest extends NSTestBase {
     }
 
     @Test
-    public void outReachAdvancedOptions() {
+    public void outReachAdvancedOptions() throws Exception {
+        SmartList smartList = mapper.readValue(new File(testDataDir + "test/t4/T4_SmartList.json"), SmartList.class);
+        smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
+        SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
+        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null.");
+        rulesUtil.waitForProcessingToComplete(actualSmartList.getSmartListId());
+        Assert.assertTrue(rulesUtil.isProcessionSuccess(actualSmartList.getSmartListId()), "Verifying smart list run status is successful.");
+        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
+        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
+        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
+
+        JobInfo jobInfo = mapper.readValue(new File(testDataDir + "test/t4/T4_DataTRansform.json"), JobInfo.class);
+        dataETL.execute(jobInfo);
+
+        List<HashMap<String, Object>> actualData = copilotAPI.getSmartListData(actualSmartList.getSmartListId(), 0);
+        List<Map<String, String>> parsedData = mapper.convertValue(actualData, List.class);
+        List<Map<String, String>> expData  = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + jobInfo.getTransformationRule().getOutputFileLoc())));
+
+        System.out.println(expData.equals(parsedData));
+        System.out.println(expData.equals(actualData));
+        Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
+
+        List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
+        List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
+        Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
+
+        EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t4/T4_EmailTemplate.json"), EmailTemplate.class);
+        EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
+        Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
+        Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
+
+        OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t4/T4_OutReach.json"), OutReach.class);
+        outReach.setSmartListId(actualSmartList.getSmartListId());
+        outReach.setSmartListName(actualSmartList.getSmartListName());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateName(actualEmailTemplate.getTitle());
+
+        ObjectMapper mapper1 = new ObjectMapper().setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        OutReach actualOutReach = copilotAPI.createOutReach(mapper1.writeValueAsString(outReach));
+        String outReachStatusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
+
+        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId);
+        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId));
+        RuleExecutionHistory executionHistory = rulesUtil.getLastExecution(actualOutReach.getCampaignId());
+        Assert.assertNotNull(executionHistory);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
+
+
+        CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+        emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+
+        ReportMaster reportMaster = reportManager.createTabularReportMaster(emailLogCollectionMaster, new String[]{"Use Case", "Batch Id",
+                "Batch Name", "Account Id", "Account Name", "Contact Id", "Contact Name", "Email Address", "Template Name", "Sent"});
+
+        // "Execution Instance Id", "External Email ID", "Internal Email ID", "Template Id",
+
+        ReportAdvanceFilter reportAdvanceFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"bid\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"*****************\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"************************\"}],\"expression\":\"A\"}", ReportAdvanceFilter.class);
+        reportAdvanceFilter.getReportFilters().get(0).setFilterValues(Arrays.asList(new Object[]{actualOutReach.getCampaignId()}));
+        reportAdvanceFilter.getReportFilters().get(0).setCollectionId(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+
+        reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
+
+        //Verifying Email Logs Data.
+        Log.info("Verifying Email Logs Data....");
+        List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
+
+        System.out.println("Actual "+mapper.writeValueAsString(emailLogs));
+        System.out.println("**************************");
+        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
+        String emailLogExpectedFile =Application.basedir+"/testdata/newstack/CoPilot/dataSet/process/t4/EmailLogsExpectedData.csv";
+        String tempTableName = "Temp"+calendar.getTimeInMillis();
+        try {
+            String query = "Select \"Contact Id\",  \"Contact Name\",  \"Email Address\"," +
+                    " \"Account Id\", \"Account Name\",  \"Use Case\", \"Sent\", \"Batch Name\", \"Batch Id\", \"Template Name\"  from "+tempTableName;
+
+            String createTableFromCSV = "CREATE TABLE "+tempTableName+" AS SELECT * FROM CSVREAD('"+ Application.basedir+jobInfo.getTransformationRule().getOutputFileLoc()+"')";
+            db.executeStmt(createTableFromCSV);
+
+            String alterTable = "ALTER TABLE "+tempTableName+" ADD COLUMN (\"Sent\" varchar(5) DEFAULT '1', \"Batch Name\" varchar(100) DEFAULT '"+actualOutReach.getName()+"'," +
+                    "\"Batch Id\" varchar(100) DEFAULT '"+actualOutReach.getCampaignId()+"', \"Template Name\" varchar(200) DEFAULT '"+actualEmailTemplate.getTitle()+"'," +
+                    " \"Use Case\" varchar(25) DEFAULT 'Campaigns')";
+
+            db.executeStmt(alterTable);
+            db.executeStmt("ALTER TABLE "+tempTableName+" ALTER COLUMN \"Contact.Id\" RENAME TO \"Contact Id\"");
+            db.executeStmt("ALTER TABLE "+tempTableName+" ALTER COLUMN \"Contact.Name\" RENAME TO \"Contact Name\"");
+            db.executeStmt("ALTER TABLE "+tempTableName+" ALTER COLUMN \"Contact.Email\" RENAME TO \"Email Address\"");
+            db.executeStmt("ALTER TABLE "+tempTableName+" ALTER COLUMN Id RENAME TO \"Account Id\"");
+            db.executeStmt("ALTER TABLE "+tempTableName+" ALTER COLUMN Name RENAME TO \"Account Name\"");
+            ResultSet resultSet = db.executeQry(query);
+            db.executeStmt("call CSVWRITE ( '" + emailLogExpectedFile + "', '" + query + "' ) ");
+
+        } finally {
+            //Closing Db Connection
+            db.close();
+            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+        }
+        List<Map<String, String>>  expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(emailLogExpectedFile)));
+        Log.info("Expected :" + mapper.writeValueAsString(expectedData));
+        Assert.assertEquals(Comparator.compareListData(expectedData, emailLogs).size(), 0, "Email Log Data Has Not Matched.");
+
+        //Verifying schedule creation and update of a outreach.
+        Schedule schedule = mapper.readValue(new File(testDataDir + "test/t4/T4_Schedule.json"), Schedule.class);
+        schedule.setTitle(actualOutReach.getName());
+        schedule.setDescription(actualOutReach.getName());
+
+        schedule.setStartTime(DateUtil.addDays(getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getStartTime()).getTimeInMillis());
+        schedule.setEndTime(DateUtil.addDays(getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getEndTime()).getTimeInMillis());
+
+        Schedule actualSchedule = copilotAPI.scheduleOutReach(mapper.writeValueAsString(schedule));
+        assertScheduleInformation(actualSchedule, schedule);
+        schedule.setCronExpression("0 20 15 ? * 2-6 *");
+        schedule.setScheduleId(actualSchedule.getScheduleId());
+        actualSchedule = copilotAPI.updateSchedule(mapper.writeValueAsString(schedule));
+        assertScheduleInformation(actualSchedule, schedule);
+
+        ReportMaster reportMaster1 = reportManager.createTabularReportMaster(emailLogCollectionMaster,
+                new String[]{"Account Id", "Account Name", "Batch Id", "Batch Name", "Contact Id", "Contact Name", "Email Address", "Internal Email ID"});
+
+        ReportAdvanceFilter whereFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"bid\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"****************************\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"*******************************\"},{\"dbName\":\"e\",\"alias\":\"B\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"********************************************\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"***************************************\"}],\"expression\":\"A AND B\"}", ReportAdvanceFilter.class);
+        whereFilter.getReportFilters().get(0).setFilterValues(Arrays.asList(new Object[]{actualOutReach.getCampaignId()}));
+        whereFilter.getReportFilters().get(0).setCollectionId(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+        whereFilter.getReportFilters().get(1).setFilterValues(Arrays.asList(new Object[]{"galbreathgali@automation.gainsighttest.com"}));
+        whereFilter.getReportFilters().get(1).setCollectionId(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+        reportMaster1.getReportInfo().get(0).setWhereAdvanceFilter(whereFilter);
+
+        List<Map<String, String>> filteredEmailLogData = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster1)), emailLogCollectionMaster);
+        Assert.assertEquals(filteredEmailLogData.size(), 1, "Only one email should be returned.");
+        String gsId  = filteredEmailLogData.get(0).get("Internal Email ID");
+        Assert.assertNotNull(gsId, "gsid should not be null.");
+        Log.info("Internal Email ID : " + gsId);
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair("category", UnSubscribeCategory.SUCCESS_COMMUNICATION.getValue()));
+        nameValuePairs.add(new BasicNameValuePair("category", UnSubscribeCategory.SURVEY.getValue()));
+        nameValuePairs.add(new BasicNameValuePair("reason", UnSubscribeReason.EMAIL_INAPPROPRIATE.getValue()));
+        nameValuePairs.add(new BasicNameValuePair("t", Base64.encode(tenantInfo.getTenantId().getBytes()).toString()));
+        String d = "{\"gsid\":\""+gsId+"\"}";
+        nameValuePairs.add(new BasicNameValuePair("d", Base64.encode(d.getBytes()).toString()));
+
+        ResponseObj responseObj = copilotAPI.unSubcribe(nameValuePairs);
+        Assert.assertTrue(responseObj.getStatusCode() == HttpStatus.SC_OK);
+        Assert.assertEquals(responseObj.getContent(), "Your preferences have been updated.");
+        CollectionInfo unSubscribedEmailCollectionMaster = gsDataAPI.getCollectionMasterByName("Unsubscribed Emails");
+        ReportMaster unSUBReportMaster = reportManager.createTabularReportMaster(unSubscribedEmailCollectionMaster, new String[]{"Account ID", "Account Name", "Category", "Contact ID", "Contact Name", "Email Address", "Reason"});
+        ReportAdvanceFilter unSUBreportAdvanceFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"e\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"galbreathgali@automation.gainsighttest.com\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"**********\"}],\"expression\":\"A\"}", ReportAdvanceFilter.class);
+        unSUBreportAdvanceFilter.getReportFilters().get(0).setCollectionId(unSubscribedEmailCollectionMaster.getCollectionDetails().getCollectionId());
+        unSUBReportMaster.getReportInfo().get(0).setWhereAdvanceFilter(unSUBreportAdvanceFilter);
+
+        List<Map<String, String>> unSUBActualData = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(unSUBReportMaster)), unSubscribedEmailCollectionMaster);
+
+        JobInfo unSUBTransformJob = mapper.readValue(new File(testDataDir + "/test/t4/T4_UnSubscribeDataTransform.json"), JobInfo.class);
+        dataETL.execute(unSUBTransformJob);
+
+        List<Map<String, String>> expectedUnSubExpectedData =  Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+unSUBTransformJob.getTransformationRule().getOutputFileLoc())));
+        Assert.assertEquals(Comparator.compareListData(expectedUnSubExpectedData, unSUBActualData).size(), 0, "No of diff records should be zero - This is checking the un-subscribed collection.");
 
     }
 
+    @Test
+    public void sendgridOutReachWebHookTest() throws Exception {
+        SmartList smartList = mapper.readValue(new File(testDataDir + "test/t5/T5_SmartList.json"), SmartList.class);
+        smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
+        SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
+        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null.");
+        rulesUtil.waitForProcessingToComplete(actualSmartList.getSmartListId());
+        Assert.assertTrue(rulesUtil.isProcessionSuccess(actualSmartList.getSmartListId()), "Verifying smart list run status is successful.");
+        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
+        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
+        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
+
+        JobInfo jobInfo = mapper.readValue(new File(testDataDir + "test/t5/T5_DataTransform.json"), JobInfo.class);
+        dataETL.execute(jobInfo);
+
+        List<HashMap<String, Object>> actualData = copilotAPI.getSmartListData(actualSmartList.getSmartListId(), 0);
+        List<Map<String, String>> parsedData = mapper.convertValue(actualData, List.class);
+        List<Map<String, String>> expData  = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + jobInfo.getTransformationRule().getOutputFileLoc())));
+
+        System.out.println(expData.equals(parsedData));
+        System.out.println(expData.equals(actualData));
+        Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
+
+        List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
+        List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
+        Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
+
+        EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t5/T5_EmailTemplate.json"), EmailTemplate.class);
+        EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
+        Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
+        Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
+
+        OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t5/T5_OutReach.json"), OutReach.class);
+        outReach.setSmartListId(actualSmartList.getSmartListId());
+        outReach.setSmartListName(actualSmartList.getSmartListName());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateName(actualEmailTemplate.getTitle());
+
+        ObjectMapper mapper1 = new ObjectMapper().setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        OutReach actualOutReach = copilotAPI.createOutReach(mapper1.writeValueAsString(outReach));
+        String outReachStatusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
+
+        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId);
+        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId));
+
+        RuleExecutionHistory executionHistory = rulesUtil.getLastExecution(actualOutReach.getCampaignId());
+        Assert.assertNotNull(executionHistory);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
 
 
+        CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+        emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+
+        ReportMaster reportMaster = reportManager.createTabularReportMaster(emailLogCollectionMaster, new String[]{"Use Case", "Batch Id",
+                "Batch Name", "Account Id", "Account Name", "Contact Id", "Contact Name", "Email Address", "Template Name", "External Email ID"});
+
+        ReportAdvanceFilter reportAdvanceFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"bid\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"*****************\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"************************\"}],\"expression\":\"A\"}", ReportAdvanceFilter.class);
+        reportAdvanceFilter.getReportFilters().get(0).setFilterValues(Arrays.asList(new Object[]{actualOutReach.getCampaignId()}));
+        reportAdvanceFilter.getReportFilters().get(0).setCollectionId(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+
+        reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
+
+
+        List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
+        System.out.println("Actual " + mapper.writeValueAsString(emailLogs));
+        String emailLogsFilePath = testDataDir+"process/t5/EmailLogData.csv";
+        FileUtil.writeToCSV(emailLogs, emailLogsFilePath);
+
+        String sourceWebHookFilePath = testDataDir + "test/t5/T5_WebhookEvents.csv";
+        String finalWebHookEventFilePath = testDataDir+"process/t5/Final_WebHookEventData.csv";
+
+        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
+        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
+        String EMAIL_LOG_DATE_TABLE = "EMAILLOG";
+        String FINAL_WEB_HOOK_TABLE = "WEBHOOK";
+        try {
+
+            db.executeStmt("DROP TABLE IF EXISTS "+SOURCE_WEBHOOK_EVENT_TABLE);
+            db.executeStmt("DROP TABLE IF EXISTS "+EMAIL_LOG_DATE_TABLE);
+            db.executeStmt("DROP TABLE IF EXISTS "+FINAL_WEB_HOOK_TABLE);
+
+            db.executeStmt("CREATE TABLE SOURCEWEBHOOK AS SELECT * FROM CSVREAD('"+sourceWebHookFilePath+"')");
+            db.executeStmt("CREATE TABLE EMAILLOG AS SELECT * FROM CSVREAD('"+emailLogsFilePath + "')");
+
+            db.executeStmt("CREATE TABLE "+FINAL_WEB_HOOK_TABLE+" AS SELECT SOURCEWEBHOOK.\"CONTACTEMAIL\" as \"email\", SOURCEWEBHOOK.\"USECASE\" as \"useCase\"," +
+                    " SOURCEWEBHOOK.\"EVENT\" as \"event\", EMAILLOG.\"Batch Id\" as \"campaign\", EMAILLOG.\"External Email ID\" as \"extId\"  " +
+                    " FROM SOURCEWEBHOOK LEFT OUTER JOIN EMAILLOG ON SOURCEWEBHOOK.\"CONTACTEMAIL\"= EMAILLOG.\"Email Address\" " +
+                    " AND SOURCEWEBHOOK.\"ACCOUNTNAME\" = EMAILLOG.\"Account Name\"");
+
+
+            long timestamp = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis();
+
+            db.executeStmt("ALTER TABLE "+FINAL_WEB_HOOK_TABLE+" ADD COLUMN (\"subaccount\" varchar(50) DEFAULT '"+tenantInfo.getTenantId()+"'," +
+                    " \"timestamp\" number(30) DEFAULT "+timestamp+", \"ip\" varchar(50) DEFAULT '111.93.24.238')");
+
+
+            db.executeStmt("call CSVWRITE ( '" + finalWebHookEventFilePath + "', 'SELECT * from "+FINAL_WEB_HOOK_TABLE+"' ) ");
+
+            List<Map<String, String>> eventMap = Comparator.getParsedCsvData(new CSVReader(new FileReader(finalWebHookEventFilePath)));
+            List<SendgridWebhookEvent> webhookEvents = mapper.convertValue(eventMap, new TypeReference<ArrayList<SendgridWebhookEvent>>() {
+            });
+            List<String> events  = new ArrayList<>();
+            for(SendgridWebhookEvent event : webhookEvents) {
+                events.add("["+mapper.writeValueAsString(event)+"]");
+            }
+
+            Assert.assertTrue(copilotAPI.sendSendGridWebHookEvents(mapper.writeValueAsString(webhookEvents)));
+            Assert.assertTrue(copilotAPI.sendSendGridWebHookEvents(events), "Seems all the events are not successful.");
+
+            Thread.sleep(10000L);
+            List<OutReachExecutionHistory> outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
+            Assert.assertTrue(outReachExecutionHistoryList.size()>0, "Atleast one outreach execution history should exists.");
+            OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir+"test/t5/T5_OutReachExeHistory.json"), OutReachExecutionHistory.class);
+            assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
+
+
+        } finally {
+            db.close();
+            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+        }
+    }
 
     @Test
+    public void mandrillOutReachWebHookTest() throws Exception {
+        SmartList smartList = mapper.readValue(new File(testDataDir + "test/t6/T6_SmartList.json"), SmartList.class);
+        smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
+        SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
+        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null.");
+        rulesUtil.waitForProcessingToComplete(actualSmartList.getSmartListId());
+        Assert.assertTrue(rulesUtil.isProcessionSuccess(actualSmartList.getSmartListId()), "Verifying smart list run status is successful.");
+        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
+        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
+        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
+
+        JobInfo jobInfo = mapper.readValue(new File(testDataDir + "test/t6/T6_DataTransform.json"), JobInfo.class);
+        dataETL.execute(jobInfo);
+
+        List<HashMap<String, Object>> actualData = copilotAPI.getSmartListData(actualSmartList.getSmartListId(), 0);
+        List<Map<String, String>> parsedData = mapper.convertValue(actualData, List.class);
+        List<Map<String, String>> expData  = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir + jobInfo.getTransformationRule().getOutputFileLoc())));
+
+        System.out.println(expData.equals(parsedData));
+        System.out.println(expData.equals(actualData));
+        Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
+
+        List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
+        List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
+        Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
+
+        EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t6/T6_EmailTemplate.json"), EmailTemplate.class);
+        EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
+        Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
+        Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
+
+        OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t6/T6_OutReach.json"), OutReach.class);
+        outReach.setSmartListId(actualSmartList.getSmartListId());
+        outReach.setSmartListName(actualSmartList.getSmartListName());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());
+        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateName(actualEmailTemplate.getTitle());
+
+        ObjectMapper mapper1 = new ObjectMapper().setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        OutReach actualOutReach = copilotAPI.createOutReach(mapper1.writeValueAsString(outReach));
+        String outReachStatusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
+
+        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId);
+        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId));
+
+        RuleExecutionHistory executionHistory = rulesUtil.getLastExecution(actualOutReach.getCampaignId());
+        Assert.assertNotNull(executionHistory);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
+        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
+
+
+        CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+        emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+        Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
+
+        ReportMaster reportMaster = reportManager.createTabularReportMaster(emailLogCollectionMaster, new String[]{"Use Case", "Batch Id",
+                "Batch Name", "Account Id", "Account Name", "Contact Id", "Contact Name", "Email Address", "Template Name", "External Email ID"});
+
+        ReportAdvanceFilter reportAdvanceFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"bid\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"*****************\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"************************\"}],\"expression\":\"A\"}", ReportAdvanceFilter.class);
+        reportAdvanceFilter.getReportFilters().get(0).setFilterValues(Arrays.asList(new Object[]{actualOutReach.getCampaignId()}));
+        reportAdvanceFilter.getReportFilters().get(0).setCollectionId(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
+
+        reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
+
+
+        List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
+        System.out.println("Actual " + mapper.writeValueAsString(emailLogs));
+        String emailLogsFilePath = testDataDir+"process/t6/EmailLogData.csv";
+        FileUtil.writeToCSV(emailLogs, emailLogsFilePath);
+
+        String sourceWebHookFilePath = testDataDir + "test/t6/T6_WebhookEvents.csv";
+        String finalWebHookEventFilePath = testDataDir+"process/t6/Final_WebHookEventData.csv";
+
+        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
+        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
+        String EMAIL_LOG_DATE_TABLE = "EMAILLOG";
+        String FINAL_WEB_HOOK_TABLE = "WEBHOOK";
+        try {
+
+            db.executeStmt("DROP TABLE IF EXISTS "+SOURCE_WEBHOOK_EVENT_TABLE);
+            db.executeStmt("DROP TABLE IF EXISTS "+EMAIL_LOG_DATE_TABLE);
+            db.executeStmt("DROP TABLE IF EXISTS "+FINAL_WEB_HOOK_TABLE);
+
+            db.executeStmt("CREATE TABLE SOURCEWEBHOOK AS SELECT * FROM CSVREAD('"+sourceWebHookFilePath+"')");
+            db.executeStmt("CREATE TABLE EMAILLOG AS SELECT * FROM CSVREAD('"+emailLogsFilePath + "')");
+
+            db.executeStmt("CREATE TABLE "+FINAL_WEB_HOOK_TABLE+" AS SELECT SOURCEWEBHOOK.\"CONTACTEMAIL\" as \"email\", SOURCEWEBHOOK.\"USECASE\" as \"useCase\"," +
+                    " SOURCEWEBHOOK.\"EVENT\" as \"event\", EMAILLOG.\"Batch Id\" as \"campaign\", EMAILLOG.\"External Email ID\" as \"extId\"  " +
+                    " FROM SOURCEWEBHOOK LEFT OUTER JOIN EMAILLOG ON SOURCEWEBHOOK.\"CONTACTEMAIL\"= EMAILLOG.\"Email Address\" " +
+                    " AND SOURCEWEBHOOK.\"ACCOUNTNAME\" = EMAILLOG.\"Account Name\"");
+
+            //As Mandrill only gives seconds removing the millisecond part in time.
+            int timestamp = (int)(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis()/1000);
+
+            db.executeStmt("ALTER TABLE " + FINAL_WEB_HOOK_TABLE + " ADD COLUMN (\"subaccount\" varchar(50) DEFAULT '" + tenantInfo.getTenantId() + "'," +
+                    " \"ts\" number(30) DEFAULT " + timestamp + ", \"ip\" varchar(50) DEFAULT '111.93.24.238')");
+
+
+            db.executeStmt("call CSVWRITE ( '" + finalWebHookEventFilePath + "', 'SELECT * from " + FINAL_WEB_HOOK_TABLE + "' ) ");
+
+            List<Map<String, String>> eventMap = Comparator.getParsedCsvData(new CSVReader(new FileReader(finalWebHookEventFilePath)));
+
+            List<MandrillWebhookEvent> mandrillWebhookEvents = constructMandrillEvents(eventMap);
+            Assert.assertTrue(copilotAPI.sendMandrillWebHookEventsInBulk(mandrillWebhookEvents));
+            //Assert.assertTrue(copilotAPI.sendMandrillWebHookEventsOneByOne(mandrillWebhookEvents));
+
+            Thread.sleep(5000L);
+            List<OutReachExecutionHistory> outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
+            Assert.assertTrue(outReachExecutionHistoryList.size()>0, "Atleast one outreach execution history should exists.");
+            OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir + "test/t6/T6_OutReachExeHistory.json"), OutReachExecutionHistory.class);
+            assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
+
+
+        } finally {
+            db.close();
+            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+        }
+    }
+
+
+     //@Test
+     public void deleteAll() throws Exception {
+         deleteAllOutreaches();
+         deleteAllEmailTemplates();
+         deleteAllSmartList();
+     }
+
+
+    //@Test
     public void deleteAllSmartList() throws Exception {
         List<SmartList> smartLists = copilotAPI.getAllSmartList();
         for(SmartList smartList : smartLists) {
@@ -328,28 +753,110 @@ public class SmartListAllApiTest extends NSTestBase {
     }
 
 
-    @Test
+    //@Test
     public void deleteAllEmailTemplates() throws Exception {
         List<EmailTemplate> emailTemplates = copilotAPI.getAllEmailTemplates();
         for(EmailTemplate emailTemplate : emailTemplates) {
-            System.out.println(copilotAPI.deleteSmartList(emailTemplate.getTemplateId()));
+            System.out.println(copilotAPI.deleteEmailTemplate(emailTemplate.getTemplateId()));
         }
     }
 
-    @Test
+    //@Test
     public void deleteAllOutreaches() throws Exception {
         List<OutReach> outReaches = copilotAPI.getAllOutReach();
         for(OutReach outReach : outReaches) {
-            System.out.println(copilotAPI.deleteSmartList(outReach.getCampaignId()));
+            System.out.println(copilotAPI.deleteOutReach(outReach.getCampaignId()));
         }
     }
-    @Test
-    public void sample() throws Exception {
-        GSDataImpl gsData = new GSDataImpl(header);
-        CollectionInfo collectionInfo = gsData.getCollectionMaster("5cd07a69-ce2e-4d44-9443-7bd306ffdf2b");
 
-        System.out.println(collectionInfo.toString());
+    private List<MandrillWebhookEvent> constructMandrillEvents(List<Map<String, String>> dataList) {
+        List<MandrillWebhookEvent> eventList = new ArrayList<>();
+        for(Map<String, String> data : dataList) {
+            Metadata metadata = new Metadata();
+            metadata.setCampaign(data.get("campaign"));
+            metadata.setExternalId(data.get("extId"));
+            metadata.setUseCase(data.get("useCase"));
+            Message message  =  new Message();
+            message.setEmail(data.get("email"));
+            message.setMetadata(metadata);
+            message.setSubaccount(data.get("subaccount"));
+            message.setTs(Long.valueOf(data.get("ts")));
+            message.setSender(data.get("email"));
+            MandrillWebhookEvent webhookEvent = new MandrillWebhookEvent();
+            webhookEvent.setEvent(MandrillEvent.valueOf(data.get("event")));
+            webhookEvent.setTs(Long.valueOf(data.get("ts")));
+            webhookEvent.setIp(data.get("ip"));
+            webhookEvent.setMessage(message);
+            eventList.add(webhookEvent);
+        }
+        return eventList;
     }
+
+    private List<String> getValuesOfKeyAsList(List<Map<String,String>> dataList, String key) {
+        if(dataList ==null || key ==null) {
+            throw new IllegalArgumentException("Either of data list & key should not be null.");
+        }
+        List<String> valueList = new ArrayList<>();
+        for(Map<String, String> data : dataList) {
+            if(data.containsKey(key) && data.get(key)!=null && !data.get(key).isEmpty()) {
+                valueList.add(data.get(key));
+            }
+        }
+        return valueList;
+    }
+
+    private Calendar getCalenderWithTimeSetToZero(String timeZone) {
+        Calendar tempCal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
+        tempCal.set(Calendar.HOUR, 0);
+        tempCal.set(Calendar.MINUTE, 0);
+        tempCal.set(Calendar.SECOND, 0);
+        tempCal.set(Calendar.MILLISECOND, 0);
+        tempCal.set(Calendar.HOUR_OF_DAY, 0);
+        return tempCal;
+    }
+
+    private void assertScheduleInformation(Schedule actual, Schedule expected) {
+        Assert.assertNotNull(actual, "Actual schedule should not be null.");
+        Assert.assertNotNull(expected, "Expected schedule should not be null.");
+        Assert.assertNotNull(actual.getScheduleId(), "Schedule Id in actual should not be null.");
+        Verifier verifier = new Verifier();
+        verifier.verifyEquals(actual.getStartTime(), expected.getStartTime(), "Start Time of schedule not matched.");
+        verifier.verifyEquals(actual.getEndTime(), expected.getEndTime(), "End Time of schedule not matched.");
+        verifier.verifyEquals(actual.getTimeZoneName(), expected.getTimeZoneName(), "Time Zone Not matched.");
+        verifier.verifyEquals(actual.getJobType(), expected.getJobType(), "Job type not matched and should be CAMPAIGN");
+        verifier.verifyEquals(actual.getJobIdentifier(), expected.getJobIdentifier(), "Job Identifier Not Matched.");
+        verifier.verifyEquals(actual.isPastRunsAlso(), expected.isPastRunsAlso(), "Pass Run Not Matched.");
+        verifier.verifyEquals(actual.getJobContext().get("scheduleType"), expected.getJobContext().get("scheduleType"), "Schedule Type not Matched.");
+        if(verifier.isVerificationFailed()) {
+            Log.error(verifier.getAssertMessages().toString());
+            Assert.assertTrue(false, verifier.getAssertMessages().toString());
+        }
+    }
+
+    private void assertOutReachExecutionHistory(OutReachExecutionHistory actual, OutReachExecutionHistory expected) {
+        Assert.assertNotNull(actual, "Actual Out Reach Execution History should be null.");
+        Assert.assertNotNull(expected, "Expected Out Reach Execution History should be null.");
+        Verifier verifier = new Verifier();
+        verifier.verifyEquals(actual.getnAccounts(), expected.getnAccounts(), "Account Count Not Matched.");
+        verifier.verifyEquals(actual.getnContacts(), expected.getnContacts(), "Contact Count Not Matched.");
+        verifier.verifyEquals(actual.getnSent(), expected.getnSent(), "Sent Count not matched");
+        verifier.verifyEquals(actual.getNoOfUnSubscribed(), expected.getNoOfUnSubscribed(), "Un-Subscribed Count not matched");
+        verifier.verifyEquals(actual.getPassCount(), expected.getPassCount(),"Passed Count not matched");
+        verifier.verifyEquals(actual.getFailCount(), expected.getFailCount(), "Failed Count not matched");
+        verifier.verifyEquals(actual.getnOpened(), expected.getnOpened(), "Opened Count not matched");
+        verifier.verifyEquals(actual.getnRejected(), expected.getnRejected(), "Rejected Count not matched");
+        verifier.verifyEquals(actual.getExecutionType(), expected.getExecutionType(), "Execution Type not matched");
+        verifier.verifyEquals(actual.getnClicked(), expected.getnClicked(), "No of clicked count not matched");
+        verifier.verifyEquals(actual.getNoOfSoftBounce(), expected.getNoOfSoftBounce(), "Softbounce Count not matched");
+        verifier.verifyEquals(actual.getnSpam(), expected.getnSpam(), "Spam Count not matched");
+        verifier.verifyEquals(actual.getNoOfHardBounce(), expected.getNoOfHardBounce(), "Hard Bounce Count not matched");
+        verifier.verifyEquals(actual.getStatus(), expected.getStatus(), "Execution status not matched");
+        if(verifier.isVerificationFailed()) {
+            Log.error(verifier.getAssertMessages().toString());
+            Assert.assertTrue(false, verifier.getAssertMessages().toString());
+        }
+    }
+
 
 
 

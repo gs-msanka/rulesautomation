@@ -91,7 +91,7 @@ public class FileUtil {
         }
     }
 
-    public static File writeToCSV(List<HashMap<String, String>> data,  String filePath) throws IOException {
+    public static File writeToCSV(List<Map<String, String>> data,  String filePath) throws IOException {
         if(data ==null || data.size() <1) {
             throw new IllegalStateException("You need to have atleast one record.");
         }

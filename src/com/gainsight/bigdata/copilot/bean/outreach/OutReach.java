@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.copilot.bean.outreach;
 
+import com.gainsight.bigdata.pojo.EmailLog;
 import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionTrueCase;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -38,6 +39,24 @@ public class OutReach {
     private EmailSettings settings;
     private long lastRunDate;
     private String lastRunStatus;
+    private EmailLog emailLogs;
+    private long nextScheduledRun;
+
+    public long getNextScheduledRun() {
+        return nextScheduledRun;
+    }
+
+    public void setNextScheduledRun(long nextScheduledRun) {
+        this.nextScheduledRun = nextScheduledRun;
+    }
+
+    public EmailLog getEmailLogs() {
+        return emailLogs;
+    }
+
+    public void setEmailLogs(EmailLog emailLogs) {
+        this.emailLogs = emailLogs;
+    }
 
     public String getLastRunStatus() {
         return lastRunStatus;

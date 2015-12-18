@@ -128,6 +128,7 @@ public class CollectionInfo {
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     public static class CollectionDetails {
 		@JsonProperty("CollectionName")
 		private String collectionName;

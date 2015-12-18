@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.rulesengine.bean.RuleAction;
 
 import com.gainsight.bigdata.copilot.bean.outreach.ReportTokenMapping;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * Created by Giribabu on 04/12/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActionTrueCase {
     //Used in co-pilot.
     private int order;
@@ -76,10 +78,12 @@ public class ActionTrueCase {
         this.preventDuplicateDays = preventDuplicateDays;
     }
 
+    @JsonProperty("isTransactional")
     public boolean isTransactional() {
         return transactional;
     }
 
+    @JsonProperty("isTransactional")
     public void setTransactional(boolean transactional) {
         this.transactional = transactional;
     }

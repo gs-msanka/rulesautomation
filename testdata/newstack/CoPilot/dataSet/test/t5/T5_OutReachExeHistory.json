@@ -1,0 +1,16 @@
+{
+  "nContacts": 30,
+  "status": "COMPLETED",
+  "nUsb": 3,
+  "nAccounts": 1,
+  "nSent": 30,
+  "passCount": 30,
+  "failCount": 0,
+  "nOpened": 20,
+  "nRejected": 7,
+  "executionType": "Manual",
+  "nClicked": 20,
+  "nSb": 0,
+  "nSpam": 2,
+  "nHb": 3
+}

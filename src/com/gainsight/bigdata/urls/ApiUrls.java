@@ -115,6 +115,13 @@ public interface ApiUrls extends NSURLs {
     String API_IMAGE_RESIZE                 = NS_URL + "/api/image/resize";
     String API_EMAIL_TEMPLATE_NAME_UPDATE   = NS_URL + "/api/templates/name"; //Update the name of email template.
     String API_OUTREACH_NAME_UPDATE         = NS_URL + "/api/campaigns/name"; //Update the name of outreach.
+    String API_SUBSCRIBE_EMAIL              = NS_URL + "/api/subscription/email";
+    String API_WEB_HOOK_SENDGRID            = NS_URL + "/api/email/webhook/sendgrid";
+    String EMAIL_WEB_HOOK_MANDRILL          = "/api/email/webhook/mandrill";
+    String API_WEB_HOOK_MANDRILL            = NS_URL + EMAIL_WEB_HOOK_MANDRILL;
+    String API_EMAIL_VALIDATE               = NS_URL + "/api/email/validate";
+    String API_EMAIL_KNOCK_OFF              = NS_URL + "/api/email/knockOff";
+
 
     String API_GET_ALL_COLLECTIONS_SFDC_ACCOUNTID_MAPPED = NS_URL + "/api/collections/all/lite?hasaccount=true";
 
