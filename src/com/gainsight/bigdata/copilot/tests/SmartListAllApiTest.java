@@ -603,11 +603,18 @@ public class SmartListAllApiTest extends NSTestBase {
             Assert.assertTrue(copilotAPI.sendSendGridWebHookEvents(events), "Seems all the events are not successful.");
 
             Thread.sleep(10000L);
+            OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir+"test/t5/T5_OutReachExeHistory.json"), OutReachExecutionHistory.class);
             List<OutReachExecutionHistory> outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
             Assert.assertTrue(outReachExecutionHistoryList.size()>0, "Atleast one outreach execution history should exists.");
-            OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir+"test/t5/T5_OutReachExeHistory.json"), OutReachExecutionHistory.class);
-            assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
-
+            try {
+                assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
+            } catch (AssertionError e) {
+                Log.info("Retrying the assertion since few events may be stuck in queue.");
+                Thread.sleep(15000L);
+                outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
+                Assert.assertTrue(outReachExecutionHistoryList.size() > 0, "Atleast one outreach execution history should exists.");
+                assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
+            }
 
         } finally {
             db.close();
@@ -647,7 +654,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
         Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
 
-        OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t6/T6_OutReach.json"), OutReach.class);
+        OutReach outReach = mapper.readValue(new File(testDataDir + "test/t6/T6_OutReach.json"), OutReach.class);
         outReach.setSmartListId(actualSmartList.getSmartListId());
         outReach.setSmartListName(actualSmartList.getSmartListName());
         outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());

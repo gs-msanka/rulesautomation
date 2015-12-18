@@ -451,7 +451,7 @@ public class CopilotAPIImpl {
     }
 
     public List<Schedule> getSmartListSchedules(String smartListId) throws Exception {
-        String payload = smartListId == null ? "{\"jobType\":\"SMARTLIST\"}" : "{\"jobType\":\"CAMPAIGN\", \"jobIdentifier\":\""+smartListId+"\"}";
+        String payload = smartListId == null ? "{\"jobType\":\"SMARTLIST\"}" : "{\"jobType\":\"SMARTLIST\", \"jobIdentifier\":\""+smartListId+"\"}";
         return getAllSchedules(payload);
     }
 
