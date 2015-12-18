@@ -25,14 +25,11 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping;
-import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToMDAAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToSFDCAction;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.http.Header;
 import com.gainsight.sfdc.tests.BaseTest;
-import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.FileProcessor;
 import com.gainsight.sfdc.util.datagen.JobInfo;
@@ -85,7 +82,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 	public void cleanup() {
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
 		sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
-
 	}
 
 	@TestInfo(testCaseIds = { "GS-4200" })
@@ -106,7 +102,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 
 	@TestInfo(testCaseIds = { "GS-4204" })
@@ -127,7 +122,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 	
 	@TestInfo(testCaseIds = { "GS-4232" })
@@ -172,7 +166,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 	
 	@TestInfo(testCaseIds = { "GS-4234" })
@@ -217,7 +210,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 	
 	@TestInfo(testCaseIds = { "GS-4236" })
@@ -238,7 +230,6 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 	
 	@TestInfo(testCaseIds = { "GS-4239" })
@@ -259,20 +250,99 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
 	
 	
-	@TestInfo(testCaseIds = { "GS-4042" })
-	@Test(description = "Test case to verify if user is able to create a Calculated field with Average as the aggregation over time for any SFDC object")
-	public void testCalculatedFieldsUsingAggregationOverTimeType() throws Exception {
+	@TestInfo(testCaseIds = { "GS-4048" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with Average as the aggregation over time with adjust for missing data option")
+	public void testCalculatedFieldsWithAverageTypeAggregationOverTimeType() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/GS-4048-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and 4 Years 
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/GS-4048-ExpectedJob.txt"), JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4043" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with COUNT as aggregation")
+	public void testCalculatedFieldsWithCountTypeAggregationOverTimeType() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4043/GS-4043-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and 2 Years 
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4043/GS-4043-ExpectedJob.txt"), JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4043/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4043/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4044" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with COUNT_DISTINCT as aggregation")
+	public void testCalculatedFieldsWithCountDistinctTypeAggregationOverTimeType() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4044/GS-4044-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and 2 Years 
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4044/GS-4044-ExpectedJob.txt"), JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4044/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4044/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4045" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with MAX as aggregation")
+	public void testCalculatedFieldsWithMaxTypeAggregationOverTimeType() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/GS-4045-Input.json"), RulesPojo.class);
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and 2 Years 
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/GS-4045-ExpectedJob.txt"), JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/ExpectedData.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4042", "GS-6062" })
+	@Test(description = "Test case to verify if user is able to create a Calculated field with AVG as the aggregation over time and verifies same calculated Fields in additional criteria")
+	public void testCalculatedFieldsWithAverageAggregationOverTimeType() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/GS-4042-Input.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		
-		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and then 4 Years 
+		//Verifying the agrregated field vales with the expected data and actual aggregated data for 4 Weeks,4 Months and 2 Years 
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/GS-4042-ExpectedJob.txt"), JobInfo.class));	
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/ExpectedData.csv")));
 		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/ActualData.csv")));
@@ -281,7 +351,5 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
-
 	}
-
 }

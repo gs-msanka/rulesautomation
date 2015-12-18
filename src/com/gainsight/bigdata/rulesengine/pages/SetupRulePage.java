@@ -265,7 +265,7 @@ public class SetupRulePage extends BasePage {
 			}
 		} else {
 			item.click(CALCULATED_FIELD_AGGREGATION_LIST_DROPDOWN_A_SECTION);
-			selectValueInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation(), true);
+			selectValueInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation());
 			item.click(CALCULATED_FIELD_SOURCEFIELD_LIST_DROPDOWN_A_SECTION);
 			selectValueInDropDown(calculatedField.getAggregationConfig().getSourceField(), true);
 			item.click(CALCULATED_FIELD_PERIODTYPE_LIST_DROPDOWN_A_SECTION);

@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "GS-4042",
-  "ruleDescription": "GS-4042 - Desc",
+  "ruleName": "GS-4048",
+  "ruleDescription": "GS-4048 - Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "C_Custom Object",
@@ -14,7 +14,8 @@
           "sourceField": "rules_c_Number",
           "periodType": "Past",
           "noOfPeriods": "4",
-          "granularity": "Weeks"
+          "granularity": "Weeks",
+          "adjustForMissingData": "true"
         }
       },
       {
@@ -25,7 +26,8 @@
           "sourceField": "Custom_Number",
           "periodType": "Past",
           "noOfPeriods": "4",
-          "granularity": "Months"
+          "granularity": "Months",
+          "adjustForMissingData": "true"
         }
       },
       {
@@ -35,8 +37,9 @@
           "aggregationCalculation": "AVG",
           "sourceField": "Custom_Number2",
           "periodType": "Past",
-          "noOfPeriods": "2",
-          "granularity": "Years"
+          "noOfPeriods": "4",
+          "granularity": "Years",
+          "adjustForMissingData": "true"
         }
       }
     ],
@@ -100,23 +103,7 @@
           }
         ]
       },
-      "criterias": [
-        {
-          "showField": "CalculatedField - 3",
-          "operator": "not equal to",
-          "isNullCheck": true
-        },
-        {
-          "showField": "CalculatedField - 2",
-          "operator": "not equal to",
-          "isNullCheck": true
-        },
-        {
-          "showField": "CalculatedField - 1",
-          "operator": "not equal to",
-          "isNullCheck": true
-        }
-      ]
+      "criterias": []
     }
   ]
 }

@@ -75,6 +75,7 @@
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
       </classes>
    </test>
 </suite>
