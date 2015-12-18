@@ -60,7 +60,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");
+				"Survey properties saved successfully.");
 	}
 	
 	@TestInfo(testCaseIds={"GS-2667","GS-2668","GS-2669"})
@@ -78,7 +78,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");
+				"Survey properties saved successfully.");
 
 	}
 	
@@ -98,7 +98,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");	
+				"Survey properties saved successfully.");	
 	}
 	
 	@TestInfo(testCaseIds={"GS-3200","GS-2662","GS-2667","GS-2668","GS-2669"})
@@ -117,7 +117,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");
+				"Survey properties saved successfully.");
 	}
 	
 	@TestInfo(testCaseIds={"GS-3200","GS-2667","GS-2668","GS-2669"})
@@ -135,7 +135,7 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");
+				"Survey properties saved successfully.");
 
 	}
 	
@@ -155,6 +155,6 @@ public class SurveyPropertiesTest extends SurveySetup{
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"[Survey properties saved successfully.");	
+				"Survey properties saved successfully.");	
 	}
 }
