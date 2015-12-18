@@ -124,7 +124,7 @@ public class SetupRuleActionPage extends BasePage {
      */
     public void clickOnActionButton() {
         try {
-            env.setTimeout(2);
+            env.setTimeout(0);
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
