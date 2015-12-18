@@ -195,7 +195,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 		setSurveyId(surveyPropData);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		SurveyPage surveyPage = new SurveyPage();
 		SurveyQuestionPage surveyQuestionPage = surveyPage
 				.clickOnQuestions(surveyPropData);
@@ -245,7 +245,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 		setSurveyId(surveyPropData);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		SurveyPage surveyPage = new SurveyPage();
 		SurveyQuestionPage surveyQuestionPage = surveyPage
 				.clickOnQuestions(surveyPropData);
@@ -294,7 +294,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 		setSurveyId(surveyPropData);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		SurveyPage surveyPage = new SurveyPage();
 		SurveyQuestionPage surveyQuestionPage = surveyPage
 				.clickOnQuestions(surveyPropData);
@@ -352,7 +352,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -422,7 +422,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -492,7 +492,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -561,7 +561,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -620,7 +620,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -679,7 +679,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -742,7 +742,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));
@@ -805,7 +805,7 @@ public class SurveyDistributionListTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		sfdc.runApexCode(resolveStrNameSpace("delete[SELECT Id FROM JBCXM__SurveyParticipant__c where JBCXM__SurveyMaster__c='"
 				+ setSurveyId(surveyPropData) + "' and isDeleted=false];"));

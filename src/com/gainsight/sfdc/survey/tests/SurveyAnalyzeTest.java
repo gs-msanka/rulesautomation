@@ -51,7 +51,7 @@ public class SurveyAnalyzeTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		SurveyQuestionPage surveyQuestionPage = surPropPage
 				.clickOnQuestions(surveyPropData);
@@ -104,7 +104,7 @@ public class SurveyAnalyzeTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		SurveyQuestionPage surveyQuestionPage = surPropPage
 				.clickOnQuestions(surveyPropData);
@@ -157,7 +157,7 @@ public class SurveyAnalyzeTest extends SurveySetup {
 				surveyPropData, true);
 		surPropPage.updateSurveyProperties(surveyPropData);
 		Assert.assertEquals(surPropPage.getPropertiesMessage(),
-				"Survey properties successfully saved.");
+				"Survey properties saved successfully.");
 		setSurveyId(surveyPropData);
 		SurveyQuestionPage surveyQuestionPage = surPropPage
 				.clickOnQuestions(surveyPropData);
