@@ -341,7 +341,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
         Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
 
-        JobInfo jobInfo = mapper.readValue(new File(testDataDir + "test/t4/T4_DataTRansform.json"), JobInfo.class);
+        JobInfo jobInfo = mapper.readValue(new File(testDataDir + "test/t4/T4_DataTransform.json"), JobInfo.class);
         dataETL.execute(jobInfo);
 
         List<HashMap<String, Object>> actualData = copilotAPI.getSmartListData(actualSmartList.getSmartListId(), 0);
@@ -610,7 +610,7 @@ public class SmartListAllApiTest extends NSTestBase {
                 assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
             } catch (AssertionError e) {
                 Log.info("Retrying the assertion since few events may be stuck in queue.");
-                Thread.sleep(15000L);
+                Thread.sleep(30000L);
                 outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
                 Assert.assertTrue(outReachExecutionHistoryList.size() > 0, "Atleast one outreach execution history should exists.");
                 assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
