@@ -22,7 +22,7 @@
         "calculationType": "Aggregation",
         "aggregationConfig": {
           "aggregationCalculation": "COUNT_DISTINCT",
-          "sourceField": "Custom_Number",
+          "sourceField": "Custom_Number3",
           "periodType": "Past",
           "noOfPeriods": "4",
           "granularity": "Months"
