@@ -234,7 +234,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 	
 	@TestInfo(testCaseIds = { "GS-4239" })
 	@Test(description = "Test case to verify if the calculation type is Actual Value when Both fields are aggregated over time")
-	public void testCalculatedFieldsWithBothFieldsFromShowFieldsWithActualvalue() throws Exception {
+	public void testCalculatedFieldsWithBothFieldsFromShowFieldsAggregatedOvertime() throws Exception {
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-Input.json"), RulesPojo.class);
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
