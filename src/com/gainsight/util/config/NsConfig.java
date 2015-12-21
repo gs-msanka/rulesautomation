@@ -94,6 +94,12 @@ public class NsConfig implements IConfig {
     public String getSchedulerDBIsSSLEnabled() {
         return getConfigValue(INsProperties.SchedulerDBIsSSLEnabled);
     }
+
+    public String getMandrillWebHookSecret() {
+        return getConfigValue(INsProperties.MandrillWebHookSecret);
+    }
+
+
     
     public JsonObject getConfigObject() {
         return configObject;
@@ -127,6 +133,7 @@ public class NsConfig implements IConfig {
         public static final String SchedulerDBUserName = "mongo_scheduler_username";
         public static final String SchedulerDBPassword = "mongo_scheduler_password";
         public static final String SchedulerDBIsSSLEnabled = "mongo_scheduler_ssl_enable";
+        String MandrillWebHookSecret = "mandrill_webhook_secret";
 
 
 

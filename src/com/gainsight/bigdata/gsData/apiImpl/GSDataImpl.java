@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.ws.commons.util.Base64;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -56,7 +57,7 @@ public class GSDataImpl {
             throw new IllegalArgumentException("Org id can't be null.");
         }
         Log.info("Getting Tenant Information with org Id...");
-        ResponseObj responseObj = wa.doGet(TENANT_INFO_LITE+orgId, header.getAllHeaders());
+        ResponseObj responseObj = wa.doGet(TENANT_INFO_LITE + orgId, header.getAllHeaders());
         if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
             NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
             if(nsResponseObj.isResult()) {
@@ -66,6 +67,23 @@ public class GSDataImpl {
             }
         }
         throw new RuntimeException("No Tenant Information found with the supplied org id Or ." +responseObj.toString());
+    }
+
+    public CollectionInfo getCollectionMasterByName(String collectionName) throws IOException {
+        COMMetadata metadata = mapper.readValue("{\"limit\":1,\"skip\":0,\"whereAdvanceFilter\":{\"filters\":[{\"dbName\":\"CollectionDetails.CollectionName\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"logicalOperator\":\"AND\",\"filterValues\":[\"Unsubscribed Emails\"]}],\"expression\":\"A\"},\"includeFields\":[\"CollectionDetails\",\"CollectionDescription\",\"createdByName\",\"createdDate\",\"modifiedByName\",\"modifiedDate\",\"Columns\"]}", COMMetadata.class);
+        NsResponseObj nsResponseObj = getCustomObjectsDetailsNsResponse(metadata);
+        if(nsResponseObj.isResult()) {
+            List<HashMap<String, Object>> response = null;
+            if(nsResponseObj != null && nsResponseObj.isResult() && nsResponseObj.getData()!= null) {
+                response = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+                if(response != null && response.size() >= 0 && response.get(0).containsKey("collectionMaster")) {
+                    Object serverResponse = response.get(0).get("collectionMaster");
+                    CollectionInfo collectionInfo = mapper.convertValue(serverResponse, CollectionInfo.class);
+                    return collectionInfo;
+                }
+            }
+        }
+        throw new RuntimeException("Failed to get Collection master with collection name :" +collectionName);
     }
 
     /**

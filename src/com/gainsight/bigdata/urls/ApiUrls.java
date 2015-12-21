@@ -17,11 +17,16 @@ public interface ApiUrls extends NSURLs {
     //Reporting API
     String API_REPORT_RUN                       = NS_URL + "/api/reports/run/preparation";
     String API_REPORT_RUN_LINKS                 = NS_URL + "/api/reports/run/preparation/links";
-    String API_REPORT_PUT                       = NS_URL + "/api/reports";
-    String API_REPORT_DELETE                    = NS_URL + "/api/reports/"; //Append Report ID.
-    String API_REPORT_GET_ALL                   = NS_URL + "/api/reports/reporting_v2";
-    String API_COLLECTION_ALL_LITE              = NS_URL + "/api/collections/all/lite";
-    String API_COLLECTION_TREE                  = NS_URL + "/api/collections/%s/collectionTree";
+    String API_REPORT                           = NS_URL + "/api/reports/";                         //Append Report ID, To get report metadata.
+    String API_REPORT_GET_ALL                   = NS_URL + "/api/reports/reporting_v2";             //To get all the created reports.
+    String API_COLLECTION_ALL_LITE              = NS_URL + "/api/collections/all/lite";             //To get all the Collections Master details - Lite.
+    String API_COLLECTION_TREE                  = NS_URL + "/api/collections/%s/collectionTree";    //To get the collection tree that has lookup information.
+    String API_REPORT_EXPORT_EXCEL              = NS_URL + "/api/export/excel";                     //To export the report to a excel.
+    String API_REPORT_EXPORT_CHART              = NS_URL + "/api/export/chart";                     //To export the report chart.
+    String API_REPORT_EXPORT_MASTER             = NS_URL + "/api/reports/exportmaster/";            //Append the layout id to get the scheduled information and email template information that is saved for a layout.
+    String API_REPORT_PPTX_METADATA             = NS_URL + "/qbr/exports/pptx/documents/%s/metadata"; //Get the metadata of the PPTX file uploaded.
+    String API_REPORT_DASHBOARD_TEST_EMAIL      = NS_URL + "/api/export/dashboard/pptx";               //Trigger the send email.
+
 
     String API_RULE_RUN                         = NS_URL + "/api/eventrule";
     String APP_API_GET_COLLECTION               = NS_URL + "/api/collections/";
@@ -75,20 +80,51 @@ public interface ApiUrls extends NSURLs {
     String COLLECTION_DATA_LOAD             = NS_URL + "/api/dataload/load";
     String COLLECTION_DATA_ASYNC_IMPORT     = NS_URL + "/api/dataload/import";
     String COLLECTION_CURL_GENERATE         = NS_URL + "/api/dataload/collections/%s/curl"; //Collection Id.
-
+    String COLLECTION_DATA_DELETE_POST      = NS_URL + "/api/dataload/delete";  //To delete the data from collection.
 
     //S3 Connectors API
     String S3_ACCOUNT_FETCH                 = NS_URL + "/api/s3Connector/account/fetch";
     String S3_FOLDERS_FETCH                 = NS_URL + "/api/s3Connector/s3Folders/fetch";
+    String S3_BUCKET_EXISTS                 = NS_URL + "/api/s3Connector/bucket/exists";
+    String S3_FOLDER_CREATE                 = NS_URL + "/api/s3Connector/s3Folder/create";
+    String S3_DATALOAD_HISTORY              = NS_URL + "/api/s3Connector/dataload/history";  //?start=0&count=10
 
 
     //Common API
-    String API_SCHEDULE                     = NS_URL + "/api/schedule";
-    String TENANT_INFO_LITE                 = NS_URL + "/api/tenants/info/"; //Append 18 digit org id.
+    String API_SCHEDULES_ALL                    = NS_URL + "/api/schedule/schedules";
+    String API_SCHEDULE                         = NS_URL + "/api/schedule";
+    String TENANT_INFO_LITE                     = NS_URL + "/api/tenants/info/"; //Append 18 digit org id.
 
     //Copilot
-    String API_CREATE_SMARTLIST              = NS_URL + "/api/smartlists/";
-    
+    String API_CREATE_SMARTLIST             = NS_URL + "/api/smartlists/";
+    String API_SMARTLIST_NAME_UPDATE        = NS_URL + "/api/smartlists/name";
+    String API_COPILOT_FEATURES_STATUS      = NS_URL + "/api/async/tasks/features/copilot";    //To get the status of the smart lists that are triggered.
+    String API_SMARTLIST                    = NS_URL + "/api/smartlists/";  //To get all the smart list's created.   /data?numberOfRecords=15 - To get top 15 records.
+    String API_SMARTLIST_SAVE               = NS_URL + "/api/smartlists/save"; //Create a smart list with out triggering the execution.
+    String API_SMARTLIST_CREATE_EXECUTE     = NS_URL + "/api/smartlists/saveExecute"; //Save the smart list & trigger the refresh.
+    String API_SMARTLIST_DATA               = NS_URL + "/api/smartlists/%s/data";  //Get the smart list data.
+    String API_SMARTLIST_DATA_RESYNC        = NS_URL + "/api/smartlists/%s/execute";  //Refresh the smartlist data.
+    String API_EMAIL_TEMPLATE               = NS_URL + "/api/templates/";    //To get all the email templates.
+    String API_EMAIL_TEMPLATE_OUTREACH_INFO = NS_URL + "/api/templates/outreachInfo"; //To get the template info related use in different outreaches.
+    String API_OUTREACH                     = NS_URL + "/api/campaigns/";  //Get all the outreaches/
+    String API_OUTREACH_RUN                 = NS_URL + "/api/campaigns/%s/run";  //To run the outreach.
+    String API_OUTREACH_EXECUTION_HISTORY   = NS_URL + "/api/campaigns/%s/executionHistory";      //To get the execution history of a outreach.
+    String API_SMARTLIST_SEARCH             = NS_URL + "/api/smartlists/%s/search";
+    String API_OUTREACH_PREVIEW             = NS_URL + "/api/campaigns/%s/preview";
+    String API_COPILOT_EMAIL_LOG_ANALYTICS  = NS_URL + "/api/collections/assets/ANALYTICS/entities/EMAIL_LOG"; //To get Email logs collection master. //TODO-Why are we not using exisints API to get collection master of email logs.
+    String API_IMAGE_RESIZE                 = NS_URL + "/api/image/resize";
+    String API_EMAIL_TEMPLATE_NAME_UPDATE   = NS_URL + "/api/templates/name"; //Update the name of email template.
+    String API_OUTREACH_NAME_UPDATE         = NS_URL + "/api/campaigns/name"; //Update the name of outreach.
+    String API_SUBSCRIBE_EMAIL              = NS_URL + "/api/subscription/email";
+    String API_WEB_HOOK_SENDGRID            = NS_URL + "/api/email/webhook/sendgrid";
+    String EMAIL_WEB_HOOK_MANDRILL          = "/api/email/webhook/mandrill";
+    String API_WEB_HOOK_MANDRILL            = NS_URL + EMAIL_WEB_HOOK_MANDRILL;
+    String API_EMAIL_VALIDATE               = NS_URL + "/api/email/validate";
+    String API_EMAIL_KNOCK_OFF              = NS_URL + "/api/email/knockOff";
+
+
+    String API_GET_ALL_COLLECTIONS_SFDC_ACCOUNTID_MAPPED = NS_URL + "/api/collections/all/lite?hasaccount=true";
+
     //GS Email related API's
     String GET_ACCESS_KEY                  = NS_URL + "/api/email/account";
     String EXISTS_CALL                     = NS_URL + "/api/accounts/SFDC/exists";
