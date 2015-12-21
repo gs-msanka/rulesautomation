@@ -1,0 +1,106 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4043",
+  "ruleDescription": "GS-4043 - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT",
+          "sourceField": "rules_c_Number",
+          "periodType": "Past",
+          "noOfPeriods": "4",
+          "granularity": "Days"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT",
+          "sourceField": "Custom_Number3",
+          "periodType": "Past",
+          "noOfPeriods": "3",
+          "granularity": "Months"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT",
+          "sourceField": "Custom_Number2",
+          "periodType": "Past",
+          "noOfPeriods": "2",
+          "granularity": "Years"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number2",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number3",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "rules_c_Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "C_lookup Name",
+            "destination": "C_Text"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

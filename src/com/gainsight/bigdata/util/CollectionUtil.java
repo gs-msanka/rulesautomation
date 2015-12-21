@@ -5,7 +5,6 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.gsData.pojos.CollectionDependency;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.ColumnAttributeType;
-import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.Verifier;
 import net.javacrumbs.jsonunit.core.Option;
@@ -402,33 +401,6 @@ public class CollectionUtil {
         column.setLookupDetail(lookUpDetail);
         Log.info("Look Up Details : " + lookUpDetail.toString());
     }
-
-
-	/**
-	 * @param collectionInfo - collectionmaster on which calculatedExpression has to be created
-	 * @param columnName - column for whih calculated measure has to be created
-	 * @param column1
-	 * @param column2
-	 * @param column3
-	 * @param formula - RedShiftFormulaType
-	 * @return
-	 */
-	public static CollectionInfo getcalculatedExpression(CollectionInfo collectionInfo, String columnName,
-			String column1, String column2, String column3, RedShiftFormulaType formula){
-		switch (formula) {
-		case FORMULA1:
-			for (CollectionInfo.Column column : collectionInfo.getColumns()) {
-				if (column.getDisplayName().equals(columnName)) {
-					column.setCalculatedExpression("(" + column1 + "+"
-							+ column2 + ")" + "*" + column3);
-				}
-			}
-			break;
-		default:
-			break;
-		}
-		return collectionInfo;
-	}
 
     /**
      * Replaces the display names / tokens in a calculated expression of column.

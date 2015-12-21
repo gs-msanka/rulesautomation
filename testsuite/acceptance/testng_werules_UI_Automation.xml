@@ -68,13 +68,13 @@
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="testCTAActionWithMdaJoins" />
-               <include name="testRedShiftCalculatedMeasuresInSetupRule" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
       </classes>
    </test>
 </suite>

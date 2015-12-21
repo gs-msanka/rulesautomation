@@ -1,0 +1,108 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4775",
+  "ruleDescription": "GS-4775 - Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "47741450690613730",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "ADD"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "DIVIDE"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "GS-47741450690613730",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "DIVIDE",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "ADD",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "MULTIPLE",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "SUBSTRACT",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "ADD",
+            "operator": "greater or equal",
+            "value": "input_0"
+          },
+          {
+            "fieldName": "ID",
+            "operator": "not equal to",
+            "value": "input_abc"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A OR B",
+    "timeIdentifier": "createdDate"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "ID",
+            "destination": "Id"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "ADD",
+            "destination": "AccPercentage"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "SUBSTRACT",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "MULTIPLE",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "DIVIDE",
+            "destination": "ActiveUsers"
+          }
+        ]
+      },
+      "criterias": [
+        {
+          "showField": "SUBSTRACT",
+          "operator": "not equal to",
+          "isNullCheck": true
+        }
+      ]
+    }
+  ]
+}

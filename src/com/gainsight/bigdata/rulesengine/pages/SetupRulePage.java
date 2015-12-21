@@ -162,7 +162,7 @@ public class SetupRulePage extends BasePage {
         element.dragAndDrop(sourceXpath, ACTION_FIELDS_DIV);     
 		String filterOperator = String.format(ACTION_FILTER_OPERATOR, object+ "::" + fields);
 		item.click(filterOperator);
-		selectValueInDropDown(operator);
+		selectValueInDropDown(operator, true);
 		if (value.startsWith("select_")) {
 			value = value.substring(7);
 			String filterSValue = String.format(ACTION_FILTER_SVALUE, object+ "::" + fields);
@@ -265,7 +265,7 @@ public class SetupRulePage extends BasePage {
 			}
 		} else {
 			item.click(CALCULATED_FIELD_AGGREGATION_LIST_DROPDOWN_A_SECTION);
-			selectValueInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation(), true);
+			selectValueInDropDown(calculatedField.getAggregationConfig().getAggregationCalculation());
 			item.click(CALCULATED_FIELD_SOURCEFIELD_LIST_DROPDOWN_A_SECTION);
 			selectValueInDropDown(calculatedField.getAggregationConfig().getSourceField(), true);
 			item.click(CALCULATED_FIELD_PERIODTYPE_LIST_DROPDOWN_A_SECTION);

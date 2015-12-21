@@ -1,0 +1,18 @@
+{
+  "jobName": "4774",
+  "jobType": "4774",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/InputData.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/InputData-Output.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "createdDate"
+      }
+    ]
+  }
+}

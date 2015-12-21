@@ -1,0 +1,17 @@
+{
+  "jobName": "4200",
+  "jobType": "transform",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "RulesSFDCCustom__c",
+    "fields": [
+      "C_Number__c",
+      "C_Text__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/ActualData.csv"
+  }
+}
