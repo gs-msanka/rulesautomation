@@ -5,7 +5,6 @@ import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.gsData.pojos.CollectionDependency;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.ColumnAttributeType;
-import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.Verifier;
 import net.javacrumbs.jsonunit.core.Option;
