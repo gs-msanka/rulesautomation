@@ -52,7 +52,6 @@ import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pages.SetupRuleActionPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.pojo.enums.ActionType;
-import com.gainsight.bigdata.rulesengine.pojo.enums.RedShiftFormulaType;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CTAAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.CloseCtaAction;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.LoadToFeatureAction;
