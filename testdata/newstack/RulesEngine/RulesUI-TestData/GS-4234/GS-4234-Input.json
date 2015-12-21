@@ -17,7 +17,7 @@
             "aggregationCalculation": "SUM",
             "sourceField": "CustomNumber1",
             "periodType": "Past",
-            "noOfPeriods": "2",
+            "noOfPeriods": "3",
             "granularity": "Months"
           }
         },

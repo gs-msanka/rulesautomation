@@ -17,7 +17,7 @@
             "aggregationCalculation": "SUM",
             "sourceField": "rules_c_Number",
             "periodType": "Past",
-            "noOfPeriods": "30",
+            "noOfPeriods": "4",
             "granularity": "Days"
           }
         },

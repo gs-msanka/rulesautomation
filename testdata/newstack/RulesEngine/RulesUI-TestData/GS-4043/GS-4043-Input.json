@@ -14,7 +14,7 @@
           "sourceField": "rules_c_Number",
           "periodType": "Past",
           "noOfPeriods": "4",
-          "granularity": "Weeks"
+          "granularity": "Days"
         }
       },
       {
@@ -24,7 +24,7 @@
           "aggregationCalculation": "COUNT",
           "sourceField": "Custom_Number3",
           "periodType": "Past",
-          "noOfPeriods": "4",
+          "noOfPeriods": "3",
           "granularity": "Months"
         }
       },
