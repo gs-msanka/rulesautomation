@@ -403,33 +403,6 @@ public class CollectionUtil {
         Log.info("Look Up Details : " + lookUpDetail.toString());
     }
 
-
-	/**
-	 * @param collectionInfo - collectionmaster on which calculatedExpression has to be created
-	 * @param columnName - column for whih calculated measure has to be created
-	 * @param column1
-	 * @param column2
-	 * @param column3
-	 * @param formula - RedShiftFormulaType
-	 * @return
-	 */
-	public static CollectionInfo getcalculatedExpression(CollectionInfo collectionInfo, String columnName,
-			String column1, String column2, String column3, RedShiftFormulaType formula){
-		switch (formula) {
-		case FORMULA1:
-			for (CollectionInfo.Column column : collectionInfo.getColumns()) {
-				if (column.getDisplayName().equals(columnName)) {
-					column.setCalculatedExpression("(" + column1 + "+"
-							+ column2 + ")" + "*" + column3);
-				}
-			}
-			break;
-		default:
-			break;
-		}
-		return collectionInfo;
-	}
-
     /**
      * Replaces the display names / tokens in a calculated expression of column.
      * Can be used on all redshift collections.

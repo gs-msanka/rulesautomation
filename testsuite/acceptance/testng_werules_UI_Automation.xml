@@ -68,7 +68,6 @@
                <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="testCTAActionWithMdaJoins" />
-               <include name="testRedShiftCalculatedMeasuresInSetupRule" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>

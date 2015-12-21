@@ -161,8 +161,8 @@ public class CreateRuleTest extends BaseTest {
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
         dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
-        sfdc.runApexCode("Delete [SELECT Id FROM RulesSFDCCustom__c];");
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+        sfdc.runApexCode("Delete [SELECT Id FROM RulesSFDCCustom__c];");
         metaUtil.createExtIdFieldForScoreCards(sfdc);
         AdministrationBasePage administrationBasePage = basepage.clickOnAdminTab();
         AdminScorecardSection adminScorecardSection = administrationBasePage.clickOnScorecardSection();
@@ -864,46 +864,6 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
 	}
 
-	@TestInfo(testCaseIds = { "GS-9063" })
-	@Test
-	public void testRedShiftCalculatedMeasuresInSetupRule() throws Exception{
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC22.json"), RulesPojo.class);
-		rulesPojo.getSetupRule().setSelectObject("TC22" + calendar.getTimeInMillis());
-		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject("TC22" + calendar.getTimeInMillis());
-        JobInfo load = mapper.readValue(new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob_4.txt"), JobInfo.class);
-		dataETL.execute(load);
-		String collectionName = "TC22" + calendar.getTimeInMillis();
-		Log.info("Collection Name : " + collectionName);
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/CollectionSchema_4.json")), CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName(collectionName);
-		String collectionId = dataLoadManager.createSubjectAreaAndGetId(collectionInfo);
-		Assert.assertNotNull(collectionId);
-		CollectionInfo actualCollectionInfo = dataLoadManager.getCollectionInfo(collectionId);
-		JobInfo loadTransform = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/dataLoadJob2.txt"), JobInfo.class);
-		File dataLoadFile = FileProcessor.getDateProcessedFile(loadTransform,calendar.getTime());
-		DataLoadMetadata metadata = dataLoadManager.getDefaultDataLoadMetaData(actualCollectionInfo);
-		metadata.setCollectionName(actualCollectionInfo.getCollectionDetails().getCollectionName());
-		String statusId = dataLoadManager.dataLoadManage(metadata, dataLoadFile);
-		Assert.assertNotNull(statusId);
-		Assert.assertTrue(dataLoadManager.waitForDataLoadJobComplete(statusId), "verify whether dataload job status status != IN_PROGRESS");
-		Assert.assertTrue(dataLoadManager.isdataLoadJobCompleted(statusId),"verify whether dataload job is completed or not");
-		
-		Map<String, String> map=CollectionUtil.getDisplayAndDBNamesMap(actualCollectionInfo);
-		CollectionInfo calculatedFeildsSchema=CollectionUtil.getcalculatedExpression(actualCollectionInfo,
-				"calculatedMeasure1", map.get("number4"), map.get("number3"),
-				map.get("Score"), RedShiftFormulaType.FORMULA1);
-		Assert.assertTrue(tenantManager.updateSubjectArea(tenantDetails.getTenantId(),actualCollectionInfo), "check collectionmaster is updated or not via api");
-		String schemaWithCalculatedFields = mapper.writeValueAsString(calculatedFeildsSchema);
-		Log.info("Updated Collection schema is " + schemaWithCalculatedFields);
-		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-		rulesManagerPage.clickOnAddRule();
-		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
-		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
-				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
-		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
-		Assert.assertEquals(totalNumberOfRecordsProcessed, 6, "Verify records matched or not");
-	}
 	
 	@TestInfo(testCaseIds = { "GS-4185", "GS-4186", "GS-4257"})
 	@Test
