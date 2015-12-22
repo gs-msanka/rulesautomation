@@ -241,21 +241,23 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(emailLogCollection.getCollectionDetails().getDbType(), "DATA");
         Assert.assertNotNull(emailLogCollection.getCollectionDetails().getCollectionId(), "Collection Id should not be null.");
         Assert.assertEquals(emailLogCollection.getTenantId(), tenantInfo.getTenantId());
-        Assert.assertTrue(emailLogCollection.getColumns().size() > 1, "No of columns should be atleast more than 1."); //TODO - Just leave with count verification now.
+        Assert.assertTrue(emailLogCollection.getColumns().size() > 1, "No of columns should be atleast more than 1."); //TODO - Just leaving with count verification now.
     }
 
 
     @Test
     public void verifySmartListAdvancedOptions() throws Exception {
+        //Deleting the data from account & contact object with name hvaing COPILOTBULKACCOUNT.
         sfdc.runApexCode("Delete [Select id from Account where Name like '%CopilotBULKAccount%'];\n" +
                 "Delete [Select id from contact where LastName like '%CopiotBULKContact%'];");
-
+        //Added Accounts, Customers and contacts.
         sfdc.runApexCode(getNameSpaceResolvedFileContents(testDataDir + "/test/t2/T2_DataSet.apex"));
+        //Creating the smart list - 1.
         SmartList smartList1 = mapper.readValue(new File(testDataDir + "test/t2/T2_SmartList.json"), SmartList.class);
         smartList1.getSchedulerInfo().getSchedules().get(0).setCronExpression("0 17 10 1/1 * ? *");
         smartList1.getSchedulerInfo().getSchedules().get(0).setStartTime(Calendar.getInstance().getTimeInMillis());
         smartList1.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList1.getAutomatedRule().getTriggerCriteria()));
-
+        //Creating the smart list - 2.
         SmartList smartList2 = mapper.readValue(new File(testDataDir + "test/t2/T2_SmartList.json"), SmartList.class);
         smartList2.setName(smartList2.getName() + "-1");
         smartList2.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList2.getAutomatedRule().getTriggerCriteria()));
@@ -269,6 +271,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertNotNull(actualSmartList1.getSmartListId(), "Smart list should not be null.");
         Assert.assertNotNull(actualSmartList2.getSmartListId(), "Smart list should not be null.");
 
+        //Getting the all smart list execution status and verify they are present.
         HashMap<String, List<RuleExecutionHistory>> statsMap = copilotAPI.getAllSmartListStatus();
         Assert.assertNotNull(statsMap.get(actualSmartList1.getSmartListId()));
         Assert.assertNotNull(statsMap.get(actualSmartList2.getSmartListId()));
@@ -282,6 +285,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertNotNull(copilotAPI.getSmartList(smartListList, actualSmartList1.getSmartListId()), "Smart does not exists with id " + actualSmartList1.getSmartListId());
         Assert.assertNotNull(copilotAPI.getSmartList(smartListList, actualSmartList2.getSmartListId()), "Smart does not exists with id " + actualSmartList2.getSmartListId());
 
+        //Get the smart list schedule and verify the schedule details.
         List<Schedule> smartListSchedule1 = copilotAPI.getSmartListSchedules(actualSmartList1.getSmartListId());
         Assert.assertNotNull(smartListSchedule1);
         Assert.assertEquals(smartListSchedule1.size(), 1, "1 Schedule info should have exists.");
@@ -289,6 +293,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(smartListSchedule1.get(0).getCronExpression(), actualSmartList1.getSchedulerInfo().getSchedules().get(0).getCronExpression());
         Assert.assertEquals(smartListSchedule1.get(0).getJobContext().get("scheduleType"), actualSmartList1.getSchedulerInfo().getSchedules().get(0).getJobContext().get("scheduleType"));
 
+        //Get the smart list schedule and verify the schedule details.
         List<Schedule> smartListSchedule2 = copilotAPI.getSmartListSchedules(actualSmartList2.getSmartListId());
         Assert.assertNotNull(smartListSchedule2);
         Assert.assertEquals(smartListSchedule2.size(), 1, "1 Schedule info should have exists.");
@@ -296,12 +301,15 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(smartListSchedule2.get(0).getCronExpression(), actualSmartList2.getSchedulerInfo().getSchedules().get(0).getCronExpression());
         Assert.assertEquals(smartListSchedule2.get(0).getJobContext().get("scheduleType"), actualSmartList2.getSchedulerInfo().getSchedules().get(0).getJobContext().get("scheduleType"));
 
+        //Wait for the smart list execution complete.
         rulesUtil.waitForProcessingToComplete(actualSmartList1.getSmartListId());
         Assert.assertTrue(rulesUtil.isProcessingCompleted(actualSmartList1.getSmartListId()), "Smart List execution failed.");
 
+        //Search the smart list data and verify the size.
         String payload = "[{\"left\":{\"type\":\"field\",\"field\":\"Email\",\"fieldName\":\"Email\",\"entity\":\"Contact\",\"valueType\":\"STRING\",\"dataType\":\"STRING\",\"fieldType\":\"EMAIL\",\"groupable\":true,\"objectName\":\"Contact\",\"label\":\"Email\",\"alias\":\"\",\"aggregation\":\"\",\"properties\":{\"SFDC\":{\"keys\":[\"SFDC_USER_EMAIL\"]}},\"meta\":{\"isAccessible\":true,\"isFilterable\":true,\"isSortable\":true,\"isGroupable\":true,\"originalDataType\":\"EMAIL\",\"isCreateable\":true,\"precision\":0,\"decimalPlaces\":\"0\",\"relationshipName\":\"\",\"isFormulaField\":false,\"isUpdateable\":true,\"isRichText\":false}},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"email0\"}}]";
         List<HashMap<String, Object>> dataSet = copilotAPI.searchSmartList(actualSmartList1.getSmartListId(), payload);
         Assert.assertEquals(dataSet.size(), 50);
+        //Get the samrt list data with limit applied and verify the data count.
         List<HashMap<String, Object>> dataSet1 = copilotAPI.getSmartListData(actualSmartList1.getSmartListId(), 15);
         Assert.assertEquals(dataSet1.size(), 15);
     }
@@ -331,6 +339,7 @@ public class SmartListAllApiTest extends NSTestBase {
 
     @Test
     public void outReachAdvancedOptions() throws Exception {
+        //Create smart list and wait for execution to be completed, Check the stats fo smart list and compare the smart list data.
         SmartList smartList = mapper.readValue(new File(testDataDir + "test/t4/T4_SmartList.json"), SmartList.class);
         smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
         SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
@@ -352,15 +361,18 @@ public class SmartListAllApiTest extends NSTestBase {
         System.out.println(expData.equals(actualData));
         Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
 
+        //Get all the email id's in the smart list for gainsight bounce/reject and knock off all the emails.
         List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
         List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
         Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
 
+        //Create a email template and validate it.
         EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t4/T4_EmailTemplate.json"), EmailTemplate.class);
         EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
         Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
         Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
 
+        //Create a outreach - Trigger the outreach, Wait for the out reach execution to be completed, Check the outreach execution stats.
         OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t4/T4_OutReach.json"), OutReach.class);
         outReach.setSmartListId(actualSmartList.getSmartListId());
         outReach.setSmartListName(actualSmartList.getSmartListName());
@@ -378,7 +390,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
 
-
+        //Get the email log collection master, Create a report on  email log collection with the filter applied on the outreach id.
         CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
         Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
         emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
@@ -395,13 +407,13 @@ public class SmartListAllApiTest extends NSTestBase {
 
         reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
 
-        //Verifying Email Logs Data.
-        Log.info("Verifying Email Logs Data....");
+        //Get the email logs data by running the report and changing the db names with display names.
         List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
 
-        System.out.println("Actual "+mapper.writeValueAsString(emailLogs));
-        System.out.println("**************************");
-        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
+        //Load the smart list expected data CSV to TABLE.
+        //Alter the table to add new column that has outreach id, Name, email Template Name, sent count, Use case as campaigns.
+        //Write the output to the CSV file.
+        H2Db db = new H2Db("jdbc:h2:"+testDataDir+"process/TEST"  ,"sa","");
         String emailLogExpectedFile =Application.basedir+"/testdata/newstack/CoPilot/dataSet/process/t4/EmailLogsExpectedData.csv";
         String tempTableName = "Temp"+calendar.getTimeInMillis();
         try {
@@ -427,8 +439,9 @@ public class SmartListAllApiTest extends NSTestBase {
         } finally {
             //Closing Db Connection
             db.close();
-            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+            new File(testDataDir+"process/TEST.h2.db").delete();
         }
+        //Read the CSV file prepared in above step and compare the data with report data on email logs collection.
         List<Map<String, String>>  expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(emailLogExpectedFile)));
         Log.info("Expected :" + mapper.writeValueAsString(expectedData));
         Assert.assertEquals(Comparator.compareListData(expectedData, emailLogs).size(), 0, "Email Log Data Has Not Matched.");
@@ -448,6 +461,7 @@ public class SmartListAllApiTest extends NSTestBase {
         actualSchedule = copilotAPI.updateSchedule(mapper.writeValueAsString(schedule));
         assertScheduleInformation(actualSchedule, schedule);
 
+        //Again run a report on email logs collection by filtering on the campaign id with more column information i.e. internal email id - which is used for un-subscribe.
         ReportMaster reportMaster1 = reportManager.createTabularReportMaster(emailLogCollectionMaster,
                 new String[]{"Account Id", "Account Name", "Batch Id", "Batch Name", "Contact Id", "Contact Name", "Email Address", "Internal Email ID"});
 
@@ -463,6 +477,7 @@ public class SmartListAllApiTest extends NSTestBase {
         String gsId  = filteredEmailLogData.get(0).get("Internal Email ID");
         Assert.assertNotNull(gsId, "gsid should not be null.");
         Log.info("Internal Email ID : " + gsId);
+        //Un-Subscribe a participant / Contact from Both Survey And Success Communications.
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("category", UnSubscribeCategory.SUCCESS_COMMUNICATION.getValue()));
         nameValuePairs.add(new BasicNameValuePair("category", UnSubscribeCategory.SURVEY.getValue()));
@@ -470,10 +485,11 @@ public class SmartListAllApiTest extends NSTestBase {
         nameValuePairs.add(new BasicNameValuePair("t", Base64.encode(tenantInfo.getTenantId().getBytes()).toString()));
         String d = "{\"gsid\":\""+gsId+"\"}";
         nameValuePairs.add(new BasicNameValuePair("d", Base64.encode(d.getBytes()).toString()));
-
         ResponseObj responseObj = copilotAPI.unSubcribe(nameValuePairs);
         Assert.assertTrue(responseObj.getStatusCode() == HttpStatus.SC_OK);
         Assert.assertEquals(responseObj.getContent(), "Your preferences have been updated.");
+        //Run a report on the unsubscribed collection master and check it the email address is properly logged.
+        //TODO - Un-subscribe verification can also be done using the validate API developed form DEC22 Release.
         CollectionInfo unSubscribedEmailCollectionMaster = gsDataAPI.getCollectionMasterByName("Unsubscribed Emails");
         ReportMaster unSUBReportMaster = reportManager.createTabularReportMaster(unSubscribedEmailCollectionMaster, new String[]{"Account ID", "Account Name", "Category", "Contact ID", "Contact Name", "Email Address", "Reason"});
         ReportAdvanceFilter unSUBreportAdvanceFilter = mapper.readValue("{\"filters\":[{\"dbName\":\"e\",\"alias\":\"A\",\"dataType\":\"string\",\"filterOperator\":\"EQ\",\"filterValues\":[\"galbreathgali@automation.gainsighttest.com\"],\"type\":0,\"logicalOperator\":\"AND\",\"collectionId\":\"**********\"}],\"expression\":\"A\"}", ReportAdvanceFilter.class);
@@ -492,6 +508,7 @@ public class SmartListAllApiTest extends NSTestBase {
 
     @Test
     public void sendgridOutReachWebHookTest() throws Exception {
+        //Create smart list, wait for execution, verify the stats, verify the smart list data.
         SmartList smartList = mapper.readValue(new File(testDataDir + "test/t5/T5_SmartList.json"), SmartList.class);
         smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
         SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
@@ -513,21 +530,24 @@ public class SmartListAllApiTest extends NSTestBase {
         System.out.println(expData.equals(actualData));
         Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
 
+        //Knock of all the emails from gainsight black list (bounce, un-subscribed).
         List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
         List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
         Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
 
+        //Create a email template add validate the email template..
         EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t5/T5_EmailTemplate.json"), EmailTemplate.class);
         EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
         Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
         Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
 
+        //Create a outreach, trigger outreach, wait for outreach execution, verify execution history via rules api.
+        //TODO - Outreach execution history can also be verified by outreach execution history API.
         OutReach outReach = mapper.readValue(new File(testDataDir+ "test/t5/T5_OutReach.json"), OutReach.class);
         outReach.setSmartListId(actualSmartList.getSmartListId());
         outReach.setSmartListName(actualSmartList.getSmartListName());
         outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());
         outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateName(actualEmailTemplate.getTitle());
-
         ObjectMapper mapper1 = new ObjectMapper().setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
         OutReach actualOutReach = copilotAPI.createOutReach(mapper1.writeValueAsString(outReach));
         String outReachStatusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
@@ -540,7 +560,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
 
-
+        //Get email log collection master, Run report to get log data for this outreach and write to CSV file.
         CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
         Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
         emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
@@ -555,17 +575,21 @@ public class SmartListAllApiTest extends NSTestBase {
 
         reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
 
-
         List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
         System.out.println("Actual " + mapper.writeValueAsString(emailLogs));
         String emailLogsFilePath = testDataDir+"process/t5/EmailLogData.csv";
         FileUtil.writeToCSV(emailLogs, emailLogsFilePath);
 
+        //Load the WebHook events CSV file to a table.
+        //Load the EMAIL Logs Report CSV file to a table.
+        //Join both the tables on emailid, account name fields.
+        //Alter the table to add few more information like SubAccount, timestamp and ip etc.
+        //Write the file Data - webhook events to a CSV file.
+        //why we do all above ? - In order to trigger the web hook events we need external id of email from email log collection
         String sourceWebHookFilePath = testDataDir + "test/t5/T5_WebhookEvents.csv";
         String finalWebHookEventFilePath = testDataDir+"process/t5/Final_WebHookEventData.csv";
 
-        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
-        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
+        H2Db db = new H2Db("jdbc:h2:"+testDataDir+"process/TEST"  ,"sa","");        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
         String EMAIL_LOG_DATE_TABLE = "EMAILLOG";
         String FINAL_WEB_HOOK_TABLE = "WEBHOOK";
         try {
@@ -591,6 +615,7 @@ public class SmartListAllApiTest extends NSTestBase {
 
             db.executeStmt("call CSVWRITE ( '" + finalWebHookEventFilePath + "', 'SELECT * from "+FINAL_WEB_HOOK_TABLE+"' ) ");
 
+            //Read the file CSV file and trigger the webhook events.
             List<Map<String, String>> eventMap = Comparator.getParsedCsvData(new CSVReader(new FileReader(finalWebHookEventFilePath)));
             List<SendgridWebhookEvent> webhookEvents = mapper.convertValue(eventMap, new TypeReference<ArrayList<SendgridWebhookEvent>>() {
             });
@@ -599,9 +624,13 @@ public class SmartListAllApiTest extends NSTestBase {
                 events.add("["+mapper.writeValueAsString(event)+"]");
             }
 
+            //Trigger all the webhook events as bulk.
             Assert.assertTrue(copilotAPI.sendSendGridWebHookEvents(mapper.writeValueAsString(webhookEvents)));
+            //Trigger single event once with Thread implemented internally.
             Assert.assertTrue(copilotAPI.sendSendGridWebHookEvents(events), "Seems all the events are not successful.");
 
+            //Wait for 10 sec and verify the outreach execution history if not successful retry after 30 sec delay.
+            //TODO - Wait can be implemented by looking at the
             Thread.sleep(10000L);
             OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir+"test/t5/T5_OutReachExeHistory.json"), OutReachExecutionHistory.class);
             List<OutReachExecutionHistory> outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
@@ -616,14 +645,16 @@ public class SmartListAllApiTest extends NSTestBase {
                 assertOutReachExecutionHistory(outReachExecutionHistoryList.get(0), expOutReachExeHistory);
             }
 
+
         } finally {
             db.close();
-            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+            new File(testDataDir+"process/TEST.h2.db").delete();
         }
     }
 
     @Test
     public void mandrillOutReachWebHookTest() throws Exception {
+        //Create smart list, execute, verify stats and data of smart list.
         SmartList smartList = mapper.readValue(new File(testDataDir + "test/t6/T6_SmartList.json"), SmartList.class);
         smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
         SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
@@ -645,15 +676,18 @@ public class SmartListAllApiTest extends NSTestBase {
         System.out.println(expData.equals(actualData));
         Assert.assertEquals(Comparator.compareListData(parsedData, expData).size(), 0, "No of Diff Records should be zero.");
 
+        //Knock off all the emails from Gainsight Black listed collection - (Unsubscribed, Bounced).
         List<String> emailList = getValuesOfKeyAsList(expData, "Contact.Email");
         List<EmailProperties> emailProperties = copilotAPI.getEmailValidateProperties(emailList);
         Assert.assertTrue(copilotAPI.knockOffEmail(emailProperties));
 
+        //Create a template and validate the template.
         EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t6/T6_EmailTemplate.json"), EmailTemplate.class);
         EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
         Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
         Assert.assertTrue(copilotAPI.verifyEmailTemplate(emailTemplate, actualEmailTemplate), "Email template verification failed.");
 
+        //Create a outreach, trigger, wait for completion, verify execution and stats.
         OutReach outReach = mapper.readValue(new File(testDataDir + "test/t6/T6_OutReach.json"), OutReach.class);
         outReach.setSmartListId(actualSmartList.getSmartListId());
         outReach.setSmartListName(actualSmartList.getSmartListName());
@@ -672,7 +706,7 @@ public class SmartListAllApiTest extends NSTestBase {
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0);
         Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 30);
 
-
+        //Create report on email log collection by filtering on outreach id and write the data to CSV.
         CollectionInfo emailLogCollectionMaster = copilotAPI.getEmailLogsCollection();
         Assert.assertNotNull(emailLogCollectionMaster, "Failed to fetch email logs collection info.");
         emailLogCollectionMaster = gsDataAPI.getCollectionMaster(emailLogCollectionMaster.getCollectionDetails().getCollectionId());
@@ -687,7 +721,6 @@ public class SmartListAllApiTest extends NSTestBase {
 
         reportMaster.getReportInfo().get(0).setWhereAdvanceFilter(reportAdvanceFilter);
 
-
         List<Map<String, String>> emailLogs = reportManager.getProcessedReportData(reportManager.runReportLinksAndGetData(mapper.writeValueAsString(reportMaster)), emailLogCollectionMaster);
         System.out.println("Actual " + mapper.writeValueAsString(emailLogs));
         String emailLogsFilePath = testDataDir+"process/t6/EmailLogData.csv";
@@ -696,8 +729,12 @@ public class SmartListAllApiTest extends NSTestBase {
         String sourceWebHookFilePath = testDataDir + "test/t6/T6_WebhookEvents.csv";
         String finalWebHookEventFilePath = testDataDir+"process/t6/Final_WebHookEventData.csv";
 
-        H2Db db = new H2Db("jdbc:h2:~/TEST"  ,"sa","");
-        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
+        //Load Source webhook events to a table.
+        //Load email log events to a table.
+        //Join both the tables on email & account name.
+        //Alter the table with more required properties as subaccount, timestamp and IP.
+        //Why did we do this - Inorder to trigger a webhook event we need extid, subaccount, timestamp.
+        H2Db db = new H2Db("jdbc:h2:"+testDataDir+"process/TEST"  ,"sa","");        String SOURCE_WEBHOOK_EVENT_TABLE = "SOURCEWEBHOOK";
         String EMAIL_LOG_DATE_TABLE = "EMAILLOG";
         String FINAL_WEB_HOOK_TABLE = "WEBHOOK";
         try {
@@ -723,13 +760,14 @@ public class SmartListAllApiTest extends NSTestBase {
 
             db.executeStmt("call CSVWRITE ( '" + finalWebHookEventFilePath + "', 'SELECT * from " + FINAL_WEB_HOOK_TABLE + "' ) ");
 
+            //Trigger the bulk webhook events.
             List<Map<String, String>> eventMap = Comparator.getParsedCsvData(new CSVReader(new FileReader(finalWebHookEventFilePath)));
-
             List<MandrillWebhookEvent> mandrillWebhookEvents = constructMandrillEvents(eventMap);
             Assert.assertTrue(copilotAPI.sendMandrillWebHookEventsInBulk(mandrillWebhookEvents));
             //Assert.assertTrue(copilotAPI.sendMandrillWebHookEventsOneByOne(mandrillWebhookEvents));
 
-            Thread.sleep(5000L);
+            //Wait for 10 sec and verify the outreach execution history.
+            Thread.sleep(10000L);
             List<OutReachExecutionHistory> outReachExecutionHistoryList = copilotAPI.getOutReachExecutionHistory(actualOutReach.getCampaignId());
             Assert.assertTrue(outReachExecutionHistoryList.size()>0, "Atleast one outreach execution history should exists.");
             OutReachExecutionHistory expOutReachExeHistory = mapper.readValue(new File(testDataDir + "test/t6/T6_OutReachExeHistory.json"), OutReachExecutionHistory.class);
@@ -738,7 +776,8 @@ public class SmartListAllApiTest extends NSTestBase {
 
         } finally {
             db.close();
-            new File(System.getProperty("user.home")+"/TEST.h2.db").delete();
+            new File(testDataDir+"process/TEST.h2.db").delete();
+
         }
     }
 
@@ -822,6 +861,12 @@ public class SmartListAllApiTest extends NSTestBase {
         return tempCal;
     }
 
+    /**
+     * Verify the schedule information.
+     * Cron expression, timezone, Job identifier, starttime, end time, and job context etc.
+     * @param actual
+     * @param expected
+     */
     private void assertScheduleInformation(Schedule actual, Schedule expected) {
         Assert.assertNotNull(actual, "Actual schedule should not be null.");
         Assert.assertNotNull(expected, "Expected schedule should not be null.");
@@ -840,6 +885,12 @@ public class SmartListAllApiTest extends NSTestBase {
         }
     }
 
+    /**
+     * Validates outreach execution history.
+     * Accounts, Contacts, Sent, Opened and many more outreach execution parameter's.
+     * @param actual
+     * @param expected
+     */
     private void assertOutReachExecutionHistory(OutReachExecutionHistory actual, OutReachExecutionHistory expected) {
         Assert.assertNotNull(actual, "Actual Out Reach Execution History should be null.");
         Assert.assertNotNull(expected, "Expected Out Reach Execution History should be null.");
