@@ -11,7 +11,8 @@
         "weekly": false,
         "daily": true,
         "dateTime": false,
-        "fieldName": "rules_c_Date__c"
+        "fieldName": "rules_c_Date__c",
+        "timeZone": "America/Los_Angeles"
       }
     ]
   },

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.TimeZoneTypes;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -45,14 +46,14 @@ public class DateUtil {
 	 * @param userSpecifiedTimeZone
 	 * @return
 	 */
-	public static String addMonths(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+	public static String addMonths(Calendar cal, int amount, String format,  TimeZoneTypes timeZoneTypes) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         cal.add(Calendar.MONTH, amount);
 		//setting timezone
-		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+		if(timeZoneTypes == null) {
 			dateFormat.setTimeZone(timeZone);
 		} else {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+			dateFormat.setTimeZone(TimeZone.getTimeZone(timeZoneTypes.getTimeZone()));
 		}
 		Log.info((dateFormat.format(cal.getTime())));
         return dateFormat.format(cal.getTime());
@@ -99,17 +100,17 @@ public class DateUtil {
 	 * @param cal
 	 * @param amount
 	 * @param format
-	 * @param userSpecifiedTimeZone
+	 * @param timeZoneTypes
 	 * @return
 	 */
-	public static String addDays(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+	public static String addDays(Calendar cal, int amount, String format, TimeZoneTypes timeZoneTypes) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		cal.add(Calendar.DATE, amount);
 		//setting timezone
-		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+		if(timeZoneTypes == null) {
 			dateFormat.setTimeZone(timeZone);
 		} else {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+			dateFormat.setTimeZone(TimeZone.getTimeZone(timeZoneTypes.getTimeZone()));
 		}
 		Log.info((dateFormat.format(cal.getTime())));
 		return dateFormat.format(cal.getTime());
@@ -155,16 +156,16 @@ public class DateUtil {
      * @param cal
      * @param amount
      * @param format
-     * @param userSpecifiedTimeZone
+     * @param timeZoneTypes
      * @return
      */
-    public static String addWeeks(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+    public static String addWeeks(Calendar cal, int amount, String format, TimeZoneTypes timeZoneTypes) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		//setting timezone
-		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+		if(timeZoneTypes == null ) {
 			dateFormat.setTimeZone(timeZone);
 		} else {
-			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+			dateFormat.setTimeZone(TimeZone.getTimeZone(timeZoneTypes.getTimeZone()));
 		}
 		Log.info((dateFormat.format(cal.getTime())));
 		cal.add(Calendar.WEEK_OF_YEAR, amount);

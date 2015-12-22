@@ -147,17 +147,17 @@ public class JobInfo {
             boolean dateTime = false;
             String dateFormat;
             String fieldName;
-			String timeZone;
+            TimeZoneTypes timeZone;
 
-			public String getTimeZone() {
+			public TimeZoneTypes getTimeZone() {
 				return timeZone;
 			}
 
 			public void setTimeZone(String timeZone) {
-				this.timeZone = timeZone;
+				this.timeZone = TimeZoneTypes.getValue(timeZone);
 			}
 
-            public String getDateFormat() {
+			public String getDateFormat() {
                 return dateFormat;
             }
 
