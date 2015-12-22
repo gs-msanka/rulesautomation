@@ -11,7 +11,8 @@
         "weekly": false,
         "daily": true,
         "dateTime": false,
-        "fieldName": "CustomDate1"
+        "fieldName": "CustomDate1",
+        "timeZone": "America/Los_Angeles"
       }
     ]
   }
