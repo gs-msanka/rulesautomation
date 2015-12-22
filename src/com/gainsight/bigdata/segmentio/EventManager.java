@@ -9,20 +9,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.gainsight.http.Header;
+import com.gainsight.http.WebAction;
 import com.gainsight.testdriver.Log;
 
+import org.apache.http.HttpEntity;
 import us.monoid.web.Resty;
 
 public class EventManager {
 	private static final int NUMBER_OF_THREADS = 10;
 
-	public static int submitEvents(Resty resty, String url,
-			List<String> payloads) throws ExecutionException {
+	public static int submitEvents(List<Header> headers, String url,
+			List<HttpEntity> payloads) throws ExecutionException {
 		ExecutorService executor = Executors
 				.newFixedThreadPool(NUMBER_OF_THREADS);
 		List<Future<Boolean>> list = new ArrayList<Future<Boolean>>();
-		for (String payload : payloads) {
-			Callable<Boolean> worker = new EventSubmitter(resty, url, payload);
+		for (HttpEntity payload : payloads) {
+			Callable<Boolean> worker = new EventSubmitter(headers, url, payload);
 			Future<Boolean> submit = executor.submit(worker);
 			list.add(submit);
 		}
@@ -37,6 +40,7 @@ public class EventManager {
 			}
 		}
 		try {
+			executor.shutdown();
 			executor.awaitTermination(180L, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Log.info("Error while waiting for threads to complete event submissions (timeout is 180 seconds)");

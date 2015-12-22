@@ -1,0 +1,57 @@
+{
+  "jobName": "Connectors Customers Insert",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "useRestApi" : true,
+    "fields": [
+      "Id",
+      "Name",
+      "Account_ExternalId__c"
+    ],
+    "output": "/testdata/newstack/CoPilot/dataSet/process/Final_Accounts.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "resolveNameSpace" : false,
+        "file": "/testdata/newstack/CoPilot/dataSet/process/Final_Accounts.csv",
+        "table": "TempAccount",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "Id",
+            "alias": "JBCXM__Account__c"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/data/CopilotCustomerInfo.csv",
+        "table": "TempCustomers",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "JBCXM__Status__c",
+            "alias": "JBCXM__Status__r.JBCXM__SystemName__c"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/CoPilot/dataSet/process/Customers.csv"
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "JBCXM__CustomerInfo__c",
+    "operation": "insert",
+    "contentType": "CSV",
+    "file": "/testdata/newstack/CoPilot/dataSet/process/Customers.csv"
+  }
+}

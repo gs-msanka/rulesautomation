@@ -31,6 +31,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -267,7 +268,7 @@ public class GSDataTest extends NSTestBase {
 
         Map<String, CollectionInfo.Column> columnMap = CollectionUtil.getDisplayNameColumnsMap(actualCollectionInfo);
         for(CollectionInfo.Column column : columnList) {
-            Assert.assertTrue(columnMap.containsKey(column.getDisplayName()), "Column/Field doesn't exists in the collection.");
+            Assert.assertTrue(columnMap.containsKey(column.getDisplayName()), column.getDisplayName()+" - Column/Field doesn't exists in the collection.");
             Assert.assertTrue(CollectionUtil.verifyColumn(column, columnMap.get(column.getDisplayName())), "Column info didn't match, " + column.getDisplayName());
         }
     }
@@ -304,6 +305,9 @@ public class GSDataTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-7594", "GS-8128", "GS-8129", "GS-8130", "GS-8131", "GS-7570"})
     public void createFormulaFieldsOnMongo() throws Exception {
+        if(dataBaseType != DBStoreType.MONGO) {
+            throw new SkipException("This test case can only run on when MONGO is the data store.");
+        }
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_6_" + date.getTime());
         CollectionUtil.getColumnByDisplayName(collectionInfo, "FilesDownloaded").setDecimalPlaces(0); //Settings decimal places to zero.
@@ -357,6 +361,9 @@ public class GSDataTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-7595", "GS-8113", "GS-8114", "GS-8115", "GS-8116", "GS-7620", "GS-7571", "GS-7578"})
     public void createFormulaFieldsOnRedshift() throws Exception {
+        if(dataBaseType != DBStoreType.REDSHIFT) {
+          throw new SkipException("This test case can only run when REDSHIFT is enabled / databaseType = RedShift.");
+        }
         CollectionInfo collectionInfo = mapper.readValue(new File(testDataFiles + "/global/CollectionInfo.json"), CollectionInfo.class);
         collectionInfo.getCollectionDetails().setCollectionName("GS_COM_7_" + date.getTime());
         CollectionUtil.getColumnByDisplayName(collectionInfo, "FilesDownloaded").setDecimalPlaces(0); //Settings decimal places to zero.
@@ -538,7 +545,7 @@ public class GSDataTest extends NSTestBase {
 
         ResponseObj responseObj = gsDataImpl.sendDataForValidation(mapper.writeValueAsString(metadata), new File(testDataFiles + "/tests/t6/T6Collection.csv"));
         Log.info("Response Obj : " +responseObj.toString());
-        Assert.assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode());
+        Assert.assertEquals(responseObj.getStatusCode(),HttpStatus.SC_BAD_REQUEST);
 
         NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj.isResult(), " Result should be false.");
@@ -600,7 +607,7 @@ public class GSDataTest extends NSTestBase {
         DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, new String[]{"AccountName", "ADD", "PageViews", "PageVisits", "FilesDownloaded", "NoofReportsRun"}, DataLoadOperationType.INSERT);
         ResponseObj responseObj = gsDataImpl.sendDataForValidation(mapper.writeValueAsString(metadata), new File(testDataFiles + "/tests/t8/T8CollectionData.csv"));
         Log.info("Response Obj : " + responseObj.getContent());
-        Assert.assertEquals(HttpStatus.SC_BAD_REQUEST, responseObj.getStatusCode());
+        Assert.assertEquals(responseObj.getStatusCode(),HttpStatus.SC_BAD_REQUEST);
 
         NsResponseObj nsResponseObj1 = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
         Assert.assertFalse(nsResponseObj1.isResult());

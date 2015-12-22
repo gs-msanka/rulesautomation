@@ -1,0 +1,36 @@
+{
+  "jobName": "ContactFetch",
+  "jobType": "ContactFetch",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Contact",
+    "useRestApi" : true,
+    "fields": [
+      "Id",
+      "Name",
+      "AccountId",
+      "Account.Name",
+      "Email"
+    ],
+    "whereCondition" : " where Name Like ",
+    "output": "/testdata/newstack/Copilot/dataSet/process/t1/Contacts.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/Copilot/dataSet/process/t1/Contacts.csv",
+        "table": "Contacts",
+        "joinColumnName": "Name",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/Copilot/dataSet/process/t1/ExpectedData.csv"
+  }
+}

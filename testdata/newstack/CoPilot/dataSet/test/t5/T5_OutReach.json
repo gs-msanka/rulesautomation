@@ -1,0 +1,153 @@
+{
+  "name": "OutReach Advanced Options",
+  "category": "default",
+  "smartListId": "********************",
+  "smartListName": "********************",
+  "defaultECA": [
+    {
+      "actions": [
+        {
+          "order": 0,
+          "actionType": "EMAIL",
+          "emailTemplateName": "********************",
+          "emailTemplateId": "********************",
+          "params": {
+            "areaName": "EMAIL"
+          },
+          "fromAddress": {
+            "name": {
+              "type": "field",
+              "field": "Name",
+              "entity": "Account",
+              "fieldName": "Name",
+              "objectName": "Account",
+              "valueType": "STRING",
+              "aggregation": "",
+              "label": "Account ➝ Account Name"
+            },
+            "emailId": "ggolla@gainsight.com",
+            "replyTo": ""
+          },
+          "copyToAddress": [],
+          "tokenMapping": {
+            "isNotNullable": false,
+            "tokens": [
+              {
+                "name": "embd::54718ad7-b373-4b63-81f4-4635d5c46e23",
+                "value": {
+                  "type": "field",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Full Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Full Name",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "embd::d6a5ec5b-3764-4711-84f8-0c2214f7e0ed",
+                "value": {
+                  "type": "field",
+                  "field": "AccountId",
+                  "fieldName": "AccountId",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "REFERENCE",
+                  "label": "Account ID",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Account ID",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "subj::e8dcecb1-39b7-4622-a643-c7dc9afcf850",
+                "value": {
+                  "type": "field",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Account",
+                  "alias": "",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "fieldLabel": "Account ➝ Account Name",
+                  "objectName": "Account"
+                }
+              },
+              {
+                "name": "subj::cd25b630-97bc-49ec-aaef-04bd84e7b090",
+                "value": {
+                  "type": "field",
+                  "field": "Id",
+                  "fieldName": "Id",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "ID",
+                  "label": "Id",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Id",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "subj::d7485d92-1964-488b-80d7-34e89f46cc24",
+                "value": {
+                  "type": "field",
+                  "field": "Email",
+                  "fieldName": "Email",
+                  "entity": "Contact",
+                  "alias": "",
+                  "fieldType": "EMAIL",
+                  "label": "Email",
+                  "aggregation": "",
+                  "valueType": "STRING",
+                  "isExternalCriteria": true,
+                  "fieldLabel": "Contact ➝ Email",
+                  "objectName": "Contact"
+                }
+              },
+              {
+                "name": "unsubscribeText",
+                "value": {
+                  "type": "value",
+                  "valueType": "STRING",
+                  "value": "Manage your subscription preferences &lt;a href=&quot;${%s}&quot;&gt;here&lt;/a&gt;"
+                }
+              }
+            ]
+          },
+          "reportTokenMappings": [],
+          "reportNotNullable": true,
+          "addUnsubscribeFooter": true,
+          "isTransactional": false,
+          "preventDuplicateDays": 0
+        }
+      ]
+    }
+  ],
+  "followUpECA": [],
+  "status": "ACTIVATED",
+  "totalRecipients": 0,
+  "settings": {
+    "SEND_EMAIL_ONLY_ONCE": true,
+    "TEST_RUN": false
+  },
+  "outreachEmailTemplateTypes": [
+    "STANDARD"
+  ],
+  "preventDuplicateDays": 0,
+  "cascadeDelete": false,
+  "published": false,
+  "reportTokenMappings": [],
+  "campaignId": "****************"
+}

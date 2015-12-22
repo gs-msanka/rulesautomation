@@ -2,7 +2,7 @@ package com.gainsight.bigdata.copilot.smartlist.pojos;
 
 import java.util.ArrayList;
 
-import com.gainsight.bigdata.copilot.pojos.ActionDetails;
+import com.gainsight.bigdata.copilot.bean.smartlist.ActionDetails;
 
 public class AutomatedRule{
 	private String relatedId;
