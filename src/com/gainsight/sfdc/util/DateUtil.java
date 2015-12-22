@@ -36,6 +36,27 @@ public class DateUtil {
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(cal.getTime());
 	}
+	
+	/**
+	 * Method to add number of months in particular timezone
+	 * @param cal
+	 * @param amount
+	 * @param format
+	 * @param userSpecifiedTimeZone
+	 * @return
+	 */
+	public static String addMonths(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        cal.add(Calendar.MONTH, amount);
+		//setting timezone
+		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+			dateFormat.setTimeZone(timeZone);
+		} else {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+		}
+		Log.info((dateFormat.format(cal.getTime())));
+        return dateFormat.format(cal.getTime());
+	}
 
     public static String addMonths(TimeZone timeZone, int amount, String format) {
         Calendar cal = Calendar.getInstance(timeZone);
@@ -72,6 +93,27 @@ public class DateUtil {
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(cal.getTime());
     }
+    
+	/**
+	 * Method to add number of days in particular timezone
+	 * @param cal
+	 * @param amount
+	 * @param format
+	 * @param userSpecifiedTimeZone
+	 * @return
+	 */
+	public static String addDays(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		cal.add(Calendar.DATE, amount);
+		//setting timezone
+		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+			dateFormat.setTimeZone(timeZone);
+		} else {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+		}
+		Log.info((dateFormat.format(cal.getTime())));
+		return dateFormat.format(cal.getTime());
+	}
 
     public static String addDays(Date date, int amount, String format) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
@@ -107,6 +149,26 @@ public class DateUtil {
         dateFormat.setTimeZone(timeZone);
         cal.add(Calendar.WEEK_OF_YEAR, amount);
         return dateFormat.format(cal.getTime());
+    }
+    
+    /** Method to add number of weeks in particular timezone
+     * @param cal
+     * @param amount
+     * @param format
+     * @param userSpecifiedTimeZone
+     * @return
+     */
+    public static String addWeeks(Calendar cal, int amount, String format, String userSpecifiedTimeZone) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		//setting timezone
+		if(userSpecifiedTimeZone == null || userSpecifiedTimeZone.isEmpty()) {
+			dateFormat.setTimeZone(timeZone);
+		} else {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(userSpecifiedTimeZone));
+		}
+		Log.info((dateFormat.format(cal.getTime())));
+		cal.add(Calendar.WEEK_OF_YEAR, amount);
+		return dateFormat.format(cal.getTime());
     }
 
     public static String addWeeks(Date date, int amount, String format) {

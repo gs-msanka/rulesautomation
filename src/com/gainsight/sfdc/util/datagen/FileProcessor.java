@@ -248,21 +248,22 @@ public class FileProcessor {
     }
 
     private static String getDate(JobInfo.DateProcess.Fields field, int value) {
-        if(field.isDateTime())  {
-            if(field.isDaily()) {
-                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
-            } else if (field.isWeekly()){
-                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
+        if (field.isDateTime()) {
+            if (field.isDaily()) {
+                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat(), field.getTimeZone());
+            } else if (field.isWeekly()) {
+                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat(), field.getTimeZone());
             } else {
-                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat());
+                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd'T'HH:mm:ss" : field.getDateFormat(), field.getTimeZone());
             }
+
         } else {
-            if(field.isDaily()) {
-                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
-            } else if (field.isWeekly()){
-                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
+            if (field.isDaily()) {
+                return DateUtil.addDays(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd" : field.getDateFormat(), field.getTimeZone());
+            } else if (field.isWeekly()) {
+                return DateUtil.addWeeks(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd" : field.getDateFormat(), field.getTimeZone());
             } else {
-                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat()==null ? "yyyy-MM-dd" :field.getDateFormat());
+                return DateUtil.addMonths(Calendar.getInstance(), value, field.getDateFormat() == null ? "yyyy-MM-dd" : field.getDateFormat(), field.getTimeZone());
             }
         }
     }
