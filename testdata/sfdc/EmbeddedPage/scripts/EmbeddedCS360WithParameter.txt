@@ -1,0 +1,23 @@
+String SectionName = 'embeddedparam';
+String CS360objName = 'objName';
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+
+Integer currentDisplayOrder = 0;
+
+List<AggregateResult> ds = [Select MAX(JBCXM__DisplayOrder__c) maxDs From JBCXM__c360Sections__c];
+currentDisplayOrder = Integer.valueOf(ds[0].get('maxDs'));
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName, 
+														  JBCXM__DisplayLabel__c = SectionName,
+														  JBCXM__AccountReference__c = 'AccountId',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = true,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = true,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__ReportItems__c='{"queryParams":[{"target":{"type":"value","valueType":"String","value":"param"},"source":{"type":"field","fieldName":"Name","label":" Account Name","valueType":"STRING","object":"Account"}}],"vfPage":"Embedparam","sectionHeight":400}',
+														  JBCXM__isStandardObject__c = false,
+														  JBCXM__ObjectName__c = CS360objName,
+														  JBCXM__Type__c = 'EmbedPage');
+insert rList;
+
+
