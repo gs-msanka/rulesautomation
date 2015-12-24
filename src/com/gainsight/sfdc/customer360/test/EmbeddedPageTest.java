@@ -32,11 +32,12 @@ public class EmbeddedPageTest extends BaseTest {
             + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360BundledParameter.txt";
     public static String visualForcePageUrl = ".visual.force.com/apex/";
     private static String embededList = "//div[@class='gs_section_title']/h1[text()='%s']";
-    Element element = new Element();
+    Element element;
 
 
     @BeforeClass
     public void setUp() throws Exception {
+        element = new Element();
         Log.info("Embedded testcases");
         basepage.login();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
