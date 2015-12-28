@@ -2,15 +2,14 @@ package com.gainsight.sfdc.customer360.test;
 
 import java.util.HashMap;
 
-import com.gainsight.pageobject.core.Element;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.gainsight.testdriver.Log;
 
+import com.gainsight.pageobject.core.Element;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.testdriver.Log;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.annotations.TestInfo;
 
@@ -30,10 +29,13 @@ public class EmbeddedPageTest extends BaseTest {
             + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360WithParameter.txt";
     private final String EMBEDDED_360_BUNBLED_PARAM_ENABLE = env.basedir
             + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360BundledParameter.txt";
+    private final String EMBEDDED_360_URL_PARAM_ENABLE_FILE = env.basedir
+            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360URLWithParameter.txt.txt";
+    private final String EMBEDDED_360_NAVIGATION_IFRAME = env.basedir
+            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedNavigationInIframe.txt.txt.txt";
     public static String visualForcePageUrl = ".visual.force.com/apex/";
     private static String embededList = "//div[@class='gs_section_title']/h1[text()='%s']";
     Element element;
-
 
     @BeforeClass
     public void setUp() throws Exception {
@@ -41,15 +43,11 @@ public class EmbeddedPageTest extends BaseTest {
         Log.info("Embedded testcases");
         basepage.login();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
-        visualForcePageUrl = "https://"
-                + "c"
-                + "."
-                + sfdcInfo.getEndpoint().substring(8,
-                sfdcInfo.getEndpoint().indexOf("."))
-                + visualForcePageUrl;
+        visualForcePageUrl = "https://" + "c" + "."
+                + sfdcInfo.getEndpoint().substring(8, sfdcInfo.getEndpoint().indexOf(".")) + visualForcePageUrl;
     }
 
-    @TestInfo(testCaseIds = {"GS-5103"})
+    @TestInfo(testCaseIds = { "GS-6011" })
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F1")
     public void embeddedWithCustomPage(HashMap<String, String> testData) {
@@ -62,11 +60,11 @@ public class EmbeddedPageTest extends BaseTest {
         element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
 
         String NO_CUSTOMER_FOUND_MSG = "//div[@class='gs_inavlidCustomerSpan' and contains(text(),'No customer selected. Please search and select a customer')]";
-        Assert.assertTrue(element.isElementPresent(NO_CUSTOMER_FOUND_MSG));
+        Assert.assertTrue(element.isElementPresent(NO_CUSTOMER_FOUND_MSG), "Message not found in custom page");
 
     }
 
-    @TestInfo(testCaseIds = {"GS-5103"})
+    @TestInfo(testCaseIds = { "GS-6010" })
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F2")
     public void embeddedWithBoxURL(HashMap<String, String> testData) {
@@ -80,11 +78,11 @@ public class EmbeddedPageTest extends BaseTest {
 
         element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
         String NO_BOX_WELCOME_MSG = "//form/div/h2[contains(text(),'Sign In to Your Account')]";
-        Assert.assertTrue(element.isElementPresent(NO_BOX_WELCOME_MSG));
+        Assert.assertTrue(element.isElementPresent(NO_BOX_WELCOME_MSG), "Message not found in Box url");
 
     }
 
-    @TestInfo(testCaseIds = {"GS-5103"})
+    @TestInfo(testCaseIds = { "GS-6006" })
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F3")
     public void embeddedWithParameter(HashMap<String, String> testData) {
@@ -99,11 +97,11 @@ public class EmbeddedPageTest extends BaseTest {
 
         element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
         String PARAMETER_ACCNAME = "//h1[contains(text(),'" + CustomerName + "')]";
-        Assert.assertTrue(element.isElementPresent(PARAMETER_ACCNAME));
+        Assert.assertTrue(element.isElementPresent(PARAMETER_ACCNAME), "Parameter not found in visual force page");
 
     }
 
-    @TestInfo(testCaseIds = {"GS-5103"})
+    @TestInfo(testCaseIds = { "GS-6012" })
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F4")
     public void embeddedWithBundledParameter(HashMap<String, String> testData) {
@@ -118,7 +116,8 @@ public class EmbeddedPageTest extends BaseTest {
         element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
 
         String BUNDLED_PARAMETER = "//h1[contains(text(),'123456')]";
-        Assert.assertTrue(element.isElementPresent(BUNDLED_PARAMETER));
+        Assert.assertTrue(element.isElementPresent(BUNDLED_PARAMETER),
+                "Bundled Parameter not found in visual force page");
 
     }
 
