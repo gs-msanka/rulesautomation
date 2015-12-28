@@ -1,7 +1,7 @@
 {
   "ruleType": "Custom",
-  "ruleName": "GS-4204",
-  "ruleDescription": "GS-4204 - Desc",
+  "ruleName": "GS-4237",
+  "ruleDescription": "GS-237 - Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "customObject2 Object",
@@ -9,17 +9,51 @@
       {
         "fieldName": "CalculatedField - 1",
         "calculationType": "Comparison",
-        "calculateDifferenceType": "Percentage",
+        "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "customObject2 Object::Custom_Number1"
+        },
+        "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "COUNT",
-            "sourceField": "Custom_Number1",
+            "aggregationCalculation": "AVG",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "14",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "customObject2 Object::Custom_Number1"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Custom_Number2",
+            "periodType": "Past",
+            "noOfPeriods": "20",
             "granularity": "Weeks"
           }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "customObject2 Object::Custom_Number1"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
@@ -34,25 +68,18 @@
         }
       },
       {
-        "fieldName": "CalculatedField - 2",
+        "fieldName": "CalculatedField - 4",
         "calculationType": "Comparison",
-        "calculateDifferenceType": "Percentage",
+        "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
-          "calculatedFieldType": "Aggregation",
-          "showField": "",
-          "aggregation": {
-            "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
-            "periodType": "Past",
-            "noOfPeriods": "14",
-            "granularity": "Weeks"
-          }
+          "calculatedFieldType": "Show field",
+          "showField": "customObject2 Object::Custom_Number1"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "AVG",
+            "aggregationCalculation": "COUNT_DISTINCT",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "20",
@@ -67,6 +94,10 @@
         "showFields": [
           {
             "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number1",
             "showAdvancedName": ""
           }
         ],
@@ -92,6 +123,16 @@
             "sourceObject": "",
             "sourceField": "CalculatedField - 2",
             "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
           }
         ]
       },

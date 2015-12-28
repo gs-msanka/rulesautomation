@@ -1,0 +1,105 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4046",
+  "ruleDescription": "GS-4046 - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "customObject2 Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "MIN",
+          "sourceField": "Custom_Number1",
+          "periodType": "Past",
+          "noOfPeriods": "20",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "SUM",
+          "sourceField": "Custom_Number2",
+          "periodType": "Past",
+          "noOfPeriods": "20",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "AVG",
+          "sourceField": "Custom_Number3",
+          "periodType": "Past",
+          "noOfPeriods": "20",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 4",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT",
+          "sourceField": "Custom_Number4",
+          "periodType": "Past",
+          "noOfPeriods": "20",
+          "granularity": "Weeks"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "customObject2 Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Number1",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Custom_Date1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

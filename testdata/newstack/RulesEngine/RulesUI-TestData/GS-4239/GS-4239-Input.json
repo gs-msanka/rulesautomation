@@ -4,7 +4,7 @@
   "ruleDescription": "GS-4239 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "C_Custom Object",
+    "selectObject": "customObject2 Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 1",
@@ -14,44 +14,61 @@
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "SUM",
-            "sourceField": "rules_c_Number",
+            "aggregationCalculation": "AVG",
+            "sourceField": "Custom_Number1",
             "periodType": "Past",
-            "noOfPeriods": "4",
-            "granularity": "Days"
+            "noOfPeriods": "15",
+            "granularity": "Weeks"
           }
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "SUM",
+            "aggregationCalculation": "AVG",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "3",
-            "granularity": "Months"
+            "noOfPeriods": "15",
+            "granularity": "Weeks"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Custom_Number1",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "Custom_Number2",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
           }
         }
       }
     ],
     "setupData": [
       {
-        "sourceObject": "C_Custom Object",
+        "sourceObject": "customObject2 Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "rules_c_Number",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number2",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number3",
             "showAdvancedName": ""
           },
           {
@@ -63,7 +80,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "rules_c_Date"
+    "timeIdentifier": "Custom_Date1"
   },
   "setupActions": [
     {
@@ -78,9 +95,9 @@
             "destination": "C_Number"
           },
           {
-            "sourceObject": "C_lookup",
-            "sourceField": "C_lookup Name",
-            "destination": "C_Text"
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
           }
         ]
       },

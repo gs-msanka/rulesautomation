@@ -7,41 +7,43 @@
     "selectObject": "customObject2 Object",
     "calculatedFields": [
       {
-        "fieldName": "CalculatedField - 1",
+        "fieldName": "CalculatedField - 3",
         "calculationType": "Comparison",
         "calculateDifferenceType": "Percentage",
         "fieldAConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "COUNT",
+            "aggregationCalculation": "AVG",
             "sourceField": "Custom_Number1",
             "periodType": "Past",
-            "noOfPeriods": "14",
-            "granularity": "Weeks"
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
           }
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "COUNT",
+            "aggregationCalculation": "AVG",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "20",
-            "granularity": "Weeks"
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
           }
         }
       },
       {
-        "fieldName": "CalculatedField - 2",
+        "fieldName": "CalculatedField - 4",
         "calculationType": "Comparison",
         "calculateDifferenceType": "Percentage",
         "fieldAConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "AVG",
+            "aggregationCalculation": "COUNT_DISTINCT",
             "sourceField": "Custom_Number1",
             "periodType": "Past",
             "noOfPeriods": "14",
@@ -52,7 +54,7 @@
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "AVG",
+            "aggregationCalculation": "COUNT_DISTINCT",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "20",
@@ -85,13 +87,13 @@
         "fieldMappings": [
           {
             "sourceObject": "",
-            "sourceField": "CalculatedField - 1",
-            "destination": "C_Number"
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
           },
           {
             "sourceObject": "",
-            "sourceField": "CalculatedField - 2",
-            "destination": "C_Percent"
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
           }
         ]
       },

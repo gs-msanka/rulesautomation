@@ -1,15 +1,15 @@
 {
   "ruleType": "Custom",
-  "ruleName": "GS-4204",
-  "ruleDescription": "GS-4204 - Desc",
+  "ruleName": "GS-4239",
+  "ruleDescription": "GS-4239 - Desc",
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "customObject2 Object",
     "calculatedFields": [
       {
-        "fieldName": "CalculatedField - 1",
+        "fieldName": "CalculatedField - 3",
         "calculationType": "Comparison",
-        "calculateDifferenceType": "Percentage",
+        "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
@@ -17,7 +17,7 @@
             "aggregationCalculation": "COUNT",
             "sourceField": "Custom_Number1",
             "periodType": "Past",
-            "noOfPeriods": "14",
+            "noOfPeriods": "23",
             "granularity": "Weeks"
           }
         },
@@ -28,23 +28,23 @@
             "aggregationCalculation": "COUNT",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "20",
+            "noOfPeriods": "23",
             "granularity": "Weeks"
           }
         }
       },
       {
-        "fieldName": "CalculatedField - 2",
+        "fieldName": "CalculatedField - 4",
         "calculationType": "Comparison",
-        "calculateDifferenceType": "Percentage",
+        "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "AVG",
+            "aggregationCalculation": "COUNT_DISTINCT",
             "sourceField": "Custom_Number1",
             "periodType": "Past",
-            "noOfPeriods": "14",
+            "noOfPeriods": "23",
             "granularity": "Weeks"
           }
         },
@@ -52,10 +52,10 @@
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "AVG",
+            "aggregationCalculation": "COUNT_DISTINCT",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "20",
+            "noOfPeriods": "23",
             "granularity": "Weeks"
           }
         }
@@ -67,6 +67,10 @@
         "showFields": [
           {
             "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
             "showAdvancedName": ""
           }
         ],
@@ -85,13 +89,13 @@
         "fieldMappings": [
           {
             "sourceObject": "",
-            "sourceField": "CalculatedField - 1",
-            "destination": "C_Number"
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
           },
           {
             "sourceObject": "",
-            "sourceField": "CalculatedField - 2",
-            "destination": "C_Percent"
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
           }
         ]
       },

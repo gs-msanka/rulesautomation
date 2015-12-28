@@ -420,4 +420,80 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		objField.setLookups(lookup);
 		metaUtil.createFieldsOnObject(sfdc, "C_Custom__c", objField);
 	}
+	
+	/**
+	 * Method which creates custom object "customObject2" and fields using metadataapi
+	 * 
+	 * @throws Exception
+	 */
+	public void createCustomObjectInSfdc() throws Exception {
+		ObjectFields objField = new ObjectFields();
+		// creating CustomObject
+		metadataClient.createCustomObject("customObject2");
+
+		List<String> externalID_Text = new ArrayList<String>();
+		externalID_Text.add("Custom_ExternalID");
+		objField.setExternalID_Text(externalID_Text);
+
+		List<String> textFields = new ArrayList<String>();
+		textFields.add("Custom_Text1");
+		textFields.add("Custom_Text2");
+		objField.setTextFields(textFields);
+
+		List<String> numberFields = new ArrayList<String>();
+		numberFields.add("Custom_Number1");
+		numberFields.add("Custom_Number2");
+		numberFields.add("Custom_Number3");
+		numberFields.add("Custom_Number4");
+		objField.setNumberFields(numberFields);
+
+		List<String> checkBoxes = new ArrayList<String>();
+		checkBoxes.add("Custom_Checkbox1");
+		checkBoxes.add("Custom_Checkbox2");
+		objField.setCheckBoxes(checkBoxes);
+
+		List<String> Email = new ArrayList<String>();
+		Email.add("Custom_Email");
+		objField.setEmails(Email);
+
+		List<String> Percent = new ArrayList<String>();
+		Percent.add("Custom_Percent");
+		objField.setPercents(Percent);
+
+		List<HashMap<String, String[]>> pickLists = new ArrayList<HashMap<String, String[]>>();
+		HashMap<String, String[]> hmPickList1 = new HashMap<String, String[]>();
+		hmPickList1.put("Custom_Picklist", new String[] { "India", "England", "USA" });
+		pickLists.add(hmPickList1);
+		objField.setPickLists(pickLists);
+
+		List<HashMap<String, String[]>> multiPickLists = new ArrayList<HashMap<String, String[]>>();
+		HashMap<String, String[]> hmMultiPickList1 = new HashMap<String, String[]>();
+		hmMultiPickList1.put("rules_c_MultiPicklist", new String[] { "Hyderabad", "Bangalore", "Chennai" });
+		multiPickLists.add(hmMultiPickList1);
+		objField.setMultiPickLists(multiPickLists);
+
+		List<String> Date = new ArrayList<String>();
+		Date.add("Custom_Date1");
+		Date.add("Custom_Date2");
+		objField.setDates(Date);
+
+		List<String> DateTime = new ArrayList<String>();
+		DateTime.add("Custom_DateTime1");
+		DateTime.add("Custom_DateTime2");
+		objField.setDateTimes(DateTime);
+
+		List<String> textArea = new ArrayList<String>();
+		textArea.add("Custom_TextArea");
+		objField.setTextAreas(textArea);
+
+		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
+		Customer_lookupListMap.put("Name", "C_lookup");
+		Customer_lookupListMap.put("ReferenceTo", "Account");
+		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesUI_Automation11");
+		lookup.add(Customer_lookupListMap);
+		objField.setLookups(lookup);
+		metaUtil.createFieldsOnObject(sfdc, "customObject2__c", objField);
+	}
 }
+
