@@ -66,4 +66,10 @@
         </classes>
     </test>
 
+    <test verbose="3" name="EmbeddedPage" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.EmbeddedPageTest"/>
+        </classes>
+    </test>
+
 </suite>
