@@ -611,7 +611,7 @@ public class CreateRuleTest extends BaseTest {
 		Assert.assertEquals(actualCronExpression, rulesPojo.getShowScheduler().getCronExpression(), "Cron Expression is not matching, Kindly check !!");
 	}
 	
-	@TestInfo(testCaseIds = { "GS-5018", "GS-5019", "GS-9065" })
+	@TestInfo(testCaseIds = { "GS-5018", "GS-5019", "GS-9065", "GS-9063" })
 	@Test
 	public void testCTAActionWithMdaJoins() throws Exception{
 		String redShiftCollection1=Long.toString(calendar.getTimeInMillis());
