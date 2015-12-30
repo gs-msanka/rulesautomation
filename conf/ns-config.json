@@ -126,7 +126,7 @@
       "mongo_scheduler_password"   : "pass",
       "mongo_scheduler_ssl_enable" : "false"
     },
-    " conqa02" : {
+    "conqa02" : {
       "ns_sfdc_username"  : "conqa02@gainsight.com",
       "ns_sfdc_password"  : "1234567jbr",
       "ns_sfdc_stoken"    : "jelOFlad9Xd682lqtoBpdtu7",
