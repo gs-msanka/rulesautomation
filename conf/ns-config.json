@@ -126,6 +126,26 @@
       "mongo_scheduler_password"   : "pass",
       "mongo_scheduler_ssl_enable" : "false"
     },
+    " conqa02" : {
+      "ns_sfdc_username"  : "conqa02@gainsight.com",
+      "ns_sfdc_password"  : "1234567jbr",
+      "ns_sfdc_stoken"    : "jelOFlad9Xd682lqtoBpdtu7",
+      "ns_appUrl"         : "https://conqa02-api-router.herokuapp.com",
+      "ns_adminUrl"       : "https://conqa02-api-router.herokuapp.com",
+      "ns_version"        : "v1.0",
+      "mongo_global_host"       : "54.165.93.124",
+      "mongo_global_port"       : "27017",
+      "mongo_global_db"         : "qa_connectors_db2",
+      "mongo_global_username"   : "qauser",
+      "mongo_global_password"   : "pass",
+      "mongo_global_ssl_enable" : "false",
+      "mongo_scheduler_host"       : "54.165.93.124",
+      "mongo_scheduler_port"       : "27017",
+      "mongo_scheduler_db"         : "qa_connectors_db2",
+      "mongo_scheduler_username"   : "qauser",
+      "mongo_scheduler_password"   : "pass",
+      "mongo_scheduler_ssl_enable" : "false"
+    },
     "pprod" :{
       "ns_sfdc_username"  : "awspprd@gainsighttest.com",
       "ns_sfdc_password"  : "pprd@123",
