@@ -1,0 +1,35 @@
+ {
+  "jobName": "Connectors Events",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi" : true,
+    "source": "sfdc",
+    "table": "Contact",
+    "fields": [
+      "Id",
+      "Name",
+      "Email",
+      "AccountId",
+      "Account.Name"
+    ],
+    "whereCondition" : "where account.name like '%Galbreath Co' and email like '%@automation.gainsighttest.com'",
+    "output": "/testdata/newstack/CoPilot/dataSet/process/t5/ExpectedData.csv"
+  },
+  "transform": {
+    "query": "Select Id as \"Contact.Id\", Name as \"Contact.Name\", Email as \"Contact.Email\", AccountId as \"Id\", AccountId as \"Contact.Account.Id\", \"Account.Name\" as \"Name\", AccountId as \"Contact.AccountId\" from contacts",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/process/t5/ExpectedData.csv",
+        "table": "Contacts",
+        "joinColumnName": "Name",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/CoPilot/dataSet/process/t5/Final_ExpectedData.csv"
+  }
+}

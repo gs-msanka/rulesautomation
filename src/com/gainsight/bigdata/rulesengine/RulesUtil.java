@@ -2,10 +2,7 @@ package com.gainsight.bigdata.rulesengine;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +31,7 @@ import com.gainsight.utils.wait.CommonWait;
 import com.gainsight.utils.wait.ExpectedCommonWaitCondition;
 import com.sforce.soap.partner.sobject.SObject;
 
+import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 
 import static com.gainsight.bigdata.urls.ApiUrls.*;
@@ -90,7 +88,7 @@ public class RulesUtil extends NSTestBase {
 		Assert.assertEquals("SUCCESS", LRR);
 
 		int rules1 = sfdc.getRecordCount(resolveStrNameSpace("Select Id, IsDeleted From Account Where ((IsDeleted = false))"));
-		Log.info(""+rules1);
+		Log.info("" + rules1);
 		int rules2 = sfdc
 				.getRecordCount(resolveStrNameSpace("Select Id,Name FROM JBCXM__CustomerInfo__c where Id!=null and isdeleted=false"));
 		Log.info(""+rules2);
@@ -160,7 +158,7 @@ public void setupRule(HashMap<String,String> testData){
 				"JBCXM__SystemName__c", "PL");
 		emailTemplateMap = getMapFromObject("EmailTemplate", "Name", "EML");
 		playbookMap=getMapFromObject("JBCXM__Playbook__c","Name","PB");
-		milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c","Name","ML","JBCXM__Category__c", "Milestones");
+		milestoneMap=getMapFromObjectUsingFilter("JBCXM__PickList__c", "Name", "ML", "JBCXM__Category__c", "Milestones");
 	}
 
 	/**
@@ -173,7 +171,7 @@ public void setupRule(HashMap<String,String> testData){
 						replaceSystemNameInRule(
 								replaceSystemNameInRule(replaceSystemNameInRule(string,
 										emailTemplateMap), featuresMap),
-						ctaTypesMap), PickListMap),playbookMap),milestoneMap);
+								ctaTypesMap), PickListMap), playbookMap), milestoneMap);
 		return string;
 	}
 
@@ -262,6 +260,10 @@ public void setupRule(HashMap<String,String> testData){
 			code = code.replace("JBCXM__", "");
 		}
 		return code;
+	}
+
+	public static void waitForCompletion(String ruleId, Header header) throws Exception {
+		waitForCompletion(ruleId, new WebAction(), header);
 	}
 
 	/**
@@ -684,14 +686,81 @@ public void setupRule(HashMap<String,String> testData){
 	/**
 	 * @param statusId statusID for rule to complete
 	 */
-	public void waitForRuleProcessingToComplete(final String statusId){
+	public void waitForRuleProcessingToComplete(final String statusId) {
 		Log.info("Waiting for rule with statusID "+statusId + " to Complete");
 		CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
-					@Override
-					public Boolean apply() {
-						return isRuleProcessingCompleted(statusId);
-					}
-				});
+			@Override
+			public Boolean apply() {
+				return isRuleProcessingCompleted(statusId);
+			}
+		});
+	}
+
+	public void waitForProcessingToComplete(final String ruleId) {
+		Log.info("Waiting for rule : "+ruleId + " to Complete");
+		CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<Boolean>() {
+			@Override
+			public Boolean apply() {
+				return isProcessingCompleted(ruleId);
+			}
+		});
+	}
+
+	public boolean isProcessionSuccess(String ruleId) {
+		boolean result = false;
+		RuleExecutionHistory executionHistory = getLastExecution(ruleId);
+		if (executionHistory == null) {
+			throw new RuntimeException("Execution History is null, Please check your data parameter.");
+		}
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed"))) {
+			result = true;
+		}
+		return result;
+	}
+
+	public boolean isProcessingCompleted(String ruleId) {
+		boolean result = false;
+		RuleExecutionHistory executionHistory = getLastExecution(ruleId);
+		if (executionHistory == null) {
+			throw new RuntimeException("Execution History is null, Please check your data parameter.");
+		}
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") ||
+				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {
+			result = true;
+		}
+		return result;
+	}
+
+	public RuleExecutionHistory getLastExecution(String ruleId) {
+		List<RuleExecutionHistory> executionHistoryList = getAllExecutionHistory(ruleId);
+		RuleExecutionHistory executionHistory = executionHistoryList.get(0);
+		if(executionHistory == null) {
+			throw new RuntimeException("Execution history not found for the supplied ruleid");
+		}
+		for(RuleExecutionHistory execution : executionHistoryList) {
+			if(executionHistory.getStartTime() < execution.getStartTime()) {   //Trying to get the execution history that has start time greater than all others.
+				executionHistory = execution;
+			}
+		}
+		return executionHistory;
+	}
+
+	public List<RuleExecutionHistory> getAllExecutionHistory(String ruleId) {
+		List<RuleExecutionHistory> ruleExecutionHistoryList=null;
+		try {
+			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS +"?ruleId="+ ruleId, header.getAllHeaders());
+			Log.info("Response : " +responseObj.toString());
+			if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+				NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+				if (nsResponseObj.isResult()) {
+					ruleExecutionHistoryList = mapper.convertValue(nsResponseObj.getData(), new TypeReference<ArrayList<RuleExecutionHistory>>(){});
+				}
+			}
+		} catch (Exception e) {
+			Log.error("Rule processing is not completed", e);
+			throw new RuntimeException("Rule processing is not completed" + e.getLocalizedMessage());
+		}
+		return ruleExecutionHistoryList;
 	}
 	
 	/**
@@ -699,9 +768,13 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return RuleExecutionHistory object
 	 */
 	public RuleExecutionHistory getExecutionHistory(String statusId) {
-		RuleExecutionHistory ruleExecutionHistory=null;
+		if(statusId == null) {
+			throw new IllegalArgumentException("Status Id can be null.");
+		}
+			RuleExecutionHistory ruleExecutionHistory=null;
 		try {
-			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + "/" + statusId + "", header.getAllHeaders());
+			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + statusId, header.getAllHeaders());
+			Log.info("Response : " +responseObj.toString());
 			if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
 				NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
 				if (nsResponseObj.isResult()) {
@@ -718,10 +791,25 @@ public void setupRule(HashMap<String,String> testData){
 	public boolean isRuleProcessingCompleted(String statusId){
 		boolean result = false;
 		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
+		if (executionHistory == null) {
+			throw new RuntimeException("Execution History is null, Please check your data parameter.");
+		}
 		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") || 
 				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {		
 				result = true;
-		} 
+		}
+		return result;
+	}
+
+	public boolean isRuleProcessingSuccessful(String statusId){
+		boolean result = false;
+		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
+		if (executionHistory == null) {
+			throw new RuntimeException("Execution History is null, Please check your data parameter.");
+		}
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed"))) {
+			result = true;
+		}
 		return result;
 	}
 	

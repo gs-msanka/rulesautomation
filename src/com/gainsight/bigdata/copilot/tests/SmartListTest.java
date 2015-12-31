@@ -22,9 +22,9 @@ import org.testng.annotations.Test;
 import com.gainsight.bigdata.copilot.apiImpl.CopilotUtil;
 import com.gainsight.bigdata.copilot.apiImpl.LoadTestData;
 import com.gainsight.bigdata.copilot.apiImpl.SmartListSetup;
-import com.gainsight.bigdata.copilot.pojos.ActionDetails;
+import com.gainsight.bigdata.copilot.bean.smartlist.ActionDetails;
 import com.gainsight.bigdata.copilot.smartlist.pojos.AutomatedRule;
-import com.gainsight.bigdata.copilot.smartlist.pojos.SmartList;
+import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.enums.DataLoadStatusType;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
@@ -931,7 +931,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1024,7 +1024,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1116,7 +1116,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1205,7 +1205,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1294,7 +1294,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1383,7 +1383,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1473,7 +1473,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1565,7 +1565,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);
@@ -1656,7 +1656,7 @@ public class SmartListTest extends LoadTestData {
 		AutomatedRule automatedRule = mapper.readValue(
 				testData.get("automatedRule1"), AutomatedRule.class);
 		for (ActionDetails actionDetails : automatedRule.getActionDetails()) {
-			actionDetails.setActionInfo(actionCriteria);
+			//actionDetails.setActionInfo(actionCriteria);
 		}
 		automatedRule.setTriggerCriteria(trigerCriteria);
 		String requestPayload = mapper.writeValueAsString(automatedRule);

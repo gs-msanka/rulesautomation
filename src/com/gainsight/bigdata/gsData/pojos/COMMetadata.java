@@ -8,7 +8,7 @@ public class COMMetadata {
     private int limit = 50;
     private int skip = 0;
     private WhereAdvanceFilter whereAdvanceFilter;
-    private String[] includeFields = {"CollectionDetails", "CollectionDescription", "createdByName", "createdDate", "modifiedByName", "modifiedDate"};
+    private String[] includeFields = {"CollectionDetails", "CollectionDescription", "createdByName", "createdDate", "modifiedByName", "modifiedDate", "Columns"};
 
     public int getLimit() {
         return limit;

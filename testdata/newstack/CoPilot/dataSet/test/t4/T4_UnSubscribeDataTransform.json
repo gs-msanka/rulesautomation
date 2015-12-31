@@ -1,0 +1,27 @@
+{
+  "jobName": "Un Subscribe Data Transform",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "transform": {
+    "query": "SELECT UnSubscribedData.\"Account Name\" as \"Account Name\", UnSubscribedData.\"Contact Name\" as \"Contact Name\", UnSubscribedData.\"Contact Email\" as \"Email Address\", UnSubscribedData.Category as \"Category\" , UnSubscribedData.Reason as \"Reason\", SmartListExpectedData.\"Contact.Id\" as \"Contact ID\", SmartListExpectedData.\"Contact.AccountId\" as \"Account ID\" From UnSubscribedData LEFT OUTER JOIN SmartListExpectedData ON UnSubscribedData.\"Contact Email\" = SmartListExpectedData.\"Contact.Email\"",
+    "useQuery": true,
+    "tableInfo": [
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/test/t4/T4_UnSubscribedData.csv",
+        "table": "UnSubscribedData",
+        "joinColumnName": "****",
+        "columns": []
+      },
+      {
+        "file": "/testdata/newstack/CoPilot/dataSet/process/t4/Final_ExpectedData.csv",
+        "table": "SmartListExpectedData",
+        "joinColumnName": "****",
+        "columns": []
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/CoPilot/dataSet/process/t4/UnSubscribed_ExpectedData.csv"
+  }
+}

@@ -4,6 +4,7 @@
 package com.gainsight.bigdata.pojo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -41,6 +42,23 @@ public class RuleExecutionHistory {
 	private String executionType;
 	private String createdDateStr;
 	private String modifiedDateStr;
+	private ProcessReport processReport;
+
+	public long getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(long scheduledTime) {
+		this.scheduledTime = scheduledTime;
+	}
+
+	public ProcessReport getProcessReport() {
+		return processReport;
+	}
+
+	public void setProcessReport(ProcessReport processReport) {
+		this.processReport = processReport;
+	}
 
 	public String getCreatedBy() {
 		return createdBy;
@@ -136,14 +154,6 @@ public class RuleExecutionHistory {
 
 	public void setExecutionMessages(List<String> executionMessages) {
 		this.executionMessages = executionMessages;
-	}
-
-	public long getScheduledTime() {
-		return scheduledTime;
-	}
-
-	public void setScheduledTime(Long scheduledTime) {
-		this.scheduledTime = scheduledTime;
 	}
 
 	public long getQueuedTime() {
@@ -289,7 +299,7 @@ public class RuleExecutionHistory {
 
 		private String processReportType;
 		private Boolean queryPassed;
-		private List<Object> actionResults = new ArrayList<Object>();
+		private List<ActionResult> actionResults = new ArrayList<ActionResult>();
 		private String processResult;
 		private Integer externalSystemCallCount;
 
@@ -309,11 +319,11 @@ public class RuleExecutionHistory {
 			this.queryPassed = queryPassed;
 		}
 
-		public List<Object> getActionResults() {
+		public List<ActionResult> getActionResults() {
 			return actionResults;
 		}
 
-		public void setActionResults(List<Object> actionResults) {
+		public void setActionResults(List<ActionResult> actionResults) {
 			this.actionResults = actionResults;
 		}
 
@@ -332,6 +342,53 @@ public class RuleExecutionHistory {
 		public void setExternalSystemCallCount(Integer externalSystemCallCount) {
 			this.externalSystemCallCount = externalSystemCallCount;
 		}
+	}
 
+	public static class ActionResult {
+		private String actionName;
+		private String processResult;
+		private int passCount;
+		private int failCount;
+		private HashMap<String, Object> failedCountByReason;
+
+		public HashMap<String, Object> getFailedCountByReason() {
+			return failedCountByReason;
+		}
+
+		public void setFailedCountByReason(HashMap<String, Object> failedCountByReason) {
+			this.failedCountByReason = failedCountByReason;
+		}
+
+		public String getActionName() {
+			return actionName;
+		}
+
+		public void setActionName(String actionName) {
+			this.actionName = actionName;
+		}
+
+		public String getProcessResult() {
+			return processResult;
+		}
+
+		public void setProcessResult(String processResult) {
+			this.processResult = processResult;
+		}
+
+		public int getPassCount() {
+			return passCount;
+		}
+
+		public void setPassCount(int passCount) {
+			this.passCount = passCount;
+		}
+
+		public int getFailCount() {
+			return failCount;
+		}
+
+		public void setFailCount(int failCount) {
+			this.failCount = failCount;
+		}
 	}
 }

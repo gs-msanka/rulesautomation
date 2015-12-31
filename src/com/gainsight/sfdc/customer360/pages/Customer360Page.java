@@ -266,6 +266,14 @@ public class Customer360Page extends BasePage {
 		xpath.append("]");
 		return xpath.toString();
 	}
+
+	public void clickOnEmbededPage(String secName) {
+		final String EMBEDDED_SECTION_TAB = "//ul[@class='nav']/li[contains(@class,'" + secName + "')]/a[contains(text(),'" + secName + "')]";
+		wait.waitTillElementDisplayed(EMBEDDED_SECTION_TAB, MIN_TIME, MAX_TIME);
+		item.click(EMBEDDED_SECTION_TAB);
+		wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='" + secName + "']",
+				MIN_TIME, MAX_TIME);
+	}
 	
 	
 }
