@@ -1,0 +1,72 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4200-using-mongo-redhsift-postgres",
+  "ruleDescription": "GS-4200-using mongo-redhsift-postgres - Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "CustomNumber1"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "CustomNumber2"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AccountName",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber1",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber2",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "AccountName",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

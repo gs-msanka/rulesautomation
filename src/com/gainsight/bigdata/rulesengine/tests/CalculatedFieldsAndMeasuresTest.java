@@ -4,15 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-
 import au.com.bytecode.opencsv.CSVReader;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
@@ -49,8 +45,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	
 	@BeforeClass
-	@Parameters("dbStoreType")
-	public void setup(@Optional String dbStoreType) throws Exception {
+	public void setup() throws Exception {
 		basepage.login();
 		sfdc.connect();
 		nsTestBase.init();

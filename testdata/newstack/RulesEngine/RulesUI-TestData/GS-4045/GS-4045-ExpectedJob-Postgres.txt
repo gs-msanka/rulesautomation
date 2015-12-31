@@ -1,5 +1,5 @@
 {
-  "jobName": "4043",
+  "jobName": "4045",
   "jobType": "transform",
   "namespacePrefix": "JBCXM",
   "useNameSpace": false,
@@ -10,10 +10,8 @@
     "table": "RulesSFDCCustom__c",
     "fields": [
       "C_Number__c",
-      "C_Text__c",
-      "ActiveUsers__c",
-      "C_Percent__c"
+      "C_Text__c"
     ],
-    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4043/ActualData.csv"
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/ActualData.csv"
   }
 }

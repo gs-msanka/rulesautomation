@@ -4,8 +4,8 @@
   "namespacePrefix": "JBCXM",
   "useNameSpace": false,
   "dateProcess": {
-    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/Data_Into_Custom_Object.csv",
-    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/Data_Into_Custom_Object-Output.csv",
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object-Output.csv",
     "fields": [
       {
         "weekly": false,
