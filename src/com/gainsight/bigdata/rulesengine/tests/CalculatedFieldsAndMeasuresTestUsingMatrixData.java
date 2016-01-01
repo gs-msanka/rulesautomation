@@ -103,7 +103,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
 			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
 			// Updating DB storage type to postgres from back end.
-			if (dataBaseType == DBStoreType.POSTGRES) {
+			if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
 				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
 			}	
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
