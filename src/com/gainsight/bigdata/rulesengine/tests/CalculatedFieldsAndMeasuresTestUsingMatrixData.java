@@ -65,6 +65,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	MongoDBDAO mongoDBDAO = null;
 	private static DBStoreType dataBaseType;
+	String collectionName;
 	
 	@BeforeClass
 	@Parameters("dbStoreType")
@@ -76,9 +77,9 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
 		if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
 			Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
-		}else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+		} else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
 			Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-		}else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+		} else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
 			dataBaseType = DBStoreType.valueOf(dbStoreType);
 			mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(),Integer.valueOf(nsConfig.getGlobalDBPort()),nsConfig.getGlobalDBUserName(),nsConfig.getGlobalDBPassword(),nsConfig.getGlobalDBDatabase());
 			TenantDetails.DBDetail schemaDBDetails = null;
@@ -94,6 +95,26 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		gsDataImpl = new GSDataImpl(NSTestBase.header);
 		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		rulesConfigureAndDataSetup.createDataLoadConfiguration();
+		// Loading testdata globally
+		boolean isLoadTestDataGlobally = true;
+		if (isLoadTestDataGlobally) {
+			CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
+			collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
+			String collectionId = gsDataImpl.createCustomObject(collectionInfo);
+			Assert.assertNotNull(collectionId, "Collection ID should not be null.");
+			// Updating DB storage type to postgres from back end.
+			if (dataBaseType == DBStoreType.POSTGRES) {
+				Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+			}	
+			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
+			collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
+			JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
+			File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+			DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
+			Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
+			NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
+			Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
+		}
 	}
 
 	@BeforeMethod
@@ -102,29 +123,9 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4200" })
+	@TestInfo(testCaseIds = { "GS-4200", "GS-4232" })
 	@Test(description = "Test case to verify if the calculated Fields for comparision calculation type with percentage is working fine when Fields A and B are from Show Fields")
 	public void testCalculatedFields() throws Exception {
-		// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4200" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		// Updating DB storage type to postgres from back end.
-		if (dataBaseType == DBStoreType.POSTGRES) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-		}	
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
-		
-		// Setting the collectionName value to the source object selection and others in input json
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/GS-4200-Input-Postgres.json"), RulesPojo.class);
 		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
 		loadToSFDCAction.getFieldMappings().get(1).setSourceObject(collectionName);
@@ -153,27 +154,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	@TestInfo(testCaseIds = { "GS-4236" })
 	@Test(description = "Test case to verify if the calculated Fields for comparision calculation type with Actual Value is working fine when Fields A and B are from Show Fields")
 	public void testCalculatedFields2() throws Exception {
-		
-		// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4236" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		// Updating DB storage type to postgres from back end.
-		if (dataBaseType == DBStoreType.POSTGRES) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-		}
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
-		
-		// Setting the collectionName value to the source object selection and others in input json
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4236/GS-4236-Input-Postgres.json"), RulesPojo.class);
 		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
 		loadToSFDCAction.getFieldMappings().get(1).setSourceObject(collectionName);
@@ -201,26 +181,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	@TestInfo(testCaseIds = { "GS-4048", "GS-4043", "GS-4044", "GS-4042" })
 	@Test(description = "Calculated field with AVERAGE as the aggregation over time with adjust for missing data option and also COUNT and COUNT_DISTINCT for weekly granualrity")
 	public void testCalculatedFields3() throws Exception {
-	// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4048" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		// Updating DB storage type to postgres from back end.
-		if (dataBaseType == DBStoreType.POSTGRES) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-		}
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
-		
-		// Setting the collectionName value to the source object selection and others in input json
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/GS-4048-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
@@ -245,26 +205,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	@TestInfo(testCaseIds = { "GS-4045" })
 	@Test(description = "Creating a Calculated field with MAX as aggregation with Weekly Granularity")
 	public void testCalculatedFields4() throws Exception {		
-		// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4045" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		// Updating DB storage type to postgres from back end.
-		if (dataBaseType == DBStoreType.POSTGRES) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-		}	
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
-		
-		// Setting the collectionName value to the source object selection and others in input json
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/GS-4045-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
@@ -288,26 +228,6 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062" })
 	@Test(description = "Creating a Calculated field - Aggregation over time  with SUM,MIN as aggregation with Weekly Granularity adn verifying same calculated fields are available or not in advanced criteria")
 	public void testCalculatedFields5() throws Exception {		
-		// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4046" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		// Updating DB storage type to postgres from back end.
-		if (dataBaseType == DBStoreType.POSTGRES) {
-			Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId,DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
-		}	
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");	
-		
-		// Setting the collectionName value to the source object selection and others in input json
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/GS-4046-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
@@ -328,95 +248,154 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*@TestInfo(testCaseIds = { "GS-4232" })
-	@Test(description = "Test case to verify using MDA Subject Area if the calculated Fields for comparision calculation type with percentage is working fine when Fields A and B are from Show Fields")
-	public void testCalculatedFieldsUsingMatrixData() throws Exception {
-			
-		// Setting the collectionName value to the source object selection and others in input json
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/GS-4232-Input.json"), RulesPojo.class);
-		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
-		loadToSFDCAction.getFieldMappings().get(1).setSourceObject(collectionName);
-		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToSFDCAction, JsonNode.class));
+	@TestInfo(testCaseIds = { "GS-4237"})
+	@Test(description = "Test case to verify if user is able to create a Calculated fields with weekly granularity With Field A from showfield and field B is aggregated value")
+	public void testCalculatedFields6() throws Exception {		
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4237/GS-4237-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
-		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));
-				
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));			
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
 		
 		//Verifying the agrregated field vales with the expected data and actual aggregated data
-		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/GS-4232-ExpectedJob.txt"),JobInfo.class));	
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/ExpectedData.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/ActualData.csv")));
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4237/GS-4237-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/ExpectedData-2.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/ActualData.csv")));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
 		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
-		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4234" })
-	@Test(description = "Test case tries to verify if the calculation for Comparative fields with percentage is working fine when Field A is from Aggregated Fields and field B is from Show Field using matrix data")
-	public void testCalculatedFieldsWithAggregatedAndShowFieldUsingMatrixData() throws Exception {
-		
-		// Creating collection with data as source collection
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4234-" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4232/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj.isResult());
-		
-		// Setting the collectionName value to the source object selection and others in input json
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/GS-4234-Input.json"), RulesPojo.class);
-		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
-		loadToSFDCAction.getFieldMappings().get(1).setSourceObject(collectionName);
-		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToSFDCAction, JsonNode.class));
+	@TestInfo(testCaseIds = { "GS-4238"})
+	@Test(description = "Test case to verify if user is able to create a Calculated fields with weekly granularity With Field A from aggregated field and Field B from show field")
+	public void testCalculatedFields7() throws Exception {		
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/GS-4238-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);
 		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
-		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));
-				
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));			
 		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
 		rulesManagerPage.clickOnAddRule();
 		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/GS-4238-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/ExpectedData-2.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4204" })
+	@Test(description = "Test case to verify if the calculation type is comparision when Both fields are aggregated over time for  AVG, COUNT, COUNT_DISTINCT and AVG(Adjust for missing data) over weekly granularity")
+	public void testCalculatedFields8() throws Exception {		
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-Input-Postgres1.json"), RulesPojo.class);
+		rulesPojo.getSetupRule().setSelectObject(collectionName);
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));			
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ExpectedData-3.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+		
+		// creating rule again since at a time only 4 configurations aggregated over time can be configured
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
+		sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
+		RulesPojo rulesPojo1 = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-Input-Postgres2.json"), RulesPojo.class);
+		rulesPojo1.getSetupRule().setSelectObject(collectionName);
+		rulesPojo1.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo1));			
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo1);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-ExpectedJob-2.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ExpectedData-4.csv")));
+		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/ActualData.csv")));
+		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
+		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
+	}
+	
+	
+	@TestInfo(testCaseIds = { "GS-4239" })
+	@Test(description = "Test case to verify if the calculation type is Actual Value when Both fields are aggregated over time")
+	public void testCalculatedFields9() throws Exception {		
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-Input-Postgres1.json"), RulesPojo.class);
+		rulesPojo.getSetupRule().setSelectObject(collectionName);
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));			
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-ExpectedJob.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ExpectedData-3.csv")));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ActualData.csv")));
+		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+				
+		// creating rule again since at a time only 4 configurations aggregated over time can be configured
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(CLEANUP_SCRIPT));
+		sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
+		RulesPojo rulesPojo1 = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-Input-Postgres2.json"), RulesPojo.class);
+		rulesPojo1.getSetupRule().setSelectObject(collectionName);
+		rulesPojo1.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo1));			
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo1);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo1.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
+		
+		//Verifying the agrregated field vales with the expected data and actual aggregated data
+		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/GS-4239-ExpectedJob-2.txt"),JobInfo.class));	
+		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ExpectedData-4.csv")));
+		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4239/ActualData.csv")));
+		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
+		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData1));
+		Assert.assertEquals(differenceData1.size(), 0, "Check the Diff above for which the aggregated data is not matching");
+	}
+	
+	@TestInfo(testCaseIds = { "GS-4234" })
+	@Test(description = "Test case tries to verify if the calculation for Comparative fields with percentage is working fine when Field A is from Aggregated Fields and field B is from Show Field over weekly granularity")
+	public void testCalculatedFields10() throws Exception {
+		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/GS-4234-Input-Postgres.json"), RulesPojo.class);
+		rulesPojo.getSetupRule().setSelectObject(collectionName);
+		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));			
+		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+		rulesManagerPage.clickOnAddRule();
+		rulesEngineUtil.createRuleFromUi(rulesPojo);
+		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed, check rule execution attachement for more details");
 		
 		//Verifying the agrregated field vales with the expected data and actual aggregated data
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4234/GS-4234-ExpectedJob.txt"),JobInfo.class));	
@@ -428,59 +407,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}
-	
-	@TestInfo(testCaseIds = { "GS-4774", "GS-4775" })
-	@Test
-	public void createCalculatedFieldsOnRedshiftSubectArea() throws Exception {
-		CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/CollectionSchema.json")),CollectionInfo.class);
-		collectionInfo.getCollectionDetails().setCollectionName("GS-4774" + date.getTime());
-		String collectionId = gsDataImpl.createCustomObject(collectionInfo);
-		Assert.assertNotNull(collectionId, "Collection ID should not be null.");
-		CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-	
-		List<CollectionInfo.Column> columnList = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/Columns.json")),new TypeReference<ArrayList<CollectionInfo.Column>>() {});
-		actualCollectionInfo.getColumns().addAll(columnList);
-		CollectionUtil.tokenizeCalculatedExpression(actualCollectionInfo, null);
-		NsResponseObj nsResponseObj = gsDataImpl.updateCustomObjectGetNsResponse(mapper.writeValueAsString(actualCollectionInfo));
-		Log.info(mapper.writeValueAsString(actualCollectionInfo));
-		Assert.assertTrue(nsResponseObj.isResult(), "Collection update failed");
-		actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
-		String collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-		Log.info("collectionName is " +collectionName);	
-		
-		DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, new String[]{"ID", "Name", "PageViews", "totaldownloads","overallpayments","uniquedownloads"}, DataLoadOperationType.INSERT);
-		JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/DataloadJob.txt")), JobInfo.class);
-		File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
-		Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
-		NsResponseObj nsResponseObj1 = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-		Assert.assertTrue(nsResponseObj1.isResult(), "Data load is failed");
-		
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/Inputdata.json"), RulesPojo.class);	
-		LoadToSFDCAction loadToSFDCAction = mapper.readValue(rulesPojo.getSetupActions().get(0).getAction(), LoadToSFDCAction.class);
-		for (FieldMapping fields : loadToSFDCAction.getFieldMappings()) {
-			fields.setSourceObject(collectionName);
-		}
-		rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToSFDCAction, JsonNode.class));
-		rulesPojo.getSetupRule().setSelectObject(collectionName);
-		rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
-		Log.debug("Updated Pojo is" +mapper.writeValueAsString(rulesPojo));	
-		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-		rulesManagerPage.clickOnAddRule();
-		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed");
-			
-		// Verifying the agrregated field values with the expected data and actual data for calculated Formula fields
-		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/GS-4774-ExpectedJob.txt"), JobInfo.class));	
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/ExpectedData.csv")));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4774/ActualData.csv")));
-		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
-		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
-		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which calculated fields/Formula fields data is not matching");
-	}
-*/
-	
+
 	@AfterClass
 	public void tearDown() {
 		if (mongoDBDAO != null) {
