@@ -4,7 +4,7 @@
   "ruleDescription": "GS-42378 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "customObject2 Object",
+    "selectObject": "C_Custom Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 1",
@@ -15,7 +15,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks",
@@ -24,7 +24,7 @@
         },
         "fieldBConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number2"
+          "showField": "C_Custom Object::rules_c_Number"
         }
       },
       {
@@ -36,7 +36,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks"
@@ -44,7 +44,7 @@
         },
         "fieldBConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number2"
+          "showField": "C_Custom Object::rules_c_Number"
         }
       },
       {
@@ -56,7 +56,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "COUNT",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks"
@@ -64,7 +64,7 @@
         },
         "fieldBConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number2"
+          "showField": "C_Custom Object::rules_c_Number"
         }
       },
       {
@@ -76,7 +76,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "COUNT_DISTINCT",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks"
@@ -84,20 +84,20 @@
         },
         "fieldBConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number2"
+          "showField": "C_Custom Object::rules_c_Number"
         }
       }
     ],
     "setupData": [
       {
-        "sourceObject": "customObject2 Object",
+        "sourceObject": "C_Custom Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Custom_Number2",
+            "fieldName": "rules_c_Number",
             "showAdvancedName": ""
           }
         ],
@@ -105,7 +105,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "Custom_Date1"
+    "timeIdentifier": "rules_c_Date"
   },
   "setupActions": [
     {

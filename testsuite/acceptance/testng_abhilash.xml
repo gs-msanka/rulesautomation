@@ -4,6 +4,11 @@
       <listener class-name="com.gainsight.utils.AutTestListener" />
       <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
    </listeners>
+      <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
+      <classes>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
+      </classes>
+   </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
       <parameter name="dbStoreType" value="Redshift" />
       <classes>

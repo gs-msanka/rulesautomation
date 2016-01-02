@@ -4,16 +4,16 @@
   "ruleDescription": "GS-4046 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "customObject2 Object",
+    "selectObject": "C_Custom Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 1",
         "calculationType": "Aggregation",
         "aggregationConfig": {
           "aggregationCalculation": "MIN",
-          "sourceField": "Custom_Number1",
+          "sourceField": "rules_c_Number",
           "periodType": "Past",
-          "noOfPeriods": "20",
+          "noOfPeriods": "15",
           "granularity": "Weeks"
         }
       },
@@ -22,45 +22,23 @@
         "calculationType": "Aggregation",
         "aggregationConfig": {
           "aggregationCalculation": "SUM",
-          "sourceField": "Custom_Number2",
+          "sourceField": "rules_c_Number",
           "periodType": "Past",
-          "noOfPeriods": "20",
-          "granularity": "Weeks"
-        }
-      },
-      {
-        "fieldName": "CalculatedField - 3",
-        "calculationType": "Aggregation",
-        "aggregationConfig": {
-          "aggregationCalculation": "AVG",
-          "sourceField": "Custom_Number3",
-          "periodType": "Past",
-          "noOfPeriods": "20",
-          "granularity": "Weeks"
-        }
-      },
-      {
-        "fieldName": "CalculatedField - 4",
-        "calculationType": "Aggregation",
-        "aggregationConfig": {
-          "aggregationCalculation": "COUNT",
-          "sourceField": "Custom_Number4",
-          "periodType": "Past",
-          "noOfPeriods": "20",
+          "noOfPeriods": "15",
           "granularity": "Weeks"
         }
       }
     ],
     "setupData": [
       {
-        "sourceObject": "customObject2 Object",
+        "sourceObject": "C_Custom Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Custom_Number1",
+            "fieldName": "C_lookup Name",
             "showAdvancedName": ""
           }
         ],
@@ -68,7 +46,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "Custom_Date1"
+    "timeIdentifier": "rules_c_Date"
   },
   "setupActions": [
     {
@@ -85,21 +63,27 @@
           {
             "sourceObject": "",
             "sourceField": "CalculatedField - 2",
-            "destination": "C_Percent"
-          },
-          {
-            "sourceObject": "",
-            "sourceField": "CalculatedField - 3",
             "destination": "ActiveUsers"
           },
           {
-            "sourceObject": "",
-            "sourceField": "CalculatedField - 4",
-            "destination": "AccPercentage"
+            "sourceObject": "C_lookup",
+            "sourceField": "C_lookup Name",
+            "destination": "C_Text"
           }
         ]
       },
-      "criterias": []
+      "criterias": [
+        {
+          "showField": "CalculatedField - 1",
+          "operator": "not equal to",
+          "isNullCheck": true
+        },
+        {
+          "showField": "CalculatedField - 2",
+          "operator": "not equal to",
+          "isNullCheck": true
+        }
+      ]
     }
   ]
 }

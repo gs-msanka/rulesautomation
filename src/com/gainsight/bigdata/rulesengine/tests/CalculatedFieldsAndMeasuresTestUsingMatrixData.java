@@ -228,7 +228,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	}
 	
 	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062" })
-	@Test(description = "Creating a Calculated field - Aggregation over time  with SUM,MIN as aggregation with Weekly Granularity adn verifying same calculated fields are available or not in advanced criteria")
+	@Test(description = "Creating a Calculated field - Aggregation over time  with SUM,MIN as aggregation with Weekly Granularity and verifying same calculated fields are available or not in advanced criteria")
 	public void testCalculatedFields5() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/GS-4046-Input-Postgres.json"), RulesPojo.class);
 		rulesPojo.getSetupRule().setSelectObject(collectionName);

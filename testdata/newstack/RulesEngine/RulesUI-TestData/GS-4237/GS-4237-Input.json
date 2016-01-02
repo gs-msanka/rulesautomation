@@ -1,10 +1,10 @@
 {
   "ruleType": "Custom",
   "ruleName": "GS-4237",
-  "ruleDescription": "GS-237 - Desc",
+  "ruleDescription": "GS-4237 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "customObject2 Object",
+    "selectObject": "C_Custom Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 1",
@@ -12,7 +12,7 @@
         "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number1"
+          "showField": "C_Custom Object::rules_c_Number"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
@@ -33,7 +33,7 @@
         "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number1"
+          "showField": "C_Custom Object::rules_c_Number"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
@@ -53,7 +53,7 @@
         "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number1"
+          "showField": "C_Custom Object::rules_c_Number"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
@@ -73,7 +73,7 @@
         "calculateDifferenceType": "Actual value",
         "fieldAConfig": {
           "calculatedFieldType": "Show field",
-          "showField": "customObject2 Object::Custom_Number1"
+          "showField": "C_Custom Object::rules_c_Number"
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
@@ -90,14 +90,14 @@
     ],
     "setupData": [
       {
-        "sourceObject": "customObject2 Object",
+        "sourceObject": "C_Custom Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Custom_Number1",
+            "fieldName": "rules_c_Number",
             "showAdvancedName": ""
           }
         ],
@@ -105,7 +105,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "Custom_Date1"
+    "timeIdentifier": "rules_c_Date"
   },
   "setupActions": [
     {

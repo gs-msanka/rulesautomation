@@ -4,7 +4,7 @@
   "ruleDescription": "GS-4204 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "customObject2 Object",
+    "selectObject": "C_Custom Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 3",
@@ -15,7 +15,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
+            "sourceField": "rules_c_Number",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks",
@@ -44,7 +44,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "COUNT_DISTINCT",
-            "sourceField": "Custom_Number1",
+            "sourceField": "rules_c_Number",
             "periodType": "Past",
             "noOfPeriods": "14",
             "granularity": "Weeks"
@@ -65,7 +65,7 @@
     ],
     "setupData": [
       {
-        "sourceObject": "customObject2 Object",
+        "sourceObject": "C_Custom Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
@@ -76,7 +76,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "Custom_Date1"
+    "timeIdentifier": "rules_c_Date"
   },
   "setupActions": [
     {

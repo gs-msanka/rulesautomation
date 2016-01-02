@@ -9,10 +9,11 @@
     "connection": "conf/application.conf",
     "table": "RulesSFDCCustom__c",
     "fields": [
-      "C_Number__c",
       "C_Text__c",
+      "C_Number__c",
       "ActiveUsers__c",
-      "C_Percent__c"
+      "C_Percent__c",
+      "AccPercentage__c"
     ],
     "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ActualData.csv"
   }

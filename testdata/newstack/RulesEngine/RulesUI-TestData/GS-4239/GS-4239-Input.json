@@ -4,7 +4,7 @@
   "ruleDescription": "GS-4239 - Desc",
   "setupRule": {
     "dataSource": "Native",
-    "selectObject": "customObject2 Object",
+    "selectObject": "C_Custom Object",
     "calculatedFields": [
       {
         "fieldName": "CalculatedField - 1",
@@ -15,7 +15,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
             "noOfPeriods": "15",
             "granularity": "Weeks"
@@ -26,7 +26,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number2",
+            "sourceField": "rules_c_Number",
             "periodType": "Past",
             "noOfPeriods": "15",
             "granularity": "Weeks"
@@ -42,7 +42,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number1",
+            "sourceField": "Custom_Number3",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks",
@@ -54,7 +54,7 @@
           "showField": "",
           "aggregation": {
             "aggregationCalculation": "AVG",
-            "sourceField": "Custom_Number2",
+            "sourceField": "rules_c_Number",
             "periodType": "Past",
             "noOfPeriods": "4",
             "granularity": "Weeks",
@@ -65,14 +65,10 @@
     ],
     "setupData": [
       {
-        "sourceObject": "customObject2 Object",
+        "sourceObject": "C_Custom Object",
         "showFields": [
           {
             "fieldName": "C_lookup",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_lookup Name",
             "showAdvancedName": ""
           }
         ],
@@ -80,7 +76,7 @@
       }
     ],
     "advancedLogic": "",
-    "timeIdentifier": "Custom_Date1"
+    "timeIdentifier": "rules_c_Date"
   },
   "setupActions": [
     {
