@@ -93,6 +93,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
 		rulesManagerPage = new RulesManagerPage();
 		gsDataImpl = new GSDataImpl(NSTestBase.header);
+		sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));
 		rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
 		rulesConfigureAndDataSetup.createDataLoadConfiguration();
 		// Loading testdata globally
@@ -108,6 +109,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 			}	
 			CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
 			collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
+			dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob3.txt"),JobInfo.class));
 			JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
 			File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
 			DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
@@ -195,9 +197,9 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ExpectedData-2.csv")));
 		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(new FileReader(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4048/ActualData.csv")));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
-		Log.info("Actual : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actualData));
-		Log.info("Expected : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(expectedData));
-		Log.info("Difference is : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(differenceData));
+		Log.info("Actual : " + mapper.writeValueAsString(actualData));
+		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
+		Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	

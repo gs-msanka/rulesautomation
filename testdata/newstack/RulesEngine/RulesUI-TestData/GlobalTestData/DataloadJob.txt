@@ -4,12 +4,12 @@
   "namespacePrefix": "JBCXM",
   "useNameSpace": false,
   "dateProcess": {
-    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object.csv",
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object2.csv",
     "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object-Output.csv",
     "fields": [
       {
-        "weekly": false,
-        "daily": true,
+        "weekly": true,
+        "daily": false,
         "dateTime": false,
         "fieldName": "CustomDate1",
         "timeZone": "America/Los_Angeles"
