@@ -11,7 +11,6 @@
             <methods>
                <include name="testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea" />
                <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
-               <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
@@ -19,6 +18,7 @@
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData" />
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
@@ -67,7 +67,6 @@
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
-               <include name="testAllActionsUsingMdaData" />
                <include name="testLoadToCustomersWithMatrixData" />
                <include name="testCTAActionWithMdaJoins" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />

@@ -150,7 +150,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062" })
+	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062", "GS-9075" })
 	@Test(description = "Creating a Calculated field - Aggregation over time  with SUM,MIN as aggregation with Weekly Granularity and verifying same calculated fields are available or not in advanced criteria")
 	public void testCalculatedFields5() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/GS-4046-Input.json"), RulesPojo.class);

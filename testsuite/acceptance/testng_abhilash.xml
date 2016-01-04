@@ -25,6 +25,7 @@
       <parameter name="dbStoreType" value="Mongo" />
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData" />
       </classes>
    </test>
 </suite>
