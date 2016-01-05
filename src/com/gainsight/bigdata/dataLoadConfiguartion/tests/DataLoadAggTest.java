@@ -59,7 +59,7 @@ public class DataLoadAggTest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws Exception {
-        dataBaseType = dbStoreType == null ? DBStoreType.MONGO : DBStoreType.valueOf(dbStoreType);
+        dataBaseType = dbStoreType==null || dbStoreType.isEmpty() ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         gsDataImpl = new GSDataImpl(header);
         TenantInfo tenantInfo = gsDataImpl.getTenantInfo(sfinfo.getOrg());
@@ -210,6 +210,7 @@ public class DataLoadAggTest extends NSTestBase {
 
         System.out.println("Exp "+mapper.writeValueAsString(expected));
         System.out.println("Act "+mapper.writeValueAsString(actualData));
+        System.out.println("Diff " +mapper.writeValueAsString(Comparator.compareListData(expected, actualData)));
 
         assertEquals(Comparator.compareListData(expected, actualData).size(), 0, "Diff should be null");
     }
