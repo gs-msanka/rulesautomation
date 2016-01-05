@@ -125,6 +125,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
 	}
 	
+	
 	@TestInfo(testCaseIds = { "GS-4200", "GS-4232" })
 	@Test(description = "Test case to verify if the calculated Fields for comparision calculation type with percentage is working fine when Fields A and B are from Show Fields")
 	public void testCalculatedFields() throws Exception {
@@ -204,7 +205,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 	}
 	
 	
-	@TestInfo(testCaseIds = { "GS-4045" })
+	@TestInfo(testCaseIds = { "GS-4045", "GS-4243" })
 	@Test(description = "Creating a Calculated field with MAX as aggregation with Weekly Granularity")
 	public void testCalculatedFields4() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4045/GS-4045-Input-Postgres.json"), RulesPojo.class);
@@ -296,7 +297,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest{
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4204" })
+	@TestInfo(testCaseIds = { "GS-4204", "GS-4235" })
 	@Test(description = "Test case to verify if the calculation type is comparision when Both fields are aggregated over time for  AVG, COUNT, COUNT_DISTINCT and AVG(Adjust for missing data) over weekly granularity")
 	public void testCalculatedFields8() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-Input-Postgres1.json"), RulesPojo.class);

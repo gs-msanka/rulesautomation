@@ -42,10 +42,16 @@
             "showAdvancedName": ""
           }
         ],
-        "filterFields": []
+        "filterFields": [
+          {
+            "fieldName": "AccountName",
+            "operator": "starts with",
+            "value": "input_RULESUI Account"
+          }
+        ]
       }
     ],
-    "advancedLogic": "",
+    "advancedLogic": "A",
     "timeIdentifier": "CustomDate1"
   },
   "setupActions": [

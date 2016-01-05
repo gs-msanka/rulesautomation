@@ -202,7 +202,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData extends BaseT
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062" })
+	@TestInfo(testCaseIds = { "GS-4046", "GS-4047", "GS-6062", "GS-4742", "GS-4749" })
 	@Test(description = "Creating a Calculated field - Aggregation over time  with SUM,MIN as aggregation with Weekly Granularity and verifying same calculated fields are available or not in advanced criteria")
 	public void testCalculatedFields5() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4046/GS-4046-Input-Mongo.json"), RulesPojo.class);
@@ -271,7 +271,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData extends BaseT
 		Assert.assertEquals(differenceData.size(), 0, "Check the Diff above for which the aggregated data is not matching");	
 	}
 	
-	@TestInfo(testCaseIds = { "GS-4204" })
+	@TestInfo(testCaseIds = { "GS-4204", "GS-4235" })
 	@Test(description = "Test case to verify if the calculation type is comparision when Both fields are aggregated over time for  AVG, COUNT, COUNT_DISTINCT and AVG(Adjust for missing data) over weekly granularity")
 	public void testCalculatedFields8() throws Exception {		
 		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4204/GS-4204-Input-Mongo1.json"), RulesPojo.class);
