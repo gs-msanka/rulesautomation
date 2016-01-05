@@ -65,7 +65,7 @@ public class LoadDataToMDATest extends NSTestBase {
     @BeforeClass
     @Parameters({"dbStoreType", "useDBName"})
     public void setup(@Optional String dbStoreType, @Optional String useDBName) throws Exception {
-        dataBaseType = dbStoreType !=null ? DBStoreType.valueOf(dbStoreType) : DBStoreType.MONGO;
+        dataBaseType = (dbStoreType==null || dbStoreType.isEmpty()) ? dataBaseType : DBStoreType.valueOf(dbStoreType);
         this.useDBName = (useDBName == null ? false : Boolean.valueOf(useDBName));
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning..."); //Tenant Provision is mandatory step for data load progress.
         gsDataImpl = new GSDataImpl(header);
