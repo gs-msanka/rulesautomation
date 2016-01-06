@@ -51,14 +51,16 @@ public class PackageUtil {
     }
 
     /**
-     * Check if the beta package is installed in the org, used when user tries to upgrade the beta package.
+     * Check if the beta package is installed in the org, used when user tries
+     * to upgrade the beta package.
+     * 
      * @return true if beta is installed in the org.
      * @throws ConnectionException
      */
     public boolean isBetaPackageInstalled() throws ConnectionException {
         boolean result = false;
         InstalledPackage installedPackage = getInstalledPackage();
-        if(installedPackage !=null && installedPackage.getVersionNumber().contains("Beta")) {
+        if (installedPackage != null && installedPackage.getVersionNumber().contains("Beta")) {
             Log.info("Package Full Name : " + installedPackage.getFullName());
             Log.info("Package Version Number : " + installedPackage.getVersionNumber());
             result = true;
@@ -69,19 +71,19 @@ public class PackageUtil {
     }
 
     private InstalledPackage getInstalledPackage() throws ConnectionException {
-        ReadResult readResult = metadataConnection.readMetadata("InstalledPackage", new String[]{"JBCXM"});
+        ReadResult readResult = metadataConnection.readMetadata("InstalledPackage", new String[] { "JBCXM" });
         Metadata[] metadatas = readResult.getRecords();
         InstalledPackage installedPackage = null;
-        if (metadatas != null && metadatas[0] !=null) {
-            installedPackage = (InstalledPackage)metadatas[0];
+        if (metadatas != null && metadatas[0] != null) {
+            installedPackage = (InstalledPackage) metadatas[0];
         }
         return installedPackage;
     }
 
     public String getInstalledPackageVersion() throws ConnectionException {
         InstalledPackage installedPackage = getInstalledPackage();
-        if(installedPackage !=null) {
-            Log.info("Installed Version : " +installedPackage.getVersionNumber());
+        if (installedPackage != null) {
+            Log.info("Installed Version : " + installedPackage.getVersionNumber());
             return installedPackage.getVersionNumber();
         } else {
             Log.info("No Installed Package found");
@@ -101,7 +103,9 @@ public class PackageUtil {
     }
 
     /**
-     * Sets Sales application as default for system admin profile, need this while un-installing no profile should have gainsight app as default.
+     * Sets Sales application as default for system admin profile, need this
+     * while un-installing no profile should have gainsight app as default.
+     * 
      * @throws ConnectionException
      */
     public void setSalesAppAsDefaultForSysAdmin() throws ConnectionException {
@@ -113,9 +117,9 @@ public class PackageUtil {
         appVisibility.setDefault(true);
         appVisibility.setVisible(true);
         appVisibility.setApplication("standard__Sales");
-        profile.setApplicationVisibilities(new ProfileApplicationVisibility[]{appVisibility});
+        profile.setApplicationVisibilities(new ProfileApplicationVisibility[] { appVisibility });
 
-        SaveResult[] saveResults = metadataConnection.updateMetadata(new Metadata[]{profile});
+        SaveResult[] saveResults = metadataConnection.updateMetadata(new Metadata[] { profile });
 
         boolean success = true;
         for (SaveResult saveResult : saveResults) {
@@ -129,14 +133,15 @@ public class PackageUtil {
         }
         if (!success) {
             Log.error("Seems Some error while setting sales app a default for admin profile");
-            throw new RuntimeException("Seems Some error while setting sales app a default for admin profile, please see the logs, errors will be printed above.");
+            throw new RuntimeException(
+                    "Seems Some error while setting sales app a default for admin profile, please see the logs, errors will be printed above.");
         }
         Log.info("Sales App set to default for system admin.");
     }
 
-
     /**
-     * Adds Gainsight as default app for a profile, Adds tabs to gainsight application
+     * Adds Gainsight as default app for a profile, Adds tabs to gainsight
+     * application
      *
      * @param managePackage
      * @param nameSpace
@@ -146,16 +151,16 @@ public class PackageUtil {
         CustomApplication application = new CustomApplication();
         String appFullName = FileUtil.resolveNameSpace("JBCXM__JBara", managePackage ? nameSpace : null);
         application.setFullName(appFullName);
-        String[] tabs = new String[]{"JBCXM__Gainsight", "JBCXM__Customers", "JBCXM__CustomerSuccess360", "JBCXM__AllAdoption",
-                "JBCXM__Survey", "JBCXM__Administration", "JBCXM__Cockpit",
-                "JBCXM__GainsightMobile", "JBCXM__NPS"};
-        for(int i=0; i< tabs.length; i++) {
-            tabs[i]= FileUtil.resolveNameSpace(tabs[i], managePackage ? nameSpace : null);
+        String[] tabs = new String[] { "JBCXM__Gainsight", "JBCXM__Customers", "JBCXM__CustomerSuccess360",
+                "JBCXM__AllAdoption", "JBCXM__Survey", "JBCXM__Administration", "JBCXM__Cockpit",
+                "JBCXM__GainsightMobile", "JBCXM__NPS" };
+        for (int i = 0; i < tabs.length; i++) {
+            tabs[i] = FileUtil.resolveNameSpace(tabs[i], managePackage ? nameSpace : null);
         }
         application.setTab(tabs);
         application.setLabel("Gainsight");
 
-        SaveResult[] saveResults = metadataConnection.updateMetadata(new Metadata[]{application});
+        SaveResult[] saveResults = metadataConnection.updateMetadata(new Metadata[] { application });
 
         boolean success = true;
         for (SaveResult saveResult : saveResults) {
@@ -169,7 +174,8 @@ public class PackageUtil {
         }
         if (!success) {
             Log.error("Seems Some error while setting up gainsight application.");
-            throw new RuntimeException("Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
+            throw new RuntimeException(
+                    "Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
         }
 
         Profile profile = new Profile();
@@ -180,9 +186,9 @@ public class PackageUtil {
         appVisibility.setVisible(true);
         appVisibility.setApplication(appFullName);
         profile.setTabVisibilities(getTabVisibility(managePackage, nameSpace, tabs));
-        profile.setApplicationVisibilities(new ProfileApplicationVisibility[]{appVisibility});
+        profile.setApplicationVisibilities(new ProfileApplicationVisibility[] { appVisibility });
 
-        saveResults = metadataConnection.updateMetadata(new Metadata[]{profile});
+        saveResults = metadataConnection.updateMetadata(new Metadata[] { profile });
 
         success = true;
         for (SaveResult saveResult : saveResults) {
@@ -196,7 +202,8 @@ public class PackageUtil {
         }
         if (!success) {
             Log.error("Seems Some error while setting up gainsight application.");
-            throw new RuntimeException("Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
+            throw new RuntimeException(
+                    "Seems Some error while setting up gainsight application, please see the logs, errors will be printed above.");
         }
         Log.info("Gainsight Application/Tabs setup done.");
     }
@@ -224,16 +231,22 @@ public class PackageUtil {
         return tabVisibilities;
     }
 
-
     /**
      * Removes the pages from account, opportunity, case widget.
-     * @param accLayout - true to remove account widget.
-     * @param oppLayout - true to remove opportunity widget.
-     * @param caseLayout - true to remove case widget.
-     * @param managePackage - if its a managed package.
-     * @param nameSpace - Name space ex: JBCXM
+     * 
+     * @param accLayout
+     *            - true to remove account widget.
+     * @param oppLayout
+     *            - true to remove opportunity widget.
+     * @param caseLayout
+     *            - true to remove case widget.
+     * @param managePackage
+     *            - if its a managed package.
+     * @param nameSpace
+     *            - Name space ex: JBCXM
      */
-    public void removeWidgets(boolean accLayout, boolean oppLayout, boolean caseLayout, boolean managePackage, String nameSpace) {
+    public void removeWidgets(boolean accLayout, boolean oppLayout, boolean caseLayout, boolean managePackage,
+            String nameSpace) {
         Log.info("Started to removing widget layouts");
         try {
             String zipFile = "retrieveResults.zip";
@@ -249,9 +262,15 @@ public class PackageUtil {
             retrieveZip(tempDir, zipFile, MANIFEST_FILE);
             unzip(tempDir + "/" + zipFile, tempDirSrc);
 
-            if (accLayout) removeSection(accLayoutFile,  FileUtil.resolveNameSpace("JBCXM__CustomerSuccess", managePackage ? nameSpace : null));
-            if (oppLayout) removeSection(oppLayoutFile, FileUtil.resolveNameSpace("JBCXM__CustomerSuccessOpportunity", managePackage ? nameSpace : null));
-            if (caseLayout) removeSection(caseLayoutFile, FileUtil.resolveNameSpace("JBCXM__Summary", managePackage ? nameSpace : null));
+            if (accLayout)
+                removeSection(accLayoutFile,
+                        FileUtil.resolveNameSpace("JBCXM__CustomerSuccess", managePackage ? nameSpace : null));
+            if (oppLayout)
+                removeSection(oppLayoutFile, FileUtil.resolveNameSpace("JBCXM__CustomerSuccessOpportunity",
+                        managePackage ? nameSpace : null));
+            if (caseLayout)
+                removeSection(caseLayoutFile,
+                        FileUtil.resolveNameSpace("JBCXM__Summary", managePackage ? nameSpace : null));
 
             createZipFile(tempDirSrc, tempDir, "playload");
             deployZip(tempDir + "/playload.zip");
@@ -266,11 +285,15 @@ public class PackageUtil {
     /**
      * Updates the Account, Opportunity & Case Widget layouts.
      *
-     * @param accLayout - true to update account layout.
-     * @param oppLayout - true to update opportunity layout.
-     * @param caseLayout - true to update case layout.
+     * @param accLayout
+     *            - true to update account layout.
+     * @param oppLayout
+     *            - true to update opportunity layout.
+     * @param caseLayout
+     *            - true to update case layout.
      */
-    public void updateWidgetLayouts(boolean accLayout, boolean oppLayout, boolean caseLayout, boolean managePackage, String nameSpace) {
+    public void updateWidgetLayouts(boolean accLayout, boolean oppLayout, boolean caseLayout, boolean managePackage,
+            String nameSpace) {
         Log.info("Started to deploy widget layouts");
         try {
             String zipFile = "retrieveResults.zip";
@@ -289,13 +312,16 @@ public class PackageUtil {
             retrieveZip(tempDir, zipFile, MANIFEST_FILE);
             unzip(tempDir + "/" + zipFile, tempDirSrc);
 
-            if (accLayout && !isPagePresent(accLayoutFile, FileUtil.resolveNameSpace("JBCXM__CustomerSuccess", managePackage ? nameSpace : null)))  {
+            if (accLayout && !isPagePresent(accLayoutFile,
+                    FileUtil.resolveNameSpace("JBCXM__CustomerSuccess", managePackage ? nameSpace : null))) {
                 updateLayout(accLayoutFile, accWidgetFile);
             }
-            if (oppLayout && !isPagePresent(oppLayoutFile, FileUtil.resolveNameSpace("JBCXM__CustomerSuccessOpportunity", managePackage ? nameSpace : null))) {
+            if (oppLayout && !isPagePresent(oppLayoutFile,
+                    FileUtil.resolveNameSpace("JBCXM__CustomerSuccessOpportunity", managePackage ? nameSpace : null))) {
                 updateLayout(oppLayoutFile, oppWidgetFile);
             }
-            if (caseLayout && !isPagePresent(caseLayoutFile, FileUtil.resolveNameSpace("JBCXM__Summary", managePackage ? nameSpace : null)))  {
+            if (caseLayout && !isPagePresent(caseLayoutFile,
+                    FileUtil.resolveNameSpace("JBCXM__Summary", managePackage ? nameSpace : null))) {
                 updateLayout(caseLayoutFile, caseWidgetFile);
             }
 
@@ -323,10 +349,27 @@ public class PackageUtil {
         }
     }
 
+    public void deployEmbeddedPageCode() {
+        Log.info("Started Deploying Permission Sets Custom Code");
+        try {
+            String srcDir = Application.basedir + "/resources/sfdcmetadata/embeddedPages/src";
+            String desDir = Application.basedir + "/resources/sfdcmetadata/temp";
+            String zipFileName = "EmbeddedPages";
+            createZipFile(srcDir, desDir, zipFileName);
+            deployZip(desDir + "/" + zipFileName + ".zip");
+        } catch (Exception e) {
+            Log.error("Failed to deploy permission sets", e);
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
     /**
      * Removed the widget page.
-     * @param parentFile - the Widget file path
-     * @param pageName - Name of the page that to be removed.
+     * 
+     * @param parentFile
+     *            - the Widget file path
+     * @param pageName
+     *            - Name of the page that to be removed.
      */
     private void removeSection(String parentFile, String pageName) {
         Log.info("Update the Layout on file : " + parentFile);
@@ -337,10 +380,11 @@ public class PackageUtil {
 
             XPathFactory xpf = XPathFactory.newInstance();
             XPath xpath = xpf.newXPath();
-            XPathExpression expression = xpath.compile("//layoutSections/layoutColumns/layoutItems/page[text()='" + pageName + "']/ancestor::layoutSections");
+            XPathExpression expression = xpath.compile("//layoutSections/layoutColumns/layoutItems/page[text()='"
+                    + pageName + "']/ancestor::layoutSections");
 
             Node layoutSectionNode = (Node) expression.evaluate(document, XPathConstants.NODE);
-            if(layoutSectionNode != null) {
+            if (layoutSectionNode != null) {
                 layoutSectionNode.getParentNode().removeChild(layoutSectionNode);
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
@@ -356,8 +400,11 @@ public class PackageUtil {
 
     /**
      * Checks if the layout has already widget page added to it.
-     * @param parentFile - Layout XML file path
-     * @param pageName - page to check for ex JBCXM__CustomerSuccess.
+     * 
+     * @param parentFile
+     *            - Layout XML file path
+     * @param pageName
+     *            - page to check for ex JBCXM__CustomerSuccess.
      * @return true if page as widget, else false.
      */
     private boolean isPagePresent(String parentFile, String pageName) {
@@ -370,10 +417,11 @@ public class PackageUtil {
 
             XPathFactory xpf = XPathFactory.newInstance();
             XPath xpath = xpf.newXPath();
-            XPathExpression expression = xpath.compile("//layoutSections/layoutColumns/layoutItems/page[text()='" + pageName + "']/ancestor::layoutSections");
+            XPathExpression expression = xpath.compile("//layoutSections/layoutColumns/layoutItems/page[text()='"
+                    + pageName + "']/ancestor::layoutSections");
 
             Node layoutSectionNode = (Node) expression.evaluate(document, XPathConstants.NODE);
-            if(layoutSectionNode!=null) {
+            if (layoutSectionNode != null) {
                 result = true;
             }
         } catch (Exception e) {
@@ -409,27 +457,28 @@ public class PackageUtil {
     }
 
     /**
-     * Installs the JBCXM package based on the version provided.
-     * if beta is installed already, throws a error.
-     * If Same version is already installed, skips the installation.
+     * Installs the JBCXM package based on the version provided. if beta is
+     * installed already, throws a error. If Same version is already installed,
+     * skips the installation.
+     * 
      * @param version
      * @param password
      * @throws Exception
      */
     public void installApplication(String version, String password) throws Exception {
-        if(isBetaPackageInstalled()) {
-            throw new RuntimeException("Beta package exists, " +
-                    "please un-install the beta to install the package, " +
-                    "as beta packages can't be upgraded.");
+        if (isBetaPackageInstalled()) {
+            throw new RuntimeException("Beta package exists, " + "please un-install the beta to install the package, "
+                    + "as beta packages can't be upgraded.");
         }
         String installedVersion = getInstalledPackageVersion();
-        if(installedVersion != null && installedVersion.trim().equals(version.trim())) {
-            Log.info("Same version exists, skipping installation of : " +version);
+        if (installedVersion != null && installedVersion.trim().equals(version.trim())) {
+            Log.info("Same version exists, skipping installation of : " + version);
             return;
         }
         String srcDir = Application.basedir + "/resources/sfdcmetadata/appInstall";
         String desDir = Application.basedir + "/resources/sfdcmetadata/temp";
-        String filePath = Application.basedir + "/resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
+        String filePath = Application.basedir
+                + "/resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage";
         Log.info("Started Installation Application Version :" + version);
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -453,12 +502,15 @@ public class PackageUtil {
 
     /**
      * Uninstalls gainsight application.
-     * @param managedPackage - true if its a managed package.
-     * @param nameSpace - application name space.
+     * 
+     * @param managedPackage
+     *            - true if its a managed package.
+     * @param nameSpace
+     *            - application name space.
      * @throws Exception
      */
     public void unInstallApplication(boolean managedPackage, String nameSpace) throws Exception {
-        if(!ispackageInstalled()) {
+        if (!ispackageInstalled()) {
             return;
         }
         removeWidgets(true, true, true, managedPackage, nameSpace);
@@ -470,7 +522,6 @@ public class PackageUtil {
         deployZip(desDir + "appUnInstall.zip");
         Log.info("Application un-install successful");
     }
-
 
     private void retrieveZip(String dirPath, String zipFile, String MANIFEST_FILE) throws RemoteException, Exception {
         Log.info("Pulling metadata from SFDC from manifest file : " + MANIFEST_FILE);
@@ -492,20 +543,17 @@ public class PackageUtil {
             // Double the wait time for the next iteration
             waitTimeMilliSecs *= 2;
             if (poll++ > MAX_NUM_POLL_REQUESTS) {
-                throw new Exception("Request timed out.  If this is a large set " +
-                        "of metadata components, check that the time allowed " +
-                        "by MAX_NUM_POLL_REQUESTS is sufficient.");
+                throw new Exception("Request timed out.  If this is a large set "
+                        + "of metadata components, check that the time allowed "
+                        + "by MAX_NUM_POLL_REQUESTS is sufficient.");
             }
-            result = metadataConnection.checkRetrieveStatus(
-                    asyncResultId);
-
+            result = metadataConnection.checkRetrieveStatus(asyncResultId);
 
             Log.info("Retrieve Status: " + result.getStatus());
         } while (!result.isDone());
 
         if (result.getStatus() == RetrieveStatus.Failed) {
-            throw new Exception(result.getErrorStatusCode() + " msg: " +
-                    result.getErrorMessage());
+            throw new Exception(result.getErrorStatusCode() + " msg: " + result.getErrorMessage());
         } else if (result.getStatus() == RetrieveStatus.Succeeded) {
             // Print out any warning messages
             StringBuilder buf = new StringBuilder();
@@ -542,8 +590,7 @@ public class PackageUtil {
      * Helper method to copy from a readable channel to a writable channel,
      * using an in-memory buffer.
      */
-    private void copy(ReadableByteChannel src, WritableByteChannel dest)
-            throws IOException {
+    private void copy(ReadableByteChannel src, WritableByteChannel dest) throws IOException {
         // Use an in-memory byte buffer
         ByteBuffer buffer = ByteBuffer.allocate(8092);
         while (src.read(buffer) != -1) {
@@ -556,16 +603,17 @@ public class PackageUtil {
     }
 
     private void setUnpackaged(RetrieveRequest request, String MANIFEST_FILE) throws Exception {
-        // Edit the path, if necessary, if your package.xml file is located elsewhere
+        // Edit the path, if necessary, if your package.xml file is located
+        // elsewhere
         File unpackedManifest = new File(MANIFEST_FILE);
         Log.info("Manifest file: " + unpackedManifest.getAbsolutePath());
 
         if (!unpackedManifest.exists() || !unpackedManifest.isFile())
-            throw new Exception("Should provide a valid retrieve manifest " +
-                    "for unpackaged content. " +
-                    "Looking for " + unpackedManifest.getAbsolutePath());
+            throw new Exception("Should provide a valid retrieve manifest " + "for unpackaged content. "
+                    + "Looking for " + unpackedManifest.getAbsolutePath());
 
-        // Note that we populate the _package object by parsing a manifest file here.
+        // Note that we populate the _package object by parsing a manifest file
+        // here.
         // You could populate the _package based on any source for your
         // particular application.
         com.sforce.soap.metadata.Package p = parsePackage(unpackedManifest);
@@ -576,8 +624,7 @@ public class PackageUtil {
         try {
             InputStream is = new FileInputStream(file);
             List<PackageTypeMembers> pd = new ArrayList<PackageTypeMembers>();
-            DocumentBuilder db =
-                    DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Element d = db.parse(is).getDocumentElement();
             for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling()) {
                 if (c instanceof Element) {
@@ -615,8 +662,8 @@ public class PackageUtil {
     }
 
     /**
-     * Extracts a zip file specified by the zipFilePath to a directory specified by
-     * destDirectory (will be created if does not exists)
+     * Extracts a zip file specified by the zipFilePath to a directory specified
+     * by destDirectory (will be created if does not exists)
      *
      * @param zipFilePath
      * @param destDirectory
@@ -625,23 +672,22 @@ public class PackageUtil {
     public void unzip(String zipFilePath, String destDirectory) throws IOException {
         byte[] buffer = new byte[1024];
         try {
-            //create output directory is not exists
+            // create output directory is not exists
             File folder = new File(destDirectory);
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            //get the zip file content
-            ZipInputStream zis =
-                    new ZipInputStream(new FileInputStream(zipFilePath));
-            //get the zipped file list entry
+            // get the zip file content
+            ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
+            // get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
 
             while (ze != null) {
                 String fileName = ze.getName();
                 File newFile = new File(destDirectory + File.separator + fileName);
                 Log.info("file unzip : " + newFile.getAbsoluteFile());
-                //create all non exists folders
-                //else you will hit FileNotFoundException for compressed folder
+                // create all non exists folders
+                // else you will hit FileNotFoundException for compressed folder
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
@@ -715,8 +761,8 @@ public class PackageUtil {
         Log.info("Writing all the files to zip successful");
     }
 
-    public static void addToZip(File directoryToZip, File file, ZipOutputStream zos) throws FileNotFoundException,
-            IOException {
+    public static void addToZip(File directoryToZip, File file, ZipOutputStream zos)
+            throws FileNotFoundException, IOException {
 
         FileInputStream fis = new FileInputStream(file);
         // we want the zipEntry's path to be a relative path that is relative
@@ -741,15 +787,13 @@ public class PackageUtil {
         DeployOptions deployOptions = new DeployOptions();
         deployOptions.setPerformRetrieve(false);
         deployOptions.setRollbackOnError(true);
-        AsyncResult asyncResult = metadataConnection.deploy(zipBytes,
-                deployOptions);
+        AsyncResult asyncResult = metadataConnection.deploy(zipBytes, deployOptions);
         DeployResult result = waitForDeployCompletion(asyncResult.getId());
         if (!result.isSuccess()) {
             printErrors(result, "Final list of failures:\n");
             throw new Exception("The files were not successfully deployed");
         }
-        Log.info("The file " + filePath
-                + " was successfully deployed\n");
+        Log.info("The file " + filePath + " was successfully deployed\n");
     }
 
     /*
@@ -761,9 +805,7 @@ public class PackageUtil {
         // See the retrieve sample for how to retrieve a zip file.
         File zipFile = new File(filePath);
         if (!zipFile.exists() || !zipFile.isFile()) {
-            throw new Exception(
-                    "Cannot find the zip file for deploy() on path:"
-                            + zipFile.getAbsolutePath());
+            throw new Exception("Cannot find the zip file for deploy() on path:" + zipFile.getAbsolutePath());
         }
         FileInputStream fileInputStream = new FileInputStream(zipFile);
         try {
@@ -791,33 +833,26 @@ public class PackageUtil {
         if (details != null) {
             DeployMessage[] componentFailures = details.getComponentFailures();
             for (DeployMessage failure : componentFailures) {
-                String loc = "(" + failure.getLineNumber() + ", "
-                        + failure.getColumnNumber();
-                if (loc.length() == 0
-                        && !failure.getFileName().equals(failure.getFullName())) {
+                String loc = "(" + failure.getLineNumber() + ", " + failure.getColumnNumber();
+                if (loc.length() == 0 && !failure.getFileName().equals(failure.getFullName())) {
                     loc = "(" + failure.getFullName() + ")";
                 }
-                stringBuilder.append(
-                        failure.getFileName() + loc + ":"
-                                + failure.getProblem()).append('\n');
+                stringBuilder.append(failure.getFileName() + loc + ":" + failure.getProblem()).append('\n');
             }
             RunTestsResult rtr = details.getRunTestResult();
             if (rtr.getFailures() != null) {
                 for (RunTestFailure failure : rtr.getFailures()) {
-                    String n = (failure.getNamespace() == null ? "" : (failure
-                            .getNamespace() + ".")) + failure.getName();
-                    stringBuilder.append("Test failure, method: " + n + "."
-                            + failure.getMethodName() + " -- "
-                            + failure.getMessage() + " stack "
-                            + failure.getStackTrace() + "\n\n");
+                    String n = (failure.getNamespace() == null ? "" : (failure.getNamespace() + "."))
+                            + failure.getName();
+                    stringBuilder.append("Test failure, method: " + n + "." + failure.getMethodName() + " -- "
+                            + failure.getMessage() + " stack " + failure.getStackTrace() + "\n\n");
                 }
             }
             if (rtr.getCodeCoverageWarnings() != null) {
                 for (CodeCoverageWarning ccw : rtr.getCodeCoverageWarnings()) {
                     stringBuilder.append("Code coverage issue");
                     if (ccw.getName() != null) {
-                        String n = (ccw.getNamespace() == null ? "" : (ccw
-                                .getNamespace() + ".")) + ccw.getName();
+                        String n = (ccw.getNamespace() == null ? "" : (ccw.getNamespace() + ".")) + ccw.getName();
                         stringBuilder.append(", class: " + n);
                     }
                     stringBuilder.append(" -- " + ccw.getMessage() + "\n");
@@ -830,8 +865,7 @@ public class PackageUtil {
         }
     }
 
-    private static DeployResult waitForDeployCompletion(String asyncResultId)
-            throws Exception {
+    private static DeployResult waitForDeployCompletion(String asyncResultId) throws Exception {
         int poll = 0;
         long waitTimeMilliSecs = 15 * ONE_SECOND;
         DeployResult deployResult;
@@ -840,31 +874,26 @@ public class PackageUtil {
             Thread.sleep(waitTimeMilliSecs);
             // double the wait time for the next iteration
             if (poll++ > MAX_NUM_POLL_REQUESTS) {
-                throw new Exception(
-                        "Request timed out. If this is a large set of metadata components, "
-                                + "ensure that MAX_NUM_POLL_REQUESTS is sufficient.");
+                throw new Exception("Request timed out. If this is a large set of metadata components, "
+                        + "ensure that MAX_NUM_POLL_REQUESTS is sufficient.");
             }
             // Fetch in-progress details once for every 3 polls
             fetchDetails = (poll % 3 == 0);
-            deployResult = metadataConnection.checkDeployStatus(asyncResultId,
-                    fetchDetails);
+            deployResult = metadataConnection.checkDeployStatus(asyncResultId, fetchDetails);
             Log.info("Status is: " + deployResult.getStatus());
             if (!deployResult.isDone() && fetchDetails) {
-                printErrors(deployResult,
-                        "Failures for deployment in progress:\n");
+                printErrors(deployResult, "Failures for deployment in progress:\n");
             }
         } while (!deployResult.isDone());
-        if (!deployResult.isSuccess()
-                && deployResult.getErrorStatusCode() != null) {
-            throw new Exception(deployResult.getErrorStatusCode() + " msg: "
-                    + deployResult.getErrorMessage());
+        if (!deployResult.isSuccess() && deployResult.getErrorStatusCode() != null) {
+            throw new Exception(deployResult.getErrorStatusCode() + " msg: " + deployResult.getErrorMessage());
         }
         if (!fetchDetails) {
             // Get the final result with details if we didn't do it in the last
             // attempt.
-            deployResult = metadataConnection.checkDeployStatus(asyncResultId,
-                    true);
+            deployResult = metadataConnection.checkDeployStatus(asyncResultId, true);
         }
         return deployResult;
     }
+
 }
