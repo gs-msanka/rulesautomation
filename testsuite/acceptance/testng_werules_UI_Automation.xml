@@ -68,7 +68,6 @@
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="testCTAActionWithMdaJoins" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
@@ -76,6 +75,7 @@
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToSfdcTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingMatrixData" />
+         <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTestUsingRedShiftAsSourceData" />
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA POSTGRES DataBase" preserve-order="true">

@@ -43,7 +43,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
 	private  RulesConfigureAndDataSetup rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
 	private RulesUtil rulesUtil = new RulesUtil();
 	GSDataImpl gsDataImpl = null;
-	private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
+	private static final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM RulesSFDCCustom__c];";
 	
 	@BeforeClass
 	public void setup() throws Exception {

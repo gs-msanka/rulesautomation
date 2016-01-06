@@ -1,0 +1,76 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4236-using-RedShift-CalculatedmeasuresAndJoins",
+  "ruleDescription": "GS-4236-using-RedShift-CalculatedmeasuresAndJoins-Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "joinOnCollection": "RedShift-Joins-Collection-1",
+    "joinOnCollectionField": "T2_ID",
+    "joinWithCollection": "RedShift-Joins-Collection-2",
+    "selectObject": "RedShift-Joins-Collection-1",
+    "lookUpField": true,
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-ADD"
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-SUBSTRACT"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "T2_ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "lookup_T1-ADD",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "T2_AccountName",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "lookup_T1-SUBSTRACT",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "AccountName",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}
