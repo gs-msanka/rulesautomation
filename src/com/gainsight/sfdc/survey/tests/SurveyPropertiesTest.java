@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.Integration.utils.MDAIntegrationImpl;
 import com.gainsight.sfdc.gsEmail.setup.GSEmailSetup;
 import com.gainsight.sfdc.survey.pages.SurveyBasePage;
 import com.gainsight.sfdc.survey.pages.SurveyPropertiesPage;
@@ -40,7 +41,11 @@ public class SurveyPropertiesTest extends SurveySetup{
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
 		ns.init();
 		ns.tenantAutoProvision();
-		gs.enableOAuthForOrg();
+        MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl(NSTestBase.header);
+        if(!integrationImpl.isMDAAuthorized()) {
+            Log.info("MDA is not authorised, so authorizing now");
+        gs.enableOAuthForOrg();
+        }
 		gs.updateAccessKeyInApplicationSettingForGSEmail();
 	}
     
