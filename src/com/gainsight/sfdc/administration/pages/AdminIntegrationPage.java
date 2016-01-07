@@ -4,11 +4,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.gainsight.sfdc.pages.BasePage;
-import com.gainsight.sfdc.pages.Constants;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 
 public class AdminIntegrationPage extends BasePage {
 	
@@ -28,7 +27,7 @@ public class AdminIntegrationPage extends BasePage {
 	private static final String GSEMAIL_OFF         = "//button[@class='btnDisable gs-btn btn-cancel' and @action='DISABLE']";
 	private static final String GSEMAIL_SECTION     = "//div[@class='data-title' and text()='Gainsight Email Service']";
 
-    private static final String AUTHORIZE_MDA_SECTION   = "//div[@class='gs-cta-head SFDC']/descendant::div[@class='data-title' and contains(text(), 'Authorize MDA')]";
+    private static final String AUTHORIZE_MDA_SECTION   = "//input[@id='MA-Salesforce-myonoffswitch']/following-sibling::label";
     private static final String DATA_LOAD_CONFIG_SEC    = "//div[contains(@class, DATA_API)]/descendant::div[@class='data-title' and contains(text(), Data Load Configuration)]";
     private static final String GENERATE_CURL           = "//input[@type='button' and @value='Generate cURL']";
 
@@ -66,35 +65,32 @@ public class AdminIntegrationPage extends BasePage {
      * Authorizes MDA - Matrix Data Platform.
      */
     public AdminIntegrationPage authorizeMDA() {
-        if (!element.getElement(By.id(REVOKE)).isDisplayed()) {
-            item.click(AUTHORIZE);
-            sleep(15);      // This is required as there's no element available in the pop-up UI as ready indicator.
-            Set<String> windowId = driver.getWindowHandles();    // get  window id of current window
-            Iterator<String> iterator = windowId.iterator();
-            String mainWinID = iterator.next();
-            String oauthWinID = iterator.next();
-            driver.switchTo().window(oauthWinID);
-            Log.info("Page Title : " + driver.getTitle());
-            if (isElementPresentAndDisplay(By.xpath(CLOSE_OAUTH_WINDOW))) {
+        wait.waitTillElementDisplayed(AUTHORIZE, MIN_TIME, MAX_TIME);
+        item.click(AUTHORIZE);
+        sleep(15);      // This is required as there's no element available in the pop-up UI as ready indicator.
+        Set<String> windowId = driver.getWindowHandles();    // get  window id of current window
+        Iterator<String> iterator = windowId.iterator();
+        String mainWinID = iterator.next();
+        String oauthWinID = iterator.next();
+        driver.switchTo().window(oauthWinID);
+        Log.info("Page Title : " + driver.getTitle());
+        if (isElementPresentAndDisplay(By.xpath(CLOSE_OAUTH_WINDOW))) {
+            item.click(CLOSE_OAUTH_WINDOW);
+            driver.switchTo().window(mainWinID);
+        } else {
+            wait.waitTillElementDisplayed(MDA_APP_NAME, MIN_TIME, MAX_TIME);
+            item.click(ALLOW_OAUTH_ACCESS);
+            if (item.isElementPresent("//p[contains(text(),'Authorization successful')]")) {
                 item.click(CLOSE_OAUTH_WINDOW);
                 driver.switchTo().window(mainWinID);
             } else {
-                wait.waitTillElementDisplayed(MDA_APP_NAME, MIN_TIME, MAX_TIME);
-                item.click(ALLOW_OAUTH_ACCESS);
-                if (item.isElementPresent("//p[contains(text(),'Authorization successful')]")) {
-                    item.click(CLOSE_OAUTH_WINDOW);
-                    driver.switchTo().window(mainWinID);
-                } else {
-                    Log.error("OAUTH Failed.");
-                    throw new RuntimeException("OAuth Failed");
-                }
+                Log.error("OAUTH Failed.");
+                throw new RuntimeException("OAuth Failed");
             }
-            wait.waitTillElementDisplayed("//span[contains(text(), 'Authorized Gainsight Matrix Data Architecture, You can now activate connectors.')]", MIN_TIME, MAX_TIME);
-            wait.waitTillElementDisplayed(REVOKE, MIN_TIME, MAX_TIME);
-            Log.info("OAuth Enabled successfully.");
-        } else {
-            Log.info("OAuth already enabled");
         }
+        wait.waitTillElementDisplayed("//span[contains(text(), 'Authorized Gainsight Matrix Data Architecture, You can now activate connectors.')]", MIN_TIME, MAX_TIME);
+        wait.waitTillElementDisplayed(REVOKE, MIN_TIME, MAX_TIME);
+        Log.info("OAuth Enabled successfully.");
         return this;
     }
 

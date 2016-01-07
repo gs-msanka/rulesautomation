@@ -129,7 +129,6 @@ public class CreateRuleTest extends BaseTest {
     DataETL dataETL = new DataETL();
     String[] dataBaseDetail = null;
     private String host = null;
-    private String port = null;
     private String userName = null;
 	private String passWord = null;
     private String collectionDBName = null;
@@ -179,11 +178,10 @@ public class CreateRuleTest extends BaseTest {
         for (DBServerDetail dbServerDetail : dbDetails) {
             dataBaseDetail = dbServerDetail.getHost().split(":");
             host = dataBaseDetail[0];
-            port = dataBaseDetail[1];
             userName=dbServerDetail.getUserName();
 			passWord=dbServerDetail.getPassword();
 			}
-        Log.info("Host is" + host + " and Port is " + port);
+        Log.info("Host is" + host);
         // Updating timeZone to America/Los_Angeles in Application settings
         rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
@@ -197,7 +195,7 @@ public class CreateRuleTest extends BaseTest {
 			Assert.assertTrue(tenantManager
 					.enabledRedShiftWithDBDetails(tenantDetails));
 		}
-		mongoConnection = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+		mongoConnection = new MongoDBDAO(host, 27017, userName, passWord, dbDetail.getDbName());
 		mongoConnection.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "MONGO");
 		mongoConnection.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "RedShift");
 		rulesConfigureAndDataSetup.createMdaSubjectAreaWithData();
