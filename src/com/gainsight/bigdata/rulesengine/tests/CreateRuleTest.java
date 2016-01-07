@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.Integration.utils.MDAIntegrationImpl;
 import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.pojo.CollectionInfo;
@@ -154,7 +155,11 @@ public class CreateRuleTest extends BaseTest {
 	    nsTestBase.tenantAutoProvision();
         tenantManager= new TenantManager();
         GSEmailSetup gs=new GSEmailSetup();
+        MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl(NSTestBase.header);
+        if(!integrationImpl.isMDAAuthorized()) {
+            Log.info("MDA is not authorised, so authorizing now");
         gs.enableOAuthForOrg();
+        }
         MongoDBDAO mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         tenantDetails = tenantManager.getTenantDetail(sfdc.fetchSFDCinfo().getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
