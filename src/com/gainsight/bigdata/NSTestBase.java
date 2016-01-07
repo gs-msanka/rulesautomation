@@ -187,7 +187,7 @@ public class NSTestBase {
         Log.info("Total Piclist Records : " + objRecords.length);
         for (SObject sObject : objRecords) {
             Log.info("ObjectName:" + objName + "..FieldName : " + sObject.getField(resolveStrNameSpace(fieldName)) + " - With Id : " + sObject.getId());
-            objMap.put(shortCut + "." + sObject.getField(fieldName).toString(), sObject.getId());
+            objMap.put(shortCut + "." + sObject.getField(resolveStrNameSpace(fieldName)).toString(), sObject.getId());
         }
         return objMap;
     }
