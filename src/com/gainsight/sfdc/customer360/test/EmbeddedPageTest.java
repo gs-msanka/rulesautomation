@@ -29,10 +29,12 @@ public class EmbeddedPageTest extends BaseTest {
             + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360WithParameter.txt";
     private final String EMBEDDED_360_BUNBLED_PARAM_ENABLE = env.basedir
             + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360BundledParameter.txt";
-    private final String EMBEDDED_360_URL_PARAM_ENABLE_FILE = env.basedir
-            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360URLWithParameter.txt.txt";
-    private final String EMBEDDED_360_NAVIGATION_IFRAME = env.basedir
-            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedNavigationInIframe.txt.txt.txt";
+    private final String EMBEDDED_360_URL_PARAM_ENABLE = env.basedir
+            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedCS360URLWithParameter.txt";
+    private final String EMBEDDED_360_NESTED_PARAM_ENABLE = env.basedir
+            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedNestedParameter.txt";
+    private final String EMBEDDED_360_NESTED_BUN_PARAM_ENABLE = env.basedir
+            + "/testdata/sfdc/EmbeddedPage/scripts/EmbeddedNestBundledParam.txt";
     public static String visualForcePageUrl = ".visual.force.com/apex/";
     private static String embededList = "//div[@class='gs_section_title']/h1[text()='%s']";
     Element element;
@@ -45,6 +47,7 @@ public class EmbeddedPageTest extends BaseTest {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
         visualForcePageUrl = "https://" + "c" + "."
                 + sfdcInfo.getEndpoint().substring(8, sfdcInfo.getEndpoint().indexOf(".")) + visualForcePageUrl;
+        packageUtil.deployEmbeddedPageCode();
     }
 
     @TestInfo(testCaseIds = { "GS-6011" })
@@ -118,6 +121,66 @@ public class EmbeddedPageTest extends BaseTest {
         String BUNDLED_PARAMETER = "//h1[contains(text(),'123456')]";
         Assert.assertTrue(element.isElementPresent(BUNDLED_PARAMETER),
                 "Bundled Parameter not found in visual force page");
+
+    }
+
+    @TestInfo(testCaseIds = { "GS-6009" })
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F5")
+    public void embeddedURLWithParameter(final HashMap<String, String> testData) {
+
+        System.out.println("FileName "+EMBEDDED_360_URL_PARAM_ENABLE);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(EMBEDDED_360_URL_PARAM_ENABLE));
+        final String embeddedListName = testData.get("Section");
+        final String embiframeurl = testData.get("URL");
+        Log.info("the url is   " + embiframeurl);
+        final Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
+        c360Page.clickOnEmbededPage(embeddedListName);
+
+        element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
+
+        final String no_box_welcome_message = "//form/div/h2[contains(text(),'Sign In to Your Account')]";
+        Assert.assertTrue(element.isElementPresent(no_box_welcome_message), "Message not found in Box url with parameter");
+
+    }
+
+    @TestInfo(testCaseIds = { "GS-100272" })
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F6")
+    public void embeddedNestedParameter(final HashMap<String, String> testData) {
+
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(EMBEDDED_360_NESTED_PARAM_ENABLE));
+        final String embeddedListName = testData.get("Section");
+        final String embiframeurl = visualForcePageUrl + testData.get("URL");
+        Log.info("the url is   " + embiframeurl);
+        final Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
+        c360Page.clickOnEmbededPage(embeddedListName);
+
+        element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
+
+        final String nested_parameter = "//h1[contains(text(),'abc')]";
+        Assert.assertTrue(element.isElementPresent(nested_parameter),
+                "Nested parameter not found in visual force page");
+
+    }
+
+    @TestInfo(testCaseIds = { "GS-100273" })
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "F7")
+    public void embeddedNestedBundledParameter(final HashMap<String, String> testData) {
+
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(EMBEDDED_360_NESTED_BUN_PARAM_ENABLE));
+        final String embeddedListName = testData.get("Section");
+        final String embiframeurl = visualForcePageUrl + testData.get("URL");
+        Log.info("the url is   " + embiframeurl);
+        final Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
+        c360Page.clickOnEmbededPage(embeddedListName);
+
+        element.switchToFrame("//iframe[contains(@src,'" + embiframeurl + "')]");
+
+        final String nested_bundled_parameter = "//h1[contains(text(),'gainsight')]";
+        Assert.assertTrue(element.isElementPresent(nested_bundled_parameter),
+                "Nested bundled Parameter not found in visual force page");
 
     }
 

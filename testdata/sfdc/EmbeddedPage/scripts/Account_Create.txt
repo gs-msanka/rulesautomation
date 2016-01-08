@@ -19,3 +19,5 @@ for(Account acc2 : accList1) {
     custList.add(cust);
 }
 insert custList;
+
+Delete[Select id from JBCXM__C360Sections__c where name  IN ('embedbunparam','embedurlparam','embeddedpage','embeddedparam','embeddedurl','emnesbunparam','embednestedparam')];
