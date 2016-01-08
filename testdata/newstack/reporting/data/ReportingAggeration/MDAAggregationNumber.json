@@ -13,7 +13,7 @@
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Min of Files Downloaded",
+          "fieldDisplayName": "Files Downloaded",
           "collectionId": "",
           "agg_func": "min"
         },
@@ -23,7 +23,7 @@
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Max of No of Meetings Attended",
+          "fieldDisplayName": "No of Meetings Attended",
           "collectionId": "",
           "agg_func": "max"
         },
@@ -33,7 +33,7 @@
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Avg of No of Rules Triggered",
+          "fieldDisplayName": "No of Rules Triggered",
           "collectionId": "",
           "agg_func": "avg"
         },
@@ -43,28 +43,28 @@
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Sum of No of Schedules Created",
+          "fieldDisplayName": "No of Schedules Created",
           "collectionId": "",
           "agg_func": "sum"
         },
         {
           "col": "Active",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "boolean",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
+          "fieldDisplayName": "Active",
           "collectionId": ""
         },
         {
           "col": "ProductCode",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
+          "fieldDisplayName": "ProductCode",
           "collectionId": ""
         },
         {
@@ -77,7 +77,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "MDAAggregationNumber",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -123,7 +123,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           },
@@ -137,14 +137,14 @@
               90
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }
         ]
       },
       "skip": 0,
-      "SchemaName": "MDARedShiftData",
+      "SchemaName": "Auto_RedShift_MDAData",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
@@ -218,7 +218,7 @@
           "collectionId": ""
         }
       ],
-      "ReportReadLimit": 5,
+      "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000
     }
   ]
