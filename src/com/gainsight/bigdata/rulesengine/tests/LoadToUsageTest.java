@@ -81,8 +81,8 @@ public class LoadToUsageTest extends BaseTest {
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/GS-5148-ExpectedJob.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv"), null)));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -93,8 +93,8 @@ public class LoadToUsageTest extends BaseTest {
 		//Running rule for second time to verify duplication of data is not happening while running rule again
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");	
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/GS-5148-ExpectedJob.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ExpectedData.csv"), null)));
+		List<Map<String, String>> actualData1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5148/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedData1, actualData1);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData1));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData1));
@@ -116,8 +116,8 @@ public class LoadToUsageTest extends BaseTest {
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Rule processing failed !!!");
 		
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/GS-5150-ExpectedJob.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ExpectedData.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ExpectedData.csv"), null)));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-5150/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
