@@ -288,10 +288,6 @@ public class CallToActionTest extends BaseTest {
         }
         //Verifying CS tasks of a CTA for the playbook changed above(Playbook should not be changed)
         dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/CSTasks.txt"), JobInfo.class));
- /*       JobInfo jobInfo1 = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/playbookTasks.txt"), JobInfo.class);
-        CTAAction act1 = mapper.readValue(upsertJson.getSetupActions().get(0).getAction(), CTAAction.class);
-        jobInfo1.getExtractionRule().setWhereCondition(" where JBCXM__PlaybookId__r.Name='" + act1.getPlaybook() + "'");
-        dataETL.execute(jobInfo1);*/
         List<Map<String, String>> expectedTasks1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/PlayBookTasks.csv"), null)));
         List<Map<String, String>> actualTasks1 = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv"), null)));
         List<Map<String, String>> differenceData1 = Comparator.compareListData(expectedTasks1, actualTasks1);
