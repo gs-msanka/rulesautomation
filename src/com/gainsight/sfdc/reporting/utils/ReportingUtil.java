@@ -139,7 +139,7 @@ public class ReportingUtil extends BaseTest {
 			}
 		}
 
-	//	reportingSettingsUtils.selectReportType(disPlayType);
+		reportingSettingsUtils.selectReportType(disPlayType);
 		reportingBasePage.saveReport(reportInfo.getReportName());
 
     }

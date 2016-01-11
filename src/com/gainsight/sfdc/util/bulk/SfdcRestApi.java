@@ -93,7 +93,7 @@ public class SfdcRestApi {
                         dataRecord.put(field, val);
 
                     } else {
-                        dataRecord.put(field, record.get(field) == null ? "" : record.get(field).asText());
+                        dataRecord.put(field, record.get(field).isNull()  ? "" : record.get(field).asText());
                     }
                 }
                 queryData.add(dataRecord);
