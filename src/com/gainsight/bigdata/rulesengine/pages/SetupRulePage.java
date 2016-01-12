@@ -99,6 +99,9 @@ public class SetupRulePage extends BasePage {
 
     public void enterAdvanceLogic(String advanceLogic) {
         field.clearAndSetText(ADVANCE_LOGIC_INPUT, advanceLogic);
+        element.getElement(ADVANCE_LOGIC_INPUT).sendKeys(Keys.ENTER);
+        // Clickng somewhere on screen to auto change the additional criteria from small to capital case if any
+        item.click("//div[@class='RuleContainer']/descendant::h1[contains(@class, 'rule-name')]");
     }
 
     public SetupRuleActionPage clickOnNext() {
