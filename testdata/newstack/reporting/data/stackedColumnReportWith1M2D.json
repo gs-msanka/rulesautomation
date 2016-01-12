@@ -14,7 +14,7 @@
           "dataType": "boolean",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
+          "fieldDisplayName": "Active",
           "collectionId": ""
         },
         {
@@ -24,7 +24,7 @@
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
+          "fieldDisplayName": "ProductCode",
           "collectionId": ""
         },
         {
@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "StackedColumn9038",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",
@@ -71,7 +71,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           },
@@ -85,14 +85,14 @@
               90
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }
         ]
       },
       "skip": 0,
-      "SchemaName": "MDAdataForReporting",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [

@@ -2,6 +2,7 @@ package com.gainsight.sfdc.administration.pages;
 
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.sfdc.pages.BasePage;
+import com.gainsight.sfdc.reporting.pages.ReportingBasePage;
 /**
  * Created with IntelliJ IDEA.
  * User: gainsight
@@ -26,6 +27,7 @@ public class AdministrationBasePage extends BasePage {
     private final String INTEGRATION_PAGE		= "//a[@href='Integration']";
     private final String COCKPIT_CONFIG_PAGE    = "//a[@href='WorkflowConfiguration']";
     private final String ADMIN_360_SECTION	    = "//a/span[text()='CS360 Sections']";
+    private final String REPORTS_TAB = "//a[@href='ReportBuilder']/span[contains(text(),'Reports 2.0')]";
 
 
     public AdministrationBasePage() {
@@ -67,6 +69,11 @@ public class AdministrationBasePage extends BasePage {
         return new AdminScorecardSection();
     }
    
+    public ReportingBasePage clickOnReportsTab() {
+		item.click(REPORTS_TAB);
+		return new ReportingBasePage();
+	}
+
     public AdminIntegrationPage clickOnIntegrationLink(){
     	item.click(INTEGRATION_PAGE);
     	return new AdminIntegrationPage();

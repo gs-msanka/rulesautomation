@@ -4,6 +4,7 @@ package com.gainsight.sfdc.util.bulk;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
+import com.gainsight.sfdc.pojos.SObject;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
@@ -11,6 +12,7 @@ import com.gainsight.utils.config.ConfigProviderFactory;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -52,12 +54,12 @@ public class SfdcRestApi {
      * @return list of the records as key value pair's.
      * @throws Exception
      */
-    public static List<HashMap<String, String>> pullDataFromSfdc(String sObject, String[] fields, String whereCondition) throws Exception {
+    public static List<Map<String, String>> pullDataFromSfdc(String sObject, String[] fields, String whereCondition) throws Exception {
         if(sObject==null || fields==null || fields.length <1) {
             throw new IllegalArgumentException("Sobject & fields can't be empty or null");
         }
         System.out.println("Pulling data from sfdc for object "+sObject);
-        List<HashMap<String,String>> queryData = new ArrayList<>();
+        List<Map<String,String>> queryData = new ArrayList<>();
         StringBuffer query = new StringBuffer("Select ");
         for(String field : fields) {
             query.append(field).append(", ");
@@ -83,9 +85,9 @@ public class SfdcRestApi {
                 for(String field : fields) {
                     if(field.contains(".")) {
                         String[] split = field.split("\\.");
-                        JsonNode innerNode  = record.get(split[0]);
+                        JsonNode innerNode = record.get(split[0]);
                         String val = "";
-                        if(innerNode !=null) {
+                        if (innerNode != null) {
                             val = innerNode.get(split[1]).isNull() ? "" : innerNode.get(split[1]).asText();
                         }
                         dataRecord.put(field, val);
@@ -108,9 +110,24 @@ public class SfdcRestApi {
     * @throws Exception
     */
     public static void  pullDataFromSfdc(String sObject, String[] fields, String whereCondition, String filePath) throws Exception {
-        List<Map<String, String>> data = (List)pullDataFromSfdc(sObject, fields, whereCondition);
-        FileUtil.writeToCSV(data, filePath);
-    }
+        List<Map<String, String>> data = pullDataFromSfdc(sObject, fields, whereCondition);
+		FileUtil.writeToCSV(data, filePath);
+	}
 
+    /**
+     * 
+     * @return
+     * @throws Exception
+     */
+	public static List<SObject> getSfdcObjects() throws Exception {
+        SfdcRestImpl sfdcRestImpl  = new SfdcRestImpl(sfdcInfo.getSessionId());
+		
+		ResponseObj responseObj = sfdcRestImpl.getFromSalesforce(sfdcInfo.getEndpoint()+"/services/data/v34.0/sobjects");
+		
+		JsonNode jsonNode = mapper.readValue(responseObj.getContent(), JsonNode.class);
+		
+		List<SObject> soList = mapper.convertValue(jsonNode.get("sobjects"),new TypeReference<ArrayList<SObject>>(){});
+		return soList;
+	}
 
 }

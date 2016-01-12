@@ -1,0 +1,363 @@
+{
+  "ReportInfo": [
+    {
+      "SchemaName": "Auto_RedShift_MDAData",
+      "CollectionID": "",
+      "limit": 500,
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Date1",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date1",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date2",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date2",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date3",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date3",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp1",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp2",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp2",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp3",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp3",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "Files Downloaded",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Files Downloaded",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Meetings Attended",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Meetings Attended",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Reports Run",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Reports Run",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Rules Triggered",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Rules Triggered",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Schedules Created",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Schedules Created",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "Page Views",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Page Views",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "Page Visits",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Page Visits",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "AccountName",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "AccountName",
+          "dataType": "string",
+          "collectionId": ""
+        },
+        {
+          "col": "Industry",
+          "axis": "measure",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Industry",
+          "dataType": "string",
+          "collectionId": ""
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000,
+      "reportName": "FlatReportsWithMaxShowMe",
+      "assetType": "ANALYTICS",
+      "skip": 0,
+      "drillDownReportDimensions": [
+        {
+          "col": "Date1",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date1",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date2",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date2",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date3",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date3",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Date",
+          "dataType": "date",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp1",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp2",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp2",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp3",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp3",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "EventTimeStamp",
+          "dataType": "dateTime",
+          "collectionId": ""
+        },
+        {
+          "col": "Files Downloaded",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Files Downloaded",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Meetings Attended",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Meetings Attended",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Reports Run",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Reports Run",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Rules Triggered",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Rules Triggered",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "No of Schedules Created",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "No of Schedules Created",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "Page Views",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Page Views",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "Page Visits",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "sum",
+          "type": 1,
+          "fieldDisplayName": "Page Visits",
+          "dataType": "number",
+          "collectionId": ""
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "AccountName",
+          "dataType": "string",
+          "collectionId": ""
+        },
+        {
+          "col": "Industry",
+          "axis": "row",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "type": 0,
+          "fieldDisplayName": "Industry",
+          "dataType": "string",
+          "collectionId": ""
+        }
+      ]
+    }
+  ],
+  "format": "JSON",
+  "displayType": "GRID",
+  "reportMasterRequired": false,
+  "newReport": true
+}

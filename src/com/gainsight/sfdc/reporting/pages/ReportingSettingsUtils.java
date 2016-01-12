@@ -11,7 +11,8 @@ public class ReportingSettingsUtils extends BasePage {
 	// Ranking related xpath's
 	private final String RANKING_BTN_XPATH = "//label[@class='gs-rb-settings-label' and contains(text(),'Ranking')]";
 	private final String CLICK_RANKING_FIELDNAME_XPATH = "//span[@class='ui-multiselect-selected-label' and contains(text(),'Choose a field')]";
-	private final String SELECT_RANKING_FEILDNAME_XPATH = "//input[@type='radio' and @title='%s']/parent::label";
+//	private final String SELECT_RANKING_FEILDNAME_XPATH = "//input[@type='radio' and @title='%s']/parent::label";
+	private final String SELECT_RANKING_FEILDNAME_XPATH = "//input[@type='radio' and contains(@title,'%s')]/parent::label";
 	private final String CLICK_RANKING_OPERATOR_XPATH = "//span[@class='ui-multiselect-selected-label' and contains(text(),'Top')]";
 	private final String SELECT_RANKING_OPERATOR_XPATH = "//input[@type='radio' and @title='%s']/parent::label";
 
@@ -46,7 +47,7 @@ public class ReportingSettingsUtils extends BasePage {
 		item.click(SETTINGS_BTN_XPATH);
 		item.click(RANKING_BTN_XPATH);
 		applyRankingOnFieldName(fieldName);
-		if (operator.contains("desc")) {
+		if (operator.contains("desc") || operator.contains("DESC")) {
 			operator = "Top";
 		} else {
 			operator = "Bottom";
@@ -88,7 +89,7 @@ public class ReportingSettingsUtils extends BasePage {
 		item.click(CHART_ICON);
 		item.click(String.format(CHART_LABEL, chartType));
 		env.setTimeout(3);
-		wait.waitTillElementNotDisplayed(RANKING_APPLY_BTN_POPUP, 1, 5);
+		wait.waitTillElementNotDisplayed(RANKING_APPLY_BTN_POPUP, 1, 15);
 		env.setTimeout(30);
 	}
 
@@ -102,7 +103,7 @@ public class ReportingSettingsUtils extends BasePage {
 			return "Stacked Column";
 		} else if (chartType.contains("COLUMN_LINE")) {
 			return "Column Line";
-		} else if (chartType.contains("GRID")) {
+		} else if (chartType.contains("GRID") || chartType.contains("LIST")) {
 			return "Table";
 		} else if (chartType.contains("BAR")) {
 			return "Bar";

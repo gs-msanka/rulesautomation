@@ -8,56 +8,56 @@
       "limit": 500,
       "drillDownReportDimensions": [
         {
-          "col": "EventTimeStamp1",
-          "axis": "row",
-          "type": 0,
-          "dataType": "datetime",
-          "decimalPlaces": 0,
-          "fieldDisplayName": "EventTimeStamp1",
-          "collectionId": ""
-        },
-        {
           "col": "Date1",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Count of Date1",
+          "fieldDisplayName": "Date1",
           "collectionId": "",
-          "agg_func": "count"
+          "agg_func": "max"
         },
         {
           "col": "Date2",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Count_distinct of Date2",
+          "fieldDisplayName": "Date2",
           "collectionId": "",
           "agg_func": "count_distinct"
         },
         {
           "col": "Date3",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Min of Date3",
+          "fieldDisplayName": "Date3",
           "collectionId": "",
           "agg_func": "min"
         },
         {
           "col": "Date",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Max of Date",
+          "fieldDisplayName": "Date",
           "collectionId": "",
-          "agg_func": "max"
+          "agg_func": "count"
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "row",
+          "type": 0,
+          "dataType": "dateTime",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "EventTimeStamp1",
+          "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "MDAAggregationDate",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -90,41 +90,8 @@
           }
         ]
       },
-      "havingAdvanceFilter": {
-        "expression": "1 AND 2",
-        "filters": [
-          {
-            "dbName": "Active",
-            "alias": "1",
-            "dataType": "boolean",
-            "filterOperator": "EQ",
-            "logicalOperator": "AND",
-            "filterValues": [
-              4
-            ],
-            "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
-            "type": 0,
-            "aggregateFunction": "count"
-          },
-          {
-            "dbName": "ProductCode",
-            "alias": "2",
-            "dataType": "string",
-            "filterOperator": "GT",
-            "logicalOperator": "AND",
-            "filterValues": [
-              90
-            ],
-            "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
-            "type": 0,
-            "aggregateFunction": "count"
-          }
-        ]
-      },
       "skip": 0,
-      "SchemaName": "MDARedShiftData",
+      "SchemaName": "Auto_RedShift_MDAData",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
@@ -132,7 +99,7 @@
           "col": "EventTimeStamp1",
           "axis": "row",
           "type": 0,
-          "dataType": "datetime",
+          "dataType": "dateTime",
           "decimalPlaces": 0,
           "fieldDisplayName": "EventTimeStamp1",
           "collectionId": ""
@@ -143,9 +110,9 @@
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Count of Date1",
+          "fieldDisplayName": "Max of Date1",
           "collectionId": "",
-          "agg_func": "count"
+          "agg_func": "max"
         },
         {
           "col": "Date2",
@@ -173,12 +140,12 @@
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Max of Date",
+          "fieldDisplayName": "Count of Date",
           "collectionId": "",
-          "agg_func": "max"
+          "agg_func": "count"
         }
       ],
-      "ReportReadLimit": 5,
+      "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000
     }
   ]
