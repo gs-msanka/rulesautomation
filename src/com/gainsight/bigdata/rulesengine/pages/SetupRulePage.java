@@ -39,10 +39,9 @@ public class SetupRulePage extends BasePage {
     private final String ACTION_FILTER_IVALUE = "//div[@class='advance-logic-place-holder']/following-sibling::div//span[contains(text(),'%s')]/../../../following-sibling::div"
     	    + "//input[contains(@class,'value-text')]";
     private final String GSCUSTOMERS_CHECKBOX = "//div[contains(text(),'Apply to Gainsight customers')]/preceding-sibling::input";
-	private final String SETUPRULE_FILTER_BOOLEAN_CHECK = "//div[@class='advance-logic-place-holder']/following-sibling::div//span[contains(text(),'%s')]/ancestor::div[contains(@class, 'gs-condition-lhs')]/following-sibling::div[contains(@class, 'gs-condition-rhs')]/descendant::input[@type='checkbox']";
-
-
-	private final String ADD_CALCULATED_FIELD_LINKTEXT = "Add Calculated Field";
+    
+    
+    private final String ADD_CALCULATED_FIELD_LINKTEXT = "Add Calculated Field";
     private final String ADD_CALCULATED_FIELD_DIVISION ="//div[@aria-describedby='add_calculated_popup']";
     private final String CALULATED_FIELD_NAME_INPUT = "//input[contains(@class, 'cal_field_name')]";
     private final String CALCULATION_TYPE_DROPDOWN = "//select[contains(@class, 'calc_select calc_type_select')]/following-sibling::button";
@@ -173,8 +172,6 @@ public class SetupRulePage extends BasePage {
 			value = value.substring(6);
 			String filterIValue = String.format(ACTION_FILTER_IVALUE, object+ "::" + fields);
 			field.clearAndSetText(filterIValue, value);
-		}else if (value.startsWith("booleanCheck")){
-			item.click(String.format(SETUPRULE_FILTER_BOOLEAN_CHECK,object+ "::" + fields));
 		}
 	}
     

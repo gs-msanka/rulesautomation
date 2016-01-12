@@ -411,14 +411,6 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		textArea.add("rules_c_TextArea");
 		objField.setTextAreas(textArea);
 
-        List<String> phone = new ArrayList<String>();
-        phone.add("rules_phone");
-        objField.setPhones(phone);
-
-        List<String> URL = new ArrayList<String>();
-        URL.add("rules_URL");
-        objField.setURLs(URL);
-
 		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();
 		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
 		Customer_lookupListMap.put("Name", "C_lookup");
