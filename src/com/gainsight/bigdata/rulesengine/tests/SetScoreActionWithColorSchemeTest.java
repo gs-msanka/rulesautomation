@@ -94,8 +94,8 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		
 		//Verifying color scheme in hexadecimal format for the customers where the rule criteria satisfied.
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/GS-3385-ExpectedJob-ColorScheme.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/GS-3825-ExpectedDataForColorScheme.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/GS-3825-ExpectedDataForColorScheme.csv"), null)));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -114,8 +114,8 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		
 		//Verifying color scheme in hexadecimal format for the customers where the rule criteria satisfied.
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/GS-3825-ExpectedJobForColorScheme.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/GS3825-ExpectedDataForColorSchema.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/GS3825-ExpectedDataForColorSchema.csv"), null)));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3825/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));
@@ -134,8 +134,8 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest{
 		
 		//Verifying scores for the customers satisfying the rule criteria
 		dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir+ "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/GS-3837-ExpectedJob-For-ColorScheme.txt"),JobInfo.class));
-		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/GS-3837-ExpectedDataForColorSchema.csv"), NAMESPACE)));
-		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/ActualData.csv"), NAMESPACE)));
+		List<Map<String, String>> expectedData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/GS-3837-ExpectedDataForColorSchema.csv"), null)));
+		List<Map<String, String>> actualData = Comparator.getParsedCsvData(new CSVReader(FileUtil.resolveNameSpace(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3837/ActualData.csv"), null)));
 		List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
 		Log.info("Actual : " + mapper.writeValueAsString(actualData));
 		Log.info("Expected : " + mapper.writeValueAsString(expectedData));

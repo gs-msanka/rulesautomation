@@ -22,58 +22,14 @@
             "showAdvancedName": ""
           },
           {
-            "fieldName": "Percent Auto",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Account Name",
-            "showAdvancedName": ""
-          },
-          {
             "fieldName": "C_Picklist",
             "showAdvancedName": ""
           }
         ],
-        "filterFields": [
-          {
-            "fieldName": "Account Name",
-            "operator": "starts with",
-            "value": "input_RULESUI Account "
-          },
-          {
-            "fieldName": "C_Picklist",
-            "operator": "includes",
-            "value": "select_Pvalue1"
-          },
-          {
-            "fieldName": "Date Auto",
-            "operator": "less or equal",
-            "value": "select_Rule Date"
-          },
-          {
-            "fieldName": "Number Auto",
-            "operator": "greater than",
-            "value": "input_10"
-          },
-          {
-            "fieldName": "Email Auto",
-            "operator": "equals",
-            "value": "input_athaduka@gainsight.com"
-          },
-          {
-            "fieldName": "Currency Auto",
-            "operator": "greater than",
-            "value": "input_100"
-          },
-          {
-            "fieldName": "Percent Auto",
-            "operator": "not equal to",
-            "value": "input_797946"
-          }
-        ]
+        "filterFields": []
       }
     ],
-    "advancedLogic": "A and B and (C or D or E) and F and G",
+    "advancedLogic": "",
     "timeIdentifier": "Created Date"
   },
   "setupActions": [

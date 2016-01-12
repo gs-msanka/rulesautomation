@@ -40,19 +40,9 @@
                <include name="testEditARule" />
                <include name="verifyRecordsOnDateFiltersUsingNativeData" />
                <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
-               <include name="testCtaWithUpsertProrityOption" />
-               <include name="testCtaWithUpdateCommentsAlwaysOption" />
-               <include name="testCtaWithUpdateCommentsNeverOption" />
-               <include name="testCtaWithAddOrReplacePlaybook" />
-               <include name="testCtaWithRuleNameChangeOption" />
-               <include name="testCtaUpsertWithSnoozeOption" />
-               <include name="testCtaActionWithDonNotSkipWeekendOption" />
-               <include name="testCtaActionWithSkipAllWeekendsOption" />
-               <include name="testCtaActionWithSkipWeekendIfDueOnWeekEndOption" />
-               <include name="testCloseCtaFromSpecificSource" />
-               <include name="testCloseCtaFromAllSources" />
             </methods>
          </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToUsageTest" />
