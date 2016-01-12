@@ -99,7 +99,6 @@ public class SetupRulePage extends BasePage {
 
     public void enterAdvanceLogic(String advanceLogic) {
         field.clearAndSetText(ADVANCE_LOGIC_INPUT, advanceLogic);
-        element.getElement(ADVANCE_LOGIC_INPUT).sendKeys(Keys.ENTER);
     }
 
     public SetupRuleActionPage clickOnNext() {

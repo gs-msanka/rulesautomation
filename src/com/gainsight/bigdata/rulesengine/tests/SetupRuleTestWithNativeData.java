@@ -99,4 +99,25 @@ public class SetupRuleTestWithNativeData extends BaseTest {
         Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
         Assert.assertEquals(differenceData.size(), 0, "expectedData and actualData is not matched!! , check the Diff above.");
     }
+
+    @TestInfo(testCaseIds = {"GS-4985"})
+    @Test
+    public void testDataInShowFieldsAndFilterFields3() throws Exception {
+        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4985/Input.json"), RulesPojo.class);
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+        List<Map<String, String>> PreviewResults = rulesUtil.getPreviewResults(rulesPojo.getRuleName(), "{\"numberOfRecords\":\"10\"}");
+        Log.info("Total Records are " + mapper.writeValueAsString(PreviewResults));
+        String records[] = {"C_lookup__r.Name"};
+        List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
+        String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 3\"},{\"C_lookup__r.Name\":\"RULESUI Account 4\"},{\"C_lookup__r.Name\":\"RULESUI Account 5\"},{\"C_lookup__r.Name\":\"RULESUI Account 6\"},{\"C_lookup__r.Name\":\"RULESUI Account 7\"},{\"C_lookup__r.Name\":\"RULESUI Account 8\"},{\"C_lookup__r.Name\":\"RULESUI Account 9\"}]";
+        List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
+        Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
+        Log.info("ActualData : " + mapper.writeValueAsString(actualData));
+        List<Map<String, String>> differenceData = Comparator.compareListData(expectedData, actualData);
+        Log.info("Difference is : " + mapper.writeValueAsString(differenceData));
+        Assert.assertEquals(actualData.size(), expectedData.size(), "Number of records are not matched after applying filters");
+        Assert.assertEquals(differenceData.size(), 0, "expectedData and actualData is not matched!! , check the Diff above.");
+    }
 }

@@ -12,8 +12,6 @@
                <include name="testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea" />
                <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
                <include name="testLoadToCustomersWithMatrixData" />
-               <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
-               <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />

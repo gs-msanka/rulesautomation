@@ -397,15 +397,32 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		multiPickLists.add(hmMultiPickList1);
 		objField.setMultiPickLists(multiPickLists);
 
-		List<String> Date = new ArrayList<String>();
-		Date.add("rules_c_Date");
-		Date.add("Custom_Date2");
-		objField.setDates(Date);
+        List<String> Date = new ArrayList<String>();
+        Date.add("rules_c_Date");
+        Date.add("Custom_Date2");
+        Date.add("Custom_Date3");
+        Date.add("Custom_Date4");
+        Date.add("Custom_Date5");
+        Date.add("Custom_Date6");
+        objField.setDates(Date);
 
 		List<String> DateTime = new ArrayList<String>();
-		DateTime.add("rules_c_DateTime");
-		DateTime.add("Custom_DateTime2");
-		objField.setDateTimes(DateTime);
+        DateTime.add("rules_c_DateTime");
+        DateTime.add("Custom_DateTime2");
+        DateTime.add("Custom_DateTime3");
+        DateTime.add("Custom_DateTime4");
+        DateTime.add("Custom_DateTime5");
+        DateTime.add("Custom_DateTime6");
+        objField.setDateTimes(DateTime);
+
+        List<String> Currency = new ArrayList<String>();
+        Currency.add("Custom_Currency");
+        Currency.add("Custom_CurrencyField2");
+        Currency.add("Custom_CurrencyField3");
+        Currency.add("Custom_CurrencyField4");
+        Currency.add("Custom_CurrencyField5");
+        Currency.add("Custom_CurrencyField6");
+        objField.setCurrencies(Currency);
 
 		List<String> textArea = new ArrayList<String>();
 		textArea.add("rules_c_TextArea");
