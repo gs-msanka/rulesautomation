@@ -1,0 +1,107 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4239-using-Mongo-Calculatedmeasures",
+  "ruleDescription": "GS-4239-using-Mongo-Calculatedmeasures-Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "customObject2 Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "SumOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "15",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "SubstractionOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "15",
+            "granularity": "Weeks"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "SubstractionOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "CustomNumber1",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "CustomNumber1",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

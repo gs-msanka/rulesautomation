@@ -40,7 +40,7 @@
         ]
       }
     ],
-    "advancedLogic": "A or B",
+    "advancedLogic": "A OR B",
     "timeIdentifier": "Created Date"
   },
   "setupActions": [

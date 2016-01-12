@@ -153,6 +153,26 @@
       "ns_appUrl"         : "https://app-ppd1-web-lbr-eas.gainsight.com",
       "ns_adminUrl"       : "https://app-ppd1-web-lbr-eas.gainsight.com",
       "ns_version"        : "v1.0"
+    },
+    "ruleqa01": {
+      "ns_sfdc_username": "ruleqa01@gainsight.com",
+      "ns_sfdc_password": "Gainsight123",
+      "ns_sfdc_stoken": "du2dlDqAlfuSy641PrxtsWI9",
+      "ns_appUrl": "https://ruleqa01-api-router.herokuapp.com",
+      "ns_adminUrl": "https://ruleqa01-api-router.herokuapp.com",
+      "ns_version": "v1.0",
+      "mongo_global_host": "54.165.93.124",
+      "mongo_global_port": "27017",
+      "mongo_global_db": "qa_rules_db1",
+      "mongo_global_username": "qauser",
+      "mongo_global_password": "pass",
+      "mongo_global_ssl_enable": "false",
+      "mongo_scheduler_host": "54.165.93.124",
+      "mongo_scheduler_port": "27017",
+      "mongo_scheduler_db": "qa_rules_db1",
+      "mongo_scheduler_username": "qauser",
+      "mongo_scheduler_password": "pass",
+      "mongo_scheduler_ssl_enable": "false"
     }
   }
 }

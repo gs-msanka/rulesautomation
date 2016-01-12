@@ -1,0 +1,105 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4204-using-RedShift-CalculatedmeasuresAndJoins",
+  "ruleDescription": "GS-4204-using-RedShift-CalculatedmeasuresAndJoins",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "joinOnCollection": "RedShift-Joins-Collection-1",
+    "joinOnCollectionField": "T2_ID",
+    "joinWithCollection": "RedShift-Joins-Collection-2",
+    "selectObject": "RedShift-Joins-Collection-1",
+    "lookUpField": true,
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT",
+            "sourceField": "T2_CustomNumber1",
+            "periodType": "Past",
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT",
+            "sourceField": "T2_CustomNumber2",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "T2_CustomNumber1",
+            "periodType": "Past",
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "T2_CustomNumber2",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "T2_ID",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

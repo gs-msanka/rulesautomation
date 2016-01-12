@@ -4,7 +4,7 @@
   "namespacePrefix": "JBCXM",
   "useNameSpace": false,
   "extract": {
-    "useRestApi": false,
+    "useRestApi": true,
     "source": "sfdc",
     "connection": "conf/application.conf",
     "table": "RulesSFDCCustom__c",
@@ -12,7 +12,7 @@
       "C_Number__c",
       "C_Text__c",
       "ActiveUsers__c",
-      "C_Percent__c "
+      "C_Percent__c"
     ],
     "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4042/ActualData.csv"
   }

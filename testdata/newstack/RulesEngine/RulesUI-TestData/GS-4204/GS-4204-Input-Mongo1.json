@@ -1,0 +1,101 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4204-using-Mongo-Calculatedmeasures",
+  "ruleDescription": "GS-4204-using-Mongo-Calculatedmeasures",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "customObject2 Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT",
+            "sourceField": "SubstractionOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT",
+            "sourceField": "DivideOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "SubstractionOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "DivideOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}
