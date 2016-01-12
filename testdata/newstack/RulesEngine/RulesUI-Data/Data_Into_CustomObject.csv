@@ -1,0 +1,10 @@
+C_lookup__r.Data_ExternalId__c,rules_c_ExternalID__c,rules_c_Text__c,rules_c_TextArea__c,rules_c_Number__c,rules_c_MultiPicklist__c,rules_c_Email__c,rules_c_Date__c,rules_c_DateTime__c,rules_c_Checkbox__c,rules_c_Picklist__c,rules_c_Percent__c,Custom_Currency__c,rules_phone__c,rules_URL__c
+RULESUI Account 1,RULESUI Account 1,RULESUI Account 1 Text 1,RULESUI Account 1 TextArea 1,1,MPvalue1,athaduka@gainsight.com,-15,-15,TRUE,Pvalue1,1000,110,123456789,http:://gainsight.com
+RULESUI Account 2,RULESUI Account 2,RULESUI Account 2 Text 1,RULESUI Account 2 TextArea 1,2,MPvalue2,athaduka@gainsight.com,-2,-2,FALSE,Pvalue2,100,200,123456789,http:://google.com
+RULESUI Account 3,RULESUI Account 3,RULESUI Account 3 Text 1,RULESUI Account 3 TextArea 1,3,MPvalue3,athaduka@gainsight.com,-3,-3,TRUE,Pvalue3,12,300,123456789,http:://gainsight.com
+RULESUI Account 4,RULESUI Account 4,RULESUI Account 4 Text 1,RULESUI Account 4 TextArea 1,4,MPvalue1,athaduka@gainsight.com,-4,-4,FALSE,Pvalue1,50,400,123456789,http:://google.com
+RULESUI Account 5,RULESUI Account 5,RULESUI Account 5 Text 1,RULESUI Account 5 TextArea 1,4,MPvalue2,athaduka@gainsight.com,-5,-5,TRUE,Pvalue2,1000,500,123456789,http:://gainsight.com
+RULESUI Account 6,RULESUI Account 6,RULESUI Account 6 Text 1,RULESUI Account 6 TextArea 1,6,MPvalue3,athaduka@gainsight.com,-6,-6,FALSE,Pvalue3,100,600,123456789,http:://google.com
+RULESUI Account 7,RULESUI Account 7,RULESUI Account 7 Text 1,RULESUI Account 7 TextArea 1,7,MPvalue1,athaduka@gainsight.com,-7,-7,TRUE,Pvalue1,12,700,123456789,http:://gainsight.com
+RULESUI Account 8,RULESUI Account 8,RULESUI Account 8 Text 1,RULESUI Account 8 TextArea 1,8,MPvalue2,athaduka@gainsight.com,-8,-8,FALSE,Pvalue2,50,800,123456789,http:://google.com
+RULESUI Account 9,RULESUI Account 9,RULESUI Account 9 Text 1,RULESUI Account 9 TextArea 1,9,MPvalue3,athaduka@gainsight.com,-9,-9,TRUE,Pvalue3,1000,900,123456789,http:://google.com
