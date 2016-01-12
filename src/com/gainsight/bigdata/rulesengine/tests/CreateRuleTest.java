@@ -538,60 +538,7 @@ public class CreateRuleTest extends BaseTest {
 		rulesManagerPage.editRuleByName(rulesPojo.getRuleName());
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
 	}
-	
-	@TestInfo(testCaseIds = { "GS-9064" })
-	@Test
-	public void verifyRecordsOnDateFiltersUsingNativeData() throws Exception {
-		ObjectFields objField = new ObjectFields();
-		List<String> Date = new ArrayList<String>();
-		// Creating 10 date type fields on Account object
-		for (int i = 0; i < 10; i++) {
-			Date.add("DateField" + i);
-		}
-		objField.setDates(Date);
-		metaUtil.createFieldsOnObject(sfdc, "Account", objField);
-		String LOAD_ACCOUNTS_JOB2 = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Accounts2.txt";
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB2)), JobInfo.class);
-		dataETL.execute(jobInfo);
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
-				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC18.json"), RulesPojo.class);
-		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-		rulesManagerPage.clickOnAddRule();
-		rulesEngineUtil.createRuleFromUi(rulesPojo);		
-		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
-		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
-				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
-		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
-		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
-	}
 
-	@TestInfo(testCaseIds = { "GS-9064" })
-	@Test
-	public void verifyRecordsOnDateTimeFiltersUsingNativeData() throws Exception {
-		ObjectFields objField = new ObjectFields();
-		List<String> DateTime = new ArrayList<String>();
-		// Creating 10 dateTime type fields on Account object
-		for (int i = 0; i < 10; i++) {
-			
-			DateTime.add("DateTimeField" + i);
-		}
-		objField.setDateTimes(DateTime);
-		metaUtil.createFieldsOnObject(sfdc, "Account", objField);
-		String LOAD_ACCOUNTS_JOB = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_DateTimeFiltersUsingNativeData.txt";
-		JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-		dataETL.execute(jobInfo);
-		RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir
-				+ "/testdata/newstack/RulesEngine/RulesUI-TestData/TC19.json"), RulesPojo.class);
-		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-		rulesManagerPage.clickOnAddRule();
-		rulesEngineUtil.createRuleFromUi(rulesPojo);
-		RuleExecutionHistory executionHistory=rulesUtil.runRuleAndGetExecutionHistory(rulesPojo.getRuleName());
-		int totalNumberOfRecordsProcessed=Integer.valueOf(executionHistory.getExecutionMessages().get(1).
-				substring(executionHistory.getExecutionMessages().get(1).lastIndexOf(":")+2).trim());
-		Log.info("Total records fetched are " + totalNumberOfRecordsProcessed);
-		Assert.assertEquals(totalNumberOfRecordsProcessed, 9, "Verify records fetched are valid or not");
-	}
-	
 	@TestInfo(testCaseIds = { "GS-5647"})
 	@Test
 	public void verifyRecordsOnDateFiltersUsingMdaData() throws Exception {	

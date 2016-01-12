@@ -10,13 +10,85 @@
         "weekly": false,
         "daily": true,
         "dateTime": false,
-        "fieldName": "rules_c_Date__c"
+        "fieldName": "rules_c_Date__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Custom_Date2__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Custom_Date3__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date4__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date5__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date6__c",
+        "timeZone": "America/Los_Angeles"
       },
       {
         "weekly": false,
         "daily": true,
         "dateTime": true,
-        "fieldName": "rules_c_DateTime__c"
+        "fieldName": "rules_c_DateTime__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime2__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime3__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime4__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime5__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime6__c",
+        "timeZone": "America/Los_Angeles"
       }
     ]
   },
