@@ -6,7 +6,7 @@
     "dbType": "DATA",
     "dbCollectionName": null,
     "CollectionID": null,
-    "CollectionName": "MDARedShiftData"
+    "CollectionName": "Auto_RedShift_MDAData"
   },
   "Columns": [
     {
@@ -356,7 +356,7 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 1,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
@@ -377,7 +377,7 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 2,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
@@ -398,7 +398,7 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 3,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
@@ -419,7 +419,7 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 3,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,

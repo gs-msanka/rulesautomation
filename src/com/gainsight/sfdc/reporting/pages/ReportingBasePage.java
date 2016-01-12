@@ -21,7 +21,8 @@ public class ReportingBasePage extends BasePage {
 	private String type = "FORCE";
 
 	public ReportingBasePage() {
-		wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"), MIN_TIME, MAX_TIME);
+		// wait.waitTillElementPresent(XPathConstants.getXPath("READY_INDICATOR"),
+		// MIN_TIME, MAX_TIME);
 	}
 
 	public void setType(String type) {
@@ -105,6 +106,12 @@ public class ReportingBasePage extends BasePage {
 
 	}
 
+	public void expandShowMe() {
+		if (element.getElement(XPathConstants.getXPath("SHOWMEEXPAND")).isDisplayed()) {
+			item.click(XPathConstants.getXPath("SHOWMEEXPAND"));
+		}
+	}
+
 	public void addByField(String fieldName, String ObjName) {
 		Log.info("Adding field into By section: " + fieldName);
 		item.click(XPathConstants.getXPath("ADDBY"));
@@ -153,6 +160,7 @@ public class ReportingBasePage extends BasePage {
 	 */
 	public void saveReport(String reportName) {
 		Log.info("Saving the Report : " + reportName);
+		
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
 		js.executeScript(a);

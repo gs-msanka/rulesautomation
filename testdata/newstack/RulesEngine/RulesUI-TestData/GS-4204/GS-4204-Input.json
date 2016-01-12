@@ -14,22 +14,49 @@
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "SUM",
-            "sourceField": "rules_c_Number",
+            "aggregationCalculation": "COUNT",
+            "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "4",
-            "granularity": "Days"
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
           }
         },
         "fieldBConfig": {
           "calculatedFieldType": "Aggregation",
           "showField": "",
           "aggregation": {
-            "aggregationCalculation": "SUM",
+            "aggregationCalculation": "COUNT",
+            "sourceField": "rules_c_Number",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
             "sourceField": "Custom_Number2",
             "periodType": "Past",
-            "noOfPeriods": "3",
-            "granularity": "Months"
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "rules_c_Number",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
           }
         }
       }
@@ -40,22 +67,6 @@
         "showFields": [
           {
             "fieldName": "C_lookup",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "rules_c_Number",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number2",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number3",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "C_lookup Name",
             "showAdvancedName": ""
           }
         ],
@@ -78,9 +89,9 @@
             "destination": "C_Number"
           },
           {
-            "sourceObject": "C_lookup",
-            "sourceField": "C_lookup Name",
-            "destination": "C_Text"
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
           }
         ]
       },

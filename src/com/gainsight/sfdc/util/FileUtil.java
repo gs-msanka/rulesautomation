@@ -55,7 +55,7 @@ public class FileUtil {
 
     public static FileReader resolveNameSpace(File file, String nameSpace) {
         try {
-            if(!nameSpace.equalsIgnoreCase("JBCXM")) {
+            if(!"JBCXM".equalsIgnoreCase(nameSpace)) {
                 String extension = FilenameUtils.getExtension(file.getName());
                 File tempFile = new File( "./resources/datagen/process/tempFile."+extension);
                 FileOutputStream fOut = new FileOutputStream(tempFile);

@@ -1,0 +1,62 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4045-using-RedShift-CalculatedmeasuresAndJoins",
+  "ruleDescription": "GS-4045-using-RedShift-CalculatedmeasuresAndJoins-Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "MAX",
+          "sourceField": "CustomNumberWithDecimals2",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "T2_ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "lookup_AccountName",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "AccountName",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

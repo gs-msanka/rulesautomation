@@ -429,3 +429,4 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		metaUtil.createFieldsOnObject(sfdc, "C_Custom__c", objField);
 	}
 }
+

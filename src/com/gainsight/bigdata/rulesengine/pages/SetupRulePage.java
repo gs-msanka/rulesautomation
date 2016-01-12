@@ -258,7 +258,7 @@ public class SetupRulePage extends BasePage {
 				element.clearAndSetText(CALCULATED_FIELD_NO_OF_PERIODS_B_SECTION,calculatedField.getFieldBConfig().getAggregation().getNoOfPeriods());
 				item.click(CALCULATED_FIELD_GRANULARITY_B_SECTION);
 				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getGranularity(), true);
-				if (calculatedField.getFieldAConfig().getAggregation().isAdjustForMissingData()) {
+				if (calculatedField.getFieldBConfig().getAggregation().isAdjustForMissingData()) {
 					item.click(CALCULATED_FILED_ADJUST_MISSINGDATA_B_SECTION);
 				} else {
 					Log.info("Boolean is not checked - Not Adjusting For Missing data");

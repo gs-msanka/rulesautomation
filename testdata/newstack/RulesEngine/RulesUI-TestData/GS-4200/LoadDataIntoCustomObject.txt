@@ -8,8 +8,8 @@
     "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/Data_Into_Custom_Object-Output.csv",
     "fields": [
       {
-        "weekly": false,
-        "daily": true,
+        "weekly": true,
+        "daily": false,
         "dateTime": false,
         "fieldName": "rules_c_Date__c",
         "timeZone": "America/Los_Angeles"

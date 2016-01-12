@@ -61,8 +61,6 @@ public class BasePage extends WebPage implements Constants {
     protected final String LOADING_ICON       = "//div[contains(@class, 'gs-loader-image')]";
 	private final String LOADING_ICON_360 = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
     private final String SEARCH_LOADING     = "//div[@class='base_filter_search_progress_icon']";
-	private final String REPORTS_TAB = "//a[@href='ReportBuilder']/span[contains(text(),'Reports 2.0')]";
-	private final String REPORTS_TAB_POPUP = "//a[@href='ReportBuilder']/span[contains(text(),'Reports 2.0')]";
 
 	public Transactions transactionUtil     = new Transactions();
 	public AmountsUtil amtUtil  = new AmountsUtil();
@@ -134,12 +132,6 @@ public class BasePage extends WebPage implements Constants {
 	public CustomerBasePage clickOnCustomersTab() {
         clickOnTab(CUSTOMER_TAB);
 		return new CustomerBasePage();
-	}
-
-	public ReportingBasePage clickOnReportsTab() {
-		clickOnTab(REPORTS_TAB);
-		wait.waitTillElementNotDisplayed(REPORTS_TAB_POPUP, 1, 4);
-		return new ReportingBasePage();
 	}
 
 	public TransactionsBasePage clickOnTransactionTab() {

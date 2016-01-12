@@ -597,7 +597,7 @@ public void setupRule(HashMap<String,String> testData){
 				Log.error("Status did not match!!");
 				check = false;
 			}
-			if (!assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c")
+			if (!assignee.equalsIgnoreCase(obj.getChild(resolveStrNameSpace("JBCXM__Assignee__c"))
 					.getValue().toString())) {
 				Log.error("Assignee did not match!!");
 				check = false;
