@@ -1,0 +1,172 @@
+{
+  "columns": [
+      {
+        "name": "JBCXM__Account__r.Name",
+        "label": "Account Name",
+        "displayOrder": 1,
+        "visibilityMode": true,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "TEXT",
+        "isGroupable": true,
+        "hasJBCXMNS": false,
+        "decimalPlaces": 0
+      },
+      {
+        "name": "CreatedDate",
+        "label": "Created Date",
+        "displayOrder": 2,
+        "visibilityMode": true,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "DATETIME",
+        "isGroupable": true,
+        "hasJBCXMNS": false,
+        "decimalPlaces": 0
+      },
+      {
+        "name": "JBCXM__DueDate__c",
+        "label": "Due Date",
+        "displayOrder": 3,
+        "visibilityMode": true,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "DATE",
+        "isGroupable": true,
+        "hasJBCXMNS": false,
+        "decimalPlaces": "0"
+      },
+      {
+        "name": "Id",
+        "label": "Id",
+        "displayOrder": 4,
+        "visibilityMode": true,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "ID",
+        "isGroupable": true,
+        "hasJBCXMNS": false,
+        "decimalPlaces": "0"
+      }
+  ],
+  "name": "SFDCReportForScatter",
+  "whereAdvanceFilter": {
+    "filterLogic": "JBCXM__1 AND JBCXM__2",
+    "filterCriteria": [
+      {
+        "value": "A",
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "TEXT",
+        "logicalOperator": "AND",
+        "operator": "e",
+        "name": "JBCXM__Account__r.Name",
+        "isNull": false,
+        "fieldLabel": "Account Name",
+        "alias": "JBCXM__1",
+        "locked": false
+      },
+      {
+        "value": "A",
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "TEXT",
+        "logicalOperator": "AND",
+        "operator": "e",
+        "name": "JBCXM__Assignee__r.Name",
+        "isNull": false,
+        "fieldLabel": "Assignee Name",
+        "alias": "JBCXM__2",
+        "locked": false
+      }
+    ]
+  },
+  "havingAdvanceFilter": {
+    "filterLogic": "JBCXM__1 AND JBCXM__2",
+    "filterCriteria": [
+      {
+        "value": 1,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "TEXT",
+        "logicalOperator": "AND",
+        "operator": "e",
+        "name": "JBCXM__Account__r.Name",
+        "fieldLabel": "Account Name",
+        "alias": "JBCXM__1",
+        "locked": false,
+        "aggregation": "COUNT"
+      },
+      {
+        "value": 2,
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "DATETIME",
+        "logicalOperator": "AND",
+        "operator": "n",
+        "name": "CreatedDate",
+        "fieldLabel": "Created Date",
+        "alias": "JBCXM__2",
+        "locked": false,
+        "aggregation": "COUNT"
+      }
+    ]
+  },
+  "Dimensions": [
+    {
+      "summerizedBy": null,
+      "objectName": "JBCXM__CTA__c",
+      "name": "JBCXM__DueDate__c",
+      "label": "Due Date",
+      "groupable": true,
+      "aliasName": "Cat1",
+      "fieldType": "DATE",
+      "hasJBCXMNS": false,
+      "stacked": false
+    },
+    {
+      "summerizedBy": null,
+      "objectName": "JBCXM__CTA__c",
+      "name": "Id",
+      "label": "Id",
+      "groupable": true,
+      "aliasName": "Cat2",
+      "fieldType": "ID",
+      "hasJBCXMNS": false,
+      "stacked": false
+    }
+  ],
+  "Measures": [
+    {
+      "objectName": "JBCXM__CTA__c",
+      "name": "JBCXM__Account__r.Name",
+      "label": "Count of Account Name",
+      "graphType": null,
+      "aggType": "COUNT",
+      "aliasName": "DS1",
+      "fieldType": "TEXT",
+      "hasJBCXMNS": false,
+      "decimalPlaces": 0
+    },
+    {
+      "objectName": "JBCXM__CTA__c",
+      "name": "CreatedDate",
+      "label": "Count of Created Date",
+      "graphType": null,
+      "aggType": "COUNT",
+      "aliasName": "DS2",
+      "fieldType": "DATETIME",
+      "hasJBCXMNS": false,
+      "decimalPlaces": 0
+    }
+  ],
+  "reportQueryOption": {
+    "limit": 5,
+    "orderBy": [
+      {
+        "name": "JBCXM__DueDate__c",
+        "label": "Due Date",
+        "objectName": "JBCXM__CTA__c",
+        "fieldType": "DATE",
+        "isGroupable": true,
+        "sortOrder": "DESC",
+        "hasJBCXMNS": false
+      }
+    ]
+  },
+  "graphType": "SCATTER",
+  "VisualType": "????",
+  "baseObject": "JBCXM__CTA__c"
+}

@@ -1,0 +1,89 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4046",
+  "ruleDescription": "GS-4046 - Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "MIN",
+          "sourceField": "rules_c_Number",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "SUM",
+          "sourceField": "rules_c_Number",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "rules_c_Date"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "C_lookup",
+            "sourceField": "C_lookup Name",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": [
+        {
+          "showField": "CalculatedField - 1",
+          "operator": "not equal to",
+          "isNullCheck": true
+        },
+        {
+          "showField": "CalculatedField - 2",
+          "operator": "not equal to",
+          "isNullCheck": true
+        }
+      ]
+    }
+  ]
+}

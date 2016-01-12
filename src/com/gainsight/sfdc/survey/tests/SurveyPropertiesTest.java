@@ -39,15 +39,15 @@ public class SurveyPropertiesTest extends SurveySetup{
 		sfdc.runApexCode(resolveStrNameSpace(SURVEYDATA_CLEANUP));
 		updateNSURLInAppSettings(nsConfig.getNsURl());
 		sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCS));
-		ns.init();
-		ns.tenantAutoProvision();
+        ns.init();
+        ns.tenantAutoProvision();
         MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl(NSTestBase.header);
-        if(!integrationImpl.isMDAAuthorized()) {
+        if (!integrationImpl.isMDAAuthorized()) {
             Log.info("MDA is not authorised, so authorizing now");
-        gs.enableOAuthForOrg();
+            gs.enableOAuthForOrg();
         }
-		gs.updateAccessKeyInApplicationSettingForGSEmail();
-	}
+        gs.updateAccessKeyInApplicationSettingForGSEmail();
+    }
     
 	@TestInfo(testCaseIds={"GS-2662","GS-2667","GS-2668","GS-2669"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel", enabled=true)
