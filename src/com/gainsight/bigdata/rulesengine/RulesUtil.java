@@ -956,4 +956,40 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return result;
 	}
+
+	/**
+	 * @param ruleName            - ruleName to get the results shown in the preview results
+	 * @param totalRecordsToFetch - payload/entity to fetch records
+	 * @return - returns preview results of a rule as list of hashmap
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
+		String ruleId = getRuleId(ruleName);
+		ResponseObj responseObj = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
+		Log.info("Response Obj : " + responseObj.toString());
+		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+			NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+			return mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {});
+		} else {
+			throw new RuntimeException("Failed to get preview result records");
+		}
+	}
+
+	/**
+	 * @param ListofMap - List of hashmap
+	 * @param records   - List of fields to fetch data
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> getRecordsFromListofMap(List<Map<String, String>> ListofMap, String[] records) throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		for (Map<String, String> Record : ListofMap) {
+			Map<String, String> map = new HashMap<String, String>();
+			for (String record : records) {
+				map.put(record, Record.get(record));
+			}
+			list.add(map);
+		}
+		return list;
+	}
 }
