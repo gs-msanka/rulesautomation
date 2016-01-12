@@ -38,6 +38,8 @@
                <include name="testCloningOFARule" />
                <include name="testDeleteRule" />
                <include name="testEditARule" />
+               <include name="verifyRecordsOnDateFiltersUsingNativeData" />
+               <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
