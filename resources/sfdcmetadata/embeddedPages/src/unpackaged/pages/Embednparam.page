@@ -1,0 +1,10 @@
+<apex:page >
+
+
+  
+ <h1>    {!$CurrentPage.parameters.param}   </h1>
+ <h1>    {!$CurrentPage.parameters.param2}   </h1>
+  <h1>    {!$CurrentPage.parameters.param3}   </h1>
+ 
+
+</apex:page>

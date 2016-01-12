@@ -1,0 +1,95 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4046-using-Mongo-Calculatedmeasures",
+  "ruleDescription": "GS-4046-using-Mongo-Calculatedmeasures- Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "MIN",
+          "sourceField": "SumOfTwoMeasures",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "SUM",
+          "sourceField": "SubstractionOfTwoMeasures",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AccountName",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "AccountName",
+            "operator": "starts with",
+            "value": "input_RULESUI Account"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "AccountName",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": [
+        {
+          "showField": "CalculatedField - 1",
+          "operator": "not equal to",
+          "isNullCheck": true
+        },
+        {
+          "showField": "CalculatedField - 2",
+          "operator": "not equal to",
+          "isNullCheck": true
+        }
+      ]
+    }
+  ]
+}

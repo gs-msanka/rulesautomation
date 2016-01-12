@@ -89,7 +89,9 @@ class BaseXPathConstants {
 		XPATHCONSTANTS.put("AGGREGATION_VALUE_CLOSE",
 				"//label[contains(text(),'Aggregation')]/parent::div/preceding-sibling::div[@class='gs-rb-report-close pull-right']");
 		XPATHCONSTANTS.put("DISPLAY", "//span[contains(text(),'Display')]/following-sibling::input");
-    }
+		XPATHCONSTANTS.put("SHOWMEEXPAND",
+				"//label[contains(text(),'Show me')]/following-sibling::div[@class='gs-rb-show-count']");
+	}
 }
 
 class SFDCXPathConstants extends BaseXPathConstants {

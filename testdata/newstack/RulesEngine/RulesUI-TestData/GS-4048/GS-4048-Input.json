@@ -11,10 +11,10 @@
         "calculationType": "Aggregation",
         "aggregationConfig": {
           "aggregationCalculation": "AVG",
-          "sourceField": "rules_c_Number",
+          "sourceField": "Custom_Number3",
           "periodType": "Past",
           "noOfPeriods": "4",
-          "granularity": "Days",
+          "granularity": "Weeks",
           "adjustForMissingData": "true"
         }
       },
@@ -23,23 +23,32 @@
         "calculationType": "Aggregation",
         "aggregationConfig": {
           "aggregationCalculation": "AVG",
-          "sourceField": "Custom_Number3",
+          "sourceField": "rules_c_Number",
           "periodType": "Past",
-          "noOfPeriods": "3",
-          "granularity": "Months",
-          "adjustForMissingData": "true"
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
         }
       },
       {
         "fieldName": "CalculatedField - 3",
         "calculationType": "Aggregation",
         "aggregationConfig": {
-          "aggregationCalculation": "AVG",
+          "aggregationCalculation": "COUNT",
           "sourceField": "Custom_Number2",
           "periodType": "Past",
-          "noOfPeriods": "4",
-          "granularity": "Years",
-          "adjustForMissingData": "true"
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 4",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT_DISTINCT",
+          "sourceField": "Custom_Number4",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
         }
       }
     ],
@@ -49,18 +58,6 @@
         "showFields": [
           {
             "fieldName": "C_lookup",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "rules_c_Number",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number2",
-            "showAdvancedName": ""
-          },
-          {
-            "fieldName": "Custom_Number3",
             "showAdvancedName": ""
           },
           {
@@ -100,6 +97,11 @@
             "sourceObject": "",
             "sourceField": "CalculatedField - 3",
             "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
           }
         ]
       },

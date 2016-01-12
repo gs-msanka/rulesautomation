@@ -1,0 +1,19 @@
+{
+  "jobName": "Load Data into custom object",
+  "jobType": "Load Data into custom object",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object2.csv",
+    "outputFile": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object-Output.csv",
+    "fields": [
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "T2_CustomDate1",
+        "timeZone": "America/Los_Angeles"
+      }
+    ]
+  }
+}
