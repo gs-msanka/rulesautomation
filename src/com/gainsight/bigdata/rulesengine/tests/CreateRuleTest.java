@@ -211,24 +211,6 @@ public class CreateRuleTest extends BaseTest {
         }
     }
 
-    @TestInfo(testCaseIds = { "GS-9069","GS-4232","GS-4742","GS-4749"})
-    @Test
-    public void testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea() throws Exception {
-        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC3.json"), RulesPojo.class);
-        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-        rulesManagerPage.clickOnAddRule();
-        rulesEngineUtil.createRuleFromUi(rulesPojo);
-        Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
-        List<RuleAction> ruleActions = rulesPojo.getSetupActions();
-        for (RuleAction ruleAction : ruleActions) {
-            JsonNode actionObject = ruleAction.getAction();
-            CTAAction ctaAction = mapper.readValue(actionObject, CTAAction.class);
-            Assert.assertTrue(rulesUtil.isCTACreateSuccessfully(ctaAction.getPriority(), ctaAction.getStatus(), sfdcInfo.getUserId(),
-                    ctaAction.getType(), ctaAction.getReason(), ctaAction.getComments(), ctaAction.getName(), ctaAction.getPlaybook()),
-                    "verify whether cta action configured resulted in  correct cta or not");
-        }
-    }
-
     @TestInfo(testCaseIds = { "GS-9070"})
     @Test
     public void testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea() throws Exception {
