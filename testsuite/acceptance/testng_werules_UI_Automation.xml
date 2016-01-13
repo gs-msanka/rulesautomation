@@ -48,6 +48,7 @@
          <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithGradingSchemeTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.SetScoreActionWithColorSchemeTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.CalculatedFieldsAndMeasuresTest"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleTestWithNativeData"/>
       </classes>
    </test>
    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA REDSHIFT DataBase" preserve-order="true">
