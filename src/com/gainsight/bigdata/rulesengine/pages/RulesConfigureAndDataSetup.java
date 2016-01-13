@@ -376,9 +376,14 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		checkBoxes.add("Custom_Checkbox2");
 		objField.setCheckBoxes(checkBoxes);
 
-		List<String> Email = new ArrayList<String>();
-		Email.add("rules_c_Email");
-		objField.setEmails(Email);
+        List<String> Email = new ArrayList<String>();
+        Email.add("rules_c_Email");
+        Email.add("customEmail2");
+        Email.add("customEmail3");
+        Email.add("customEmail4");
+        Email.add("customEmail5");
+        Email.add("customEmail6");
+        objField.setEmails(Email);
 
 		List<String> Percent = new ArrayList<String>();
 		Percent.add("rules_c_Percent");
@@ -430,10 +435,20 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 
         List<String> phone = new ArrayList<String>();
         phone.add("rules_phone");
+        phone.add("customPhone2");
+        phone.add("customPhone3");
+        phone.add("customPhone4");
+        phone.add("customPhone5");
+        phone.add("customPhone6");
         objField.setPhones(phone);
 
         List<String> URL = new ArrayList<String>();
         URL.add("rules_URL");
+        URL.add("customUrl2");
+        URL.add("customUrl3");
+        URL.add("customUrl4");
+        URL.add("customUrl5");
+        URL.add("customUrl6");
         objField.setURLs(URL);
 
 		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();

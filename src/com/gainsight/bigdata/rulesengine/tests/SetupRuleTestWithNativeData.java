@@ -2,11 +2,13 @@ package com.gainsight.bigdata.rulesengine.tests;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.rulesengine.pages.RulesConfigureAndDataSetup;
 import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
 import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
 import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
@@ -39,6 +41,7 @@ public class SetupRuleTestWithNativeData extends BaseTest {
     private final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM C_Custom__c];";
     private String rulesManagerPageUrl;
     private RulesManagerPage rulesManagerPage;
+    private RulesConfigureAndDataSetup rulesConfigureAndDataSetup;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -47,10 +50,12 @@ public class SetupRuleTestWithNativeData extends BaseTest {
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
-/*        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+        rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
+        rulesConfigureAndDataSetup.createCustomObjectAndFields();
         sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Data_Into_CustomObject.txt"), JobInfo.class);
-        dataETL.execute(jobInfo);*/
+        dataETL.execute(jobInfo);
     }
 
     @BeforeMethod
