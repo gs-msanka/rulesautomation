@@ -9,9 +9,7 @@
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
-               <include name="testCtaActionWithCalculatedMeasuresUsingMdaSubjectArea" />
                <include name="testCtaActionWithCalculatedFieldsAndMeasuresUsingMdaSubjectArea" />
-               <include name="testLoadToCustomersWithMatrixData" />
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMdaTest" />
@@ -36,8 +34,6 @@
                <include name="testCloningOFARule" />
                <include name="testDeleteRule" />
                <include name="testEditARule" />
-               <include name="verifyRecordsOnDateFiltersUsingNativeData" />
-               <include name="verifyRecordsOnDateTimeFiltersUsingNativeData" />
             </methods>
          </class>
          <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
@@ -56,7 +52,6 @@
       <classes>
          <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
             <methods>
-               <include name="testLoadToCustomersWithMatrixData" />
                <include name="verifyRecordsOnDateTimeFiltersUsingMdaData" />
                <include name="verifyRecordsOnDateFiltersUsingMdaData" />
             </methods>
