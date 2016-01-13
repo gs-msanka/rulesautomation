@@ -1,0 +1,46 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Verify all operators are working for Boolean fields",
+  "ruleDescription": "Verify all operators are working for Boolean fields- Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Checkbox2",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_Checkbox",
+            "operator": "equals",
+            "value": "booleanCheck"
+          },
+          {
+            "fieldName": "Custom_Checkbox2",
+            "operator": "not equal to",
+            "value": ""
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "A AND B",
+    "timeIdentifier": "Created Date"
+  }
+}
