@@ -117,7 +117,7 @@
         ]
       }
     ],
-    "advancedLogic": "(S AND A AND B AND C AND D AND E AND F AND G AND H AND I AND J AND K AND L) OR (M AND N AND O AND P AND Q AND R)",
+    "advancedLogic": "(S AND A AND (B OR C OR (D AND E AND F AND G) OR (H AND I AND J AND K AND L))) OR (M AND N AND O AND P AND Q AND R)",
     "timeIdentifier": "Created Date"
   }
 }

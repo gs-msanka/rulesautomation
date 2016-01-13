@@ -957,23 +957,42 @@ public void setupRule(HashMap<String,String> testData){
 		return result;
 	}
 
-	/**
-	 * @param ruleName            - ruleName to get the results shown in the preview results
-	 * @param totalRecordsToFetch - payload/entity to fetch records
-	 * @return - returns preview results of a rule as list of hashmap
-	 * @throws Exception
-	 */
-	public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
-		String ruleId = getRuleId(ruleName);
-		ResponseObj responseObj = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
-		Log.info("Response Obj : " + responseObj.toString());
-		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-			NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-			return mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {});
-		} else {
-			throw new RuntimeException("Failed to get preview result records");
-		}
-	}
+    /**
+     * @param ruleName            - ruleName to get the results shown in the preview results
+     * @param totalRecordsToFetch - payload/entity to fetch records
+     * @return - returns preview results of a rule as list of hashmap
+     * @throws Exception
+     */
+    public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
+        String ruleId = getRuleId(ruleName);
+        ResponseObj responseObj = waitForPreviewResults(ruleId, ruleName, totalRecordsToFetch);
+        Log.info("Response Obj : " + responseObj.toString());
+        List<Map<String, String>> results = null;
+        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if (rs != null && rs.isResult())
+                results = mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {
+                });
+        } else {
+            throw new RuntimeException("Failed to get preview result records");
+        }
+        return results;
+    }
+
+    public ResponseObj waitForPreviewResults(final String ruleId, String ruleName, final String totalRecordsToFetch) {
+        Log.info("Waiting for rule with name " + ruleName + " to get preview results");
+        return CommonWait.waitForCondition(MAX_WAIT_TIME, INTERVAL_TIME, new ExpectedCommonWaitCondition<ResponseObj>() {
+            @Override
+            public ResponseObj apply() {
+                try {
+                    result = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error occurred while getting records", e);
+                }
+                return result;
+            }
+        });
+    }
 
 	/**
 	 * @param ListofMap - List of hashmap

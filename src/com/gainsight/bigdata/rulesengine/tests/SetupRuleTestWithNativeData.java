@@ -134,7 +134,7 @@ public class SetupRuleTestWithNativeData extends BaseTest {
         Log.info("Total Records are " + mapper.writeValueAsString(PreviewResults));
         String records[] = {"C_lookup__r.Name"};
         List<Map<String, String>> actualData = rulesUtil.getRecordsFromListofMap(PreviewResults, records);
-        String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 3\"}]";
+        String expectedString = "[{\"C_lookup__r.Name\":\"RULESUI Account 1\"},{\"C_lookup__r.Name\":\"RULESUI Account 2\"},{\"C_lookup__r.Name\":\"RULESUI Account 3\"},{\"C_lookup__r.Name\":\"RULESUI Account 4\"},{\"C_lookup__r.Name\":\"RULESUI Account 5\"},{\"C_lookup__r.Name\":\"RULESUI Account 6\"},{\"C_lookup__r.Name\":\"RULESUI Account 7\"},{\"C_lookup__r.Name\":\"RULESUI Account 8\"},{\"C_lookup__r.Name\":\"RULESUI Account 9\"}]";
         List<Map<String, String>> expectedData = mapper.readValue(expectedString, new TypeReference<List<Map<String, String>>>() {});
         Log.info("ExpectedData : " + mapper.writeValueAsString(expectedData));
         Log.info("ActualData : " + mapper.writeValueAsString(actualData));
