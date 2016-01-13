@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Giribabu on 21/05/15.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportInfo {
 
