@@ -14,23 +14,7 @@
    </test>
    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest">
-            <methods>
-               <include name="testAdditionAndRemovalOFFieldsInDataLoadConfig" />
-               <include name="testGainsightObjectsArePresentInDataLoadConfigurationList" />
-               <include name="dailyScheduler" />
-               <include name="weeklyScheduler" />
-               <include name="monthlyScheduler" />
-               <include name="yearlyScheduler" />
-               <include name="testAllActionsUsingNativeData" />
-               <include name="testCTAActionWithCalculatedFieldsOnUsageDataObject" />
-               <include name="verifyDataLoadConfiguration" />
-               <include name="testRuleInactive" />
-               <include name="testCloningOFARule" />
-               <include name="testDeleteRule" />
-               <include name="testEditARule" />
-            </methods>
-         </class>
+         <class name="com.gainsight.bigdata.rulesengine.tests.CreateRuleTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToMilestonesAndFeaturesTest" />
          <class name="com.gainsight.bigdata.rulesengine.tests.LoadToCustomersTest" />
