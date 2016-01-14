@@ -455,9 +455,4 @@ public class CreateRuleTest extends BaseTest {
 		rulesManagerPage.editRuleByName(rulesPojo.getRuleName());
 		Assert.assertTrue(rulesManagerPage.isEditRulePagePresent(), "Check whether clicking on edit rule lands on editrule page or not!!");
 	}
-
-    @AfterClass
-    public void tearDown() {
-        mongoConnection.mongoUtil.closeConnection();
-    }
 }
