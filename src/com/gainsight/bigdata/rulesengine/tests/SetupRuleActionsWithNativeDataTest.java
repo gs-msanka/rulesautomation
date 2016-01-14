@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by Abhilash Thaduka on 1/11/2016.
  */
-public class SetupRuleTestWithNativeData extends BaseTest {
+public class SetupRuleActionsWithNativeDataTest extends BaseTest {
 
     private static final String CREATE_ACCOUNTS_CUSTOMERS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt";
     private static final String CLEANUP_SCRIPT = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Cleanup.apex";

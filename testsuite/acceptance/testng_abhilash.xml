@@ -6,7 +6,7 @@
    </listeners>
    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
       <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleTestWithNativeData"/>
+         <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
       </classes>
    </test>
 </suite>
