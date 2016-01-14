@@ -285,7 +285,9 @@ public void setupRule(HashMap<String,String> testData){
 			ResponseObj result = webAction.doGet(APP_API_ASYNC_STATUS
 					+ "?ruleId=" + ruleId + "",
 					header.getAllHeaders());
+            Log.info(String.valueOf(result));
 			ResponseObject res = RulesUtil.convertToObject(result.getContent());
+            Log.info(String.valueOf(res));
 			List<Object> data = (List<Object>) res.getData();
 			Map<String, Object> map = (Map<String, Object>) data.get(0);
 			if (map.get("status") != null) {
@@ -955,5 +957,45 @@ public void setupRule(HashMap<String,String> testData){
 			Log.error("Failed due to : " + verifier.getAssertMessages().toString());
 		}
 		return result;
+	}
+
+    /**
+     * @param ruleName            - ruleName to get the results shown in the preview results
+     * @param totalRecordsToFetch - payload/entity to fetch records
+     * @return - returns preview results of a rule as list of hashmap
+     * @throws Exception
+     */
+    public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
+        String ruleId = getRuleId(ruleName);
+        ResponseObj responseObj = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
+        Log.info("Response Obj : " + responseObj.toString());
+        List<Map<String, String>> results = null;
+        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+            NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            if (rs != null && rs.isResult())
+                results = mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {
+                });
+        } else {
+            throw new RuntimeException("Failed to get preview result records");
+        }
+        return results;
+    }
+
+	/**
+	 * @param ListofMap - List of hashmap
+	 * @param records   - List of fields to fetch data
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> getRecordsFromListofMap(List<Map<String, String>> ListofMap, String[] records) throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		for (Map<String, String> Record : ListofMap) {
+			Map<String, String> map = new HashMap<String, String>();
+			for (String record : records) {
+				map.put(record, Record.get(record));
+			}
+			list.add(map);
+		}
+		return list;
 	}
 }

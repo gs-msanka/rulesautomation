@@ -130,7 +130,7 @@
         ]
       }
     ],
-    "advancedLogic": "A and B and (C or D or E) and F and G",
+    "advancedLogic": "A AND B AND (C OR D OR E) AND F AND G",
     "timeIdentifier": "Created Date"
   },
   "setupActions": [

@@ -1,0 +1,93 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Supported fields for Filters",
+  "ruleDescription": "Supported fields for Filters",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "C_lookup Name",
+            "operator": "starts with",
+            "value": "input_RULESUI Account"
+          },
+          {
+            "fieldName": "Custom_Currency",
+            "operator": "not equal to",
+            "value": "input_4712154"
+          },
+          {
+            "fieldName": "rules_c_Date",
+            "operator": "less or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "rules_c_DateTime",
+            "operator": "less or equal",
+            "value": "select_Rule Date"
+          },
+          {
+            "fieldName": "rules_c_Email",
+            "operator": "equals",
+            "value": "input_athaduka@gainsight.com"
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "operator": "greater or equal",
+            "value": "input_50"
+          },
+          {
+            "fieldName": "rules_c_Percent",
+            "operator": "greater or equal",
+            "value": "input_100"
+          },
+          {
+            "fieldName": "rules_phone",
+            "operator": "less than",
+            "value": "input_999999999999999"
+          },
+          {
+            "fieldName": "rules_c_Picklist",
+            "operator": "includes",
+            "value": "select_Pvalue1"
+          },
+          {
+            "fieldName": "rules_c_MultiPicklist",
+            "operator": "excludes",
+            "value": "select_MPvalue2"
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "operator": "not equal to",
+            "value": "input_sdadasdad"
+          },
+          {
+            "fieldName": "rules_URL",
+            "operator": "equals",
+            "value": "input_http:://gainsight.com"
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "operator": "not equal to",
+            "value": "booleanCheck"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "(A AND B AND C AND D AND E AND F) OR (G AND H AND J AND K AND L AND I) OR M",
+    "timeIdentifier": "Created Date"
+  }
+}

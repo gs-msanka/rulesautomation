@@ -1,0 +1,79 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Supported fields for show.",
+  "ruleDescription": "Supported fields for showfields",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Checkbox",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "Custom_Currency",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Date",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_DateTime",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Email",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Number",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Percent",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_phone",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Picklist",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_MultiPicklist",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_Text",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_c_TextArea",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "rules_URL",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "Created Date"
+  }
+}

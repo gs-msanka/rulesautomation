@@ -1,0 +1,123 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "Supported fields for Filters",
+  "ruleDescription": "Supported fields for Filters",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "setupData": [
+      {
+        "sourceObject": "C_Custom Object",
+        "showFields": [
+          {
+            "fieldName": "C_lookup",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": [
+          {
+            "fieldName": "rules_c_Email",
+            "operator": "equals",
+            "value": "input_athaduka@gainsight.com"
+          },
+          {
+            "fieldName": "customEmail2",
+            "operator": "not equal to",
+            "value": "input_challa24@asgainsight.com"
+          },
+          {
+            "fieldName": "customEmail3",
+            "operator": "greater or equal",
+            "value": "input_abhilash31@gainsight.com"
+          },
+          {
+            "fieldName": "customEmail4",
+            "operator": "less than",
+            "value": "input_anirudh44@gainsight.com"
+          },
+          {
+            "fieldName": "customEmail5",
+            "operator": "starts with",
+            "value": "input_sai"
+          },
+          {
+            "fieldName": "customEmail6",
+            "operator": "contains",
+            "value": "input_gain"
+          },
+          {
+            "fieldName": "rules_phone",
+            "operator": "equals",
+            "value": "input_123456789"
+          },
+          {
+            "fieldName": "customPhone2",
+            "operator": "not equal to",
+            "value": "input_23"
+          },
+          {
+            "fieldName": "customPhone3",
+            "operator": "greater or equal",
+            "value": "input_98746"
+          },
+          {
+            "fieldName": "customPhone4",
+            "operator": "less than",
+            "value": "input_74125899"
+          },
+          {
+            "fieldName": "customPhone5",
+            "operator": "starts with",
+            "value": "input_78"
+          },
+          {
+            "fieldName": "customPhone6",
+            "operator": "contains",
+            "value": "input_3"
+          },
+          {
+            "fieldName": "rules_URL",
+            "operator": "equals",
+            "value": "input_http:://google.com"
+          },
+          {
+            "fieldName": "customUrl2",
+            "operator": "not equal to",
+            "value": "input_asa"
+          },
+          {
+            "fieldName": "customUrl3",
+            "operator": "greater or equal",
+            "value": "input_http::sas//yahoo.com"
+          },
+          {
+            "fieldName": "customUrl4",
+            "operator": "less than",
+            "value": "input_http:://yasaahoo.com"
+          },
+          {
+            "fieldName": "customUrl5",
+            "operator": "starts with",
+            "value": "input_htt"
+          },
+          {
+            "fieldName": "customUrl6",
+            "operator": "contains",
+            "value": "input_ht"
+          },
+          {
+            "fieldName": "C_lookup Name",
+            "operator": "starts with",
+            "value": "input_RULE"
+          }
+        ]
+      }
+    ],
+    "advancedLogic": "(S AND A AND (B OR C OR (D AND E AND F AND G) OR (H AND I AND J AND K AND L))) OR (M AND N AND O AND P AND Q AND R)",
+    "timeIdentifier": "Created Date"
+  }
+}
