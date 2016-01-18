@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "RedshiftReportCQ9043",
+      "reportName": "Auto_RedshiftReportCQ9043",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

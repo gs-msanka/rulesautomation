@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "PieReport9031",
+      "reportName": "Auto_PieReport9031",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",
@@ -71,7 +71,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           },
@@ -85,7 +85,7 @@
               90
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }

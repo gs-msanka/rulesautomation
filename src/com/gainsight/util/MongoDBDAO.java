@@ -255,6 +255,22 @@ public class MongoDBDAO  {
 		whereQuery.put("TenantId", tenantID);
 		whereQuery.put("CollectionDetails.CollectionName", new Document("$regex", documentMatcher).append("$options", "i"));
 		Log.info(whereQuery.toString());
-		return mongoUtil.removeMany(mongoCollection, whereQuery);
+        return mongoUtil.removeMany(mongoCollection, whereQuery);
+    }
+
+    /**
+     * Method to delete a particular document based on collectionName from reportMaster, it will work only for reportmaster
+     *
+     * @param tenantID        - Tenant id
+     * @param mongoCollection - collectionName
+     * @param documentMatcher - collectionName Matcher
+     * @return
+     */
+    public boolean deleteMongoDocumentFromReportMaster(String tenantID, String mongoCollection, String documentMatcher) {
+        Document whereQuery = new Document();
+        whereQuery.put("TenantId", tenantID);
+        whereQuery.put("ReportInfo.reportName", new Document("$regex", documentMatcher).append("$options", "i"));
+        Log.info(whereQuery.toString());
+        return mongoUtil.removeMany(mongoCollection, whereQuery);
     }
 }

@@ -27,7 +27,7 @@
           "decimalPlaces": 0
         }
       ],
-      "reportName": "MDAAggregationBoolean",
+      "reportName": "Auto_MDAAggregationBoolean",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "StackedBarReport9037",
+      "reportName": "Auto_StackedBarReport9037",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",

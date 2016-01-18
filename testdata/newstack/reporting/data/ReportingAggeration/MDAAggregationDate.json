@@ -57,7 +57,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "MDAAggregationDate",
+      "reportName": "Auto_MDAAggregationDate",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
