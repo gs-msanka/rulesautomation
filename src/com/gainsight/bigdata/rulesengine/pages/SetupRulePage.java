@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.rulesengine.pages;
 
+import org.openqa.selenium.Keys;
 import org.testng.Assert;
 
 import com.gainsight.bigdata.rulesengine.pojo.setuprule.CalculatedField;
@@ -39,6 +40,7 @@ public class SetupRulePage extends BasePage {
     private final String ACTION_FILTER_IVALUE = "//div[@class='advance-logic-place-holder']/following-sibling::div//span[contains(text(),'%s')]/../../../following-sibling::div"
     	    + "//input[contains(@class,'value-text')]";
     private final String GSCUSTOMERS_CHECKBOX = "//div[contains(text(),'Apply to Gainsight customers')]/preceding-sibling::input";
+	private final String SETUPRULE_FILTER_BOOLEAN_CHECK = "//div[@class='advance-logic-place-holder']/following-sibling::div//span[contains(text(),'%s')]/ancestor::div[contains(@class, 'gs-condition-lhs')]/following-sibling::div[contains(@class, 'gs-condition-rhs')]/descendant::input[@type='checkbox']";
     
     
     private final String ADD_CALCULATED_FIELD_LINKTEXT = "Add Calculated Field";
@@ -97,6 +99,9 @@ public class SetupRulePage extends BasePage {
 
     public void enterAdvanceLogic(String advanceLogic) {
         field.clearAndSetText(ADVANCE_LOGIC_INPUT, advanceLogic);
+        element.getElement(ADVANCE_LOGIC_INPUT).sendKeys(Keys.ENTER);
+        // Clickng somewhere on screen to auto change the additional criteria from small to capital case if any
+        item.click("//div[@class='RuleContainer']/descendant::h1[contains(@class, 'rule-name')]");
     }
 
     public SetupRuleActionPage clickOnNext() {
@@ -172,10 +177,12 @@ public class SetupRulePage extends BasePage {
 			value = value.substring(6);
 			String filterIValue = String.format(ACTION_FILTER_IVALUE, object+ "::" + fields);
 			field.clearAndSetText(filterIValue, value);
+		} else if (value.startsWith("booleanCheck")) {
+			item.click(String.format(SETUPRULE_FILTER_BOOLEAN_CHECK, object + "::" + fields));
 		}
 	}
-    
-    public void dragAndDropFieldsToShowAreaForMatrixData(String field, String joinWithCollection) {
+
+	public void dragAndDropFieldsToShowAreaForMatrixData(String field, String joinWithCollection) {
 		String sourceXpath = null;
 		if (!field.startsWith("lookup_")) {
 			sourceXpath = String.format(MDA_OBJECT_SOURCE_FIELD, field);
@@ -253,7 +260,7 @@ public class SetupRulePage extends BasePage {
 				element.clearAndSetText(CALCULATED_FIELD_NO_OF_PERIODS_B_SECTION,calculatedField.getFieldBConfig().getAggregation().getNoOfPeriods());
 				item.click(CALCULATED_FIELD_GRANULARITY_B_SECTION);
 				selectValueInDropDown(calculatedField.getFieldBConfig().getAggregation().getGranularity(), true);
-				if (calculatedField.getFieldAConfig().getAggregation().isAdjustForMissingData()) {
+				if (calculatedField.getFieldBConfig().getAggregation().isAdjustForMissingData()) {
 					item.click(CALCULATED_FILED_ADJUST_MISSINGDATA_B_SECTION);
 				} else {
 					Log.info("Boolean is not checked - Not Adjusting For Missing data");

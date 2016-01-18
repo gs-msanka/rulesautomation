@@ -1,0 +1,111 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4048-using-mongo-redhsift-postgres",
+  "ruleDescription": "GS-4048-using mongo-redhsift-postgres - Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "AVG",
+          "sourceField": "CustomNumberWithDecimals1",
+          "periodType": "Past",
+          "noOfPeriods": "4",
+          "granularity": "Weeks",
+          "adjustForMissingData": "true"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "AVG",
+          "sourceField": "CustomNumberWithDecimals2",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT",
+          "sourceField": "CustomNumber1",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 4",
+        "calculationType": "Aggregation",
+        "aggregationConfig": {
+          "aggregationCalculation": "COUNT_DISTINCT",
+          "sourceField": "CustomNumber2",
+          "periodType": "Past",
+          "noOfPeriods": "15",
+          "granularity": "Weeks"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "AccountName",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "AccountName",
+            "destination": "C_Text"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

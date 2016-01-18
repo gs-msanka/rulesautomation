@@ -73,7 +73,7 @@ public class SmartListAllApiTest extends NSTestBase {
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
 
         if(true) {
-            sfdc.runApexCode("delete [select id from jbcxm__customerInfo__c];");
+            sfdc.runApexCode(resolveStrNameSpace("delete [select id from jbcxm__customerInfo__c];"));
             sfdc.runApexCode("delete [select id from contact];");
             metaUtil.createExtIdFieldOnAccount(sfdc);
             JobInfo accountJobInfo = mapper.readValue(new File(testDataDir+"/jobs/Accounts.json"), JobInfo.class);

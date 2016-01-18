@@ -1,0 +1,19 @@
+{
+  "jobName": "4238",
+  "jobType": "transform",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "RulesSFDCCustom__c",
+    "fields": [
+      "C_Number__c",
+      "C_Percent__c",
+      "ActiveUsers__c",
+      "AccPercentage__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4238/ActualData.csv"
+  }
+}

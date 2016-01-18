@@ -109,7 +109,7 @@
         ]
       }
     ],
-    "advancedLogic": "A and B and (C or D)",
+    "advancedLogic": "A AND B AND (C OR D)",
     "timeIdentifier": "Date"
   },
   "setupActions": [

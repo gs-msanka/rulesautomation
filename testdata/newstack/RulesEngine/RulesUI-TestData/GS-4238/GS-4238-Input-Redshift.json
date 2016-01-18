@@ -1,0 +1,150 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4238-using-RedShift-CalculatedmeasuresAndJoins",
+  "ruleDescription": "GS-4238-using-RedShift-CalculatedmeasuresAndJoins-Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "joinOnCollection": "RedShift-Joins-Collection-1",
+    "joinOnCollectionField": "T2_ID",
+    "joinWithCollection": "RedShift-Joins-Collection-2",
+    "selectObject": "RedShift-Joins-Collection-1",
+    "lookUpField": true,
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 1",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "CustomNumberWithDecimals1",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-ADD"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 2",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "CustomNumberWithDecimals2",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-SUBSTRACT"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT",
+            "sourceField": "CustomNumberWithDecimals2",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-SUBSTRACT"
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 4",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Actual value",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT_DISTINCT",
+            "sourceField": "CustomNumberWithDecimals2",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Show field",
+          "showField": "T1-ADD"
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "T2_ID",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "lookup_T1-ADD",
+            "showAdvancedName": ""
+          },
+          {
+            "fieldName": "lookup_T1-SUBSTRACT",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 1",
+            "destination": "C_Number"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 2",
+            "destination": "C_Percent"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

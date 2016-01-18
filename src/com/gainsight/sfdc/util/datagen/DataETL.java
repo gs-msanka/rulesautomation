@@ -314,13 +314,14 @@ public class DataETL implements IJobExecutor {
             csvData.add(0, headerRows);
             csvReader.close();
 
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(userDir+"/resources/datagen/process/Temp.csv"));
+			File tmpFile =  new File(userDir+"/resources/datagen/process/Temp.csv");
+			tmpFile.getParentFile().mkdirs();
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(tmpFile));
             csvWriter.writeAll(csvData);
             csvWriter.flush();
             csvWriter.close();
 
-            File f = new File(userDir+"/resources/datagen/process/Temp.csv");
-            return f;
+            return tmpFile;
         } else {
             return new File(fileName);
         }

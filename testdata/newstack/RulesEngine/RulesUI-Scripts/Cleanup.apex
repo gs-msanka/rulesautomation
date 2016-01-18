@@ -10,6 +10,7 @@ Delete [Select Id from JBCXM__AutomatedAlertRules__c];
 
 // Delete [select id from JBCXM__CustomerInfo__c];
 Delete [SELECT Id FROM JBCXM__CTA__c];
+Delete [SELECT Id FROM JBCXM__CSTask__c];
 Delete [SELECT Id FROM JBCXM__CustomerFeatures__c];
 Delete [SELECT Id FROM JBCXM__ScorecardFact__c];
 // Delete [SELECT Id FROM RulesSFDCCustom__c];

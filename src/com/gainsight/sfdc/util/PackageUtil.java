@@ -323,6 +323,20 @@ public class PackageUtil {
         }
     }
 
+    public void deployEmbeddedPageCode() {
+        Log.info("Started Deploying Permission Sets Custom Code");
+        try {
+            String srcDir = Application.basedir + "/resources/sfdcmetadata/embeddedPages/src";
+            String desDir = Application.basedir + "/resources/sfdcmetadata/temp";
+            String zipFileName = "EmbeddedPages";
+            createZipFile(srcDir, desDir, zipFileName);
+            deployZip(desDir + "/" + zipFileName + ".zip");
+        } catch (Exception e) {
+            Log.error("Failed to deploy permission sets", e);
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
     /**
      * Removed the widget page.
      * @param parentFile - the Widget file path

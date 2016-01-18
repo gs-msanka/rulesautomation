@@ -49,9 +49,18 @@ public class RulesManagerPage extends BasePage {
      * @return EditRulePage class object
      */
     public EditRulePage clickOnAddRule() {
-        item.click(ADD_RULE_LINK);
+        try {
+            env.setTimeout(3);
+            if (element.isElementPresent(ADD_RULE_LINK)) {
+                item.click(ADD_RULE_LINK);
+            } else {
+                item.click("//div[@class='Rules_homepage']/descendant::span[text()='Rule']");
+            }
+        } finally {
+            env.setTimeout(30);
+        }
         return new EditRulePage();
-    }
+}
 
     /**
      * Lists all the rules
