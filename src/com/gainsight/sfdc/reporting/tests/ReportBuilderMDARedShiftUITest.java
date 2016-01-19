@@ -96,7 +96,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         }
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-        mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_RedShift");
+      /*  mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_RedShift");
 
 
         if (!tenantDetails.isRedshiftEnabled()) {
@@ -174,7 +174,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         Assert.assertTrue(nsResponseObj5.isResult(), "Data is not loaded, please check log for more details");
 
         mongoDBDAO.deleteMongoDocumentFromReportMaster(
-                tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
+                tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");*/
     }
 
     @TestInfo(testCaseIds = {"GS-9041"})
@@ -428,6 +428,19 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/WhereFiltersWithExpressions.json"),
+                ReportMaster.class);
+        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+
+    }
+
+    @TestInfo(testCaseIds = {"GS-100386"})
+    @Test
+    public void mdaJoins() throws Exception {
+
+        ReportMaster reportMaster = mapper.readValue(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAJoins/reportsWithMDAJoins.json"),
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 

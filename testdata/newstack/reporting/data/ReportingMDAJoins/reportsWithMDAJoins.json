@@ -1,68 +1,85 @@
 {
   "ReportInfo": [
     {
-      "SchemaName": "Auto_RedShift_MDAData",
-      "CollectionID": "fa06a72d-75c2-42f6-87b9-c791bfc94359",
+      "SchemaName": "Auto_RedShift_MDADataJOIN2",
+      "CollectionID": "",
       "limit": 500,
       "Type": "adhoc",
       "Dimensions": [
         {
-          "col": "Date",
-          "axis": "row",
+          "col": "Join2Boolean",
+          "axis": "measure",
           "type": 0,
-          "dataType": "date",
-          "fieldDisplayName": "Date",
+          "dataType": "boolean",
+          "fieldDisplayName": "Join2Boolean",
           "collectionId": "",
-          "decimalPlaces": 0
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Join1Boolean",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join1Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": ""
+            }
+          }
         },
         {
           "col": "AccountName",
           "axis": "measure",
           "type": 0,
           "dataType": "string",
-          "fieldDisplayName": "Count of AccountName",
-          "collectionId": "",
-          "decimalPlaces": 0,
-          "agg_func": "count"
-        },
-        {
-          "col": "Join1Date1",
-          "axis": "measure",
-          "type": 0,
-          "dataType": "date",
-          "fieldDisplayName": "Count of Join1Date1",
+          "fieldDisplayName": "AccountName",
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "count",
           "pathMetaData": {
             "path": {
-              "lookupId": "30746e67-3fbc-4799-8749-c649964bfe26",
-              "lookupName": "autoredshiftmdadatajoin1_4f704641360e4317bea8f721fe15de5a__gsr_331"
-            }
-          }
-        },
-        {
-          "col": "Join2Number1",
-          "axis": "measure",
-          "type": 1,
-          "dataType": "number",
-          "fieldDisplayName": "Sum of Join2Number1",
-          "collectionId": "",
-          "decimalPlaces": 0,
-          "agg_func": "sum",
-          "pathMetaData": {
-            "path": {
-              "lookupId": "30746e67-3fbc-4799-8749-c649964bfe26",
-              "lookupName": "autoredshiftmdadatajoin1_4f704641360e4317bea8f721fe15de5a__gsr_331",
+              "lookupId": "",
+              "lookupName": "",
               "path": {
-                "lookupId": "3443309f-3c11-4bdd-9e50-2bef2572f4ad",
-                "lookupName": "autoredshiftmdadatajoin2_79220791a3eb487ab1681f996b0054a0__gsr"
+                "lookupId": "",
+                "lookupName": ""
               }
             }
           }
         }
       ],
       "drillDownReportDimensions": [
+        {
+          "col": "Join2Boolean",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join2Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Join1Boolean",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join1Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": ""
+            }
+          }
+        },
         {
           "col": "AccountName",
           "axis": "row",
@@ -71,60 +88,26 @@
           "fieldDisplayName": "AccountName",
           "collectionId": "",
           "decimalPlaces": 0,
-          "agg_func": "count"
-        },
-        {
-          "col": "Join1Date1",
-          "axis": "row",
-          "type": 0,
-          "dataType": "date",
-          "fieldDisplayName": "Join1Date1",
-          "collectionId": "",
-          "decimalPlaces": 0,
           "agg_func": "count",
           "pathMetaData": {
             "path": {
-              "lookupId": "30746e67-3fbc-4799-8749-c649964bfe26",
-              "lookupName": "autoredshiftmdadatajoin1_4f704641360e4317bea8f721fe15de5a__gsr_331"
-            }
-          }
-        },
-        {
-          "col": "Join2Number1",
-          "axis": "row",
-          "type": 1,
-          "dataType": "number",
-          "fieldDisplayName": "Join2Number1",
-          "collectionId": "",
-          "decimalPlaces": 0,
-          "agg_func": "sum",
-          "pathMetaData": {
-            "path": {
-              "lookupId": "30746e67-3fbc-4799-8749-c649964bfe26",
-              "lookupName": "autoredshiftmdadatajoin1_4f704641360e4317bea8f721fe15de5a__gsr_331",
+              "lookupId": "",
+              "lookupName": "",
               "path": {
-                "lookupId": "3443309f-3c11-4bdd-9e50-2bef2572f4ad",
-                "lookupName": "autoredshiftmdadatajoin2_79220791a3eb487ab1681f996b0054a0__gsr"
+                "lookupId": "",
+                "lookupName": ""
               }
             }
           }
-        },
-        {
-          "col": "Date",
-          "axis": "row",
-          "type": 0,
-          "dataType": "date",
-          "fieldDisplayName": "Date",
-          "collectionId": "",
-          "decimalPlaces": 0
         }
       ],
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "MDAJoinsReport"
+      "reportName": "Auto_MDAJoinsReport"
     }
   ],
   "newReport": true,
   "reportMasterRequired": false,
-  "format": "JSON"
+  "format": "JSON",
+  "displayType": "GRID"
 }
