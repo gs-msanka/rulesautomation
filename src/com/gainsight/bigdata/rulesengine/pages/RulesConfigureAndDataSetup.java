@@ -457,8 +457,15 @@ public class RulesConfigureAndDataSetup extends NSTestBase {
 		Customer_lookupListMap.put("ReferenceTo", "Account");
 		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesUI_Automation");
 		lookup.add(Customer_lookupListMap);
-		objField.setLookups(lookup);
-		metaUtil.createFieldsOnObject(sfdc, "C_Custom__c", objField);
-	}
+
+        HashMap<String, String> relationShipLookup = new HashMap<String, String>();
+        relationShipLookup.put("Name", "Relationship_lookup");
+        relationShipLookup.put("ReferenceTo", resolveStrNameSpace("JBCXM__GSRelationship__c"));
+        relationShipLookup.put("ReleationShipName", "Relationshiplookup_rulesUI_Automation");
+        lookup.add(relationShipLookup);
+        objField.setLookups(lookup);
+
+        metaUtil.createFieldsOnObject(sfdc, "C_Custom__c", objField);
+    }
 }
 
