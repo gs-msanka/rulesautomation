@@ -12,9 +12,9 @@
   "sfdc_apiVersion" : "32.0",
   "profiles" : {
     "default" : {
-      "sfdc_username" : "gs-ggolla@testing1.com",
-      "sfdc_password" : "ggolla@1215",
-      "sfdc_stoken"   : "IIsOiwmoaDvBTse6ahRmiXpuE"
+      "sfdc_username" : "sreenu@demo1.com",
+      "sfdc_password" : "GainSight@123!",
+      "sfdc_stoken" : "3gVq5I3rILPVj9xDO7MJL7Ls"
     },
     "marvels" : {
       "sfdc_username" : "marvels@gsautomation.com",
@@ -47,14 +47,19 @@
       "sfdc_stoken"   : "CNZBJ1vviBEfc7u4pYfXm7gDc"
     },
     "copilot" : {
-      "sfdc_username" : "copilot@gsautomation.com",
-      "sfdc_password" : "gainsight123",
-      "sfdc_stoken" : "F5aFyBg1zzGM891NcizPtySZ"
+      "sfdc_username": "copilot@gsautomation.com",
+      "sfdc_password": "gainsight123",
+      "sfdc_stoken": "F5aFyBg1zzGM891NcizPtySZ"
     },
-      "demo1" : {
-      "sfdc_username" : "abhilash@demo1.com",
-      "sfdc_password" : "1234567jbr",
-      "sfdc_stoken" : "y8K0qPMNX0CDM0goVJHq9akWo"
+    "demo1": {
+      "sfdc_username": "abhilash@demo1.com",
+      "sfdc_password": "1234567jbr",
+      "sfdc_stoken": "y8K0qPMNX0CDM0goVJHq9akWo"
+    },
+    "reporting": {
+      "sfdc_username": "jprawbranchorg1@gainsight.com",
+      "sfdc_password": "gainsight_test12345",
+      "sfdc_stoken": "XRtkg2EMhjUGI1Rvp6EiI7sh1"
     }
   }
 }
