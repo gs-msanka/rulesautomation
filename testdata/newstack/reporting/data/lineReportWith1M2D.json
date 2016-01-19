@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "LineReport9035",
+      "reportName": "Auto_LineReport9035",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",

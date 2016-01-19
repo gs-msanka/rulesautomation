@@ -57,7 +57,7 @@
           "decimalPlaces": 0
         }
       ],
-      "reportName": "MDAAggregationDateTime",
+      "reportName": "Auto_MDAAggregationDateTime",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

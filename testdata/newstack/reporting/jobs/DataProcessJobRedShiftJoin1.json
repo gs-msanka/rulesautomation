@@ -1,0 +1,25 @@
+{
+  "jobName": "EventProcess",
+  "jobType": "EventProcess",
+  "namespacePrefix": "JBCXM",
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/reporting/data/ReportDataJoin12.csv",
+    "outputFile": "/testdata/newstack/reporting/process/ReportDataJoin1.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "dateFormat": "MM-dd-yyyy",
+        "fieldName": "Join1Date1"
+      },
+      {
+        "weekly": false,
+        "daily": false,
+        "dateTime": true,
+        "dateFormat": "MM-dd-yyyy HH:mm:ss",
+        "fieldName": "Join1EventTimeStamp1"
+      }
+    ]
+  }
+}

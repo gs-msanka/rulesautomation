@@ -58,7 +58,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "BubbleReport9033",
+      "reportName": "Auto_BubbleReport9033",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

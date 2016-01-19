@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "ColumnReport9032",
+      "reportName": "Auto_ColumnReport9032",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",

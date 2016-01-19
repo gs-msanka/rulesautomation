@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "Scatterreport9034",
+      "reportName": "Auto_Scatterreport9034",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

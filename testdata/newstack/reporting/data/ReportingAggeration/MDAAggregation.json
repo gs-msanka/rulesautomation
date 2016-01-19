@@ -58,7 +58,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "MDAAggregation9058",
+      "reportName": "AutoMDAAggregation9058",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

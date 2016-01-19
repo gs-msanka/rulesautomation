@@ -8,11 +8,11 @@
       "limit": 500,
       "drillDownReportDimensions": [
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "row",
           "type": 1,
           "dataType": "number",
-          "fieldDisplayName": "No of Schedules Created",
+          "fieldDisplayName": "NoofSchedulesCreated",
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "sum"
@@ -79,10 +79,10 @@
       ],
       "reportName": "WhereFiltersWithExpressions",
       "assetType": "ANALYTICS",
-       "whereAdvanceFilter": {
+      "whereAdvanceFilter": {
         "filters": [
           {
-            "dbName": "Files Downloaded",
+            "dbName": "FilesDownloaded",
             "alias": "A",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -94,7 +94,7 @@
             "collectionId": ""
           },
           {
-            "dbName": "No of Meetings Attended",
+            "dbName": "NoofMeetingsAttended",
             "alias": "B",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -106,7 +106,7 @@
             "collectionId": ""
           },
           {
-            "dbName": "No of Reports Run",
+            "dbName": "NoofReportsRun",
             "alias": "C",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -159,11 +159,11 @@
           "decimalPlaces": 0
         },
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "measure",
           "type": 1,
           "dataType": "number",
-          "fieldDisplayName": "Sum of No of Schedules Created",
+          "fieldDisplayName": "Sum of NoofSchedulesCreated",
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "sum"

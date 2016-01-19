@@ -10,7 +10,9 @@
 
     <test name="Reporting UI Automation" preserve-order="true">
         <classes>
-            <class name="com.gainsight.sfdc.reporting.tests.ReportBuilderUITest" />
+            <class name="com.gainsight.sfdc.reporting.tests.ReportBuilderMDAMongoUITest" />
+            <class name="com.gainsight.sfdc.reporting.tests.ReportBuilderMDARedShiftUITest" />
+            <class name="com.gainsight.sfdc.reporting.tests.ReportBuilderSFDCUITest" />
         </classes>
     </test>
 

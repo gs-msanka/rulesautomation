@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "DateTimeSummarizedByCM9046",
+      "reportName": "Auto_DateTimeSummarizedByCM9046",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

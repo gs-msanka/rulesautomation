@@ -6,7 +6,7 @@
     "dbType": "DATA",
     "dbCollectionName": null,
     "CollectionID": null,
-    "CollectionName": "Auto_Mongo_MDAdata"
+    "CollectionName": "Auto_RedShift_MDADataJOIN1"
   },
   "Columns": [
     {
@@ -19,21 +19,21 @@
       "primary": false,
       "distinctMemberCount": 0,
       "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
       "mappings": {
         "SFDC": {
-          "key": "SFDC_ACCOUNT_NAME",
+          "key": "SFDC_USER_USER",
           "dataType": "string",
           "format": null
         }
       },
+      "decimalPlaces": 0,
+      "deleted": false,
+      "measureValueBucket": null,
       "maxLength": 250,
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "AccountName",
+      "DisplayName": "Join1User",
       "colattribtype": 0
     },
     {
@@ -54,7 +54,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Industry",
+      "DisplayName": "Join1Name1",
       "colattribtype": 0
     },
     {
@@ -75,28 +75,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "ProductCode",
-      "colattribtype": 0
-    },
-    {
-      "name": null,
-      "datatype": "string",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": 250,
-      "dataType": "string",
-      "columnAttribute": 0,
-      "DBName": null,
-      "DisplayName": "ProductName",
+      "DisplayName": "Join1Name2",
       "colattribtype": 0
     },
     {
@@ -117,7 +96,7 @@
       "dataType": "date",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "Date",
+      "DisplayName": "Join1Date1",
       "colattribtype": 0
     },
     {
@@ -138,7 +117,7 @@
       "dataType": "dateTime",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "EventTimeStamp",
+      "DisplayName": "Join1EventTimeStamp1",
       "colattribtype": 0
     },
     {
@@ -159,7 +138,7 @@
       "columnAttribute": 0,
       "dataType": "boolean",
       "DBName": null,
-      "DisplayName": "Active",
+      "DisplayName": "Join1Boolean",
       "colattribtype": 0
     },
     {
@@ -180,7 +159,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "PageViews",
+      "DisplayName": "Join1Number1",
       "colattribtype": 1
     },
     {
@@ -201,70 +180,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "PageVisits",
-      "colattribtype": 1
-    },
-    {
-      "name": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 0,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "number",
-      "columnAttribute": 1,
-      "DBName": null,
-      "DisplayName": "FilesDownloaded",
-      "colattribtype": 1
-    },
-    {
-      "name": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 1,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "number",
-      "columnAttribute": 1,
-      "DBName": null,
-      "DisplayName": "NoofReportsRun",
-      "colattribtype": 1
-    },
-    {
-      "name": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "format": null,
-      "defaultValue": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "groupName": null,
-      "measureValueBucket": null,
-      "decimalPlaces": 2,
-      "deleted": false,
-      "mappings": null,
-      "maxLength": null,
-      "dataType": "number",
-      "columnAttribute": 1,
-      "DBName": null,
-      "DisplayName": "NoofRulesTriggered",
+      "DisplayName": "Join1Number2",
       "colattribtype": 1
     },
     {
@@ -291,7 +207,7 @@
       "dataType": "string",
       "columnAttribute": 0,
       "DBName": null,
-      "DisplayName": "ID",
+      "DisplayName": "Join1ID",
       "colattribtype": 0
     },
     {
@@ -305,108 +221,16 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 3,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "NoofSchedulesCreated",
+      "DisplayName": "Join1Number3",
       "colattribtype": 1
-    },
-    {
-      "name": null,
-      "DBName": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "colattribtype": 2,
-      "DisplayName": "Sum of 2 fileds",
-      "formula": [
-        {
-          "calculationType": "operateAgg",
-          "measureName": "Sum of 2 fileds",
-          "level": 1,
-          "operation": {
-            "operands": [
-              {
-                "fieldType": "field",
-                "dataType": "number",
-                "value": "NoofRulesTriggered"
-              },
-              {
-                "fieldType": "field",
-                "dataType": "long",
-                "value": "NoofSchedulesCreated"
-              }
-            ],
-            "operator": "add",
-            "aggregateFunction": "sum"
-          }
-        }
-      ],
-      "format": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "dimensionBrowserCollection": "SELF",
-      "alignment": "LEFT",
-      "aggFunction": "SUM",
-      "numberType": "NUMBER",
-      "decimalPlaces": 0,
-      "thousandSeparatorUsed": false,
-      "negativeNumber": "MINUSVALUE",
-      "systemDefined": false,
-      "encrypted": false,
-      "deleted": false,
-      "hasLookup": false
-    },
-    {
-      "name": null,
-      "DBName": null,
-      "datatype": "number",
-      "hidden": false,
-      "indexed": false,
-      "colattribtype": 2,
-      "DisplayName": "Diff of 2 fileds",
-      "formula": [
-        {
-          "calculationType": "operateAgg",
-          "measureName": "Diff of 2 fileds",
-          "level": 1,
-          "operation": {
-            "operands": [
-              {
-                "fieldType": "field",
-                "dataType": "number",
-                "value": "NoofRulesTriggered"
-              },
-              {
-                "fieldType": "field",
-                "dataType": "long",
-                "value": "NoofReportsRun"
-              }
-            ],
-            "operator": "subtract",
-            "aggregateFunction": "sum"
-          }
-        }
-      ],
-      "format": null,
-      "primary": false,
-      "distinctMemberCount": 0,
-      "dimensionBrowserCollection": "SELF",
-      "alignment": "LEFT",
-      "aggFunction": "SUM",
-      "numberType": "NUMBER",
-      "decimalPlaces": 0,
-      "thousandSeparatorUsed": false,
-      "negativeNumber": "MINUSVALUE",
-      "systemDefined": false,
-      "encrypted": false,
-      "deleted": false,
-      "hasLookup": false
     }
   ],
-  "CollectionDescription": "For Reporting with out any mappings."
+  "CollectionDescription": "Creating this collection for joins"
 }
