@@ -96,7 +96,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         }
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-      /*  mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_RedShift");
+        mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_RedShift");
 
 
         if (!tenantDetails.isRedshiftEnabled()) {
@@ -174,7 +174,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         Assert.assertTrue(nsResponseObj5.isResult(), "Data is not loaded, please check log for more details");
 
         mongoDBDAO.deleteMongoDocumentFromReportMaster(
-                tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");*/
+                tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
     }
 
     @TestInfo(testCaseIds = {"GS-9041"})
