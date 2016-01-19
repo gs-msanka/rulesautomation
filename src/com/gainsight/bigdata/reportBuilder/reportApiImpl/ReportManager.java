@@ -70,6 +70,7 @@ public class ReportManager extends NSTestBase {
         ReportInfo reportInfo = new ReportInfo();
         reportInfo.setSchemaName(collectionInfo.getCollectionDetails().getCollectionName());
         reportInfo.setCollectionID(collectionInfo.getCollectionDetails().getCollectionId());
+        reportInfo.setNonAggregatedResult(true);
 
         Set<String> tempColumns = new HashSet<>();
         if (columns != null) {
