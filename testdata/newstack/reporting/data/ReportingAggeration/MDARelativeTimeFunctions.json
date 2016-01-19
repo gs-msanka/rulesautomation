@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "MDARelativeTimeFunctions",
+      "reportName": "Auto_MDARelativeTimeFunctions",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

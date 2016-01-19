@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "DateTimeSummarizedByCY9048",
+      "reportName": "Auto_DateTimeSummarizedByCY9048",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

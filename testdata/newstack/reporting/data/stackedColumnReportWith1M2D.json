@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "StackedColumn9038",
+      "reportName": "Auto_StackedColumn9038",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A",

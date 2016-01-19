@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "ReportWith9040",
+      "reportName": "Auto_ReportWith9040",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",

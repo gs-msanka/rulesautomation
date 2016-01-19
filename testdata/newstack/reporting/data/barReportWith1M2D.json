@@ -38,7 +38,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "BarReport9030",
+      "reportName": "Auto_BarReport9030",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -84,7 +84,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }

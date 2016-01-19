@@ -94,7 +94,7 @@
             "collectionId": ""
           },
           {
-            "dbName": "No of Meetings Attended",
+            "dbName": "NoofMeetingsAttended",
             "alias": "B",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -106,7 +106,7 @@
             "collectionId": ""
           },
           {
-            "dbName": "No of Reports Run",
+            "dbName": "NoofReportsRun",
             "alias": "C",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -163,7 +163,7 @@
           "axis": "measure",
           "type": 1,
           "dataType": "number",
-          "fieldDisplayName": "Sum of No of Schedules Created",
+          "fieldDisplayName": "Sum of NoofSchedulesCreated",
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "sum"

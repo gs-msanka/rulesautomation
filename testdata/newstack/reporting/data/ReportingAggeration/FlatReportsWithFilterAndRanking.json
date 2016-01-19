@@ -87,72 +87,72 @@
           "collectionId": ""
         },
         {
-          "col": "Files Downloaded",
+          "col": "FilesDownloaded",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Files Downloaded",
+          "fieldDisplayName": "FilesDownloaded",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Meetings Attended",
+          "col": "NoofMeetingsAttended",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Meetings Attended",
+          "fieldDisplayName": "NoofMeetingsAttended",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Reports Run",
+          "col": "NoofReportsRun",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Reports Run",
+          "fieldDisplayName": "NoofReportsRun",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Rules Triggered",
+          "col": "NoofRulesTriggered",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Rules Triggered",
+          "fieldDisplayName": "NoofRulesTriggered",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Schedules Created",
+          "fieldDisplayName": "NoofSchedulesCreated",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "Page Views",
+          "col": "PageViews",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Page Views",
+          "fieldDisplayName": "PageViews",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "Page Visits",
+          "col": "PageVisits",
           "axis": "measure",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Page Visits",
+          "fieldDisplayName": "PageVisits",
           "dataType": "number",
           "collectionId": "",
           "order": "asc"
@@ -181,7 +181,7 @@
       "whereAdvanceFilter": {
         "filters": [
           {
-            "dbName": "No of Meetings Attended",
+            "dbName": "NoofMeetingsAttended",
             "alias": "A",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -193,7 +193,7 @@
             "collectionId": ""
           },
           {
-            "dbName": "Page Views",
+            "dbName": "PageViews",
             "alias": "B",
             "dataType": "number",
             "filterOperator": "EQ",
@@ -219,7 +219,7 @@
       },
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "FlatReportsWithFilterAndRanking",
+      "reportName": "Auto_FlatReportsWithFilterAndRanking",
       "assetType": "ANALYTICS",
       "skip": 0,
       "drillDownReportDimensions": [
@@ -304,72 +304,72 @@
           "collectionId": ""
         },
         {
-          "col": "Files Downloaded",
+          "col": "FilesDownloaded",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Files Downloaded",
+          "fieldDisplayName": "FilesDownloaded",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Meetings Attended",
+          "col": "NoofMeetingsAttended",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Meetings Attended",
+          "fieldDisplayName": "NoofMeetingsAttended",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Reports Run",
+          "col": "NoofReportsRun",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Reports Run",
+          "fieldDisplayName": "NoofReportsRun",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Rules Triggered",
+          "col": "NoofRulesTriggered",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Rules Triggered",
+          "fieldDisplayName": "NoofRulesTriggered",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "No of Schedules Created",
+          "fieldDisplayName": "NoofSchedulesCreated",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "Page Views",
+          "col": "PageViews",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Page Views",
+          "fieldDisplayName": "PageViews",
           "dataType": "number",
           "collectionId": ""
         },
         {
-          "col": "Page Visits",
+          "col": "PageVisits",
           "axis": "row",
           "decimalPlaces": 0,
           "agg_func": "sum",
           "type": 1,
-          "fieldDisplayName": "Page Visits",
+          "fieldDisplayName": "PageVisits",
           "dataType": "number",
           "collectionId": ""
         },
