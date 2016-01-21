@@ -32,7 +32,7 @@ public class ReportInfo {
     private String reportId;
     private String reportName;
     private String assetType;
-    private boolean nonAggregatedResult = true;
+    private boolean nonAggregatedResult ;
     @JsonProperty("whereAdvanceFilter")
     private ReportAdvanceFilter whereAdvanceFilter;
 
