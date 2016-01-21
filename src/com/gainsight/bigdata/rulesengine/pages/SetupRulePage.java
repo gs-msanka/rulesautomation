@@ -77,7 +77,7 @@ public class SetupRulePage extends BasePage {
 
 
 	public SetupRulePage() {
-    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, TEN_SECONDS);
     	Log.info("Waiting for the page to load");
     }
 
