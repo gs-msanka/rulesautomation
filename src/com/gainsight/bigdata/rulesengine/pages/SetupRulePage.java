@@ -82,6 +82,7 @@ public class SetupRulePage extends BasePage {
     }
 
     public void dropDownOFSourceObjectSelection() {
+        wait.waitTillElementNotDisplayed("//label[contains(@class, 'loading-spin')]", MIN_TIME, MAX_TIME);
         item.click(SOURCE_OBJECT_DROPDOWN_LOC);
     }
 

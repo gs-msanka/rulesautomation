@@ -210,6 +210,7 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
     public void createCtaUsingMdaLinkedCollection() throws Exception {
         RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-200059/GS-200059-Input.json"), RulesPojo.class);
         rulesPojo.getSetupRule().setSelectObject(collectionName);
+        rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
         Log.debug("Updated testdata is " + mapper.writeValueAsString(rulesPojo));
         rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
         rulesManagerPage.clickOnAddRule();

@@ -6,7 +6,14 @@
   "ruleDescription": "GS-200059-testcase to create Relationship CTA using Mda linked collection-Desc",
   "setupRule": {
     "dataSource": "Matrix",
-    "selectObject": "",
+    "selectObject": "GS-3977-MDA1449227441617",
+    "setupData": [
+      {
+        "sourceObject": "GS-3977-MDA1449227441617",
+        "showFields": [],
+        "filterFields": []
+      }
+    ],
     "advancedLogic": ""
   },
   "setupActions": [
