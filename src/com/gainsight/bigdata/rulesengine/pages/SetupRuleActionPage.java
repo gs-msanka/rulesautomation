@@ -158,8 +158,16 @@ public class SetupRuleActionPage extends BasePage {
         	clickOnActionButton();
             item.click(xpath + SELECT_BUTTON);
             selectValueInDropDown("Call To Action");
-		}
-        item.click(xpath + CREATE_CTA_RADIO_BUTTON);
+        }
+        try {
+            env.setTimeout(1);
+            if (element.isElementPresent(CREATE_CTA_RADIO_BUTTON)) {
+                item.click(xpath + CREATE_CTA_RADIO_BUTTON);
+
+            }
+        } finally {
+            env.setTimeout(30);
+        }
         field.clearAndSetText(CTA_NAME_INPUT, ctaAction.getName());
         item.click(xpath + PRIORITY_BUTTON);
         selectValueInDropDown(ctaAction.getPriority());

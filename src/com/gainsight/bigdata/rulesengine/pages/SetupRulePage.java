@@ -72,9 +72,11 @@ public class SetupRulePage extends BasePage {
     
     private final String LOOKUP_BUTTON = "//span[contains(text(), '%s')]/ancestor::li[contains(@class, 'tree-child-li-node')]/descendant::i";
     private final String MDA_OBJECT_SOURCE_FIELD = "//div[contains(@class, 'gs-rb-schema-tree-wrapper')]/descendant::a/descendant::span[text()='%s']";
-    
 
-    public SetupRulePage() {
+	public final String SHOW_FIELD = "//div[@class='select-field-container']/descendant::span[contains(text(), '%s')]";
+
+
+	public SetupRulePage() {
     	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
     	Log.info("Waiting for the page to load");
     }
