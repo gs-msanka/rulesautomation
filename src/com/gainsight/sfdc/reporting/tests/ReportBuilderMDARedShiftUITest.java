@@ -435,6 +435,19 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
     }
 
+    @TestInfo(testCaseIds = {"GS-100386"})
+    @Test
+    public void mdaJoins() throws Exception {
+
+        ReportMaster reportMaster = mapper.readValue(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAJoins/reportsWithMDAJoins.json"),
+                ReportMaster.class);
+        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+
+    }
+
     @AfterClass
     public void quit() {
         mongoUtil.closeConnection();

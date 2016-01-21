@@ -1,6 +1,7 @@
 package com.gainsight.bigdata.reportBuilder.reportApiImpl;
 
 import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportFilter;
@@ -289,7 +290,7 @@ public class ReportManager extends NSTestBase {
      * @param collectionInfo - Collection Master.
      * @return - report master - with display names replaced with db names.
      */
-    public static ReportMaster getDBNamesPopulatedReportMaster(ReportMaster reportMaster, CollectionInfo collectionInfo) {
+    public static ReportMaster getDBNamesPopulatedReportMaster(ReportMaster reportMaster, CollectionInfo collectionInfo) throws Exception {
         HashMap<String, String> displayDBNamesMap = getDisplayAndDBNamesMap(collectionInfo);
         ReportInfo reportInfo = reportMaster.getReportInfo().get(0);
         if(reportInfo == null) {
@@ -305,36 +306,69 @@ public class ReportManager extends NSTestBase {
 
         reportInfo.setCollectionID(collectionId);
 
-
-        if(reportInfo.getDimensions() !=null) {
+        if (reportInfo.getDimensions() != null) {
             Log.info("Updating DB Names for dimensions...");
             for (ReportInfo.Dimension dimension : reportInfo.getDimensions()) {
-                if (displayDBNamesMap.containsKey(dimension.getCol()) && displayDBNamesMap.get(dimension.getCol()) != null) {
-                    String dbName = displayDBNamesMap.get(dimension.getCol());
-                    dimension.setCol(dbName);
-                    dimension.setCollectionId(collectionId);
+
+                String dbName = displayDBNamesMap.get(dimension.getCol());
+                dimension.setCollectionId(collectionId);
+                if (dimension.getPathMetaData() != null) {
+                    String lookUpID = displayDBNamesMap.get(dimension.getCol() + "lookupId");
+                    String lookUpName = displayDBNamesMap.get(dimension.getCol() + "lookupName");
+                    dimension.getPathMetaData().getPath().setLookupId(lookUpID);
+                    dimension.getPathMetaData().getPath().setLookupName(lookUpName);
+                    dimension.setCol(displayDBNamesMap.get(dimension.getCol() + "lookupDBName"));
+                    dimension.setCollectionId(displayDBNamesMap.get("ColletionId"));
+                    if (dimension.getPathMetaData().getPath().getPath() != null) {
+                        GSDataImpl gsDataImpl = new GSDataImpl(NSTestBase.header);
+                        CollectionInfo collectionInfo2 = gsDataImpl.getCollectionMaster(displayDBNamesMap.get("ColletionId"));
+                        HashMap<String, String> displayDBNamesMap2 = getDisplayAndDBNamesMap(collectionInfo2);
+                        String lookUpID2 = displayDBNamesMap2.get(dimension.getCol() + "lookupId");
+                        String lookUpName2 = displayDBNamesMap2.get(dimension.getCol() + "lookupName");
+                        dimension.getPathMetaData().getPath().getPath().setLookupId(lookUpID2);
+                        dimension.getPathMetaData().getPath().getPath().setLookupName(lookUpName2);
+                        dimension.setCol(displayDBNamesMap2.get(dimension.getCol() + "lookupDBName"));
+                        dimension.setCollectionId(displayDBNamesMap2.get("ColletionId"));
+                    }
                 } else {
-                    throw new RuntimeException(dimension.getCol() + " is not found in displayDBNamesMap.");
+                    dimension.setCol(dbName);
                 }
             }
         }
 
-        if(reportInfo.getDrillDownReportDimensions() != null) {
+        if (reportInfo.getDrillDownReportDimensions() != null) {
             Log.info("Updating DB Names for Drill Down Dimensions...");
             for (ReportInfo.Dimension dimension : reportInfo.getDrillDownReportDimensions()) {
-                if (displayDBNamesMap.containsKey(dimension.getCol()) && displayDBNamesMap.get(dimension.getCol()) != null) {
-                    String dbName = displayDBNamesMap.get(dimension.getCol());
+                String dbName = displayDBNamesMap.get(dimension.getCol());
+                if (dimension.getPathMetaData() != null) {
+                    String lookUpID = displayDBNamesMap.get(dimension.getCol() + "lookupId");
+                    String lookUpName = displayDBNamesMap.get(dimension.getCol() + "lookupName");
+                    dimension.getPathMetaData().getPath().setLookupId(lookUpID);
+                    dimension.getPathMetaData().getPath().setLookupName(lookUpName);
+                    dimension.setCol(displayDBNamesMap.get(dimension.getCol() + "lookupDBName"));
+                    dimension.setCollectionId(displayDBNamesMap.get("ColletionId"));
+                    if (dimension.getPathMetaData().getPath().getPath() != null) {
+                        GSDataImpl gsDataImpl = new GSDataImpl(NSTestBase.header);
+                        CollectionInfo collectionInfo2 = gsDataImpl.getCollectionMaster(displayDBNamesMap.get("ColletionId"));
+                        HashMap<String, String> displayDBNamesMap2 = getDisplayAndDBNamesMap(collectionInfo2);
+                        String lookUpID2 = displayDBNamesMap2.get(dimension.getCol() + "lookupId");
+                        String lookUpName2 = displayDBNamesMap2.get(dimension.getCol() + "lookupName");
+                        dimension.getPathMetaData().getPath().getPath().setLookupId(lookUpID2);
+                        dimension.getPathMetaData().getPath().getPath().setLookupName(lookUpName2);
+                        dimension.setCol(displayDBNamesMap.get(dimension.getCol() + "lookupDBName"));
+                        dimension.setCollectionId(displayDBNamesMap2.get("ColletionId"));
+                    }
+                } else {
                     dimension.setCol(dbName);
                     dimension.setCollectionId(collectionId);
-                } else {
-                    throw new RuntimeException(dimension.getCol() + " is not found in displayDBNamesMap.");
                 }
+
             }
         }
 
-        if(reportInfo.getWhereAdvanceFilter() != null) {
+        if (reportInfo.getWhereAdvanceFilter() != null) {
             Log.info("Updating DB Names for Where Advanced Filter...");
-            for(ReportFilter reportFilter : reportInfo.getWhereAdvanceFilter().getReportFilters()) {
+            for (ReportFilter reportFilter : reportInfo.getWhereAdvanceFilter().getReportFilters()) {
                 if (reportFilter.getDbName() != null && displayDBNamesMap.containsKey(reportFilter.getDbName()) && displayDBNamesMap.get(reportFilter.getDbName()) != null) {
                     String dbName = displayDBNamesMap.get(reportFilter.getDbName());
                     reportFilter.setDbName(dbName);
@@ -367,18 +401,22 @@ public class ReportManager extends NSTestBase {
      * @return - Hash Map with display names as keys and db names has values.
      */
     public static HashMap<String, String> getDisplayAndDBNamesMap(CollectionInfo collectionInfo) {
-        if(collectionInfo == null || collectionInfo.getColumns() == null) {
+        if (collectionInfo == null || collectionInfo.getColumns() == null) {
             throw new IllegalArgumentException("Collection info & Columns List can't be null");
         }
         HashMap<String, String> resultMap = new HashMap<>();
-        for(CollectionInfo.Column column : collectionInfo.getColumns()) {
+        for (CollectionInfo.Column column : collectionInfo.getColumns()) {
             resultMap.put(column.getDisplayName(), column.getDbName());
+            if (column.getLookupDetail() != null) {
+                resultMap.put(column.getDisplayName() + "lookupId", column.getLookupDetail().getLookupId());
+                resultMap.put(column.getDisplayName() + "lookupName", column.getLookupDetail().getName());
+                resultMap.put(column.getDisplayName() + "lookupDBName", column.getLookupDetail().getFieldDBName());
+                resultMap.put("ColletionId", column.getLookupDetail().getCollectionId());
+            }
         }
-
-        Log.info("Result Map : " +resultMap);
+        Log.info("Result Map : " + resultMap);
         return resultMap;
     }
-
 
     /**
      * Run Report with links (joins).

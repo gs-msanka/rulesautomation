@@ -77,7 +77,12 @@ public class MDAConnectBackend extends BaseTest {
 			DataLoadManager dataLoadManager = new DataLoadManager(sfdcInfo, nsTestBase.getDataLoadAccessKey());
 			CollectionInfo collectionInfo = dataLoadManager.getCollection(reportInfo.getSchemaName());
 
-			ReportMaster r = ReportManager.getDBNamesPopulatedReportMaster(reportMaster, collectionInfo);
+			ReportMaster r = null;
+			try {
+				r = ReportManager.getDBNamesPopulatedReportMaster(reportMaster, collectionInfo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			Log.info("Printing json________________" + new ObjectMapper().writeValueAsString(r));
 
