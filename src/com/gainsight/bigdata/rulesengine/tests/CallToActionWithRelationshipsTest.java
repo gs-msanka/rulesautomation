@@ -122,7 +122,7 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
             }
             CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
             collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
-            dataETL.execute(mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/ExtractJob.txt"), JobInfo.class));
+            dataETL.execute(mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/ExtractJob.txt"), JobInfo.class));
             JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
             File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
             DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
