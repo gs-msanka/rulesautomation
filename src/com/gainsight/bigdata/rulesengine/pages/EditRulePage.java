@@ -23,6 +23,9 @@ public class EditRulePage extends BasePage {
     private final String SELECT_RULE_BUTTON = "//select[contains(@class, 'select-type')]/following-sibling::button";
     private final String RULES_LIST_VIEW = "//li[@data-id ='ListView']/a";
     private final String RULES_HEADER = "//div[contains(@class, 'gs-re-top-section')]";
+    private final String RULE_FOR_ACCOUNT_TYPE = "rule-for-account";
+    private final String RULE_FOR_RELATIONSHIP_TYPE = "rule-for-relationship";
+    private final String RELATIONSHIP_TYPE = "//select[contains(@class, 'relationship-type')]/following-sibling::button";
 
     public EditRulePage() {
         wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
@@ -30,7 +33,7 @@ public class EditRulePage extends BasePage {
 
     public void waitForPageLoad() {
         Log.info("Refreshing the Page");
-        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, MAX_TIME);
+        wait.waitTillElementNotDisplayed(LOADING_ICON, MIN_TIME, TEN_SECONDS);
     }
 
     /**
@@ -40,6 +43,43 @@ public class EditRulePage extends BasePage {
     public void selectRuleType(String ruleType) {
         item.click(SELECT_RULE_BUTTON);
         selectValueInDropDown(ruleType);
+    }
+
+    /**
+     * Method to select rulefor type like account or relationship
+     *
+     * @param ruleForType - ruleFor Type
+     */
+    public void selectRuleFor(String ruleForType) {
+        try {
+            env.setTimeout(1);
+            if (element.isElementDisplayed("//label[(contains(text(),'Rule For'))]")) {
+                if ("Relationship".equalsIgnoreCase(ruleForType)) {
+                    item.click(RULE_FOR_RELATIONSHIP_TYPE);
+                } else {
+                    item.click(RULE_FOR_ACCOUNT_TYPE);
+                }
+            }
+        } finally {
+            env.setTimeout(30);
+        }
+    }
+
+    /**
+     * Method to select relationship type from the list of relationships available
+     *
+     * @param relationshipType - RelationshipType
+     */
+    public void selectRelationShipType(String relationshipType) {
+        try {
+            env.setTimeout(1);
+            if (element.isElementDisplayed("//label[(contains(text(),'Relationship Type'))]")) {
+                item.click(RELATIONSHIP_TYPE);
+                selectValueInDropDown(relationshipType);
+            }
+        } finally {
+            env.setTimeout(30);
+        }
     }
 
     /**
@@ -95,6 +135,8 @@ public class EditRulePage extends BasePage {
      */
     public void enterRuleDetailsAndClickNext(RulesPojo rulesPojo){
         selectRuleType(rulesPojo.getRuleType());
+        selectRuleFor(rulesPojo.getRuleFor());
+        selectRelationShipType(rulesPojo.getRelationshipType());
         enterRuleName(rulesPojo.getRuleName());
         enterRuleDescription(rulesPojo.getRuleDescription());
         clickOnNext();

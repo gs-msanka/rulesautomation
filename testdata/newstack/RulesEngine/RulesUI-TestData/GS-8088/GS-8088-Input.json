@@ -1,0 +1,31 @@
+{
+  "ruleType": "Custom",
+  "ruleFor": "Relationship",
+  "relationshipType": "RelationShip for RulesEngine",
+  "ruleName": "GS-8088-Create Relationship CTA using linked object",
+  "ruleDescription": "GS-8088-Create Relationship CTA using linked object-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "C_Custom Object",
+    "advancedLogic": "A"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "Create Relationship CTA using linked object",
+        "priority": "High",
+        "type": "Event",
+        "status": "Work In Progress",
+        "playbook": "Annual Review",
+        "reason": "Marketing Activity",
+        "dueDate": "50",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Once",
+        "dueDateType": "Do not skip weekend",
+        "comments": "These are test comments for RelationShip CTA created using linked object"
+      },
+      "criterias": []
+    }
+  ]
+}
