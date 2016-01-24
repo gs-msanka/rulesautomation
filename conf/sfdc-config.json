@@ -12,9 +12,9 @@
   "sfdc_apiVersion" : "32.0",
   "profiles" : {
     "default" : {
-      "sfdc_username" : "gs-ggolla@testing1.com",
-      "sfdc_password" : "ggolla@1215",
-      "sfdc_stoken"   : "IIsOiwmoaDvBTse6ahRmiXpuE"
+      "sfdc_username" : "releasetest@vidya.com",
+      "sfdc_password" : "Gainsight#123",
+      "sfdc_stoken"   : "xKnNzoaMKULT5y2h55P4Mh028"
     },
     "marvels" : {
       "sfdc_username" : "marvels@gsautomation.com",

@@ -1,17 +1,13 @@
 package com.gainsight.bigdata.copilot.tests;
 
 import au.com.bytecode.opencsv.CSVReader;
-import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.copilot.apiImpl.CopilotAPIImpl;
 import com.gainsight.bigdata.copilot.bean.emailProp.EmailProperties;
 import com.gainsight.bigdata.copilot.bean.emailTemplate.EmailTemplate;
 import com.gainsight.bigdata.copilot.bean.outreach.OutReach;
 import com.gainsight.bigdata.copilot.bean.outreach.OutReachExecutionHistory;
 import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
-import com.gainsight.bigdata.copilot.bean.webhook.mandrill.MandrillEvent;
 import com.gainsight.bigdata.copilot.bean.webhook.mandrill.MandrillWebhookEvent;
-import com.gainsight.bigdata.copilot.bean.webhook.mandrill.Message;
-import com.gainsight.bigdata.copilot.bean.webhook.mandrill.Metadata;
 import com.gainsight.bigdata.copilot.bean.webhook.sendgrid.SendgridWebhookEvent;
 import com.gainsight.bigdata.copilot.enums.UnSubscribeCategory;
 import com.gainsight.bigdata.copilot.enums.UnSubscribeReason;
@@ -19,23 +15,14 @@ import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.*;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportAdvanceFilter;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
-import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
-import com.gainsight.bigdata.rulesengine.RulesUtil;
-import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInfo;
-import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInnerCondition;
-import com.gainsight.bigdata.rulesengine.bean.RuleSetup.Criteria;
-import com.gainsight.bigdata.rulesengine.bean.RuleSetup.TriggerCriteria;
-import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.sfdc.util.DateUtil;
 import com.gainsight.sfdc.util.FileUtil;
-import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.sfdc.util.db.H2Db;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.Comparator;
-import com.gainsight.utils.Verifier;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -52,19 +39,11 @@ import java.io.FileReader;
 import java.sql.ResultSet;
 import java.util.*;
 
-
 /**
  * Created by Giribabu on 05/12/15.
  */
-public class SmartListAllApiTest extends NSTestBase {
-    CopilotAPIImpl copilotAPI;
-    GSDataImpl gsDataAPI;
-    String testDataDir  = Application.basedir+"/testdata/newstack/CoPilot/dataSet/";
-    DataETL dataETL     = new DataETL();
-    RulesUtil rulesUtil = new RulesUtil();
-    TenantInfo tenantInfo;
-    ReportManager reportManager = new ReportManager();
-    Calendar calendar = Calendar.getInstance();
+
+public class CopilotAdvancedTest extends CopilotTestUtils {
 
     @BeforeClass
     public void setUp() throws Exception {
@@ -83,152 +62,6 @@ public class SmartListAllApiTest extends NSTestBase {
             JobInfo customerJobInfo = mapper.readValue(new File(testDataDir+"/jobs/Customers.json"), JobInfo.class);
             dataETL.execute(customerJobInfo);
         }
-    }
-
-    /**
-     * Create Smart list
-     * Update Smart list
-     * Delete Smart list
-     * @throws Exception
-     */
-    @Test
-    public void accountStrategyAccountHasBaseObject() throws Exception {
-        //Create a smart list and execute and verify the smart list stats.
-        SmartList smartList = mapper.readValue(new File(testDataDir+"test/t1/T1_SmartList.json"), SmartList.class);
-        smartList.getAutomatedRule().setTriggerCriteria(resolveStrNameSpace(smartList.getAutomatedRule().getTriggerCriteria()));
-        SmartList actualSmartList = copilotAPI.createSmartListExecuteAndGetSmartList(mapper.writeValueAsString(smartList));
-        Assert.assertNotNull(actualSmartList.getSmartListId(), "Smart list Id should not be null.");
-        rulesUtil.waitForProcessingToComplete(actualSmartList.getSmartListId());
-        Assert.assertTrue(rulesUtil.isProcessionSuccess(actualSmartList.getSmartListId()), "Verifying smart list run status is successful.");
-        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
-        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 30, "Verifying contact count.");
-        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 1, "Verifying customer count.");
-
-        //Update the smart list trigger criteria & action info criteria and execute the smart list and verify the smartlist stats.
-        List<TriggerCriteria> triggerCriteriaList = mapper.readValue(actualSmartList.getAutomatedRule().getTriggerCriteria(), new TypeReference<ArrayList<TriggerCriteria>>() {});
-        TriggerCriteria triggerCriteria = triggerCriteriaList.get(0);
-        triggerCriteria.setWhereLogic("A OR B");
-        Criteria criteria = mapper.readValue("{\"alias\":\"B\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Account\",\"field\":\"Name\",\"fieldName\":\"Name\",\"objectName\":\"Account\",\"fieldType\":\"STRING\",\"label\":\"Account Name\",\"isExternalCriteria\":false},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"Gallo Ernst & Julio Winery\"}}", Criteria.class);
-        triggerCriteria.getCriteria().add(criteria);
-        actualSmartList.getAutomatedRule().setTriggerCriteria(mapper.writeValueAsString(triggerCriteriaList));
-
-        ActionInfo actionInfo = mapper.readValue(actualSmartList.getAutomatedRule().getActionDetails().get(0).getActionInfo(), ActionInfo.class);
-        ActionInnerCondition actionInnerCondition = mapper.readValue("{\"type\":\"calculated\",\"valueType\":\"BOOLEAN\",\"expression\":{\"alias\":\"undefined\",\"left\":{\"keys\":[],\"type\":\"field\",\"valueType\":\"STRING\",\"entity\":\"Contact\",\"field\":\"Contact.Name\",\"fieldName\":\"Name\",\"objectName\":\"Contact\",\"fieldType\":\"STRING\",\"label\":\"Full Name\",\"isExternalCriteria\":true},\"operator\":\"contains\",\"right\":{\"keys\":[],\"type\":\"value\",\"valueType\":\"STRING\",\"isNull\":false,\"value\":\"giri\"}}}", ActionInnerCondition.class);
-        actionInfo.getCondition().getExpression().getRight().add(actionInnerCondition);
-        actualSmartList.getAutomatedRule().getActionDetails().get(0).setActionInfo(mapper.writeValueAsString(actionInfo));
-        actualSmartList.setShowFields(null);
-        actualSmartList = copilotAPI.updateSmartList(mapper.writeValueAsString(actualSmartList));
-        rulesUtil.waitForProcessingToComplete(actualSmartList.getSmartListId());
-        Assert.assertTrue(rulesUtil.isProcessionSuccess(actualSmartList.getSmartListId()), "Verifying smart list run status is successful.");
-        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId()); //Once the rule is successfully run, get the stats and verify.
-        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 2, "Verifying contact count.");
-        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 2, "Verifying customer count.");
-
-        //Update the smart list name & verify the updated smartlist name.
-        actualSmartList = copilotAPI.updateSmartListName(actualSmartList.getSmartListId(), "This is My new Name Idiot.");
-        Assert.assertEquals(actualSmartList.getSmartListName(), "This is My new Name Idiot.");
-
-        //Trigger the resync on smart list & verify the status again.
-        String smartListReSyncStatusId = copilotAPI.reSyncSmartListData(actualSmartList.getSmartListId());  //If resync is triggered with data modification then it make sense.
-        Assert.assertNotNull(smartListReSyncStatusId, "Status Id should not be null.");
-        rulesUtil.waitForRuleProcessingToComplete(smartListReSyncStatusId);
-        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(smartListReSyncStatusId), "Verifying smart list re-sync is successful.");
-
-        actualSmartList = copilotAPI.getSmartList(actualSmartList.getSmartListId());
-        Assert.assertEquals(actualSmartList.getStats().getContactCount(), 2, "Verifying contact count.");
-        Assert.assertEquals(actualSmartList.getStats().getCustomerCount(), 2,"Verifying customer count.");
-
-        List<HashMap<String, Object>> testData = copilotAPI.getSmartListData(actualSmartList.getSmartListId(), 0);
-        Assert.assertEquals(testData.size(), 2, "Expected Value should be 2 records in the smart list data.");
-
-        //Create email template & verify the same.
-        EmailTemplate emailTemplate = mapper.readValue(new File(testDataDir+"test/t1/T1_EmailTemplate.json"), EmailTemplate.class);
-        EmailTemplate actualEmailTemplate = copilotAPI.createEmailTemplate(mapper.writeValueAsString(emailTemplate));
-        Assert.assertNotNull(actualEmailTemplate.getTemplateId(), "Template id should not be null.");
-        Assert.assertEquals(actualEmailTemplate.getTitle(), emailTemplate.getTitle(), "Verifying email template title.");
-
-        //Verify Email Template Name Change.
-        actualEmailTemplate = copilotAPI.updateEmailTemplateName(actualEmailTemplate.getTemplateId(), "UPDATED EMAIL TEMPLATE NAME");
-        Assert.assertEquals(actualEmailTemplate.getTitle(), "UPDATED EMAIL TEMPLATE NAME");
-
-        //Create out reach & verify the same.
-        OutReach outReach = mapper.readValue(new File(testDataDir + "test/t1/T1_OutReach.json"), OutReach.class);
-        outReach.setSmartListId(actualSmartList.getSmartListId());
-        outReach.setSmartListName(actualSmartList.getSmartListName());
-        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateId(actualEmailTemplate.getTemplateId());
-        outReach.getDefaultECA().get(0).getActions().get(0).setEmailTemplateName(actualEmailTemplate.getTitle());
-
-        OutReach actualOutReach = copilotAPI.createOutReach(mapper.writeValueAsString(outReach));
-        Assert.assertNotNull(actualOutReach, "Out Reach creation failed.");
-        Assert.assertNotNull(actualOutReach.getCampaignId(), "Out reach Id should not be null.");
-
-        //Trigger out reach, wait for outreach process, verify the execution history of out reach.
-        String outReachStatusId = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
-        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId);
-        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId), "Out reach process is not successful.");
-
-        actualOutReach = copilotAPI.getOutReach(actualOutReach.getCampaignId());
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
-
-        RuleExecutionHistory executionHistory = rulesUtil.getExecutionHistory(outReachStatusId);
-        Assert.assertTrue(executionHistory.getProcessReport().getActionResults().get(0).getActionName().toLowerCase().contains("Send Email using Gainsight".toLowerCase()));
-        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getPassCount(), 2, "Passed count should be 2");
-        Assert.assertEquals(executionHistory.getProcessReport().getActionResults().get(0).getFailCount(), 0, "Failed cound should be 0");
-
-        //Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
-        String outReachStatusId1 = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
-        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId1);
-        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId1), "Outreach execution failed.");
-
-        actualOutReach = copilotAPI.getOutReach(actualOutReach.getCampaignId());
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "FAILURE");
-
-        RuleExecutionHistory executionHistory1 = rulesUtil.getExecutionHistory(outReachStatusId1);
-        Assert.assertTrue(executionHistory1.getProcessReport().getActionResults().get(0).getActionName().toLowerCase().contains("Send Email using Gainsight".toLowerCase()));
-        Assert.assertEquals(executionHistory1.getProcessReport().getActionResults().get(0).getPassCount(), 0, "Passed count in out reach execution should be 0");
-        Assert.assertEquals(executionHistory1.getProcessReport().getActionResults().get(0).getFailCount(), 2, "Failed count in out reach execution should be 2");
-
-        //Update outreach -- Re-Trigger out reach, wait for outreach process, verify the execution history of out reach.
-        actualOutReach.getDefaultECA().get(0).getActions().get(0).setPreventDuplicateDays(0);
-        actualOutReach.setPreventDuplicateDays(0);
-        actualOutReach = copilotAPI.updateOutReach(mapper.writeValueAsString(actualOutReach));
-
-        String outReachStatusId2 = copilotAPI.triggerOutReach(actualOutReach.getCampaignId());
-        rulesUtil.waitForRuleProcessingToComplete(outReachStatusId2);
-        Assert.assertTrue(rulesUtil.isRuleProcessingSuccessful(outReachStatusId2), "Outreach execution failed.");
-
-        actualOutReach = copilotAPI.getOutReach(actualOutReach.getCampaignId());
-        Assert.assertEquals(actualOutReach.getLastRunStatus(), "SUCCESS");
-
-        RuleExecutionHistory executionHistory2 = rulesUtil.getExecutionHistory(outReachStatusId2);
-        Assert.assertTrue(executionHistory2.getProcessReport().getActionResults().get(0).getActionName().toLowerCase().contains("Send Email using Gainsight".toLowerCase()));
-        Assert.assertEquals(executionHistory2.getProcessReport().getActionResults().get(0).getPassCount(), 2, "Passed count in out reach execution should be 0");
-        Assert.assertEquals(executionHistory2.getProcessReport().getActionResults().get(0).getFailCount(), 0, "Failed count in out reach execution should be 2");
-
-        //Get the email template references in outreaches & verify the template use in outreach.
-        HashMap<String, List<HashMap<String,String>>> templateReferenceList = copilotAPI.getEmailTemplatesOutReachInfo(new String[]{actualEmailTemplate.getTemplateId()});
-        List<HashMap<String, String>> templateReference = templateReferenceList.get(actualEmailTemplate.getTemplateId());
-        Assert.assertNotNull(templateReference);
-        Assert.assertEquals(templateReference.size(), 1);
-        Assert.assertEquals(templateReference.get(0).get("outreachId"), actualOutReach.getCampaignId(), "Out reach id not matched.");
-        Assert.assertEquals(templateReference.get(0).get("outreachName"), actualOutReach.getName(), "Out reach name not matched.");
-
-        //Verifying outreach name - updated.
-        actualOutReach = copilotAPI.updateOutReachName(actualOutReach.getCampaignId(), "OUT REACH NAME UPDATED");
-        Assert.assertEquals(actualOutReach.getName(), "OUT REACH NAME UPDATED");
-
-        //Delete outreach, email template, smart list.
-        Assert.assertTrue(copilotAPI.deleteOutReach(actualOutReach.getCampaignId()), "Outreach delete failed.");
-        Assert.assertTrue(copilotAPI.deleteEmailTemplate(actualEmailTemplate.getTemplateId()), "email template delete failed.");
-        Assert.assertTrue(copilotAPI.deleteSmartList(actualSmartList.getSmartListId()), "Smart list delete failed.");
-
-        //Verify the error code on invalid outreach, email template, smart list Id.
-        NsResponseObj outReachNsResponse = copilotAPI.getOutReachNsResponse(actualOutReach.getCampaignId());
-        Assert.assertEquals(outReachNsResponse.getErrorCode(), MDAErrorCodes.CAMPAIGN_NOT_FOUND.getGSCode(), "Outreach not found error code not matched.");
-        NsResponseObj emailTemplateNsResponse = copilotAPI.getEmailTemplateNsResponseObj(actualEmailTemplate.getTemplateId());
-        Assert.assertEquals(emailTemplateNsResponse.getErrorCode(), MDAErrorCodes.EMAIL_TEMPLATE_NOT_FOUND.getGSCode(), "Email Template not found error code not matched.");
-        NsResponseObj smartListNsResponse = copilotAPI.getSmartListNsResponse(actualSmartList.getSmartListId());
-        Assert.assertEquals(smartListNsResponse.getErrorCode(), MDAErrorCodes.SMARTLIST_DOESNOT_EXISTS.getGSCode(), "Smart list not found error code not matched.");
     }
 
     @Test
@@ -814,110 +647,4 @@ public class SmartListAllApiTest extends NSTestBase {
             System.out.println(copilotAPI.deleteOutReach(outReach.getCampaignId()));
         }
     }
-
-    private List<MandrillWebhookEvent> constructMandrillEvents(List<Map<String, String>> dataList) {
-        List<MandrillWebhookEvent> eventList = new ArrayList<>();
-        for(Map<String, String> data : dataList) {
-            Metadata metadata = new Metadata();
-            metadata.setCampaign(data.get("campaign"));
-            metadata.setExternalId(data.get("extId"));
-            metadata.setUseCase(data.get("useCase"));
-            Message message  =  new Message();
-            message.setEmail(data.get("email"));
-            message.setMetadata(metadata);
-            message.setSubaccount(data.get("subaccount"));
-            message.setTs(Long.valueOf(data.get("ts")));
-            message.setSender(data.get("email"));
-            MandrillWebhookEvent webhookEvent = new MandrillWebhookEvent();
-            webhookEvent.setEvent(MandrillEvent.valueOf(data.get("event")));
-            webhookEvent.setTs(Long.valueOf(data.get("ts")));
-            webhookEvent.setIp(data.get("ip"));
-            webhookEvent.setMessage(message);
-            eventList.add(webhookEvent);
-        }
-        return eventList;
-    }
-
-    private List<String> getValuesOfKeyAsList(List<Map<String,String>> dataList, String key) {
-        if(dataList ==null || key ==null) {
-            throw new IllegalArgumentException("Either of data list & key should not be null.");
-        }
-        List<String> valueList = new ArrayList<>();
-        for(Map<String, String> data : dataList) {
-            if(data.containsKey(key) && data.get(key)!=null && !data.get(key).isEmpty()) {
-                valueList.add(data.get(key));
-            }
-        }
-        return valueList;
-    }
-
-    private Calendar getCalenderWithTimeSetToZero(String timeZone) {
-        Calendar tempCal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
-        tempCal.set(Calendar.HOUR, 0);
-        tempCal.set(Calendar.MINUTE, 0);
-        tempCal.set(Calendar.SECOND, 0);
-        tempCal.set(Calendar.MILLISECOND, 0);
-        tempCal.set(Calendar.HOUR_OF_DAY, 0);
-        return tempCal;
-    }
-
-    /**
-     * Verify the schedule information.
-     * Cron expression, timezone, Job identifier, starttime, end time, and job context etc.
-     * @param actual
-     * @param expected
-     */
-    private void assertScheduleInformation(Schedule actual, Schedule expected) {
-        Assert.assertNotNull(actual, "Actual schedule should not be null.");
-        Assert.assertNotNull(expected, "Expected schedule should not be null.");
-        Assert.assertNotNull(actual.getScheduleId(), "Schedule Id in actual should not be null.");
-        Verifier verifier = new Verifier();
-        verifier.verifyEquals(actual.getStartTime(), expected.getStartTime(), "Start Time of schedule not matched.");
-        verifier.verifyEquals(actual.getEndTime(), expected.getEndTime(), "End Time of schedule not matched.");
-        verifier.verifyEquals(actual.getTimeZoneName(), expected.getTimeZoneName(), "Time Zone Not matched.");
-        verifier.verifyEquals(actual.getJobType(), expected.getJobType(), "Job type not matched and should be CAMPAIGN");
-        verifier.verifyEquals(actual.getJobIdentifier(), expected.getJobIdentifier(), "Job Identifier Not Matched.");
-        verifier.verifyEquals(actual.isPastRunsAlso(), expected.isPastRunsAlso(), "Pass Run Not Matched.");
-        verifier.verifyEquals(actual.getJobContext().get("scheduleType"), expected.getJobContext().get("scheduleType"), "Schedule Type not Matched.");
-        if(verifier.isVerificationFailed()) {
-            Log.error(verifier.getAssertMessages().toString());
-            Assert.assertTrue(false, verifier.getAssertMessages().toString());
-        }
-    }
-
-    /**
-     * Validates outreach execution history.
-     * Accounts, Contacts, Sent, Opened and many more outreach execution parameter's.
-     * @param actual
-     * @param expected
-     */
-    private void assertOutReachExecutionHistory(OutReachExecutionHistory actual, OutReachExecutionHistory expected) {
-        Assert.assertNotNull(actual, "Actual Out Reach Execution History should be null.");
-        Assert.assertNotNull(expected, "Expected Out Reach Execution History should be null.");
-        Verifier verifier = new Verifier();
-        verifier.verifyEquals(actual.getnAccounts(), expected.getnAccounts(), "Account Count Not Matched.");
-        verifier.verifyEquals(actual.getnContacts(), expected.getnContacts(), "Contact Count Not Matched.");
-        verifier.verifyEquals(actual.getnSent(), expected.getnSent(), "Sent Count not matched");
-        verifier.verifyEquals(actual.getNoOfUnSubscribed(), expected.getNoOfUnSubscribed(), "Un-Subscribed Count not matched");
-        verifier.verifyEquals(actual.getPassCount(), expected.getPassCount(),"Passed Count not matched");
-        verifier.verifyEquals(actual.getFailCount(), expected.getFailCount(), "Failed Count not matched");
-        verifier.verifyEquals(actual.getnOpened(), expected.getnOpened(), "Opened Count not matched");
-        verifier.verifyEquals(actual.getnRejected(), expected.getnRejected(), "Rejected Count not matched");
-        verifier.verifyEquals(actual.getExecutionType(), expected.getExecutionType(), "Execution Type not matched");
-        verifier.verifyEquals(actual.getnClicked(), expected.getnClicked(), "No of clicked count not matched");
-        verifier.verifyEquals(actual.getNoOfSoftBounce(), expected.getNoOfSoftBounce(), "Softbounce Count not matched");
-        verifier.verifyEquals(actual.getnSpam(), expected.getnSpam(), "Spam Count not matched");
-        verifier.verifyEquals(actual.getNoOfHardBounce(), expected.getNoOfHardBounce(), "Hard Bounce Count not matched");
-        verifier.verifyEquals(actual.getStatus(), expected.getStatus(), "Execution status not matched");
-        if(verifier.isVerificationFailed()) {
-            Log.error(verifier.getAssertMessages().toString());
-            Assert.assertTrue(false, verifier.getAssertMessages().toString());
-        }
-    }
-
-
-
-
-
-
 }

@@ -25,6 +25,7 @@ public class OutReach {
     private String smartListId;
     private String smartListName;
     private String status;
+    private String statusId;
     private int totalRecipients;
     private String[] outreachEmailTemplateTypes;
     @JsonProperty("preventDuplicateDays")
@@ -202,6 +203,13 @@ public class OutReach {
         this.status = status;
     }
 
+    public String getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(String statusId) {
+        this.statusId = statusId;
+    }
     public int getTotalRecipients() {
         return totalRecipients;
     }

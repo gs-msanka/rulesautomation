@@ -63,7 +63,7 @@ public class RulesUtil extends NSTestBase {
 				ResponseObject.class);
 		return response;
 	}
-	
+
 	public void loadToCustomers(HashMap<String, String> testData) throws Exception {
 		populateObjMaps();
 		setupRule(testData);
@@ -94,33 +94,33 @@ public class RulesUtil extends NSTestBase {
 		Log.info(""+rules2);
 		Assert.assertEquals(rules1, rules2);
 	}
-   /**
- * @param testData - the entire testData Hashmap which we get from excel - from which we generate the rule.
- */
-public void setupRule(HashMap<String,String> testData){
-	   //Create Rule in AutomatedAlertHandler
-	   String apexCodeForRuleCreation="JBCXM__AutomatedAlertRules__c rule=new JBCXM__AutomatedAlertRules__c(Name='"+testData.get("Name")+"',"
-	   											+"JBCXM__ruleType__c='"+testData.get("JBCXM__ruleType__c")+"',JBCXM__SourceType__c='"+testData.get("JBCXM__SourceType__c")
-	   											+"',JBCXM__TriggerCriteria__c='"+getIdResolvedString(testData.get("JBCXM__TriggerCriteria__c"))+"');"
-	   											+"insert rule;"
-	   											+"rule.JBCXM__externalId__c=rule.Id;"
-	   											+"update rule;";
-	   Log.info("Creating Rule...."+apexCodeForRuleCreation);
-	   sfdc.runApexCode(resolveStrNameSpace(apexCodeForRuleCreation));
-	   //Create ActionInfo in ActionTemplate
-	   String apexCodeForActionTemplate="JBCXM__AutomatedAlertRules__c AAR = [Select id,Name from JBCXM__AutomatedAlertRules__c Where Name = '"+testData.get("Name")+"' Limit 1];"
-	   								+ "JBCXM__ActionTemplates__c NewAT = new JBCXM__ActionTemplates__c(JBCXM__Action_Type__c ='"+testData.get("JBCXM__Action_Type__c")+"'"
-	   								+",JBCXM__AutomatedAlertRules__c ='"+getRuleId(testData.get("Name"))+"'"
-	   								+",JBCXM__ActionInfo__c='"+getIdResolvedString(testData.get("JBCXM__ActionInfo__c"))+"');"
-	   								+"insert NewAT;";
-	   Log.info("Creating Action Template...."+apexCodeForActionTemplate);
-	   if(apexCodeForActionTemplate.contains("$templateId")) {
-		   SObject[] templates = sfdc.getRecords("SELECT Id FROM EmailTemplate where Name='Gainsight sample template - measure below threshold'");
-		   String templateId = (String) templates[0].getChild("Id").getValue();
-		   apexCodeForActionTemplate=getStringByReplacingTemplateId(apexCodeForActionTemplate, templateId);
-	   }
-	   sfdc.runApexCode(resolveStrNameSpace(apexCodeForActionTemplate));
-   }
+	/**
+	 * @param testData - the entire testData Hashmap which we get from excel - from which we generate the rule.
+	 */
+	public void setupRule(HashMap<String,String> testData){
+		//Create Rule in AutomatedAlertHandler
+		String apexCodeForRuleCreation="JBCXM__AutomatedAlertRules__c rule=new JBCXM__AutomatedAlertRules__c(Name='"+testData.get("Name")+"',"
+				+"JBCXM__ruleType__c='"+testData.get("JBCXM__ruleType__c")+"',JBCXM__SourceType__c='"+testData.get("JBCXM__SourceType__c")
+				+"',JBCXM__TriggerCriteria__c='"+getIdResolvedString(testData.get("JBCXM__TriggerCriteria__c"))+"');"
+				+"insert rule;"
+				+"rule.JBCXM__externalId__c=rule.Id;"
+				+"update rule;";
+		Log.info("Creating Rule...."+apexCodeForRuleCreation);
+		sfdc.runApexCode(resolveStrNameSpace(apexCodeForRuleCreation));
+		//Create ActionInfo in ActionTemplate
+		String apexCodeForActionTemplate="JBCXM__AutomatedAlertRules__c AAR = [Select id,Name from JBCXM__AutomatedAlertRules__c Where Name = '"+testData.get("Name")+"' Limit 1];"
+				+ "JBCXM__ActionTemplates__c NewAT = new JBCXM__ActionTemplates__c(JBCXM__Action_Type__c ='"+testData.get("JBCXM__Action_Type__c")+"'"
+				+",JBCXM__AutomatedAlertRules__c ='"+getRuleId(testData.get("Name"))+"'"
+				+",JBCXM__ActionInfo__c='"+getIdResolvedString(testData.get("JBCXM__ActionInfo__c"))+"');"
+				+"insert NewAT;";
+		Log.info("Creating Action Template...."+apexCodeForActionTemplate);
+		if(apexCodeForActionTemplate.contains("$templateId")) {
+			SObject[] templates = sfdc.getRecords("SELECT Id FROM EmailTemplate where Name='Gainsight sample template - measure below threshold'");
+			String templateId = (String) templates[0].getChild("Id").getValue();
+			apexCodeForActionTemplate=getStringByReplacingTemplateId(apexCodeForActionTemplate, templateId);
+		}
+		sfdc.runApexCode(resolveStrNameSpace(apexCodeForActionTemplate));
+	}
 
 	/**
 	 * Method to load Accounts and Customers for the Rule Use case automation
@@ -130,7 +130,7 @@ public void setupRule(HashMap<String,String> testData){
 	 * @throws IOException
 	 */
 	public void loadAccountsAndCustomers(DataETL dataETL,
-			String accountJobName, String customerJobName) throws IOException {
+										 String accountJobName, String customerJobName) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		if (accountJobName != null && accountJobName != "") {
 			JobInfo jobInfo = mapper.readValue(
@@ -146,7 +146,7 @@ public void setupRule(HashMap<String,String> testData){
 			dataETL.execute(jobInfo);
 		}
 	}
-	
+
 	/**
 	 * Method to generate the static maps which contains the Ids to be replaced for tokens, in the test data
 	 */
@@ -162,7 +162,7 @@ public void setupRule(HashMap<String,String> testData){
 	}
 
 	/**
-	 * @param string - the string with Tokens  - pattern of token : #Shortcut.SysName# 
+	 * @param string - the string with Tokens  - pattern of token : #Shortcut.SysName#
 	 * @return - the string where Ids are replaced with values - like system names
 	 */
 	private String getIdResolvedString(String string) {
@@ -188,9 +188,9 @@ public void setupRule(HashMap<String,String> testData){
 	 * @return - true if the CTA is successfully created./ false if any of the CTA criteria do not match with the required values.
 	 */
 	public boolean isCTACreateSuccessfully(String priorityValue,
-			String statusValue, String accForAssigneeValue, String typeValue,
-			String reasonValue, String Comment, String RuleName,
-			String PlaybookName, boolean refrenceUser) {
+										   String statusValue, String accForAssigneeValue, String typeValue,
+										   String reasonValue, String Comment, String RuleName,
+										   String PlaybookName, boolean refrenceUser) {
 
 		String Assignee;
 		if (refrenceUser == true) {
@@ -219,8 +219,8 @@ public void setupRule(HashMap<String,String> testData){
 				Log.error("Status did not match!!");
 				check = false;
 			}
-			 if(!Assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c").getValue().toString()))
-			 { Log.error("Assignee did not match!!"); check=false; }
+			if(!Assignee.equalsIgnoreCase(obj.getChild("JBCXM__Assignee__c").getValue().toString()))
+			{ Log.error("Assignee did not match!!"); check=false; }
 			if (!ctaTypesMap.get("CT." + typeValue).equalsIgnoreCase(
 					obj.getChild(resolveStrNameSpace("JBCXM__Type__c")).getValue().toString())) {
 				Log.error("Type did not match!!");
@@ -230,7 +230,7 @@ public void setupRule(HashMap<String,String> testData){
 					.getValue().toString())) {
 				System.out.println("comment:"
 						+ obj.getChild(resolveStrNameSpace("JBCXM__Comments__c")).getValue()
-								.toString());
+						.toString());
 				Log.error("Comments did not match!!");
 				check = false;
 			}
@@ -275,7 +275,7 @@ public void setupRule(HashMap<String,String> testData){
 	 * @throws Exception
 	 */
 	public static void waitForCompletion(String ruleId, WebAction webAction,
-			Header header) throws Exception {
+										 Header header) throws Exception {
 		boolean flag = true;
 		int maxWaitingTime = 1000000;
 		long startTime = System.currentTimeMillis();
@@ -283,11 +283,11 @@ public void setupRule(HashMap<String,String> testData){
 		while (flag && executionTime < maxWaitingTime) {
 			Thread.sleep(10000);
 			ResponseObj result = webAction.doGet(APP_API_ASYNC_STATUS
-					+ "?ruleId=" + ruleId + "",
+							+ "?ruleId=" + ruleId + "",
 					header.getAllHeaders());
-            Log.info(String.valueOf(result));
+			Log.info(String.valueOf(result));
 			ResponseObject res = RulesUtil.convertToObject(result.getContent());
-            Log.info(String.valueOf(res));
+			Log.info(String.valueOf(res));
 			List<Object> data = (List<Object>) res.getData();
 			Map<String, Object> map = (Map<String, Object>) data.get(0);
 			if (map.get("status") != null) {
@@ -305,109 +305,109 @@ public void setupRule(HashMap<String,String> testData){
 		}
 	}
 
-    /**
-     * Deletes the rule based on either ruleId Or RuleName Or Both.
-     * If Both are NULL, then all the rules are deleted
-     * @param ruleId
-     * @param ruleName
-     */
-    public void deleteRule(String ruleId, String ruleName) {
-        String tempQuery = "Select id, Name from JBCXM__AutomatedAlertRules__c ";
-        if(ruleId == null && ruleName == null) {
-            Log.info("Deleting All the Rules");
-            sfdc.runApexCode(resolveStrNameSpace(RULES_CLEAN_SCRIPT));
-        } else {
-            if (ruleId != null && ruleName != null) {
-                tempQuery += " where id='" + ruleId + "' and name='" + ruleName + "'";
-            } else if (ruleId != null) {
-                tempQuery += " where id='" + ruleId + "'";
-            } else if (ruleName != null) {
-                tempQuery += "where name='" + ruleName + "'";
-            }
-        }
-        Log.info("Deleting Rules Query : " +tempQuery);
-        if(sfdc.getRecords(resolveStrNameSpace(tempQuery)).length > 0 ) {
-            sfdc.runApexCode(resolveStrNameSpace("Delete ["+tempQuery+"]"));
-        } else {
-            Log.error("No Rules Found to Delete");
-            throw new RuntimeException("No Rules Found to Delete " +tempQuery);
-        }
-    }
+	/**
+	 * Deletes the rule based on either ruleId Or RuleName Or Both.
+	 * If Both are NULL, then all the rules are deleted
+	 * @param ruleId
+	 * @param ruleName
+	 */
+	public void deleteRule(String ruleId, String ruleName) {
+		String tempQuery = "Select id, Name from JBCXM__AutomatedAlertRules__c ";
+		if(ruleId == null && ruleName == null) {
+			Log.info("Deleting All the Rules");
+			sfdc.runApexCode(resolveStrNameSpace(RULES_CLEAN_SCRIPT));
+		} else {
+			if (ruleId != null && ruleName != null) {
+				tempQuery += " where id='" + ruleId + "' and name='" + ruleName + "'";
+			} else if (ruleId != null) {
+				tempQuery += " where id='" + ruleId + "'";
+			} else if (ruleName != null) {
+				tempQuery += "where name='" + ruleName + "'";
+			}
+		}
+		Log.info("Deleting Rules Query : " +tempQuery);
+		if(sfdc.getRecords(resolveStrNameSpace(tempQuery)).length > 0 ) {
+			sfdc.runApexCode(resolveStrNameSpace("Delete ["+tempQuery+"]"));
+		} else {
+			Log.error("No Rules Found to Delete");
+			throw new RuntimeException("No Rules Found to Delete " +tempQuery);
+		}
+	}
 
-    /**
-     * Return the rule id if name id specified, else returns the rule id that's last created/modified.
-     * @param ruleName - Rule name to fetch the rule id
-     * @return - rule id if rule exists, else throws an exception.
-     */
-    public String getRuleId(String ruleName) {
-        String tempQuery = "Select id, Name From JBCXM__AutomatedAlertRules__c";
-        if(ruleName!=null) {
-            tempQuery += " where name='"+ruleName+"'";
-        }
-        tempQuery += " ORDER BY LastModifiedDate DESC NULLS LAST ";
-        Log.info("Query to get Rule Id " +ruleName);
-        SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(tempQuery));
-        if(sObjects.length >0) {
-            return sObjects[0].getId();
-        } else {
-            Log.error("No Rules Exists in the system with matched criteria");
-            throw new RuntimeException("No Rules Exists in the system with matched criteria");
-        }
-    }
+	/**
+	 * Return the rule id if name id specified, else returns the rule id that's last created/modified.
+	 * @param ruleName - Rule name to fetch the rule id
+	 * @return - rule id if rule exists, else throws an exception.
+	 */
+	public String getRuleId(String ruleName) {
+		String tempQuery = "Select id, Name From JBCXM__AutomatedAlertRules__c";
+		if(ruleName!=null) {
+			tempQuery += " where name='"+ruleName+"'";
+		}
+		tempQuery += " ORDER BY LastModifiedDate DESC NULLS LAST ";
+		Log.info("Query to get Rule Id " +ruleName);
+		SObject[] sObjects = sfdc.getRecords(resolveStrNameSpace(tempQuery));
+		if(sObjects.length >0) {
+			return sObjects[0].getId();
+		} else {
+			Log.error("No Rules Exists in the system with matched criteria");
+			throw new RuntimeException("No Rules Exists in the system with matched criteria");
+		}
+	}
 
-    /**
-     * Replaces the SystemName(which is given in as a pattern) with the Id fetched from the corresponding objects' HashMaps
-     * @param text
-     * @param replacements
-     * @return
-     */
-    public static String replaceSystemNameInRule(String text, HashMap<String, String> replacements) {
-        Pattern pattern = Pattern.compile("#(.+?)#");
-        return replaceStringWithTokens(text, pattern, replacements);
-    }
+	/**
+	 * Replaces the SystemName(which is given in as a pattern) with the Id fetched from the corresponding objects' HashMaps
+	 * @param text
+	 * @param replacements
+	 * @return
+	 */
+	public static String replaceSystemNameInRule(String text, HashMap<String, String> replacements) {
+		Pattern pattern = Pattern.compile("#(.+?)#");
+		return replaceStringWithTokens(text, pattern, replacements);
+	}
 
-    
-    /**
-     *  Accepts a text, which contains patterns to be replaced and the values are present within the replacements hashmap
-     * @param text
-     * @param pattern
-     * @param replacements
-     * @return
-     */
-    public static String replaceStringWithTokens(String text, Pattern pattern, HashMap<String, String> replacements) {
-        Matcher matcher = pattern.matcher(text);
-        //populate the replacements map ...
-        StringBuilder builder = new StringBuilder();
-        int i = 0;
-        while (matcher.find()) {
-            Log.info("Found " +matcher.group());
-            String replacement = replacements.get(matcher.group().substring(1, matcher.group().length()-1));
-            Log.info("replacement : " + replacement);
-            builder.append(text.substring(i, matcher.start()));
-            if (replacement == null)   {
-                builder.append(matcher.group(0));
-            }
-            else {
-                builder.append(replacement);
-            }
-            i = matcher.end();
-        }
-        builder.append(text.substring(i, text.length()));
-        Log.info("Replaced String : " +builder.toString());
-        return builder.toString();
-    }
-    
-    /**
-     * Extra utility which can be used to generate the system names in test data by replacing the Ids..not used as of now!
-     * @param text
-     * @param replacements
-     * @return
-     */
-    public static String replaceSFIDWithSystemName(String text, HashMap<String, String> replacements) {
-        Pattern pattern = Pattern.compile("\"\\w{18}\"");
-        return replaceStringWithTokens(text, pattern, replacements);
-    }
-    
+
+	/**
+	 *  Accepts a text, which contains patterns to be replaced and the values are present within the replacements hashmap
+	 * @param text
+	 * @param pattern
+	 * @param replacements
+	 * @return
+	 */
+	public static String replaceStringWithTokens(String text, Pattern pattern, HashMap<String, String> replacements) {
+		Matcher matcher = pattern.matcher(text);
+		//populate the replacements map ...
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		while (matcher.find()) {
+			Log.info("Found " +matcher.group());
+			String replacement = replacements.get(matcher.group().substring(1, matcher.group().length()-1));
+			Log.info("replacement : " + replacement);
+			builder.append(text.substring(i, matcher.start()));
+			if (replacement == null)   {
+				builder.append(matcher.group(0));
+			}
+			else {
+				builder.append(replacement);
+			}
+			i = matcher.end();
+		}
+		builder.append(text.substring(i, text.length()));
+		Log.info("Replaced String : " +builder.toString());
+		return builder.toString();
+	}
+
+	/**
+	 * Extra utility which can be used to generate the system names in test data by replacing the Ids..not used as of now!
+	 * @param text
+	 * @param replacements
+	 * @return
+	 */
+	public static String replaceSFIDWithSystemName(String text, HashMap<String, String> replacements) {
+		Pattern pattern = Pattern.compile("\"\\w{18}\"");
+		return replaceStringWithTokens(text, pattern, replacements);
+	}
+
 	public Boolean createAndRunRule(HashMap<String,String> testData) throws Exception {
 		setupRule(testData);
 		String RuleName = testData.get("Name");
@@ -519,7 +519,7 @@ public void setupRule(HashMap<String,String> testData){
 		Assert.assertNotNull(responseObj.getRequestId());
 
 	}
-	
+
 	/**
 	 * @param objectName - sfdc object/mda collection name
 	 * @param dataStorage - accepted argument are SFDC and MDA
@@ -652,7 +652,7 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return check;
 	}
-	
+
 
 	/**
 	 * @param ruleName ruleName to get status
@@ -668,7 +668,7 @@ public void setupRule(HashMap<String,String> testData){
 			statusId = jsonNode.get("data").findValue("statusId").toString().replace("\"", "");
 			Log.info("statusId is " + statusId);
 		}
-		return statusId;		
+		return statusId;
 	}
 	/**
 	 * @param ruleName ruleName to Execute
@@ -684,7 +684,7 @@ public void setupRule(HashMap<String,String> testData){
 		waitForRuleProcessingToComplete(statusId);
 		return getExecutionHistory(statusId);
 	}
-	
+
 	/**
 	 * @param statusId statusID for rule to complete
 	 */
@@ -764,7 +764,7 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return ruleExecutionHistoryList;
 	}
-	
+
 	/**
 	 * @param statusId statusID to get executionHistory
 	 * @return RuleExecutionHistory object
@@ -773,7 +773,7 @@ public void setupRule(HashMap<String,String> testData){
 		if(statusId == null) {
 			throw new IllegalArgumentException("Status Id can be null.");
 		}
-			RuleExecutionHistory ruleExecutionHistory=null;
+		RuleExecutionHistory ruleExecutionHistory=null;
 		try {
 			ResponseObj responseObj = wa.doGet(APP_API_ASYNC_STATUS + statusId, header.getAllHeaders());
 			Log.info("Response : " +responseObj.toString());
@@ -789,16 +789,16 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return ruleExecutionHistory;
 	}
-	
+
 	public boolean isRuleProcessingCompleted(String statusId){
 		boolean result = false;
 		RuleExecutionHistory executionHistory  = getExecutionHistory(statusId);
 		if (executionHistory == null) {
 			throw new RuntimeException("Execution History is null, Please check your data parameter.");
 		}
-		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") || 
-				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {		
-				result = true;
+		if (executionHistory.getStatus() != null && (executionHistory.getStatus().equalsIgnoreCase("Completed") ||
+				executionHistory.getStatus().equalsIgnoreCase("Failed_While_Processing"))) {
+			result = true;
 		}
 		return result;
 	}
@@ -814,7 +814,7 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return result;
 	}
-	
+
 	public boolean isCTAclosedSuccessfully(CloseCtaAction closeCtaAction) {
 		boolean result = false;
 		SObject[] closedCtaRecords = sfdc
@@ -861,7 +861,7 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return result;
 	}
-	
+
 	public boolean isMileStoneCreatedSuccessfully(String mileStone, String milestoneDate, String mileStoneComments, String accountName){
 		boolean result = false;
 		SObject[] milseStoneRecords = sfdc
@@ -877,12 +877,12 @@ public void setupRule(HashMap<String,String> testData){
 					"MileStone is not matching for Account - " + " "
 							+ accountName);
 			verifier.verifyEquals(milestoneDate, String.valueOf(obj.getChild(
-					resolveStrNameSpace("JBCXM__CreatedDate__c")).getValue()),
+							resolveStrNameSpace("JBCXM__CreatedDate__c")).getValue()),
 					"MileStone createdDate is not matching for Account  - "
 							+ " " + accountName);
 			verifier.verifyEquals(mileStoneComments, String.valueOf(obj
-					.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
-					.getValue()),
+							.getChild(resolveStrNameSpace("JBCXM__Comment__c"))
+							.getValue()),
 					"MileStone Comments is not matching for Account  - " + " "
 							+ accountName);
 		}
@@ -893,7 +893,7 @@ public void setupRule(HashMap<String,String> testData){
 		}
 		return result;
 	}
-	
+
 	public boolean isFeatureCreatedSuccessfully(LoadToFeatureAction loadToFeatureAction, String accountName){
 		boolean result = false;
 		SObject[] features = sfdc
@@ -920,25 +920,25 @@ public void setupRule(HashMap<String,String> testData){
 			Log.info(String.valueOf(obj.getChild(
 					resolveStrNameSpace("JBCXM__Comment__c")).getValue()));
 			verifier.verifyEquals(loadToFeatureAction.getComments(), String
-					.valueOf(obj.getChild(
-							resolveStrNameSpace("JBCXM__Comment__c"))
-							.getValue()),
+							.valueOf(obj.getChild(
+									resolveStrNameSpace("JBCXM__Comment__c"))
+									.getValue()),
 					"Features Comments is not matching for Account  - " + " "
 							+ accountName);
 			boolean licenced = false;
 			if (loadToFeatureAction.getLicensed().getUpdateType()
 					.equalsIgnoreCase("Licenced")
 					|| loadToFeatureAction.getLicensed().getUpdateType()
-							.equalsIgnoreCase("Do not update existing value")
+					.equalsIgnoreCase("Do not update existing value")
 					|| loadToFeatureAction.getLicensed().getUpdateType()
-							.equalsIgnoreCase("true")) {
+					.equalsIgnoreCase("true")) {
 				licenced = true;
 			}
 			boolean enabled = false;
 			if (loadToFeatureAction.getEnabled().getUpdateType()
 					.equalsIgnoreCase("Enabled")
 					|| loadToFeatureAction.getEnabled().getUpdateType()
-							.equalsIgnoreCase("true")) {
+					.equalsIgnoreCase("true")) {
 				enabled = true;
 			}
 			verifier.verifyEquals(
@@ -959,27 +959,27 @@ public void setupRule(HashMap<String,String> testData){
 		return result;
 	}
 
-    /**
-     * @param ruleName            - ruleName to get the results shown in the preview results
-     * @param totalRecordsToFetch - payload/entity to fetch records
-     * @return - returns preview results of a rule as list of hashmap
-     * @throws Exception
-     */
-    public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
-        String ruleId = getRuleId(ruleName);
-        ResponseObj responseObj = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
-        Log.info("Response Obj : " + responseObj.toString());
-        List<Map<String, String>> results = null;
-        if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
-            NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-            if (rs != null && rs.isResult())
-                results = mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {
-                });
-        } else {
-            throw new RuntimeException("Failed to get preview result records");
-        }
-        return results;
-    }
+	/**
+	 * @param ruleName            - ruleName to get the results shown in the preview results
+	 * @param totalRecordsToFetch - payload/entity to fetch records
+	 * @return - returns preview results of a rule as list of hashmap
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> getPreviewResults(String ruleName, String totalRecordsToFetch) throws Exception {
+		String ruleId = getRuleId(ruleName);
+		ResponseObj responseObj = wa.doPost(String.format(RULE_PREVIEW_RESULTS, ruleId), header.getAllHeaders(), totalRecordsToFetch);
+		Log.info("Response Obj : " + responseObj.toString());
+		List<Map<String, String>> results = null;
+		if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
+			NsResponseObj rs = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+			if (rs != null && rs.isResult())
+				results = mapper.readValue(mapper.writeValueAsString(rs.getData()), new TypeReference<List<Map<String, String>>>() {
+				});
+		} else {
+			throw new RuntimeException("Failed to get preview result records");
+		}
+		return results;
+	}
 
 	/**
 	 * @param ListofMap - List of hashmap
