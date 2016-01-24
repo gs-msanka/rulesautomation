@@ -107,7 +107,7 @@ public class BaseTest {
         env.start();
         try {
             env.launchBrower();
-          //  basepage = new BasePage();
+            basepage = new BasePage();
             Log.info("Initializing Base Page : " + basepage);
         } catch (Exception e) {
             env.stop();
