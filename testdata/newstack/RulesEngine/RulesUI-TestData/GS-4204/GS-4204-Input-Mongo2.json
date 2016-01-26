@@ -1,0 +1,103 @@
+{
+  "ruleType": "Custom",
+  "ruleName": "GS-4204-using-Mongo-Calculatedmeasures",
+  "ruleDescription": "GS-4204-using-Mongo-Calculatedmeasures",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "customObject2 Object",
+    "calculatedFields": [
+      {
+        "fieldName": "CalculatedField - 3",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "CustomNumberWithDecimals1",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "AVG",
+            "sourceField": "DivideOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "4",
+            "granularity": "Weeks",
+            "adjustForMissingData": "true"
+          }
+        }
+      },
+      {
+        "fieldName": "CalculatedField - 4",
+        "calculationType": "Comparison",
+        "calculateDifferenceType": "Percentage",
+        "fieldAConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT_DISTINCT",
+            "sourceField": "SubstractionOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "14",
+            "granularity": "Weeks"
+          }
+        },
+        "fieldBConfig": {
+          "calculatedFieldType": "Aggregation",
+          "showField": "",
+          "aggregation": {
+            "aggregationCalculation": "COUNT_DISTINCT",
+            "sourceField": "DivideOfTwoMeasures",
+            "periodType": "Past",
+            "noOfPeriods": "20",
+            "granularity": "Weeks"
+          }
+        }
+      }
+    ],
+    "setupData": [
+      {
+        "sourceObject": "Object",
+        "showFields": [
+          {
+            "fieldName": "ID",
+            "showAdvancedName": ""
+          }
+        ],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": "",
+    "timeIdentifier": "CustomDate1"
+  },
+  "setupActions": [
+    {
+      "actionType": "loadToSFDCObject",
+      "action": {
+        "objectName": "RulesSFDCCustom Object",
+        "operation": "Insert",
+        "fieldMappings": [
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 3",
+            "destination": "ActiveUsers"
+          },
+          {
+            "sourceObject": "",
+            "sourceField": "CalculatedField - 4",
+            "destination": "AccPercentage"
+          }
+        ]
+      },
+      "criterias": []
+    }
+  ]
+}

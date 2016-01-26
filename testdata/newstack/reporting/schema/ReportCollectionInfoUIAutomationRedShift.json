@@ -6,7 +6,7 @@
     "dbType": "DATA",
     "dbCollectionName": null,
     "CollectionID": null,
-    "CollectionName": "MDARedShiftData"
+    "CollectionName": "Auto_RedShift_MDAData"
   },
   "Columns": [
     {
@@ -22,7 +22,13 @@
       "measureValueBucket": null,
       "decimalPlaces": 0,
       "deleted": false,
-      "mappings": null,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_ACCOUNT_NAME",
+          "dataType": "string",
+          "format": null
+        }
+      },
       "maxLength": 250,
       "dataType": "string",
       "columnAttribute": 0,
@@ -300,7 +306,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Page Views",
+      "DisplayName": "PageViews",
       "colattribtype": 1
     },
     {
@@ -321,7 +327,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Page Visits",
+      "DisplayName": "PageVisits",
       "colattribtype": 1
     },
     {
@@ -342,7 +348,7 @@
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "Files Downloaded",
+      "DisplayName": "FilesDownloaded",
       "colattribtype": 1
     },
     {
@@ -356,14 +362,14 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 1,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "No of Reports Run",
+      "DisplayName": "NoofReportsRun",
       "colattribtype": 1
     },
     {
@@ -377,14 +383,14 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 2,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "No of Rules Triggered",
+      "DisplayName": "NoofRulesTriggered",
       "colattribtype": 1
     },
     {
@@ -398,15 +404,42 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 3,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "No of Schedules Created",
+      "DisplayName": "NoofSchedulesCreated",
       "colattribtype": 1
+    },
+    {
+      "name": null,
+      "datatype": "string",
+      "hidden": false,
+      "indexed": false,
+      "format": null,
+      "defaultValue": null,
+      "primary": false,
+      "distinctMemberCount": 0,
+      "groupName": null,
+      "measureValueBucket": null,
+      "decimalPlaces": 0,
+      "deleted": false,
+      "mappings": {
+        "SFDC": {
+          "key": "SFDC_ACCOUNT",
+          "dataType": "string",
+          "format": null
+        }
+      },
+      "maxLength": 250,
+      "dataType": "string",
+      "columnAttribute": 0,
+      "DBName": null,
+      "DisplayName": "ID",
+      "colattribtype": 0
     },
     {
       "name": null,
@@ -419,14 +452,14 @@
       "distinctMemberCount": 0,
       "groupName": null,
       "measureValueBucket": null,
-      "decimalPlaces": 3,
+      "decimalPlaces": 0,
       "deleted": false,
       "mappings": null,
       "maxLength": null,
       "dataType": "number",
       "columnAttribute": 1,
       "DBName": null,
-      "DisplayName": "No of Meetings Attended",
+      "DisplayName": "NoofMeetingsAttended",
       "colattribtype": 1
     }
   ],

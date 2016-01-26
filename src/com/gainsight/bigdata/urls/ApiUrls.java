@@ -29,6 +29,7 @@ public interface ApiUrls extends NSURLs {
 
 
     String API_RULE_RUN                         = NS_URL + "/api/eventrule";
+    String RULE_PREVIEW_RESULTS                 = NS_URL + "/api/eventrule/%s/result";
     String APP_API_GET_COLLECTION               = NS_URL + "/api/collections/";
     String APP_API_ASYNC_STATUS			        = NS_URL + "/api/async/process/";
 

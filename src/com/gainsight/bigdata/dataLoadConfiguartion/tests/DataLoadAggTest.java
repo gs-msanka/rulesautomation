@@ -80,7 +80,7 @@ public class DataLoadAggTest extends NSTestBase {
         }
 
         if(true) {  //to run multiple times locally.
-            MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl();
+            MDAIntegrationImpl integrationImpl = new MDAIntegrationImpl(header);
             integrationImpl.authorizeMDA();
             metaUtil.createExtIdFieldOnAccount(sfdc);
             metaUtil.createExtIdFieldOnContacts(sfdc);

@@ -3,7 +3,7 @@
   "jobType": "EventProcess",
   "namespacePrefix": "JBCXM",
   "dateProcess" : {
-    "inputFile" : "/testdata/newstack/reporting/data/ReportData1.csv",
+    "inputFile" : "/testdata/newstack/reporting/data/ReportData2.csv",
     "outputFile" : "/testdata/newstack/reporting/process/ReportData1.csv",
     "fields" :[
       {

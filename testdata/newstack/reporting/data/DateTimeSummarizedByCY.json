@@ -14,7 +14,7 @@
           "dataType": "boolean",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
+          "fieldDisplayName": "Active",
           "collectionId": ""
         },
         {
@@ -24,7 +24,7 @@
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
+          "fieldDisplayName": "ProductCode",
           "collectionId": ""
         },
         {
@@ -48,7 +48,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "Auto_DateTimeSummarizedByCY9048",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -94,7 +94,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           },
@@ -108,14 +108,14 @@
               90
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }
         ]
       },
       "skip": 0,
-      "SchemaName": "MDAdataForReporting1_1448430137703",
+      "SchemaName": "Auto_RedShift_MDAData",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [

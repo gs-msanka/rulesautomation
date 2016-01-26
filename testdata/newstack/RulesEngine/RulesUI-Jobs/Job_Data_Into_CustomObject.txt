@@ -1,0 +1,103 @@
+{
+  "jobName": "Load Data into custom object for RulesUI Automation",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "dateProcess": {
+    "inputFile": "/testdata/newstack/RulesEngine/RulesUI-Data/Data_Into_CustomObject.csv",
+    "outputFile": "/resources/datagen/process/Load_Data_Into_CustomObject.csv",
+    "fields": [
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "rules_c_Date__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Custom_Date2__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": false,
+        "fieldName": "Custom_Date3__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date4__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date5__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": false,
+        "fieldName": "Custom_Date6__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "rules_c_DateTime__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime2__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": false,
+        "daily": true,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime3__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime4__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime5__c",
+        "timeZone": "America/Los_Angeles"
+      },
+      {
+        "weekly": true,
+        "daily": false,
+        "dateTime": true,
+        "fieldName": "Custom_DateTime6__c",
+        "timeZone": "America/Los_Angeles"
+      }
+    ]
+  },
+  "load": {
+    "target": "sfdc",
+    "sObject": "C_Custom__c",
+    "operation": "upsert",
+    "contentType": "CSV",
+    "externalIDField": "rules_c_ExternalID__c",
+    "file": "/resources/datagen/process/Load_Data_Into_CustomObject.csv"
+  }
+}

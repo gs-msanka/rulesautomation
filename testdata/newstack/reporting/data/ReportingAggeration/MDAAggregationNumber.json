@@ -8,63 +8,63 @@
       "limit": 500,
       "drillDownReportDimensions": [
         {
-          "col": "Files Downloaded",
+          "col": "FilesDownloaded",
           "axis": "row",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Min of Files Downloaded",
+          "fieldDisplayName": "FilesDownloaded",
           "collectionId": "",
           "agg_func": "min"
         },
         {
-          "col": "No of Meetings Attended",
+          "col": "NoofMeetingsAttended",
           "axis": "row",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Max of No of Meetings Attended",
+          "fieldDisplayName": "NoofMeetingsAttended",
           "collectionId": "",
           "agg_func": "max"
         },
         {
-          "col": "No of Rules Triggered",
+          "col": "NoofRulesTriggered",
           "axis": "row",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Avg of No of Rules Triggered",
+          "fieldDisplayName": "NoofRulesTriggered",
           "collectionId": "",
           "agg_func": "avg"
         },
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "row",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Sum of No of Schedules Created",
+          "fieldDisplayName": "NoofSchedulesCreated",
           "collectionId": "",
           "agg_func": "sum"
         },
         {
           "col": "Active",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "boolean",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
+          "fieldDisplayName": "Active",
           "collectionId": ""
         },
         {
           "col": "ProductCode",
-          "axis": "measure",
+          "axis": "row",
           "type": 0,
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
+          "fieldDisplayName": "ProductCode",
           "collectionId": ""
         },
         {
@@ -77,7 +77,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "Auto_MDAAggregationNumber",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -123,7 +123,7 @@
               4
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           },
@@ -137,14 +137,14 @@
               90
             ],
             "locked": false,
-            "collectionId": "f46b5df5-30e7-4b0a-bead-cbb5eed02537",
+            "collectionId": "",
             "type": 0,
             "aggregateFunction": "count"
           }
         ]
       },
       "skip": 0,
-      "SchemaName": "MDARedShiftData",
+      "SchemaName": "Auto_RedShift_MDAData",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
@@ -158,42 +158,42 @@
           "collectionId": ""
         },
         {
-          "col": "Files Downloaded",
+          "col": "FilesDownloaded",
           "axis": "measure",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Min of Files Downloaded",
+          "fieldDisplayName": "Min of FilesDownloaded",
           "collectionId": "",
           "agg_func": "min"
         },
         {
-          "col": "No of Meetings Attended",
+          "col": "NoofMeetingsAttended",
           "axis": "measure",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Max of No of Meetings Attended",
+          "fieldDisplayName": "Max of NoofMeetingsAttended",
           "collectionId": "",
           "agg_func": "max"
         },
         {
-          "col": "No of Rules Triggered",
+          "col": "NoofRulesTriggered",
           "axis": "measure",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Avg of No of Rules Triggered",
+          "fieldDisplayName": "Avg of NoofRulesTriggered",
           "collectionId": "",
           "agg_func": "avg"
         },
         {
-          "col": "No of Schedules Created",
+          "col": "NoofSchedulesCreated",
           "axis": "measure",
           "type": 1,
           "dataType": "number",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Sum of No of Schedules Created",
+          "fieldDisplayName": "Sum of NoofSchedulesCreated",
           "collectionId": "",
           "agg_func": "sum"
         },
@@ -218,7 +218,7 @@
           "collectionId": ""
         }
       ],
-      "ReportReadLimit": 5,
+      "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000
     }
   ]

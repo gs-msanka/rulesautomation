@@ -14,7 +14,7 @@
           "dataType": "boolean",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
+          "fieldDisplayName": "Active",
           "collectionId": ""
         },
         {
@@ -24,7 +24,7 @@
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
+          "fieldDisplayName": "ProductCode",
           "collectionId": ""
         },
         {
@@ -34,7 +34,7 @@
           "dataType": "string",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Count of ProductName",
+          "fieldDisplayName": "ProductName",
           "collectionId": ""
         },
         {
@@ -58,7 +58,7 @@
           "collectionId": ""
         }
       ],
-      "reportName": "New Report",
+      "reportName": "Auto_BubbleReport9033",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "expression": "A AND B",
@@ -125,7 +125,7 @@
         ]
       },
       "skip": 0,
-      "SchemaName": "MDAdataForReporting",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [

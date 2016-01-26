@@ -1,17 +1,17 @@
 package com.gainsight.bigdata.Integration.utils;
 
-import com.gainsight.bigdata.Integration.enums.UsageConnectorType;
-import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
+import com.gainsight.http.WebAction;
 import com.gainsight.sfdc.administration.pages.AdminIntegrationPage;
 import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import org.apache.http.HttpStatus;
-import org.codehaus.jackson.type.TypeReference;
 
-import java.io.IOException;
+import org.apache.http.HttpStatus;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -21,7 +21,16 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
 /**
  * Created by Giribabu on 14/07/15.
  */
-public class MDAIntegrationImpl extends NSTestBase {
+public class MDAIntegrationImpl
+{
+	ObjectMapper mapper = new ObjectMapper();
+	WebAction wa = new WebAction();
+	Header header;
+
+	public MDAIntegrationImpl(Header header) {
+		this.header = header;
+
+	}
 
     /**
      * Check if the tenant is authorised on MDA (i.e OAuth enabled.)

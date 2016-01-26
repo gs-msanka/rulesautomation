@@ -1,0 +1,92 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Active",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        }
+      ],
+      "reportName": "Auto_MDAAggregationBoolean",
+      "assetType": "ANALYTICS",
+      "whereAdvanceFilter": {
+        "expression": "A AND B",
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "A",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "logicalOperator": "AND",
+            "filterValues": [
+              "A"
+            ],
+            "locked": false,
+            "collectionId": "",
+            "type": 0
+          },
+          {
+            "dbName": "ProductCode",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "STARTSWITH",
+            "logicalOperator": "AND",
+            "filterValues": [
+              "B"
+            ],
+            "locked": false,
+            "collectionId": "",
+            "type": 0
+          }
+        ]
+      },
+      "skip": 0,
+      "SchemaName": "Auto_RedShift_MDAData",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "Active",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Count of Active",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

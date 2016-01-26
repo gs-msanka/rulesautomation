@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Giribabu on 21/05/15.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportInfo {
 
@@ -32,7 +32,7 @@ public class ReportInfo {
     private String reportId;
     private String reportName;
     private String assetType;
-    private boolean nonAggregatedResult = true;
+    private boolean nonAggregatedResult ;
     @JsonProperty("whereAdvanceFilter")
     private ReportAdvanceFilter whereAdvanceFilter;
 
@@ -178,6 +178,7 @@ public class ReportInfo {
         private String collectionId;
         private String summarizedBy;
         private String order;
+        public PathMetadata pathMetaData;
 
 
         public int getDecimalPlaces() {
@@ -260,7 +261,59 @@ public class ReportInfo {
             this.order = order;
         }
 
+        public PathMetadata getPathMetaData() {
+            return pathMetaData;
+        }
+
+        public void setPathMetaData(PathMetadata pathMetaData) {
+            this.pathMetaData = pathMetaData;
+        }
+
     }
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class PathMetadata {
+        public Path path;
 
+        public Path getPath() {
+            return path;
+        }
+
+        public void setPath(Path path) {
+            this.path = path;
+        }
+    }
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Path {
+        private String lookupId;
+        private String lookupName;
+        public Path path;
+
+        public String getLookupId() {
+            return lookupId;
+        }
+
+        public void setLookupId(String lookupId) {
+            this.lookupId = lookupId;
+        }
+
+        public String getLookupName() {
+            return lookupName;
+        }
+
+        public void setLookupName(String lookupName) {
+            this.lookupName = lookupName;
+        }
+
+        public Path getPath() {
+            return path;
+        }
+
+        public void setPath(Path path) {
+            this.path = path;
+        }
+    }
 }

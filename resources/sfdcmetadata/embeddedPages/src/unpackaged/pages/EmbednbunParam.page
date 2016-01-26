@@ -1,0 +1,8 @@
+<apex:page >
+
+
+  
+ <h1>    {!$CurrentPage.parameters.bundleparam}   </h1>
+ <h1>    {!$CurrentPage.parameters.bundleparam2}   </h1>
+
+</apex:page>

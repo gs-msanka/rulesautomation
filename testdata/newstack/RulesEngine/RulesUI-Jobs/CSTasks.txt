@@ -1,0 +1,21 @@
+{
+  "jobName": "extract CSTASKS",
+  "jobType": "extract CSTASKS",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "whereCondition": " where isdeleted=false",
+    "table": "JBCXM__CSTask__c ",
+    "fields": [
+      "JBCXM__Subject__c",
+      "JBCXM__Status__c",
+      "JBCXM__Priority__c",
+      "JBCXM__SkipOption__c",
+      "JBCXM__DeltaDays__c"
+    ],
+    "output": "/testdata/newstack/RulesEngine/RulesUI_ExpectedData/CSTasks.csv"
+  }
+}

@@ -21,7 +21,7 @@ public class NSConfigProvider extends AbstractConfigProvider<NsConfig> {
 
     @Override
     public NsConfig getConfig() {
-        String profileName = System.getProperty("ns_env" , "test");
+        String profileName = System.getProperty("ns_env" , "autoqa01");
         return getConfig(profileName);
     }
 

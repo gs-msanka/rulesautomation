@@ -1,0 +1,113 @@
+{
+  "ReportInfo": [
+    {
+      "SchemaName": "Auto_RedShift_MDADataJOIN2",
+      "CollectionID": "",
+      "limit": 500,
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Join2Boolean",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join2Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Join1Boolean",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join1Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": ""
+            }
+          }
+        },
+        {
+          "col": "AccountName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": "",
+              "path": {
+                "lookupId": "",
+                "lookupName": ""
+              }
+            }
+          }
+        }
+      ],
+      "drillDownReportDimensions": [
+        {
+          "col": "Join2Boolean",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join2Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Join1Boolean",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "fieldDisplayName": "Join1Boolean",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": ""
+            }
+          }
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "pathMetaData": {
+            "path": {
+              "lookupId": "",
+              "lookupName": "",
+              "path": {
+                "lookupId": "",
+                "lookupName": ""
+              }
+            }
+          }
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000,
+      "reportName": "Auto_MDAJoinsReport"
+    }
+  ],
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID"
+}
