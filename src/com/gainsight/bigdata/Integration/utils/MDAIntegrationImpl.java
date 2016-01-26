@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.Integration.utils;
 
+import com.gainsight.bigdata.Integration.enums.UsageConnectorType;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.ResponseObj;
@@ -8,7 +9,9 @@ import com.gainsight.sfdc.pages.BasePage;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import org.apache.http.HttpStatus;
+import org.codehaus.jackson.type.TypeReference;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -33,8 +36,8 @@ public class MDAIntegrationImpl extends NSTestBase {
                 if(nsResponseObj.isResult()) {
                     result = true;
                 } else {
-                    Log.info(nsResponseObj.getErrorCode());
-                    Log.info(nsResponseObj.getErrorDesc());
+                    Log.info("Error Code " +nsResponseObj.getErrorCode());
+                    Log.info("Error Description "+nsResponseObj.getErrorDesc());
                 }
             }
         } catch (Exception e) {
@@ -59,8 +62,8 @@ public class MDAIntegrationImpl extends NSTestBase {
                 nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                 if(nsResponseObj.isResult()) {
                     Log.info("Revoked MDA Authorization..., Now Disabling MixPanel, Google Analytics & SegmentIO connectors.");
-                    if(deActivateGoogleAnalyticsConnector() && deActivateMixPanelConnector()
-                            && deActivateSegmentIOConnector()) {
+                    if(deactivateConnector(UsageConnectorType.SEGMENT_IO) && deactivateConnector(UsageConnectorType.MIXPANEL)
+                            && deactivateConnector(UsageConnectorType.GOOGLE_ANALYTICS)) {
                         result = true;
                     }
                 }
@@ -71,79 +74,32 @@ public class MDAIntegrationImpl extends NSTestBase {
         return result;
     }
 
-    /**
-     * Deactivates Google Analytics Connector.
-     * @return true on successful de-activation of Google analytics connector..
-     */
-    public boolean deActivateGoogleAnalyticsConnector() {
-        Log.info("Disabling Google Analytics Connector...");
-        boolean result = false;
-        try {
-            ResponseObj responseObj = wa.doPut(GA_DEACTIVATE_PUT,  "{}", header.getAllHeaders());
-            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-                if(nsResponseObj.isResult()) {
-                    Log.info("Disabled Google Analytics Connector.");
-                    result = true;
-                }
-            } else {
-                throw new RuntimeException("Failed to de-active google analytics");
-            }
-        } catch (Exception e) {
-            Log.error("Failed ", e);
-            throw new RuntimeException(e);
+    public NsResponseObj getNsReponseObj(ResponseObj responseObj) throws IOException {
+        if (responseObj.getStatusCode() == org.apache.commons.httpclient.HttpStatus.SC_OK) {
+            NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            return nsResponseObj;
         }
-        return result;
+        throw new RuntimeException("Status code is not 200 Ok.");
     }
 
-    /**
-     * Deactivates SegmentIO Connector.
-     * @return true on successful de-activation of SegmentIO connector.
-     */
-    public boolean deActivateSegmentIOConnector() {
-        Log.info("Disabling SegmentIO Connector...");
-        boolean result = false;
+    public boolean makeConnectorDefault(UsageConnectorType connectorType) {
         try {
-            ResponseObj responseObj = wa.doPut(SEGMENT_DEACTIVATE_PUT,  "{}", header.getAllHeaders());
-            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-                if(nsResponseObj.isResult()) {
-                    Log.info("Disabled SegmentIO Connector.");
-                    result = true;
-                }
-            } else {
-                throw new RuntimeException("Failed to de-active SegmentIO");
-            }
+            ResponseObj responseObj = wa.doPut(String.format(CONNECTOR_DEFAULT_PUT, connectorType), "{}", header.getAllHeaders());
+            NsResponseObj nsResponseObj = getNsReponseObj(responseObj);
+            return nsResponseObj.isResult();
         } catch (Exception e) {
-            Log.error("Failed ", e);
             throw new RuntimeException(e);
         }
-        return result;
     }
 
-    /**
-     * Deactivates MixPanel Connector.
-     * @return true on successful de-activation of MixPanel Connector.
-     */
-    public boolean deActivateMixPanelConnector() {
-        Log.info("Disabling MixPanel Connector...");
-        boolean result = false;
+    public boolean deactivateConnector(UsageConnectorType connectorType) {
         try {
-            ResponseObj responseObj = wa.doPut(MIX_PANEL_DEACTIVATE_PUT,  "{}", header.getAllHeaders());
-            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
-                NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
-                if(nsResponseObj.isResult()) {
-                    Log.info("Disabled MixPanel Connector.");
-                    result = true;
-                }
-            } else {
-                throw new RuntimeException("Failed to de-active MixPanel");
-            }
+            ResponseObj responseObj = wa.doPut(String.format(CONNECTOR_DEACTIVATE_PUT, connectorType), "{}", header.getAllHeaders());
+            NsResponseObj nsResponseObj = getNsReponseObj(responseObj);
+            return nsResponseObj.isResult();
         } catch (Exception e) {
-            Log.error("Failed ", e);
             throw new RuntimeException(e);
         }
-        return result;
     }
 
     /**
