@@ -1,5 +1,6 @@
 package com.gainsight.bigdata.Integration.utils;
 
+import com.gainsight.bigdata.Integration.enums.UsageConnectorType;
 import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
@@ -12,6 +13,7 @@ import com.gainsight.testdriver.Log;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;

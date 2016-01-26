@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * Created by gainsight on 10/07/15.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDetail {
 
     private String createdBy;
@@ -34,7 +34,24 @@ public class AccountDetail {
     @JsonIgnore
     private boolean deleted;
     private boolean writeToSFDC = false;
+    private boolean reSync;
+    private String bucketName;
 
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public boolean isReSync() {
+        return reSync;
+    }
+
+    public void setReSync(boolean reSync) {
+        this.reSync = reSync;
+    }
 
     public boolean isWriteToSFDC() {
         return writeToSFDC;
