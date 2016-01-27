@@ -277,7 +277,7 @@ public void setupRule(HashMap<String,String> testData){
 	public static void waitForCompletion(String ruleId, WebAction webAction,
 			Header header) throws Exception {
 		boolean flag = true;
-		int maxWaitingTime = 3000000;
+		int maxWaitingTime = 1000000;
 		long startTime = System.currentTimeMillis();
 		long executionTime = 0;
 		while (flag && executionTime < maxWaitingTime) {

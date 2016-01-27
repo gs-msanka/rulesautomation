@@ -14,6 +14,8 @@ import java.util.List;
 public class RulesPojo {
     private String ruleType = "";
     private String ruleName = "";
+    private String ruleFor = "Account";
+    private String relationshipType;
     private String ruleDescription = "";
     private SetupRulePojo setupRule = new SetupRulePojo();
     private List<RuleAction> setupActions = new ArrayList<>();
@@ -37,6 +39,22 @@ public class RulesPojo {
 
     public String getRuleName() {
         return ruleName;
+    }
+
+    public String getRuleFor() {
+        return ruleFor;
+    }
+
+    public void setRuleFor(String ruleFor) {
+        this.ruleFor = ruleFor;
+    }
+
+    public String getRelationshipType() {
+        return relationshipType;
+    }
+
+    public void setRelationshipType(String relationshipType) {
+        this.relationshipType = relationshipType;
     }
 
     public void setRuleName(String ruleName) {

@@ -1,0 +1,68 @@
+{
+  "jobName": "Extract Relationships",
+  "jobType": "Extract Relationships",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": true,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "JBCXM__GSRelationship__c",
+    "fields": [
+      "Id",
+      "JBCXM__Account__r.Name"
+    ],
+    "output": "/resources/datagen/process/RulesUIAccountsss.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/RulesUIAccountsss.csv",
+        "table": "account",
+        "joinColumnName": "\"JBCXM__Account__r.Name\"",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "RelationshipId"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/LoadDataIntoMda.csv",
+        "table": "accounts",
+        "joinColumnName": "AccountName",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "AccountName"
+          },
+          {
+            "name": "CustomDate1",
+            "alias": "CustomDate1"
+          },
+          {
+            "name": "CustomNumber1",
+            "alias": "CustomNumber1"
+          },
+          {
+            "name": "CustomNumber2",
+            "alias": "CustomNumber2"
+          },
+          {
+            "name": "CustomNumberWithDecimals1",
+            "alias": "CustomNumberWithDecimals1"
+          },
+          {
+            "name": "CustomNumberWithDecimals2",
+            "alias": "CustomNumberWithDecimals2"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/Data_Into_Custom_Object2.csv"
+  }
+}

@@ -238,29 +238,6 @@ public class CreateRuleTest extends BaseTest {
         }
         verifier.assertVerification();
     }
-    
-   // @Test // TODO - WIP
-	public void verifyDataLoadConfiguration() throws Exception{
-		Assert.assertTrue(mongoConnection.deleteAllRecordsFromMongoCollectionBasedOnTenantID(tenantDetails.getTenantId(), RULES_LOADABLE_OBJECT), "Check whether Delete operation is success or not");
-		Assert.assertTrue(mongoConnection.deleteCollectionSchemaFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER), "Check whether Delete operation is success or not");
-		rulesConfigureAndDataSetup.createMultipleSubjectAreasForDataLoadConfiguration(tenantDetails, mongoDBDAO);
-		DataLoadConfigPojo dataLoadConfigPojo = mapper.readValue(
-				new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/TC6.json"),DataLoadConfigPojo.class);
-		rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
-		rulesManagerPage.clickOnConfigure();
-		for (LoadableObjects loadableObject : dataLoadConfigPojo.getLoadableObjects()) {
-			DataLoadConfiguration dataLoadConfiguration = new DataLoadConfiguration();
-			dataLoadConfiguration.selectDataSource(loadableObject.getObjectType());
-			for (DataLoadObject dataLoadObject : loadableObject.getDataLoadObject()) {
-				dataLoadConfiguration.selectSourceObject(dataLoadObject.getObjectName());
-				dataLoadConfiguration.clickOnNativeObjectSelectionSymbol();
-				dataLoadConfiguration.clickOnParticularObject(dataLoadObject.getObjectName());
-				dataLoadConfiguration.selectFieldsFromList(dataLoadObject);
-				dataLoadConfiguration.clickOnSaveButton();
-			}
-		}
-	}
-	
 
 	/**
 	 * TestCase to verify Gainsight package objects(JBCXM) are available under
