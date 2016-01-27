@@ -77,80 +77,75 @@
           "decimalPlaces": 0
         }
       ],
-      "reportName": "Auto_HavingFiltersWithExpressions",
+      "reportName": "Auto_MongoWhereFiltersWithExpressions",
       "assetType": "ANALYTICS",
-      "havingAdvanceFilter": {
+      "whereAdvanceFilter": {
         "filters": [
           {
-            "dbName": "AccountName",
-            "alias": "1",
-            "dataType": "string",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "dbName": "FilesDownloaded",
+            "alias": "A",
+            "dataType": "number",
+            "filterOperator": "NE",
             "filterValues": [
               1
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "Date1",
-            "alias": "2",
-            "dataType": "date",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "dbName": "NoofMeetingsAttended",
+            "alias": "B",
+            "dataType": "number",
+            "filterOperator": "NE",
             "filterValues": [
               2
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "EventTimeStamp1",
-            "alias": "3",
-            "dataType": "dateTime",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "dbName": "NoofReportsRun",
+            "alias": "C",
+            "dataType": "number",
+            "filterOperator": "GT",
             "filterValues": [
               3
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "Industry",
-            "alias": "4",
+            "dbName": "AccountName",
+            "alias": "D",
             "dataType": "string",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "filterOperator": "NE",
             "filterValues": [
-              4
+              "A"
             ],
             "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "ProductName",
-            "alias": "5",
+            "dbName": "ProductCode",
+            "alias": "E",
             "dataType": "string",
             "filterOperator": "EQ",
-            "aggregateFunction": "count",
             "filterValues": [
-              5
+              "B"
             ],
             "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           }
         ],
-        "expression": "1 AND (2 OR 3) AND 4 OR 5"
+        "expression": "A AND (B OR C) AND D OR E"
       },
       "skip": 0,
-      "SchemaName": "Auto_RedShift_MDAData",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [

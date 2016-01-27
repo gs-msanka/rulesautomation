@@ -125,7 +125,7 @@
         ]
       },
       "skip": 0,
-      "SchemaName": "Auto_Mongo_MDAdata",
+      "SchemaName": "Auto_RedShift_MDAData",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [

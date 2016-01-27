@@ -68,6 +68,16 @@
           "agg_func": "count"
         },
         {
+          "col": "FilesDownloaded",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
           "col": "Date",
           "axis": "row",
           "type": 0,
@@ -85,7 +95,7 @@
             "dbName": "AccountName",
             "alias": "1",
             "dataType": "string",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "aggregateFunction": "count",
             "filterValues": [
               1
@@ -98,7 +108,7 @@
             "dbName": "Date1",
             "alias": "2",
             "dataType": "date",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "aggregateFunction": "count",
             "filterValues": [
               2
@@ -108,28 +118,28 @@
             "collectionId": ""
           },
           {
-            "dbName": "EventTimeStamp1",
+            "dbName": "FilesDownloaded",
             "alias": "3",
-            "dataType": "dateTime",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "aggregateFunction": "sum",
             "filterValues": [
-              3
+              0
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "Industry",
+            "dbName": "FilesDownloaded",
             "alias": "4",
-            "dataType": "string",
-            "filterOperator": "EQ",
-            "aggregateFunction": "count",
+            "dataType": "number",
+            "filterOperator": "LTE",
+            "aggregateFunction": "sum",
             "filterValues": [
-              4
+              500
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
@@ -137,7 +147,7 @@
             "dbName": "ProductName",
             "alias": "5",
             "dataType": "string",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "aggregateFunction": "count",
             "filterValues": [
               5
@@ -150,7 +160,7 @@
         "expression": "1 AND (2 OR 3) AND 4 OR 5"
       },
       "skip": 0,
-      "SchemaName": "Auto_RedShift_MDAData",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
@@ -222,6 +232,16 @@
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "count"
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
         }
       ],
       "ReportReadLimit": 1000,

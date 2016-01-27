@@ -1,0 +1,81 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/resources/datagen/process/ReportingUIAccountsss.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/ReportingUIAccountsss.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "Join2ID"
+          },
+          {
+            "name": "Name",
+            "alias": "Join2User"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/reporting/data/ReportDataJoin2.csv",
+        "table": "accounts",
+        "joinColumnName": "Join2Name1",
+        "columns": [
+          {
+            "name": "Join2Name1",
+            "alias": "Join2Name1"
+          },
+          {
+            "name": "Join2Name2",
+            "alias": "Join2Name2"
+          },
+          {
+            "name": "Join2Date1",
+            "alias": "Joi21Date1"
+          },
+          {
+            "name": "Join2EventTimeStamp1",
+            "alias": "Join2EventTimeStamp1"
+          },
+          {
+            "name": "Join2Boolean",
+            "alias": "Join2Boolean"
+          },
+          {
+            "name": "Join2Number1",
+            "alias": "Join2Number1"
+          },
+          {
+            "name": "Join2Number2",
+            "alias": "Join2Number2"
+          },
+          {
+            "name": "Join2Number3",
+            "alias": "Join2Number3"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/reporting/data/ReportDataJoin22.csv"
+  }
+}
