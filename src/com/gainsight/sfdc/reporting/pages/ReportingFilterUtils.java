@@ -25,6 +25,8 @@ public class ReportingFilterUtils extends BasePage {
 	private final String FILTER_OPERATOR_SELECT_XPATH = "//button[@type='button' and contains(@class,'gs-filter-operator')]";
 	private final String FILTER_VALUE_XPATH = "//div[@class='gs-condition-rhs pull-left']";
 	private final String FILTER_VALUE_NULL_XPATH = "//input[@data-control='NULL-CHECKBOX']";
+	private final String FILTER_VALUE_LAST60DAYS = "//input[@value='%s']/following-sibling::span";
+	private final String DATE_FILTER_SEARCH = "//div[contains(@class,'timeframeSelectDropdown')]//input[@placeholder='Search'and @type='text']";
 
 	private final String SEARCH_FILTER_NAME_XPATH = "//div[contains(@class,'gs-filter-lhs')]//div[@class='ui-multiselect-filter']/input[@placeholder='Search'and @type='text']";
 	private final String SEARCH_FILTER_NAME_XPATH_MDA = "//div[contains(@class,'gs-filter-lhs')]//div[@class='customTreeContainer']//input[@placeholder='Search...'and @type='text']";
@@ -197,16 +199,19 @@ public class ReportingFilterUtils extends BasePage {
 			if (reportFilter.getTimeFunction() == null) {
 				selectValueInDropDown("Custom");
 				item.click(FILTER_VALUE_NULL_XPATH);
-
+			} else if (reportFilter.getTimeFunction().contains("LAST")) {
+				String filterValue = getFiletrValue(reportFilter.getTimeFunction());
+				item.setText(DATE_FILTER_SEARCH, filterValue);
+				item.click(String.format(FILTER_VALUE_LAST60DAYS, reportFilter.getTimeFunction().toString()));
 			} else if (reportFilter.getTimeFunction().equalsIgnoreCase("Custom")) {
 				selectValueInDropDown("Custom");
-		//		item.setText(FILTER_AVALUE_DATE_CUSTOM_INPUT, filterValues.get(0).toString());
-		        item.setText(FILTER_AVALUE_DATE_CUSTOM_INPUT, dateUtil.getFormattedDate(date, "MM/dd/yyyy"));
+				//		item.setText(FILTER_AVALUE_DATE_CUSTOM_INPUT, filterValues.get(0).toString());
+				item.setText(FILTER_AVALUE_DATE_CUSTOM_INPUT, dateUtil.getFormattedDate(date, "MM/dd/yyyy"));
 			} else {
-                String relativeTime = convertToRelativeTime(reportFilter.getTimeFunction());
-                item.setText(FILTER_AVALUE_DATE_XPATH, relativeTime);
-                item.click(String.format(FILTER_AVALUE_DATE_MULTISELECT, relativeTime));
-            }
+				String relativeTime = convertToRelativeTime(reportFilter.getTimeFunction());
+				item.setText(FILTER_AVALUE_DATE_XPATH, relativeTime);
+				item.click(String.format(FILTER_AVALUE_DATE_MULTISELECT, relativeTime));
+			}
 
         } else if (filterOperator.contains("between")) {
             selectValueInDropDown("Custom");
@@ -235,6 +240,10 @@ public class ReportingFilterUtils extends BasePage {
         }
     }
 
+	private String getFiletrValue(String timeFunction) {
+		return timeFunction.replaceAll("_"," ");
+	}
+
 	private String convertToRelativeTime(String timeFunction) {
 		if (timeFunction.contains("LAST_7_DAYS")) {
 			return "Last 7 Days";
@@ -259,8 +268,10 @@ public class ReportingFilterUtils extends BasePage {
 		} else if (filterOperator.contains("NE")) {
 			filterOperator = "not equals";
 			return filterOperator;
+		} else if (filterOperator.contains("LTE")) {
+			filterOperator = "less or equal";
+			return filterOperator;
 		} else {
-
 			return filterOperator;
 		}
 	}

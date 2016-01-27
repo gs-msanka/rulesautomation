@@ -1,0 +1,157 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Auto_RedShift-ADD",
+          "axis": "row",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Auto_RedShift-ADD",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Auto_RedShift-DIVIDE",
+          "axis": "row",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Auto_RedShift-DIVIDE",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Auto_RedShift-MULTIPLE",
+          "axis": "row",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Auto_RedShift-MULTIPLE",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        }
+      ],
+      "reportName": "Auto_RedShiftCalculatedMeasures",
+      "assetType": "ANALYTICS",
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "Auto_RedShift-ADD",
+            "alias": "1",
+            "dataType": "number",
+            "filterOperator": "LTE",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              1000
+            ],
+            "type": 2,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": 1
+      },
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "A",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "A"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A"
+      },
+      "skip": 0,
+      "SchemaName": "Auto_RedShift_MDAData",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "AccountName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Auto_RedShift-ADD",
+          "axis": "measure",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of Auto_RedShift-ADD",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Auto_RedShift-DIVIDE",
+          "axis": "measure",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of Auto_RedShift-DIVIDE",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Auto_RedShift-MULTIPLE",
+          "axis": "measure",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of Auto_RedShift-MULTIPLE",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

@@ -56,7 +56,6 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
     private String passWord = null;
     private String reportingBuilderPageUrl;
     private static final String COLLECTION_MASTER = "collectionmaster";
-    HashMap<String, String> hmap = new HashMap<String, String>();
     Date date = Calendar.getInstance().getTime();
 
     @BeforeClass
@@ -68,13 +67,6 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         nsTestBase.tenantAutoProvision();
         reportingBuilderPageUrl = visualForcePageUrl + "ReportBuilder";
         reportingBasePage = new ReportingBasePage();
-        sfdc.runApexCodeFromFile(new File(Application.basedir + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
-        //Modifying api names to display names
-        List<SObject> soList = sfdcRestApi.getSfdcObjects();
-
-        for (SObject sObject : soList) {
-            hmap.put(sObject.getName(), sObject.getLabel());
-        }
         mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                 nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         TenantDetails tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
@@ -91,9 +83,6 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
 
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
-        if (!tenantDetails.isRedshiftEnabled()) {
-            Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
-        }
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "Auto_RedShift");
@@ -175,6 +164,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         mongoDBDAO.deleteMongoDocumentFromReportMaster(
                 tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
+        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
     }
 
     @TestInfo(testCaseIds = {"GS-9041"})
@@ -184,7 +174,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomationRedShift.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -198,7 +188,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(
                         Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomationRedShiftCM.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -212,7 +202,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(
                         Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomationRedShiftCQ.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -226,7 +216,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(
                         Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomationRedShiftCY.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -239,7 +229,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/DateTimeSummarizedByCW.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -252,7 +242,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/DateTimeSummarizedByCM.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -265,7 +255,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/DateTimeSummarizedByCQ.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -278,7 +268,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/DateTimeSummarizedByCY.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -292,7 +282,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregation.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -306,7 +296,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationNumber.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -320,7 +310,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationDate.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -334,7 +324,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationDateTime.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -348,7 +338,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationBoolean.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -362,7 +352,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/MDARelativeTimeFunctions.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -376,7 +366,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/FlatReportsWithMaxShowMe.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -390,7 +380,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
                 new File(Application.basedir
                         + "/testdata/newstack/reporting/data/ReportingAggeration/FlatReportsWithFilterAndRanking.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -403,7 +393,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/filtersOnNullForAllDataType.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -416,7 +406,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/HavingFiltersWithExpressions.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -429,7 +419,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/WhereFiltersWithExpressions.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
@@ -442,7 +432,19 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingMDAJoins/reportsWithMDAJoins.json"),
                 ReportMaster.class);
-        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
+        reportingBasePage.createNewReport();
+
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+
+    }
+
+    @Test
+    public void mdaCalculatedRedShift() throws Exception {
+
+        ReportMaster reportMaster = mapper.readValue(
+                new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingCalculatedMeasures/MDARedShiftCalculatedMeasures.json"),
+                ReportMaster.class);
+        reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
 
