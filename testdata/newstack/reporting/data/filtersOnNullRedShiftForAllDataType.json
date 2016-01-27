@@ -1,0 +1,147 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Active",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductCode",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "ProductCode",
+          "collectionId": ""
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "AccountName",
+          "collectionId": ""
+        },
+        {
+          "col": "EventTimeStamp",
+          "axis": "row",
+          "type": 0,
+          "dataType": "dateTime",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "EventTimeStamp",
+          "collectionId": ""
+        }
+      ],
+      "reportName": "Auto_RedShiftfiltersOnNullForAllDataType",
+      "assetType": "ANALYTICS",
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "EventTimeStamp1",
+            "alias": "A",
+            "dataType": "dateTime",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Date2",
+            "alias": "B",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "C",
+            "dataType": "number",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "ProductCode",
+            "alias": "D",
+            "dataType": "string",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A AND B AND C AND D"
+      },
+      "skip": 0,
+      "SchemaName": "Auto_RedShift_MDAData",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "order": "asc"
+        },
+        {
+          "col": "EventTimeStamp",
+          "axis": "row",
+          "type": 0,
+          "dataType": "dateTime",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "EventTimeStamp",
+          "collectionId": ""
+        },
+        {
+          "col": "Active",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of Active",
+          "collectionId": ""
+        },
+        {
+          "col": "ProductCode",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of ProductCode",
+          "collectionId": ""
+        }
+      ],
+      "ReportReadLimit": 5,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

@@ -172,7 +172,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
     public void reportUsingRedShiftCW() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/ReportingUIAutomationRedShift.json"),
+                new File(Application.basedir + "/testdata/newstack/reporting/data/SummarizedByWeekRedshift.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -276,11 +276,11 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
     @TestInfo(testCaseIds = {"GS-9058"})
     @Test
-    public void stringAggregation() throws Exception {
+    public void stringMDARedShiftAggregation() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregation.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftAggregationString.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -290,11 +290,11 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
     @TestInfo(testCaseIds = {"GS-100274"})
     @Test
-    public void numberAggregation() throws Exception {
+    public void numberMDARedshiftAggregation() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationNumber.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftAggregationNumber.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -304,11 +304,11 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
     @TestInfo(testCaseIds = {"GS-100275"})
     @Test
-    public void dateAggregation() throws Exception {
+    public void dateMDARedShiftAggregation() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationDate.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftAggregationDate.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -322,7 +322,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationDateTime.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftAggregationDateTime.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -336,7 +336,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDAAggregationBoolean.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftAggregationBoolean.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -350,7 +350,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARelativeTimeFunctions.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/MDARedShiftRelativeTimeFunctions.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -364,7 +364,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir
-                        + "/testdata/newstack/reporting/data/ReportingAggeration/FlatReportsWithMaxShowMe.json"),
+                        + "/testdata/newstack/reporting/data/ReportingAggeration/FlatMDARedshiftReportsWithMaxShowMe.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 
@@ -391,7 +391,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
     public void filtersOnNullForAllDataTypes() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
-                new File(Application.basedir + "/testdata/newstack/reporting/data/filtersOnNullForAllDataType.json"),
+                new File(Application.basedir + "/testdata/newstack/reporting/data/filtersOnNullRedShiftForAllDataType.json"),
                 ReportMaster.class);
         reportingBasePage.createNewReport();
 

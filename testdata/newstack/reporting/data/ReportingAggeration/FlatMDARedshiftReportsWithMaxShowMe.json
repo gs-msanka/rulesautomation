@@ -154,7 +154,8 @@
           "type": 1,
           "fieldDisplayName": "PageVisits",
           "dataType": "number",
-          "collectionId": ""
+          "collectionId": "",
+          "order": "asc"
         },
         {
           "col": "AccountName",
@@ -177,9 +178,47 @@
           "collectionId": ""
         }
       ],
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "Date",
+            "alias": "A",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_90_DAYS",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "reporting"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A OR B OR C"
+      },
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "Auto_FlatReportsWithMaxShowMe",
+      "reportName": "Auto_FlatReportsForMDARedshiftWithFilterAndRankingMongo",
       "assetType": "ANALYTICS",
       "skip": 0,
       "drillDownReportDimensions": [
