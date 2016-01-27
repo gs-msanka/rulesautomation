@@ -49,7 +49,9 @@ class BaseXPathConstants {
 		XPATHCONSTANTS.put("SAVEBUTTON_XPATH", "//div[@title='Save']");
 		XPATHCONSTANTS.put("SAVEBUTTON_POPUP_XPATH", "//span[contains(text(),'Saving report')]");
 		XPATHCONSTANTS.put("SAVEAS_BTN_XPATH", "//div[@title='Save as']");
-		XPATHCONSTANTS.put("SAVE_SUCCESS_POPUP_XPATH", "//div[contains(text(),'Success')]");
+        XPATHCONSTANTS.put("SAVE_SUCCESS_POPUP_XPATH", "//div[contains(text(),'Success')]");
+        XPATHCONSTANTS.put("SAVE_DESCRIPTION_XPATH", "//label[contains(text(),'Description')]/following-sibling::textarea");
+        XPATHCONSTANTS.put("SAVE_POPUP_SAVE_XPATH", "//input[@value='Save']");
 
 		XPATHCONSTANTS.put("NEW", "//div[@title='New']");
 		XPATHCONSTANTS.put("RESET", "//div[@title='Reset']");
