@@ -12,94 +12,90 @@
           "axis": "row",
           "type": 0,
           "dataType": "date",
-          "agg_func": "count",
           "decimalPlaces": 0,
           "fieldDisplayName": "Date1",
-          "collectionId": ""
+          "collectionId": "",
+          "agg_func": "max"
         },
         {
           "col": "Date2",
           "axis": "row",
           "type": 0,
           "dataType": "date",
-          "agg_func": "count",
           "decimalPlaces": 0,
           "fieldDisplayName": "Date2",
-          "collectionId": ""
-        },
-        {
-          "col": "Date",
-          "axis": "row",
-          "type": 0,
-          "dataType": "date",
-          "agg_func": "count",
-          "decimalPlaces": 0,
-          "fieldDisplayName": "Date",
-          "collectionId": ""
+          "collectionId": "",
+          "agg_func": "count_distinct"
         },
         {
           "col": "Date3",
           "axis": "row",
           "type": 0,
           "dataType": "date",
-          "agg_func": "count",
           "decimalPlaces": 0,
           "fieldDisplayName": "Date3",
+          "collectionId": "",
+          "agg_func": "min"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "agg_func": "count"
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "row",
+          "type": 0,
+          "dataType": "dateTime",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "EventTimeStamp1",
           "collectionId": ""
         }
       ],
-      "reportName": "Auto_MDARelativeTimeFunctions",
+      "reportName": "Auto_MDARedShiftAggregationDate",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
-        "expression": "A AND B",
         "filters": [
           {
-            "dbName": "Date1",
+            "dbName": "Date",
             "alias": "A",
             "dataType": "date",
             "filterOperator": "EQ",
-            "timeFunction": "LAST_7_DAYS",
-            "logicalOperator": "AND",
+            "timeFunction": "LAST_60_DAYS",
             "filterValues": [],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
           },
           {
-            "dbName": "Date",
+            "dbName": "AccountName",
             "alias": "B",
-            "dataType": "date",
-            "filterOperator": "BTW",
-            "timeFunction": "CUSTOM",
-            "logicalOperator": "AND",
-            "filterValues": [
-              "11-30-2015",
-              "12-01-2015"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          }
-        ]
-      },
-      "havingAdvanceFilter": {
-        "expression": 1,
-        "filters": [
-          {
-            "dbName": "Date",
-            "alias": "1",
-            "dataType": "date",
+            "dataType": "string",
             "filterOperator": "NE",
-            "logicalOperator": "AND",
             "filterValues": [
-              1
+              "reporting"
             ],
-            "locked": false,
-            "collectionId": "",
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
           }
-        ]
+        ],
+        "expression": "A OR B OR C"
       },
       "skip": 0,
       "SchemaName": "Auto_RedShift_MDAData",
@@ -107,12 +103,12 @@
       "Type": "adhoc",
       "Dimensions": [
         {
-          "col": "Date3",
+          "col": "EventTimeStamp1",
           "axis": "row",
           "type": 0,
-          "dataType": "date",
+          "dataType": "dateTime",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Date3",
+          "fieldDisplayName": "EventTimeStamp1",
           "collectionId": ""
         },
         {
@@ -121,9 +117,9 @@
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Count of Date1",
+          "fieldDisplayName": "Max of Date1",
           "collectionId": "",
-          "agg_func": "count"
+          "agg_func": "max"
         },
         {
           "col": "Date2",
@@ -131,9 +127,19 @@
           "type": 0,
           "dataType": "date",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Count of Date2",
+          "fieldDisplayName": "Count_distinct of Date2",
           "collectionId": "",
-          "agg_func": "count"
+          "agg_func": "count_distinct"
+        },
+        {
+          "col": "Date3",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "date",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "Min of Date3",
+          "collectionId": "",
+          "agg_func": "min"
         },
         {
           "col": "Date",
