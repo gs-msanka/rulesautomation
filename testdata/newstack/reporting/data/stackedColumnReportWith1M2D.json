@@ -8,88 +8,81 @@
       "limit": 500,
       "drillDownReportDimensions": [
         {
-          "col": "Active",
+          "col": "FilesDownloaded",
           "axis": "row",
-          "type": 0,
-          "dataType": "boolean",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "FilesDownloaded",
+          "collectionId": "",
           "decimalPlaces": 0,
-          "agg_func": "count",
-          "fieldDisplayName": "Active",
-          "collectionId": ""
-        },
-        {
-          "col": "ProductCode",
-          "axis": "row",
-          "type": 0,
-          "dataType": "string",
-          "decimalPlaces": 0,
-          "agg_func": "count",
-          "fieldDisplayName": "ProductCode",
-          "collectionId": ""
+          "agg_func": "sum"
         },
         {
           "col": "AccountName",
           "axis": "row",
           "type": 0,
           "dataType": "string",
-          "decimalPlaces": 0,
-          "agg_func": "count",
           "fieldDisplayName": "AccountName",
-          "collectionId": ""
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
         }
       ],
       "reportName": "Auto_StackedColumn9038",
-      "assetType" : "ANALYTICS",
+      "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
-        "expression": "A",
+        "filters": [
+          {
+            "dbName": "Date",
+            "alias": "A",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_60_DAYS",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A AND B"
+      },
+      "havingAdvanceFilter": {
         "filters": [
           {
             "dbName": "AccountName",
-            "alias": "A",
-            "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
-            "filterValues": [
-              "A"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          }
-        ]
-      },
-      "havingAdvanceFilter": {
-        "expression": "1 AND 2",
-        "filters": [
-          {
-            "dbName": "Active",
             "alias": "1",
-            "dataType": "boolean",
-            "filterOperator": "EQ",
-            "logicalOperator": "AND",
-            "filterValues": [
-              4
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0,
-            "aggregateFunction": "count"
-          },
-          {
-            "dbName": "ProductCode",
-            "alias": "2",
             "dataType": "string",
             "filterOperator": "GT",
-            "logicalOperator": "AND",
+            "aggregateFunction": "count",
             "filterValues": [
-              90
+              0
             ],
-            "locked": false,
-            "collectionId": "",
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
           }
-        ]
+        ],
+        "expression": 1
       },
       "skip": 0,
       "SchemaName": "Auto_Mongo_MDAdata",
@@ -97,38 +90,37 @@
       "Type": "adhoc",
       "Dimensions": [
         {
-          "col": "AccountName",
+          "col": "Date",
           "axis": "row",
           "type": 0,
-          "dataType": "string",
-          "decimalPlaces": 0,
-          "fieldDisplayName": "AccountName",
+          "dataType": "date",
+          "fieldDisplayName": "Date",
           "collectionId": "",
-          "order":"asc"
+          "decimalPlaces": 0
         },
         {
-          "col": "Active",
+          "col": "FilesDownloaded",
           "axis": "measure",
-          "type": 0,
-          "dataType": "boolean",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of FilesDownloaded",
+          "collectionId": "",
           "decimalPlaces": 0,
-          "agg_func": "count",
-          "fieldDisplayName": "Count of Active",
-          "collectionId": ""
+          "agg_func": "sum"
         },
         {
-          "col": "ProductCode",
+          "col": "AccountName",
           "axis": "measure",
           "type": 0,
           "dataType": "string",
+          "fieldDisplayName": "Count of AccountName",
+          "collectionId": "",
           "decimalPlaces": 0,
-          "agg_func": "count",
-          "fieldDisplayName": "Count of ProductCode",
-          "collectionId": ""
+          "agg_func": "count"
         }
       ],
-      "ReportReadLimit": 5,
+      "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000
-         }
+    }
   ]
 }

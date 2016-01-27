@@ -1,911 +1,201 @@
-Industry,ProductCode,ProductName,Date,EventTimeStamp,Active,PageViews,PageVisits,FilesDownloaded,NoofReportsRun,NoofRulesTriggered,NoofSchedulesCreated
-Distribution,CODE001,REPORTINGUI Account 9,0,0,TRUE,83,171,5,478,592,49
-Oil & Gas & Energy,CODE002,REPORTINGUI Account 10,0,0,FALSE,37,161,0,174,537,47
-Technology,CODE003,REPORTINGUI Account 11,0,0,TRUE,48,114,0,178,633,36
-Others,CODE004,REPORTINGUI Account 12,0,0,FALSE,91,192,5,64,903,35
-Manufacturing,CODE005,REPORTINGUI Account 13,0,0,TRUE,29,116,5,231,260,13
-Finance,CODE006,REPORTINGUI Account 14,0,0,FALSE,49,191,3,173,281,22
-Technology,CODE007,REPORTINGUI Account 15,0,0,FALSE,51,163,2,430,904,26
-Technology,CODE008,REPORTINGUI Account 16,0,0,TRUE,22,142,5,375,837,5
-Healthcare,CODE009,REPORTINGUI Account 17,0,0,FALSE,8,112,1,316,235,28
-Chemicals,CODE010,REPORTINGUI Account 18,0,0,TRUE,47,132,3,262,625,18
-Apparel,CODE011,REPORTINGUI Account 19,0,0,FALSE,77,180,0,389,177,35
-Medical Equipment & Supplies,CODE012,REPORTINGUI Account 20,0,0,TRUE,73,115,3,51,534,45
-Manufacturing,CODE013,REPORTINGUI Account 21,0,0,FALSE,52,113,1,197,994,1
-Healthcare,CODE014,REPORTINGUI Account 1,0,0,TRUE,19,117,5,394,76,4
-Retail,CODE015,REPORTINGUI Account 2,0,0,FALSE,2,185,2,443,461,35
-Energy,CODE001,REPORTINGUI Account 3,0,0,TRUE,83,183,5,239,26,9
-Manufacturing,CODE002,REPORTINGUI Account 4,0,0,FALSE,31,156,1,321,701,41
-Technology,CODE003,REPORTINGUI Account 5,0,0,TRUE,53,140,4,97,755,49
-Chemicals,CODE004,REPORTINGUI Account 6,0,0,FALSE,46,156,1,95,672,20
-Manufacturing,CODE005,REPORTINGUI Account 7,0,0,TRUE,14,189,0,388,253,5
-Finance,CODE006,REPORTINGUI Account 8,0,0,FALSE,63,174,5,19,925,38
-Consulting,CODE007,REPORTINGUI Account 26,0,0,TRUE,27,180,2,253,361,12
-Government,CODE008,REPORTINGUI Account 27,0,0,FALSE,15,157,5,339,126,34
-Manufacturing,CODE009,REPORTINGUI Account 28,0,0,TRUE,50,120,1,100,994,16
-Shipping,CODE010,REPORTINGUI Account 29,0,0,FALSE,57,126,5,415,965,23
-Food & Beverage,CODE011,REPORTINGUI Account 30,0,0,FALSE,51,136,4,338,740,2
-Healthcare,CODE012,REPORTINGUI Account 31,0,0,TRUE,80,186,0,181,1,33
-Electronics,CODE013,REPORTINGUI Account 32,0,0,FALSE,54,130,3,474,880,46
-Transportation,CODE014,REPORTINGUI Account 33,0,0,TRUE,97,153,3,118,110,12
-Apparel,CODE015,REPORTINGUI Account 34,0,0,FALSE,29,175,0,200,553,34
-Service,CODE001,REPORTINGUI Account 35,0,0,TRUE,86,126,3,125,669,49
-"Television Cable, & Broadcast Network",CODE002,REPORTINGUI Account 36,0,0,FALSE,23,179,5,422,525,33
-Finance,CODE003,REPORTINGUI Account 37,0,0,TRUE,59,107,3,448,274,20
-Manufacturing,CODE004,REPORTINGUI Account 38,0,0,FALSE,69,184,3,245,389,32
-Manufacturing,CODE005,REPORTINGUI Account 39,0,0,TRUE,60,190,5,243,358,33
-Chemicals,CODE006,REPORTINGUI Account 40,0,0,FALSE,57,199,1,425,223,30
-Government,CODE007,REPORTINGUI Account 41,0,0,TRUE,88,177,1,117,948,1
-Machinery,CODE008,REPORTINGUI Account 42,0,0,FALSE,88,104,5,247,309,26
-Manufacturing,CODE009,REPORTINGUI Account 43,0,0,TRUE,75,143,3,480,85,24
-Biotechnology,CODE010,REPORTINGUI Account 44,0,0,FALSE,13,126,5,198,664,16
-Hospitality,CODE011,REPORTINGUI Account 45,0,0,TRUE,37,190,0,478,769,37
-Education,CODE012,REPORTINGUI Account 46,0,0,FALSE,72,168,5,476,423,25
-Medical & Dental Laboratories,CODE013,REPORTINGUI Account 47,0,0,TRUE,35,150,0,82,994,14
-Medical Products,CODE014,REPORTINGUI Account 48,0,0,FALSE,31,178,0,304,712,27
-Agriculture,CODE015,REPORTINGUI Account 49,0,0,FALSE,57,150,2,357,516,4
-Healthcare,CODE001,REPORTINGUI Account 22,0,0,TRUE,40,186,0,16,757,13
-Retail,CODE002,REPORTINGUI Account 23,0,0,FALSE,93,165,2,13,259,17
-Service,CODE003,REPORTINGUI Account 24,0,0,TRUE,39,192,4,89,365,26
-Fish & Seafood,CODE004,REPORTINGUI Account 25,0,0,FALSE,46,103,4,19,332,50
-Finance,CODE005,REPORTINGUI Account 9,0,0,TRUE,54,181,3,23,943,7
-Education,CODE006,REPORTINGUI Account 21,0,0,FALSE,40,110,0,391,777,19
-Manufacturing,CODE007,REPORTINGUI Account 21,0,0,TRUE,62,200,4,413,470,29
-Food & Beverage,CODE008,REPORTINGUI Account 21,0,0,FALSE,21,131,4,210,521,1
-Retail,CODE009,REPORTINGUI Account 21,0,0,TRUE,97,193,5,33,128,38
-Industrial Manufacturing & Services,CODE010,REPORTINGUI Account 21,0,0,FALSE,72,197,3,138,866,38
-Insurance,CODE011,REPORTINGUI Account 21,0,0,TRUE,57,171,5,282,310,22
-Healthcare,CODE012,REPORTINGUI Account 21,0,0,FALSE,47,187,2,348,531,3
-Retail,CODE013,REPORTINGUI Account 21,0,0,TRUE,21,189,2,246,956,11
-Healthcare,CODE014,REPORTINGUI Account 21,0,0,FALSE,81,126,5,273,406,33
-Manufacturing,CODE015,REPORTINGUI Account 21,0,0,TRUE,29,109,1,412,784,23
-Utilities,CODE001,REPORTINGUI Account 21,0,0,FALSE,76,167,2,50,450,48
-Engineering,CODE002,REPORTINGUI Account 21,0,0,TRUE,92,182,3,369,979,37
-Oil & Gas & Energy,CODE003,REPORTINGUI Account 21,0,0,FALSE,51,116,3,172,909,34
-Service,CODE004,Networking - 2G,0,0,FALSE,91,152,2,22,702,12
-Hospitality,CODE005,Networking - 3G,0,0,TRUE,4,194,2,453,262,0
-Retail,CODE006,CRM,0,0,FALSE,8,188,5,75,267,45
-Non-profit,CODE007,Marketing - Automation,0,0,TRUE,99,110,4,119,295,19
-Food & Beverage,CODE008,Microsoft Excel,0,0,FALSE,6,166,3,252,283,37
-Agriculture,CODE009,Microsfot PowerPoint,0,0,TRUE,90,160,2,391,35,6
-Finance,CODE010,Outlook,0,0,FALSE,78,112,0,482,181,43
-Oil & Gas Exploration & Production,CODE011,Windows Server,0,0,TRUE,9,122,5,284,718,19
-Manufacturing,CODE012,Amazon EC2 Server,0,0,FALSE,39,152,4,233,724,48
-Manufacturing,CODE013,Cloud Computing,0,0,TRUE,48,181,2,230,171,42
-Manufacturing,CODE014,SAP,0,0,FALSE,9,107,2,493,79,4
-Government,CODE015,Online Meetings,0,0,TRUE,52,170,2,350,738,24
-Service,CODE001,Microsoft Word,0,0,FALSE,87,168,3,449,27,19
-Healthcare,CODE002,Windows - OS,0,0,TRUE,71,173,2,123,132,19
-Manufacturing,CODE003,Antivirus,0,0,FALSE,71,138,3,472,633,15
-Consumer Services,CODE004,Networking - 2G,0,0,TRUE,4,172,3,83,729,37
-Manufacturing,CODE005,Networking - 3G,0,0,FALSE,56,198,4,391,401,30
-Hospitality,CODE006,CRM,0,0,TRUE,18,130,4,241,397,26
-Consulting,CODE007,Marketing - Automation,0,0,FALSE,84,131,5,306,702,30
-Telecommunications,CODE008,Microsoft Excel,0,0,FALSE,76,128,0,281,444,36
-Hospitality,CODE009,Microsfot PowerPoint,0,0,TRUE,51,142,2,172,69,1
-Manufacturing,CODE010,Outlook,0,0,FALSE,58,176,0,416,315,1
-Construction,CODE011,Windows Server,0,0,TRUE,78,151,1,231,140,14
-Telecommunications,CODE012,Amazon EC2 Server,0,0,FALSE,29,111,3,199,758,5
-Healthcare,CODE013,Cloud Computing,0,0,TRUE,7,162,0,51,235,47
-Manufacturing,CODE014,SAP,0,0,FALSE,15,132,0,434,358,15
-Manufacturing,CODE015,Online Meetings,0,0,TRUE,12,190,5,338,803,40
-Construction,CODE001,Microsoft Word,0,0,FALSE,99,166,2,41,337,35
-Bakery Products,CODE002,Windows - OS,0,0,TRUE,96,150,2,309,934,40
-Technology,CODE003,Antivirus,0,0,FALSE,63,123,2,194,514,46
-Manufacturing,CODE004,Networking - 2G,0,0,TRUE,67,198,3,165,303,16
-Technology,CODE005,Networking - 3G,0,0,FALSE,10,138,1,332,70,34
-Transportation,CODE006,CRM,0,0,TRUE,18,145,5,109,729,26
-Manufacturing,CODE007,Marketing - Automation,0,0,FALSE,31,118,3,253,231,2
-Consulting,CODE008,Microsoft Excel,0,0,TRUE,81,128,1,310,709,6
-Software & Programming,CODE009,Microsfot PowerPoint,0,0,FALSE,34,146,5,401,910,41
-,CODE010,Outlook,0,0,TRUE,21,191,5,329,232,37
-Food & Beverage,CODE011,Windows Server,0,0,FALSE,29,152,3,359,969,41
-Service,CODE012,Amazon EC2 Server,0,0,FALSE,78,197,0,270,878,3
-Service,CODE013,Cloud Computing,0,0,TRUE,11,183,3,96,9,9
-Medical Devices,CODE014,SAP,0,0,FALSE,12,104,2,191,71,35
-Service,CODE015,Online Meetings,0,0,TRUE,54,102,1,194,980,15
-Biotechnology,CODE001,Microsoft Word,0,0,FALSE,91,196,3,23,864,43
-Finance,CODE002,Windows - OS,0,0,TRUE,40,156,1,370,410,3
-Hospitality,CODE003,Antivirus,0,0,FALSE,18,123,4,243,239,13
-Healthcare,CODE004,Networking - 2G,0,0,TRUE,96,178,1,397,397,17
-Technology,CODE005,Networking - 3G,0,0,FALSE,90,152,1,46,355,23
-Service,CODE006,CRM,0,0,TRUE,8,168,2,327,956,49
-Government,CODE007,Marketing - Automation,0,0,FALSE,75,147,5,245,430,22
-Energy,CODE008,Microsoft Excel,0,0,TRUE,10,119,2,295,313,6
-Energy,CODE009,Microsfot PowerPoint,0,0,FALSE,66,146,5,443,346,28
-Energy,CODE010,Outlook,0,0,TRUE,78,105,3,315,548,28
-Education,CODE011,Windows Server,0,0,FALSE,92,181,3,76,669,4
-Non-profit,CODE012,Amazon EC2 Server,0,0,TRUE,24,174,3,268,141,14
-Telecommunications,CODE013,Cloud Computing,0,0,FALSE,76,172,3,206,895,39
-Non-profit,CODE014,SAP,0,0,TRUE,32,138,1,296,84,43
-Technology,CODE015,Online Meetings,0,0,FALSE,90,177,4,200,871,17
-Retail,CODE001,Microsoft Word,0,0,FALSE,54,198,0,153,342,28
-Technology,CODE002,Windows - OS,0,0,TRUE,80,158,3,244,844,3
-Service,CODE003,Antivirus,0,0,FALSE,6,156,1,162,848,31
-Manufacturing,CODE004,Networking - 2G,0,0,TRUE,29,126,2,260,371,7
-Others,CODE005,Networking - 3G,0,0,FALSE,17,195,2,320,306,35
-Technology,CODE006,CRM,0,0,TRUE,56,194,5,143,255,28
-Others,CODE007,Marketing - Automation,0,0,FALSE,76,134,1,16,63,25
-Manufacturing,CODE008,Microsoft Excel,0,0,TRUE,81,192,5,465,527,9
-Manufacturing,CODE009,Microsfot PowerPoint,0,0,FALSE,90,120,0,79,998,32
-Manufacturing,CODE010,Outlook,0,0,TRUE,20,178,1,299,155,47
-Distribution,CODE011,Windows Server,1,1,FALSE,91,150,4,155,408,39
-Oil & Gas & Energy,CODE012,Amazon EC2 Server,1,1,TRUE,84,114,4,63,986,28
-Technology,CODE013,Cloud Computing,1,1,FALSE,10,163,2,473,449,14
-Others,CODE014,SAP,1,1,TRUE,91,101,5,500,914,40
-Manufacturing,CODE015,Online Meetings,1,1,FALSE,63,127,3,234,18,46
-Finance,CODE001,Microsoft Word,1,1,TRUE,82,161,1,306,7,28
-Technology,CODE002,Windows - OS,1,1,FALSE,20,158,5,59,949,3
-Technology,CODE003,Antivirus,1,1,TRUE,8,116,1,155,795,10
-Healthcare,CODE004,Networking - 2G,1,1,FALSE,17,115,4,272,56,20
-Chemicals,CODE005,Networking - 3G,1,1,FALSE,13,193,3,373,525,19
-Apparel,CODE006,CRM,1,1,TRUE,81,117,5,468,535,26
-Medical Equipment & Supplies,CODE007,Marketing - Automation,1,1,FALSE,49,155,4,224,768,23
-Manufacturing,CODE008,Microsoft Excel,1,1,TRUE,35,129,1,67,733,25
-Healthcare,CODE009,Microsfot PowerPoint,1,1,FALSE,39,129,3,458,787,35
-Retail,CODE010,Outlook,1,1,TRUE,35,166,5,211,915,13
-Energy,CODE011,Windows Server,1,1,FALSE,64,153,3,341,151,43
-Manufacturing,CODE012,Amazon EC2 Server,1,1,TRUE,7,167,3,258,697,10
-Technology,CODE013,Cloud Computing,1,1,FALSE,80,153,1,101,869,35
-Chemicals,CODE014,SAP,1,1,TRUE,51,160,3,434,593,19
-Manufacturing,CODE015,Online Meetings,1,1,FALSE,10,110,4,54,532,36
-Finance,CODE001,Microsoft Word,1,1,TRUE,24,187,1,189,703,30
-Consulting,CODE002,Windows - OS,1,1,FALSE,83,177,4,62,113,39
-Government,CODE003,Antivirus,1,1,TRUE,59,162,2,368,540,18
-Manufacturing,CODE004,Networking - 2G,1,1,FALSE,86,171,4,104,801,25
-Shipping,CODE005,Networking - 3G,1,1,TRUE,8,128,3,170,401,20
-Food & Beverage,CODE006,CRM,1,1,FALSE,22,169,3,453,356,24
-Healthcare,CODE007,Marketing - Automation,1,1,TRUE,77,138,5,68,259,15
-Electronics,CODE008,Microsoft Excel,1,1,FALSE,76,152,3,96,61,11
-Transportation,CODE009,Microsfot PowerPoint,1,1,FALSE,11,158,0,444,23,29
-Apparel,CODE010,Outlook,1,1,TRUE,86,136,4,100,465,30
-Service,CODE011,Windows Server,1,1,FALSE,27,180,0,199,889,0
-"Television Cable, & Broadcast Network",CODE012,Amazon EC2 Server,1,1,TRUE,23,114,3,285,415,49
-Finance,CODE013,Cloud Computing,1,1,FALSE,86,184,2,21,412,42
-Manufacturing,CODE014,SAP,1,1,TRUE,48,104,2,196,467,6
-Manufacturing,CODE015,Online Meetings,1,1,FALSE,60,121,0,494,971,28
-Chemicals,CODE001,Microsoft Word,1,1,TRUE,78,154,4,60,893,9
-Government,CODE002,Windows - OS,1,1,FALSE,71,177,2,62,81,28
-Machinery,CODE003,Antivirus,1,1,TRUE,91,116,2,409,561,38
-Manufacturing,CODE004,Networking - 2G,1,1,FALSE,63,198,1,216,725,32
-Biotechnology,CODE005,Networking - 3G,1,1,TRUE,32,117,3,412,40,3
-Hospitality,CODE006,CRM,1,1,FALSE,44,143,2,46,740,32
-Education,CODE007,Marketing - Automation,1,1,TRUE,3,176,5,333,572,22
-Medical & Dental Laboratories,CODE008,Microsoft Excel,1,1,FALSE,68,114,2,17,786,14
-Medical Products,CODE009,Microsfot PowerPoint,1,1,TRUE,32,143,1,426,423,13
-Agriculture,CODE010,Outlook,1,1,FALSE,28,106,2,361,480,39
-Healthcare,CODE011,Windows Server,1,1,TRUE,90,179,5,381,544,11
-Retail,CODE012,Amazon EC2 Server,1,1,FALSE,25,148,2,392,41,6
-Service,CODE013,Cloud Computing,1,1,FALSE,3,140,4,249,167,11
-Fish & Seafood,CODE014,SAP,1,1,TRUE,94,174,1,451,593,4
-Finance,CODE015,Online Meetings,1,1,FALSE,57,152,1,297,856,20
-Education,CODE001,Microsoft Word,1,1,TRUE,63,166,0,226,93,4
-Manufacturing,CODE002,Windows - OS,1,1,FALSE,19,178,1,139,553,45
-Food & Beverage,CODE003,Antivirus,1,1,TRUE,33,173,0,228,966,47
-Retail,CODE004,Networking - 2G,1,1,FALSE,12,113,2,88,997,15
-Industrial Manufacturing & Services,CODE005,Networking - 3G,1,1,TRUE,37,164,4,451,193,28
-Insurance,CODE006,CRM,1,1,FALSE,59,122,1,247,417,18
-Healthcare,CODE007,Marketing - Automation,1,1,TRUE,19,170,1,390,26,18
-Retail,CODE008,Microsoft Excel,1,1,FALSE,42,130,1,469,898,28
-Healthcare,CODE009,Microsfot PowerPoint,1,1,TRUE,47,102,5,422,386,23
-Manufacturing,CODE010,Outlook,1,1,FALSE,78,149,2,11,139,19
-Utilities,CODE011,Windows Server,1,1,TRUE,74,182,1,304,34,30
-Engineering,CODE012,Amazon EC2 Server,1,1,FALSE,72,195,4,71,480,43
-Oil & Gas & Energy,CODE013,Cloud Computing,1,1,TRUE,55,101,1,275,762,3
-Service,CODE014,SAP,1,1,FALSE,22,198,3,16,846,27
-Hospitality,CODE015,Online Meetings,1,1,TRUE,76,109,3,361,876,30
-Retail,CODE001,Microsoft Word,1,1,FALSE,74,153,3,315,72,27
-Non-profit,CODE002,Windows - OS,1,1,FALSE,72,190,3,24,153,1
-Food & Beverage,CODE003,Antivirus,1,1,TRUE,89,125,4,487,167,32
-Agriculture,CODE004,Networking - 2G,1,1,FALSE,52,198,2,134,829,32
-Finance,CODE005,Networking - 3G,1,1,TRUE,76,123,3,492,542,36
-Oil & Gas Exploration & Production,CODE006,CRM,1,1,FALSE,55,165,4,182,118,23
-Manufacturing,CODE007,Marketing - Automation,1,1,TRUE,1,158,0,195,910,13
-Manufacturing,CODE008,Microsoft Excel,1,1,FALSE,98,123,3,191,103,5
-Manufacturing,CODE009,Microsfot PowerPoint,1,1,TRUE,6,107,0,100,356,38
-Government,CODE010,Outlook,1,1,FALSE,62,167,5,119,903,26
-Service,CODE011,Windows Server,1,1,TRUE,42,158,5,358,915,15
-Healthcare,CODE012,Amazon EC2 Server,1,1,FALSE,38,123,4,237,857,22
-Manufacturing,CODE013,Cloud Computing,1,1,TRUE,29,138,1,271,716,50
-Consumer Services,CODE014,SAP,1,1,FALSE,90,153,1,411,94,10
-Manufacturing,CODE015,Online Meetings,1,1,TRUE,80,115,3,298,441,50
-Hospitality,CODE001,Microsoft Word,1,1,FALSE,63,160,2,394,206,20
-Consulting,CODE002,Windows - OS,1,1,TRUE,68,150,2,424,670,31
-Telecommunications,CODE003,Antivirus,1,1,FALSE,83,153,5,53,125,9
-Hospitality,CODE004,Networking - 2G,1,1,TRUE,48,100,0,178,292,12
-Manufacturing,CODE005,Networking - 3G,1,1,FALSE,99,107,3,178,975,1
-Construction,CODE006,CRM,1,1,FALSE,24,172,5,140,581,29
-Telecommunications,CODE007,Marketing - Automation,1,1,TRUE,6,111,1,139,422,47
-Healthcare,CODE008,Microsoft Excel,1,1,FALSE,67,119,0,38,397,36
-Manufacturing,CODE009,Microsfot PowerPoint,1,1,TRUE,73,200,3,113,888,30
-Manufacturing,CODE010,Outlook,1,1,FALSE,86,171,2,287,345,46
-Construction,CODE011,Windows Server,1,1,TRUE,89,108,0,186,788,22
-Bakery Products,CODE012,Amazon EC2 Server,1,1,FALSE,6,148,2,318,210,32
-Technology,CODE013,Cloud Computing,1,1,TRUE,25,104,1,436,123,35
-Manufacturing,CODE014,SAP,1,1,FALSE,94,137,1,246,776,45
-Technology,CODE015,Online Meetings,1,1,TRUE,51,160,5,500,367,13
-Transportation,CODE001,Microsoft Word,1,1,FALSE,42,178,3,295,56,39
-Manufacturing,CODE002,Windows - OS,1,1,TRUE,6,122,3,70,225,42
-Consulting,CODE003,Antivirus,1,1,FALSE,21,117,0,199,504,37
-Software & Programming,CODE004,Networking - 2G,1,1,TRUE,14,108,1,116,736,2
-,CODE005,Networking - 3G,1,1,FALSE,61,111,2,343,370,3
-Food & Beverage,CODE006,CRM,1,1,TRUE,74,190,0,69,791,9
-Service,CODE007,Marketing - Automation,1,1,FALSE,32,200,1,455,431,8
-Service,CODE008,Microsoft Excel,1,1,TRUE,12,151,2,91,764,10
-Medical Devices,CODE009,Microsfot PowerPoint,1,1,FALSE,58,124,5,390,275,40
-Service,CODE010,Outlook,1,1,FALSE,45,110,4,81,849,6
-Biotechnology,CODE011,Windows Server,1,1,TRUE,71,150,0,271,793,13
-Finance,CODE012,Amazon EC2 Server,1,1,FALSE,17,183,1,477,683,26
-Hospitality,CODE013,Cloud Computing,1,1,TRUE,83,123,0,29,24,25
-Healthcare,CODE014,SAP,1,1,FALSE,11,116,3,62,619,24
-Technology,CODE015,Online Meetings,1,1,TRUE,67,141,3,240,326,37
-Service,CODE001,Microsoft Word,1,1,FALSE,48,196,4,467,402,47
-Government,CODE002,Windows - OS,1,1,TRUE,18,156,5,475,471,39
-Energy,CODE003,Antivirus,1,1,FALSE,82,160,3,200,760,47
-Energy,CODE004,Networking - 2G,1,1,TRUE,31,174,3,124,757,38
-Energy,CODE005,Networking - 3G,1,1,FALSE,95,183,5,488,149,43
-Education,CODE006,CRM,1,1,TRUE,41,164,5,403,542,15
-Non-profit,CODE007,Marketing - Automation,1,1,FALSE,18,170,4,109,84,23
-Telecommunications,CODE008,Microsoft Excel,1,1,TRUE,35,195,0,493,941,13
-Non-profit,CODE009,Microsfot PowerPoint,1,1,FALSE,71,164,4,403,192,18
-Technology,CODE010,Outlook,1,1,TRUE,76,157,5,95,144,6
-Retail,CODE011,Windows Server,1,1,FALSE,32,166,5,401,288,26
-Technology,CODE012,Amazon EC2 Server,1,1,TRUE,49,107,5,130,307,23
-Service,CODE013,Cloud Computing,1,1,FALSE,33,122,1,342,395,7
-Manufacturing,CODE014,SAP,1,1,FALSE,36,108,3,88,282,48
-Others,CODE015,Online Meetings,1,1,TRUE,80,119,5,138,490,46
-Technology,CODE001,Microsoft Word,1,1,FALSE,33,129,1,216,119,13
-Others,CODE002,Windows - OS,1,1,TRUE,55,195,1,92,328,18
-Manufacturing,CODE003,Antivirus,1,1,FALSE,16,154,2,123,351,6
-Manufacturing,CODE004,Networking - 2G,1,1,TRUE,92,146,2,457,419,10
-Manufacturing,CODE005,Networking - 3G,1,1,FALSE,51,159,0,30,336,21
-Distribution,CODE006,CRM,2,2,TRUE,9,159,4,371,837,1
-Oil & Gas & Energy,CODE007,Marketing - Automation,2,2,FALSE,29,176,3,121,969,16
-Technology,CODE008,Microsoft Excel,2,2,TRUE,0,186,1,32,477,44
-Others,CODE009,Microsfot PowerPoint,2,2,FALSE,77,167,5,289,317,43
-Manufacturing,CODE010,Outlook,2,2,TRUE,42,180,2,74,150,40
-Finance,CODE011,Windows Server,2,2,FALSE,71,168,2,118,369,12
-Technology,CODE012,Amazon EC2 Server,2,2,TRUE,93,166,0,58,223,36
-Technology,CODE013,Cloud Computing,2,2,FALSE,89,156,5,324,503,28
-Healthcare,CODE014,SAP,2,2,TRUE,88,126,3,500,606,36
-Chemicals,CODE015,Online Meetings,2,2,FALSE,53,197,3,205,323,47
-Apparel,CODE001,Microsoft Word,2,2,TRUE,46,155,1,499,286,37
-Medical Equipment & Supplies,CODE002,Windows - OS,2,2,FALSE,80,172,0,109,274,19
-Manufacturing,CODE003,Antivirus,2,2,FALSE,56,180,2,31,45,42
-Healthcare,CODE004,Networking - 2G,2,2,TRUE,96,174,4,98,298,25
-Retail,CODE005,Networking - 3G,2,2,FALSE,81,137,0,244,942,10
-Energy,CODE006,CRM,2,2,TRUE,29,165,0,227,229,43
-Manufacturing,CODE007,Marketing - Automation,2,2,FALSE,64,200,0,453,529,10
-Technology,CODE008,Microsoft Excel,2,2,TRUE,29,188,3,201,82,29
-Chemicals,CODE009,Microsfot PowerPoint,2,2,FALSE,43,132,4,56,559,20
-Manufacturing,CODE010,Outlook,2,2,TRUE,56,133,3,235,152,16
-Finance,CODE011,Windows Server,2,2,FALSE,31,176,4,117,51,44
-Consulting,CODE012,Amazon EC2 Server,2,2,TRUE,53,113,5,143,546,46
-Government,CODE013,Cloud Computing,2,2,FALSE,99,134,5,356,711,20
-Manufacturing,CODE014,SAP,2,2,TRUE,66,127,3,446,538,46
-Shipping,CODE015,Online Meetings,2,2,FALSE,30,192,3,237,338,45
-Food & Beverage,CODE001,Microsoft Word,2,2,TRUE,1,129,0,93,899,32
-Healthcare,CODE002,Windows - OS,2,2,FALSE,48,125,4,72,843,35
-Electronics,CODE003,Antivirus,2,2,TRUE,72,163,5,433,677,33
-Transportation,CODE004,Networking - 2G,2,2,FALSE,30,192,2,428,648,19
-Apparel,CODE005,Networking - 3G,2,2,TRUE,80,166,3,430,367,42
-Service,CODE006,CRM,2,2,FALSE,39,130,2,469,145,11
-"Television Cable, & Broadcast Network",CODE007,Marketing - Automation,2,2,FALSE,3,143,3,496,481,46
-Finance,CODE008,Microsoft Excel,2,2,TRUE,25,147,4,467,208,23
-Manufacturing,CODE009,Microsfot PowerPoint,2,2,FALSE,35,110,0,108,732,46
-Manufacturing,CODE010,Outlook,2,2,TRUE,99,122,1,438,690,29
-Chemicals,CODE011,Windows Server,2,2,FALSE,33,119,2,331,308,12
-Government,CODE012,Amazon EC2 Server,2,2,TRUE,72,129,5,269,507,41
-Machinery,CODE013,Cloud Computing,2,2,FALSE,23,114,1,447,397,19
-Manufacturing,CODE014,SAP,2,2,TRUE,72,129,0,391,45,17
-Biotechnology,CODE015,Online Meetings,2,2,FALSE,37,136,5,290,592,2
-Hospitality,CODE001,Microsoft Word,2,2,TRUE,70,197,1,182,1000,31
-Education,CODE002,Windows - OS,2,2,FALSE,46,139,2,93,80,5
-Medical & Dental Laboratories,CODE003,Antivirus,2,2,TRUE,42,169,4,58,606,28
-Medical Products,CODE004,Networking - 2G,2,2,FALSE,94,150,1,326,816,4
-Agriculture,CODE005,Networking - 3G,2,2,TRUE,71,120,1,285,806,46
-Healthcare,CODE006,CRM,2,2,FALSE,0,153,4,216,101,44
-Retail,CODE007,Marketing - Automation,2,2,TRUE,65,174,3,471,791,41
-Service,CODE008,Microsoft Excel,2,2,FALSE,68,108,2,197,714,48
-Fish & Seafood,CODE009,Microsfot PowerPoint,2,2,TRUE,74,131,3,76,541,12
-Finance,CODE010,Outlook,2,2,FALSE,18,184,3,395,378,23
-Education,CODE011,Windows Server,2,2,FALSE,86,159,3,265,360,50
-Manufacturing,CODE012,Amazon EC2 Server,2,2,TRUE,10,193,2,141,192,11
-Food & Beverage,CODE013,Cloud Computing,2,2,FALSE,15,130,1,166,498,27
-Retail,CODE014,SAP,2,2,TRUE,2,143,5,125,539,22
-Industrial Manufacturing & Services,CODE015,Online Meetings,2,2,FALSE,8,160,4,401,924,17
-Insurance,CODE001,Microsoft Word,2,2,TRUE,38,181,4,238,561,26
-Healthcare,CODE002,Windows - OS,2,2,FALSE,23,151,4,178,778,41
-Retail,CODE003,Antivirus,2,2,TRUE,13,112,0,30,772,32
-Healthcare,CODE004,Networking - 2G,2,2,FALSE,96,160,5,155,411,49
-Manufacturing,CODE005,Networking - 3G,2,2,TRUE,80,108,0,260,616,49
-Utilities,CODE006,CRM,2,2,FALSE,20,126,1,454,558,2
-Engineering,CODE007,Marketing - Automation,2,2,TRUE,92,136,2,92,965,4
-Oil & Gas & Energy,CODE008,Microsoft Excel,2,2,FALSE,92,161,4,391,755,20
-Service,CODE009,Microsfot PowerPoint,2,2,TRUE,42,189,5,308,581,36
-Hospitality,CODE010,Outlook,2,2,FALSE,53,127,5,393,917,7
-Retail,CODE011,Windows Server,2,2,TRUE,7,185,5,151,370,8
-Non-profit,CODE012,Amazon EC2 Server,2,2,FALSE,86,146,2,235,956,43
-Food & Beverage,CODE013,Cloud Computing,2,2,TRUE,30,104,5,479,184,18
-Agriculture,CODE014,SAP,2,2,FALSE,34,122,1,224,101,23
-Finance,CODE015,Online Meetings,2,2,FALSE,13,139,0,322,917,33
-Oil & Gas Exploration & Production,CODE001,Microsoft Word,2,2,TRUE,55,108,4,106,554,4
-Manufacturing,CODE002,Windows - OS,2,2,FALSE,10,109,2,449,83,30
-Manufacturing,CODE003,Antivirus,2,2,TRUE,49,136,1,128,810,21
-Manufacturing,CODE004,Networking - 2G,2,2,FALSE,5,117,4,207,564,16
-Government,CODE005,Networking - 3G,2,2,TRUE,48,186,5,253,507,40
-Service,CODE006,CRM,2,2,FALSE,54,169,5,68,181,4
-Healthcare,CODE007,Marketing - Automation,2,2,TRUE,15,158,1,130,889,11
-Manufacturing,CODE008,Microsoft Excel,2,2,FALSE,5,148,0,246,197,11
-Consumer Services,CODE009,Microsfot PowerPoint,2,2,TRUE,23,169,5,122,316,22
-Manufacturing,CODE010,Outlook,2,2,FALSE,74,189,2,198,197,14
-Hospitality,CODE011,Windows Server,2,2,TRUE,19,135,3,54,386,19
-Consulting,CODE012,Amazon EC2 Server,2,2,FALSE,8,159,2,182,191,47
-Telecommunications,CODE013,Cloud Computing,2,2,TRUE,44,166,2,435,352,49
-Hospitality,CODE014,SAP,2,2,FALSE,8,163,5,204,746,16
-Manufacturing,CODE015,Online Meetings,2,2,TRUE,54,169,1,365,698,38
-Construction,CODE001,Microsoft Word,2,2,FALSE,100,187,3,324,439,35
-Telecommunications,CODE002,Windows - OS,2,2,TRUE,20,131,5,272,927,2
-Healthcare,CODE003,Antivirus,2,2,FALSE,38,187,1,357,85,8
-Manufacturing,CODE004,Networking - 2G,2,2,FALSE,29,198,5,331,301,36
-Manufacturing,CODE005,Networking - 3G,2,2,TRUE,90,164,1,301,532,8
-Construction,CODE006,CRM,2,2,FALSE,36,114,4,270,851,47
-Bakery Products,CODE007,Marketing - Automation,2,2,TRUE,36,100,4,57,844,14
-Technology,CODE008,Microsoft Excel,2,2,FALSE,61,176,4,321,942,50
-Manufacturing,CODE009,Microsfot PowerPoint,2,2,TRUE,91,175,3,411,32,37
-Technology,CODE010,Outlook,2,2,FALSE,31,173,5,425,468,15
-Transportation,CODE011,Windows Server,2,2,TRUE,37,123,4,318,513,38
-Manufacturing,CODE012,Amazon EC2 Server,2,2,FALSE,71,163,2,349,522,41
-Consulting,CODE013,Cloud Computing,2,2,TRUE,79,103,5,440,373,27
-Software & Programming,CODE014,SAP,2,2,FALSE,97,121,0,310,64,25
-,CODE015,Online Meetings,2,2,TRUE,53,114,5,488,361,6
-Food & Beverage,CODE001,Microsoft Word,2,2,FALSE,70,176,5,274,642,17
-Service,CODE002,Windows - OS,2,2,TRUE,79,124,5,40,210,29
-Service,CODE003,Antivirus,2,2,FALSE,51,193,5,401,216,31
-Medical Devices,CODE004,Networking - 2G,2,2,TRUE,63,124,2,309,21,0
-Service,CODE005,Networking - 3G,2,2,FALSE,38,139,1,33,761,44
-Biotechnology,CODE006,CRM,2,2,TRUE,55,101,2,334,644,44
-Finance,CODE007,Marketing - Automation,2,2,FALSE,25,162,1,302,11,22
-Hospitality,CODE008,Microsoft Excel,2,2,FALSE,88,113,5,226,905,39
-Healthcare,CODE009,Microsfot PowerPoint,2,2,TRUE,12,114,0,337,844,9
-Technology,CODE010,Outlook,2,2,FALSE,48,128,0,371,927,10
-Service,CODE011,Windows Server,2,2,TRUE,71,100,4,386,596,40
-Government,CODE012,Amazon EC2 Server,2,2,FALSE,42,164,5,65,775,7
-Energy,CODE013,Cloud Computing,2,2,TRUE,80,163,4,307,791,0
-Energy,CODE014,SAP,2,2,FALSE,75,188,3,345,204,13
-Energy,CODE015,Online Meetings,2,2,TRUE,29,138,3,148,814,9
-Education,CODE001,Microsoft Word,2,2,FALSE,87,116,3,309,396,38
-Non-profit,CODE002,Windows - OS,2,2,TRUE,76,185,4,396,564,8
-Telecommunications,CODE003,Antivirus,2,2,FALSE,73,169,2,72,876,47
-Non-profit,CODE004,Networking - 2G,2,2,TRUE,26,138,2,365,907,8
-Technology,CODE005,Networking - 3G,2,2,FALSE,49,179,4,48,652,18
-Retail,CODE006,CRM,2,2,TRUE,64,196,5,257,85,33
-Technology,CODE007,Marketing - Automation,2,2,FALSE,25,116,4,178,480,46
-Service,CODE008,Microsoft Excel,2,2,TRUE,45,165,1,455,774,42
-Manufacturing,CODE009,Microsfot PowerPoint,2,2,FALSE,72,131,1,454,287,28
-Others,CODE010,Outlook,2,2,TRUE,87,147,2,247,831,33
-Technology,CODE011,Windows Server,2,2,FALSE,70,167,5,334,106,5
-Others,CODE012,Amazon EC2 Server,2,2,FALSE,32,155,2,360,535,28
-Manufacturing,CODE013,Cloud Computing,2,2,TRUE,35,104,0,300,791,8
-Manufacturing,CODE014,SAP,2,2,FALSE,74,195,3,249,650,9
-Manufacturing,CODE015,Online Meetings,2,2,TRUE,70,136,2,65,785,46
-Distribution,CODE001,Microsoft Word,3,3,FALSE,73,197,5,482,382,29
-Oil & Gas & Energy,CODE002,Windows - OS,3,3,TRUE,41,114,3,102,979,43
-Technology,CODE003,Antivirus,3,3,FALSE,51,141,0,191,26,44
-Others,CODE004,Networking - 2G,3,3,TRUE,23,153,2,96,863,5
-Manufacturing,CODE005,Networking - 3G,3,3,FALSE,74,175,5,62,842,19
-Finance,CODE006,CRM,3,3,TRUE,37,143,3,477,794,48
-Technology,CODE007,Marketing - Automation,3,3,FALSE,33,111,5,124,37,16
-Technology,CODE008,Microsoft Excel,3,3,TRUE,65,151,4,21,326,27
-Healthcare,CODE009,Microsfot PowerPoint,3,3,FALSE,100,147,4,315,238,50
-Chemicals,CODE010,Outlook,3,3,TRUE,51,143,0,99,581,33
-Apparel,CODE011,Windows Server,3,3,FALSE,91,140,5,177,928,50
-Medical Equipment & Supplies,CODE012,Amazon EC2 Server,3,3,TRUE,23,146,2,470,746,34
-Manufacturing,CODE013,Cloud Computing,3,3,FALSE,0,135,5,218,957,16
-Healthcare,CODE014,SAP,3,3,TRUE,66,154,2,426,799,26
-Retail,CODE015,Online Meetings,3,3,FALSE,2,192,0,360,21,48
-Energy,CODE001,Microsoft Word,3,3,FALSE,97,152,2,469,463,29
-Manufacturing,CODE002,Windows - OS,3,3,TRUE,14,109,3,264,773,2
-Technology,CODE003,Antivirus,3,3,FALSE,76,126,3,168,647,0
-Chemicals,CODE004,Networking - 2G,3,3,TRUE,93,156,5,500,311,4
-Manufacturing,CODE005,Networking - 3G,3,3,FALSE,85,162,5,413,655,44
-Finance,CODE006,CRM,3,3,TRUE,84,156,5,143,901,3
-Consulting,CODE007,Marketing - Automation,3,3,FALSE,39,176,0,144,747,29
-Government,CODE008,Microsoft Excel,3,3,TRUE,80,188,3,65,736,16
-Manufacturing,CODE009,Microsfot PowerPoint,3,3,FALSE,92,153,5,327,720,18
-Shipping,CODE010,Outlook,3,3,TRUE,16,100,3,371,532,19
-Food & Beverage,CODE011,Windows Server,3,3,FALSE,85,159,1,147,1000,18
-Healthcare,CODE012,Amazon EC2 Server,3,3,TRUE,46,125,0,479,301,16
-Electronics,CODE013,Cloud Computing,3,3,FALSE,70,118,2,401,746,36
-Transportation,CODE014,SAP,3,3,TRUE,63,131,1,270,908,5
-Apparel,CODE015,Online Meetings,3,3,FALSE,1,178,4,425,562,46
-Service,CODE001,Microsoft Word,3,3,TRUE,53,177,5,26,117,37
-"Television Cable, & Broadcast Network",CODE002,Windows - OS,3,3,FALSE,7,186,4,211,829,46
-Finance,CODE003,Antivirus,3,3,TRUE,27,176,5,73,928,2
-Manufacturing,CODE004,Networking - 2G,3,3,FALSE,33,123,1,217,601,49
-Manufacturing,CODE005,Networking - 3G,3,3,FALSE,6,165,4,389,775,11
-Chemicals,CODE006,CRM,3,3,TRUE,53,151,4,455,9,48
-Government,CODE007,Marketing - Automation,3,3,FALSE,60,161,3,81,375,42
-Machinery,CODE008,Microsoft Excel,3,3,TRUE,45,177,4,111,997,38
-Manufacturing,CODE009,Microsfot PowerPoint,3,3,FALSE,76,113,5,238,789,7
-Biotechnology,CODE010,Outlook,3,3,TRUE,80,158,4,189,79,4
-Hospitality,CODE011,Windows Server,3,3,FALSE,37,116,3,482,106,32
-Education,CODE012,Amazon EC2 Server,3,3,TRUE,41,177,4,115,654,12
-Medical & Dental Laboratories,CODE013,Cloud Computing,3,3,FALSE,25,184,4,452,877,3
-Medical Products,CODE014,SAP,3,3,TRUE,16,148,0,101,180,21
-Agriculture,CODE015,Online Meetings,3,3,FALSE,5,188,5,273,206,32
-Healthcare,CODE001,Microsoft Word,3,3,TRUE,67,195,2,474,210,12
-Retail,CODE002,Windows - OS,3,3,FALSE,78,107,5,190,936,25
-Service,CODE003,Antivirus,3,3,TRUE,94,198,5,491,691,9
-Fish & Seafood,CODE004,Networking - 2G,3,3,FALSE,8,190,1,163,548,6
-Finance,CODE005,Networking - 3G,3,3,TRUE,78,114,4,27,294,30
-Education,CODE006,CRM,3,3,FALSE,17,161,2,221,714,44
-Manufacturing,CODE007,Marketing - Automation,3,3,TRUE,93,179,3,264,233,9
-Food & Beverage,CODE008,Microsoft Excel,3,3,FALSE,44,187,0,419,331,8
-Retail,CODE009,Microsfot PowerPoint,3,3,FALSE,14,169,2,476,270,7
-Industrial Manufacturing & Services,CODE010,Outlook,3,3,TRUE,84,196,3,386,257,26
-Insurance,CODE011,Windows Server,3,3,FALSE,20,136,1,369,269,45
-Healthcare,CODE012,Amazon EC2 Server,3,3,TRUE,10,132,5,267,706,48
-Retail,CODE013,Cloud Computing,3,3,FALSE,23,126,1,236,900,48
-Healthcare,CODE014,SAP,3,3,TRUE,6,193,2,50,516,17
-Manufacturing,CODE015,Online Meetings,3,3,FALSE,78,109,5,73,117,8
-Utilities,CODE001,Microsoft Word,3,3,TRUE,42,193,5,317,801,42
-Engineering,CODE002,Windows - OS,3,3,FALSE,84,127,2,225,68,0
-Oil & Gas & Energy,CODE003,Antivirus,3,3,TRUE,68,101,2,493,593,37
-Service,CODE004,Networking - 2G,3,3,FALSE,93,180,3,363,782,21
-Hospitality,CODE005,Networking - 3G,3,3,TRUE,51,149,3,119,687,21
-Retail,CODE006,CRM,3,3,FALSE,46,166,3,385,559,19
-Non-profit,CODE007,Marketing - Automation,3,3,TRUE,51,132,3,384,199,25
-Food & Beverage,CODE008,Microsoft Excel,3,3,FALSE,65,167,0,150,65,49
-Agriculture,CODE009,Microsfot PowerPoint,3,3,TRUE,1,131,5,438,881,3
-Finance,CODE010,Outlook,3,3,FALSE,52,155,5,41,132,7
-Oil & Gas Exploration & Production,CODE011,Windows Server,3,3,TRUE,87,141,5,131,593,0
-Manufacturing,CODE012,Amazon EC2 Server,3,3,FALSE,4,113,0,285,803,40
-Manufacturing,CODE013,Cloud Computing,3,3,FALSE,61,130,1,36,353,25
-Manufacturing,CODE014,SAP,3,3,TRUE,49,116,1,258,579,41
-Government,CODE015,Online Meetings,3,3,FALSE,52,125,4,32,258,27
-Service,CODE001,Microsoft Word,3,3,TRUE,40,170,4,141,691,9
-Healthcare,CODE002,Windows - OS,3,3,FALSE,25,174,4,406,362,12
-Manufacturing,CODE003,Antivirus,3,3,TRUE,87,101,0,344,559,4
-Consumer Services,CODE004,Networking - 2G,3,3,FALSE,60,157,5,141,973,9
-Manufacturing,CODE005,Networking - 3G,3,3,TRUE,19,133,1,264,179,28
-Hospitality,CODE006,CRM,3,3,FALSE,55,145,4,252,659,32
-Consulting,CODE007,Marketing - Automation,3,3,TRUE,29,123,0,498,720,12
-Telecommunications,CODE008,Microsoft Excel,3,3,FALSE,73,109,5,319,81,23
-Hospitality,CODE009,Microsfot PowerPoint,3,3,TRUE,58,145,3,187,123,9
-Manufacturing,CODE010,Outlook,3,3,FALSE,49,165,2,388,354,21
-Construction,CODE011,Windows Server,3,3,TRUE,90,172,4,145,410,0
-Telecommunications,CODE012,Amazon EC2 Server,3,3,FALSE,49,125,5,324,89,44
-Healthcare,CODE013,Cloud Computing,3,3,TRUE,99,159,5,186,216,22
-Manufacturing,CODE014,SAP,3,3,FALSE,32,167,1,335,460,46
-Manufacturing,CODE015,Online Meetings,3,3,TRUE,86,169,5,179,600,26
-Construction,CODE001,Microsoft Word,3,3,FALSE,78,196,4,457,659,37
-Bakery Products,CODE002,Windows - OS,3,3,FALSE,98,179,3,105,332,0
-Technology,CODE003,Antivirus,3,3,TRUE,71,113,2,493,550,36
-Manufacturing,CODE004,Networking - 2G,3,3,FALSE,98,106,2,362,321,4
-Technology,CODE005,Networking - 3G,3,3,TRUE,29,146,5,60,267,50
-Transportation,CODE006,CRM,3,3,FALSE,41,178,1,454,927,14
-Manufacturing,CODE007,Marketing - Automation,3,3,TRUE,29,167,1,36,21,29
-Consulting,CODE008,Microsoft Excel,3,3,FALSE,76,148,2,171,394,16
-Software & Programming,CODE009,Microsfot PowerPoint,3,3,TRUE,22,198,1,340,271,7
-,CODE010,Outlook,3,3,FALSE,54,116,4,77,622,31
-Food & Beverage,CODE011,Windows Server,3,3,TRUE,52,123,0,440,516,38
-Service,CODE012,Amazon EC2 Server,3,3,FALSE,91,135,5,142,871,5
-Service,CODE013,Cloud Computing,3,3,TRUE,76,147,0,433,865,15
-Medical Devices,CODE014,SAP,3,3,FALSE,61,142,0,32,636,48
-Service,CODE015,Online Meetings,3,3,TRUE,100,129,1,114,60,1
-Biotechnology,CODE001,Microsoft Word,3,3,FALSE,82,174,0,129,660,44
-Finance,CODE002,Windows - OS,3,3,TRUE,38,190,4,90,152,40
-Hospitality,CODE003,Antivirus,3,3,FALSE,43,119,3,75,72,49
-Healthcare,CODE004,Networking - 2G,3,3,TRUE,6,106,0,230,333,1
-Technology,CODE005,Networking - 3G,3,3,FALSE,8,117,0,169,965,35
-Service,CODE006,CRM,3,3,FALSE,9,195,4,54,443,14
-Government,CODE007,Marketing - Automation,3,3,TRUE,92,177,1,439,422,8
-Energy,CODE008,Microsoft Excel,3,3,FALSE,86,101,1,426,318,6
-Energy,CODE009,Microsfot PowerPoint,3,3,TRUE,20,134,0,430,314,25
-Energy,CODE010,Outlook,3,3,FALSE,68,158,4,495,55,11
-Education,CODE011,Windows Server,3,3,TRUE,45,140,2,75,274,36
-Non-profit,CODE012,Amazon EC2 Server,3,3,FALSE,12,164,4,62,902,4
-Telecommunications,CODE013,Cloud Computing,3,3,TRUE,38,161,5,488,66,38
-Non-profit,CODE014,SAP,3,3,FALSE,2,164,5,266,606,26
-Technology,CODE015,Online Meetings,3,3,TRUE,94,183,1,490,893,35
-Retail,CODE001,Microsoft Word,3,3,FALSE,40,186,2,403,254,33
-Technology,CODE002,Windows - OS,3,3,TRUE,18,181,0,499,15,18
-Service,CODE003,Antivirus,3,3,FALSE,22,186,1,220,766,48
-Manufacturing,CODE004,Networking - 2G,3,3,TRUE,1,138,1,245,240,13
-Others,CODE005,Networking - 3G,3,3,FALSE,91,177,3,474,472,38
-Technology,CODE006,CRM,3,3,TRUE,46,145,5,182,299,36
-Others,CODE007,Marketing - Automation,3,3,FALSE,74,156,3,186,130,14
-Manufacturing,CODE008,Microsoft Excel,3,3,TRUE,97,189,3,284,360,9
-Manufacturing,CODE009,Microsfot PowerPoint,3,3,FALSE,30,174,5,469,354,47
-Manufacturing,CODE010,Outlook,3,3,FALSE,54,102,2,134,298,24
-Distribution,CODE011,Windows Server,4,4,TRUE,60,168,4,454,237,20
-Oil & Gas & Energy,CODE012,Amazon EC2 Server,4,4,FALSE,25,131,3,487,323,38
-Technology,CODE013,Cloud Computing,4,4,TRUE,0,127,3,177,350,11
-Others,CODE014,SAP,4,4,FALSE,91,101,1,88,190,5
-Manufacturing,CODE015,Online Meetings,4,4,TRUE,16,180,0,108,982,1
-Finance,CODE001,Microsoft Word,4,4,FALSE,22,145,0,52,260,23
-Technology,CODE002,Windows - OS,4,4,TRUE,3,116,3,38,621,18
-Technology,CODE003,Antivirus,4,4,FALSE,15,168,3,284,322,35
-Healthcare,CODE004,Networking - 2G,4,4,TRUE,44,129,1,113,374,9
-Chemicals,CODE005,Networking - 3G,4,4,FALSE,1,188,3,72,245,16
-Apparel,CODE006,CRM,4,4,TRUE,11,144,2,319,318,38
-Medical Equipment & Supplies,CODE007,Marketing - Automation,4,4,FALSE,99,199,2,179,676,44
-Manufacturing,CODE008,Microsoft Excel,4,4,TRUE,78,192,0,229,134,1
-Healthcare,CODE009,Microsfot PowerPoint,4,4,FALSE,54,161,5,321,997,49
-Retail,CODE010,Outlook,4,4,TRUE,93,192,4,187,793,41
-Energy,CODE011,Windows Server,4,4,FALSE,29,106,2,335,922,20
-Manufacturing,CODE012,Amazon EC2 Server,4,4,TRUE,49,144,0,148,283,24
-Technology,CODE013,Cloud Computing,4,4,FALSE,9,172,5,364,611,38
-Chemicals,CODE014,SAP,4,4,FALSE,56,116,0,15,401,31
-Manufacturing,CODE015,Online Meetings,4,4,TRUE,24,100,3,263,306,45
-Finance,CODE001,Microsoft Word,4,4,FALSE,16,187,5,318,895,28
-Consulting,CODE002,Windows - OS,4,4,TRUE,81,198,4,32,377,10
-Government,CODE003,Antivirus,4,4,FALSE,24,177,5,314,67,42
-Manufacturing,CODE004,Networking - 2G,4,4,TRUE,3,195,0,438,446,17
-Shipping,CODE005,Networking - 3G,4,4,FALSE,75,115,1,293,133,16
-Food & Beverage,CODE006,CRM,4,4,TRUE,48,173,0,121,637,42
-Healthcare,CODE007,Marketing - Automation,4,4,FALSE,46,112,0,381,36,8
-Electronics,CODE008,Microsoft Excel,4,4,TRUE,35,200,3,202,346,36
-Transportation,CODE009,Microsfot PowerPoint,4,4,FALSE,76,192,1,255,851,14
-Apparel,CODE010,Outlook,4,4,TRUE,73,170,5,382,656,21
-Service,CODE011,Windows Server,4,4,FALSE,74,142,0,474,873,17
-"Television Cable, & Broadcast Network",CODE012,Amazon EC2 Server,4,4,TRUE,46,159,3,62,208,44
-Finance,CODE013,Cloud Computing,4,4,FALSE,21,178,3,434,929,21
-Manufacturing,CODE014,SAP,4,4,TRUE,87,162,4,432,293,17
-Manufacturing,CODE015,Online Meetings,4,4,FALSE,12,165,0,81,419,0
-Chemicals,CODE001,Microsoft Word,4,4,TRUE,5,147,2,406,12,24
-Government,CODE002,Windows - OS,4,4,FALSE,58,187,2,209,504,22
-Machinery,CODE003,Antivirus,4,4,FALSE,94,195,1,281,939,33
-Manufacturing,CODE004,Networking - 2G,4,4,TRUE,89,126,1,387,687,37
-Biotechnology,CODE005,Networking - 3G,4,4,FALSE,3,145,2,490,928,27
-Hospitality,CODE006,CRM,4,4,TRUE,78,121,2,329,267,21
-Education,CODE007,Marketing - Automation,4,4,FALSE,19,157,5,49,996,26
-Medical & Dental Laboratories,CODE008,Microsoft Excel,4,4,TRUE,88,139,3,283,822,26
-Medical Products,CODE009,Microsfot PowerPoint,4,4,FALSE,100,163,5,438,971,1
-Agriculture,CODE010,Outlook,4,4,TRUE,83,136,4,107,329,3
-Healthcare,CODE011,Windows Server,4,4,FALSE,88,153,0,220,664,35
-Retail,CODE012,Amazon EC2 Server,4,4,TRUE,14,162,2,469,826,24
-Service,CODE013,Cloud Computing,4,4,FALSE,61,127,1,204,186,45
-Fish & Seafood,CODE014,SAP,4,4,TRUE,54,199,1,114,623,29
-Finance,CODE015,Online Meetings,4,4,FALSE,4,120,4,341,284,7
-Education,CODE001,Microsoft Word,4,4,TRUE,61,141,3,175,775,37
-Manufacturing,CODE002,Windows - OS,4,4,FALSE,33,179,0,173,212,12
-Food & Beverage,CODE003,Antivirus,4,4,TRUE,54,159,2,494,596,15
-Retail,CODE004,Networking - 2G,4,4,FALSE,64,104,0,11,1,28
-Industrial Manufacturing & Services,CODE005,Networking - 3G,4,4,TRUE,50,131,0,417,304,42
-Insurance,CODE006,CRM,4,4,FALSE,20,173,1,463,32,40
-Healthcare,CODE007,Marketing - Automation,4,4,FALSE,89,140,5,344,476,17
-Retail,CODE008,Microsoft Excel,4,4,TRUE,23,123,1,38,218,18
-Healthcare,CODE009,Microsfot PowerPoint,4,4,FALSE,11,123,1,491,762,44
-Manufacturing,CODE010,Outlook,4,4,TRUE,9,162,5,435,598,20
-Utilities,CODE011,Windows Server,4,4,FALSE,21,125,5,388,957,14
-Engineering,CODE012,Amazon EC2 Server,4,4,TRUE,83,182,5,82,852,21
-Oil & Gas & Energy,CODE013,Cloud Computing,4,4,FALSE,69,134,2,187,368,44
-Service,CODE014,SAP,4,4,TRUE,17,131,2,281,118,16
-Hospitality,CODE015,Online Meetings,4,4,FALSE,42,116,1,460,3,49
-Retail,CODE001,Microsoft Word,4,4,TRUE,75,157,3,286,329,10
-Non-profit,CODE002,Windows - OS,4,4,FALSE,48,108,4,104,854,3
-Food & Beverage,CODE003,Antivirus,4,4,TRUE,60,179,2,139,517,27
-Agriculture,CODE004,Networking - 2G,4,4,FALSE,36,136,1,81,719,44
-Finance,CODE005,Networking - 3G,4,4,TRUE,53,136,5,496,49,11
-Oil & Gas Exploration & Production,CODE006,CRM,4,4,FALSE,92,150,1,117,812,46
-Manufacturing,CODE007,Marketing - Automation,4,4,TRUE,22,159,0,38,415,17
-Manufacturing,CODE008,Microsoft Excel,4,4,FALSE,59,158,3,443,296,39
-Manufacturing,CODE009,Microsfot PowerPoint,4,4,TRUE,49,125,0,446,101,47
-Government,CODE010,Outlook,4,4,FALSE,1,146,3,311,644,11
-Service,CODE011,Windows Server,4,4,FALSE,47,155,2,498,213,18
-Healthcare,CODE012,Amazon EC2 Server,4,4,TRUE,51,120,1,491,553,36
-Manufacturing,CODE013,Cloud Computing,4,4,FALSE,79,200,4,81,304,12
-Consumer Services,CODE014,SAP,4,4,TRUE,67,125,0,390,586,27
-Manufacturing,CODE015,Online Meetings,4,4,FALSE,9,161,1,395,91,43
-Hospitality,CODE001,Microsoft Word,4,4,TRUE,44,147,5,316,234,6
-Consulting,CODE002,Windows - OS,4,4,FALSE,82,161,0,222,918,40
-Telecommunications,CODE003,Antivirus,4,4,TRUE,51,133,5,312,961,2
-Hospitality,CODE004,Networking - 2G,4,4,FALSE,23,105,0,224,264,5
-Manufacturing,CODE005,Networking - 3G,4,4,TRUE,17,131,0,159,789,35
-Construction,CODE006,CRM,4,4,FALSE,83,129,5,460,575,47
-Telecommunications,CODE007,Marketing - Automation,4,4,TRUE,40,142,5,276,971,31
-Healthcare,CODE008,Microsoft Excel,4,4,FALSE,95,159,1,196,273,26
-Manufacturing,CODE009,Microsfot PowerPoint,4,4,TRUE,71,130,1,39,113,9
-Manufacturing,CODE010,Outlook,4,4,FALSE,45,106,4,450,309,42
-Construction,CODE011,Windows Server,4,4,TRUE,73,128,2,419,241,8
-Bakery Products,CODE012,Amazon EC2 Server,4,4,FALSE,29,124,0,350,861,39
-Technology,CODE013,Cloud Computing,4,4,TRUE,49,141,4,435,604,29
-Manufacturing,CODE014,SAP,4,4,FALSE,47,104,1,52,533,12
-Technology,CODE015,Online Meetings,4,4,FALSE,72,103,4,111,485,37
-Transportation,CODE001,Microsoft Word,4,4,TRUE,24,112,1,439,427,21
-Manufacturing,CODE002,Windows - OS,4,4,FALSE,88,128,2,186,100,14
-Consulting,CODE003,Antivirus,4,4,TRUE,55,148,3,330,917,21
-Software & Programming,CODE004,Networking - 2G,4,4,FALSE,100,152,0,193,246,3
-,CODE005,Networking - 3G,4,4,TRUE,62,101,0,250,761,9
-Food & Beverage,CODE006,CRM,4,4,FALSE,46,118,2,372,701,9
-Service,CODE007,Marketing - Automation,4,4,TRUE,58,199,4,339,961,16
-Service,CODE008,Microsoft Excel,4,4,FALSE,86,137,3,282,195,31
-Medical Devices,CODE009,Microsfot PowerPoint,4,4,TRUE,8,164,3,414,1,43
-Service,CODE010,Outlook,4,4,FALSE,75,182,2,428,362,41
-Biotechnology,CODE011,Windows Server,4,4,TRUE,6,168,2,318,976,7
-Finance,CODE012,Amazon EC2 Server,4,4,FALSE,72,123,4,107,85,50
-Hospitality,CODE013,Cloud Computing,4,4,TRUE,100,189,4,476,343,6
-Healthcare,CODE014,SAP,4,4,FALSE,50,157,0,338,936,36
-Technology,CODE015,Online Meetings,4,4,TRUE,3,192,4,153,500,13
-Service,CODE001,Microsoft Word,4,4,FALSE,17,169,1,125,864,8
-Government,CODE002,Windows - OS,4,4,TRUE,56,126,1,185,179,35
-Energy,CODE003,Antivirus,4,4,FALSE,51,160,1,370,823,16
-Energy,CODE004,Networking - 2G,4,4,FALSE,61,179,3,275,626,5
-Energy,CODE005,Networking - 3G,4,4,TRUE,65,112,2,48,171,41
-Education,CODE006,CRM,4,4,FALSE,31,143,2,197,781,44
-Non-profit,CODE007,Marketing - Automation,4,4,TRUE,56,126,4,409,304,38
-Telecommunications,CODE008,Microsoft Excel,4,4,FALSE,34,167,1,100,291,40
-Non-profit,CODE009,Microsfot PowerPoint,4,4,TRUE,99,142,2,241,722,41
-Technology,CODE010,Outlook,4,4,FALSE,70,119,1,248,112,41
-Retail,CODE011,Windows Server,4,4,TRUE,47,135,3,452,46,34
-Technology,CODE012,Amazon EC2 Server,4,4,FALSE,45,111,3,110,116,28
-Service,CODE013,Cloud Computing,4,4,TRUE,80,145,0,307,600,20
-Manufacturing,CODE014,SAP,4,4,FALSE,58,101,1,224,108,39
-Others,CODE015,Online Meetings,4,4,TRUE,56,127,0,336,889,9
-Technology,CODE001,Microsoft Word,4,4,FALSE,82,129,4,500,658,31
-Others,CODE002,Windows - OS,4,4,TRUE,25,199,1,153,582,25
-Manufacturing,CODE003,Antivirus,4,4,FALSE,63,138,1,125,654,3
-Manufacturing,CODE004,Networking - 2G,4,4,TRUE,28,160,3,174,107,31
-Manufacturing,CODE005,Networking - 3G,4,4,FALSE,23,106,0,368,12,45
-Distribution,CODE006,CRM,5,5,TRUE,53,124,0,199,195,31
-Oil & Gas & Energy,CODE007,Marketing - Automation,5,5,FALSE,46,163,4,433,553,11
-Technology,CODE008,Microsoft Excel,5,5,FALSE,20,194,1,286,367,5
-Others,CODE009,Microsfot PowerPoint,5,5,TRUE,85,195,4,291,98,35
-Manufacturing,CODE010,Outlook,5,5,FALSE,89,166,5,283,509,13
-Finance,CODE011,Windows Server,5,5,TRUE,2,197,2,486,294,16
-Technology,CODE012,Amazon EC2 Server,5,5,FALSE,55,120,2,188,171,43
-Technology,CODE013,Cloud Computing,5,5,TRUE,52,129,0,345,81,31
-Healthcare,CODE014,SAP,5,5,FALSE,50,129,2,291,524,5
-Chemicals,CODE015,Online Meetings,5,5,TRUE,4,133,2,326,581,37
-Apparel,CODE001,Microsoft Word,5,5,FALSE,3,168,2,235,595,44
-Medical Equipment & Supplies,CODE002,Windows - OS,5,5,TRUE,42,123,2,113,483,44
-Manufacturing,CODE003,Antivirus,5,5,FALSE,68,132,0,446,560,34
-Healthcare,CODE004,Networking - 2G,5,5,TRUE,21,142,5,344,690,33
-Retail,CODE005,Networking - 3G,5,5,FALSE,26,147,3,13,512,26
-Energy,CODE006,CRM,5,5,TRUE,19,153,5,310,347,15
-Manufacturing,CODE007,Marketing - Automation,5,5,FALSE,17,128,1,372,538,39
-Technology,CODE008,Microsoft Excel,5,5,TRUE,100,102,1,499,39,26
-Chemicals,CODE009,Microsfot PowerPoint,5,5,FALSE,1,146,0,479,758,10
-Manufacturing,CODE010,Outlook,5,5,TRUE,10,116,1,66,963,50
-Finance,CODE011,Windows Server,5,5,FALSE,15,163,0,377,469,38
-Consulting,CODE012,Amazon EC2 Server,5,5,FALSE,97,175,4,142,434,34
-Government,CODE013,Cloud Computing,5,5,TRUE,57,162,2,29,954,31
-Manufacturing,CODE014,SAP,5,5,FALSE,52,118,2,105,157,3
-Shipping,CODE015,Online Meetings,5,5,TRUE,24,179,0,258,838,16
-Food & Beverage,CODE001,Microsoft Word,5,5,FALSE,62,175,3,485,83,25
-Healthcare,CODE002,Windows - OS,5,5,TRUE,88,192,4,457,699,47
-Electronics,CODE003,Antivirus,5,5,FALSE,70,147,1,457,429,5
-Transportation,CODE004,Networking - 2G,5,5,TRUE,38,115,1,398,4,38
-Apparel,CODE005,Networking - 3G,5,5,FALSE,96,106,4,140,242,24
-Service,CODE006,CRM,5,5,TRUE,13,159,2,338,586,3
-"Television Cable, & Broadcast Network",CODE007,Marketing - Automation,5,5,FALSE,12,113,0,401,354,4
-Finance,CODE008,Microsoft Excel,5,5,TRUE,99,200,2,141,828,2
-Manufacturing,CODE009,Microsfot PowerPoint,5,5,FALSE,16,153,5,83,688,23
-Manufacturing,CODE010,Outlook,5,5,TRUE,12,149,3,57,162,10
-Chemicals,CODE011,Windows Server,5,5,FALSE,56,192,3,106,125,14
-Government,CODE012,Amazon EC2 Server,5,5,TRUE,34,121,5,442,835,29
-Machinery,CODE013,Cloud Computing,5,5,FALSE,51,163,3,48,490,49
-Manufacturing,CODE014,SAP,5,5,TRUE,90,155,5,224,92,18
-Biotechnology,CODE015,Online Meetings,5,5,FALSE,65,178,3,263,696,2
-Hospitality,CODE001,Microsoft Word,5,5,FALSE,63,193,2,130,559,9
-Education,CODE002,Windows - OS,5,5,TRUE,2,179,1,461,601,4
-Medical & Dental Laboratories,CODE003,Antivirus,5,5,FALSE,24,152,5,23,474,47
-Medical Products,CODE004,Networking - 2G,5,5,TRUE,38,200,2,490,226,20
-Agriculture,CODE005,Networking - 3G,5,5,FALSE,84,132,0,209,137,45
-Healthcare,CODE006,CRM,5,5,TRUE,76,101,5,446,564,9
-Retail,CODE007,Marketing - Automation,5,5,FALSE,53,154,3,148,444,14
-Service,CODE008,Microsoft Excel,5,5,TRUE,4,125,0,177,82,22
-Fish & Seafood,CODE009,Microsfot PowerPoint,5,5,FALSE,39,169,4,386,998,30
-Finance,CODE010,Outlook,5,5,TRUE,61,154,3,48,383,50
-Education,CODE011,Windows Server,5,5,FALSE,97,149,3,159,827,23
-Manufacturing,CODE012,Amazon EC2 Server,5,5,TRUE,66,165,5,24,578,29
-Food & Beverage,CODE013,Cloud Computing,5,5,FALSE,35,136,2,241,189,2
-Retail,CODE014,SAP,5,5,TRUE,99,139,1,217,54,22
-Industrial Manufacturing & Services,CODE015,Online Meetings,5,5,FALSE,99,154,4,388,159,18
-Insurance,CODE001,Microsoft Word,5,5,TRUE,11,100,4,188,142,43
-Healthcare,CODE002,Windows - OS,5,5,FALSE,63,157,0,383,831,43
-Retail,CODE003,Antivirus,5,5,TRUE,66,129,1,64,518,3
-Healthcare,CODE004,Networking - 2G,5,5,FALSE,82,107,1,372,587,47
-Manufacturing,CODE005,Networking - 3G,5,5,FALSE,35,177,4,298,589,15
-Utilities,CODE006,CRM,5,5,TRUE,75,139,5,355,851,5
-Engineering,CODE007,Marketing - Automation,5,5,FALSE,38,155,3,124,164,19
-Oil & Gas & Energy,CODE008,Microsoft Excel,5,5,TRUE,31,173,1,403,361,36
-Service,CODE009,Microsfot PowerPoint,5,5,FALSE,30,159,3,468,279,4
-Hospitality,CODE010,Outlook,5,5,TRUE,53,187,3,375,105,30
-Retail,CODE011,Windows Server,5,5,FALSE,95,108,1,131,987,25
-Non-profit,CODE012,Amazon EC2 Server,5,5,TRUE,58,122,1,293,35,13
-Food & Beverage,CODE013,Cloud Computing,5,5,FALSE,41,129,1,17,351,27
-Agriculture,CODE014,SAP,5,5,TRUE,42,136,2,69,19,25
-Finance,CODE015,Online Meetings,5,5,FALSE,18,199,1,348,457,37
-Oil & Gas Exploration & Production,CODE001,Microsoft Word,5,5,TRUE,45,164,5,413,958,3
-Manufacturing,CODE002,Windows - OS,5,5,FALSE,0,139,4,249,537,2
-Manufacturing,CODE003,Antivirus,5,5,TRUE,39,175,3,252,924,12
-Manufacturing,CODE004,Networking - 2G,5,5,FALSE,9,166,5,402,714,36
-Government,CODE005,Networking - 3G,5,5,TRUE,78,184,3,62,142,6
-Service,CODE006,CRM,5,5,FALSE,68,143,3,429,484,10
-Healthcare,CODE007,Marketing - Automation,5,5,TRUE,54,172,0,15,61,0
-Manufacturing,CODE008,Microsoft Excel,5,5,FALSE,30,186,0,205,492,23
-Consumer Services,CODE009,Microsfot PowerPoint,5,5,FALSE,59,114,1,213,345,48
-Manufacturing,CODE010,Outlook,5,5,TRUE,67,156,5,205,492,25
-Hospitality,CODE011,Windows Server,5,5,FALSE,88,141,1,72,105,20
-Consulting,CODE012,Amazon EC2 Server,5,5,TRUE,74,168,1,298,439,45
-Telecommunications,CODE013,Cloud Computing,5,5,FALSE,3,147,0,248,509,43
-Hospitality,CODE014,SAP,5,5,TRUE,39,194,1,241,206,9
-Manufacturing,CODE015,Online Meetings,5,5,FALSE,53,192,2,260,125,8
-Construction,CODE001,Microsoft Word,5,5,TRUE,11,176,3,19,525,30
-Telecommunications,CODE002,Windows - OS,5,5,FALSE,42,115,2,351,800,10
-Healthcare,CODE003,Antivirus,5,5,TRUE,51,176,5,138,929,24
-Manufacturing,CODE004,Networking - 2G,5,5,FALSE,72,140,4,111,501,34
-Manufacturing,CODE005,Networking - 3G,5,5,TRUE,12,187,1,326,753,0
-Construction,CODE006,CRM,5,5,FALSE,56,183,5,256,303,2
-Bakery Products,CODE007,Marketing - Automation,5,5,TRUE,69,141,3,116,228,26
-Technology,CODE008,Microsoft Excel,5,5,FALSE,92,125,5,258,879,2
-Manufacturing,CODE009,Microsfot PowerPoint,5,5,TRUE,40,119,2,193,327,29
-Technology,CODE010,Outlook,5,5,FALSE,80,154,4,294,412,39
-Transportation,CODE011,Windows Server,5,5,TRUE,36,116,5,162,841,11
-Manufacturing,CODE012,Amazon EC2 Server,5,5,FALSE,99,178,0,367,771,6
-Consulting,CODE013,Cloud Computing,5,5,FALSE,42,135,0,247,71,10
-Software & Programming,CODE014,SAP,5,5,TRUE,89,168,1,89,181,33
-,CODE015,Online Meetings,5,5,FALSE,72,180,3,20,953,8
-Food & Beverage,CODE001,Microsoft Word,5,5,TRUE,87,139,1,299,891,0
-Service,CODE002,Windows - OS,5,5,FALSE,16,116,0,373,510,1
-Service,CODE003,Antivirus,5,5,TRUE,74,136,4,483,257,30
-Medical Devices,CODE004,Networking - 2G,5,5,FALSE,27,162,5,17,32,48
-Service,CODE005,Networking - 3G,5,5,TRUE,3,148,0,164,36,22
-Biotechnology,CODE006,CRM,5,5,FALSE,65,151,2,128,859,50
-Finance,CODE007,Marketing - Automation,5,5,TRUE,21,148,5,436,372,38
-Hospitality,CODE008,Microsoft Excel,5,5,FALSE,46,195,0,320,942,7
-Healthcare,CODE009,Microsfot PowerPoint,5,5,TRUE,68,105,4,337,573,4
-Technology,CODE010,Outlook,5,5,FALSE,22,142,0,342,144,15
-Service,CODE011,Windows Server,5,5,TRUE,91,132,3,189,131,35
-Government,CODE012,Amazon EC2 Server,5,5,FALSE,71,167,3,185,880,40
-Energy,CODE013,Cloud Computing,5,5,TRUE,18,192,0,411,155,43
-Energy,CODE014,SAP,5,5,FALSE,29,124,2,277,805,25
-Energy,CODE015,Online Meetings,5,5,TRUE,39,166,3,171,379,6
-Education,CODE001,Microsoft Word,5,5,FALSE,5,185,5,218,800,8
-Non-profit,CODE002,Windows - OS,5,5,FALSE,10,170,2,256,142,8
-Telecommunications,CODE003,Antivirus,5,5,TRUE,98,191,5,132,71,12
-Non-profit,CODE004,Networking - 2G,5,5,FALSE,61,191,3,405,353,3
-Technology,CODE005,Networking - 3G,5,5,TRUE,1,111,3,246,819,2
-Retail,CODE006,CRM,5,5,FALSE,31,167,2,406,540,14
-Technology,CODE007,Marketing - Automation,5,5,TRUE,71,127,0,482,348,17
-Service,CODE008,Microsoft Excel,5,5,FALSE,15,136,4,77,327,13
-Manufacturing,CODE009,Microsfot PowerPoint,5,5,TRUE,100,132,5,132,777,10
-Others,CODE010,Outlook,5,5,FALSE,47,116,3,321,681,38
-Technology,CODE011,Windows Server,5,5,TRUE,2,142,1,272,263,24
-Others,CODE012,Amazon EC2 Server,5,5,FALSE,41,157,1,231,304,23
-Manufacturing,CODE013,Cloud Computing,5,5,TRUE,45,147,1,185,915,4
-Manufacturing,CODE014,SAP,5,5,FALSE,83,148,2,217,245,47
-Manufacturing,CODE015,Online Meetings,6,6,TRUE,94,111,4,406,448,8
-Distribution,CODE001,Microsoft Word,6,6,FALSE,67,135,2,431,568,24
-Oil & Gas & Energy,CODE002,Windows - OS,6,6,TRUE,49,187,1,292,711,3
-Technology,CODE003,Antivirus,6,6,FALSE,57,171,3,48,533,9
-Others,CODE004,Networking - 2G,6,6,TRUE,61,118,1,416,832,3
-Manufacturing,CODE005,Networking - 3G,6,6,FALSE,53,123,3,441,113,27
-Finance,CODE006,CRM,6,6,FALSE,30,149,1,415,903,34
-Technology,CODE007,Marketing - Automation,6,6,TRUE,45,198,2,68,674,32
-Technology,CODE008,Microsoft Excel,6,6,FALSE,44,177,3,85,470,13
-Healthcare,CODE009,Microsfot PowerPoint,6,6,TRUE,81,199,0,44,313,7
-Chemicals,CODE010,Outlook,6,6,FALSE,48,160,4,56,289,43
-Apparel,CODE011,Windows Server,6,6,TRUE,1,136,4,116,289,47
-Medical Equipment & Supplies,CODE012,Amazon EC2 Server,6,6,FALSE,22,141,2,240,48,20
-Manufacturing,CODE013,Cloud Computing,6,6,TRUE,51,168,3,483,206,41
-Healthcare,CODE014,SAP,6,6,FALSE,20,152,0,62,859,30
-Retail,CODE015,Online Meetings,6,6,TRUE,71,169,5,426,617,6
-Energy,CODE001,Microsoft Word,6,6,FALSE,90,163,5,180,800,22
-Manufacturing,CODE002,Windows - OS,6,6,TRUE,79,107,4,430,33,18
-Technology,CODE003,Antivirus,6,6,FALSE,12,191,4,316,393,50
-Chemicals,CODE004,Networking - 2G,6,6,TRUE,99,110,1,63,908,37
-Manufacturing,CODE005,Networking - 3G,6,6,FALSE,52,168,2,394,108,9
-Finance,CODE006,CRM,6,6,TRUE,100,137,5,28,258,47
-Consulting,CODE007,Marketing - Automation,6,6,FALSE,35,157,4,372,981,10
-Government,CODE008,Microsoft Excel,6,6,TRUE,51,193,5,340,282,2
-Manufacturing,CODE009,Microsfot PowerPoint,6,6,FALSE,27,107,5,125,831,21
-Shipping,CODE010,Outlook,6,6,FALSE,67,108,1,404,420,4
-Food & Beverage,CODE011,Windows Server,6,6,TRUE,64,199,5,353,942,38
-Healthcare,CODE012,Amazon EC2 Server,6,6,FALSE,47,139,3,196,5,19
-Electronics,CODE013,Cloud Computing,6,6,TRUE,93,186,5,191,167,17
-Transportation,CODE014,SAP,6,6,FALSE,88,100,0,58,456,15
-Apparel,CODE015,Online Meetings,6,6,TRUE,22,114,4,300,925,26
-Service,CODE001,Microsoft Word,6,6,FALSE,75,132,3,174,678,42
-"Television Cable, & Broadcast Network",CODE002,Windows - OS,6,6,TRUE,23,161,1,205,125,16
-Finance,CODE003,Antivirus,6,6,FALSE,64,189,3,470,812,35
-Manufacturing,CODE004,Networking - 2G,6,6,TRUE,53,115,3,432,70,28
-Manufacturing,CODE005,Networking - 3G,6,6,FALSE,91,130,0,82,393,47
-Chemicals,CODE006,CRM,6,6,TRUE,15,105,5,32,340,0
-Government,CODE007,Marketing - Automation,6,6,FALSE,48,136,5,479,544,26
-Machinery,CODE008,Microsoft Excel,6,6,TRUE,79,197,5,198,761,45
-Manufacturing,CODE009,Microsfot PowerPoint,6,6,FALSE,19,171,2,118,627,20
-Biotechnology,CODE010,Outlook,6,6,TRUE,100,114,3,442,223,23
-Hospitality,CODE011,Windows Server,6,6,FALSE,29,152,0,121,352,4
-Education,CODE012,Amazon EC2 Server,6,6,TRUE,21,196,4,460,33,35
-Medical & Dental Laboratories,CODE013,Cloud Computing,6,6,FALSE,88,178,3,356,941,1
-Medical Products,CODE014,SAP,6,6,FALSE,41,122,1,461,558,19
-Agriculture,CODE015,Online Meetings,6,6,TRUE,71,170,0,35,183,46
-Healthcare,CODE001,Microsoft Word,6,6,FALSE,83,124,1,485,637,21
-Retail,CODE002,Windows - OS,6,6,TRUE,50,127,1,492,153,8
-Service,CODE003,Antivirus,6,6,FALSE,49,183,1,272,450,21
-Fish & Seafood,CODE004,Networking - 2G,6,6,TRUE,20,186,0,55,795,6
-Finance,CODE005,Networking - 3G,6,6,FALSE,68,125,2,468,414,18
-Education,CODE006,CRM,6,6,TRUE,5,181,1,184,875,40
-Manufacturing,CODE007,Marketing - Automation,6,6,FALSE,31,162,1,341,303,43
-Food & Beverage,CODE008,Microsoft Excel,6,6,TRUE,48,132,0,471,456,19
-Retail,CODE009,Microsfot PowerPoint,6,6,FALSE,26,174,1,378,557,32
-Industrial Manufacturing & Services,CODE010,Outlook,6,6,TRUE,60,129,2,362,934,30
-Insurance,CODE011,Windows Server,6,6,FALSE,15,139,2,387,351,40
-Healthcare,CODE012,Amazon EC2 Server,6,6,TRUE,8,110,4,459,858,31
-Retail,CODE013,Cloud Computing,6,6,FALSE,30,176,4,300,553,40
-Healthcare,CODE014,SAP,6,6,TRUE,91,177,1,482,672,25
-Manufacturing,CODE015,Online Meetings,6,6,FALSE,31,168,5,232,358,35
-Utilities,CODE001,Microsoft Word,6,6,TRUE,34,179,3,105,260,4
-Engineering,CODE002,Windows - OS,6,6,FALSE,79,148,3,412,277,18
-Oil & Gas & Energy,CODE003,Antivirus,6,6,FALSE,50,128,0,39,313,9
-Service,CODE004,Networking - 2G,6,6,TRUE,78,161,2,490,104,29
-Hospitality,CODE005,Networking - 3G,6,6,FALSE,82,160,4,458,421,31
-Retail,CODE006,CRM,6,6,TRUE,32,156,0,303,112,44
-Non-profit,CODE007,Marketing - Automation,6,6,FALSE,51,155,4,386,958,18
-Food & Beverage,CODE008,Microsoft Excel,6,6,TRUE,67,171,2,447,117,0
-Agriculture,CODE009,Microsfot PowerPoint,6,6,FALSE,60,187,3,149,582,18
-Finance,CODE010,Outlook,6,6,TRUE,76,140,3,44,610,39
-Oil & Gas Exploration & Production,CODE011,Windows Server,6,6,FALSE,47,195,4,166,474,50
-Manufacturing,CODE012,Amazon EC2 Server,6,6,TRUE,83,173,3,17,818,46
-Manufacturing,CODE013,Cloud Computing,6,6,FALSE,27,120,1,308,865,34
-Manufacturing,CODE014,SAP,6,6,TRUE,27,176,5,497,292,23
-Government,CODE015,Online Meetings,6,6,FALSE,94,143,0,453,263,3
-Service,CODE001,Microsoft Word,6,6,TRUE,26,185,0,35,612,7
-Healthcare,CODE002,Windows - OS,6,6,FALSE,0,170,5,435,815,11
-Manufacturing,CODE003,Antivirus,6,6,TRUE,61,111,1,347,228,4
-Consumer Services,CODE004,Networking - 2G,6,6,FALSE,20,195,4,296,476,32
-Manufacturing,CODE005,Networking - 3G,6,6,TRUE,31,177,4,196,82,19
-Hospitality,CODE006,CRM,6,6,FALSE,4,167,4,266,893,9
-Consulting,CODE007,Marketing - Automation,6,6,FALSE,7,117,3,173,215,34
-Telecommunications,CODE008,Microsoft Excel,6,6,TRUE,19,120,4,54,919,18
-Hospitality,CODE009,Microsfot PowerPoint,6,6,FALSE,80,143,4,284,943,36
-Manufacturing,CODE010,Outlook,6,6,TRUE,10,139,5,150,517,32
-Construction,CODE011,Windows Server,6,6,FALSE,51,122,2,355,793,41
-Telecommunications,CODE012,Amazon EC2 Server,6,6,TRUE,7,165,4,441,81,3
-Healthcare,CODE013,Cloud Computing,6,6,FALSE,30,101,0,121,953,20
-Manufacturing,CODE014,SAP,6,6,TRUE,47,115,3,81,756,46
-Manufacturing,CODE015,Online Meetings,6,6,FALSE,61,199,5,205,406,6
-Construction,CODE001,Microsoft Word,6,6,TRUE,54,133,3,223,445,24
-Bakery Products,CODE002,Windows - OS,6,6,FALSE,85,161,2,444,732,36
-Technology,CODE003,Antivirus,6,6,TRUE,53,102,4,75,51,25
-Manufacturing,CODE004,Networking - 2G,6,6,FALSE,67,125,2,461,783,39
-Technology,CODE005,Networking - 3G,6,6,TRUE,53,183,0,28,245,37
-Transportation,CODE006,CRM,6,6,FALSE,67,182,4,314,687,28
-Manufacturing,CODE007,Marketing - Automation,6,6,TRUE,41,107,4,356,843,34
-Consulting,CODE008,Microsoft Excel,6,6,FALSE,21,153,4,207,280,8
-Software & Programming,CODE009,Microsfot PowerPoint,6,6,TRUE,76,132,3,62,718,35
-,CODE010,Outlook,6,6,FALSE,24,192,1,296,388,5
-Food & Beverage,CODE011,Windows Server,6,6,FALSE,19,145,5,109,190,25
-Service,CODE012,Amazon EC2 Server,6,6,TRUE,42,170,3,141,509,12
-Service,CODE013,Cloud Computing,6,6,FALSE,83,189,1,10,227,46
-Medical Devices,CODE014,SAP,6,6,TRUE,6,199,2,411,816,31
-Service,CODE015,Online Meetings,6,6,FALSE,3,114,2,189,631,31
-Biotechnology,CODE001,Microsoft Word,6,6,TRUE,19,165,4,342,198,32
-Finance,CODE002,Windows - OS,6,6,FALSE,10,169,1,116,464,41
-Hospitality,CODE003,Antivirus,6,6,TRUE,12,200,5,215,771,7
-Healthcare,CODE004,Networking - 2G,6,6,FALSE,11,132,1,406,804,19
-Technology,CODE005,Networking - 3G,6,6,TRUE,84,102,3,267,325,40
-Service,CODE006,CRM,6,6,FALSE,43,111,0,219,377,15
-Government,CODE007,Marketing - Automation,6,6,TRUE,49,189,4,190,814,32
-Energy,CODE008,Microsoft Excel,6,6,FALSE,91,158,0,15,950,11
-Energy,CODE009,Microsfot PowerPoint,6,6,TRUE,87,148,5,241,559,43
-Energy,CODE010,Outlook,6,6,FALSE,63,175,3,380,745,10
-Education,CODE011,Windows Server,6,6,TRUE,79,114,0,150,636,0
-Non-profit,CODE012,Amazon EC2 Server,6,6,FALSE,90,165,3,226,39,25
-Telecommunications,CODE013,Cloud Computing,6,6,TRUE,84,177,3,301,318,29
-Non-profit,CODE014,SAP,6,6,FALSE,4,181,5,308,866,39
-Technology,CODE015,Online Meetings,6,6,FALSE,17,127,2,473,504,30
-Retail,CODE001,Microsoft Word,6,6,TRUE,78,132,4,37,441,48
-Technology,CODE002,Windows - OS,6,6,FALSE,22,118,4,45,849,0
-Service,CODE003,Antivirus,6,6,TRUE,76,167,3,467,709,33
-Manufacturing,CODE004,Networking - 2G,6,6,FALSE,80,102,4,302,920,28
-Others,CODE005,Networking - 3G,6,6,TRUE,63,169,4,226,669,48
-Technology,CODE006,CRM,6,6,FALSE,11,196,3,271,695,32
-Others,CODE007,Marketing - Automation,6,6,TRUE,29,143,1,297,963,14
-Manufacturing,CODE008,Microsoft Excel,6,6,FALSE,13,124,2,95,716,33
-Manufacturing,CODE009,Microsfot PowerPoint,7,7,TRUE,92,107,1,35,392,38
-Manufacturing,CODE010,Outlook,7,7,FALSE,6,112,5,490,747,48
+Industry,ProductCode,ProductName,Date,EventTimeStamp,Active,PageViews,PageVisits,FilesDownloaded,NoofReportsRun,NoofRulesTriggered,NoofSchedulesCreated,Date1,EventTimeStamp1,Date2,EventTimeStamp2,Date3,EventTimeStamp3,NoofMeetingsAttended
+Distribution,CODE001,REPORTINGUI Account 1,0,0,TRUE,114,113,64,192,89,99,-195,-171,-129,-91,-154,-124,147
+Oil & Gas & Energy,CODE002,REPORTINGUI Account 2,-1,-1,FALSE,59,161,33,166,50,148,-37,-53,-79,-113,-6,-190,83
+Technology,CODE003,REPORTINGUI Account 3,-2,-2,TRUE,57,6,58,,120,124,-160,-60,-30,-156,-90,-54,123
+Others,CODE004,REPORTINGUI Account 4,-3,-3,FALSE,60,175,173,47,151,192,-77,-120,-27,-95,-141,-198,136
+Manufacturing,CODE005,REPORTINGUI Account 5,-4,-4,TRUE,193,181,156,91,12,9,-55,-139,-128,-1,-193,-70,91
+Finance,CODE006,REPORTINGUI Account 6,-5,-5,FALSE,29,179,190,88,196,31,-139,-50,-199,-16,-49,-146,145
+Technology,,REPORTINGUI Account 7,-6,-6,FALSE,24,95,,130,,32,-143,-155,-109,-61,-81,-199,108
+Technology,CODE008,REPORTINGUI Account 8,-7,-7,TRUE,172,39,103,41,101,42,-178,-113,-133,,-196,-56,
+Healthcare,CODE009,REPORTINGUI Account 9,-8,-8,FALSE,68,34,51,57,55,80,,-194,-37,-130,-117,-137,189
+Chemicals,CODE010,REPORTINGUI Account 10,-9,-9,TRUE,,196,46,120,168,,-196,-100,-129,-167,-60,-24,65
+,CODE011,REPORTINGUI Account 11,-10,-10,FALSE,48,134,176,102,176,144,-53,-3,-9,-140,-20,-38,179
+Medical Equipment & Supplies,CODE012,REPORTINGUI Account 12,-11,-11,TRUE,174,73,161,69,24,95,-146,-161,-177,-89,-64,,153
+Manufacturing,CODE013,REPORTINGUI Account 13,,-12,FALSE,192,21,138,11,8,129,-66,-158,-163,-115,-132,-4,119
+Healthcare,CODE014,REPORTINGUI Account 14,-13,-13,TRUE,63,65,65,90,183,36,-135,,-82,-166,-44,-118,14
+Retail,CODE015,REPORTINGUI Account 15,-14,-14,FALSE,135,,66,181,56,47,-56,-127,-98,,-111,-153,39
+Energy,CODE001,REPORTINGUI Account 16,-15,-15,TRUE,40,182,146,110,168,39,-70,-115,-138,-171,-195,-44,3
+Manufacturing,CODE002,REPORTINGUI Account 17,-16,-16,FALSE,196,99,93,143,124,55,-93,-8,-191,-190,-181,-87,71
+Technology,CODE003,REPORTINGUI Account 18,-17,-17,TRUE,200,53,179,110,105,85,-176,-53,-179,-164,-135,-13,92
+Chemicals,CODE004,REPORTINGUI Account 19,-18,-18,FALSE,27,44,185,128,161,56,-107,-34,-48,-197,-142,-28,157
+Manufacturing,,REPORTINGUI Account 20,-19,-19,TRUE,34,65,1,92,162,5,-87,-138,-52,-110,,-111,49
+Finance,CODE006,REPORTINGUI Account 21,-20,-20,FALSE,,53,19,142,146,30,-84,-36,-2,-82,-46,-34,
+Consulting,CODE007,REPORTINGUI Account 22,-21,-21,TRUE,48,31,53,,116,163,-112,-68,,-136,-143,-37,164
+Government,CODE008,REPORTINGUI Account 23,-22,-22,FALSE,130,194,137,176,77,121,-103,-9,-67,-166,-157,-64,80
+Manufacturing,CODE009,REPORTINGUI Account 24,-23,-23,TRUE,79,75,15,40,72,,-35,-123,-81,-52,-37,-58,148
+Shipping,CODE010,REPORTINGUI Account 25,-24,-24,FALSE,191,45,47,69,26,147,-66,-100,-84,-122,-155,-160,69
+Food & Beverage,CODE011,REPORTINGUI Account 26,-25,-25,FALSE,119,22,47,27,24,172,-28,-5,-77,-48,-194,-53,129
+Healthcare,CODE012,REPORTINGUI Account 27,-26,-26,TRUE,149,179,,165,97,108,-139,-34,-149,-193,,-96,96
+Electronics,CODE013,REPORTINGUI Account 28,-27,-27,FALSE,58,79,166,152,,126,-13,-68,-31,-84,-157,-186,54
+Transportation,CODE014,REPORTINGUI Account 29,-28,-28,TRUE,39,190,102,171,161,75,-183,-102,-20,-43,-34,-30,114
+Apparel,CODE015,REPORTINGUI Account 30,-29,,FALSE,36,2,163,187,154,140,-10,-38,-161,-34,-23,-131,150
+Service,CODE001,REPORTINGUI Account 31,-30,-30,TRUE,124,,128,63,21,16,-153,-167,-199,-84,-16,-42,185
+,CODE002,REPORTINGUI Account 32,-31,-31,FALSE,139,28,99,83,52,91,-134,-36,-67,-9,-157,,75
+Finance,CODE003,REPORTINGUI Account 33,-32,-32,TRUE,170,75,129,141,190,91,-48,-16,-97,-53,-94,-37,49
+Manufacturing,CODE004,REPORTINGUI Account 34,-33,-33,FALSE,10,67,78,131,168,,-158,-121,-16,-13,-78,-157,196
+Manufacturing,CODE005,REPORTINGUI Account 35,-34,-34,TRUE,,132,120,190,185,146,-59,-172,-5,,-163,-12,176
+Chemicals,CODE006,REPORTINGUI Account 36,-35,-35,FALSE,23,138,41,162,70,16,,-174,-22,-46,-90,-177,143
+Government,CODE007,REPORTINGUI Account 37,-36,-36,TRUE,90,97,,130,71,148,-100,-18,-47,-136,-51,-19,17
+Machinery,CODE008,REPORTINGUI Account 38,-37,-37,FALSE,88,45,170,27,50,29,-79,-157,-35,-108,-96,-150,77
+Manufacturing,CODE009,REPORTINGUI Account 39,-38,-38,TRUE,166,188,59,34,21,78,-156,-72,,-94,-180,-124,195
+Biotechnology,CODE010,REPORTINGUI Account 40,-39,-39,FALSE,24,168,158,16,82,33,-46,-120,-192,-103,-27,-83,168
+Hospitality,CODE011,REPORTINGUI Account 41,-40,-40,TRUE,155,144,20,,188,48,-8,-42,-168,-64,-53,-9,152
+Education,CODE012,REPORTINGUI Account 42,-41,-41,FALSE,85,74,27,149,118,142,-159,-102,-144,-66,-171,-190,99
+Medical & Dental Laboratories,CODE013,REPORTINGUI Account 43,-42,-42,TRUE,89,,123,159,160,181,-91,,-113,-120,-117,-125,182
+Medical Products,CODE014,REPORTINGUI Account 44,-43,-43,FALSE,68,117,48,122,,78,-65,-112,-178,-21,-51,-63,181
+Agriculture,CODE015,REPORTINGUI Account 45,-44,-44,FALSE,197,103,35,67,92,72,-55,-81,-107,-79,-137,-170,89
+Healthcare,CODE001,REPORTINGUI Account 46,-45,-45,TRUE,81,36,151,119,181,188,-143,-40,-12,-65,-20,-89,50
+Retail,CODE002,REPORTINGUI Account 47,-46,-46,FALSE,151,85,106,111,83,9,-135,-147,-59,-45,-83,-23,
+Service,CODE003,REPORTINGUI Account 48,-47,-47,TRUE,119,19,73,176,121,,-43,-56,-180,-83,-5,-89,123
+,CODE004,REPORTINGUI Account 49,-48,-48,FALSE,1,97,,54,141,50,-138,-152,-112,-21,-70,-40,136
+Finance,CODE005,REPORTINGUI Account 50,-49,-49,TRUE,2,141,141,24,15,37,-136,-78,-94,-31,-146,-162,177
+Education,CODE006,REPORTINGUI Account 51,-50,-50,FALSE,189,17,66,13,23,4,-88,-73,-79,-142,-141,-192,46
+Manufacturing,CODE007,REPORTINGUI Account 52,-51,-51,TRUE,,148,27,179,80,17,-51,-42,-47,-121,-79,-80,125
+Food & Beverage,CODE008,REPORTINGUI Account 53,-52,-52,FALSE,124,164,99,157,146,109,-99,-188,-120,-56,-62,-111,162
+Retail,CODE009,REPORTINGUI Account 54,-53,-53,,172,181,75,106,179,48,-164,-104,-48,-90,-29,-144,113
+Industrial Manufacturing & Services,CODE010,REPORTINGUI Account 55,-54,-54,FALSE,190,,195,164,37,161,,-64,-35,-60,-82,-109,22
+Insurance,CODE011,REPORTINGUI Account 56,-55,-55,TRUE,59,133,46,146,191,176,-146,-76,-189,-96,-90,-36,27
+Healthcare,CODE012,REPORTINGUI Account 57,-56,-56,FALSE,179,56,84,136,166,187,-44,-136,-14,-2,-191,-78,161
+Retail,CODE013,REPORTINGUI Account 58,-57,-57,TRUE,145,125,171,109,36,165,-159,-148,-24,-150,-45,-54,60
+Healthcare,CODE014,REPORTINGUI Account 59,-58,-58,FALSE,132,103,190,,38,,-16,-114,-39,-4,-31,-84,15
+Manufacturing,CODE015,REPORTINGUI Account 60,-59,-59,TRUE,90,76,56,133,131,174,-196,,-161,,-98,,57
+Utilities,CODE001,REPORTINGUI Account 61,-60,-60,FALSE,56,78,7,71,80,50,-84,-57,-39,-27,-63,-146,121
+Engineering,CODE002,REPORTINGUI Account 62,-61,-61,TRUE,107,184,42,12,94,173,-151,-141,-33,-33,-84,-134,185
+Oil & Gas & Energy,CODE003,REPORTINGUI Account 63,-62,-62,FALSE,24,82,49,199,15,24,-35,-107,-144,-61,-60,-81,101
+,CODE004,REPORTINGUI Account 64,-63,-63,FALSE,53,176,54,86,199,83,-47,-1,-101,-55,-184,-113,40
+Hospitality,CODE005,REPORTINGUI Account 65,-64,-64,TRUE,4,57,24,182,178,10,-13,-16,,-90,-81,-81,193
+Retail,CODE006,REPORTINGUI Account 66,-65,-65,FALSE,162,31,38,15,,114,-150,-85,-141,-43,,-80,80
+Non-profit,CODE007,REPORTINGUI Account 67,-66,-66,TRUE,47,159,172,12,119,36,-47,-195,-107,-159,-104,-99,65
+Food & Beverage,CODE008,REPORTINGUI Account 68,-67,-67,FALSE,33,167,134,3,102,24,-197,-13,-99,-192,-169,-147,
+Agriculture,CODE009,REPORTINGUI Account 69,-68,-68,TRUE,58,143,119,190,81,170,-131,-94,-55,-97,-97,-150,75
+Finance,CODE010,REPORTINGUI Account 70,-69,-69,FALSE,183,68,173,110,150,,-45,-172,-75,-140,-127,-166,179
+Oil & Gas Exploration & Production,CODE011,REPORTINGUI Account 71,-70,-70,TRUE,,170,81,80,162,33,-73,-32,-72,-94,-144,-83,85
+Manufacturing,CODE012,REPORTINGUI Account 72,-71,-71,FALSE,63,54,148,123,1,65,-137,-120,-170,-164,-10,-32,13
+Manufacturing,CODE013,REPORTINGUI Account 73,-72,-72,TRUE,117,141,70,125,148,83,-125,-187,-145,-80,-110,-183,176
+Manufacturing,CODE014,REPORTINGUI Account 74,-73,-73,FALSE,151,64,147,109,123,141,-90,-90,-12,-60,-76,-48,49
+Government,CODE015,REPORTINGUI Account 75,-74,-74,TRUE,18,,48,81,86,139,-26,-60,-102,-146,-89,-128,193
+Service,CODE001,REPORTINGUI Account 76,-75,-75,FALSE,133,63,104,31,77,143,-34,-63,-123,-88,-1,-90,123
+Healthcare,CODE002,REPORTINGUI Account 77,-76,-76,,178,76,167,,187,183,-5,-15,-71,-166,-189,-3,61
+Manufacturing,CODE003,REPORTINGUI Account 78,-77,-77,FALSE,60,40,149,48,32,177,-115,-171,-136,-93,-137,-101,114
+,CODE004,REPORTINGUI Account 79,-78,-78,TRUE,63,13,,109,64,174,-92,-174,-59,-129,-102,,143
+Manufacturing,,REPORTINGUI Account 80,-79,-79,FALSE,21,97,8,180,196,1,-154,-17,-43,-133,-196,-126,16
+Hospitality,CODE006,REPORTINGUI Account 81,-80,-80,TRUE,12,89,6,175,101,151,-93,-83,-16,-155,-188,-173,55
+Consulting,CODE007,REPORTINGUI Account 82,-81,-81,FALSE,99,116,152,59,190,117,-190,-46,-98,-80,-106,-37,127
+Telecommunications,CODE008,REPORTINGUI Account 83,-82,-82,FALSE,22,136,184,36,91,61,-47,-5,-144,-149,-85,-78,113
+Hospitality,CODE009,REPORTINGUI Account 84,-83,-83,TRUE,57,192,33,142,40,,-90,-133,-116,-171,-80,-165,16
+Manufacturing,CODE010,REPORTINGUI Account 85,-84,-84,FALSE,200,169,37,168,9,70,-164,-81,-168,-8,-189,-27,41
+Construction,CODE011,REPORTINGUI Account 86,-85,-85,TRUE,19,13,199,15,174,139,-189,-139,-135,-57,-183,-78,107
+Telecommunications,CODE012,REPORTINGUI Account 87,-86,-86,FALSE,172,54,117,55,6,99,-150,-103,-35,-110,-46,-108,
+Healthcare,CODE013,REPORTINGUI Account 88,-87,-87,TRUE,105,91,143,64,165,149,-77,-182,-111,-71,-188,-54,28
+Manufacturing,CODE014,REPORTINGUI Account 89,-88,-88,FALSE,15,10,179,164,172,55,-52,-99,-127,-189,-121,-185,111
+Manufacturing,CODE015,REPORTINGUI Account 90,-89,-89,TRUE,163,113,170,35,196,104,-196,-49,-146,-112,-62,-144,10
+Construction,CODE001,REPORTINGUI Account 91,-90,-90,FALSE,123,69,92,131,133,29,-11,-98,-78,-15,-115,-104,90
+Bakery Products,CODE002,REPORTINGUI Account 92,-91,-91,TRUE,76,17,36,58,,113,-129,-6,-44,-166,,-104,112
+Technology,CODE003,REPORTINGUI Account 93,-92,-92,FALSE,53,,200,184,146,88,-3,-189,-152,-75,-23,-14,14
+,CODE004,REPORTINGUI Account 94,-93,-93,TRUE,80,174,143,170,165,120,-176,-27,-8,-168,-57,-162,146
+Technology,CODE005,REPORTINGUI Account 95,-94,-94,FALSE,66,48,165,32,157,48,-103,-80,-100,-2,-73,-198,174
+Transportation,CODE006,REPORTINGUI Account 96,-95,-95,TRUE,64,158,143,200,42,32,-82,-32,-133,-84,-184,-53,67
+Manufacturing,CODE007,REPORTINGUI Account 97,,-96,FALSE,120,177,157,130,13,64,-108,-79,-23,,-54,-90,158
+Consulting,CODE008,REPORTINGUI Account 98,-97,-97,TRUE,11,7,42,151,191,80,-173,-152,-170,-33,-154,-22,49
+Software & Programming,CODE009,REPORTINGUI Account 99,-98,-98,FALSE,116,49,106,71,138,180,-196,-35,-10,-155,-193,-172,130
+,CODE010,REPORTINGUI Account 100,-99,-99,TRUE,,152,152,53,127,,-165,-194,-141,-18,-178,-121,
+Food & Beverage,CODE011,REPORTINGUI Account 101,-100,-100,FALSE,63,24,199,104,2,64,-136,-161,-28,-111,-46,-174,107
+Service,CODE012,REPORTINGUI Account 102,-101,-101,FALSE,154,3,75,109,169,3,-80,-74,-137,-90,-195,-86,47
+Service,CODE013,REPORTINGUI Account 103,-102,-102,TRUE,61,38,,27,175,82,-113,-141,-142,-123,-196,-81,46
+Medical Devices,,REPORTINGUI Account 104,-103,-103,FALSE,193,88,180,13,133,128,-89,-50,,-90,-54,-108,85
+Service,CODE015,REPORTINGUI Account 105,-104,,TRUE,61,120,39,166,48,156,-181,-188,-24,-145,-95,-190,5
+Biotechnology,CODE001,REPORTINGUI Account 106,-105,-105,FALSE,2,23,53,165,,112,-47,-18,-142,-135,-123,-55,29
+Finance,CODE002,REPORTINGUI Account 107,-106,-106,TRUE,14,173,99,170,117,180,-17,-116,-29,-86,-101,-185,177
+Hospitality,CODE003,REPORTINGUI Account 108,-107,-107,FALSE,33,109,74,164,108,164,-57,,-165,-48,-57,-85,153
+Healthcare,CODE004,REPORTINGUI Account 109,-108,-108,TRUE,58,28,180,49,108,71,-172,-158,-174,-144,-105,-128,158
+Technology,CODE005,REPORTINGUI Account 110,-109,-109,FALSE,60,142,108,190,60,167,-74,-177,-162,-157,-169,-24,184
+Service,CODE006,REPORTINGUI Account 111,-110,-110,TRUE,58,185,144,79,145,114,-42,-129,-101,-28,-82,-68,51
+Government,CODE007,REPORTINGUI Account 112,-111,-111,FALSE,,121,161,167,61,99,,-190,-89,-148,-142,-68,32
+Energy,CODE008,REPORTINGUI Account 113,-112,-112,TRUE,49,158,13,103,80,115,-30,-196,-81,-183,-172,-199,9
+Energy,CODE009,REPORTINGUI Account 114,-113,-113,FALSE,31,150,91,28,36,72,-132,-100,-34,-101,-175,-7,135
+Energy,CODE010,REPORTINGUI Account 115,-114,-114,TRUE,198,132,55,150,106,100,-96,-182,-87,-126,-94,-98,11
+Education,CODE011,REPORTINGUI Account 116,-115,-115,FALSE,110,112,125,52,,83,-12,-36,-9,-19,-131,-154,
+Non-profit,CODE012,REPORTINGUI Account 117,-116,-116,TRUE,124,149,,197,39,187,-100,-101,-170,-38,-188,-146,164
+Telecommunications,CODE013,REPORTINGUI Account 118,-117,-117,FALSE,187,113,162,102,161,11,-136,-148,-71,-26,-140,-88,95
+Non-profit,CODE014,REPORTINGUI Account 119,-118,-118,TRUE,112,38,97,106,140,59,-120,-13,-158,-92,-50,-46,121
+Technology,CODE015,REPORTINGUI Account 120,-119,-119,FALSE,35,177,130,46,158,27,-115,-153,-132,-137,-26,-166,109
+Retail,CODE001,REPORTINGUI Account 121,-120,-120,FALSE,148,190,162,55,146,169,-93,-78,-192,-92,-117,-11,16
+Technology,CODE002,REPORTINGUI Account 122,-121,-121,,7,87,65,76,110,192,,-161,-35,-187,-17,-80,119
+Service,CODE003,REPORTINGUI Account 123,-122,-122,FALSE,2,114,89,195,171,,-132,-70,-9,-127,-57,-164,19
+Manufacturing,CODE004,REPORTINGUI Account 124,-123,-123,TRUE,106,150,80,109,13,121,-103,-69,-109,-22,-170,-166,100
+Others,CODE005,REPORTINGUI Account 125,-124,,FALSE,9,163,30,146,34,32,-34,-90,-142,-100,-177,-62,200
+Technology,CODE006,REPORTINGUI Account 126,-125,-125,TRUE,200,90,200,93,109,176,-114,-159,-67,-70,-71,-184,65
+Others,CODE007,REPORTINGUI Account 127,-126,-126,FALSE,49,61,10,185,103,177,-73,-125,-82,-188,-154,-40,186
+Manufacturing,CODE008,REPORTINGUI Account 128,-127,-127,TRUE,115,140,117,92,195,168,-182,-161,-171,-165,-9,-102,106
+Manufacturing,CODE009,REPORTINGUI Account 129,-128,-128,FALSE,103,131,125,10,130,58,-151,-52,-148,-157,-128,-128,34
+Manufacturing,CODE010,REPORTINGUI Account 130,-129,-129,TRUE,,35,168,82,166,172,-123,-53,-83,-139,-14,-108,
+Distribution,CODE011,REPORTINGUI Account 131,-130,-130,FALSE,163,154,116,55,198,94,-190,-134,-109,-55,-194,-29,25
+Oil & Gas & Energy,CODE012,REPORTINGUI Account 132,-131,-131,TRUE,131,83,53,20,130,152,-76,-109,-65,-51,-49,-42,103
+Technology,CODE013,REPORTINGUI Account 133,-132,-132,,178,47,102,134,20,191,-172,-16,-85,-6,-103,-185,96
+Others,CODE014,REPORTINGUI Account 134,-133,-133,TRUE,5,114,121,33,124,157,-15,-177,-45,-133,-2,-16,67
+Manufacturing,CODE015,REPORTINGUI Account 135,-134,-134,FALSE,136,9,68,79,,139,-165,-142,-94,-114,-105,-90,98
+Finance,CODE001,REPORTINGUI Account 136,-135,-135,TRUE,194,187,45,185,145,137,,-167,-24,-62,-129,-13,145
+Technology,CODE002,REPORTINGUI Account 137,-136,-136,FALSE,26,2,1,70,18,35,-133,-86,-120,-34,-116,-189,29
+Technology,CODE003,REPORTINGUI Account 138,-137,-137,TRUE,191,143,188,148,6,125,-19,-31,-22,-107,-97,-148,90
+Healthcare,CODE004,REPORTINGUI Account 139,-138,-138,FALSE,104,132,176,2,156,46,-183,-122,-92,-176,-111,-106,45
+Chemicals,CODE005,REPORTINGUI Account 140,,-139,FALSE,138,199,10,170,113,4,-71,-118,-177,-66,-109,-192,194
+Apparel,CODE006,REPORTINGUI Account 141,-140,-140,TRUE,120,98,178,99,134,,-183,-65,-140,-31,-84,-116,158
+Medical Equipment & Supplies,CODE007,REPORTINGUI Account 142,-141,-141,FALSE,161,164,98,146,193,9,-88,-141,-45,-172,-50,-153,90
+Manufacturing,CODE008,REPORTINGUI Account 143,-142,-142,TRUE,194,152,56,17,79,85,-53,-146,-189,-23,-135,-151,140
+Healthcare,CODE009,REPORTINGUI Account 144,-143,-143,FALSE,37,169,75,80,88,2,-132,-7,-91,-12,-175,-5,39
+Retail,CODE010,REPORTINGUI Account 145,-144,-144,TRUE,119,64,111,140,112,97,-170,-73,-154,-188,-170,-124,77
+Energy,CODE011,REPORTINGUI Account 146,-145,-145,FALSE,180,1,80,58,167,75,-147,-77,-42,-196,-123,-74,50
+Manufacturing,CODE012,REPORTINGUI Account 147,-146,-146,TRUE,86,28,200,28,133,28,-85,-6,-6,-187,-39,-78,62
+Technology,CODE013,REPORTINGUI Account 148,-147,-147,FALSE,174,23,160,106,126,160,-25,-180,-33,-128,-194,-92,161
+Chemicals,CODE014,REPORTINGUI Account 149,-148,-148,TRUE,99,91,161,200,40,110,-177,-188,-153,-164,-79,-86,130
+Manufacturing,CODE015,REPORTINGUI Account 150,-149,-149,FALSE,138,76,166,174,75,54,-11,-2,-30,-99,-170,-97,110
+Finance,CODE001,REPORTINGUI Account 151,-150,-150,TRUE,168,151,156,119,82,198,,-84,-169,-58,-89,-110,
+Consulting,CODE002,REPORTINGUI Account 152,-151,-151,FALSE,45,45,13,94,153,1,-172,-133,-93,-2,-165,-82,69
+Government,CODE003,REPORTINGUI Account 153,-152,-152,TRUE,59,9,3,72,,149,-126,-2,-180,-1,-161,-91,176
+Manufacturing,CODE004,REPORTINGUI Account 154,-153,-153,,199,183,172,70,164,90,-132,-177,-7,-17,-15,-135,169
+Shipping,CODE005,REPORTINGUI Account 155,-154,-154,TRUE,194,15,30,102,52,109,-143,-178,-22,-139,-178,-37,187
+Food & Beverage,CODE006,REPORTINGUI Account 156,-155,-155,FALSE,76,168,170,47,147,120,-80,-171,-151,-91,-79,-96,152
+Healthcare,CODE007,REPORTINGUI Account 157,,-156,TRUE,161,93,10,179,162,4,-198,-162,-22,-6,-120,-50,191
+Electronics,CODE008,REPORTINGUI Account 158,-157,-157,FALSE,28,112,65,2,6,77,-24,-86,-53,-68,-30,-121,47
+Transportation,CODE009,REPORTINGUI Account 159,-158,-158,FALSE,144,182,192,78,90,83,-1,-76,-38,-131,-127,-134,7
+Apparel,CODE010,REPORTINGUI Account 160,-159,-159,TRUE,178,164,160,36,3,177,-124,-138,-187,-39,-96,-31,90
+Service,CODE011,REPORTINGUI Account 161,-160,,FALSE,27,197,113,55,199,200,-3,-40,-95,-112,-10,-47,54
+"Television Cable, & Broadcast Network",CODE012,REPORTINGUI Account 162,-161,-161,TRUE,86,,33,167,96,,-184,-122,-23,-156,-98,-7,114
+Finance,CODE013,REPORTINGUI Account 163,-162,-162,FALSE,181,17,96,73,159,27,-118,,-126,-185,-18,-190,194
+Manufacturing,CODE014,REPORTINGUI Account 164,-163,-163,TRUE,19,48,48,39,61,138,-64,-75,-111,-132,-178,-171,154
+Manufacturing,CODE015,REPORTINGUI Account 165,-164,-164,FALSE,189,127,14,179,100,93,-79,-193,-47,-80,-47,-38,62
+Chemicals,CODE001,REPORTINGUI Account 166,-165,-165,TRUE,109,178,124,134,27,116,-41,-192,-50,-14,-109,-123,60
+Government,CODE002,REPORTINGUI Account 167,-166,-166,,16,114,125,86,108,55,-151,-182,-103,-127,-24,-158,179
+Machinery,CODE003,REPORTINGUI Account 168,-167,-167,TRUE,,190,14,193,,41,-16,-10,-173,-92,-126,-194,97
+Manufacturing,CODE004,REPORTINGUI Account 169,-168,-168,FALSE,185,141,69,52,162,93,-155,-153,-36,-127,-136,-161,158
+Biotechnology,CODE005,REPORTINGUI Account 170,-169,-169,TRUE,61,154,189,150,118,155,-122,-89,-151,-68,-52,-163,98
+Hospitality,CODE006,REPORTINGUI Account 171,-170,-170,FALSE,162,103,129,21,191,66,-139,-81,-178,-110,-80,-1,96
+Education,CODE007,REPORTINGUI Account 172,-171,-171,TRUE,119,28,71,170,31,18,-69,-155,-75,-125,-173,-135,183
+Medical & Dental Laboratories,CODE008,REPORTINGUI Account 173,,-172,FALSE,8,84,130,11,159,177,-84,-5,-93,-11,-133,-84,150
+Medical Products,CODE009,REPORTINGUI Account 174,-173,-173,TRUE,57,92,5,8,23,150,-79,-187,-45,-180,-129,-197,23
+Agriculture,CODE010,REPORTINGUI Account 175,-174,-174,FALSE,4,131,199,15,175,26,-64,-179,-139,-189,-159,-10,102
+Healthcare,CODE011,REPORTINGUI Account 176,-175,-175,TRUE,146,93,22,169,9,138,-28,-28,-171,-34,-86,-2,
+Retail,CODE012,REPORTINGUI Account 177,-176,-176,FALSE,8,50,53,98,144,61,-11,,,-181,-136,-68,80
+Service,CODE013,REPORTINGUI Account 178,-177,-177,,168,13,85,189,70,33,-44,-71,-136,-167,-193,-25,122
+Fish & Seafood,CODE014,REPORTINGUI Account 179,-178,-178,TRUE,155,140,135,64,114,192,-86,-40,-131,-169,-78,-126,64
+Finance,CODE015,REPORTINGUI Account 180,-179,-179,FALSE,78,36,156,28,66,97,-100,-179,-22,-21,-123,-141,105
+Education,CODE001,REPORTINGUI Account 181,-180,,TRUE,140,84,167,66,77,72,-115,-45,-84,,-108,-166,69
+Manufacturing,CODE002,REPORTINGUI Account 182,-181,-181,FALSE,1,109,87,173,174,180,-123,-1,-84,-145,-176,,35
+Food & Beverage,CODE003,REPORTINGUI Account 183,-182,-182,TRUE,22,9,,41,126,111,-172,-49,-60,-77,-74,-72,27
+Retail,CODE004,REPORTINGUI Account 184,-183,-183,FALSE,109,172,179,161,6,49,-69,-135,-169,-33,-172,-91,11
+Industrial Manufacturing & Services,CODE005,REPORTINGUI Account 185,-184,-184,TRUE,66,11,8,35,40,23,,-63,-167,-173,-75,-41,91
+Insurance,CODE006,REPORTINGUI Account 186,-185,-185,FALSE,153,172,97,18,174,17,-50,-119,-122,-140,-6,-194,191
+Healthcare,CODE007,REPORTINGUI Account 187,-186,-186,TRUE,71,93,16,8,145,141,-182,-192,-170,-97,-22,-161,30
+Retail,CODE008,REPORTINGUI Account 188,-187,-187,FALSE,83,16,90,7,72,79,-104,-1,-127,-136,-196,-120,39
+Healthcare,CODE009,REPORTINGUI Account 189,-188,-188,,7,93,15,85,44,6,-168,-72,-116,-75,,-148,181
+Manufacturing,CODE010,REPORTINGUI Account 190,,-189,FALSE,40,80,112,109,123,6,-79,-97,-199,-180,-134,-100,107
+Utilities,CODE011,REPORTINGUI Account 191,-190,-190,TRUE,92,39,192,125,91,29,-68,-43,,-134,-192,-116,45
+Engineering,CODE012,REPORTINGUI Account 192,-191,-191,FALSE,52,141,85,103,200,107,-34,-3,-131,-168,-44,-186,65
+Oil & Gas & Energy,CODE013,REPORTINGUI Account 193,-192,-192,TRUE,,30,92,103,83,110,-159,-69,-34,-62,-159,-185,
+Service,CODE014,REPORTINGUI Account 194,-193,-193,FALSE,7,39,2,181,96,28,-133,-140,-156,-173,-140,-150,154
+Hospitality,CODE015,REPORTINGUI Account 195,-194,-194,TRUE,162,176,39,52,138,171,-37,-30,-58,-110,-147,-53,200
+Retail,CODE001,REPORTINGUI Account 196,-195,-195,FALSE,156,34,9,,91,51,-66,-179,-84,-32,-113,,167
+Non-profit,CODE002,REPORTINGUI Account 197,-196,-196,FALSE,188,180,130,170,141,95,-134,-49,-46,-135,-65,-67,9
+Food & Beverage,CODE003,REPORTINGUI Account 198,-197,-197,TRUE,3,80,69,101,147,193,-37,-29,-6,-172,-118,-42,177
+Agriculture,CODE004,REPORTINGUI Account 199,-198,-198,FALSE,16,5,24,143,5,22,-156,-127,-145,-162,-83,-68,154
+Finance,CODE005,REPORTINGUI Account 200,-199,-199,TRUE,133,61,42,42,159,122,-135,-115,-157,-16,-55,-59,174

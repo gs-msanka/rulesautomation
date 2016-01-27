@@ -1,0 +1,152 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "COLUMN_LINE",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "Active",
+          "axis": "row",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Active",
+          "collectionId": ""
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "AccountName",
+          "collectionId": ""
+        }
+      ],
+      "reportName": "Auto_ColumnLineForMongo9039",
+      "assetType": "ANALYTICS",
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "Date",
+            "alias": "A",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_90_DAYS",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "reporting"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A OR B OR C"
+      },
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "1",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              0
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "2",
+            "dataType": "number",
+            "filterOperator": "LTE",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              500
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "1 AND 2"
+      },
+      "skip": 0,
+      "SchemaName": "Auto_Mongo_MDAdata",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "decimalPlaces": 0,
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "order": "asc"
+        },
+        {
+          "col": "Active",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "boolean",
+          "decimalPlaces": 0,
+          "agg_func": "count",
+          "fieldDisplayName": "Count of Active",
+          "collectionId": ""
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        }
+      ],
+      "ReportReadLimit": 5,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

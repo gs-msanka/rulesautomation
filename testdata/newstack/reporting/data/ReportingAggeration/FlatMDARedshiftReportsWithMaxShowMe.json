@@ -181,45 +181,44 @@
       "whereAdvanceFilter": {
         "filters": [
           {
-            "dbName": "NoofMeetingsAttended",
+            "dbName": "Date",
             "alias": "A",
-            "dataType": "number",
+            "dataType": "date",
             "filterOperator": "EQ",
-            "filterValues": [
-              3
-            ],
-            "type": 1,
-            "logicalOperator": "AND",
-            "collectionId": ""
-          },
-          {
-            "dbName": "PageViews",
-            "alias": "B",
-            "dataType": "number",
-            "filterOperator": "EQ",
+            "timeFunction": "LAST_90_DAYS",
             "filterValues": [],
-            "type": 1,
+            "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "ProductCode",
-            "alias": "C",
+            "dbName": "AccountName",
+            "alias": "B",
             "dataType": "string",
             "filterOperator": "NE",
             "filterValues": [
-              "A"
+              "reporting"
             ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
             "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           }
         ],
-        "expression": "A AND B AND C"
+        "expression": "A OR B OR C"
       },
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "Auto_RedShiftFlatReportsWithFilterAndRanking",
+      "reportName": "Auto_FlatReportsForMDARedshiftWithFilterAndRankingMongo",
       "assetType": "ANALYTICS",
       "skip": 0,
       "drillDownReportDimensions": [

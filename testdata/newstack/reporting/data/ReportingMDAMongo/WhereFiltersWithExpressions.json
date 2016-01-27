@@ -68,16 +68,6 @@
           "agg_func": "count"
         },
         {
-          "col": "FilesDownloaded",
-          "axis": "row",
-          "type": 1,
-          "dataType": "number",
-          "fieldDisplayName": "FilesDownloaded",
-          "collectionId": "",
-          "decimalPlaces": 0,
-          "agg_func": "sum"
-        },
-        {
           "col": "Date",
           "axis": "row",
           "type": 0,
@@ -87,80 +77,75 @@
           "decimalPlaces": 0
         }
       ],
-      "reportName": "Auto_RedShiftHavingFiltersWithExpressions",
+      "reportName": "Auto_MongoWhereFiltersWithExpressions",
       "assetType": "ANALYTICS",
-      "havingAdvanceFilter": {
+      "whereAdvanceFilter": {
         "filters": [
           {
-            "dbName": "AccountName",
-            "alias": "1",
-            "dataType": "string",
+            "dbName": "FilesDownloaded",
+            "alias": "A",
+            "dataType": "number",
             "filterOperator": "NE",
-            "aggregateFunction": "count",
             "filterValues": [
               1
             ],
-            "type": 0,
+            "type": 1,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "Date1",
-            "alias": "2",
-            "dataType": "date",
+            "dbName": "NoofMeetingsAttended",
+            "alias": "B",
+            "dataType": "number",
             "filterOperator": "NE",
-            "aggregateFunction": "count",
             "filterValues": [
               2
             ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "NoofReportsRun",
+            "alias": "C",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "filterValues": [
+              3
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "D",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "A"
+            ],
             "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           },
           {
-            "dbName": "FilesDownloaded",
-            "alias": "3",
-            "dataType": "number",
-            "filterOperator": "GT",
-            "aggregateFunction": "sum",
-            "filterValues": [
-              0
-            ],
-            "type": 1,
-            "logicalOperator": "AND",
-            "collectionId": ""
-          },
-          {
-            "dbName": "FilesDownloaded",
-            "alias": "4",
-            "dataType": "number",
-            "filterOperator": "LTE",
-            "aggregateFunction": "sum",
-            "filterValues": [
-              500
-            ],
-            "type": 1,
-            "logicalOperator": "AND",
-            "collectionId": ""
-          },
-          {
-            "dbName": "ProductName",
-            "alias": "5",
+            "dbName": "ProductCode",
+            "alias": "E",
             "dataType": "string",
-            "filterOperator": "NE",
-            "aggregateFunction": "count",
+            "filterOperator": "EQ",
             "filterValues": [
-              5
+              "B"
             ],
             "type": 0,
             "logicalOperator": "AND",
             "collectionId": ""
           }
         ],
-        "expression": "1 AND (2 OR 3) AND 4 OR 5"
+        "expression": "A AND (B OR C) AND D OR E"
       },
       "skip": 0,
-      "SchemaName": "Auto_RedShift_MDAData",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
@@ -232,16 +217,6 @@
           "collectionId": "",
           "decimalPlaces": 0,
           "agg_func": "count"
-        },
-        {
-          "col": "FilesDownloaded",
-          "axis": "measure",
-          "type": 1,
-          "dataType": "number",
-          "fieldDisplayName": "Sum of FilesDownloaded",
-          "collectionId": "",
-          "decimalPlaces": 0,
-          "agg_func": "sum"
         }
       ],
       "ReportReadLimit": 1000,

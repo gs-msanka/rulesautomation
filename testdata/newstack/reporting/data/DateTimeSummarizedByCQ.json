@@ -28,6 +28,16 @@
           "collectionId": ""
         },
         {
+          "col": "FilesDownloaded",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
           "col": "AccountName",
           "axis": "row",
           "type": 0,
@@ -51,68 +61,73 @@
       "reportName": "Auto_DateTimeSummarizedByCQ9047",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter": {
-        "expression": "A AND B",
         "filters": [
+          {
+            "dbName": "Date",
+            "alias": "A",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_30_DAYS",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
           {
             "dbName": "AccountName",
-            "alias": "A",
-            "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
-            "filterValues": [
-              "A"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          },
-          {
-            "dbName": "ProductCode",
             "alias": "B",
             "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
+            "filterOperator": "NE",
             "filterValues": [
-              "B"
+              "gainsight"
             ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          }
-        ]
-      },
-      "havingAdvanceFilter": {
-        "expression": "1 AND 2",
-        "filters": [
-          {
-            "dbName": "Active",
-            "alias": "1",
-            "dataType": "boolean",
-            "filterOperator": "EQ",
-            "logicalOperator": "AND",
-            "filterValues": [
-              4
-            ],
-            "locked": false,
-            "collectionId": "",
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
           },
           {
-            "dbName": "ProductCode",
-            "alias": "2",
+            "dbName": "Industry",
+            "alias": "C",
             "dataType": "string",
-            "filterOperator": "GT",
-            "logicalOperator": "AND",
-            "filterValues": [
-              90
-            ],
-            "locked": false,
-            "collectionId": "",
+            "filterOperator": "NE",
+            "filterValues": [],
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
           }
-        ]
+        ],
+        "expression": "A OR B OR C"
+      },
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "1",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              0
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "2",
+            "dataType": "number",
+            "filterOperator": "LTE",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              500
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "1 AND 2"
       },
       "skip": 0,
       "SchemaName": "Auto_RedShift_MDAData",
@@ -158,10 +173,20 @@
           "agg_func": "count",
           "fieldDisplayName": "Count of ProductCode",
           "collectionId": ""
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
         }
       ],
       "ReportReadLimit": 5,
       "DimensionBrowserReadLimit": 1000
-         }
+    }
   ]
 }
