@@ -83,7 +83,6 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         rulesUtil.populateObjMaps();
         rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        rulesConfigureAndDataSetup.createlookupOnRelationshipObject();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ENABLE_RELATIONSHIP));
