@@ -70,13 +70,6 @@ public class RulesConfigureAndDataSetup{
         //Field was getting creating on account object but permission are set on other object.
         NSTestBase.metaUtil.addFieldPermissionsToUsers("Account", NSTestBase.metaUtil.convertFieldNameToAPIName(fields.keySet().toArray(new String[fields.size()])), NSTestBase.sfdc.fetchSFDCinfo(), false);
         ArrayList<HashMap<String, String>> fFields = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> fField1 = new HashMap<String, String>();
-        fField1.put("Type", "CheckBox");
-        fField1.put("Formula", "IsActive__c");
-        fField1.put("FieldName", "FIsActive");
-        fField1.put("Description", "Is Active Field");
-        fField1.put("HelpText", "Is Active Field");
-        fFields.add(fField1);
         HashMap<String, String> fField2 = new HashMap<String, String>();
         fField2.put("Type", "Currency");
         fField2.put("Formula", "AnnualRevenue");
@@ -125,7 +118,7 @@ public class RulesConfigureAndDataSetup{
 				"C_Text", "C_Number", "C_Checkbox", "C_Currency", "C_Email",
 				"C_Percent", "C_Phone", "C_Picklist", "C_MultiPicklist",
 				"C_TextArea", "C_EncryptedString", "C_URL", "C_Reference" };
-		String[] permFieldsForAccountObject = new String[] { "FIsActive",
+		String[] permFieldsForAccountObject = new String[] {
 				"FCurrency", "FDate", "FDateTime", "InputDateTime",
 				"AccPercentage", "ActiveUsers", "FNumber", "FPercent", "FText" };
         NSTestBase.metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", NSTestBase.metaUtil.convertFieldNameToAPIName(permFields), NSTestBase.sfdc.fetchSFDCinfo(), true);
