@@ -174,6 +174,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/SummarizedByWeekRedshift.json"),
                 ReportMaster.class);
+        reportingBasePage.openReportingPage(reportingBuilderPageUrl);
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
