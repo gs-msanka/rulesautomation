@@ -79,6 +79,7 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         basepage.login();
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         rulesManagerPage = new RulesManagerPage();
         rulesUtil.populateObjMaps();
         rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
