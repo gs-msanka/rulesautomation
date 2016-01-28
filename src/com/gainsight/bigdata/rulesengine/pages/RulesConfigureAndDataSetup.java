@@ -67,7 +67,6 @@ public class RulesConfigureAndDataSetup{
                 "France", "Italy", "Germany", "Japan", "China", "Australia",
                 "Russia", "Africa", "Arab "});
         NSTestBase.metadataClient.createPickListField("Account", fields, true);
-        //Field was getting creating on account object but permission are set on other object.
         NSTestBase.metaUtil.addFieldPermissionsToUsers("Account", NSTestBase.metaUtil.convertFieldNameToAPIName(fields.keySet().toArray(new String[fields.size()])), NSTestBase.sfdc.fetchSFDCinfo(), false);
 		String[] permFields = new String[] { "Data ExternalId", "IsActive",
 				"InputDate", "InputDateTime", "AccPercentage", "ActiveUsers",
