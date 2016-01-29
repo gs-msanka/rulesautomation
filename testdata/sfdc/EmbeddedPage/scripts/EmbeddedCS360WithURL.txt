@@ -1,6 +1,8 @@
 String SectionName = 'embeddedurl';
 String CS360objName = 'objName';
+String SectionName2 = 'embedurlparam';
 Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName2];
 
 Integer currentDisplayOrder = 0;
 
