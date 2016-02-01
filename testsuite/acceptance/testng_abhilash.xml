@@ -11,6 +11,7 @@
                     <exclude name="createCtaUsingMdaLinkedCollection"/>
                 </methods>
             </class>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
         </classes>
     </test>
     <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
