@@ -163,11 +163,21 @@ public class ReportingBasePage extends BasePage {
 		
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
-		js.executeScript(a);
-		item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
-		if (!element.getElement(XPathConstants.getXPath("SAVE_SUCCESS_POPUP_XPATH")).isDisplayed()) {
+        js.executeScript(a);
+        item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
+        item.setText(XPathConstants.getXPath("SAVE_DESCRIPTION_XPATH"), "Test Discription");
+        item.click(XPathConstants.getXPath("SAVE_POPUP_SAVE_XPATH"));
+        if (!element.getElement(XPathConstants.getXPath("SAVE_SUCCESS_POPUP_XPATH")).isDisplayed()) {
 			item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
 		}
+	}
+
+	/**
+	 * It will click on create new button.
+	 */
+	public void createNewReport() {
+		Log.info("Creting new report by clicking on new button ");
+		item.click(XPathConstants.getXPath("NEW"));
 	}
 
 	/**

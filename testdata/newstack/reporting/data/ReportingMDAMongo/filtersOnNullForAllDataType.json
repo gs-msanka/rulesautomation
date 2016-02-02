@@ -38,81 +38,62 @@
           "collectionId": ""
         },
         {
-          "col": "Industry",
+          "col": "EventTimeStamp",
           "axis": "row",
           "type": 0,
-          "dataType": "string",
+          "dataType": "dateTime",
           "decimalPlaces": 0,
           "agg_func": "count",
-          "fieldDisplayName": "Industry",
+          "fieldDisplayName": "EventTimeStamp",
           "collectionId": ""
         }
       ],
-      "reportName": "Auto_ReportWith9040",
+      "reportName": "Auto_filtersOnNullForAllDataType",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
-        "expression": "A AND B",
         "filters": [
           {
-            "dbName": "AccountName",
+            "dbName": "EventTimeStamp1",
             "alias": "A",
-            "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
-            "filterValues": [
-              "A"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          },
-          {
-            "dbName": "ProductCode",
-            "alias": "B",
-            "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
-            "filterValues": [
-              "B"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
-          }
-        ]
-      },
-      "havingAdvanceFilter": {
-        "expression": "1 AND 2",
-        "filters": [
-          {
-            "dbName": "Active",
-            "alias": "1",
-            "dataType": "boolean",
+            "dataType": "dateTime",
             "filterOperator": "EQ",
-            "logicalOperator": "AND",
-            "filterValues": [
-              4
-            ],
-            "locked": false,
-            "collectionId": "",
+            "filterValues": [],
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Date2",
+            "alias": "B",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "C",
+            "dataType": "number",
+            "filterOperator": "EQ",
+            "filterValues": [],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
           },
           {
             "dbName": "ProductCode",
-            "alias": "2",
+            "alias": "D",
             "dataType": "string",
-            "filterOperator": "GT",
-            "logicalOperator": "AND",
-            "filterValues": [
-              90
-            ],
-            "locked": false,
-            "collectionId": "",
+            "filterOperator": "EQ",
+            "filterValues": [],
             "type": 0,
-            "aggregateFunction": "count"
+            "logicalOperator": "AND",
+            "collectionId": ""
           }
-        ]
+        ],
+        "expression": "A AND B AND C AND D"
       },
       "skip": 0,
       "SchemaName": "Auto_Mongo_MDAdata",
@@ -130,12 +111,12 @@
           "order": "asc"
         },
         {
-          "col": "Industry",
+          "col": "EventTimeStamp",
           "axis": "row",
           "type": 0,
-          "dataType": "string",
+          "dataType": "dateTime",
           "decimalPlaces": 0,
-          "fieldDisplayName": "Industry",
+          "fieldDisplayName": "EventTimeStamp",
           "collectionId": ""
         },
         {

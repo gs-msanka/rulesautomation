@@ -1,7 +1,7 @@
 {
   "ReportInfo": [
     {
-      "SchemaName": "Auto_RedShift_MDAData",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "limit": 500,
       "Type": "adhoc",
@@ -109,7 +109,7 @@
         {
           "col": "NoofReportsRun",
           "axis": "measure",
-          "decimalPlaces": 0,
+          "decimalPlaces": 1,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofReportsRun",
@@ -119,7 +119,7 @@
         {
           "col": "NoofRulesTriggered",
           "axis": "measure",
-          "decimalPlaces": 0,
+          "decimalPlaces": 2,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofRulesTriggered",
@@ -129,7 +129,7 @@
         {
           "col": "NoofSchedulesCreated",
           "axis": "measure",
-          "decimalPlaces": 0,
+          "decimalPlaces": 3,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofSchedulesCreated",
@@ -154,7 +154,8 @@
           "type": 1,
           "fieldDisplayName": "PageVisits",
           "dataType": "number",
-          "collectionId": ""
+          "collectionId": "",
+          "order": "asc"
         },
         {
           "col": "AccountName",
@@ -177,9 +178,47 @@
           "collectionId": ""
         }
       ],
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "Date",
+            "alias": "A",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_90_DAYS",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "AccountName",
+            "alias": "B",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "reporting"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A OR B OR C"
+      },
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "Auto_FlatReportsWithMaxShowMe",
+      "reportName": "Auto_FlatReportsWithFilterAndRankingMongo",
       "assetType": "ANALYTICS",
       "skip": 0,
       "drillDownReportDimensions": [
@@ -286,7 +325,7 @@
         {
           "col": "NoofReportsRun",
           "axis": "row",
-          "decimalPlaces": 0,
+          "decimalPlaces": 1,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofReportsRun",
@@ -296,7 +335,7 @@
         {
           "col": "NoofRulesTriggered",
           "axis": "row",
-          "decimalPlaces": 0,
+          "decimalPlaces": 2,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofRulesTriggered",
@@ -306,7 +345,7 @@
         {
           "col": "NoofSchedulesCreated",
           "axis": "row",
-          "decimalPlaces": 0,
+          "decimalPlaces": 3,
           "agg_func": "sum",
           "type": 1,
           "fieldDisplayName": "NoofSchedulesCreated",

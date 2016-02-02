@@ -245,8 +245,8 @@ public class MetaDataUtil {
                                                     "NumberOfEmployees", "Fax", "Industry", "Phone", "Rating", "ShippingAddress", "Sic", "SicDesc",
                                                     "TickerSymbol","Type", "Website"};
         String[] oppObjectFields = new String[]{"Amount", "Description", "LeadSource", "NextStep", "IsPrivate", "Probability", "Type"};
-        String[] caseObjectFields = new String[]{"Origin", "Reason", "IsSelfServiceClosed",
-                                                        "Description", "IsEscalated", "Priority", "Subject", "Type", "IsVisibleInSelfService",
+        String[] caseObjectFields = new String[]{"Origin", "Reason",
+                                                        "Description", "IsEscalated", "Priority", "Subject", "Type",
                                                         "SuppliedCompany", "SuppliedEmail", "SuppliedName", "SuppliedPhone"};
         String[] contactObjectFields = new String[]{ "AssistantName", "AssistantPhone", "Birthdate", "Department", "Description", "DoNotCall",
                                                     "Email", "HasOptedOutOfEmail", "Fax", "HasOptedOutOfFax", "HomePhone", "LeadSource", "MailingAddress",

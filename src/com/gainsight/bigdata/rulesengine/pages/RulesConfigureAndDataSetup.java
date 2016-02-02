@@ -67,69 +67,13 @@ public class RulesConfigureAndDataSetup{
                 "France", "Italy", "Germany", "Japan", "China", "Australia",
                 "Russia", "Africa", "Arab "});
         NSTestBase.metadataClient.createPickListField("Account", fields, true);
-        //Field was getting creating on account object but permission are set on other object.
         NSTestBase.metaUtil.addFieldPermissionsToUsers("Account", NSTestBase.metaUtil.convertFieldNameToAPIName(fields.keySet().toArray(new String[fields.size()])), NSTestBase.sfdc.fetchSFDCinfo(), false);
-        ArrayList<HashMap<String, String>> fFields = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> fField1 = new HashMap<String, String>();
-        fField1.put("Type", "CheckBox");
-        fField1.put("Formula", "IsActive__c");
-        fField1.put("FieldName", "FIsActive");
-        fField1.put("Description", "Is Active Field");
-        fField1.put("HelpText", "Is Active Field");
-        fFields.add(fField1);
-        HashMap<String, String> fField2 = new HashMap<String, String>();
-        fField2.put("Type", "Currency");
-        fField2.put("Formula", "AnnualRevenue");
-        fField2.put("FieldName", "FCurrency");
-        fField2.put("Description", "AnnualRevenue");
-        fField2.put("HelpText", "Formula AnnualRevenue");
-        fFields.add(fField2);
-        HashMap<String, String> fField3 = new HashMap<String, String>();
-        fField3.put("Type", "Date");
-        fField3.put("Formula", "InputDate__c");
-        fField3.put("FieldName", "FDate");
-        fField3.put("Description", "Formula InputDate__c");
-        fField3.put("HelpText", "Formula InputDate__c");
-        fFields.add(fField3);
-        HashMap<String, String> fField4 = new HashMap<String, String>();
-        fField4.put("Type", "DateTime");
-        fField4.put("Formula", "InputDateTime__c");
-        fField4.put("FieldName", "FDateTime");
-        fField4.put("Description", "Formula InputDateTime__c");
-        fField4.put("HelpText", "Formula InputDateTime__c");
-        fFields.add(fField4);
-        HashMap<String, String> fField5 = new HashMap<String, String>();
-        fField5.put("Type", "Number");
-        fField5.put("Formula", "ActiveUsers__c");
-        fField5.put("FieldName", "FNumber");
-        fField5.put("Description", "Formula ActiveUsers__c");
-        fField5.put("HelpText", " Formula ActiveUsers__c");
-        fFields.add(fField5);
-        HashMap<String, String> fField6 = new HashMap<String, String>();
-        fField6.put("Type", "Percent");
-        fField6.put("Formula", "AccPercentage__c");
-        fField6.put("FieldName", "FPercent");
-        fField6.put("Description", "Field AccPercentage__c");
-        fField6.put("HelpText", "Field AccPercentage__c");
-        fFields.add(fField6);
-        HashMap<String, String> fField7 = new HashMap<String, String>();
-        fField7.put("Type", "Text");
-        fField7.put("Formula", "Name");
-        fField7.put("FieldName", "FText");
-        fField7.put("Description", "Formula Name");
-        fField7.put("HelpText", "Formula Name");
-        fFields.add(fField7);
-        NSTestBase.metadataClient.createFormulaFields("Account", fFields);
 		String[] permFields = new String[] { "Data ExternalId", "IsActive",
 				"InputDate", "InputDateTime", "AccPercentage", "ActiveUsers",
 				"C_Text", "C_Number", "C_Checkbox", "C_Currency", "C_Email",
 				"C_Percent", "C_Phone", "C_Picklist", "C_MultiPicklist",
 				"C_TextArea", "C_EncryptedString", "C_URL", "C_Reference" };
-		String[] permFieldsForAccountObject = new String[] { "FIsActive",
-				"FCurrency", "FDate", "FDateTime", "InputDateTime",
-				"AccPercentage", "ActiveUsers", "FNumber", "FPercent", "FText" };
         NSTestBase.metaUtil.addFieldPermissionsToUsers("RulesSFDCCustom__c", NSTestBase.metaUtil.convertFieldNameToAPIName(permFields), NSTestBase.sfdc.fetchSFDCinfo(), true);
-        NSTestBase.metaUtil.addFieldPermissionsToUsers("Account", NSTestBase.metaUtil.convertFieldNameToAPIName(permFieldsForAccountObject), NSTestBase.sfdc.fetchSFDCinfo(), true);
         
         ObjectFields objField = new ObjectFields();
 		List<HashMap<String, String>> lookup = new ArrayList<HashMap<String, String>>();

@@ -30,38 +30,45 @@
       "reportName": "Auto_MDAAggregationBoolean",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
-        "expression": "A AND B",
         "filters": [
           {
-            "dbName": "AccountName",
+            "dbName": "Date",
             "alias": "A",
-            "dataType": "string",
-            "filterOperator": "STARTSWITH",
+            "dataType": "date",
+            "filterOperator": "EQ",
+            "timeFunction": "LAST_90_DAYS",
+            "filterValues": [],
+            "type": 0,
             "logicalOperator": "AND",
-            "filterValues": [
-              "A"
-            ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
+            "collectionId": ""
           },
           {
-            "dbName": "ProductCode",
+            "dbName": "AccountName",
             "alias": "B",
             "dataType": "string",
-            "filterOperator": "STARTSWITH",
-            "logicalOperator": "AND",
+            "filterOperator": "NE",
             "filterValues": [
-              "B"
+              "reporting"
             ],
-            "locked": false,
-            "collectionId": "",
-            "type": 0
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Industry",
+            "alias": "C",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
           }
-        ]
+        ],
+        "expression": "A OR B OR C"
       },
       "skip": 0,
-      "SchemaName": "Auto_RedShift_MDAData",
+      "SchemaName": "Auto_Mongo_MDAdata",
       "CollectionID": "",
       "Type": "adhoc",
       "Dimensions": [
