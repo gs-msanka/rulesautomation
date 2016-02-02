@@ -284,8 +284,8 @@ public class CopilotAdvancedTest extends CopilotTestUtils {
         schedule.setTitle(actualOutReach.getName());
         schedule.setDescription(actualOutReach.getName());
 
-        schedule.setStartTime(DateUtil.addDays(getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getStartTime()).getTimeInMillis());
-        schedule.setEndTime(DateUtil.addDays(getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getEndTime()).getTimeInMillis());
+        schedule.setStartTime(DateUtil.addDays(DateUtil.getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getStartTime()).getTimeInMillis());
+        schedule.setEndTime(DateUtil.addDays(DateUtil.getCalenderWithTimeSetToZero(schedule.getTimeZoneName()), (int) schedule.getEndTime()).getTimeInMillis());
 
         Schedule actualSchedule = copilotAPI.scheduleOutReach(mapper.writeValueAsString(schedule));
         assertScheduleInformation(actualSchedule, schedule);

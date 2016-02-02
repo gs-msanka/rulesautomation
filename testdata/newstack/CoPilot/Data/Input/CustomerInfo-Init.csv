@@ -1,11 +1,21 @@
 JBCXM__Account__r.p_c_ExternalId__c,JBCXM__Status__r.JBCXM__SystemName__c,JBCXM__Stage__r.JBCXM__SystemName__c,p_c_ExternalID__c
-Copilot_Auto000,ActiveCustomer,stage1,CI_Copilot_Auto000
-Copilot_Auto001,InactiveCustomer,stage2,CI_Copilot_Auto001
-Copilot_Auto002,ActiveCustomer,stage3,CI_Copilot_Auto002
-Copilot_Auto003,InactiveCustomer,stage4,CI_Copilot_Auto003
-Copilot_Auto004,ActiveCustomer,stage5,CI_Copilot_Auto004
-Copilot_Auto005,InactiveCustomer,stage6,CI_Copilot_Auto005
-Copilot_Auto006,ActiveCustomer,stage1,CI_Copilot_Auto006
-Copilot_Auto007,InactiveCustomer,stage2,CI_Copilot_Auto007
-Copilot_Auto008,ActiveCustomer,stage3,CI_Copilot_Auto008
-Copilot_Auto009,InactiveCustomer,stage4,CI_Copilot_Auto009
+Gallo Ernst & Julio Winery,ActiveCustomer,stage1,Gallo Ernst & Julio Winery
+Facts on File Newsletter,InactiveCustomer,stage2,Facts on File Newsletter
+PacDevco Inc,ActiveCustomer,stage3,PacDevco Inc
+UniAmerica Inc,InactiveCustomer,stage4,UniAmerica Inc
+East Coast Traders,ActiveCustomer,stage5,East Coast Traders
+UBAF Arab American Bank,InactiveCustomer,stage6,UBAF Arab American Bank
+Veritas Software,ActiveCustomer,stage1,Veritas Software
+Quinn/Brein Inc,InactiveCustomer,stage2,Quinn/Brein Inc
+Nardon Mfg Company Incorporated,ActiveCustomer,stage3,Nardon Mfg Company Incorporated
+Abberley Kooiman,InactiveCustomer,stage4,Abberley Kooiman
+IBM Corp Data Systems Div,ActiveCustomer,stage1,IBM Corp Data Systems Div
+Via Systems,InactiveCustomer,stage2,Via Systems
+IBIS Systems Inc.,ActiveCustomer,stage3,IBIS Systems Inc.
+Galbreath Co,InactiveCustomer,stage4,Galbreath Co
+Back Stage Magazine,ActiveCustomer,stage5,Back Stage Magazine
+Cadbury Beverages Div Cadbury,InactiveCustomer,stage6,Cadbury Beverages Div Cadbury
+Lafferty RF & Co Inc,ActiveCustomer,stage1,Lafferty RF & Co Inc
+O-Cel-O Div General Mills Inc.,InactiveCustomer,stage2,O-Cel-O Div General Mills Inc.
+Fedder RP Corp,ActiveCustomer,stage3,Fedder RP Corp
+Ferrara Foods & Confections,ActiveCustomer,stage4,Ferrara Foods & Confections

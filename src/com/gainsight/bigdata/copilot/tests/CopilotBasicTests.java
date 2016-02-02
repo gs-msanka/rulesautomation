@@ -6,22 +6,12 @@ import com.gainsight.bigdata.copilot.bean.outreach.OutReach;
 import com.gainsight.bigdata.copilot.bean.smartlist.SmartList;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.pojo.RuleExecutionHistory;
-import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInfo;
-import com.gainsight.bigdata.rulesengine.bean.RuleAction.ActionInnerCondition;
-import com.gainsight.bigdata.rulesengine.bean.RuleSetup.Criteria;
-import com.gainsight.bigdata.rulesengine.bean.RuleSetup.TriggerCriteria;
 import com.gainsight.bigdata.tenantManagement.enums.MDAErrorCodes;
-import com.gainsight.sfdc.util.datagen.JobInfo;
-import org.codehaus.jackson.type.TypeReference;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Sridivya on 1/11/2016.
@@ -46,15 +36,8 @@ public class CopilotBasicTests extends CopilotTestUtils {
         tenantInfo = gsDataAPI.getTenantInfo(sfinfo.getOrg());
 
         if (true) {
-            //  sfdc.runApexCode("delete [select id from jbcxm__customerInfo__c];");
-            //  sfdc.runApexCode("delete [select id from contact];");
-          /*  metaUtil.createExtIdFieldOnAccount(sfdc);
-            JobInfo accountJobInfo = mapper.readValue(new File(testDataDir + "/jobs/Accounts.json"), JobInfo.class);
-            dataETL.execute(accountJobInfo);
-            JobInfo contactJobInfo = mapper.readValue(new File(testDataDir + "/jobs/Contacts.json"), JobInfo.class);
-            dataETL.execute(contactJobInfo);
-            JobInfo customerJobInfo = mapper.readValue(new File(testDataDir + "/jobs/Customers.json"), JobInfo.class);
-            dataETL.execute(customerJobInfo);*/
+            createCustomFields();
+            cleanAndGenerateData();
         }
     }
 
@@ -71,7 +54,7 @@ public class CopilotBasicTests extends CopilotTestUtils {
         Assert.assertEquals(actualSmartList.getSmartListName(), "This is My new Name");
 
         //Resync smart list & verify the status again.
-        reSyncSmartList(actualSmartList, 2, 2);
+        reSyncSmartList(actualSmartList, 2, 2, 2);
 
         //Create email template & verify the same.
         EmailTemplate actualEmailTemplate = createAndValidateEmailTemplate(mapper.readValue(new File(testDataDir + "test/t1/T1_EmailTemplate.json"), EmailTemplate.class));
