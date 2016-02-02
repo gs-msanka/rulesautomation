@@ -92,7 +92,7 @@
       "mongo_scheduler_password"   : "T4Fa36Hr",
       "mongo_scheduler_ssl_enable" : "false"
     },
-     "fibonacci": {
+    "fibonacci": {
       "ns_sfdc_username"    : "ggolla@nsfibonacci.com",
       "ns_sfdc_password"    : "finbonacci@gs2015",
       "ns_sfdc_stoken"      : "GM9HLG07RBuKsQK32LrurwLe",

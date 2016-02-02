@@ -1,0 +1,93 @@
+{
+  "externalID_Text": [
+    "p_c_ExternalID"
+  ],
+  "textFields": [
+    "p_c_Text"
+  ],
+  "numberFields": [
+    "p_c_Number"
+  ],
+  "checkBoxes": [
+    "p_c_Checkbox"
+  ],
+  "currencies": [
+    "p_c_Currency"
+  ],
+  "emails": [
+    "p_c_Email"
+  ],
+  "percent": [
+    "p_c_Percent"
+  ],
+  "phones": [
+    "p_c_PhoneNumber"
+  ],
+  "autoNumber": [
+    "p_c_AutoNumber"
+  ],
+  "dates": [
+    "p_c_Date"
+  ],
+  "dateTimes": [
+    "p_c_DateTime"
+  ],
+  "geoLocation": [
+    "p_c_GeoLocation"
+  ],
+  "textArea_Long": [
+    "p_c_TextAreaLong"
+  ],
+  "textArea_Rich": [
+    "p_c_TextAreaRich"
+  ],
+  "textAreas": [
+    "p_c_TextArea"
+  ],
+  "encryptedStrings": [
+    "p_c_TextEncrypted"
+  ],
+  "urls": [
+    "p_c_URL"
+  ],
+  "pickLists": [
+    {
+      "p_c_Picklist": [
+        "Pvalue1",
+        "Pvalue2",
+        "Pvalue3"
+      ]
+    }
+  ],
+  "multiPickLists": [
+    {
+      "p_c_MultiPicklist": [
+        "MPvalue1",
+        "MPvalue2",
+        "MPvalue3"
+      ]
+    }
+  ],
+  "lookups": [
+    {
+      "Name": "p_c_Contact",
+      "ReferenceTo": "Contact",
+      "ReleationShipName": "Contact_Automation2"
+    },
+    {
+      "Name": "p_c_User",
+      "ReferenceTo": "User",
+      "RelationShipName": "User_Automation2"
+    },
+    {
+      "Name": "p_c_customobj_contact2",
+      "ReferenceTo": "C_ContactObject2__c",
+      "ReleationShipName": "ContactObject_Automation2"
+    },
+    {
+      "Name": "p_c_Account",
+      "ReferenceTo": "Account",
+      "RelationShipName": "Account_Automation2"
+    }
+  ]
+}
