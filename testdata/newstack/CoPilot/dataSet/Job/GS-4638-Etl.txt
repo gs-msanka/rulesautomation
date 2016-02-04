@@ -1,0 +1,74 @@
+{       
+    "jobName": "Update Contact names and ID",
+    "jobType" : "ContactUpsert",
+    "namespacePrefix" : "JBCXM",
+    "useNameSpace" : false,
+        "extract": {
+        "source": "sfdc",
+        "connection": "conf/application.conf",
+        "table": "Contact",
+        "fields": [
+            "AccountId",
+	    "Id",
+            "Name"
+        ],
+        "output": "/resources/datagen/process/Copilotcontacts.csv"
+    },
+    "transform": {
+    	"query" : "",
+    	"useQuery" : false,
+        "tableInfo": [
+            {
+                "file": "/resources/datagen/process/Copilotcontacts.csv",
+                "table": "Contact",
+                "joinColumnName": "Name",
+                "columns": [
+                    {
+                        "name": "AccountId",
+                        "alias": "ID"
+                    },
+		    {
+                        "name": "ID",
+                        "alias": "ContactID"
+                    }
+
+                ]
+            },
+            {
+                "file": "/testdata/newstack/CoPilot/Data/Input/GS-4638.csv",
+                "table": "Contacts",
+                "joinColumnName": "Name",
+                "columns": [
+                	{
+                        "name": "Name",
+                        "alias": "Name"
+                    },
+		    {
+                        "name": "Description",
+                        "alias": "Description"
+                    },
+		     {
+                        "name": "LongTextArea",
+                        "alias": "LongTextArea"
+                    },
+		     {
+                        "name": "Date",
+                        "alias": "Date"
+                    },
+		     {
+                        "name": "CreatedDateTime",
+                        "alias": "CreatedDateTime"
+                    },
+		    {
+                        "name": "Email",
+                        "alias": "Email"
+                    }
+		     
+                ]
+            }
+        ],
+        "join": true,
+        "picklist": false,
+        "output": "/testdata/newstack/CoPilot/Data/Input/GS-4638-Output.csv"
+    }
+}
