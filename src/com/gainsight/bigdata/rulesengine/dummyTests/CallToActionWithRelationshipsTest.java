@@ -1,0 +1,154 @@
+package com.gainsight.bigdata.rulesengine.dummyTests;
+
+import com.gainsight.bigdata.NSTestBase;
+import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
+import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
+import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
+import com.gainsight.bigdata.pojo.CollectionInfo;
+import com.gainsight.bigdata.pojo.NsResponseObj;
+import com.gainsight.bigdata.rulesengine.RulesUtil;
+import com.gainsight.bigdata.rulesengine.pages.RulesConfigureAndDataSetup;
+import com.gainsight.bigdata.rulesengine.pages.RulesManagerPage;
+import com.gainsight.bigdata.rulesengine.pojo.RulesPojo;
+import com.gainsight.bigdata.rulesengine.util.RulesEngineUtil;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
+import com.gainsight.bigdata.util.CollectionUtil;
+import com.gainsight.sfdc.tests.BaseTest;
+import com.gainsight.sfdc.util.datagen.DataETL;
+import com.gainsight.sfdc.util.datagen.FileProcessor;
+import com.gainsight.sfdc.util.datagen.JobInfo;
+import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
+import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MongoDBDAO;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
+import org.testng.annotations.*;
+
+import java.io.File;
+import java.io.FileReader;
+import java.util.Calendar;
+import java.util.Date;
+
+
+/**
+ * Created by Abhilash Thaduka on 2/4/2016.
+ */
+public class CallToActionWithRelationshipsTest extends BaseTest {
+
+
+    private static final String CREATE_ACCOUNTS_CUSTOMERS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt";
+    private static final String LOAD_DATA_INTO_CUSTOMOBJECT = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Data_Into_CustomObjectForRelationshipCTA.txt";
+    private static final String ENABLE_RELATIONSHIP = Application.basedir + "/apex_scripts/Relationships/EnableRelationship.apex";
+    private static final String CREATE_RELATIONSHIP = Application.basedir + "/apex_scripts/Relationships/CreateRelationship.apex";
+    private ObjectMapper mapper = new ObjectMapper();
+    private RulesUtil rulesUtil = new RulesUtil();
+    private String rulesManagerPageUrl;
+    private NSTestBase nsTestBase = new NSTestBase();
+    private RulesEngineUtil rulesEngineUtil = new RulesEngineUtil();
+    private RulesManagerPage rulesManagerPage;
+    private RulesConfigureAndDataSetup rulesConfigureAndDataSetup;
+    private static final String CUSTOM_OBJECT_CLEANUP = "Delete [SELECT Id FROM C_Custom__c];";
+    private DataETL dataETL = new DataETL();
+    private TenantManager tenantManager;
+    private Date date = Calendar.getInstance().getTime();
+    private TenantDetails tenantDetails = null;
+    private static DBStoreType dataBaseType;
+    GSDataImpl gsDataImpl = null;
+    private MongoDBDAO mongoDBDAO = null;
+    String collectionName;
+
+    @BeforeClass
+    @Parameters("dbStoreType")
+    public void setUp(@Optional String dbStoreType) throws Exception {
+        basepage.login();
+        nsTestBase.init();
+        rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
+        metaUtil.createExtIdFieldOnAccount(sfdc);
+        metaUtil.createFieldsForAccount(sfdc, sfdc.fetchSFDCinfo());
+        metaUtil.createFieldsOnAccount(sfdc);
+        rulesManagerPage = new RulesManagerPage();
+        rulesUtil.populateObjMaps();
+        rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
+        rulesConfigureAndDataSetup.createCustomObjectAndFields();
+        rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
+        rulesConfigureAndDataSetup.createDataLoadConfiguration();
+        rulesConfigureAndDataSetup.updateTimeZoneInAppSettings("America/Los_Angeles");
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+        sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(ENABLE_RELATIONSHIP));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_RELATIONSHIP));
+        JobInfo loadData = mapper.readValue((new FileReader(LOAD_DATA_INTO_CUSTOMOBJECT)), JobInfo.class);
+        dataETL.execute(loadData);
+        gsDataImpl = new GSDataImpl(NSTestBase.header);
+        tenantManager = new TenantManager();
+        tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(NSTestBase.sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
+        if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
+            Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
+        } else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.REDSHIFT.name())) {
+            Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
+        } else if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+            dataBaseType = DBStoreType.valueOf(dbStoreType);
+            mongoDBDAO = new MongoDBDAO(NSTestBase.nsConfig.getGlobalDBHost(), Integer.valueOf(NSTestBase.nsConfig.getGlobalDBPort()), NSTestBase.nsConfig.getGlobalDBUserName(), NSTestBase.nsConfig.getGlobalDBPassword(), NSTestBase.nsConfig.getGlobalDBDatabase());
+            TenantDetails.DBDetail schemaDBDetails = null;
+            schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+            if (schemaDBDetails == null || schemaDBDetails.getDbServerDetails() == null || schemaDBDetails.getDbServerDetails().get(0) == null) {
+                throw new RuntimeException("DB details are not correct, please check it.");
+            }
+            Log.info("Connecting to schema db....");
+            mongoDBDAO = new MongoDBDAO(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+        }
+
+        // Loading testdata globally
+        boolean isLoadTestDataGlobally = true;
+        if (isLoadTestDataGlobally) {
+            CollectionInfo collectionInfo = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/CollectionSchemaWithRelationshipMapping.json")), CollectionInfo.class);
+            collectionInfo.getCollectionDetails().setCollectionName(dbStoreType + date.getTime());
+            String collectionId = gsDataImpl.createCustomObject(collectionInfo);
+            Assert.assertNotNull(collectionId, "Collection ID should not be null.");
+            // Updating DB storage type to postgres from back end.
+            if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.POSTGRES.name())) {
+                Assert.assertTrue(mongoDBDAO.updateCollectionDBStoreType(tenantDetails.getTenantId(), collectionId, DBStoreType.POSTGRES), "Failed while updating the DB store type to postgres");
+            }
+            CollectionInfo actualCollectionInfo = gsDataImpl.getCollectionMaster(collectionId);
+            collectionName = actualCollectionInfo.getCollectionDetails().getCollectionName();
+            dataETL.execute(mapper.readValue(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/ExtractJob.txt"), JobInfo.class));
+            JobInfo loadTransform = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GlobalTestData/DataloadJob.txt")), JobInfo.class);
+            File dataFile = FileProcessor.getDateProcessedFile(loadTransform, date);
+            DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo, DataLoadOperationType.INSERT);
+            Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile));
+            NsResponseObj nsResponseObj = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
+            Assert.assertTrue(nsResponseObj.isResult(), "Data is not loaded, please check log for more details");
+        }
+    }
+
+
+    @Test(dataProvider = "testData")
+    public void testCallToActionUsingRealtionship(String fileName) throws Exception {
+        Log.info("Creating rule with testdata " + fileName);
+        RulesPojo rulesPojo = mapper.readValue(new File(fileName), RulesPojo.class);
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+    }
+
+    @Test()
+    public void createCtaUsingMdaLinkedCollection() throws Exception {
+        RulesPojo rulesPojo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-200059/GS-200059-Input.json"), RulesPojo.class);
+        rulesPojo.getSetupRule().setSelectObject(collectionName);
+        rulesPojo.getSetupRule().getSetupData().get(0).setSourceObject(collectionName);
+        Log.debug("Updated testdata is " + mapper.writeValueAsString(rulesPojo));
+        rulesManagerPage.openRulesManagerPage(rulesManagerPageUrl);
+        rulesManagerPage.clickOnAddRule();
+        rulesEngineUtil.createRuleFromUi(rulesPojo);
+    }
+
+    @DataProvider(name = "testData")
+    public Object[][] getDataFromDataProvider() {
+        return new Object[][]{
+                {Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-8087/GS-8087-Input.json"},
+                {Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-8088/GS-8088-Input.json"}
+        };
+    }
+}
