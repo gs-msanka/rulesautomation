@@ -60,7 +60,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMongoAsSourceData extends BaseT
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         gsDataImpl = new GSDataImpl(NSTestBase.header);
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));
+/*        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));*/
         // Loading testdata at class level in setup
         boolean isLoadTestDataGlobally = true;
         if (isLoadTestDataGlobally) {

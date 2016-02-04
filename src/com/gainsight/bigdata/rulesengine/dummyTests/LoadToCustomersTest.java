@@ -41,8 +41,6 @@ public class LoadToCustomersTest extends BaseTest {
 
     @Test()
     public void testLoadToCustomers() throws Exception {
-        sfdc.runApexCode(resolveStrNameSpace("Delete [select id from Account where name like '%rule%'];"));
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS));
         sfdc.runApexCode(resolveStrNameSpace("Delete [select id from C_Custom__c];"));
         JobInfo loadData = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/GS-5152.txt")), JobInfo.class);
         dataETL.execute(loadData);

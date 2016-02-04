@@ -40,7 +40,7 @@ public class CalculatedFieldsAndMeasuresTest extends BaseTest {
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+/*        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));*/
         sfdc.runApexCode("Delete [SELECT Id FROM C_Custom__c];");
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-4200/LoadDataIntoCustomObject.txt"), JobInfo.class);
         dataETL.execute(jobInfo);

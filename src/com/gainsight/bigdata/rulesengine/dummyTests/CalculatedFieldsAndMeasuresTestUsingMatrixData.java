@@ -75,7 +75,7 @@ public class CalculatedFieldsAndMeasuresTestUsingMatrixData extends BaseTest {
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         gsDataImpl = new GSDataImpl(NSTestBase.header);
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));
+       /* sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt"));*/
         rulesConfigureAndDataSetup.createCustomObjectAndFieldsInSfdc();
         rulesConfigureAndDataSetup.createDataLoadConfiguration();
         // Loading testdata globally

@@ -44,7 +44,6 @@ public class LoadToUsageTest extends BaseTest {
         metaUtil.createFieldsOnUsageData(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(USAGE_DATA_MEASURE_FILE));
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
     }
 
     @BeforeMethod

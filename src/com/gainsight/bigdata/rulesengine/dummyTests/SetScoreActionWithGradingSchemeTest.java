@@ -52,7 +52,7 @@ public class SetScoreActionWithGradingSchemeTest extends BaseTest {
         runMetricSetup(METRICS_CREATE_FILE, "Grade");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(GRADE_SCHEME_FILE));
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+    /*    sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));*/
         sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
         JobInfo jobInfo = mapper.readValue(resolveNameSpace(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/GS-3385/GS-3385-Job-LoadDataIntoCustomObject.txt"), JobInfo.class);
         dataETL.execute(jobInfo);

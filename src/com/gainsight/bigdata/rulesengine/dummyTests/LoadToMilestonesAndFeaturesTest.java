@@ -39,9 +39,9 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+/*        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         JobInfo jobInfo = mapper.readValue((new FileReader(LOAD_ACCOUNTS_JOB)), JobInfo.class);
-        dataETL.execute(jobInfo);
+        dataETL.execute(jobInfo);*/
         JobInfo loadData = mapper.readValue((new FileReader(LOAD_DATA_INTO_CUSTOMOBJECT)), JobInfo.class);
         dataETL.execute(loadData);
     }

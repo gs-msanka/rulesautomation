@@ -38,7 +38,7 @@ public class SetupRuleActionsWithNativeDataTest extends BaseTest {
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
+/*        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));*/
         rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
         sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
