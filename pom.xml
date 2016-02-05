@@ -63,6 +63,12 @@
 			<artifactId>json-unit-fluent</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.8</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
