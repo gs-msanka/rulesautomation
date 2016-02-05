@@ -124,7 +124,8 @@
       "mongo_scheduler_db"         : "qa_automation_db1",
       "mongo_scheduler_username"   : "qauser",
       "mongo_scheduler_password"   : "pass",
-      "mongo_scheduler_ssl_enable" : "false"
+      "mongo_scheduler_ssl_enable" : "false",
+      "mandrill_webhook_secret"    : "1jesvTYGFJ0biFNmUbY5vQ"
     },
     "conqa02" : {
       "ns_sfdc_username"  : "conqa02@gainsight.com",

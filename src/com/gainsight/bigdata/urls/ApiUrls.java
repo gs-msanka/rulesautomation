@@ -40,17 +40,16 @@ public interface ApiUrls extends NSURLs {
     String ACCOUNT_DETAIL_GET                   = NS_URL + "/api/accounts/";        //Append Account Id to get account details.
     String COLLECTION_MASTER_GET                = NS_URL + "/api/collections/";       //Append Collection Id to get Collection Master details.
     String ACCOUNT_DELETE                       = NS_URL + "/api/accounts/accountId/";
+    String CONNECTOR_DEFAULT_PUT                = NS_URL + "/api/accounts/accountType/%s/default/true";
+    String CONNECTOR_DEACTIVATE_PUT             = NS_URL + "/api/accounts/accountType/%s/default/false";
 
-
-    String MIX_PANEL_DEACTIVATE_PUT         = NS_URL + "/api/accounts/accountType/MIXPANEL/default/false";
+    //MixPanel.
     String MIX_PANEL_CREATE                 = NS_URL + "/api/accounts/mixpanel/create";
     String MIX_PANEL_PROPERTY               = NS_URL + "/api/mixpanel/accounts/";
     String MIX_PANEL_PROJECT_GET            = NS_URL + "/api/accounts/integrations/MIXPANEL";
-    String MIX_PANEL_ACTIVATE_PUT           = NS_URL + "/api/accounts/accountType/MIXPANEL/default/true";
 
-
-    String SEGMENT_DEACTIVATE_PUT           = NS_URL + "/api/accounts/accountType/SEGMENT_IO/default/false";
-    String SEGMENT_PROJECT_GET              = NS_URL + "/api/accounts/integrations/SEGMENT_IO";
+    //Segment IO.
+    String SEGMENT_ACCOUNT_GET              = NS_URL + "/api/accounts/integrations/SEGMENT_IO";
     String SEGMENT_ACCESS_KEY_GET           = NS_URL + "/api/tokens/integrations/SEGMENT_IO/projects/"; //Append Account ID to get access-key for segmentIO project.
 
     //Data Load
@@ -61,9 +60,7 @@ public interface ApiUrls extends NSURLs {
     String DATA_LOAD_IMPORT                 = NS_URL + "/admin/dataload/import";
     String DATA_LOAD_EXPORT_FAILURES        = NS_URL + "/admin/dataload/export/failure/status/"; //Status id should be appended.
 
-
-
-    String GA_DEACTIVATE_PUT                = NS_URL + "/api/accounts/accountType/GOOGLE_ANALYTICS/default/false";
+    //Google Analytics.
     String GA_PROJECT_GET                   = NS_URL + "/api/accounts/integrations/GOOGLE_ANALYTICS";
     String GA_PROPERTIES_GET                = NS_URL + "/api/googleanalytics/";
 
