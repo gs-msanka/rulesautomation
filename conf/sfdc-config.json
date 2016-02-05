@@ -62,7 +62,8 @@
       "sfdc_username": "jprawbranchorg1@gainsight.com",
       "sfdc_password": "gainsight_test12345",
       "sfdc_stoken": "XRtkg2EMhjUGI1Rvp6EiI7sh1"
-      "demo1" : {
+    },
+    "demo1" : {
       "sfdc_username" : "abhilash@demo1.com",
       "sfdc_password" : "1234567jbr",
       "sfdc_stoken" : "y8K0qPMNX0CDM0goVJHq9akWo"
