@@ -21,7 +21,7 @@
 		<dependency>
             <groupId>com.gainsight</groupId>
             <artifactId>testdriver</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
 		<dependency>
 			<groupId>us.monoid.web</groupId>
@@ -130,6 +130,39 @@
 			<properties>
 				<testngXmlFile>${testngFileName}</testngXmlFile>
 			</properties>
+		</profile>
+		<profile>
+			<id>track-logging</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>aspectj-maven-plugin</artifactId>
+						<configuration>
+							<showWeaveInfo>false</showWeaveInfo>
+							<source>1.7</source>
+							<target>1.7</target>
+							<Xlint>ignore</Xlint>
+							<complianceLevel>1.7</complianceLevel>
+							<encoding>UTF-8</encoding>
+							<verbose>false</verbose>
+							<aspectLibraries>
+								<aspectLibrary>
+									<groupId>com.gainsight</groupId>
+									<artifactId>testdriver</artifactId>
+								</aspectLibrary>
+							</aspectLibraries>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>test-compile</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
