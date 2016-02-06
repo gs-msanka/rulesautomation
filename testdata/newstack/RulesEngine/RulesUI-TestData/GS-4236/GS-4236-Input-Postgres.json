@@ -60,7 +60,7 @@
             "destination": "C_Number"
           },
           {
-            "sourceObject": "C_lookup",
+            "sourceObject": "",
             "sourceField": "AccountName",
             "destination": "C_Text"
           }
