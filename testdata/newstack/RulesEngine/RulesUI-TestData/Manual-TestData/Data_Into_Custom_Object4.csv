@@ -1,0 +1,8 @@
+AccountName,CustomDate1,CustomNumber1,CustomNumber2,CustomNumberWithDecimals1,CustomNumberWithDecimals2,BooleanField,CreatedDateTime
+RULESUI Account 1,-12,591,346,300,300,FALSE,-12
+RULESUI Account 1,-13,590,347,400,400,TRUE,-13
+RULESUI Account 2,-14,,,500,500,FALSE,-14
+RULESUI Account 2,-15,588,349,100,,TRUE,-15
+RULESUI Account 3,-16,587,350,100,100,FALSE,-16
+RULESUI Account 4,-17,586,351,,100,TRUE,-17
+RULESUI Account 5,-18,585,315,300,200,FALSE,-18

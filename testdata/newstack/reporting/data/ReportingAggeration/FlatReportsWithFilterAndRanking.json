@@ -154,8 +154,7 @@
           "type": 1,
           "fieldDisplayName": "PageVisits",
           "dataType": "number",
-          "collectionId": "",
-          "order": "asc"
+          "collectionId": ""
         },
         {
           "col": "AccountName",
