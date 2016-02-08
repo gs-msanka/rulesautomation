@@ -8,6 +8,7 @@ import com.gainsight.sfdc.reporting.Pojo.SuccessSnapshotExportMaster;
 import com.gainsight.sfdc.reporting.apiImpl.ReportingApiImpl;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
+import com.gainsight.utils.annotations.TestInfo;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -26,6 +27,7 @@ public class ReportingApiTest extends NSTestBase {
 
 
     @Test
+    @TestInfo(testCaseIds = {"GS-200180"})
     public void exportSFDCDashboard() throws Exception{
         SObject[] dashboardID = sfdc.getRecords(resolveStrNameSpace("SELECT Id FROM JBCXM__Dashboard__c where name = 'Auto_SFDC Dashboard' "));
         if ((dashboardID.length < 1)){
@@ -51,6 +53,7 @@ public class ReportingApiTest extends NSTestBase {
 
 
     @Test
+    @TestInfo(testCaseIds = {"GS-200195"})
     public void exportSuccessSnapshot() throws Exception{
         SObject[] AccountDetails = sfdc.getRecords(resolveStrNameSpace("SELECT Id,Name FROM Account"));
         SObject[] SSDetails = sfdc.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,Name FROM JBCXM__Report__c where JBCXM__Title__c = 'Auto_Test_SuccessSnapshot' limit 1"));
