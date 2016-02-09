@@ -16,6 +16,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MetaDataUtil;
 import com.gainsight.util.MongoDBDAO;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -42,6 +43,7 @@ import java.util.List;
 public class LoadDataTest {
 
     private static final String SFDC_JOB = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Data_Into_CustomObject.txt";
+    private static final String CREATE_ACCOUNTS_CUSTOMERS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt";
     private NSTestBase nsTestBase;
     private DataETL dataETL = new DataETL();
     private ObjectMapper mapper = new ObjectMapper();
@@ -65,6 +67,8 @@ public class LoadDataTest {
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         DbType = dbStoreType;
         tenantManager = new TenantManager();
+        NSTestBase.metaUtil.createExtIdFieldOnAccount(NSTestBase.sfdc);
+        NSTestBase.sfdc.runApexCode(nsTestBase.getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(NSTestBase.sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
         if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
             Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
