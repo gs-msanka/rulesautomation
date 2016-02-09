@@ -55,7 +55,7 @@ public class ReportingApiTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-200195"})
     public void exportSuccessSnapshot() throws Exception{
-        SObject[] AccountDetails = sfdc.getRecords(resolveStrNameSpace("SELECT Id,Name FROM Account"));
+        SObject[] AccountDetails = sfdc.getRecords(("SELECT Id,Name FROM Account"));
         SObject[] SSDetails = sfdc.getRecords(resolveStrNameSpace("SELECT Id,JBCXM__Title__c,Name FROM JBCXM__Report__c where JBCXM__Title__c = 'Auto_Test_SuccessSnapshot' limit 1"));
         if ((SSDetails.length < 1)){
             throw new RuntimeException("No Success Snaphsot found with name: Auto_Test_SuccessSnapshot,Please create the Success Snapshot and try again");

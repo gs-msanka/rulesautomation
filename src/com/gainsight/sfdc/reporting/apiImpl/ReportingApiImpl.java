@@ -1,13 +1,18 @@
 package com.gainsight.sfdc.reporting.apiImpl;
 
 import com.gainsight.bigdata.pojo.NsResponseObj;
-import com.gainsight.bigdata.urls.ApiUrls;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
 import com.gainsight.testdriver.Log;
 import org.apache.commons.httpclient.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import static com.gainsight.bigdata.urls.ApiUrls.*;
+
+
+//import com.gainsight.bigdata.urls.ApiUrls;
+
 
 /**
  * Created by JayaPrakash on 03/02/16.
@@ -24,7 +29,7 @@ public class ReportingApiImpl {
 
     public NsResponseObj exportDashboardGetNsReponse(String payload) throws Exception{
 
-        ResponseObj responseObj = wa.doPost(ApiUrls.API_REPORT_DASHBOARD_TEST_EMAIL, header.getAllHeaders(), payload);
+        ResponseObj responseObj = wa.doPost(API_REPORT_DASHBOARD_TEST_EMAIL, header.getAllHeaders(), payload);
         Log.info("Response Obj : " +responseObj.toString());
         NsResponseObj nsResponseObj = null;
         if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST
@@ -38,7 +43,7 @@ public class ReportingApiImpl {
 
     public NsResponseObj exportSuccessSnapshotGetNsReponse(String payload,String successsnapshotID) throws Exception{
         Log.info("Success Snapshot ID Provided to export: "+successsnapshotID);
-        ResponseObj responseObj = wa.doPost(String.format(ApiUrls.API_REPORT_EXPORT_PPT, successsnapshotID), header.getAllHeaders(), payload);
+        ResponseObj responseObj = wa.doPost(String.format(API_REPORT_EXPORT_PPT, successsnapshotID), header.getAllHeaders(), payload);
         Log.info("Response Obj : " +responseObj.toString());
         NsResponseObj nsResponseObj = null;
         if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST
