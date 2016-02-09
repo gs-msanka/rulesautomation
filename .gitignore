@@ -16,4 +16,3 @@ selenium.properties
 *.iml
 *.classpath
 *.project
-/resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage
