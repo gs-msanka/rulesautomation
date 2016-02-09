@@ -10,10 +10,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import static com.gainsight.bigdata.urls.ApiUrls.*;
 
-
-//import com.gainsight.bigdata.urls.ApiUrls;
-
-
 /**
  * Created by JayaPrakash on 03/02/16.
  */
