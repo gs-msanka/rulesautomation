@@ -13,5 +13,7 @@ selenium.properties
 /testdata/sfdc/RulesEngine/Jobs/Temp_job.txt
 /resources/datagen/process
 .idea
-gs-automation.iml
+*.iml
+*.classpath
+*.project
 /resources/sfdcmetadata/appInstall/installedManged/installedPackages/JBCXM.installedPackage
