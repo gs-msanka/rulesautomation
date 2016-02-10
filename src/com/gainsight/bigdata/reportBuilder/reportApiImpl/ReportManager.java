@@ -29,16 +29,6 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
  * Created by Giribabu on 22/05/15.
  */
 public class ReportManager extends NSTestBase {
-    private MongoDBDAO mongoDBDAO = null;
-    private MongoUtil mongoUtil;
-    private TenantManager tenantManager = new TenantManager();
-    private TenantDetails.DBDetail dbDetail = null;
-    private String[] dataBaseDetail = null;
-    private String host = null;
-    private String userName = null;
-    private String passWord = null;
-    TenantDetails tenantDetails = null;
-    private NSTestBase nsTestBase = new NSTestBase();
 
     /**
      * Creates a tabular report with all the columns in the collection schema supplied.
@@ -614,17 +604,14 @@ public class ReportManager extends NSTestBase {
     }
 
     /**
-     * It will take input as reportname and returns report id. Creating mongoutil connection internally.
-     *
+     * It will take input as reportname, tenantid and mongoutil. Returns report id. Creating mongoutil connection internally.
      * @param reportname
+     * @param tenantId
+     * @param mongoUtil
      * @return
      * @throws IOException
      */
-    public String getReportId(String reportname) throws IOException {
-        try {
-            //    String tenantId = getTenanatId();
-            MongoUtil mongoUtil = getMongoConnection();
-            String tenantId = tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId();
+    public String getReportId(String reportname, String tenantId, MongoUtil mongoUtil) throws IOException {
             Document document = new Document();
             document.append("TenantId", tenantId);
             document.append("ReportInfo.reportName", reportname);
@@ -634,34 +621,7 @@ public class ReportManager extends NSTestBase {
             if (reportMaster.getReportInfo() != null && reportMaster.getReportInfo().size() > 0) {
                 return reportMaster.getReportInfo().get(0).getReportId();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
-    /**
-     * Creating mongoutil connection internally and returning the mongoutil to th called method.
-     *
-     * @return
-     * @throws Exception
-     */
-    public MongoUtil getMongoConnection() throws Exception {
-        nsTestBase.init();
-        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
-                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
-
-        dbDetail = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-        List<TenantDetails.DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
-        for (TenantDetails.DBServerDetail dbServerDetail : dbDetails) {
-            dataBaseDetail = dbServerDetail.getHost().split(":");
-            host = dataBaseDetail[0];
-            userName = dbServerDetail.getUserName();
-            passWord = dbServerDetail.getPassword();
-        }
-
-        mongoUtil = new MongoUtil(host, 27017, userName, passWord, dbDetail.getDbName());
-        return mongoUtil;
-    }
 }

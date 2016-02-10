@@ -7,9 +7,11 @@ import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.reporting.tests.MDAConnectBackend;
 import com.gainsight.testdriver.Application;
+import com.gainsight.testdriver.Log;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 import com.sforce.soap.partner.sobject.SObject;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -22,7 +24,6 @@ import java.util.List;
 public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
     private MongoDBDAO mongoDBDAO = null;
     private MongoUtil mongoUtil;
-    private TenantManager tenantManager = new TenantManager();
     private TenantDetails.DBDetail dbDetail = null;
     private String[] dataBaseDetail = null;
     private String host = null;
@@ -91,16 +92,16 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
     private final String SFDCSTACKEDCOLUMNREPORT = SFDCREPORTINGDATABASEPATH + "/sfdcJsonStackedColumn.json";
     private final String SFDCCOLUMNLINEREPORT = SFDCREPORTINGDATABASEPATH + "/sfdcJsonColumnLine.json";
 
-    private String[] mongoReports = new String[20];
-    private String[] redshiftReports = new String[20];
-    private String[] sfdcReports = new String[11];
-
-    MDAConnectBackend mdaConnectBackend = new MDAConnectBackend();
+    private String[] mongoReports = {BARREPORT, PIEREPORT, COLUMNREPORT, BUBBLEREPORT, SCATTERREPORT, LINEREPORT, AREAREPORT, STACKEBARDREPORT, STACKEDCOLUMNREPORT,
+            COLUMNLINEREPORT, CALCULATEDREPORT, RELATIVETIMEREPORT, SHOWMEREPORT, NULLREPORT, HAVINGREPORT, WHEREMGREPORT, FLATWITHRFMG, BEAGGMGREPORT, DTAGGMGREPORT, GRIDREPORT};
+    private String[] redshiftReports = {CWRSREPORT, CMRSREPORT, CQRSREPORT, CYRSREPORT, DTCWRSREPORT, DTCMRSREPORT, DTCQRSREPORT, DTCYRSREPORT, STRINGRS,
+            NMRSREPORT, DRSAGGREPORT, DTRSAGGREPORT, BERSAGGREPORT, RTRSREPORT, FLATRSREPORT, FLATWITHRF, NULLRSREPORT, HAVINGRSREPORT, WHERERSREPORT, MDAJOINSRSREPORT};
+    private String[] sfdcReports = {SFDCGRIDREPORT, SFDCBARREPORT, SFDCPIEREPORT, SFDCCOLUMNREPORT, SFDCBUBBLEREPORT, SFDCSCATTERREPORT, SFDCLINEREPORT, SFDCAREAREPORT, SFDCSTACKEBARDREPORT,
+            SFDCSTACKEDCOLUMNREPORT, SFDCCOLUMNLINEREPORT};
 
     @BeforeClass
     public void setup() throws Exception {
-        NSTestBase nsTestBase = new NSTestBase();
-        nsTestBase.init();
+        init();
         mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                 nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
@@ -115,70 +116,25 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
         }
 
         mongoUtil = new MongoUtil(host, 27017, userName, passWord, dbDetail.getDbName());
-        mongoReports[0] = GRIDREPORT;
-        mongoReports[1] = BARREPORT;
-        mongoReports[2] = PIEREPORT;
-        mongoReports[3] = COLUMNREPORT;
-        mongoReports[4] = BUBBLEREPORT;
-        mongoReports[5] = SCATTERREPORT;
-        mongoReports[6] = LINEREPORT;
-        mongoReports[7] = AREAREPORT;
-        mongoReports[8] = STACKEBARDREPORT;
-        mongoReports[9] = STACKEDCOLUMNREPORT;
-        mongoReports[10] = COLUMNLINEREPORT;
-        mongoReports[11] = CALCULATEDREPORT;
-        mongoReports[12] = RELATIVETIMEREPORT;
-        mongoReports[13] = SHOWMEREPORT;
-        mongoReports[14] = NULLREPORT;
-        mongoReports[15] = HAVINGREPORT;
-        mongoReports[16] = WHEREMGREPORT;
-        mongoReports[17] = FLATWITHRFMG;
-        mongoReports[18] = BEAGGMGREPORT;
-        mongoReports[19] = DTAGGMGREPORT;
 
-        redshiftReports[0] = CWRSREPORT;
-        redshiftReports[1] = CMRSREPORT;
-        redshiftReports[2] = CQRSREPORT;
-        redshiftReports[3] = CYRSREPORT;
-        redshiftReports[4] = DTCWRSREPORT;
-        redshiftReports[5] = DTCMRSREPORT;
-        redshiftReports[6] = DTCQRSREPORT;
-        redshiftReports[7] = DTCYRSREPORT;
-        redshiftReports[8] = STRINGRS;
-        redshiftReports[9] = NMRSREPORT;
-        redshiftReports[10] = DRSAGGREPORT;
-        redshiftReports[11] = DTRSAGGREPORT;
-        redshiftReports[12] = BERSAGGREPORT;
-        redshiftReports[13] = RTRSREPORT;
-        redshiftReports[14] = FLATRSREPORT;
-        redshiftReports[15] = FLATWITHRF;
-        redshiftReports[16] = NULLRSREPORT;
-        redshiftReports[17] = HAVINGRSREPORT;
-        redshiftReports[18] = WHERERSREPORT;
-        redshiftReports[19] = MDAJOINSRSREPORT;
-
-        sfdcReports[0] = SFDCGRIDREPORT;
-        sfdcReports[1] = SFDCBARREPORT;
-        sfdcReports[2] = SFDCPIEREPORT;
-        sfdcReports[3] = SFDCCOLUMNREPORT;
-        sfdcReports[4] = SFDCBUBBLEREPORT;
-        sfdcReports[5] = SFDCSCATTERREPORT;
-        sfdcReports[6] = SFDCLINEREPORT;
-        sfdcReports[7] = SFDCAREAREPORT;
-        sfdcReports[8] = SFDCSTACKEBARDREPORT;
-        sfdcReports[9] = SFDCSTACKEDCOLUMNREPORT;
-        sfdcReports[10] = SFDCCOLUMNLINEREPORT;
     }
 
     public void createReportWithAnyCombo(String ReportName, String LayoutName) throws Exception {
 
-        String reportId = reportManager.getReportId(ReportName);
-        String ReportID = reportId;
+        String ReportID = reportManager.getReportId(ReportName, tenantDetails.getTenantId(), mongoUtil);
 
+        if (ReportID != null) {
+            Log.info("No report present ");
 
-        SObject[] HomeLayoutID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__Dashboard__c WHERE NAME ='" + LayoutName + "'"));
+            SObject[] HomeLayoutID = sfdc.getRecords(resolveStrNameSpace("SELECT ID FROM JBCXM__Dashboard__c WHERE NAME ='" + LayoutName + "'"));
 
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_MDACONTAINER_SCRIPT).replaceAll("LayoutID", HomeLayoutID[0].getId()).replaceAll("viewID", ReportID));
+            if (HomeLayoutID.length > 0) {
+                sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_MDACONTAINER_SCRIPT).replaceAll("LayoutID", HomeLayoutID[0].getId()).replaceAll("viewID", ReportID));
+
+            } else {
+                Log.error("No layout present, please create layout first");
+            }
+        }
     }
 
     @Test
@@ -223,5 +179,11 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
             createReportWithAnyCombo(reportMaster.getReportInfo().get(0).getReportName(), "SFDCLayout");
         }
 
+    }
+
+    @AfterClass
+    public void quit() {
+        mongoUtil.closeConnection();
+        mongoDBDAO.mongoUtil.closeConnection();
     }
 }
