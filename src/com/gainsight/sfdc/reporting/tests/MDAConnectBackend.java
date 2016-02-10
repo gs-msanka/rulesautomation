@@ -80,9 +80,6 @@ public class MDAConnectBackend extends BaseTest {
 			ReportMaster r = null;
 			try {
 				r = ReportManager.getDBNamesPopulatedReportMaster(reportMaster, collectionInfo);
-				ReportManager reportManager = new ReportManager();
-				String str = reportManager.createDynamicTabularReport(collectionInfo);
-				System.out.println(str);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
