@@ -380,6 +380,7 @@ public class CopilotTestUtils extends NSTestBase {
     public void cleanAndGenerateData() throws Exception {
         //Clean Data
         sfdc.runApexCode("delete [select id from jbcxm__customerInfo__c];"+
+                "delete [select id from Opportunity];"+
                 "delete [select id from Case];"+
                 "delete [select id from contact];"+
                 "delete [select id from C_ContactObject__c];"+

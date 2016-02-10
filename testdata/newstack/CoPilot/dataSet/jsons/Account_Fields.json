@@ -81,17 +81,17 @@
     {
       "Name": "p_c_Contact",
       "ReferenceTo": "Contact",
-      "ReleationShipName": "Contact_Automation1"
+      "relationshipName": "Contact_Automation1"
     },
     {
       "Name": "p_c_User",
       "ReferenceTo": "User",
-      "RelaationShipName": "User_Automation1"
+      "relationshipName": "User_Automation1"
     },
     {
       "Name": "p_c_customobj_contact2",
       "ReferenceTo": "C_ContactObject2__c",
-      "RelationShipName": "ContactObject_Automation1"
+      "relationshipName": "ContactObject_Automation1"
     }
   ]
 }

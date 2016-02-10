@@ -138,7 +138,7 @@ public class MetaDataUtil {
 	    
 		 if(objF.getLookups().size() > 0){
 			 for (HashMap<String,String> hm : objF.getLookups()){
-				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("ReleationShipName")});
+				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("relationshipName")});
 				 permFieldsList.add(hm.get("Name"));
 			 }
 		 }
