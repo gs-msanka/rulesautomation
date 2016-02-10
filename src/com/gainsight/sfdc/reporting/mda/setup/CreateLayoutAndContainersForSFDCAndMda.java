@@ -2,6 +2,7 @@ package com.gainsight.sfdc.reporting.mda.setup;
 
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
+import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.reporting.tests.MDAConnectBackend;
@@ -28,6 +29,7 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
     private String userName = null;
     private String passWord = null;
     TenantDetails tenantDetails = null;
+    ReportManager reportManager = new ReportManager();
 
     private final String REPORTINGDATABASEPATH = Application.basedir + "/testdata/newstack/reporting/data";
     private final String SFDCREPORTINGDATABASEPATH = Application.basedir + "/testdata/newstack/reporting/data/SfdcJsons";
@@ -170,7 +172,7 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
 
     public void createReportWithAnyCombo(String ReportName, String LayoutName) throws Exception {
 
-        String reportId = mdaConnectBackend.getReportId(tenantDetails.getTenantId(), ReportName, mongoUtil);
+        String reportId = reportManager.getReportId(ReportName);
         String ReportID = reportId;
 
 
