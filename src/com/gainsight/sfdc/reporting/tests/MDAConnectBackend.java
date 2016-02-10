@@ -99,24 +99,4 @@ public class MDAConnectBackend extends BaseTest {
 		JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
     }
 
-    /**
-     * It will return the report id if we passes report name.
-     *
-     * @param tenantId
-     * @param reportname
-     * @param mongoUtil
-     * @return
-     */
-    public String getReportId(String tenantId, String reportname, MongoUtil mongoUtil) throws IOException {
-        Document document = new Document();
-        document.append("TenantId", tenantId);
-        document.append("ReportInfo.reportName", reportname);
-        Document document1 = mongoUtil.getFirstRecord("reportmaster", document, null, null);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ReportMaster reportMaster = objectMapper.readValue(document1.toJson(), ReportMaster.class);
-        if (reportMaster.getReportInfo() != null && reportMaster.getReportInfo().size() > 0) {
-            return reportMaster.getReportInfo().get(0).getReportId();
-        }
-        return null;
-    }
 }
