@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gainsight.bigdata.copilot.tests.CopilotTestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 
@@ -333,7 +334,7 @@ public class LoadTestData extends NSTestBase{
 	}
 
 	public void generateData() throws Exception {
-		CopilotDataSetup dataSetup = new CopilotDataSetup();
+		CopilotTestUtils dataSetup = new CopilotTestUtils();
 		dataETL = new DataETL();
 			dataSetup.loadToObject(dataETL, Job_C_ContactObject2);
 		//Initializing Account,Customer Info,Case,Contact

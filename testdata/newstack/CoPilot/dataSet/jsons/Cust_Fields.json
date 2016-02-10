@@ -17,7 +17,7 @@
   "emails": [
     "p_c_Email"
   ],
-  "percent": [
+  "percents": [
     "p_c_Percent"
   ],
   "phones": [
@@ -72,22 +72,22 @@
     {
       "Name": "p_c_Contact",
       "ReferenceTo": "Contact",
-      "ReleationShipName": "Contact_Automation2"
+      "relationshipName": "Contact_Automation2"
     },
     {
       "Name": "p_c_User",
       "ReferenceTo": "User",
-      "RelationShipName": "User_Automation2"
+      "relationshipName": "User_Automation2"
     },
     {
       "Name": "p_c_customobj_contact2",
       "ReferenceTo": "C_ContactObject2__c",
-      "ReleationShipName": "ContactObject_Automation2"
+      "relationshipName": "ContactObject_Automation2"
     },
     {
       "Name": "p_c_Account",
       "ReferenceTo": "Account",
-      "RelationShipName": "Account_Automation2"
+      "relationshipName": "Account_Automation2"
     }
   ]
 }
