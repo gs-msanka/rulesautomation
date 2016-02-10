@@ -80,6 +80,9 @@ public class MDAConnectBackend extends BaseTest {
 			ReportMaster r = null;
 			try {
 				r = ReportManager.getDBNamesPopulatedReportMaster(reportMaster, collectionInfo);
+				ReportManager reportManager = new ReportManager();
+				String str = reportManager.createDynamicTabularReport(collectionInfo);
+				System.out.println(str);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -97,5 +100,32 @@ public class MDAConnectBackend extends BaseTest {
 
 	public void compareGivenJSON(String expectedJSON, String actualJSON) {
 		JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
-	}
+    }
+
+    /**
+     * It will return the report id if we passes report name.
+     *
+     * @param tenantId
+     * @param reportname
+     * @param mongoUtil
+     * @return
+     */
+    public String getReportId(String tenantId, String reportname, MongoUtil mongoUtil) {
+        Document document = new Document();
+        document.append("TenantId", tenantId);
+        document.append("ReportInfo.reportName", reportname);
+        List<String> includeFields = new ArrayList<>();
+        List<String> excludeFields = new ArrayList<>();
+        includeFields.add("ReportInfo.ReportId");
+        excludeFields.add("newReport");
+        excludeFields.add("reportMasterRequired");
+        excludeFields.add("format");
+        excludeFields.add("displayType");
+        excludeFields.add("_id");
+        Document document1 = mongoUtil.getFirstRecord("reportmaster", document, includeFields, excludeFields);
+
+        String report1 = document1.get("ReportInfo").toString();
+
+        return report1.substring(20, report1.length() - 3);
+    }
 }
