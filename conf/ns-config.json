@@ -214,6 +214,26 @@
       "mongo_scheduler_username": "qauser",
       "mongo_scheduler_password": "pass",
       "mongo_scheduler_ssl_enable": "false"
+    },
+    "vltdev1": {
+      "ns_sfdc_username": "vaultdev1@gainsighttest.com",
+      "ns_sfdc_password": "vaultdev@123",
+      "ns_sfdc_stoken": "XGGRQP2Din0j4siY0Jva1Evl",
+      "ns_appUrl": "https://vltdev1-api-router.herokuapp.com",
+      "ns_adminUrl": "https://vltdev1-api-router.herokuapp.com",
+      "ns_version": "v1.0",
+      "mongo_global_host": "54.86.218.91",
+      "mongo_global_port": "27017",
+      "mongo_global_db": "dev_vault_db1",
+      "mongo_global_username": "devuser",
+      "mongo_global_password": "FC235761-DDE2-41B9-A33E-210F783A21C1",
+      "mongo_global_ssl_enable": "false",
+      "mongo_scheduler_host": "54.86.218.91",
+      "mongo_scheduler_port": "27017",
+      "mongo_scheduler_db": "dev_vault_db1",
+      "mongo_scheduler_username": "devuser",
+      "mongo_scheduler_password": "FC235761-DDE2-41B9-A33E-210F783A21C1",
+      "mongo_scheduler_ssl_enable": "false"
     }
   }
 }
