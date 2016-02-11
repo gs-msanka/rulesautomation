@@ -705,7 +705,8 @@ public class Workflow360Tests extends WorkflowSetup{
 	       cta.setAssignee(sfdcInfo.getUserFullName());
 	      workflow360.createCTA(cta);      
 	      Assert.assertTrue(workflow360.isCTADisplayed(cta), "Verifying risk CTA is created ");
-	       workflow360.snoozeCTA(cta);
+		   SObject[] snoozeReasonId=sfdc.getRecords(resolveStrNameSpace("Select Id from JBCXM__Picklist__c where JBCXM__Category__c='Relationship Activity' and JBCXM__ShortName__c='"+cta.getSnoozeReason()+"'"));
+	       workflow360.snoozeCTA(cta,snoozeReasonId[0].getId());
 	       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 	       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
 	       workflowPage = workflowPage.showSnoozeCTA();
@@ -1097,8 +1098,6 @@ public class Workflow360Tests extends WorkflowSetup{
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
-	        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        
 	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 	        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
@@ -1127,8 +1126,7 @@ public class Workflow360Tests extends WorkflowSetup{
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
-	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
+			SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
 	        workflow360.deSyncTaskFromSF(cta,tasks.get(0),true);
@@ -1162,7 +1160,6 @@ public class Workflow360Tests extends WorkflowSetup{
 	        }
 
 	        workflow360.addTaskToCTA(cta, tasks);
-	        workflow360.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 	        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 	        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 	        
