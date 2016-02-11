@@ -175,6 +175,26 @@
       "mongo_scheduler_password": "A23A673B-14A1-467B-BFC3-5AC87F4007BF",
       "mongo_scheduler_ssl_enable": "false"
     },
+    "ruleqa02": {
+      "ns_sfdc_username": "ruleqa02@gainsight.com",
+      "ns_sfdc_password": "gainsight.12345",
+      "ns_sfdc_stoken": "4eOsfnWYp473XR8BdVzvbT5D",
+      "ns_appUrl": "https://ruleqa02-api-router.herokuapp.com",
+      "ns_adminUrl": "https://ruleqa02-api-router.herokuapp.com",
+      "ns_version": "v1.0",
+      "mongo_global_host": "54.165.93.124",
+      "mongo_global_port": "27017",
+      "mongo_global_db": "qa_rules_db2",
+      "mongo_global_username": "qauser",
+      "mongo_global_password": "A23A673B-14A1-467B-BFC3-5AC87F4007BF",
+      "mongo_global_ssl_enable": "false",
+      "mongo_scheduler_host": "54.165.93.124",
+      "mongo_scheduler_port": "27017",
+      "mongo_scheduler_db": "qa_rules_db2",
+      "mongo_scheduler_username": "qauser",
+      "mongo_scheduler_password": "A23A673B-14A1-467B-BFC3-5AC87F4007BF",
+      "mongo_scheduler_ssl_enable": "false"
+    },
     "rawqa01": {
       "ns_sfdc_username": "rawqa01@gainsight.com",
       "ns_sfdc_password": "gainsight12345",
