@@ -48,12 +48,12 @@ public class WorkFlowTest extends WorkflowSetup {
     public void setup() throws Exception {
     	sfdc.connect();
     	basepage.login();
-       /* metaUtil.createExtIdFieldOnAccount(sfdc);
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         metaUtil.createExtIdFieldOnUser(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_USERS_SCRIPT));
         cleanPlaybooksData();
-        loadDefaultPlaybooks();*/
+        loadDefaultPlaybooks();
     }
     
     @BeforeMethod
