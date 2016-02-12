@@ -71,7 +71,7 @@
       "ReportReadLimit" : 100,
       "DimensionBrowserReadLimit" : 1000,
       "reportName" : "Auto_Flat Report",
-      "ReportId" : "739b7687-824d-4492-94ff-80d29c29209d",
+      "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {
         "filters" : [

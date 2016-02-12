@@ -1,0 +1,2 @@
+Delete[Select Id from JBCXM__C360sections__C where name like '%MDA_%'];
+Delete[Select Id from JBCXM__Dashboard__C where name like '%MDA_%'];

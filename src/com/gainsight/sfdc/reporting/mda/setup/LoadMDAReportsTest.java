@@ -5,10 +5,13 @@ import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
+import com.gainsight.util.MongoDBDAO;
+import com.gainsight.utils.MongoUtil;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -20,34 +23,47 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by JayaPrakash on 01/09/15.
- * This class will create MDA Report Masters, adds the Reports to Home Page and adds the Reports to CS 360 page
+ * This class will create MDA Report Masters, adds the Reports to Home Page and to CS 360 page
  *
  */
 
 public class LoadMDAReportsTest extends NSTestBase {
     private ReportManager reportManager;
-    private TenantDetails tenantDetails;
-    //private TenantManager tenantManager;
+    private TenantDetails tenantDetails = null;
     private DataLoadManager dataLoadManager;
     private Date date = Calendar.getInstance().getTime();
-    DataETL dataETL = new DataETL();
+    private MongoDBDAO mongoDBDAO = null;
+    private MongoUtil mongoUtil;
+    private TenantManager tenantManager = new TenantManager();
+    private DataETL dataETL = new DataETL();
+    private TenantDetails.DBDetail dbDetail = null;
+    private String[] dataBaseDetail = null;
+    private String host = null;
+    private String port = null;
+    private String userName = null;
+    private String passWord = null;
     String collectionId = "";
     JobInfo dataTransForm;
+    private static final String COLLECTION_MASTER = "collectionmaster";
+
+
     private final String REPORTMASTERBASEPATH = Application.basedir+"/src/com/gainsight/sfdc/reporting/mda/setup";
 
     private final String CREATE_LAYOUT_SCRIPT = Application.basedir+"/testdata/sfdc/reporting/scripts/CreateLayout.txt";
     private final String CREATE_MDACONTAINER_SCRIPT = Application.basedir+"/src/com/gainsight/sfdc/reporting/mda/setup/CreateMDAContainer.txt";
     private final String CREATE_MDACS360SECTION_SCRIPT = Application.basedir+"/src/com/gainsight/sfdc/reporting/mda/setup/CreateMDACS360Section.txt";
+    private final String MDADASHBOARDSCLEANUP  = Application.basedir+"/src/com/gainsight/sfdc/reporting/mda/setup/MDADashboardsCleanup.txt";
 
     private final String SCATTERCHART2M2D_PATH = REPORTMASTERBASEPATH+"/Charts/Scatter2M2D.json";
     private final String BUBBLECHART3M2D_PATH = REPORTMASTERBASEPATH+"/Charts/Bubble3M2D.json";
     private final String COLUMNCHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/Column1M1D.json";
     private final String D3BUBBLECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/D3BUBBLE1M1D.json";
     private final String HEATMAPCHART1M2D_PATH = REPORTMASTERBASEPATH+"/Charts/HEATMAP1M2D.json";
-    private final String LINECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/HEATMAP1M2D.json";
+    private final String LINECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/Line1M1D.json.json";
 
     private final String GRID2M2D_PATH = REPORTMASTERBASEPATH+"/AggTabularReports/Grid2M2D.json";
     private final String GRID3M2D_PATH = REPORTMASTERBASEPATH+"/AggTabularReports/Grid3M2D.json";
@@ -80,9 +96,31 @@ public class LoadMDAReportsTest extends NSTestBase {
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws IOException {
+        sfdc.connect();
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(MDADASHBOARDSCLEANUP)); //Cleaning the MDA Dashboards and MDA C360Sectons in the org
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning...");
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+
+        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
+                nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+
+        dbDetail = mongoDBDAO.getDataDBDetail(tenantDetails.getTenantId());
+        List<TenantDetails.DBServerDetail> dbDetails = dbDetail.getDbServerDetails();
+        for (TenantDetails.DBServerDetail dbServerDetail : dbDetails) {
+            dataBaseDetail = dbServerDetail.getHost().split(":");
+            host = dataBaseDetail[0];
+            port = dataBaseDetail[1];
+            userName = dbServerDetail.getUserName();
+            passWord = dbServerDetail.getPassword();
+        }
+        mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+
+        tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
+
+        mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+        mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
+        mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI");
 
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
             if(tenantDetails.isRedshiftEnabled()) {
@@ -115,6 +153,8 @@ public class LoadMDAReportsTest extends NSTestBase {
             Assert.assertNotNull(statusId);
             dataLoadManager.waitForDataLoadJobComplete(statusId);
         }
+
+
     }
 
     /**
@@ -147,10 +187,11 @@ public class LoadMDAReportsTest extends NSTestBase {
     @Test
     @Parameters("dbStoreType")
     public void createReportsWith2M2D(@Optional String dbStoreType) throws Exception {
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", dbStoreType+"_"+"MDA_2ShowMe_2By_Layout"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_LAYOUT_SCRIPT).replaceAll("layoutName", dbStoreType+"_" +"MDA_2ShowMe_2By_Layout"));
 
         createReportWithAnyCombo(SCATTERCHART2M2D_PATH, dbStoreType+"_" + "Scatter2M2D", dbStoreType + "_" + "MDA_2ShowMe_2By_Layout", dbStoreType + "MDA_2ShowMe_2By_CS360Section");
-        createReportWithAnyCombo(GRID2M2D_PATH, dbStoreType+"_"+"Grid2M2D", dbStoreType+"MDA_2ShowMe_2By_Layout",dbStoreType+"MDA_2ShowMe_2By_CS360Section");
+        createReportWithAnyCombo(GRID2M2D_PATH, dbStoreType+"_" +"Grid2M2D", dbStoreType+"_"+"MDA_2ShowMe_2By_Layout",dbStoreType+"_"+"MDA_2ShowMe_2By_CS360Section");
+
 
     }
 

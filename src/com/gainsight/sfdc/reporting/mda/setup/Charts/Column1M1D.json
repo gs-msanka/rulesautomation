@@ -30,7 +30,7 @@
       "ReportReadLimit" : 100,
       "DimensionBrowserReadLimit" : 1000,
       "reportName" : "JP_1M_1D",
-      "ReportId" : "5d46c98d-9108-43ba-80b1-e7396b115909",
+      "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {
         "filters" : [

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Connectors Project" preserve-order="true">
+<suite name="Report Builder - Loading MDA Reports" preserve-order="true">
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
     </listeners>
-
-
 
     <test verbose="3" name="Load To MDA MONGO" preserve-order="true">
         <parameter name="dbStoreType" value="MONGO"/>
