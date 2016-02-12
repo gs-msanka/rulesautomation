@@ -28,7 +28,7 @@
       ],
       "ReportReadLimit" : 100,
       "DimensionBrowserReadLimit" : 1000,
-      "reportName" : "JP_1M_1D_ColumnChart",
+      "reportName" : "",
       "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {

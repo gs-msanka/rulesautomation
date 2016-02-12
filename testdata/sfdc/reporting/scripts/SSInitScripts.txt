@@ -1,0 +1,12 @@
+String ssReportID = 'successSnapshotID';
+Map<String,String> reportSectionAndDashboardMap = new Map<String,String>{
+		'Section Header Slide Title'=>'{"displayType":"Section Header"}',
+		'Title Slide Title'=>'{"displayType":"Title Slide"}',
+		'Title and Content Slide Title'=>'{"displayType":"Title and Content"}',
+		'Two Content Slide Title' => '{"displayType":"Two Content"}',
+		'Comparision Slide Title' => '{"displayType":"Comparison"}'
+		};
+
+Map<ID, JBCXM__Dashboard__c> dbsMap = new Map<ID, JBCXM__Dashboard__c>([Select id from JBCXM__Dashboard__c where Name IN: reportSectionAndDashboardMap.values()]);
+Delete [Select id from JBCXM__DashboardContainer__c where JBCXM__Dashboard__c IN: dbsMap.keyset()];
+delete dbsMap.values();

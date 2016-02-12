@@ -1,0 +1,9 @@
+JBCXM__ApplicationSettings__C[] a = [SELECT Id FROM JBCXM__ApplicationSettings__C];
+	for(JBCXM__ApplicationSettings__C appSettingsIDList:a){
+		appSettingsIDList.JBCXM__IsNSAdoptionEnabled__c=true;
+		appSettingsIDList.JBCXM__IsNSEnabled__c=true;
+		appSettingsIDList.JBCXM__IsNSExportEnabled__c=true;
+		appSettingsIDList.JBCXM__IsNSReportsEnabled__c = true;
+		appSettingsIDList.JBCXM__NSChecksConfig__c = '{"usageDrillDown":false,"successSnapshot":true}';
+	}
+	Upsert a;

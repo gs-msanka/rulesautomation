@@ -14,10 +14,7 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +60,7 @@ public class LoadMDAReportsTest extends NSTestBase {
     private final String COLUMNCHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/Column1M1D.json";
     private final String D3BUBBLECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/D3BUBBLE1M1D.json";
     private final String HEATMAPCHART1M2D_PATH = REPORTMASTERBASEPATH+"/Charts/HEATMAP1M2D.json";
-    private final String LINECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/Line1M1D.json.json";
+    private final String LINECHART1M1D_PATH = REPORTMASTERBASEPATH+"/Charts/Line1M1D.json";
 
     private final String GRID2M2D_PATH = REPORTMASTERBASEPATH+"/AggTabularReports/Grid2M2D.json";
     private final String GRID3M2D_PATH = REPORTMASTERBASEPATH+"/AggTabularReports/Grid3M2D.json";
@@ -92,12 +89,15 @@ public class LoadMDAReportsTest extends NSTestBase {
     private String reportName;
     private String reportID;
 
+    @BeforeSuite
+    public void cleanup(){
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(MDADASHBOARDSCLEANUP)); //Cleaning the MDA Dashboards and MDA C360Sectons in the org
+    }
+
 
     @BeforeClass
     @Parameters("dbStoreType")
     public void setup(@Optional String dbStoreType) throws IOException {
-        sfdc.connect();
-        sfdc.runApexCode(getNameSpaceResolvedFileContents(MDADASHBOARDSCLEANUP)); //Cleaning the MDA Dashboards and MDA C360Sectons in the org
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning...");
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
@@ -120,13 +120,19 @@ public class LoadMDAReportsTest extends NSTestBase {
 
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
-        mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI");
+
 
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
+            mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOMONGO");
+            mongoDBDAO.deleteMongoDocumentFromReportMaster(
+                    tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "MONGO_");
             if(tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
         } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
+            mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOREDSHIFT");
+            mongoDBDAO.deleteMongoDocumentFromReportMaster(
+                    tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "REDSHIFT_");
             if(!tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
@@ -168,7 +174,8 @@ public class LoadMDAReportsTest extends NSTestBase {
         reportMaster = reportManager.getDBNamesPopulatedReportMaster(reportMaster, collectionInfo);
         reportMaster.getReportInfo().get(0).setSchemaName(collectionInfo.getCollectionDetails().getCollectionName());
         reportMaster.getReportInfo().get(0).setCollectionID(collectionInfo.getCollectionDetails().getCollectionId());
-        reportName = ReportName + "_" + date.getTime();
+//        reportName = ReportName + "_" + date.getTime();
+        reportName = ReportName;
         reportMaster.getReportInfo().get(0).setReportName(reportName);
         String reportId = reportManager.saveReport(mapper.writeValueAsString(reportMaster));
         Assert.assertNotNull(reportId);
@@ -270,6 +277,12 @@ public class LoadMDAReportsTest extends NSTestBase {
              createReportWithAnyCombo(LINE_SUMMARIZEDBYYEAR_PATH, dbStoreType+"_" +"Line_SummarizedByYear", dbStoreType+"_" +"MDA_SummarizedBy_Layout", dbStoreType+"_" +"MDA_SummarizedBy_CS360Section");
             }
          }
+
+    @AfterClass
+    public void quit() {
+        mongoUtil.closeConnection();
+        mongoDBDAO.mongoUtil.closeConnection();
+    }
 
 }
 

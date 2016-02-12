@@ -1,0 +1,93 @@
+List<String> reportIDList = new List<String>{'reportID0','reportID1','reportID2','reportID3','reportID4'};
+
+String sourceType = 'reportSourceType' ;
+String ssReportID = 'successSnapshotID';
+
+List<String> dashboardTypes = new List<String>{'{"displayType":"Section Header"}','{"displayType":"Title Slide"}','{"displayType":"Title and Content"}','{"displayType":"Two Content"}','{"displayType":"Comparison"}'};
+
+//List<JBCXM__Dashboard__C> dashboardNames = [Select ID,JBCXM__FilterConditions__c from JBCXM__Dashboard__C];
+
+List<JBCXM__DashboardContainer__c> pbr11 = new List<JBCXM__DashboardContainer__c>();
+
+//List<String> sectionHeaderContainerInfoList = new List<String>{'{"variableList":[],"content":"Section Header Slide"}','{"variableList":[]//,"content":"Section Header Slide Footer"}'};
+
+//List<String> sectionHeaderContainerOptionsList = new List<String>{'{"shapeName":"Title 1","placeHolder":"title"}','{"shapeName":"Text //Placeholder 2","placeHolder":"body"}'};
+
+Map<String,Map<String,String>> sectionSlideDBTypesMap = new Map<String,Map<String,String>> {
+			'{"displayType":"Section Header"}' => new Map<String,String>{
+					'{"shapeName":"Title 1","placeHolder":"title"}' => '{"variableList":[],"content":"Section Header Slide"}',
+					'{"shapeName":"Text Placeholder 2","placeHolder":"body"}' => '{"variableList":[],"content":"Section Header Slide Footer"}'
+				},
+			'{"displayType":"Title and Content"}' => new Map<String,String>{
+					'{"shapeName":"Title 1","placeHolder":"title"}'=>'{"variableList":[],"content":"Title and Content Slide Title"}',
+					'{"shapeName":"Content Placeholder 2","placeHolder":"content"}'=>'{"having":null,"where":null,"enableCustomerFilter":false,"rowsPerSlide":10,"isRB":true,"selectedColumns":null}'
+				},
+			'{"displayType":"Title Slide"}' => new Map<String,String>{
+					'{"shapeName":"Title 1","placeHolder":"centered_title"}'=>'{"variableList":[],"content":"Title Slide - Title"}',
+					'{"shapeName":"Subtitle 2","placeHolder":"subtitle"}'=>'{"variableList":[],"content":"Title Slide - Title Footer"}'
+				},
+			'{"displayType":"Two Content"}' => new Map<String,String>{
+					'{"shapeName":"Title 1","placeHolder":"title"}'=>'{"variableList":[],"content":"Two Content Slide title"}',
+					'{"shapeName":"Content Placeholder 2","placeHolder":"content"}'=>'{"having":null,"where":null,"enableCustomerFilter":false,"rowsPerSlide":10,"isRB":true,"selectedColumns":[{"width":32.89473684210527,"decimalPlaces":0,"hasJBCXMNS":false,"isGroupable":false,"fieldType":"DOUBLE","objectName":"JBCXM__CTA__c","visibilityMode":true,"displayOrder":1,"label":"Age","name":"JBCXM__Age__c"}]}',
+					'{"shapeName":"Content Placeholder 3","placeHolder":"content"}' => '{"having":null,"where":null,"enableCustomerFilter":false,"rowsPerSlide":10,"isRB":true,"selectedColumns":null}'
+			},
+			'{"displayType":"Comparison"}' => new Map<String,String>{
+					'{"shapeName":"Title 1","placeHolder":"title"}'=>'{"variableList":[],"content":"Comparision Slide Title"}',
+					'{"shapeName":"Text Placeholder 2","placeHolder":"body"}' => '{"variableList":[],"content":"Comp Report1"}',
+					'{"shapeName":"Content Placeholder 3","placeHolder":"content"}' => '{"having":null,"where":null,"enableCustomerFilter":false,"rowsPerSlide":10,"isRB":true,"selectedColumns":[{"width":33.003300330033,"decimalPlaces":0,"hasJBCXMNS":false,"isGroupable":false,"fieldType":"DOUBLE","objectName":"JBCXM__CTA__c","visibilityMode":true,"displayOrder":1,"label":"Age","name":"JBCXM__Age__c"}]}',
+					'{"shapeName":"Text Placeholder 4","placeHolder":"body"}' => '{"variableList":[],"content":"Comp Report2"}',
+					'{"shapeName":"Content Placeholder 5","placeHolder":"content"}' => '{"having":null,"where":null,"enableCustomerFilter":false,"rowsPerSlide":10,"isRB":true,"selectedColumns":null}'
+			}
+
+		};
+//Delete[Select id from JBCXM__DashboardContainer__c where name ='Test SS Dashboard Container Name'];
+
+//Have Map for each slide type
+Decimal d;
+Integer reportIterator=0;
+Map<String, ID> dBIdByTitle = new Map<String, ID>();
+for(JBCXM__Dashboard__C dBObject: [Select ID,JBCXM__FilterConditions__c from JBCXM__Dashboard__C where Name IN: dashboardTypes and JBCXM__ReportSection__r.JBCXM__Report__c =: ssReportID]){
+	dBIdByTitle.put(dBObject.JBCXM__FilterConditions__c, dBObject.Id);
+}
+Map<String,String> dbContainersMap;
+JBCXM__DashboardContainer__c viewObj11;
+for(String dbType : dBIdByTitle.keySet()){
+	dbContainersMap = sectionSlideDBTypesMap.get(dbType);
+
+	dbContainersMap = (dbContainersMap!=null)? dbContainersMap: new Map<String,String>();
+	d=0.0;
+	for(String cinfo : dbContainersMap.keySet()){
+		viewObj11 = new JBCXM__DashboardContainer__c(
+				JBCXM__ContainerInfo__c = dbContainersMap.get(cinfo),
+				JBCXM__ContainerOptions__c = cinfo,
+		        Name = 'Test SS Dashboard Container Name',
+				JBCXM__ContainerType__c = 'TEXT',
+				JBCXM__Dashboard__c = dBIdByTitle.get(dbType),
+				JBCXM__DisplayOrder__c = d,
+				JBCXM__SourceType__c=sourceType,
+				JBCXM__UIView__c=null,
+				JBCXM__SourceId__c= null
+				);
+		if(cinfo.contains('title')|| cinfo.contains('body')|| cinfo.contains('subtitle')){
+				viewObj11.JBCXM__ContainerType__c = 'TEXT';
+				viewObj11.JBCXM__SourceId__c=null;
+				viewObj11.JBCXM__SourceType__c=null;
+				viewObj11.JBCXM__UIView__c=null;
+		}else if(cinfo.contains('content')){
+		        if(sourceType == 'SFDC'){
+                        viewObj11.JBCXM__SourceId__c=null;
+                        viewObj11.JBCXM__UIView__c=reportIDList.get(reportIterator);
+                }else if(sourceType == 'MDA'){
+                        viewObj11.JBCXM__UIView__c= null;
+                        viewObj11.JBCXM__SourceId__c= reportIDList.get(reportIterator);
+                }
+				viewObj11.JBCXM__ContainerType__c = 'CHART';
+				reportIterator++;
+				}
+
+			pbr11.add(viewObj11);
+			d=d+1.0;
+
+		}
+	}
+insert pbr11;
