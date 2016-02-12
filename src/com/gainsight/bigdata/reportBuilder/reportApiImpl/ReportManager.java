@@ -7,11 +7,17 @@ import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportFilter;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
+import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
+import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.testdriver.Log;
+import com.gainsight.util.MongoDBDAO;
+import com.gainsight.utils.MongoUtil;
 import org.apache.http.HttpStatus;
+import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
@@ -23,7 +29,6 @@ import static com.gainsight.bigdata.urls.ApiUrls.*;
  * Created by Giribabu on 22/05/15.
  */
 public class ReportManager extends NSTestBase {
-
 
     /**
      * Creates a tabular report with all the columns in the collection schema supplied.
@@ -597,4 +602,26 @@ public class ReportManager extends NSTestBase {
         }
         return reportMasters;
     }
+
+    /**
+     * It will take input as reportname, tenantid and mongoutil. Returns report id. Creating mongoutil connection internally.
+     * @param reportname
+     * @param tenantId
+     * @param mongoUtil
+     * @return
+     * @throws IOException
+     */
+    public String getReportId(String reportname, String tenantId, MongoUtil mongoUtil) throws IOException {
+            Document document = new Document();
+            document.append("TenantId", tenantId);
+            document.append("ReportInfo.reportName", reportname);
+            Document document1 = mongoUtil.getFirstRecord("reportmaster", document, null, null);
+            ObjectMapper objectMapper = new ObjectMapper();
+            ReportMaster reportMaster = objectMapper.readValue(document1.toJson(), ReportMaster.class);
+            if (reportMaster.getReportInfo() != null && reportMaster.getReportInfo().size() > 0) {
+                return reportMaster.getReportInfo().get(0).getReportId();
+            }
+        return null;
+    }
+
 }
