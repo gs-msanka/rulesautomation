@@ -34,7 +34,8 @@ import java.util.TimeZone;
  *
  * Contains utils for rules engine automation.
  */
-public class RulesEngineUtil  extends BaseTest{
+public class RulesEngineUtil{
+	BaseTest baseTest=new BaseTest();
 
 
     /**
@@ -120,7 +121,7 @@ public class RulesEngineUtil  extends BaseTest{
             switch (actionType) {
                 case CTA:
                     CTAAction ctaAction = objectMapper.readValue(actionObject, CTAAction.class);
-                    ctaAction.setDefaultOwner(sfdcInfo.getUserFullName());
+                    ctaAction.setDefaultOwner(BaseTest.sfdcInfo.getUserFullName());
                     setupRuleActionPage.createCTA(ctaAction, i);
                     break;
                 case LoadToCustomers:
@@ -198,8 +199,10 @@ public class RulesEngineUtil  extends BaseTest{
 			}
 		}
 		setupRulePage.enterAdvanceLogic(setupRulePojo.getAdvancedLogic());
-		setupRulePage.selectTimeIdentifier(setupRulePojo.getTimeIdentifier());
-		if (setupRulePojo.getCalculatedFields() != null && !setupRulePojo.getCalculatedFields().isEmpty()) {
+        if (setupRulePojo.getTimeIdentifier() != null && !setupRulePojo.getTimeIdentifier().isEmpty()) {
+            setupRulePage.selectTimeIdentifier(setupRulePojo.getTimeIdentifier());
+        }
+        if (setupRulePojo.getCalculatedFields() != null && !setupRulePojo.getCalculatedFields().isEmpty()) {
 			for (CalculatedField calculatedField : setupRulePojo.getCalculatedFields()) {
 				setupRulePage.fillCalculatedFields(calculatedField);
 			}
@@ -216,7 +219,7 @@ public class RulesEngineUtil  extends BaseTest{
 	 */
 	public static int getcountOfDaysIfCtaCreatedOnWeekend(int  amount){
 		int days = 0;
-		Calendar c1 = Calendar.getInstance(userTimezone);
+		Calendar c1 = Calendar.getInstance(BaseTest.userTimezone);
 		c1.add(Calendar.DATE, amount);
 		Log.info("Date and Time is " +c1.getTime());
 		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -233,8 +236,8 @@ public class RulesEngineUtil  extends BaseTest{
 	}
     
 	public static String getCtaDateForCTASkipAllWeekendsOption(int day) {
-		Calendar sDate = Calendar.getInstance(userTimezone);
-		Calendar eDate = Calendar.getInstance(userTimezone);
+		Calendar sDate = Calendar.getInstance(BaseTest.userTimezone);
+		Calendar eDate = Calendar.getInstance(BaseTest.userTimezone);
 		eDate.add(Calendar.DATE, day);
 		while (sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
 			if (sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -243,8 +246,20 @@ public class RulesEngineUtil  extends BaseTest{
 			}
 			sDate.add(Calendar.DATE, 1);
 		}
-		DateFormat dateFormat = new SimpleDateFormat(CTA_DUEDATE_FORMAT);
-		dateFormat.setTimeZone(userTimezone);
+		DateFormat dateFormat = new SimpleDateFormat(BaseTest.CTA_DUEDATE_FORMAT);
+		dateFormat.setTimeZone(BaseTest.userTimezone);
 		return dateFormat.format(eDate.getTime());
+	}
+
+	/**
+	 * Method which navigates to setup rule page
+	 * @param rulesPojo
+     */
+	public void navigateToSetupRule(RulesPojo rulesPojo) {
+		EditRulePage editRulePage = new EditRulePage();
+		editRulePage.enterRuleDetailsAndClickNext(rulesPojo);
+		SetupRulePage setupRulePage = new SetupRulePage();
+		setupRulePage.selectDataSource(rulesPojo.getSetupRule().getDataSource());
+		setupRulePage.selectSourceObject(rulesPojo.getSetupRule().getSelectObject());
 	}
 }

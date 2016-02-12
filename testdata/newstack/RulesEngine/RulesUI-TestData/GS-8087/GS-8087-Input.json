@@ -1,0 +1,32 @@
+{
+  "ruleType": "Custom",
+  "ruleFor": "Relationship",
+  "relationshipType": "RelationShip for RulesEngine",
+  "ruleName": "GS-8086-Create CTA Using relationship object",
+  "ruleDescription": "GS-8086-Create CTA Using relationship object-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Relationship",
+    "advancedLogic": "A"
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "CTA-RelationShip from RulesEngine",
+        "priority": "Low",
+        "type": "Risk",
+        "status": "New",
+        "playbook": "Collections",
+        "reason": "Product Issue",
+        "ownerField": "Relationship :: Created By ID",
+        "dueDate": "50",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Once",
+        "dueDateType": "Do not skip weekend",
+        "comments": "These are test comments for RelationShip CTA"
+      },
+      "criterias": []
+    }
+  ]
+}

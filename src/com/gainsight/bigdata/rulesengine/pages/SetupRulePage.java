@@ -72,14 +72,17 @@ public class SetupRulePage extends BasePage {
     
     private final String LOOKUP_BUTTON = "//span[contains(text(), '%s')]/ancestor::li[contains(@class, 'tree-child-li-node')]/descendant::i";
     private final String MDA_OBJECT_SOURCE_FIELD = "//div[contains(@class, 'gs-rb-schema-tree-wrapper')]/descendant::a/descendant::span[text()='%s']";
-    
 
-    public SetupRulePage() {
-    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, MAX_TIME);
+	public final String SHOW_FIELD = "//div[@class='select-field-container']/descendant::span[contains(text(), '%s')]";
+
+
+	public SetupRulePage() {
+    	wait.waitTillElementDisplayed(READY_INDICATOR, MIN_TIME, TEN_SECONDS);
     	Log.info("Waiting for the page to load");
     }
 
     public void dropDownOFSourceObjectSelection() {
+        wait.waitTillElementNotDisplayed("//label[contains(@class, 'loading-spin')]", MIN_TIME, MAX_TIME);
         item.click(SOURCE_OBJECT_DROPDOWN_LOC);
     }
 

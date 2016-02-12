@@ -20,7 +20,7 @@ import org.openqa.selenium.interactions.Mouse;
 public class Customer360Page extends BasePage {
 
     private final String ACC_INS_NAME_INPUT     = "//div[@class='gs_search_section']/input[@type='text' and @name='search_text']";
-    private final String READY_INDICATOR        = "//input[contains(@placeholder, 'Customer name') and @name='search_text']";
+    private final String READY_INDICATOR        = "//input[contains(@placeholder, 'Customer') and @name='search_text']";
 	private final String LOADING_IMAGES         = "//div[@class='gs-loadingMsg gs-loader-container-64' and contains(@style,'display: block;')]";
 	private final String NAVIGATE_SECTION       = "//div[@class='gs_navtabs']//a[text()='%s']";
 	private final String ADD_TRAN               = "//a[text()='Add Transaction']";

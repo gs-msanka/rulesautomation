@@ -14,7 +14,7 @@
           "dataType": "number",
           "fieldDisplayName": "NoofSchedulesCreated",
           "collectionId": "",
-          "decimalPlaces": 0,
+          "decimalPlaces": 3,
           "agg_func": "sum"
         },
         {
@@ -77,7 +77,7 @@
           "decimalPlaces": 0
         }
       ],
-      "reportName": "WhereFiltersWithExpressions",
+      "reportName": "Auto_RedShiftWhereFiltersWithExpressions",
       "assetType": "ANALYTICS",
       "whereAdvanceFilter": {
         "filters": [
@@ -85,7 +85,7 @@
             "dbName": "FilesDownloaded",
             "alias": "A",
             "dataType": "number",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "filterValues": [
               1
             ],
@@ -97,7 +97,7 @@
             "dbName": "NoofMeetingsAttended",
             "alias": "B",
             "dataType": "number",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "filterValues": [
               2
             ],
@@ -109,7 +109,7 @@
             "dbName": "NoofReportsRun",
             "alias": "C",
             "dataType": "number",
-            "filterOperator": "EQ",
+            "filterOperator": "GT",
             "filterValues": [
               3
             ],
@@ -121,7 +121,7 @@
             "dbName": "AccountName",
             "alias": "D",
             "dataType": "string",
-            "filterOperator": "EQ",
+            "filterOperator": "NE",
             "filterValues": [
               "A"
             ],
@@ -165,7 +165,7 @@
           "dataType": "number",
           "fieldDisplayName": "Sum of NoofSchedulesCreated",
           "collectionId": "",
-          "decimalPlaces": 0,
+          "decimalPlaces": 3,
           "agg_func": "sum"
         },
         {

@@ -1,0 +1,76 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/resources/datagen/process/RulesUIAccountsss.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/RulesUIAccountsss.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "T3_ID"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/RulesEngine/RulesUI-TestData/Manual-TestData/Data_Into_Custom_Object4.csv",
+        "table": "accounts",
+        "joinColumnName": "AccountName",
+        "columns": [
+          {
+            "name": "AccountName",
+            "alias": "T3_AccountName"
+          },
+          {
+            "name": "CustomDate1",
+            "alias": "T3_CustomDate1"
+          },
+          {
+            "name": "CustomNumber1",
+            "alias": "T3_CustomNumber1"
+          },
+          {
+            "name": "CustomNumber2",
+            "alias": "T3_CustomNumber2"
+          },
+          {
+            "name": "CustomNumberWithDecimals1",
+            "alias": "T3_CustomNumberWithDecimals1"
+          },
+          {
+            "name": "CustomNumberWithDecimals2",
+            "alias": "T3_CustomNumberWithDecimals2"
+          },
+          {
+            "name": "CreatedDateTime",
+            "alias": "T3_CreatedDateTime"
+          },
+          {
+            "name": "BooleanField",
+            "alias": "T3_BooleanField"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/RulesEngine/RulesUI-TestData/Manual-TestData/Data_Into_Custom_Object5.csv"
+  }
+}

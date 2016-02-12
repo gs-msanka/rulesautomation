@@ -1,11 +1,21 @@
 Account.p_c_ExternalID__c,Contact.p_c_ExternalID__c,IsEscalated,Origin,Status,Priority,p_c_ExternalID__c
-Copilot_Auto000,Con.Copilot_Auto000,TRUE,Email,New,High,Case.Copilot_Auto000
-Copilot_Auto001,Con.Copilot_Auto001,TRUE,Email,New,High,Case.Copilot_Auto001
-Copilot_Auto002,Con.Copilot_Auto002,TRUE,Email,New,High,Case.Copilot_Auto002
-Copilot_Auto003,Con.Copilot_Auto003,FALSE,Email,New,High,Case.Copilot_Auto003
-Copilot_Auto004,Con.Copilot_Auto004,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto004
-Copilot_Auto005,Con.Copilot_Auto005,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto005
-Copilot_Auto006,Con.Copilot_Auto006,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto006
-Copilot_Auto007,Con.Copilot_Auto007,TRUE,Web,Escalated,Low,Case.Copilot_Auto007
-Copilot_Auto008,Con.Copilot_Auto008,TRUE,Web,Escalated,Low,Case.Copilot_Auto008
-Copilot_Auto009,Con.Copilot_Auto009,TRUE,Web,Escalated,Low,Case.Copilot_Auto009
+Gallo Ernst & Julio Winery,0031a000001h0aaAAA,TRUE,Email,New,High,Case.Copilot_Auto000
+Facts on File Newsletter,0031a000001h0ldAAA,TRUE,Email,New,High,Case.Copilot_Auto001
+PacDevco Inc,0031a000001h0m1AAA,TRUE,Email,New,High,Case.Copilot_Auto002
+UniAmerica Inc,0031a000001h0mOAAQ,FALSE,Email,New,High,Case.Copilot_Auto003
+East Coast Traders,0031a000001h0mTAAQ,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto004
+UBAF Arab American Bank,0031a000001h0moAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto005
+Veritas Software,0031a000001y6MRAAY,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto006
+Quinn/Brein Inc,0031a000002kizoAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto007
+Nardon Mfg Company Incorporated,0031a000002kizuAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto008
+Abberley Kooiman,0031a000002kj04AAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto009
+IBM Corp Data Systems Div,0031a000002kj09AAA,TRUE,Email,New,High,Case.Copilot_Auto010
+Via Systems,0031a000002kj0LAAQ,TRUE,Email,New,High,Case.Copilot_Auto011
+IBIS Systems Inc.,0031a000002kj0vAAA,TRUE,Email,New,High,Case.Copilot_Auto012
+Galbreath Co,0031a000002kj16AAA,FALSE,Email,New,High,Case.Copilot_Auto013
+Back Stage Magazine,0031a000002kj1cAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto014
+Cadbury Beverages Div Cadbury,0031a000002kj1gAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto015
+Lafferty RF & Co Inc,0031a000002kj1nAAA,FALSE,Phone,On Hold,Medium,Case.Copilot_Auto016
+O-Cel-O Div General Mills Inc.,0031a000002kj1yAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto017
+Fedder RP Corp,0031a000002kj2PAAQ,TRUE,Web,Escalated,Low,Case.Copilot_Auto018
+Ferrara Foods & Confections,0031a000002kj2cAAA,TRUE,Web,Escalated,Low,Case.Copilot_Auto019

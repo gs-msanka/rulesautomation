@@ -1,0 +1,13 @@
+{
+  "ruleType": "Custom",
+  "ruleFor": "Relationship",
+  "relationshipType": "RelationShip for RulesEngine",
+  "ruleName": "GS-8086-Create CTA Using relationship object",
+  "ruleDescription": "GS-8086-Create CTA Using relationship object-Desc",
+  "setupRule": {
+    "dataSource": "Native",
+    "selectObject": "Relationship",
+    "advancedLogic": "",
+    "timeIdentifier": ""
+  }
+}

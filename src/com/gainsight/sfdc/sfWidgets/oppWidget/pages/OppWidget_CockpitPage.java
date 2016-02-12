@@ -50,9 +50,9 @@ WorkflowPage  wfPage;
 		wfPage.closeCTA(cta, hasOpenTasks);
 	}
 
-	public void snoozeCTA(CTA cta) {
+	public void snoozeCTA(CTA cta,String Id) {
 		cta.setFromCustomer360orWidgets(true);
-		wfPage.snoozeCTA(cta);
+		wfPage.snoozeCTA(cta,Id);
 	}
 
 	public boolean isTaskDisplayed(Task task) {

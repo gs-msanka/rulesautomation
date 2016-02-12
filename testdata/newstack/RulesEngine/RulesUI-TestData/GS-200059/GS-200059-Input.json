@@ -1,0 +1,38 @@
+{
+  "ruleType": "Custom",
+  "ruleFor": "Relationship",
+  "relationshipType": "RelationShip for RulesEngine",
+  "ruleName": "GS-200059-testcase to create Relationship CTA using Mda linked collection",
+  "ruleDescription": "GS-200059-testcase to create Relationship CTA using Mda linked collection-Desc",
+  "setupRule": {
+    "dataSource": "Matrix",
+    "selectObject": "GS-3977-MDA1449227441617",
+    "setupData": [
+      {
+        "sourceObject": "GS-3977-MDA1449227441617",
+        "showFields": [],
+        "filterFields": []
+      }
+    ],
+    "advancedLogic": ""
+  },
+  "setupActions": [
+    {
+      "actionType": "createCta",
+      "action": {
+        "name": "Create Relationship CTA using linked object",
+        "priority": "High",
+        "type": "Event",
+        "status": "Work In Progress",
+        "playbook": "Annual Review",
+        "reason": "Marketing Activity",
+        "dueDate": "50",
+        "defaultOwner": "weRules",
+        "chatterUpdate": "Once",
+        "dueDateType": "Do not skip weekend",
+        "comments": "These are test comments for RelationShip CTA created using Mda linked collection"
+      },
+      "criterias": []
+    }
+  ]
+}

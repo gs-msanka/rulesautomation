@@ -1,0 +1,251 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "NoofSchedulesCreated",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "NoofSchedulesCreated",
+          "collectionId": "",
+          "decimalPlaces": 3,
+          "agg_func": "sum"
+        },
+        {
+          "col": "ProductName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "ProductName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "row",
+          "type": 0,
+          "dataType": "dateTime",
+          "fieldDisplayName": "EventTimeStamp1",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Industry",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Industry",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Date1",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date1",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "row",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        }
+      ],
+      "reportName": "Auto_HavingFiltersWithExpressions",
+      "assetType": "ANALYTICS",
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "1",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "aggregateFunction": "count",
+            "filterValues": [
+              1
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "Date1",
+            "alias": "2",
+            "dataType": "date",
+            "filterOperator": "NE",
+            "aggregateFunction": "count",
+            "filterValues": [
+              2
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "3",
+            "dataType": "number",
+            "filterOperator": "GT",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              0
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "FilesDownloaded",
+            "alias": "4",
+            "dataType": "number",
+            "filterOperator": "LTE",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              500
+            ],
+            "type": 1,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          },
+          {
+            "dbName": "ProductName",
+            "alias": "5",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "aggregateFunction": "count",
+            "filterValues": [
+              5
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "1 AND (2 OR 3) AND 4 OR 5"
+      },
+      "skip": 0,
+      "SchemaName": "Auto_Mongo_MDAdata",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "NoofSchedulesCreated",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of NoofSchedulesCreated",
+          "collectionId": "",
+          "decimalPlaces": 3,
+          "agg_func": "sum"
+        },
+        {
+          "col": "ProductName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of ProductName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "EventTimeStamp1",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "dateTime",
+          "fieldDisplayName": "Count of EventTimeStamp1",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Industry",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of Industry",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "AccountName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Date1",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Count of Date1",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "FilesDownloaded",
+          "axis": "measure",
+          "type": 1,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of FilesDownloaded",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

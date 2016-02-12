@@ -154,8 +154,7 @@
           "type": 1,
           "fieldDisplayName": "PageVisits",
           "dataType": "number",
-          "collectionId": "",
-          "order": "asc"
+          "collectionId": ""
         },
         {
           "col": "AccountName",
@@ -219,7 +218,7 @@
       },
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "reportName": "Auto_FlatReportsWithFilterAndRanking",
+      "reportName": "Auto_RedShiftFlatReportsWithFilterAndRanking",
       "assetType": "ANALYTICS",
       "skip": 0,
       "drillDownReportDimensions": [

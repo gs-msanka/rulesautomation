@@ -1,0 +1,124 @@
+{
+  "jobName": "Update Account names and ID",
+  "jobType": "AccountUpsert",
+  "namespacePrefix": "JBCXM",
+  "useNameSpace": false,
+  "extract": {
+    "useRestApi": true,
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name"
+    ],
+    "output": "/resources/datagen/process/ReportingUIAccountsss.csv"
+  },
+  "transform": {
+    "query": "",
+    "useQuery": false,
+    "tableInfo": [
+      {
+        "file": "/resources/datagen/process/ReportingUIAccountsss.csv",
+        "table": "account",
+        "joinColumnName": "Name",
+        "columns": [
+          {
+            "name": "ID",
+            "alias": "ID"
+          },
+          {
+            "name": "Name",
+            "alias": "AccountName"
+          }
+        ]
+      },
+      {
+        "file": "/testdata/newstack/reporting/data/ReportDataMongo.csv",
+        "table": "accounts",
+        "joinColumnName": "ProductName",
+        "columns": [
+          {
+            "name": "ProductCode",
+            "alias": "ProductCode"
+          },
+          {
+            "name": "ProductName",
+            "alias": "ProductName"
+          },
+          {
+            "name": "Date",
+            "alias": "Date"
+          },
+          {
+            "name": "EventTimeStamp",
+            "alias": "EventTimeStamp"
+          },
+          {
+            "name": "Date1",
+            "alias": "Date1"
+          },
+          {
+            "name": "EventTimeStamp1",
+            "alias": "EventTimeStamp1"
+          },
+          {
+            "name": "Date2",
+            "alias": "Date2"
+          },
+          {
+            "name": "EventTimeStamp2",
+            "alias": "EventTimeStamp2"
+          },
+          {
+            "name": "Date3",
+            "alias": "Date3"
+          },
+          {
+            "name": "EventTimeStamp3",
+            "alias": "EventTimeStamp3"
+          },
+          {
+            "name": "Active",
+            "alias": "Active"
+          },
+          {
+            "name": "PageViews",
+            "alias": "PageViews"
+          },
+          {
+            "name": "PageVisits",
+            "alias": "PageVisits"
+          },
+          {
+            "name": "FilesDownloaded",
+            "alias": "FilesDownloaded"
+          },
+          {
+            "name": "NoofReportsRun",
+            "alias": "NoofReportsRun"
+          },
+          {
+            "name": "NoofRulesTriggered",
+            "alias": "NoofRulesTriggered"
+          },
+          {
+            "name": "NoofSchedulesCreated",
+            "alias": "NoofSchedulesCreated"
+          },
+          {
+            "name": "Industry",
+            "alias": "Industry"
+          },
+          {
+            "name": "NoofMeetingsAttended",
+            "alias": "NoofMeetingsAttended"
+          }
+        ]
+      }
+    ],
+    "join": true,
+    "picklist": false,
+    "output": "/testdata/newstack/reporting/data/ReportDataMongo1.csv"
+  }
+}

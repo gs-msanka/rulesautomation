@@ -1,0 +1,137 @@
+{
+  "newReport": true,
+  "reportMasterRequired": false,
+  "format": "JSON",
+  "displayType": "GRID",
+  "ReportInfo": [
+    {
+      "limit": 500,
+      "drillDownReportDimensions": [
+        {
+          "col": "Diff of 2 fileds",
+          "axis": "row",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Diff of 2 fileds",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Sum of 2 fileds",
+          "axis": "row",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of 2 fileds",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "AccountName",
+          "axis": "row",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        },
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        }
+      ],
+      "reportName": "Auto_CalculatedMeasures",
+      "assetType": "ANALYTICS",
+      "havingAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "Diff of 2 fileds",
+            "alias": "1",
+            "dataType": "number",
+            "filterOperator": "NE",
+            "aggregateFunction": "sum",
+            "filterValues": [
+              1
+            ],
+            "type": 2,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": 1
+      },
+      "whereAdvanceFilter": {
+        "filters": [
+          {
+            "dbName": "AccountName",
+            "alias": "A",
+            "dataType": "string",
+            "filterOperator": "NE",
+            "filterValues": [
+              "A"
+            ],
+            "type": 0,
+            "logicalOperator": "AND",
+            "collectionId": ""
+          }
+        ],
+        "expression": "A"
+      },
+      "skip": 0,
+      "SchemaName": "Auto_Mongo_MDAdata",
+      "CollectionID": "",
+      "Type": "adhoc",
+      "Dimensions": [
+        {
+          "col": "Date",
+          "axis": "row",
+          "type": 0,
+          "dataType": "date",
+          "fieldDisplayName": "Date",
+          "collectionId": "",
+          "decimalPlaces": 0
+        },
+        {
+          "col": "Diff of 2 fileds",
+          "axis": "measure",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of Diff of 2 fileds",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "Sum of 2 fileds",
+          "axis": "measure",
+          "type": 2,
+          "dataType": "number",
+          "fieldDisplayName": "Sum of Sum of 2 fileds",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "sum"
+        },
+        {
+          "col": "AccountName",
+          "axis": "measure",
+          "type": 0,
+          "dataType": "string",
+          "fieldDisplayName": "Count of AccountName",
+          "collectionId": "",
+          "decimalPlaces": 0,
+          "agg_func": "count"
+        }
+      ],
+      "ReportReadLimit": 1000,
+      "DimensionBrowserReadLimit": 1000
+    }
+  ]
+}

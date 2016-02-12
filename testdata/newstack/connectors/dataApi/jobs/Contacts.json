@@ -1,4 +1,15 @@
 {
+  "extract": {
+    "source": "sfdc",
+    "connection": "conf/application.conf",
+    "table": "Account",
+    "fields": [
+      "Id",
+      "Name",
+      "Account_ExternalId__c"
+    ],
+    "output": "/testdata/newstack/connectors/dataApi/process/Final_Accounts.csv"
+  },
   "transform": {
     "query" : "",
     "useQuery" : false,

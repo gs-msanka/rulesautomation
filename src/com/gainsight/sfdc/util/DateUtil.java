@@ -652,4 +652,15 @@ public class DateUtil {
         Log.info("Date :" +date);
         return date;
     }
+
+    public static Calendar getCalenderWithTimeSetToZero(String timeZone) {
+        Calendar tempCal = Calendar.getInstance(TimeZone.getTimeZone(timeZone));
+        tempCal.set(Calendar.HOUR, 0);
+        tempCal.set(Calendar.MINUTE, 0);
+        tempCal.set(Calendar.SECOND, 0);
+        tempCal.set(Calendar.MILLISECOND, 0);
+        tempCal.set(Calendar.HOUR_OF_DAY, 0);
+        return tempCal;
+    }
+
 }

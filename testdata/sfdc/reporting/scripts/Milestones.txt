@@ -1,4 +1,4 @@
-Integer noOfCustomers = customerRecordCount;
+Integer noOfCustomers = 100;
 System.Debug('No of Customers from Reporting Test Java file is:'+noOfCustomers);
 Delete [select Name from JBCXM__PickList__c where JBCXM__Category__c='Milestones'];
 
@@ -18,7 +18,7 @@ for(Integer i=0;i<milestones.size();i++)
 }
 insert pList;
 
-List<Account> accList = [SELECT ID, Name FROM Account WHERE JBCXM__CustomerInfo__c != null ORDER BY Auto_Data_Load__c LIMIT : noOfCustomers];
+List<Account> accList = [SELECT ID, Name FROM Account WHERE JBCXM__CustomerInfo__c != null LIMIT : noOfCustomers];
 List<JBCXM__Milestone__c> mList = new List<JBCXM__Milestone__c>();
 Integer j = 0;
 Integer i =0;

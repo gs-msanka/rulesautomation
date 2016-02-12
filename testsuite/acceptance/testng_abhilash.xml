@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="RulesEngine UI Automation Project" preserve-order="true">
-   <listeners>
-      <listener class-name="com.gainsight.utils.AutTestListener" />
-      <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
-   </listeners>
-   <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
-      <classes>
-         <class name="com.gainsight.bigdata.rulesengine.tests.SetupRuleActionsWithNativeDataTest"/>
-      </classes>
-   </test>
+    <listeners>
+        <listener class-name="com.gainsight.utils.AutTestListener"/>
+        <listener class-name="com.gainsight.utils.testlink.TestLinkListener"/>
+    </listeners>
+    <test verbose="3" name="RulesEngine UI Automation Tests Using Native Data" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
+                <methods>
+                    <exclude name="createCtaUsingMdaLinkedCollection"/>
+                </methods>
+            </class>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionTest"/>
+        </classes>
+    </test>
+    <test verbose="3" name="RulesEngine UI Automation TestCases Using MDA MONGO DataBase" preserve-order="true">
+        <parameter name="dbStoreType" value="Mongo"/>
+        <classes>
+            <class name="com.gainsight.bigdata.rulesengine.tests.CallToActionWithRelationshipsTest">
+                <methods>
+                    <include name="createCtaUsingMdaLinkedCollection"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite>

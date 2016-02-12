@@ -427,12 +427,12 @@ public class WorkflowPage extends WorkflowBasePage {
         Timer.sleep(5);
     }
     
-    public WorkflowPage snoozeCTA(CTA cta){
+    public WorkflowPage snoozeCTA(CTA cta,String id){
     	expandCTAView(cta);
     	item.click(EXP_VIEW_SNOOZE);
     	item.clearAndSetText(EXP_VIEW_SET_SNOOZE_DATE, cta.getSnoozeDate());
     	item.click(EXP_VIEW_SNOOZE_REASON_BUTTON);
-    	selectValueInDropDown(cta.getSnoozeReason());
+        item.click("//input[contains(@title, '"+ cta.getSnoozeReason() + "') and contains(@value,'"+id+"')]/following-sibling::span[contains(text(), '"+cta.getSnoozeReason()+"')]");
     	item.click(EXP_VIEW_HEADER); //click somewhere else
         Timer.sleep(5);
         return this;
@@ -578,7 +578,7 @@ public class WorkflowPage extends WorkflowBasePage {
     }
     public WorkflowPage expandCTAView(CTA cta) {
         Log.info("Expanding CTA");
-        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]";
+        String xPath = getCTAXPath(cta)+ "/descendant::div[contains(@class, 'gs-cta-head workflow-ctaitem')]//descendant::span[@class='title-name workflow-cta-title' and contains(text(), '"+cta.getSubject()+"')]";
         item.click(xPath);
         if(!isCTAExpandedViewLoaded(cta)) {
             throw new RuntimeException("CTA expand view failed to load");

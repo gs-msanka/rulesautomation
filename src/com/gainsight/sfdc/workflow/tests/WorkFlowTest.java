@@ -674,7 +674,8 @@ public class WorkFlowTest extends WorkflowSetup {
        cta.setAssignee(sfdcInfo.getUserFullName());
        workflowPage.createCTA(cta);      
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
-       workflowPage.snoozeCTA(cta);
+        SObject[] snoozeReasonId=sfdc.getRecords(resolveStrNameSpace("Select Id from JBCXM__Picklist__c where JBCXM__Category__c='Relationship Activity' and JBCXM__ShortName__c='"+cta.getSnoozeReason()+"'"));
+       workflowPage.snoozeCTA(cta,snoozeReasonId[0].getId());
        workflowPage = workflowBasePage.clickOnListView();
         workflowPage = workflowPage.showSnoozeCTA();
        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying the CTA has been set under Snoozed CTAs");
@@ -1069,8 +1070,6 @@ public class WorkFlowTest extends WorkflowSetup {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-        
         SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
         Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
@@ -1096,7 +1095,6 @@ public class WorkFlowTest extends WorkflowSetup {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
         SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
         
@@ -1127,7 +1125,6 @@ public class WorkFlowTest extends WorkflowSetup {
         }
 
         workflowPage.addTaskToCTA(cta, tasks);
-        workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
         SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
         String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
         
@@ -1342,8 +1339,8 @@ public class WorkFlowTest extends WorkflowSetup {
             Assert.assertTrue(workflowPage.isCTADisplayed(cta));
         }
         ctaList.get(0).setSnoozeDate(getDateWithFormat(Integer.valueOf(ctaList.get(0).getSnoozeDate()), 0, false));
-
-        workflowPage.snoozeCTA(ctaList.get(0));
+        SObject[] snoozeReasonId=sfdc.getRecords(resolveStrNameSpace("Select Id from JBCXM__Picklist__c where JBCXM__Category__c='Relationship Activity' and JBCXM__ShortName__c='"+ctaList.get(0).getSnoozeReason()+"'"));
+        workflowPage.snoozeCTA(ctaList.get(0),snoozeReasonId[0].getId());
         workflowPage = workflowPage.showSnoozeCTA();
         Assert.assertTrue(workflowPage.isCTADisplayed(ctaList.get(0)));
         Assert.assertFalse(workflowPage.isCTADisplayed(ctaList.get(1)));

@@ -3,7 +3,7 @@
   "jobType": "EventProcess",
   "namespacePrefix": "JBCXM",
   "dateProcess" : {
-    "inputFile" : "/testdata/newstack/reporting/data/ReportData1.csv",
+    "inputFile" : "/testdata/newstack/reporting/data/ReportDataMongo1.csv",
     "outputFile" : "/testdata/newstack/reporting/process/ReportData1.csv",
     "fields" :[
       {
@@ -19,6 +19,48 @@
         "dateTime" : true,
         "dateFormat" : "MM-dd-yyyy HH:mm:ss",
         "fieldName" : "EventTimeStamp"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date1"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "fieldName" : "EventTimeStamp1"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date2"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "fieldName" : "EventTimeStamp2"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : false,
+        "dateFormat" : "MM-dd-yyyy",
+        "fieldName" : "Date3"
+      },
+      {
+        "weekly" : true,
+        "daily"  : false,
+        "dateTime" : true,
+        "dateFormat" : "MM-dd-yyyy HH:mm:ss",
+        "fieldName" : "EventTimeStamp3"
       }
     ]
   }
