@@ -97,5 +97,6 @@ public class MDAConnectBackend extends BaseTest {
 
 	public void compareGivenJSON(String expectedJSON, String actualJSON) {
 		JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
-	}
+    }
+
 }
