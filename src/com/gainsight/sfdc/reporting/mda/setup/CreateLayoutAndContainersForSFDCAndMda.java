@@ -101,7 +101,6 @@ public class CreateLayoutAndContainersForSFDCAndMda extends NSTestBase {
 
     @BeforeClass
     public void setup() throws Exception {
-        init();
         mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()),
                 nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
