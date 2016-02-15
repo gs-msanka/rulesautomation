@@ -226,40 +226,48 @@ public class WorkflowPage extends WorkflowBasePage {
     	    Log.info("Adding CTA of Type - "+cta.getType());
     		item.click(String.format(CREATE_CTA_LINK, cta.getType()));
     		wait.waitTillElementDisplayed(String.format(CTA_FORM_TITLE,cta.getType()), MIN_TIME, MAX_TIME);
-    		fillAndSaveCTAForm(cta,null,null,false,false);
+    		fillCTAForm(cta);
+            saveCTAForm(cta);
     	return this;
 	}
     
-    private void fillAndSaveCTAForm(CTA cta,String playbookName,List<Task> tasks,boolean revertPB,boolean onlySelectPb) {
-        Log.info("Started Filling CTA Form");
-		field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
-		if(!cta.isFromCustomer360orWidgets()) selectCustomer(cta.getCustomer());
-		item.click(ASSIGN_TO_ME);
-		item.click(CREATE_FORM_REASON);
-		item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
-		field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
-		//field.setText(CREATE_FORM_COMMENTS, cta.getComments());
-		if(cta.isRecurring()) {
-            fillAndSaveRecurringEventCTAForm(cta);
-        }
-        if(cta.isCreateWithPlaybook()){
-            if(onlySelectPb)
-                   selectPb(cta,playbookName);
-            else
-                fillPbForm(cta, playbookName, tasks,true);
-        }
+    private void fillCTAForm(CTA cta,String playbookName,List<Task> tasks,boolean revertPB,boolean onlySelectPb) {
+        fillCTAForm(cta);
+        if(onlySelectPb)
+           selectPb(cta,playbookName);
+        else
+          fillPbForm(cta, playbookName, tasks,true);
         if(revertPB){
             item.click(PLAYBOOK_SELECT);
             selectValueInDropDown("None");
         }
+        // moved date selection to end(just before save)..to check if due date is changing as per PB due date
+        field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
+	}
+
+
+    private void fillCTAForm(CTA cta) {
+        Log.info("Started Filling CTA Form");
+        field.clearAndSetText(CREATE_FORM_SUBJECT, cta.getSubject());
+        if(!cta.isFromCustomer360orWidgets()) selectCustomer(cta.getCustomer());
+        item.click(ASSIGN_TO_ME);
+        item.click(CREATE_FORM_REASON);
+        field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
+        item.click(String.format(CREATE_FORM_SELECT_REASON, cta.getReason()));
+        //field.setText(CREATE_FORM_COMMENTS, cta.getComments());
+        if(cta.isRecurring()) {
+            fillAndSaveRecurringEventCTAForm(cta);
+        }
+    }
+
+    private void saveCTAForm(CTA cta){
         button.click(SAVE_CTA);
         Log.info("Clicked on Save CTA");
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
-       if(!cta.isFromCustomer360orWidgets()) waitTillNoSearchIcon();
-       else waitTillNoLoadingIcon_360();
-	}
-
+        if(!cta.isFromCustomer360orWidgets()) waitTillNoSearchIcon();
+        else waitTillNoLoadingIcon_360();
+    }
 	private void fillAndSaveRecurringEventCTAForm(CTA cta) {
         Log.info("Starting to fill recurring event part");
     	field.selectCheckBox(CREATE_RECURRING_EVENT);
@@ -1039,7 +1047,8 @@ public class WorkflowPage extends WorkflowBasePage {
         item.click(String.format(CREATE_CTA_LINK, cta.getType()));
         wait.waitTillElementDisplayed(String.format(CTA_FORM_TITLE,cta.getType()), MIN_TIME, MAX_TIME);
         if(!onlySelectPB)
-        fillAndSaveCTAForm(cta,playbookName,tasks,revertPB,onlySelectPB);
+        fillCTAForm(cta,playbookName,tasks,revertPB,onlySelectPB);
+        saveCTAForm(cta);
         return this;
     }
 
@@ -1060,14 +1069,14 @@ public class WorkflowPage extends WorkflowBasePage {
     }
 
     public WorkflowPage fillPbForm(CTA cta,String playBookName,List<Task> tasks,boolean whileCreate){
-       selectPb(cta,playBookName);
-             if(whileCreate) verifyAndSelectTaskOwner(tasks,cta);
-            applyOwnersToTasksInPlaybook(tasks);
+        wait.waitTillElementDisplayed(PLAYBOOK_SELECT,MIN_TIME,MAX_TIME);
+        selectPb(cta,playBookName);
+        //if(whileCreate) verifyAndSelectTaskOwner(tasks,cta);
+        applyOwnersToTasksInPlaybook(tasks);
         return this;
     }
 
     public WorkflowPage selectPb(CTA cta,String playBookName){
-        Timer.sleep(2);
         if(!cta.isFromCustomer360orWidgets()) waitTillNoLoadingIcon();
         else waitTillNoLoadingIcon_360();
         item.click(PLAYBOOK_SELECT);
