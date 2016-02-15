@@ -3,6 +3,8 @@ String CS360objName = 'sfdcrelatedlist__c';
 Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='RelatedList'];
 Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
 String SectionNameUI = 'sfdcreport';
+Schema.DescribeSObjectResult dsr = sfdcrelatedlist__c.sObjectType.getDescribe();
+String objectId=dsr.getKeyPrefix();
 
 
 Integer currentDisplayOrder = 0;
@@ -20,6 +22,7 @@ JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName,
 														  JBCXM__InOpportunityWidget__c = false,
 														  JBCXM__IsActive__c = true,
 														  JBCXM__ReportItems__c='{}',
+														  JBCXM__ObjectId__c=objectId,
 														  JBCXM__isStandardObject__c = false,
 														  JBCXM__ObjectName__c = CS360objName,
 														  JBCXM__Type__c = 'RelatedList');

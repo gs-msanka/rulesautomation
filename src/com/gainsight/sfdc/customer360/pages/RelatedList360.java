@@ -12,11 +12,13 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 public class RelatedList360 extends Customer360Page {
-    private final String READT_INDICATOR = "//div[@class='gs_section_title']/h1[text()='']";
+    private final String READY_INDICATOR = "//div/a[contains(text(),'Refresh')]";
 
     public RelatedList360(String relatedListName) {
-        wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='" + relatedListName + "']", MIN_TIME,
-                MAX_TIME);
+        /*wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='" + relatedListName + "']", MIN_TIME,
+                MAX_TIME);*/
+         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+
     }
 
     private WebElement getRelatedList(String relatedListName) {
@@ -28,12 +30,12 @@ public class RelatedList360 extends Customer360Page {
     public boolean isTableHeadersExisting(HashMap<String, String> testData, String relatedListName) {
         boolean result = false;
         List<String> cols = getColHeaders(relatedListName);
-        System.out.println(cols);
         for (int i = 1; i <= testData.size(); i++) {
             if (cols.contains(testData.get("col" + i).replaceAll(" ", "").trim())) {
                 // {
                 result = true;
             } else {
+                Log.info("Header data is not matching with related list " +relatedListName);
                 return false;
             }
         }
@@ -43,7 +45,6 @@ public class RelatedList360 extends Customer360Page {
     public boolean isTableDataExisting(List<HashMap<String, String>> testDataList, String relatedListName) {
         boolean result = false;
         List<HashMap<String, String>> actualDataList = getTableData(relatedListName);
-        System.out.println("rows equal =============" + actualDataList);
         for (int i = 0; i < testDataList.size(); i++) {
             HashMap<String, String> testData = testDataList.get(i);
             HashMap<String, String> actualData = actualDataList.get(i);
@@ -67,7 +68,6 @@ public class RelatedList360 extends Customer360Page {
         boolean result = false;
         String s = "";
         String tableId = getTableId(relatedListName);
-        System.out.println("get ids for table" + tableId);
         if (table.getValueInListRow(tableId, testData) != -1) {
             result = true;
         }
@@ -81,7 +81,6 @@ public class RelatedList360 extends Customer360Page {
         List<String> tableHeaders = new ArrayList<String>();
         if (tableList != null && tableList.size() > 0) {
             headerTable = tableList.get(0);
-            System.out.println("headertable ois ======" + headerTable);
             List<WebElement> tableRowsList = headerTable.findElements(By.tagName("tr"));
             if (tableRowsList != null && tableRowsList.size() > 0) {
                 WebElement tableTr = tableRowsList.get(0);
@@ -90,7 +89,6 @@ public class RelatedList360 extends Customer360Page {
                     Log.info("Total Columns in table are :" + tableColumnsList.size());
                     for (WebElement wEle : tableColumnsList) {
                         String hText = wEle.getText().replaceAll(" ", "").trim();
-                        System.out.println("text in tha table==========" + hText);
                         tableHeaders.add(hText);
                         Log.info(hText);
                     }
@@ -106,31 +104,21 @@ public class RelatedList360 extends Customer360Page {
                 .findElements(By
                         .xpath("//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr"))
                 .size();
-        System.out.println("Number Of Rows = " + rowCount);
-        // Get number of columns In table.
         int colCount = rSection
                 .findElements((By
                         .xpath("//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr[1]/td")))
                 .size();
-        System.out.println("Number Of Columns = " + colCount);
-        // divided xpath In three parts to pass Row_count and Col_count values.
         String firstPart = "//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr[";
         String secondPart = "]/td[";
         String thirdPart = "]";
         List<HashMap<String, String>> tableDataList = new ArrayList<HashMap<String, String>>();
-        // Used for loop for number of rows.
         for (int i = 2; i <= rowCount; i++) {
-            // Used for loop for number of columns.
             HashMap<String, String> temp = new HashMap<String, String>();
             for (int j = 1; j < colCount; j++) {
                 String finalXpath = firstPart + i + secondPart + j + thirdPart;
                 String tableData = rSection.findElement(By.xpath(finalXpath)).getText();
-
                 temp.put("col" + (j), tableData);
-                System.out.print(tableData + " ");
             }
-            System.out.println("");
-            System.out.println("");
             tableDataList.add(temp);
         }
         return tableDataList;
@@ -157,9 +145,6 @@ public class RelatedList360 extends Customer360Page {
         aa.addAll(windows);
         Log.info("clickOnAdd Count : " + windows.size());
         driver.switchTo().window(aa.get(windows.size() - 1));
-        driver.getCurrentUrl();
-        System.out.println("url above" + driver.getCurrentUrl());
-
         return new SalesforceRecordForm();
     }
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -126,10 +127,10 @@ public class RelatedListTest extends BaseTest {
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = c360Page.clickOnRelatedListSec(sfdcrelatedlistname);
 
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
-        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for sfdc custom object in CS360");
+        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "table data is not matching for sfdc custom object in CS360");
         c360Page.refreshPage();
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for sfdc custom object in CS360");
 
     }
 
@@ -139,13 +140,7 @@ public class RelatedListTest extends BaseTest {
     public void custobjAddFunc(HashMap<String, String> testData) {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CUSTOBJ_SFDC_REPORT_BUILDER));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CUSTOBJ_RL_CS360Section_SFDC_CONFIGURATION));
-        basepage.clickOnAdminTab();
-        AdministrationBasePage adbasepage = new AdministrationBasePage();
-        adbasepage.clickOnC360TabAdmin();
-        AdminCustomer360Section cs360basepage = new AdminCustomer360Section();
         String relatedListName = testData.get("Section");
-        cs360basepage.editRelatedList(relatedListName);
-        cs360basepage.saveRelatedList();
         Customer360Page cPage = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         String cusobjrecordname = testData.get("RecordName");
@@ -154,7 +149,7 @@ public class RelatedListTest extends BaseTest {
         sal.clickOnSave();
         String tableheader = testData.get("TableHeader");
         HashMap<String, String> colHeaders = getMapFromData(tableheader);
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, relatedListName), "table header data is not matching for sfdc custom object in CS360");
         rLPage.closeWindow();
 
     }
@@ -179,10 +174,10 @@ public class RelatedListTest extends BaseTest {
         }
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = c360Page.clickOnRelatedListSec(sfdcrelatedlistname);
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
-        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for contact object in CS360");
+        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "table data is not matching for contact object in CS360");
         c360Page.refreshPage();
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for contact object in CS360");
 
     }
 
@@ -192,13 +187,7 @@ public class RelatedListTest extends BaseTest {
     public void stdContactAddFunc(HashMap<String, String> testData) {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CONTACTOBJ_SFDC_REPORT_BUILDER));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CONTACTOBJ_RL_CS360Section_SFDC_CONFIGURATION));
-        basepage.clickOnAdminTab();
-        AdministrationBasePage adbasepage = new AdministrationBasePage();
-        adbasepage.clickOnC360TabAdmin();
-        AdminCustomer360Section cs360basepage = new AdminCustomer360Section();
         String relatedListName = testData.get("Section");
-        cs360basepage.editRelatedList(relatedListName);
-        cs360basepage.saveRelatedList();
         Customer360Page cPage = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         SalesforceRecordForm sal = rLPage.clickOnAdd(relatedListName);
@@ -255,10 +244,10 @@ public class RelatedListTest extends BaseTest {
         }
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = c360Page.clickOnRelatedListSec(sfdcrelatedlistname);
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
-        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for case object in CS360");
+        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "table data is not matching for case object in CS360");
         c360Page.refreshPage();
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for case object in CS360");
 
     }
 
@@ -268,13 +257,7 @@ public class RelatedListTest extends BaseTest {
     public void caseobjAddFunc(HashMap<String, String> testData) {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CASEOBJ_SFDC_REPORT_BUILDER));
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CASEOBJ_RL_CS360Section_SFDC_CONFIGURATION));
-        basepage.clickOnAdminTab();
-        AdministrationBasePage adbasepage = new AdministrationBasePage();
-        adbasepage.clickOnC360TabAdmin();
-        AdminCustomer360Section cs360basepage = new AdminCustomer360Section();
         String relatedListName = testData.get("Section");
-        cs360basepage.editRelatedList(relatedListName);
-        cs360basepage.saveRelatedList();
         Customer360Page cPage = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = cPage.clickOnRelatedListSec(relatedListName);
         String contactName = testData.get("ContactName");
@@ -316,7 +299,7 @@ public class RelatedListTest extends BaseTest {
         adbasepage.clickOnC360TabAdmin();
         AdminCustomer360Section cs360basepage = new AdminCustomer360Section();
         cs360basepage.addNewSectionCS360();
-        cs360basepage.EnableNewSectionForRelatedList(sfdcrelatedlistname, collectionName);
+        cs360basepage.enableNewSectionForRelatedList(sfdcrelatedlistname, collectionName);
         String tableheader = testData.get("TableHeader");
         HashMap<String, String> colHeaders = getMapFromData(tableheader);
         List<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
@@ -330,10 +313,11 @@ public class RelatedListTest extends BaseTest {
         }
         Customer360Page c360Page = basepage.clickOnC360Tab().searchCustomer(testData.get("Customer"), false, false);
         RelatedList360 rLPage = c360Page.clickOnExternalReportSec(sfdcrelatedlistname0, sfdcrelatedlistname);
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
-        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for mda custom object in CS360");
+        Assert.assertTrue(rLPage.isTableDataExisting(dataList, sfdcrelatedlistname), "table data is not matching for mda custom object in CS360");
         c360Page.refreshPage();
-        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "verifying the sfdc table headers");
+        Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for mda custom object in CS360");
+
 
     }
 
@@ -371,6 +355,13 @@ public class RelatedListTest extends BaseTest {
         String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive", "CurrencyField", "AccPercentage", "lookupfieldname"};
         metaUtil.addFieldPermissionsToUsers("sfdcrelatedlist__c", metaUtil.convertFieldNameToAPIName(addFieldsPerm), sfdcInfo, true);
 
+
+    }
+
+    @AfterClass
+    public void quit() {
+        mongoUtil.closeConnection();
+        mongoDBDAO.mongoUtil.closeConnection();
     }
 
 }
