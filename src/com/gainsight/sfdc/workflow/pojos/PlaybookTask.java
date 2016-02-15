@@ -19,6 +19,33 @@ public class PlaybookTask {
     private boolean isRequired;
     private List<HashMap<String, String>> ctrlData;
     private List<HashMap<String, String>> value;
+    private boolean isDynamicOwner;
+    private String dynamicOwnerLabel;
+    private String dynamicOwner;
+
+    public boolean isDynamicOwner() {
+        return isDynamicOwner;
+    }
+
+    public void setIsDynamicOwner(boolean isDynamicOwner) {
+        this.isDynamicOwner = isDynamicOwner;
+    }
+
+    public String getDynamicOwnerLabel() {
+        return dynamicOwnerLabel;
+    }
+
+    public void setDynamicOwnerLabel(String dynamicOwnerLabel) {
+        this.dynamicOwnerLabel = dynamicOwnerLabel;
+    }
+
+    public String getDynamicOwner() {
+        return dynamicOwner;
+    }
+
+    public void setDynamicOwner(String dynamicOwner) {
+        this.dynamicOwner = dynamicOwner;
+    }
 
     public String getFieldName() {
         return fieldName;

@@ -13,7 +13,7 @@ public class Task {
     private String playbookName;
     private String comments;
     private boolean isFromCustomer360orWidgets=false;
-    
+
     public boolean isFromCustomer360orWidgets() {
 		return isFromCustomer360orWidgets;
 	}
