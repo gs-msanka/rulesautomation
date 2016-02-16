@@ -48,9 +48,17 @@ JBCXM__Playbook__c p8 = new JBCXM__Playbook__c();
     p8.Name = 'Annual Review';
     p8.JBCXM__PlayBookType__c = 'Event';
     p8.JBCXM__Tasks_Count__c = 6;
-
 defaultPlayBookList.add(p8);
+
+JBCXM__Playbook__c p9 = new JBCXM__Playbook__c();
+    p9.Name = 'Test Dynamic Owners';
+    p9.JBCXM__PlayBookType__c = 'Risk';
+    p9.JBCXM__Tasks_Count__c = 2;
+
+defaultPlayBookList.add(p9);
+
 insert 	defaultPlayBookList;
+
 List<String> taskList = new List<String>{'Check with Finance on T&C\'s',
 								'Check 360 View for usage, latest NPS score, & open cases',
 								'Reach out to customer regarding delay',
@@ -134,15 +142,29 @@ priority = new List<String>{ 'High','Medium','High','High','High','High'};
 days = new List<Integer>{5, 5, 10, 15, 20, 22};
 pbTasks.addAll(createTasks(taskList,p8.id, priority, days));
 
+taskList = new List<String>{'Task with CTA Owner as Owner',
+                  'Task With Account Owner as Owner'};
+
+priority = new List<String>{ 'High','Medium'};
+days = new List<Integer>{5, 5};
+List<JBCXM__PlaybookTasks__c> pbs = createTasks(taskList,p9.id, priority, days);
+    pbs[0].JBCXM__IsDynamicOwner__c=true;
+    pbs[1].JBCXM__IsDynamicOwner__c=true;
+	pbs[0].JBCXM__DynamicOwnerLabel__c='CTA Owner';
+	pbs[1].JBCXM__DynamicOwnerLabel__c='Account ➝ Owner';
+    pbs[0].JBCXM__DynamicOwner__c='@CTA Owner';
+    pbs[1].JBCXM__DynamicOwner__c='Account#Owner.Name';
+pbTasks.addAll(pbs);
+
 insert pbTasks;
-	
+
 public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String id, List<String> priority1, List<Integer> days1){
     Integer i = 0;
     List<JBCXM__PlaybookTasks__c> pbTasks1 = new List<JBCXM__PlaybookTasks__c>();
     Integer nmbr = 0;
     List<JBCXM__GSMetaInfo__c> dates=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='ASSIGN_DATE'];
     List<JBCXM__GSMetaInfo__c> skipOpts=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='Skip_all_weekends'];
-    
+
     for(String name : taskList1){
             JBCXM__PlaybookTasks__c pt = new JBCXM__PlaybookTasks__c();
             pt.JBCXM__PlaybookId__c = id;

@@ -6,6 +6,7 @@ import com.gainsight.sfdc.SalesforceConnector;
 import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.pojos.SObject;
 import com.gainsight.sfdc.util.FileUtil;
+import com.gainsight.testdriver.Log;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
 import com.gainsight.utils.config.ConfigProviderFactory;
@@ -43,7 +44,7 @@ public class SfdcRestApi {
 
     public static void main(String[] args) throws Exception {
         SfdcRestApi sfdcRestApi = new SfdcRestApi();
-        sfdcRestApi.pullDataFromSfdc("Contact", new String[]{"Id", "Name", "Account.Name"}, " limit 10", "./temp/1.csv");
+        System.out.println(sfdcRestApi.getSObjectKeyPrefix("Account"));
     }
 
     /**
@@ -115,14 +116,12 @@ public class SfdcRestApi {
 	}
 
     /**
-     * 
+     * Get List of all the SObjects in salesforce.
      * @return
      * @throws Exception
      */
 	public static List<SObject> getSfdcObjects() throws Exception {
-        SfdcRestImpl sfdcRestImpl  = new SfdcRestImpl(sfdcInfo.getSessionId());
-		
-		ResponseObj responseObj = sfdcRestImpl.getFromSalesforce(sfdcInfo.getEndpoint()+"/services/data/v34.0/sobjects");
+		ResponseObj responseObj = restImpl.getFromSalesforce(sfdcInfo.getEndpoint()+"/services/data/v"+sfdcConfig.getSfdcApiVersion()+"/sobjects");
 		
 		JsonNode jsonNode = mapper.readValue(responseObj.getContent(), JsonNode.class);
 		
@@ -130,4 +129,29 @@ public class SfdcRestApi {
 		return soList;
 	}
 
+    /**
+     * Get Keyprefix of the sObject.
+     * Example Account object keyPrefix is 001.
+     * @param sObjectApiName
+     * @return
+     */
+    public String getSObjectKeyPrefix(String sObjectApiName) {
+        String url = sfdcInfo.getEndpoint()+ "/services/data/v"+sfdcConfig.getSfdcApiVersion()+"/sobjects/" +sObjectApiName;
+        String keyPrefix = null;
+        try {
+            ResponseObj  responseObj = restImpl.getFromSalesforce(url);
+            if(responseObj.getStatusCode() == HttpStatus.SC_OK) {
+                JsonNode node = mapper.readValue(responseObj.getContent(), JsonNode.class);
+                SObject sObject = mapper.convertValue(node.get("objectDescribe"), SObject.class);
+                keyPrefix = sObject.getKeyPrefix();
+            } else {
+                Log.error(url + "\n Check the request url : "+responseObj.toString());
+                throw new RuntimeException("Check the request url : "+responseObj.toString());
+            }
+        } catch (Exception e) {
+            Log.error("Failed to get the response", e);
+        }
+        Log.info("Key prefix : " +keyPrefix);
+        return keyPrefix;
+    }
 }
