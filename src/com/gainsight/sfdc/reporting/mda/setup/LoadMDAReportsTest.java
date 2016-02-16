@@ -5,19 +5,20 @@ import com.gainsight.bigdata.dataload.apiimpl.DataLoadManager;
 import com.gainsight.bigdata.pojo.CollectionInfo;
 import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
 import com.gainsight.bigdata.reportBuilder.reportApiImpl.ReportManager;
-import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.util.datagen.DataETL;
 import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.MongoUtil;
+import com.gainsight.utils.SqlUtil;
 import com.sforce.soap.partner.sobject.SObject;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,6 @@ public class LoadMDAReportsTest extends NSTestBase {
     private Date date = Calendar.getInstance().getTime();
     private MongoDBDAO mongoDBDAO = null;
     private MongoUtil mongoUtil;
-    private TenantManager tenantManager = new TenantManager();
     private DataETL dataETL = new DataETL();
     private TenantDetails.DBDetail dbDetail = null;
     private String[] dataBaseDetail = null;
@@ -88,6 +88,7 @@ public class LoadMDAReportsTest extends NSTestBase {
     private String collectionID;
     private String reportName;
     private String reportID;
+    SqlUtil sql;
 
     @BeforeSuite
     public void cleanup(){
@@ -97,7 +98,7 @@ public class LoadMDAReportsTest extends NSTestBase {
 
     @BeforeClass
     @Parameters("dbStoreType")
-    public void setup(@Optional String dbStoreType) throws IOException {
+    public void setup(@Optional String dbStoreType) throws IOException, SQLException, ClassNotFoundException {
         Assert.assertTrue(tenantAutoProvision(), "Tenant Auto-Provisioning...");
         tenantDetails = tenantManager.getTenantDetail(sfinfo.getOrg(), null);
         tenantDetails = tenantManager.getTenantDetail(null, tenantDetails.getTenantId());
@@ -121,18 +122,27 @@ public class LoadMDAReportsTest extends NSTestBase {
         mongoUtil = new MongoUtil(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
         mongoDBDAO = new MongoDBDAO(host, Integer.valueOf(port), userName, passWord, dbDetail.getDbName());
 
-
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
-            mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOMONGO");
-            mongoDBDAO.deleteMongoDocumentFromReportMaster(
-                    tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "MONGO_");
+            String dbcollName = mongoDBDAO.getDbCollectionName(tenantDetails.getTenantId(),"GIRI_GS_AUTOMONGO");
+            if(dbcollName!=null){
+                mongoUtil.dropCollections(new String[] {dbcollName});
+                mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOMONGO");
+                mongoDBDAO.deleteMongoDocumentFromReportMaster(
+                        tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "MONGO_");
+            }
             if(tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
             }
         } else if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("redshift")) {
-            mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOREDSHIFT");
-            mongoDBDAO.deleteMongoDocumentFromReportMaster(
-                    tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "REDSHIFT_");
+            String dbcollName = mongoDBDAO.getDbCollectionName(tenantDetails.getTenantId(),"GIRI_GS_AUTOREDSHIFT");
+            if(dbcollName!=null){
+                sql=new SqlUtil(env.getProperty("ns_redshift_host"), env.getProperty("ns_redshift_dbName"), env.getProperty("ns_redshift_userName"), env.getProperty("ns_redshift_password"));
+                sql.executeSqlStatement("DROP TABLE "+dbcollName); //provide the dbcollectionname
+                sql.closeConnection();
+                mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOREDSHIFT");
+                mongoDBDAO.deleteMongoDocumentFromReportMaster(
+                        tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "REDSHIFT_");
+            }
             if(!tenantDetails.isRedshiftEnabled()) {
                 Assert.assertTrue(tenantManager.enabledRedShiftWithDBDetails(tenantDetails));
             }
@@ -145,7 +155,8 @@ public class LoadMDAReportsTest extends NSTestBase {
         dataTransForm = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/jobs/DataProcessJob1.json"), JobInfo.class);
         if(true) {      //Locally to run multiple time, we can make it false
             CollectionInfo collectionInfo = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/schema/ReportCollectionInfo1.json"), CollectionInfo.class);
-            collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + dbStoreType+"_" + date.getTime());
+            collectionInfo.getCollectionDetails().setCollectionName(collectionInfo.getCollectionDetails().getCollectionName() + dbStoreType);
+
             collectionInfo.getCollectionDetails().setDataStoreType(dbStoreType);
             String DBSTORE = collectionInfo.getCollectionDetails().getDataStoreType();
             System.out.println("Data Store is "+DBSTORE);
@@ -158,7 +169,10 @@ public class LoadMDAReportsTest extends NSTestBase {
             String statusId = dataLoadManager.dataLoadManage(dataLoadManager.getDefaultDataLoadMetaData(collectionInfo), new File(Application.basedir + dataTransForm.getDateProcess().getOutputFile()));
             Assert.assertNotNull(statusId);
             dataLoadManager.waitForDataLoadJobComplete(statusId);
+//            collectionInfo.getCollectionDetails().getDbCollectionName();
+
         }
+
 
 
     }
