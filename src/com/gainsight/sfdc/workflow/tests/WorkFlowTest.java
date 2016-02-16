@@ -61,7 +61,7 @@ public class WorkFlowTest extends WorkflowSetup {
         sfdc.runApexCode(resolveStrNameSpace(CLEANUP_SCRIPT));
     }
 
-	@TestInfo(testCaseIds={"GS-2083","GS-2084","GS-2087","GS-2086"})
+	@TestInfo(testCaseIds={"GS-2083","GS-2084","GS-2087","GS-2086","GS-200075"})
 	@Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "CTA1")
     public void createRiskCTA(HashMap<String, String> testData) throws IOException {
@@ -1509,6 +1509,114 @@ public class WorkFlowTest extends WorkflowSetup {
         
         //verify if cta is displayed along with the score
         Assert.assertTrue(workflowPage.isCTADisplayed_WithScore(cta,testData.get("Scheme")), "Verifying risk CTA is created");
+    }
+
+    @TestInfo(testCaseIds = {"GS-200073","GS-200074"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "CTA14")
+    public void createRiskCTAWithPlaybook_OnCreate(HashMap<String,String> testData) throws Exception {
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setCreateWithPlaybook(true);
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+        for(Task task : tasks) {
+            if(task.getAssignee()==null) {
+                task.setAssignee(sfdcInfo.getUserFullName());
+            }
+            String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+        }
+        cta.setTaskCount(tasks.size());
+        workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+        workflowPage.showCTATasks(cta);
+        for(Task task : tasks) {
+            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+        }
+    }
+
+    @TestInfo(testCaseIds = {"GS-200076"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "CTA14")
+    public void createRiskCTAWithPlaybook_NoPB(HashMap<String,String> testData) throws Exception {
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setCreateWithPlaybook(true);
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+        for(Task task : tasks) {
+            if(task.getAssignee()==null) {
+                task.setAssignee(sfdcInfo.getUserFullName());
+            }
+            String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+        }
+        cta.setTaskCount(tasks.size());
+        workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,true,false);
+        cta.setTaskCount(0);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+    }
+
+    //Need some help here...will come back to this TC later...not able to get the Assignee name from UI
+    @TestInfo(testCaseIds = {"GS-200077","GS-200078"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "CTA14")
+    public void createCTAWithPB_ModifyParams(HashMap<String,String> testData) throws Exception {
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setAssignee(sfdcInfo.getUserFullName());
+        cta.setCreateWithPlaybook(true);
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+        for(Task task : tasks) {
+            if(task.getAssignee()==null) {
+                task.setAssignee(sfdcInfo.getUserFullName());
+            }
+            String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+        }
+        cta.setTaskCount(tasks.size());
+        workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+        workflowPage.showCTATasks(cta);
+        for(Task task : tasks) {
+            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+        }
+    }
+
+    @TestInfo(testCaseIds = {"GS-200079"})
+    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class,dataProvider = "excel")
+    @DataProviderArguments(filePath = TEST_DATA_FILE,sheet = "CTA14")
+    public void createRiskCTAWithPlaybook_WithDynamicOwner(HashMap<String,String> testData) throws Exception {
+        WorkflowPage workflowPage = basepage.clickOnWorkflowTab().clickOnListView();
+        CTA cta = mapper.readValue(testData.get("CTA"), CTA.class);
+        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
+        cta.setCreateWithPlaybook(true);
+        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
+        for(Task task : tasks) {
+            if(task.getAssignee()==null) {
+                task.setAssignee(sfdcInfo.getUserFullName());
+            }
+            else if(task.getAssignee().contains("CTA Owner")){
+                task.setAssignee(cta.getAssignee());
+            }
+            else if(task.getAssignee().contains("Account")){
+                SObject[] assignee=sfdc.getRecords("select id,name from Users where Id in (select id from Account where name='"+cta.getCustomer()+"')");
+                task.setAssignee(assignee[0].getField("Name").toString());
+            }
+            String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+        }
+        cta.setTaskCount(tasks.size());
+        workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
+        workflowPage.showCTATasks(cta);
+        for(Task task : tasks) {
+            Assert.assertTrue(workflowPage.isTaskDisplayed(task),"Verifying the task -\" "+task.getSubject()+"\" created for Event CTA");
+        }
     }
 
     /*

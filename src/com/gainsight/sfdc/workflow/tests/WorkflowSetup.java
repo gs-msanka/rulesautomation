@@ -219,32 +219,20 @@ public class WorkflowSetup extends BaseTest{
 
     public ArrayList<Task> getTaskFromSFDC(String playbookName) {
         ArrayList<Task> tasks = new ArrayList<>();
-        SObject[] records = sfdc.getRecords("Select name, JBCXM__TaskJSON__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
+        SObject[] records = sfdc.getRecords("Select name,JBCXM__DynamicOwner__c,JBCXM__IsDynamicOwner__c,JBCXM__DynamicOwnerLabel__c,JBCXM__DeltaDays__c, JBCXM__Subject__c,JBCXM__Priority__c,JBCXM__Status__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
         if(!(records.length > 0)) {
             throw new RuntimeException("No tasks where found for the playbook");
         }
         for(SObject record : records) {
-            if(record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c"))==null) continue;
-            String s = record.getField(resolveStrNameSpace("JBCXM__TaskJSON__c")).toString();
-            try {
-                List<PlaybookTask> pTemps = mapper.readValue(s, new TypeReference<ArrayList<PlaybookTask>>() {});
-                Task t = new Task();
-                for(PlaybookTask pk : pTemps) {
-                    if(pk.getFieldName().equalsIgnoreCase("Subject__C")) {
-                        t.setSubject(pk.getValue().get(0).get("key"));
-                    } else if(pk.getFieldName().equalsIgnoreCase("Date__c")) {
-                        t.setDate(pk.getValue().get(0).get("key"));
-                    } else if(pk.getFieldName().equalsIgnoreCase("Priority__c")) {
-                        t.setPriority(pk.getValue().get(0).get("key"));
-                    } else if(pk.getFieldName().equalsIgnoreCase("Status__c")) {
-                        t.setStatus(pk.getValue().get(0).get("key"));
-                    }
-                }
-                tasks.add(t);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed While Parsing.");
-            }
+             Task t = new Task();
+             t.setSubject(record.getField(resolveStrNameSpace("JBCXM__Subject__c")).toString());
+             t.setDate(record.getField(resolveStrNameSpace("JBCXM__DeltaDays__c")).toString());
+             t.setPriority(record.getField(resolveStrNameSpace("JBCXM__Priority__c")).toString());
+             t.setStatus(record.getField(resolveStrNameSpace("JBCXM__Status__c")).toString());
+             if(record.getField(resolveStrNameSpace("JBCXM__IsDynamicOwner__c")).toString().equalsIgnoreCase("true")) {
+                t.setAssignee(record.getField(resolveStrNameSpace("JBCXM__DynamicOwner__c")).toString());
+             }
+             tasks.add(t);
         }
        return tasks;
     }
