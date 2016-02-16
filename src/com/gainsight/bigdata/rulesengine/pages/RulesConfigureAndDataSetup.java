@@ -80,7 +80,7 @@ public class RulesConfigureAndDataSetup{
 		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
 		Customer_lookupListMap.put("Name", "custom_lookup");
 		Customer_lookupListMap.put("ReferenceTo", "Account");
-		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesengineUI_Automation");
+		Customer_lookupListMap.put("relationshipName", "Custom_rulesengineUI_Automation");
 		lookup.add(Customer_lookupListMap);
 		objField.setLookups(lookup);
 		NSTestBase.metaUtil.createFieldsOnObject(NSTestBase.sfdc, "RulesSFDCCustom__c", objField);
@@ -252,13 +252,13 @@ public class RulesConfigureAndDataSetup{
 		HashMap<String, String> Customer_lookupListMap = new HashMap<String, String>();
 		Customer_lookupListMap.put("Name", "C_lookup");
 		Customer_lookupListMap.put("ReferenceTo", "Account");
-		Customer_lookupListMap.put("ReleationShipName", "Custom_rulesUI_Automation");
+		Customer_lookupListMap.put("relationshipName", "Custom_rulesUI_Automation");
 		lookup.add(Customer_lookupListMap);
 
         HashMap<String, String> relationShipLookup = new HashMap<String, String>();
         relationShipLookup.put("Name", "Relationship_lookup");
         relationShipLookup.put("ReferenceTo", NSTestBase.resolveStrNameSpace("JBCXM__GSRelationship__c"));
-        relationShipLookup.put("ReleationShipName", "Relationshiplookup_rulesUI_Automation");
+        relationShipLookup.put("relationshipName", "Relationshiplookup_rulesUI_Automation");
         lookup.add(relationShipLookup);
         objField.setLookups(lookup);
         NSTestBase.metaUtil.createFieldsOnObject(NSTestBase.sfdc, "C_Custom__c", objField);
@@ -277,7 +277,7 @@ public class RulesConfigureAndDataSetup{
         HashMap<String, String> related_Lookup = new HashMap<String, String>();
         related_Lookup.put("Name", "Relationship_lookup");
         related_Lookup.put("ReferenceTo", NSTestBase.resolveStrNameSpace("RulesSFDCCustom__c"));
-        related_Lookup.put("ReleationShipName", "Relationshiplookup_rulesUI_Automation");
+        related_Lookup.put("relationshipName", "Relationshiplookup_rulesUI_Automation");
         relatedLookup.add(related_Lookup);
         objectFields.setLookups(relatedLookup);
         NSTestBase.metaUtil.createFieldsOnObject(NSTestBase.sfdc, NSTestBase.resolveStrNameSpace("JBCXM__GSRelationship__c"), objectFields);
