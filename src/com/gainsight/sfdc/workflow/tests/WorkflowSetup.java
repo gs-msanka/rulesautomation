@@ -219,7 +219,7 @@ public class WorkflowSetup extends BaseTest{
 
     public ArrayList<Task> getTaskFromSFDC(String playbookName) {
         ArrayList<Task> tasks = new ArrayList<>();
-        SObject[] records = sfdc.getRecords("Select name,JBCXM__DynamicOwner__c,JBCXM__IsDynamicOwner__c,JBCXM__DynamicOwnerLabel__c,JBCXM__DeltaDays__c, JBCXM__Subject__c,JBCXM__Priority__c,JBCXM__Status__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'");
+        SObject[] records = sfdc.getRecords(resolveStrNameSpace("Select name,JBCXM__DynamicOwner__c,JBCXM__IsDynamicOwner__c,JBCXM__DynamicOwnerLabel__c,JBCXM__DeltaDays__c, JBCXM__Subject__c,JBCXM__Priority__c,JBCXM__Status__c, JBCXM__PlaybookId__r.Name from JBCXM__PlaybookTasks__c where  JBCXM__PlaybookId__r.Name='"+playbookName+"'"));
         if(!(records.length > 0)) {
             throw new RuntimeException("No tasks where found for the playbook");
         }
@@ -289,7 +289,7 @@ public class WorkflowSetup extends BaseTest{
     }
 
     public void cleanPlaybooksData() {
-        sfdc.runApexCode("delete [Select id from JBCXM__playbook__c];");
+        sfdc.runApexCode(resolveStrNameSpace("delete [Select id from JBCXM__playbook__c];"));
     }
     public void loadDefaultPlaybooks() {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(DEFAULT_PLAYBOOKS_SCRIPT));

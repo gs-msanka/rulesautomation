@@ -339,8 +339,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        	if(task.getAssignee()==null) {
 		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
-		        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		        	task.setFromCustomer360orWidgets(true);
+					String date=task.getDate().substring(0, task.getDate().indexOf("."));
+					task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+					task.setFromCustomer360orWidgets(true);
 		        	}
 		       accWfPage  = accWfPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
 		       for(Task task : tasks) {
@@ -366,8 +367,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        	if(task.getAssignee()==null) {
 		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
-		        	task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		        	task.setAssignee(users[i]); if(++i >=5) i=0;
+					String date=task.getDate().substring(0, task.getDate().indexOf("."));
+					task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+					task.setAssignee(users[i]); if(++i >=5) i=0;
 		        	task.setFromCustomer360orWidgets(true);
 		        	}
 
@@ -393,8 +395,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        	if(task.getAssignee()==null) {
 		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
-		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		            task.setFromCustomer360orWidgets(true);
+					String date=task.getDate().substring(0, task.getDate().indexOf("."));
+					task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+					task.setFromCustomer360orWidgets(true);
 		        	}
 		        
 		        //Applying Playbook and verifying tasks
@@ -409,8 +412,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		          	if(task.getAssignee()==null) {
 		                task.setAssignee(sfdcInfo.getUserFullName());
 		            }
-		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		            task.setFromCustomer360orWidgets(true);
+				   String date=task.getDate().substring(0, task.getDate().indexOf("."));
+				   task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+				   task.setFromCustomer360orWidgets(true);
 		          	}
 		       cta.setDueDate(getHighestTaskDate(tasks));
 		       accWfPage = accWfPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -438,8 +442,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		            task.setFromCustomer360orWidgets(true);
+					String date=task.getDate().substring(0, task.getDate().indexOf("."));
+					task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+					task.setFromCustomer360orWidgets(true);
 		        	}
 
 		       accWfPage  = accWfPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -463,8 +468,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		        for(Task task : tasks) {
 		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		            task.setFromCustomer360orWidgets(true);
+					String date=task.getDate().substring(0, task.getDate().indexOf("."));
+					task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+					task.setFromCustomer360orWidgets(true);
 		        	}
 		        
 		        //Applying Playbook and verifying tasks
@@ -477,8 +483,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
 		       for(Task task : updatedTasks) {
 		          	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		           task.setFromCustomer360orWidgets(true);
+				   String date=task.getDate().substring(0, task.getDate().indexOf("."));
+				   task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+				   task.setFromCustomer360orWidgets(true);
 		          	}
 		       cta.setDueDate(getHighestTaskDate(tasks));
 		       accWfPage = accWfPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -506,8 +513,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		       for(Task task : tasks) {
 		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		            task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		            task.setFromCustomer360orWidgets(true);
+				   String date=task.getDate().substring(0, task.getDate().indexOf("."));
+				   task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+				   task.setFromCustomer360orWidgets(true);
 		        	}
 		        
 		       accWfPage = accWfPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -530,8 +538,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
 		       for(Task task : tasks) {
 		        	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		           task.setFromCustomer360orWidgets(true);
+				   String date=task.getDate().substring(0, task.getDate().indexOf("."));
+				   task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+				   task.setFromCustomer360orWidgets(true);
 		        	}
 		        //Applying Playbook and verifying tasks
 		       accWfPage  = accWfPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -543,8 +552,9 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
 		       for(Task task : updatedTasks) {
 		          	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-		           task.setDate(getTaskDateForPlaybook(Integer.valueOf(task.getDate())));
-		           task.setFromCustomer360orWidgets(true);
+				   String date=task.getDate().substring(0, task.getDate().indexOf("."));
+				   task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+				   task.setFromCustomer360orWidgets(true);
 		          	}
 		       cta.setDueDate(getHighestTaskDate(tasks));
 		       accWfPage = accWfPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
