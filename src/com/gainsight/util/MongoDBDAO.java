@@ -277,7 +277,7 @@ public class MongoDBDAO  {
     }
 
     /**
-     * method to get dbCollectionName of a particular collection from collectionmaster
+     * method to get dbCollectionName of a particular collection from colletionMaster
      *
      * @param tenantID       - tenantID
      * @param collectionName - collectionName
@@ -292,8 +292,10 @@ public class MongoDBDAO  {
         String dbCollectionName = null;
         for (Document document : iterable) {
             Document collectionDetailsDocument = (Document) document.get("CollectionDetails");
+            Log.info("Getting dbName " + collectionDetailsDocument.get("dbCollectionName") + "   " + "for tenant : " + tenantID);
             dbCollectionName = (String) collectionDetailsDocument.get("dbCollectionName");
             Log.info(dbCollectionName);
+            break;
         }
         return dbCollectionName;
     }
