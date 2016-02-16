@@ -292,8 +292,8 @@ public class MongoDBDAO  {
         String dbCollectionName = null;
         for (Document document : iterable) {
             Document collectionDetailsDocument = (Document) document.get("CollectionDetails");
-            Log.info("Getting dbName " + collectionDetailsDocument.get("dbCollectionName") + "   " + "for tenant : " + tenantID);
             dbCollectionName = (String) collectionDetailsDocument.get("dbCollectionName");
+            Log.info("Getting dbName " + dbCollectionName + "   " + "for tenant : " + tenantID);
             break;
         }
         return dbCollectionName;
