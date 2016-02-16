@@ -3,7 +3,6 @@ String CS360objName = 'objName';
 String SectionName2 = 'embedurlparam';
 Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
 Delete[Select id from JBCXM__C360Sections__c where name =: SectionName2];
-
 Integer currentDisplayOrder = 0;
 
 List<AggregateResult> ds = [Select MAX(JBCXM__DisplayOrder__c) maxDs From JBCXM__c360Sections__c];

@@ -17,7 +17,14 @@ public class SalesforceRecordForm extends BasePage {
     private final String READY_INDICATOR    = "//div[@id='userNavButton']";
     private final String SAVE_BUTTON = "//td[@id='topButtonRow']/input[@name='save']";
     private final String EDIT_BUTTON = "//td[@id='topButtonRow']/input[@name='edit']";
+    private final String RECORD_NAME="//html/body//div[@id='contentWrapper']//input[@id='Name']";
+    private final String CONTACT_NAME="//html/body//div[@id='contentWrapper']//span/input[@id='cas3']";
+    private final String CONTACT_ORIGIN="//html/body//div[@id='contentWrapper']//span/select[@id='cas11']";
 
+    
+    
+
+    
     public SalesforceRecordForm() {
         wait.waitTillElementDisplayed(READY_INDICATOR,MIN_TIME, MAX_TIME);
     }
@@ -35,9 +42,10 @@ public class SalesforceRecordForm extends BasePage {
     public boolean verifyRecordAddIsDisplayed(String objectId) {
         wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
         String s = driver.getCurrentUrl();
+        System.out.println("url======="+s);
         Log.info("Window URL :" +s);
         Log.info("Object Id :" +objectId);
-        Pattern p = Pattern.compile("^https://[^/?]+\\.salesforce\\.com/"+objectId+"/e\\?retURL(.*)\\.visual\\.force\\.com%2Fapex%2FCustomerSuccess360");
+        Pattern p = Pattern.compile("^https://[^/?]+\\.salesforce\\.com/"+objectId+"/e\\?saveURL(.*)\\.visual\\.force\\.com/apex/CustomerSuccess360");
         Matcher m = p.matcher(s);
         return m.find();
     }
@@ -56,6 +64,25 @@ public class SalesforceRecordForm extends BasePage {
         item.click(SAVE_BUTTON);
         return new Customer360Page();
     }
+    
+    public SalesforceRecordForm clickOnCaseSave() {
+        item.click(SAVE_BUTTON);
+        return new SalesforceRecordForm();
+    }
+    
+    public void recordName(String labelName) {
+        wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
+        element.setText(RECORD_NAME, labelName);        
+    }
+    public void contactName(String labelName) {
+        wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
+        element.setText(CONTACT_NAME, labelName);        
+    }
+    public void contactCaseOrigin(String labelName) {
+        wait.waitTillElementDisplayed(SAVE_BUTTON, MIN_TIME, MAX_TIME);
+        element.selectFromDropDown(CONTACT_ORIGIN, labelName);      
+    }
+    
 
 
 

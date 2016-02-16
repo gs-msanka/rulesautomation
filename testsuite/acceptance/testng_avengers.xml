@@ -72,4 +72,10 @@
         </classes>
     </test>
 
+    <test verbose="3" name="RelatedList" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.customer360.test.RelatedListTest"/>
+        </classes>
+    </test>
+
 </suite>

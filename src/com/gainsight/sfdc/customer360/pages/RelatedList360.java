@@ -8,29 +8,61 @@ import java.util.Set;
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 public class RelatedList360 extends Customer360Page {
-    private final String READT_INDICATOR = "//div[@class='gs_section_title']/h1[text()='']";
+    private final String READY_INDICATOR = "//div/a[contains(text(),'Refresh')]";
 
     public RelatedList360(String relatedListName) {
-        wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='"+relatedListName+"']", MIN_TIME, MAX_TIME);
+        /*wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='" + relatedListName + "']", MIN_TIME,
+                MAX_TIME);*/
+         wait.waitTillElementPresent(READY_INDICATOR, MIN_TIME, MAX_TIME);
+
     }
 
     private WebElement getRelatedList(String relatedListName) {
-        WebElement rSection = element.getElement("//h1[text()='"+relatedListName+"']/parent::div[@class='gs_section_title']/parent::div[@class='gs_section']");
+        WebElement rSection = element.getElement("//h1[text()='" + relatedListName
+                + "']/parent::div[@class='gs_section_title']/parent::div[@class='gs_section']");
         return rSection;
     }
 
     public boolean isTableHeadersExisting(HashMap<String, String> testData, String relatedListName) {
         boolean result = false;
         List<String> cols = getColHeaders(relatedListName);
-        for(int i=1; i<= testData.size(); i++) {
-            if(cols.contains(testData.get("col" + i).replaceAll(" ", "").trim())) { //cols.contains(testData.get("col"+i))) {
+        for (int i = 1; i <= testData.size(); i++) {
+            if (cols.contains(testData.get("col" + i).replaceAll(" ", "").trim())) {
+                // {
                 result = true;
+                Log.info("Header value "+cols+ " is matching with " +testData+ "for relatedlist" +relatedListName);
             } else {
+                Log.info("Header value "+cols+ " is not matching with " +testData+ "for relatedlist" +relatedListName);
                 return false;
             }
+        }
+        return result;
+    }
+
+    public boolean isTableDataExisting(List<HashMap<String, String>> testDataList, String relatedListName) {
+        boolean result = false;
+        List<HashMap<String, String>> actualDataList = getTableData(relatedListName);
+        for (int i = 0; i < testDataList.size(); i++) {
+            HashMap<String, String> testData = testDataList.get(i);
+            HashMap<String, String> actualData = actualDataList.get(i);
+            for (int j = 0; j < testData.size(); j++) {
+                String key = "col" + (j + 1);
+
+                String testValue = testData.get(key).replaceAll(" ", "").trim();
+                String actualValue = actualData.get(key).replaceAll(" ", "").trim();
+                if (testValue != null && actualValue != null && testValue.equals(actualValue)) {
+                    result = true;
+                    Log.info("Table data value" +testValue+ "is matching with" +actualValue+ "for relatedList" +relatedListName);
+                } else {
+                    Log.info("Table data value" +testValue+ "is  not matching with" +actualValue+ "for relatedList" +relatedListName);
+                    return false;
+                }
+            }
+
         }
         return result;
     }
@@ -39,7 +71,7 @@ public class RelatedList360 extends Customer360Page {
         boolean result = false;
         String s = "";
         String tableId = getTableId(relatedListName);
-        if(table.getValueInListRow(tableId, testData) != -1)  {
+        if (table.getValueInListRow(tableId, testData) != -1) {
             result = true;
         }
         return result;
@@ -47,18 +79,18 @@ public class RelatedList360 extends Customer360Page {
 
     public List<String> getColHeaders(String relatedListName) {
         WebElement rSection = getRelatedList(relatedListName);
-        List<WebElement> tableList  = rSection.findElements(By.tagName("table"));
+        List<WebElement> tableList = rSection.findElements(By.tagName("table"));
         WebElement headerTable;
         List<String> tableHeaders = new ArrayList<String>();
-        if(tableList != null && tableList.size() > 0) {
+        if (tableList != null && tableList.size() > 0) {
             headerTable = tableList.get(0);
             List<WebElement> tableRowsList = headerTable.findElements(By.tagName("tr"));
-            if(tableRowsList != null && tableRowsList.size() > 0) {
+            if (tableRowsList != null && tableRowsList.size() > 0) {
                 WebElement tableTr = tableRowsList.get(0);
                 List<WebElement> tableColumnsList = tableTr.findElements(By.tagName("th"));
-                if(tableColumnsList != null) {
+                if (tableColumnsList != null) {
                     Log.info("Total Columns in table are :" + tableColumnsList.size());
-                    for(WebElement wEle : tableColumnsList) {
+                    for (WebElement wEle : tableColumnsList) {
                         String hText = wEle.getText().replaceAll(" ", "").trim();
                         tableHeaders.add(hText);
                         Log.info(hText);
@@ -70,45 +102,52 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public List<HashMap<String, String>> getTableData(String relatedListName) {
-        List<String> headerData = getColHeaders(relatedListName);
         WebElement rSection = getRelatedList(relatedListName);
+        int rowCount = rSection
+                .findElements(By
+                        .xpath("//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr"))
+                .size();
+        int colCount = rSection
+                .findElements((By
+                        .xpath("//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr[1]/td")))
+                .size();
+        String firstPart = "//div[@class='ui-jqgrid-bdiv']/descendant::div/descendant::table/descendant::tbody/tr[";
+        String secondPart = "]/td[";
+        String thirdPart = "]";
         List<HashMap<String, String>> tableDataList = new ArrayList<HashMap<String, String>>();
-        List<WebElement> tableList  = rSection.findElements(By.tagName("table"));
-        WebElement dataTable;
-        if(tableList != null && tableList.size() > 1) {
-            dataTable = tableList.get(1);
-            String Id = dataTable.getAttribute("Id");
-            List<WebElement> rowsList = dataTable.findElements(By.tagName("tr"));
-            for(WebElement row : rowsList) {
-                List<WebElement> columnsList = row.findElements(By.tagName("td"));
-                int i=0;
-                HashMap<String, String> temp = new HashMap<String, String>();
-                for(WebElement cell : columnsList) {
-                    String cellValue = cell.getText().trim();
-                    temp.put("col"+i+1, cellValue);
-                    Log.info(headerData.get(i)+" : " +cellValue);
-                    i++;
-                }
-                tableDataList.add(temp);
+        for (int i = 2; i <= rowCount; i++) {
+            HashMap<String, String> temp = new HashMap<String, String>();
+            for (int j = 1; j < colCount; j++) {
+                String finalXpath = firstPart + i + secondPart + j + thirdPart;
+                String tableData = rSection.findElement(By.xpath(finalXpath)).getText();
+                temp.put("col" + (j), tableData);
             }
+            tableDataList.add(temp);
         }
         return tableDataList;
     }
 
+    private String getText() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     public RelatedList360 refreshSection(String secName) {
-        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[@class='gs_edit_icon']/a[@class='gs_related_refresh' and text()='Refresh']";
+        String xPath = "//div[@class='gs_section_title']/h1[text()='" + secName.trim()
+                + "']/following-sibling::div[@class='gs_edit_icon']/a[@class='gs_related_refresh' and text()='Refresh']";
         item.click(xPath);
         return new RelatedList360(secName);
     }
 
     public SalesforceRecordForm clickOnAdd(String secName) {
-        String xPath = "//div[@class='gs_section_title']/h1[text()='"+secName.trim()+"']/following-sibling::div[contains(@class,'gs_edit_icon')]/a[contains(text(),'Add')]";
+        String xPath = "//div[@class='gs_section_title']/h1[text()='" + secName.trim()
+                + "']/following-sibling::div[contains(@class,'gs_edit_icon')]/a[contains(text(),'Add')]";
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Log.info("clickOnAdd Count : " +windows.size());
-        driver.switchTo().window(aa.get(windows.size()-1));
+        Log.info("clickOnAdd Count : " + windows.size());
+        driver.switchTo().window(aa.get(windows.size() - 1));
         return new SalesforceRecordForm();
     }
 
@@ -116,8 +155,8 @@ public class RelatedList360 extends Customer360Page {
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Log.info("clickOnAdd Count : " +windows.size());
-        if(aa != null && aa.size() == 2) {
+        Log.info("clickOnAdd Count : " + windows.size());
+        if (aa != null && aa.size() == 2) {
             driver.switchTo().window(aa.get(1));
             driver.close();
             driver.switchTo().window(aa.get(0));
@@ -133,68 +172,74 @@ public class RelatedList360 extends Customer360Page {
     }
 
     public boolean isNoDataMsgDisplayed(String secName) {
-        String a = "//h1[contains(text(), '"+secName+"')]/ancestor::div[@class='gs_section']/descendant::div[@class='noDataFound' and contains(text(), 'No Data Found.')]";
-        Log.info("Xpath of No Info Msg :" +a);
+        String a = "//h1[contains(text(), '" + secName
+                + "')]/ancestor::div[@class='gs_section']/descendant::div[@class='noDataFound' and contains(text(), 'No data found.')]";
+        Log.info("Xpath of No Info Msg :" + a);
         return element.getElement(a).isDisplayed();
     }
 
     public RelatedList360 selectUIView(String secName, String viewName) {
         Timer.sleep(2);
-        String xPath =  "//div[@class='gs_section_title']/h1[text()='"+secName+"' ]/following-sibling::div/select[contains(@class,'case_uiviews')]"+
-                            "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
+        String xPath = "//div[@class='gs_section_title']/h1[text()='" + secName
+                + "' ]/following-sibling::div/select[contains(@class,'case_uiviews')]"
+                + "/following-sibling::button[@class='ui-multiselect ui-widget ui-state-default ui-corner-all']";
         item.click(xPath);
-        wait.waitTillElementDisplayed("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]", MIN_TIME, MAX_TIME);
-        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"+viewName.trim()+"')]");
-        Timer.sleep(5); //Has we don't actually have control on wait for element, introducing this sleep, will change is required.
+        wait.waitTillElementDisplayed(
+                "//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"
+                        + viewName.trim() + "')]",
+                MIN_TIME, MAX_TIME);
+        item.click("//ul[@class='ui-multiselect-checkboxes ui-helper-reset']/descendant::span[contains(text(), '"
+                + viewName.trim() + "')]");
+        Timer.sleep(5); // Has we don't actually have control on wait for
+        // element, introducing this sleep, will change is
+        // required.
         return new RelatedList360(secName);
     }
 
     public String getTableId(String relatedListName) {
         String Id = null;
         WebElement rSection = getRelatedList(relatedListName);
-        List<WebElement> tableList  = rSection.findElements(By.tagName("table"));
+        List<WebElement> tableList = rSection.findElements(By.tagName("table"));
         WebElement dataTable;
-        if(tableList != null && tableList.size() > 1) {
+        if (tableList != null && tableList.size() > 1) {
             dataTable = tableList.get(1);
-            Id = dataTable.getAttribute("Id");
+            Id = dataTable.getAttribute("id");
         }
         return Id;
     }
 
     public SalesforceRecordForm viewRecord(String secName, String values) {
-        String[] split = values.split("\\|") ;
-        String xPath = "//h1[contains(text(),'"+secName+"')]/ancestor::div[@class='gs_section']/descendant::";
-        for(String s : split) {
-            xPath += "td[contains(text(), '"+s+"')]"+ "/following-sibling::";
+        String[] split = values.split("\\|");
+        String xPath = "//h1[contains(text(),'" + secName + "')]/ancestor::div[@class='gs_section']/descendant::";
+        for (String s : split) {
+            xPath += "td[contains(text(), '" + s + "')]" + "/following-sibling::";
         }
         xPath += "td/a[@class='preview-icon']";
-        Log.info("Xpath : " +xPath);
+        Log.info("Xpath : " + xPath);
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Log.info("viewRecord Count : " +windows.size());
-        driver.switchTo().window(aa.get(windows.size()-1));
+        Log.info("viewRecord Count : " + windows.size());
+        driver.switchTo().window(aa.get(windows.size() - 1));
         return new SalesforceRecordForm();
     }
 
     public SalesforceRecordForm editRecord(String secName, String values) {
-        String[] split = values.split("\\|") ;
-        String xPath = "//h1[contains(text(),'"+secName+"')]/ancestor::div[@class='gs_section']/descendant::";
-        for(String s : split) {
-            xPath += "td[contains(text(), '"+s+"')]"+ "/following-sibling::";
+        String[] split = values.split("\\|");
+        String xPath = "//h1[contains(text(),'" + secName + "')]/ancestor::div[@class='gs_section']/descendant::";
+        for (String s : split) {
+            xPath += "td[contains(text(), '" + s + "')]" + "/following-sibling::";
         }
         xPath += "td/a[@class='edit-icon']";
-        Log.info("Xpath : " +xPath);
+        Log.info("Xpath : " + xPath);
         item.click(xPath);
         Set<String> windows = driver.getWindowHandles();
         List<String> aa = new ArrayList<String>();
         aa.addAll(windows);
-        Log.info("editRecord Count : " +windows.size());
-        driver.switchTo().window(aa.get(windows.size()-1));
+        Log.info("editRecord Count : " + windows.size());
+        driver.switchTo().window(aa.get(windows.size() - 1));
         return new SalesforceRecordForm();
     }
-
-
 
 }

@@ -1,0 +1,20 @@
+String SectionName = 'caseobj';
+String CS360objName = 'objName';
+Delete[Select id from JBCXM__UIViews__c where name =: SectionName];
+
+
+
+JBCXM__UIViews__c rList = new JBCXM__UIViews__c(JBCXM__BaseObject__c='Case',
+														  JBCXM__AccountReference__c='AccountId',
+														  JBCXM__ColumnList__c='[{"name":"Account.Name","label":"Account ID Name","displayOrder":1,"visibilityMode":true,"objectName":"Case","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"},{"name":"Origin","label":"Case Origin","displayOrder":2,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"},{"name":"Status","label":"Status","displayOrder":3,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"},{"name":"Priority","label":"Priority","displayOrder":4,"visibilityMode":true,"objectName":"Case","fieldType":"PICKLIST","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"}]',
+														  JBCXM__Description__c	 = 'text',
+														  JBCXM__IsRB__c= true,
+														  JBCXM__IsShown__c	 = true,
+														  JBCXM__IsStandard__c=false,
+														  JBCXM__ReportParams__c='[]',
+														  JBCXM__ShowDefault__c	=false,
+														  JBCXM__UITabName__c='Case',
+														  Name = SectionName,
+														  JBCXM__Visibility__c='Public',
+														  JBCXM__VisualType__c='List');
+insert rList;

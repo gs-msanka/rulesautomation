@@ -1,0 +1,20 @@
+String SectionName = 'sfdcreport';
+String CS360objName = 'objName';
+Delete[Select id from JBCXM__UIViews__c where name =: SectionName];
+
+
+
+JBCXM__UIViews__c rList = new JBCXM__UIViews__c(JBCXM__BaseObject__c='sfdcrelatedlist__c',
+														  JBCXM__AccountReference__c='lookupfieldname__c',
+														  JBCXM__ColumnList__c='[{"name":"AccPercentage__c","label":"AccPercentage","displayOrder":1,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"PERCENT","isGroupable":false,"hasJBCXMNS":false,"decimalPlaces":2},{"name":"ActiveUsers__c","label":"ActiveUsers","displayOrder":2,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":false,"decimalPlaces":2},{"name":"CurrencyField__c","label":"CurrencyField","displayOrder":3,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"CURRENCY","isGroupable":false,"hasJBCXMNS":false,"decimalPlaces":2},{"name":"FNumber__c","label":"FNumber","displayOrder":4,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"DOUBLE","isGroupable":false,"hasJBCXMNS":false,"decimalPlaces":2},{"name":"IsActive__c","label":"IsActive","displayOrder":5,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"BOOLEAN","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"},{"name":"lookupfieldname__r.Name","label":"lookupfieldname Name","displayOrder":6,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"TEXT","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"},{"name":"Name","label":"Name","displayOrder":7,"visibilityMode":true,"objectName":"sfdcrelatedlist__c","fieldType":"STRING","isGroupable":true,"hasJBCXMNS":false,"decimalPlaces":"0"}]',
+														  JBCXM__Description__c	 = 'text',
+														  JBCXM__IsRB__c= true,
+														  JBCXM__IsShown__c	 = true,
+														  JBCXM__IsStandard__c=false,
+														  JBCXM__ReportParams__c='[]',
+														  JBCXM__ShowDefault__c	=false,
+														  JBCXM__UITabName__c='sfdcrelatedlist Object',
+														  Name = SectionName,
+														  JBCXM__Visibility__c='Public',
+														  JBCXM__VisualType__c='List');
+insert rList;
