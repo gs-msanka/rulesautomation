@@ -124,8 +124,10 @@ public class LoadMDAReportsTest extends NSTestBase {
 
         if(dbStoreType !=null && dbStoreType.equalsIgnoreCase("mongo")) {
             String dbcollName = mongoDBDAO.getDbCollectionName(tenantDetails.getTenantId(),"GIRI_GS_AUTOMONGO");
+            String strName = dbcollName;
+            String[] strArray = new String[] {strName};
             if(dbcollName!=null){
-                mongoUtil.dropCollections(new String[] {dbcollName});
+                mongoUtil.dropCollections(strArray);
                 mongoDBDAO.deleteMongoDocumentFromCollectionMaster(tenantDetails.getTenantId(), COLLECTION_MASTER, "GIRI_GS_AUTOMONGO");
                 mongoDBDAO.deleteMongoDocumentFromReportMaster(
                         tenantManager.getTenantDetail(sfinfo.getOrg(), null).getTenantId(), "reportmaster", "MONGO_");
