@@ -34,8 +34,9 @@ public class RelatedList360 extends Customer360Page {
             if (cols.contains(testData.get("col" + i).replaceAll(" ", "").trim())) {
                 // {
                 result = true;
+                Log.info("Header value "+cols+ " is matching with " +testData+ "for relatedlist" +relatedListName);
             } else {
-                Log.info("Header data is not matching with related list " +relatedListName);
+                Log.info("Header value "+cols+ " is not matching with " +testData+ "for relatedlist" +relatedListName);
                 return false;
             }
         }
@@ -55,7 +56,9 @@ public class RelatedList360 extends Customer360Page {
                 String actualValue = actualData.get(key).replaceAll(" ", "").trim();
                 if (testValue != null && actualValue != null && testValue.equals(actualValue)) {
                     result = true;
+                    Log.info("Table data value" +testValue+ "is matching with" +actualValue+ "for relatedList" +relatedListName);
                 } else {
+                    Log.info("Table data value" +testValue+ "is  not matching with" +actualValue+ "for relatedList" +relatedListName);
                     return false;
                 }
             }

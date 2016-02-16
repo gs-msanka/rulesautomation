@@ -48,6 +48,8 @@ Case caserec2 = new Case(AccountId=a[0].id,ContactId=c1[0].id,Origin='Phone',Pri
 insert caserec2;
 
 Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='RelatedList'];
+Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='ExternalReport'];
+
 
 
 

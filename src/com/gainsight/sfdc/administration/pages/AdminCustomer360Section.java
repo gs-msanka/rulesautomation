@@ -1,7 +1,6 @@
 package com.gainsight.sfdc.administration.pages;
 
 import com.gainsight.pageobject.util.Timer;
-import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
 
@@ -18,9 +17,10 @@ public class AdminCustomer360Section extends BasePage {
     private final String UNCHECKED_CHECKBOX = "//span[@class,'checkbox-normal']";
     private final String SAVE_SPONSOR_TRACKING = "//a[@class='btn-save saveSummary']";
     private final String EDIT_SPONSOR_TRACKING_IFRAME = "//iframe[contains(@src,'sponsortracking')]";
+    private final String EDIT_RELATED_LIST_IFRAME = "//iframe[contains(@src,'cs360Reports')]";
     private final String ADD_NEW_SECTION = "//html/body//div[@id='contentWrapper']//div/input[@value='Add new section']";
-    private final String ADD_SECTION_SHOW_LABEL = "html/body/div[@class='parentContainer']//*[@id='showLabel']";
-    private final String ADD_SECTION_SOURCE = "//button/span[contains(text(),'Select Source')]";
+    private final String ADD_SECTION_SHOW_LABEL = "//div[@class='gs-rb-cs360-popup-container']//input[@id='showLabel']";
+    private final String ADD_SECTION_SOURCE = "//div[@class='gs-rb-cs360-popup-container']//div[@class='gs-rb-source-select']/button";
     private final String SAVE_RELATED_LIST = "//div[@class='gs-rb-cs360-container']/div[@class='modal_footer']/input[@value='Save']";
     private final String CHECKBOX_REPORT_RELATED_LIST = "//div[@class='gs-rb-cs360-container']//span[contains(text(),'Auto_Mongo')]";
     private final String SECTION_TITLE = ".//*[@id='InlineEditDialogTitle']";
@@ -65,17 +65,25 @@ public class AdminCustomer360Section extends BasePage {
         item.click(ADD_NEW_SECTION);
     }
 
-    public void enableNewSectionForRelatedList(String labelName, String dropdownobj) {
-
-        wait.waitTillElementDisplayed(EDIT_FROM_RELATEDLIST, MIN_TIME, MAX_TIME);
+    public void enableNewSectionForRelatedList(String labelName, String dropdownobj,String object) {
+        if (element.isElementPresent(EDIT_RELATED_LIST_IFRAME)) {
         driver.switchTo().frame(driver.findElement(By.xpath(EDIT_FROM_RELATEDLIST)));
-        wait.waitTillElementDisplayed(SECTION_TITLE, MIN_TIME, MAX_TIME);
-        element.setText(ADD_SECTION_SHOW_LABEL, labelName);
-        element.selectFromDropDown(ADD_SECTION_SOURCE, dropdownobj);
-        element.selectCheckBox(CHECKBOX_REPORT_RELATED_LIST);
-        item.click(SAVE_RELATED_LIST);
+        wait.waitTillElementDisplayed(ENABLE_CHECKBOX, MIN_TIME, MAX_TIME);
+        try {
+            if (field.isElementPresent(ADD_SECTION_SHOW_LABEL))
+                element.setText(ADD_SECTION_SHOW_LABEL, labelName);
+                String xPath = "//div[@class='gs-rb-cs360-popup-container']//select/optgroup[@label='"+object+"']";
+                wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
+                element.selectFromDropDown(xPath, dropdownobj);
+                element.selectCheckBox(CHECKBOX_REPORT_RELATED_LIST);
+            }
+        catch (Exception e) {
+            Log.info("Element is already Checked");
+        }
+        item.click(SAVE_RELATED_LIST);   
         Timer.sleep(2);
         driver.switchTo().defaultContent();
+        }else
         Log.info("Finished Admin Config...");
 
     }

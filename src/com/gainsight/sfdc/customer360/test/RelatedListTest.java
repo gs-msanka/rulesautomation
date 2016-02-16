@@ -286,7 +286,7 @@ public class RelatedListTest extends BaseTest {
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_2")
     public void cusobjMdaDataVerification(HashMap<String, String> testData) throws Exception {
-        mongoDBDAO.deleteMongoDocumentFromReportMaster(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
+            mongoDBDAO.deleteMongoDocumentFromReportMaster(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
         ReportMaster reportMaster = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/data/RelatedListMDAData.json"), ReportMaster.class);
         reportingBasePage.openReportingPage(visualForcePageUrl + "ReportBuilder");
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
@@ -294,12 +294,14 @@ public class RelatedListTest extends BaseTest {
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
         String sfdcrelatedlistname = testData.get("Section");
         String sfdcrelatedlistname0 = testData.get("Section0");
+        String objectname = testData.get("object");
+
         basepage.clickOnAdminTab();
         AdministrationBasePage adbasepage = new AdministrationBasePage();
         adbasepage.clickOnC360TabAdmin();
         AdminCustomer360Section cs360basepage = new AdminCustomer360Section();
         cs360basepage.addNewSectionCS360();
-        cs360basepage.enableNewSectionForRelatedList(sfdcrelatedlistname, collectionName);
+        cs360basepage.enableNewSectionForRelatedList(sfdcrelatedlistname, collectionName,objectname);
         String tableheader = testData.get("TableHeader");
         HashMap<String, String> colHeaders = getMapFromData(tableheader);
         List<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
