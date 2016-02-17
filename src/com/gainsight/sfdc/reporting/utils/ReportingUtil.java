@@ -46,7 +46,7 @@ public class ReportingUtil extends BaseTest {
      * @throws Exception
      */
     public void createReportFromUiAndVerifyBackedJSON(ReportMaster reportMaster, ReportingBasePage reportingBasePage,
-                                                      MongoUtil mongoUtil, String expectedData) throws Exception {
+                                                      MongoUtil mongoUtil) throws Exception {
 
         List<ReportInfo> reportInfos = reportMaster.getReportInfo();
         for (ReportInfo reportInfo : reportInfos) {
@@ -57,8 +57,22 @@ public class ReportingUtil extends BaseTest {
         mdaConnectBackend.connectDbAndCompareJSON(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(),
                 reportInfos.get(0), mongoUtil, reportMaster);
 
-        mdaConnectBackend.verifyData(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(),
-                reportInfos.get(0), mongoUtil, expectedData);
+    }
+
+    /**
+     * @param reportMaster
+     * @param mongoUtil
+     * @param expectedData
+     * @throws Exception
+     */
+    public void verifyReportData(ReportMaster reportMaster,
+                                 MongoUtil mongoUtil, String expectedData) throws Exception {
+        if (expectedData != null) {
+            List<ReportInfo> reportInfos = reportMaster.getReportInfo();
+            mdaConnectBackend.verifyData(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(),
+                    reportInfos.get(0), mongoUtil, expectedData);
+        }
+
     }
 
 	/**
