@@ -118,7 +118,7 @@ public class ReportBuilderMDAMongoUITest extends BaseTest {
 
     @TestInfo(testCaseIds = {"GS-9040"})
     @Test
-        public void gridMongoReportForGrid() throws Exception {
+    public void gridMongoReportForGrid() throws Exception {
 
         ReportMaster reportMaster = mapper.readValue(
                 new File(Application.basedir + "/testdata/newstack/reporting/data/MongoReportWithGrid.json"),

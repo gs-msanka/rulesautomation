@@ -130,7 +130,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -145,7 +145,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -160,7 +160,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 		
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -175,7 +175,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 	}
 
 	@TestInfo(testCaseIds={"GS-9033"})
@@ -189,7 +189,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -204,7 +204,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 	}
 
 	@TestInfo(testCaseIds={"GS-9035"})
@@ -218,7 +218,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 	}
 
 	@TestInfo(testCaseIds={"GS-9036"})
@@ -232,7 +232,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -247,7 +247,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -262,7 +262,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 	}
 
 	@TestInfo(testCaseIds={"GS-9039"})
@@ -276,7 +276,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -291,7 +291,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -307,7 +307,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -323,7 +323,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -339,7 +339,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -354,7 +354,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -369,7 +369,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -384,7 +384,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -399,7 +399,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -415,7 +415,7 @@ public class ReportBuilderUITest extends BaseTest {
 				ReportMaster.class);
 		reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+		reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
 	}
 
@@ -431,7 +431,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -447,7 +447,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -463,7 +463,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -479,7 +479,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -495,7 +495,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -511,7 +511,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -527,7 +527,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -542,7 +542,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -557,7 +557,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
@@ -572,7 +572,7 @@ public class ReportBuilderUITest extends BaseTest {
                 ReportMaster.class);
         reportingBasePage.openReportingPage(reportingBuilderPageUrl);
 
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
 
     }
 
