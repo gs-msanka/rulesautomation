@@ -291,7 +291,7 @@ public class RelatedListTest extends BaseTest {
         reportingBasePage.openReportingPage(visualForcePageUrl + "ReportBuilder");
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
         reportMaster.getReportInfo().get(0).setSchemaName(collectionName);
-        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
+        reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil, null);
         String sfdcrelatedlistname = testData.get("Section");
         String sfdcrelatedlistname0 = testData.get("Section0");
         String objectname = testData.get("object");
