@@ -27,8 +27,8 @@ public class Customer360SponsorTest extends BaseTest {
 		Thread.sleep(20000);
 		AdministrationBasePage adm=basepage.clickOnAdminTab();
 		AdminCustomer360Section c360sec=adm.clickOnC360TabAdmin();		
-		c360sec.EditSponsorTracking();
-		c360sec.EnableSponsorTracking();
+		c360sec.editSponsorTracking();
+		c360sec.enableSponsorTracking();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SPONSOR_FILE));
 		basepage.clickOnC360Tab();
 		sponsorTracking360 = SponsorTracking360.init();

@@ -707,7 +707,8 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		       cta.setAssignee(sfdcInfo.getUserFullName());
 		      accWfPage.createCTA(cta);      
 		      Assert.assertTrue(accWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
-		       accWfPage.snoozeCTA(cta);
+			   SObject[] snoozeReasonId=sfdc.getRecords(resolveStrNameSpace("Select Id from JBCXM__Picklist__c where JBCXM__Category__c='Relationship Activity' and JBCXM__ShortName__c='"+cta.getSnoozeReason()+"'"));
+		       accWfPage.snoozeCTA(cta,snoozeReasonId[0].getId());
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -1103,8 +1104,6 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        }
 
 		        accWfPage.addTaskToCTA(cta, tasks);
-		        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-		        
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 		        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
@@ -1134,7 +1133,6 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        }
 
 		        accWfPage.addTaskToCTA(cta, tasks);
-		        accWfPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 		        
@@ -1157,7 +1155,6 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        SObject[] accId=sfdc.getRecords("select id from Account where Name='"+cta.getCustomer()+"'");
 				 AccWidget_CockpitPage accWfPage = basepage.gotoAccountPageWithId(accId[0].getId()).switchToAccountWidget().gotoCockpitSubTab();
 		     
-		        
 		        cta.setDueDate(getDateWithFormat(Integer.valueOf(cta.getDueDate()), 0, false));
 		        cta.setAssignee(sfdcInfo.getUserFullName());
 		        accWfPage.createCTA(cta);
@@ -1170,7 +1167,6 @@ public class AccWidget_CockpitTests extends WorkflowSetup {
 		        }
 
 		        accWfPage.addTaskToCTA(cta, tasks);
-		        accWfPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 		        

@@ -43,7 +43,17 @@ public class CTA  implements Cloneable {
     private String playbookName;
     private String oppourtunity;
     private String opportunityName;
-    
+
+    public boolean isCreateWithPlaybook() {
+        return createWithPlaybook;
+    }
+
+    public void setCreateWithPlaybook(boolean createWithPlaybook) {
+        this.createWithPlaybook = createWithPlaybook;
+    }
+
+    private boolean createWithPlaybook;
+
 	public String getPlaybookName() {
 		return playbookName;
 	}

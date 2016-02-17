@@ -16,6 +16,7 @@ import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.DBStoreType;
+import com.gainsight.util.MetaDataUtil;
 import com.gainsight.util.MongoDBDAO;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -42,6 +43,7 @@ import java.util.List;
 public class LoadDataTest {
 
     private static final String SFDC_JOB = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Jobs/Job_Data_Into_CustomObject.txt";
+    private static final String CREATE_ACCOUNTS_CUSTOMERS = Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-Scripts/Create_Accounts_Customers.txt";
     private NSTestBase nsTestBase;
     private DataETL dataETL = new DataETL();
     private ObjectMapper mapper = new ObjectMapper();
@@ -65,6 +67,8 @@ public class LoadDataTest {
         gsDataImpl = new GSDataImpl(NSTestBase.header);
         DbType = dbStoreType;
         tenantManager = new TenantManager();
+        NSTestBase.metaUtil.createExtIdFieldOnAccount(NSTestBase.sfdc);
+        NSTestBase.sfdc.runApexCode(nsTestBase.getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         tenantDetails = tenantManager.getTenantDetail(null, tenantManager.getTenantDetail(NSTestBase.sfdc.fetchSFDCinfo().getOrg(), null).getTenantId());
         if (dbStoreType != null && dbStoreType.equalsIgnoreCase(DBStoreType.MONGO.name())) {
             Assert.assertTrue(tenantManager.disableRedShift(tenantDetails));
@@ -175,6 +179,29 @@ public class LoadDataTest {
         Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata1), dataFile1), "Data is not valid");
         NsResponseObj nsResponseObj3 = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata1), dataFile1);
         Assert.assertTrue(nsResponseObj3.isResult(), "Data is not loaded, please check log for more details");
+
+        // creating Collection3
+        CollectionInfo collectionInfo3 = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/Manual-TestData/CollectionSchemaUsingRedShiftSource3.json")), CollectionInfo.class);
+        collectionInfo3.getCollectionDetails().setCollectionName("RedshiftCollection3" + date.getTime());
+        String collectionId3 = gsDataImpl.createCustomObject(collectionInfo3);
+        Assert.assertNotNull(collectionId3, "Collection ID should not be null.");
+        CollectionInfo actualCollectionInfo3 = gsDataImpl.getCollectionMaster(collectionId3);
+        String collectionName3 = actualCollectionInfo3.getCollectionDetails().getCollectionName();
+        Log.info("----------Collection/Table 3 ------------- is " + collectionName3);
+
+        // Forming lookup object "T3-ID" on collection3 with "T2_ID" on collection2 and updating collection
+        CollectionUtil.setLookUpDetails(actualCollectionInfo3, "T3_ID", actualCollectionInfo2, "T2_ID", false);
+        NsResponseObj nsResponseObj4 = gsDataImpl.updateCustomObjectGetNsResponse(mapper.writeValueAsString(actualCollectionInfo3));
+        Assert.assertTrue(nsResponseObj4.isResult(), "Collection update failed");
+
+        // loading data into collection/table 3
+        dataETL.execute(mapper.readValue(nsTestBase.getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/Manual-TestData/DataloadJob5.txt"), JobInfo.class));
+        JobInfo loadTransform3 = mapper.readValue((new FileReader(Application.basedir + "/testdata/newstack/RulesEngine/RulesUI-TestData/Manual-TestData/DataloadJob6.txt")), JobInfo.class);
+        File dataFile3 = FileProcessor.getDateProcessedFile(loadTransform3, date);
+        DataLoadMetadata metadata3 = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfo3, new String[]{"T3_ID", "T3_AccountName", "T3_CustomDate1", "T3_CustomNumber1", "T3_CustomNumber2", "T3_CustomNumberWithDecimals1", "T3_CustomNumberWithDecimals2", "T3_CreatedDateTime", "T3_BooleanField"}, DataLoadOperationType.INSERT);
+        Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata3), dataFile3), "Data is not valid");
+        NsResponseObj nsResponseObj5 = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata3), dataFile3);
+        Assert.assertTrue(nsResponseObj5.isResult(), "Data is not loaded, please check log for more details");
     }
 
     @Test(description = "loads data to sfdc with all datatypes")

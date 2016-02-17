@@ -274,6 +274,13 @@ public class Customer360Page extends BasePage {
 		wait.waitTillElementDisplayed("//div[@class='gs_section_title']/h1[text()='" + secName + "']",
 				MIN_TIME, MAX_TIME);
 	}
+	public RelatedList360 clickOnExternalReportSec(String secName,String secName1) {
+        Timer.sleep(2);
+        String xPath = "//ul[@class='nav']/li[contains(@class,'"+secName+"')]/a[contains(text(),'"+secName1+"')]";
+        wait.waitTillElementDisplayed(xPath, MIN_TIME, MAX_TIME);
+        item.click(xPath);
+        return new RelatedList360(secName);
+    }
 	
 	
 }

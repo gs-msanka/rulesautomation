@@ -1,0 +1,10 @@
+{
+  "dashboardId": "",
+  "exportTemplate": {
+    "id": null,
+    "subject": "Test Export SFDC Dashboard by JP through Automation",
+    "body": "Email Body - Test Export SFDC Dashboard by JP through Automation",
+    "toEmailList": [""],
+    "userId": ""
+  }
+}

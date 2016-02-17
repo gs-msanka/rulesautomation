@@ -1,0 +1,24 @@
+String SectionName = 'MDARL';
+String CS360objName = 'a2e133c2-1673-420d-9979-5b94bc861021';
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+
+Integer currentDisplayOrder = 0;
+
+List<AggregateResult> ds = [Select MAX(JBCXM__DisplayOrder__c) maxDs From JBCXM__c360Sections__c];
+currentDisplayOrder = Integer.valueOf(ds[0].get('maxDs'));
+
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName, 
+														  JBCXM__DisplayLabel__c = SectionName,
+														  JBCXM__AccountReference__c = 'lookupfieldname__c',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = false,
+														  JBCXM__InMobile__c = false,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = false,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__ReportItems__c='{"Collection":{"Id":"a2e133c2-1673-420d-9979-5b94bc861021","Name":"Related_List_MDA"},"reports":[{"Id":"a6491426-2a1f-4d34-b058-c56923659a91","Name":"Auto_MongoReportWithGrid9040"}],"advancedFilters":{"SFDC_ACCOUNT":"a2e133c2-1673-420d-9979-5b94bc861021_gsd19096"}}',
+														  JBCXM__isStandardObject__c = false,
+														  JBCXM__ObjectName__c = CS360objName,
+														  JBCXM__Type__c = 'ExternalReport');
+insert rList;
+

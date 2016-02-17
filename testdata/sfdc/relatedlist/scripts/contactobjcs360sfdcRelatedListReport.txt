@@ -1,0 +1,38 @@
+String SectionName = 'contactRL';
+String CS360objName = 'Contact';
+Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='RelatedList'];
+Delete[Select id from JBCXM__C360Sections__c where name =: SectionName];
+String SectionNameUI = 'contactobj';
+
+
+
+Integer currentDisplayOrder = 0;
+
+List<AggregateResult> ds = [Select MAX(JBCXM__DisplayOrder__c) maxDs From JBCXM__c360Sections__c];
+currentDisplayOrder = Integer.valueOf(ds[0].get('maxDs'));
+
+JBCXM__C360Sections__c rList = new JBCXM__C360Sections__c(Name = SectionName, 
+														  JBCXM__DisplayLabel__c = SectionName,
+														  JBCXM__AccountReference__c = 'AccountId',
+														  JBCXM__DisplayOrder__c = currentDisplayOrder +1,
+														  JBCXM__InAccountWidget__c = false,
+														  JBCXM__InMobile__c = false,
+														  JBCXM__InCustomer360__c = true,
+														  JBCXM__InOpportunityWidget__c = false,
+														  JBCXM__IsActive__c = true,
+														  JBCXM__ReportItems__c='{}',
+														  JBCXM__ObjectId__c='003',
+														  JBCXM__isStandardObject__c = true,
+														  JBCXM__ObjectName__c = CS360objName,
+														  JBCXM__Type__c = 'RelatedList');
+insert rList;
+List<JBCXM__C360Sections__c> gid=[select id from JBCXM__C360Sections__c WHERE Name=: SectionName];
+List<JBCXM__UIViews__c> viewid=[select id from JBCXM__UIViews__c WHERE Name=: SectionNameUI];
+
+viewId[0].JBCXM__SectionId__c =  gid[0].id;
+upsert viewid;
+
+
+
+
+

@@ -79,11 +79,11 @@ public class CallToActionWithRelationshipsTest extends BaseTest {
         basepage.login();
         nsTestBase.init();
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
+        metaUtil.createExtIdFieldOnAccount(sfdc);
         rulesManagerPage = new RulesManagerPage();
         rulesUtil.populateObjMaps();
         rulesConfigureAndDataSetup = new RulesConfigureAndDataSetup();
         rulesConfigureAndDataSetup.createCustomObjectAndFields();
-        rulesConfigureAndDataSetup.createlookupOnRelationshipObject();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_ACCOUNTS_CUSTOMERS));
         sfdc.runApexCode(CUSTOM_OBJECT_CLEANUP);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ENABLE_RELATIONSHIP));

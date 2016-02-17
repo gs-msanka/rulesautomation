@@ -704,7 +704,8 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		       cta.setAssignee(sfdcInfo.getUserFullName());
 		      oppWfPage.createCTA(cta);      
 		      Assert.assertTrue(oppWfPage.isCTADisplayed(cta), "Verifying risk CTA is created ");
-		       oppWfPage.snoozeCTA(cta);
+			   SObject[] snoozeReasonId=sfdc.getRecords(resolveStrNameSpace("Select Id from JBCXM__Picklist__c where JBCXM__Category__c='Relationship Activity' and JBCXM__ShortName__c='"+cta.getSnoozeReason()+"'"));
+		       oppWfPage.snoozeCTA(cta,snoozeReasonId[0].getId());
 		       basepage.switchToMainWindow();
 		       WorkflowBasePage workflowBasePage = basepage.clickOnWorkflowTab();
 		       WorkflowPage workflowPage = workflowBasePage.clickOnListView();
@@ -1100,8 +1101,6 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        }
 
 		        oppWfPage.addTaskToCTA(cta, tasks);
-		        //workflowPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
-		        
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        int sfTask=sfdc.getRecordCount("select id from Task where id='"+syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))+"'");
 		        Assert.assertTrue((sfTask==1), "Verified that the task is created successfully in SF");
@@ -1131,7 +1130,6 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        }
 
 		        oppWfPage.addTaskToCTA(cta, tasks);
-		        oppWfPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 		        
@@ -1167,7 +1165,6 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 		        }
 
 		        oppWfPage.addTaskToCTA(cta, tasks);
-		        oppWfPage.syncTasksToSF(cta,tasks.get(0));  //syncing only 1 task for now...but maintaining in a array in case we need to support multiple
 		        SObject[] syncedTasks=sfdc.getRecords(resolveStrNameSpace("SELECT JBCXM__RelatedRecordId__c FROM JBCXM__CSTask__c where JBCXM__Subject__c='"+tasks.get(0).getSubject()+"'"));
 		        String taskId=syncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c")).toString();
 		        
@@ -1176,7 +1173,8 @@ public class OppWidget_CockpitTests  extends WorkflowSetup {
 
 		        int sfTask=sfdc.getRecordCount("select id from Task where id='"+taskId+"' and isDeleted=false");
 		        Assert.assertTrue(((sfTask==0)&&(desyncedTasks[0].getField(resolveStrNameSpace("JBCXM__RelatedRecordId__c"))==null)), "Verified that the task is desynced from SF and also deleted from SF");
-		        basepage.switchToMainWindow();		        disableSFAutoSync();
+		        basepage.switchToMainWindow();
+				disableSFAutoSync();
 		    }
 		    
 		    @TestInfo(testCaseIds={"GS-5560"})

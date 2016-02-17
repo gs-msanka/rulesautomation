@@ -418,6 +418,9 @@ public class GSDataTest extends NSTestBase {
     @Test
     @TestInfo(testCaseIds = {"GS-7598"})
     public void createLookupFieldsOnRedshift() throws Exception {
+        if(dataBaseType != DBStoreType.REDSHIFT) {
+            new SkipException("Can't be executed on redshift.");
+        }
         CollectionInfo account = mapper.readValue(new File(testDataFiles + "/tests/t4/T4Account.json"), CollectionInfo.class);
         account.getCollectionDetails().setCollectionName("GSAccount_" + date.getTime());
         CollectionInfo user = mapper.readValue(new File(testDataFiles + "/tests/t4/T4User.json"), CollectionInfo.class);

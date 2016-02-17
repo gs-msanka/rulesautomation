@@ -1,0 +1,56 @@
+Map<String, String> stageStatusMap = new Map<String, String>();
+List<String> tempList = new List<String>{'Customer Status','Customer Stage'};
+for(JBCXM__Picklist__c pkList : [SELECT Id, JBCXM__SystemName__c FROM
+                                 JBCXM__PickList__c Where JBCXM__Category__c IN :tempList ]) {
+    stageStatusMap.put(pkList.JBCXM__SystemName__c, pkList.Id);
+}
+delete [select id from Case];
+delete [select id from contact];
+Delete [SELECT Id FROM Account WHERE Name Like 'Account for related list%'];
+List<Account> accList1 = new List<Account>();
+for(Integer i=0; i<=1; i++) {
+    Account acc1 = new Account(Name='Account for related list' +i);
+    accList1.add(acc1);
+}
+insert accList1;
+List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
+for(Account acc2 : accList1) {
+   JBCXM__CustomerInfo__c cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c = acc2.Id,
+                                        JBCXM__Status__c = stageStatusMap.get('ActiveCustomer'),
+                                        JBCXM__Stage__c = stageStatusMap.get('stage1'));
+    custList.add(cust);
+}
+insert custList;
+
+List<Account> a = [select Id, Name from Account WHERE NAME = 'Account for related list1'];
+
+delete [SELECT id, name FROM sfdcrelatedlist__c where Name IN ('test1', 'test2', 'test3')];
+
+sfdcrelatedlist__c record1 = new sfdcrelatedlist__c(Name='test1',AccPercentage__c=2,ActiveUsers__c=3,CurrencyField__c=100,FNumber__c=30,IsActive__c=true,lookupfieldname__c=a[0].id);
+insert record1;
+sfdcrelatedlist__c record2 = new sfdcrelatedlist__c(Name='test2',AccPercentage__c=3,ActiveUsers__c=5,CurrencyField__c=200,FNumber__c=30,IsActive__c=true,lookupfieldname__c=a[0].id);
+insert record2;
+sfdcrelatedlist__c record3 = new sfdcrelatedlist__c(Name='test3',AccPercentage__c=4,ActiveUsers__c=6,CurrencyField__c=300,FNumber__c=30,IsActive__c=true,lookupfieldname__c=a[0].id);
+insert record3;
+
+Contact contactrec1 = new Contact(AccountId=a[0].id,email='test@user.com',FirstName='test',LastName='user');
+insert contactrec1;
+Contact contactrec2 = new Contact(AccountId=a[0].id,email='test@user2.com',FirstName='test',LastName='user2');
+insert contactrec2;
+  
+List<Contact> c = [select Id from Contact WHERE LastName = 'user'];
+List<Contact> c1 = [select Id from Contact WHERE LastName = 'user2'];
+
+  
+Case caserec1 = new Case(AccountId=a[0].id,ContactId=c[0].id,Origin='Email',Priority='Medium',Status='New');
+insert caserec1;
+Case caserec2 = new Case(AccountId=a[0].id,ContactId=c1[0].id,Origin='Phone',Priority='High',Status='Escalated');
+insert caserec2;
+
+Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='RelatedList'];
+Delete[Select id from JBCXM__C360Sections__c where JBCXM__Type__c ='ExternalReport'];
+
+
+
+
+

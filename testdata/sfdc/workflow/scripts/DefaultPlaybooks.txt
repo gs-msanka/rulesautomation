@@ -1,3 +1,5 @@
+delete [select id from JBCXM__PlaybookTasks__c];
+delete [select id from JBCXM__Playbook__c];
 List<JBCXM__Playbook__c> defaultPlayBookList = new List<JBCXM__Playbook__c>();
     JBCXM__Playbook__c p1 = new JBCXM__Playbook__c();
     p1.Name = 'Collections';
@@ -46,9 +48,17 @@ JBCXM__Playbook__c p8 = new JBCXM__Playbook__c();
     p8.Name = 'Annual Review';
     p8.JBCXM__PlayBookType__c = 'Event';
     p8.JBCXM__Tasks_Count__c = 6;
-
 defaultPlayBookList.add(p8);
+
+JBCXM__Playbook__c p9 = new JBCXM__Playbook__c();
+    p9.Name = 'Test Dynamic Owners';
+    p9.JBCXM__PlayBookType__c = 'Risk';
+    p9.JBCXM__Tasks_Count__c = 2;
+
+defaultPlayBookList.add(p9);
+
 insert 	defaultPlayBookList;
+
 List<String> taskList = new List<String>{'Check with Finance on T&C\'s',
 								'Check 360 View for usage, latest NPS score, & open cases',
 								'Reach out to customer regarding delay',
@@ -132,23 +142,39 @@ priority = new List<String>{ 'High','Medium','High','High','High','High'};
 days = new List<Integer>{5, 5, 10, 15, 20, 22};
 pbTasks.addAll(createTasks(taskList,p8.id, priority, days));
 
+taskList = new List<String>{'Task with CTA Owner as Owner',
+                  'Task With Account Owner as Owner'};
+
+priority = new List<String>{ 'High','Medium'};
+days = new List<Integer>{5, 5};
+List<JBCXM__PlaybookTasks__c> pbs = createTasks(taskList,p9.id, priority, days);
+    pbs[0].JBCXM__IsDynamicOwner__c=true;
+    pbs[1].JBCXM__IsDynamicOwner__c=true;
+	pbs[0].JBCXM__DynamicOwnerLabel__c='CTA Owner';
+	pbs[1].JBCXM__DynamicOwnerLabel__c='Account ➝ Owner';
+    pbs[0].JBCXM__DynamicOwner__c='@CTA Owner';
+    pbs[1].JBCXM__DynamicOwner__c='Account#Owner.Name';
+pbTasks.addAll(pbs);
+
 insert pbTasks;
-	
 
 public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String id, List<String> priority1, List<Integer> days1){
     Integer i = 0;
     List<JBCXM__PlaybookTasks__c> pbTasks1 = new List<JBCXM__PlaybookTasks__c>();
     Integer nmbr = 0;
+    List<JBCXM__GSMetaInfo__c> dates=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='ASSIGN_DATE'];
+    List<JBCXM__GSMetaInfo__c> skipOpts=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='Skip_all_weekends'];
+
     for(String name : taskList1){
             JBCXM__PlaybookTasks__c pt = new JBCXM__PlaybookTasks__c();
             pt.JBCXM__PlaybookId__c = id;
-            pt.JBCXM__TaskJSON__c = getJSON(name, days1.get(i), priority1.get(i++) );
+        	pt.JBCXM__Subject__c = name;
+        	pt.JBCXM__Status__c = 'Open';
+        	pt.JBCXM__DueDateSrc__c = dates.get(0).Id;
+        	pt.JBCXM__Priority__c = priority1.get(i++);
+        	pt.JBCXM__SkipOption__c = skipOpts.get(0).Id;
             pt.JBCXM__DisplayOrder__c = (++nmbr);
             pbTasks1.add(pt);
         }
     return 	pbTasks1;
-}
-
-private static String getJSON(String name, Integer days2, String priority2){
-    return '[{"fieldName":"Assigned__c","objectName":"CSTask__c","ctrlType":"userlookup","ctrlData":[],"label":"Assigned To","fieldType":"REFERENCE","isRequired":"true","value":[]},{"fieldName":"Subject__c","objectName":"CSTask__c","ctrlType":"text","ctrlData":[],"label":"Subject","fieldType":"STRING","isRequired":"true","value":[{"key":"'+name+'","value":"'+name+'"}]},{"fieldName":"Date__c","objectName":"CSTask__c","ctrlType":"datecontrol","ctrlData":[],"label":"Date","fieldType":"DATE","isRequired":"false","value":[{"key":"'+days2+'","value":"'+days2+'"}]},{"fieldName":"Priority__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"High","value":"High"},{"key":"Medium","value":"Medium"},{"key":"Low","value":"Low"}],"label":"Priority","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"'+priority2+'","value":"'+priority2+'"}]},{"fieldName":"Status__c","objectName":"CSTask__c","ctrlType":"select","ctrlData":[{"key":"Open","value":"Open"},{"key":"Closed","value":"Closed"}],"label":"Status","fieldType":"PICKLIST","isRequired":"true","value":[{"key":"Open","value":"Open"}]}]';
 }

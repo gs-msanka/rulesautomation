@@ -5,6 +5,8 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.utils.MongoUtil;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 
 import org.bson.Document;
 import org.bson.types.Binary;
@@ -272,5 +274,28 @@ public class MongoDBDAO  {
         whereQuery.put("ReportInfo.reportName", new Document("$regex", documentMatcher).append("$options", "i"));
         Log.info(whereQuery.toString());
         return mongoUtil.removeMany(mongoCollection, whereQuery);
+    }
+
+    /**
+     * method to get dbCollectionName of a particular collection from colletionMaster
+     *
+     * @param tenantID       - tenantID
+     * @param collectionName - collectionName
+     * @return dbCollectionName
+     */
+    public String getDbCollectionName(String tenantID, String collectionName) {
+        Document whereQuery = new Document();
+        whereQuery.put("TenantId", tenantID);
+        whereQuery.put("CollectionDetails.CollectionName", new Document("$regex", collectionName).append("$options", "i"));
+        Log.info((String.valueOf(whereQuery)));
+        FindIterable<Document> iterable = mongoUtil.mongoDatabase.getCollection("collectionmaster").find(whereQuery);
+        String dbCollectionName = null;
+        for (Document document : iterable) {
+            Document collectionDetailsDocument = (Document) document.get("CollectionDetails");
+            dbCollectionName = (String) collectionDetailsDocument.get("dbCollectionName");
+            Log.info("Getting dbName " + dbCollectionName + "   " + "for tenant : " + tenantID);
+            break;
+        }
+        return dbCollectionName;
     }
 }
