@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "AccountName": "REPORTINGUI Account 1",
+      "EventTimeStamp": "02-08-2016 00:00:00",
+      "FilesDownloaded": 64,
+      "ProductCode": 1,
+      "Active": 1
+    },
+    {
+      "AccountName": "REPORTINGUI Account 10",
+      "EventTimeStamp": "12-07-2015 00:00:00",
+      "FilesDownloaded": 46,
+      "ProductCode": 1,
+      "Active": 1
+    },
+    {
+      "AccountName": "REPORTINGUI Account 100",
+      "EventTimeStamp": "03-17-2014 00:00:00",
+      "FilesDownloaded": 152,
+      "ProductCode": 1,
+      "Active": 1
+    },
+    {
+      "AccountName": "REPORTINGUI Account 101",
+      "EventTimeStamp": "03-10-2014 00:00:00",
+      "FilesDownloaded": 199,
+      "ProductCode": 1,
+      "Active": 1
+    },
+    {
+      "AccountName": "REPORTINGUI Account 102",
+      "EventTimeStamp": "03-03-2014 00:00:00",
+      "FilesDownloaded": 75,
+      "ProductCode": 1,
+      "Active": 1
+    }
+  ]
+}

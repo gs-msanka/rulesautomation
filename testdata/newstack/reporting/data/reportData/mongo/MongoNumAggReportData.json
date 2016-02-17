@@ -1,0 +1,1084 @@
+{
+  "data": [
+    {
+      "NoofMeetingsAttended": 189,
+      "Active": 8,
+      "Date1": null,
+      "ProductCode": 8,
+      "NoofSchedulesCreated": 906,
+      "NoofRulesTriggered": 75,
+      "FilesDownloaded": 8
+    },
+    {
+      "NoofMeetingsAttended": 191,
+      "Active": 1,
+      "Date1": "04-26-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 4,
+      "NoofRulesTriggered": 162,
+      "FilesDownloaded": 10
+    },
+    {
+      "NoofMeetingsAttended": null,
+      "Active": 1,
+      "Date1": "05-03-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 24,
+      "NoofRulesTriggered": 102,
+      "FilesDownloaded": 134
+    },
+    {
+      "NoofMeetingsAttended": 130,
+      "Active": 4,
+      "Date1": "05-10-2012",
+      "ProductCode": 4,
+      "NoofSchedulesCreated": 458,
+      "NoofRulesTriggered": 158.25,
+      "FilesDownloaded": 46
+    },
+    {
+      "NoofMeetingsAttended": 147,
+      "Active": 1,
+      "Date1": "05-17-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 99,
+      "NoofRulesTriggered": 89,
+      "FilesDownloaded": 64
+    },
+    {
+      "NoofMeetingsAttended": 127,
+      "Active": 2,
+      "Date1": "06-21-2012",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 211,
+      "NoofRulesTriggered": 194,
+      "FilesDownloaded": 116
+    },
+    {
+      "NoofMeetingsAttended": 107,
+      "Active": 1,
+      "Date1": "06-28-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 139,
+      "NoofRulesTriggered": 174,
+      "FilesDownloaded": 199
+    },
+    {
+      "NoofMeetingsAttended": 114,
+      "Active": 1,
+      "Date1": "08-02-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 0,
+      "NoofRulesTriggered": 96,
+      "FilesDownloaded": 33
+    },
+    {
+      "NoofMeetingsAttended": 158,
+      "Active": 3,
+      "Date1": "08-09-2012",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 121,
+      "NoofRulesTriggered": 150.33,
+      "FilesDownloaded": 102
+    },
+    {
+      "NoofMeetingsAttended": 106,
+      "Active": 2,
+      "Date1": "08-16-2012",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 309,
+      "NoofRulesTriggered": 170,
+      "FilesDownloaded": 16
+    },
+    {
+      "NoofMeetingsAttended": 5,
+      "Active": 1,
+      "Date1": "08-23-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 156,
+      "NoofRulesTriggered": 48,
+      "FilesDownloaded": 39
+    },
+    {
+      "NoofMeetingsAttended": null,
+      "Active": 1,
+      "Date1": "09-13-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 42,
+      "NoofRulesTriggered": 101,
+      "FilesDownloaded": 103
+    },
+    {
+      "NoofMeetingsAttended": 130,
+      "Active": 1,
+      "Date1": "09-20-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 110,
+      "NoofRulesTriggered": 40,
+      "FilesDownloaded": 161
+    },
+    {
+      "NoofMeetingsAttended": 146,
+      "Active": 2,
+      "Date1": "09-27-2012",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 205,
+      "NoofRulesTriggered": 135,
+      "FilesDownloaded": 143
+    },
+    {
+      "NoofMeetingsAttended": 49,
+      "Active": 1,
+      "Date1": "10-18-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 80,
+      "NoofRulesTriggered": 191,
+      "FilesDownloaded": 42
+    },
+    {
+      "NoofMeetingsAttended": 158,
+      "Active": 4,
+      "Date1": "10-25-2012",
+      "ProductCode": 4,
+      "NoofSchedulesCreated": 374,
+      "NoofRulesTriggered": 101.75,
+      "FilesDownloaded": 13
+    },
+    {
+      "NoofMeetingsAttended": 77,
+      "Active": 1,
+      "Date1": "11-08-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 97,
+      "NoofRulesTriggered": 112,
+      "FilesDownloaded": 111
+    },
+    {
+      "NoofMeetingsAttended": 181,
+      "Active": 1,
+      "Date1": "11-22-2012",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 6,
+      "NoofRulesTriggered": 44,
+      "FilesDownloaded": 15
+    },
+    {
+      "NoofMeetingsAttended": 98,
+      "Active": 2,
+      "Date1": "12-13-2012",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 139,
+      "NoofRulesTriggered": 127,
+      "FilesDownloaded": 68
+    },
+    {
+      "NoofMeetingsAttended": 113,
+      "Active": 2,
+      "Date1": "12-20-2012",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 118,
+      "NoofRulesTriggered": 94,
+      "FilesDownloaded": 37
+    },
+    {
+      "NoofMeetingsAttended": 123,
+      "Active": 1,
+      "Date1": "01-17-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 124,
+      "NoofRulesTriggered": 120,
+      "FilesDownloaded": 58
+    },
+    {
+      "NoofMeetingsAttended": 99,
+      "Active": 3,
+      "Date1": "01-24-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 417,
+      "NoofRulesTriggered": 79,
+      "FilesDownloaded": 27
+    },
+    {
+      "NoofMeetingsAttended": 196,
+      "Active": 1,
+      "Date1": "01-31-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 0,
+      "NoofRulesTriggered": 168,
+      "FilesDownloaded": 78
+    },
+    {
+      "NoofMeetingsAttended": 195,
+      "Active": 2,
+      "Date1": "02-14-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 100,
+      "NoofRulesTriggered": 13,
+      "FilesDownloaded": 24
+    },
+    {
+      "NoofMeetingsAttended": 158,
+      "Active": 1,
+      "Date1": "02-21-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 93,
+      "NoofRulesTriggered": 162,
+      "FilesDownloaded": 69
+    },
+    {
+      "NoofMeetingsAttended": 16,
+      "Active": 1,
+      "Date1": "02-28-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 1,
+      "NoofRulesTriggered": 196,
+      "FilesDownloaded": 8
+    },
+    {
+      "NoofMeetingsAttended": 185,
+      "Active": 1,
+      "Date1": "03-07-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 16,
+      "NoofRulesTriggered": 21,
+      "FilesDownloaded": 128
+    },
+    {
+      "NoofMeetingsAttended": 185,
+      "Active": 3,
+      "Date1": "03-21-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 286,
+      "NoofRulesTriggered": 110.67,
+      "FilesDownloaded": 42
+    },
+    {
+      "NoofMeetingsAttended": 80,
+      "Active": 2,
+      "Date1": "03-28-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 213,
+      "NoofRulesTriggered": 6,
+      "FilesDownloaded": 38
+    },
+    {
+      "NoofMeetingsAttended": 50,
+      "Active": 1,
+      "Date1": "04-18-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 75,
+      "NoofRulesTriggered": 167,
+      "FilesDownloaded": 80
+    },
+    {
+      "NoofMeetingsAttended": 153,
+      "Active": 2,
+      "Date1": "04-25-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 271,
+      "NoofRulesTriggered": 107.5,
+      "FilesDownloaded": 46
+    },
+    {
+      "NoofMeetingsAttended": 187,
+      "Active": 3,
+      "Date1": "05-16-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 329,
+      "NoofRulesTriggered": 116.5,
+      "FilesDownloaded": 30
+    },
+    {
+      "NoofMeetingsAttended": 145,
+      "Active": 3,
+      "Date1": "06-13-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 205,
+      "NoofRulesTriggered": 161.33,
+      "FilesDownloaded": 129
+    },
+    {
+      "NoofMeetingsAttended": 136,
+      "Active": 1,
+      "Date1": "06-20-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 50,
+      "NoofRulesTriggered": 141,
+      "FilesDownloaded": null
+    },
+    {
+      "NoofMeetingsAttended": 13,
+      "Active": 1,
+      "Date1": "06-27-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 65,
+      "NoofRulesTriggered": 1,
+      "FilesDownloaded": 148
+    },
+    {
+      "NoofMeetingsAttended": 177,
+      "Active": 3,
+      "Date1": "07-04-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 112,
+      "NoofRulesTriggered": 59.33,
+      "FilesDownloaded": 141
+    },
+    {
+      "NoofMeetingsAttended": 14,
+      "Active": 2,
+      "Date1": "07-11-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 45,
+      "NoofRulesTriggered": 133,
+      "FilesDownloaded": 65
+    },
+    {
+      "NoofMeetingsAttended": 75,
+      "Active": 2,
+      "Date1": "07-18-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 186,
+      "NoofRulesTriggered": 96.5,
+      "FilesDownloaded": 99
+    },
+    {
+      "NoofMeetingsAttended": 154,
+      "Active": 2,
+      "Date1": "07-25-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 63,
+      "NoofRulesTriggered": 57,
+      "FilesDownloaded": 1
+    },
+    {
+      "NoofMeetingsAttended": 169,
+      "Active": 4,
+      "Date1": "08-01-2013",
+      "ProductCode": 4,
+      "NoofSchedulesCreated": 164,
+      "NoofRulesTriggered": 114.75,
+      "FilesDownloaded": 75
+    },
+    {
+      "NoofMeetingsAttended": 75,
+      "Active": 1,
+      "Date1": "08-08-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 170,
+      "NoofRulesTriggered": 81,
+      "FilesDownloaded": 119
+    },
+    {
+      "NoofMeetingsAttended": 112,
+      "Active": 1,
+      "Date1": "08-22-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 113,
+      "NoofRulesTriggered": 0,
+      "FilesDownloaded": 36
+    },
+    {
+      "NoofMeetingsAttended": 176,
+      "Active": 1,
+      "Date1": "09-12-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 149,
+      "NoofRulesTriggered": 0,
+      "FilesDownloaded": 3
+    },
+    {
+      "NoofMeetingsAttended": 176,
+      "Active": 1,
+      "Date1": "09-19-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 83,
+      "NoofRulesTriggered": 148,
+      "FilesDownloaded": 70
+    },
+    {
+      "NoofMeetingsAttended": 90,
+      "Active": 1,
+      "Date1": "09-26-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 177,
+      "NoofRulesTriggered": 3,
+      "FilesDownloaded": 160
+    },
+    {
+      "NoofMeetingsAttended": 35,
+      "Active": 2,
+      "Date1": "10-03-2013",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 352,
+      "NoofRulesTriggered": 170,
+      "FilesDownloaded": 87
+    },
+    {
+      "NoofMeetingsAttended": 98,
+      "Active": 1,
+      "Date1": "10-10-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 155,
+      "NoofRulesTriggered": 118,
+      "FilesDownloaded": 189
+    },
+    {
+      "NoofMeetingsAttended": 121,
+      "Active": 1,
+      "Date1": "10-24-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 59,
+      "NoofRulesTriggered": 140,
+      "FilesDownloaded": 97
+    },
+    {
+      "NoofMeetingsAttended": 194,
+      "Active": 1,
+      "Date1": "11-07-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 27,
+      "NoofRulesTriggered": 159,
+      "FilesDownloaded": 96
+    },
+    {
+      "NoofMeetingsAttended": 114,
+      "Active": 3,
+      "Date1": "11-28-2013",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 276,
+      "NoofRulesTriggered": 89,
+      "FilesDownloaded": 130
+    },
+    {
+      "NoofMeetingsAttended": 65,
+      "Active": 1,
+      "Date1": "12-05-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 176,
+      "NoofRulesTriggered": 109,
+      "FilesDownloaded": 200
+    },
+    {
+      "NoofMeetingsAttended": 46,
+      "Active": 1,
+      "Date1": "12-12-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 82,
+      "NoofRulesTriggered": 175,
+      "FilesDownloaded": null
+    },
+    {
+      "NoofMeetingsAttended": 164,
+      "Active": 1,
+      "Date1": "12-19-2013",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 163,
+      "NoofRulesTriggered": 116,
+      "FilesDownloaded": 53
+    },
+    {
+      "NoofMeetingsAttended": 158,
+      "Active": 1,
+      "Date1": "01-16-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 64,
+      "NoofRulesTriggered": 13,
+      "FilesDownloaded": 157
+    },
+    {
+      "NoofMeetingsAttended": 157,
+      "Active": 1,
+      "Date1": "01-23-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 56,
+      "NoofRulesTriggered": 161,
+      "FilesDownloaded": 185
+    },
+    {
+      "NoofMeetingsAttended": 39,
+      "Active": 1,
+      "Date1": "02-13-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 79,
+      "NoofRulesTriggered": 72,
+      "FilesDownloaded": 90
+    },
+    {
+      "NoofMeetingsAttended": 174,
+      "Active": 3,
+      "Date1": "02-20-2014",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 290,
+      "NoofRulesTriggered": 82.33,
+      "FilesDownloaded": 80
+    },
+    {
+      "NoofMeetingsAttended": 164,
+      "Active": 3,
+      "Date1": "03-13-2014",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 432,
+      "NoofRulesTriggered": 58.67,
+      "FilesDownloaded": 156
+    },
+    {
+      "NoofMeetingsAttended": 162,
+      "Active": 1,
+      "Date1": "03-20-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 109,
+      "NoofRulesTriggered": 146,
+      "FilesDownloaded": 99
+    },
+    {
+      "NoofMeetingsAttended": 11,
+      "Active": 1,
+      "Date1": "04-10-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 100,
+      "NoofRulesTriggered": 106,
+      "FilesDownloaded": 55
+    },
+    {
+      "NoofMeetingsAttended": 71,
+      "Active": 3,
+      "Date1": "05-01-2014",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 375,
+      "NoofRulesTriggered": 123.67,
+      "FilesDownloaded": 6
+    },
+    {
+      "NoofMeetingsAttended": 143,
+      "Active": 1,
+      "Date1": "05-08-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 174,
+      "NoofRulesTriggered": 64,
+      "FilesDownloaded": null
+    },
+    {
+      "NoofMeetingsAttended": 182,
+      "Active": 1,
+      "Date1": "05-15-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 181,
+      "NoofRulesTriggered": 160,
+      "FilesDownloaded": 123
+    },
+    {
+      "NoofMeetingsAttended": 49,
+      "Active": 2,
+      "Date1": "05-22-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 141,
+      "NoofRulesTriggered": 81.5,
+      "FilesDownloaded": 33
+    },
+    {
+      "NoofMeetingsAttended": 85,
+      "Active": 1,
+      "Date1": "05-29-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 128,
+      "NoofRulesTriggered": 133,
+      "FilesDownloaded": 180
+    },
+    {
+      "NoofMeetingsAttended": 90,
+      "Active": 2,
+      "Date1": "06-05-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 13,
+      "NoofRulesTriggered": 108,
+      "FilesDownloaded": 66
+    },
+    {
+      "NoofMeetingsAttended": 49,
+      "Active": 1,
+      "Date1": "06-12-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 5,
+      "NoofRulesTriggered": 162,
+      "FilesDownloaded": 1
+    },
+    {
+      "NoofMeetingsAttended": 64,
+      "Active": 1,
+      "Date1": "06-19-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 192,
+      "NoofRulesTriggered": 114,
+      "FilesDownloaded": 135
+    },
+    {
+      "NoofMeetingsAttended": 62,
+      "Active": 1,
+      "Date1": "06-26-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 28,
+      "NoofRulesTriggered": 133,
+      "FilesDownloaded": 200
+    },
+    {
+      "NoofMeetingsAttended": 150,
+      "Active": 3,
+      "Date1": "07-03-2014",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 257,
+      "NoofRulesTriggered": 128.33,
+      "FilesDownloaded": 7
+    },
+    {
+      "NoofMeetingsAttended": 67,
+      "Active": 1,
+      "Date1": "07-17-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 32,
+      "NoofRulesTriggered": 42,
+      "FilesDownloaded": 143
+    },
+    {
+      "NoofMeetingsAttended": 152,
+      "Active": 2,
+      "Date1": "07-31-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 123,
+      "NoofRulesTriggered": 158,
+      "FilesDownloaded": 75
+    },
+    {
+      "NoofMeetingsAttended": 107,
+      "Active": 4,
+      "Date1": "08-07-2014",
+      "ProductCode": 4,
+      "NoofSchedulesCreated": 278,
+      "NoofRulesTriggered": 74,
+      "FilesDownloaded": 5
+    },
+    {
+      "NoofMeetingsAttended": 136,
+      "Active": 2,
+      "Date1": "08-21-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 341,
+      "NoofRulesTriggered": 158,
+      "FilesDownloaded": 143
+    },
+    {
+      "NoofMeetingsAttended": 103,
+      "Active": 1,
+      "Date1": "08-28-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 152,
+      "NoofRulesTriggered": 130,
+      "FilesDownloaded": 53
+    },
+    {
+      "NoofMeetingsAttended": 184,
+      "Active": 1,
+      "Date1": "09-11-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 167,
+      "NoofRulesTriggered": 60,
+      "FilesDownloaded": 108
+    },
+    {
+      "NoofMeetingsAttended": 186,
+      "Active": 2,
+      "Date1": "09-18-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 210,
+      "NoofRulesTriggered": 132.5,
+      "FilesDownloaded": 10
+    },
+    {
+      "NoofMeetingsAttended": 194,
+      "Active": 1,
+      "Date1": "10-02-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 4,
+      "NoofRulesTriggered": 113,
+      "FilesDownloaded": 10
+    },
+    {
+      "NoofMeetingsAttended": 3,
+      "Active": 1,
+      "Date1": "10-09-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 39,
+      "NoofRulesTriggered": 168,
+      "FilesDownloaded": 146
+    },
+    {
+      "NoofMeetingsAttended": 183,
+      "Active": 2,
+      "Date1": "10-16-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 67,
+      "NoofRulesTriggered": 18.5,
+      "FilesDownloaded": 71
+    },
+    {
+      "NoofMeetingsAttended": 45,
+      "Active": 1,
+      "Date1": "10-23-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 29,
+      "NoofRulesTriggered": 91,
+      "FilesDownloaded": 192
+    },
+    {
+      "NoofMeetingsAttended": 167,
+      "Active": 3,
+      "Date1": "11-06-2014",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 327,
+      "NoofRulesTriggered": 41.67,
+      "FilesDownloaded": 9
+    },
+    {
+      "NoofMeetingsAttended": 181,
+      "Active": 1,
+      "Date1": "11-13-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 78,
+      "NoofRulesTriggered": 0,
+      "FilesDownloaded": 48
+    },
+    {
+      "NoofMeetingsAttended": 154,
+      "Active": 2,
+      "Date1": "11-20-2014",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 164,
+      "NoofRulesTriggered": 118,
+      "FilesDownloaded": 48
+    },
+    {
+      "NoofMeetingsAttended": 176,
+      "Active": 1,
+      "Date1": "12-25-2014",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 146,
+      "NoofRulesTriggered": 185,
+      "FilesDownloaded": 120
+    },
+    {
+      "NoofMeetingsAttended": 153,
+      "Active": 1,
+      "Date1": "01-08-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 164,
+      "NoofRulesTriggered": 108,
+      "FilesDownloaded": 74
+    },
+    {
+      "NoofMeetingsAttended": 39,
+      "Active": 1,
+      "Date1": "01-15-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 47,
+      "NoofRulesTriggered": 56,
+      "FilesDownloaded": 66
+    },
+    {
+      "NoofMeetingsAttended": 91,
+      "Active": 2,
+      "Date1": "01-22-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 81,
+      "NoofRulesTriggered": 52,
+      "FilesDownloaded": 35
+    },
+    {
+      "NoofMeetingsAttended": 179,
+      "Active": 2,
+      "Date1": "02-05-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 229,
+      "NoofRulesTriggered": 127.5,
+      "FilesDownloaded": 56
+    },
+    {
+      "NoofMeetingsAttended": 111,
+      "Active": 1,
+      "Date1": "02-12-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 55,
+      "NoofRulesTriggered": 172,
+      "FilesDownloaded": 179
+    },
+    {
+      "NoofMeetingsAttended": 125,
+      "Active": 1,
+      "Date1": "02-19-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 17,
+      "NoofRulesTriggered": 80,
+      "FilesDownloaded": 27
+    },
+    {
+      "NoofMeetingsAttended": 191,
+      "Active": 1,
+      "Date1": "02-26-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 17,
+      "NoofRulesTriggered": 174,
+      "FilesDownloaded": 97
+    },
+    {
+      "NoofMeetingsAttended": 49,
+      "Active": 1,
+      "Date1": "03-12-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 91,
+      "NoofRulesTriggered": 190,
+      "FilesDownloaded": 129
+    },
+    {
+      "NoofMeetingsAttended": 113,
+      "Active": 4,
+      "Date1": "03-19-2015",
+      "ProductCode": 4,
+      "NoofSchedulesCreated": 292,
+      "NoofRulesTriggered": 136.33,
+      "FilesDownloaded": 53
+    },
+    {
+      "NoofMeetingsAttended": 168,
+      "Active": 1,
+      "Date1": "03-26-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 33,
+      "NoofRulesTriggered": 82,
+      "FilesDownloaded": 158
+    },
+    {
+      "NoofMeetingsAttended": 179,
+      "Active": 1,
+      "Date1": "04-02-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 0,
+      "NoofRulesTriggered": 150,
+      "FilesDownloaded": 173
+    },
+    {
+      "NoofMeetingsAttended": 161,
+      "Active": 2,
+      "Date1": "04-09-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 220,
+      "NoofRulesTriggered": 118,
+      "FilesDownloaded": 84
+    },
+    {
+      "NoofMeetingsAttended": 123,
+      "Active": 1,
+      "Date1": "04-16-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 0,
+      "NoofRulesTriggered": 121,
+      "FilesDownloaded": 73
+    },
+    {
+      "NoofMeetingsAttended": 51,
+      "Active": 1,
+      "Date1": "04-23-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 114,
+      "NoofRulesTriggered": 145,
+      "FilesDownloaded": 144
+    },
+    {
+      "NoofMeetingsAttended": 60,
+      "Active": 1,
+      "Date1": "04-30-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 116,
+      "NoofRulesTriggered": 27,
+      "FilesDownloaded": 124
+    },
+    {
+      "NoofMeetingsAttended": 200,
+      "Active": 3,
+      "Date1": "05-28-2015",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 512,
+      "NoofRulesTriggered": 111.67,
+      "FilesDownloaded": 33
+    },
+    {
+      "NoofMeetingsAttended": 148,
+      "Active": 2,
+      "Date1": "06-11-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 24,
+      "NoofRulesTriggered": 43.5,
+      "FilesDownloaded": 15
+    },
+    {
+      "NoofMeetingsAttended": 200,
+      "Active": 3,
+      "Date1": "06-18-2015",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 282,
+      "NoofRulesTriggered": 103.67,
+      "FilesDownloaded": 30
+    },
+    {
+      "NoofMeetingsAttended": 9,
+      "Active": 1,
+      "Date1": "07-16-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 115,
+      "NoofRulesTriggered": 80,
+      "FilesDownloaded": 13
+    },
+    {
+      "NoofMeetingsAttended": 129,
+      "Active": 2,
+      "Date1": "07-30-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 310,
+      "NoofRulesTriggered": 16.5,
+      "FilesDownloaded": 22
+    },
+    {
+      "NoofMeetingsAttended": 193,
+      "Active": 1,
+      "Date1": "08-13-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 139,
+      "NoofRulesTriggered": 86,
+      "FilesDownloaded": 48
+    },
+    {
+      "NoofMeetingsAttended": 161,
+      "Active": 1,
+      "Date1": "08-20-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 160,
+      "NoofRulesTriggered": 126,
+      "FilesDownloaded": 160
+    },
+    {
+      "NoofMeetingsAttended": 47,
+      "Active": 1,
+      "Date1": "08-27-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 77,
+      "NoofRulesTriggered": 6,
+      "FilesDownloaded": 65
+    },
+    {
+      "NoofMeetingsAttended": 90,
+      "Active": 1,
+      "Date1": "10-01-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 125,
+      "NoofRulesTriggered": 6,
+      "FilesDownloaded": 188
+    },
+    {
+      "NoofMeetingsAttended": 177,
+      "Active": 1,
+      "Date1": "10-15-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 180,
+      "NoofRulesTriggered": 117,
+      "FilesDownloaded": 99
+    },
+    {
+      "NoofMeetingsAttended": 97,
+      "Active": 2,
+      "Date1": "10-22-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 41,
+      "NoofRulesTriggered": 38,
+      "FilesDownloaded": 14
+    },
+    {
+      "NoofMeetingsAttended": 67,
+      "Active": 1,
+      "Date1": "10-29-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 157,
+      "NoofRulesTriggered": 124,
+      "FilesDownloaded": 121
+    },
+    {
+      "NoofMeetingsAttended": 193,
+      "Active": 2,
+      "Date1": "11-12-2015",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 136,
+      "NoofRulesTriggered": 178,
+      "FilesDownloaded": 24
+    },
+    {
+      "NoofMeetingsAttended": null,
+      "Active": 1,
+      "Date1": "11-19-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 83,
+      "NoofRulesTriggered": 0,
+      "FilesDownloaded": 125
+    },
+    {
+      "NoofMeetingsAttended": 110,
+      "Active": 3,
+      "Date1": "11-26-2015",
+      "ProductCode": 3,
+      "NoofSchedulesCreated": 144,
+      "NoofRulesTriggered": 117.33,
+      "FilesDownloaded": 53
+    },
+    {
+      "NoofMeetingsAttended": 150,
+      "Active": 1,
+      "Date1": "12-03-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 140,
+      "NoofRulesTriggered": 154,
+      "FilesDownloaded": 163
+    },
+    {
+      "NoofMeetingsAttended": 152,
+      "Active": 1,
+      "Date1": "12-17-2015",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 48,
+      "NoofRulesTriggered": 188,
+      "FilesDownloaded": 20
+    },
+    {
+      "NoofMeetingsAttended": 61,
+      "Active": 1,
+      "Date1": "01-07-2016",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 183,
+      "NoofRulesTriggered": 187,
+      "FilesDownloaded": 167
+    },
+    {
+      "NoofMeetingsAttended": 54,
+      "Active": 2,
+      "Date1": "01-21-2016",
+      "ProductCode": 2,
+      "NoofSchedulesCreated": 288,
+      "NoofRulesTriggered": 172.5,
+      "FilesDownloaded": 113
+    },
+    {
+      "NoofMeetingsAttended": 7,
+      "Active": 1,
+      "Date1": "02-04-2016",
+      "ProductCode": 1,
+      "NoofSchedulesCreated": 83,
+      "NoofRulesTriggered": 90,
+      "FilesDownloaded": 192
+    }
+  ]
+}
