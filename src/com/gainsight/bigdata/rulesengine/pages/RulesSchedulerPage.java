@@ -46,7 +46,8 @@ public class RulesSchedulerPage extends BasePage {
      * @return RulesSchedulerPage object after clicking on scheduler link
      */
     public RulesSchedulerPage clickOnSchedulerLink(){
-    	item.click(SCHEDULER_HYPERLINK);
+        wait.waitTillElementPresent(SCHEDULER_HYPERLINK, MIN_TIME, MAX_TIME);
+        item.click(SCHEDULER_HYPERLINK);
     	wait.waitTillElementNotDisplayed("//div[contains(@class, 'ui-draggable') and contains(@style,'display: block;')]", MIN_TIME, MAX_TIME);
     	return this; 	
     }

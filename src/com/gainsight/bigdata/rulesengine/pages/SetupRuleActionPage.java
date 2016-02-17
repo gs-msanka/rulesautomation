@@ -125,7 +125,7 @@ public class SetupRuleActionPage extends BasePage {
      */
     public void clickOnActionButton() {
         try {
-            env.setTimeout(10);
+            env.setTimeout(3);
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
@@ -406,6 +406,8 @@ public class SetupRuleActionPage extends BasePage {
             if (fieldMappingObject.isDefaultValue()) {
             	item.click(xpath + fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-hasDefaultValue')]");
             	if (fieldMappingObject.isDefaultBooleanValue()) {
+                    Log.info("Scrolling into webElement/locator: " +xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
+                    ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]"));
             		item.click(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
 				}else {
 					element.setText(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input", fieldMappingObject.getDefaultValueInput());
@@ -468,8 +470,10 @@ public class SetupRuleActionPage extends BasePage {
 		}
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]//div[@class='criteria-container'][" + c + "]";
         String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
+        Log.info("scrolling till element: " +criteriaButton + CRITERIA);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(criteriaButton + CRITERIA));
         item.click(criteriaButton + CRITERIA);
-        Log.info("scrolled till element: " +xpath + CRITERIA_SHOWFIELD);
+        Log.info("scrolling till element: " +xpath + CRITERIA_SHOWFIELD);
         ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(xpath + CRITERIA_SHOWFIELD));
         item.click(xpath + CRITERIA_SHOWFIELD);
         selectValueInDropDown(fieldName, true);
