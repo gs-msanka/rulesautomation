@@ -201,6 +201,8 @@ public class SetupRuleActionPage extends BasePage {
 		List<String> tokenList = Arrays.asList(ctaAction.getComments().split(","));
 		for (String token : tokenList) {
 			if (token.startsWith("@")) {
+                // Clicking inside comments div
+                item.click(COMMENTS);
 				element.setText(COMMENTS, token);
 				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 			} else {
@@ -323,6 +325,9 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
+        // scrolling into a particular webElement since, auto scroll is not happening
+        Log.info("Scrolling into webElement/locator: " +MILESTONE_LTM);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
@@ -566,6 +571,8 @@ public class SetupRuleActionPage extends BasePage {
 		List<String> tokenList = Arrays.asList(closeCta.getComments().split(","));
 		for (String token : tokenList) {
 			if (token.startsWith("@")) {
+                // Clicking inside comments area div
+                item.click(CLOSECTA_COMMENTS);
 				element.setText(CLOSECTA_COMMENTS, token);
 				item.click(String.format("//div[contains(@class, 'close_ctn')]/descendant::div[contains(@class, 'alertComment')]/following-sibling::div/descendant::span[text()='%s']", token.substring(token.indexOf("@") + 1)));
 			} else {
