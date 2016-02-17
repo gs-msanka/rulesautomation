@@ -11,6 +11,7 @@ import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping.PickListMappings;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -124,7 +125,7 @@ public class SetupRuleActionPage extends BasePage {
      */
     public void clickOnActionButton() {
         try {
-            env.setTimeout(0);
+            env.setTimeout(10);
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
@@ -242,7 +243,8 @@ public class SetupRuleActionPage extends BasePage {
 			List<String> tokenList = Arrays.asList(loadToFeatureAction.getComments().split(","));
 			for (String token : tokenList) {
 				if (token.startsWith("@")) {
-					element.setText(COMMENTS, token);
+                    item.click(COMMENTS);
+                    element.setText(COMMENTS, token);
 					item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 				} else {
 					element.clearAndSetText(xpath + COMMENTS, token);
@@ -337,7 +339,8 @@ public class SetupRuleActionPage extends BasePage {
 			List<String> tokenList = Arrays.asList(loadToMileStoneAction.getComments().split(","));
 			for (String token : tokenList) {
 				if (token.startsWith("@")) {
-					element.setText(COMMENTS, token);
+                    item.click(COMMENTS);
+                    element.setText(COMMENTS, token);
 					item.click(String.format(xpath + COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 				} else {
 					element.clearAndSetText(xpath + COMMENTS, token);
@@ -466,6 +469,8 @@ public class SetupRuleActionPage extends BasePage {
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]//div[@class='criteria-container'][" + c + "]";
         String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
         item.click(criteriaButton + CRITERIA);
+        Log.info("scrolled till element: " +xpath + CRITERIA_SHOWFIELD);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(xpath + CRITERIA_SHOWFIELD));
         item.click(xpath + CRITERIA_SHOWFIELD);
         selectValueInDropDown(fieldName, true);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
