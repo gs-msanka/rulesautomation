@@ -378,7 +378,6 @@ public class WorkFlowTest extends WorkflowSetup {
         	if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-           // String date=task.getDate().substring(0, task.getDate().indexOf("."));
             task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
 
         	}
@@ -395,7 +394,6 @@ public class WorkFlowTest extends WorkflowSetup {
           	if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-           String date=task.getDate().substring(0, task.getDate().indexOf("."));
            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
@@ -460,7 +458,6 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-           String date=task.getDate().substring(0, task.getDate().indexOf("."));
            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
@@ -488,7 +485,6 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-           String date=task.getDate().substring(0, task.getDate().indexOf("."));
            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
            }
         
@@ -511,7 +507,6 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-           String date=task.getDate().substring(0, task.getDate().indexOf("."));
            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	}
         //Applying Playbook and verifying tasks
@@ -524,7 +519,6 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> updatedTasks = getTaskFromSFDC(testData.get("UpdatedPlaybook"));
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-           String date=task.getDate().substring(0, task.getDate().indexOf("."));
            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
@@ -1529,7 +1523,6 @@ public class WorkFlowTest extends WorkflowSetup {
             if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-           // String date=task.getDate().substring(0, task.getDate().indexOf("."));
             task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         }
         cta.setTaskCount(tasks.size());
