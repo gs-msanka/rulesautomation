@@ -164,7 +164,7 @@ public class ReportingBasePage extends BasePage {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         String a = "j$('#" + "reportBuilderName" + "').val(\"" + reportName + "\").trigger(\"change\")";
         js.executeScript(a);
-        js.executeScript("arguments[0].scrollIntoView()", getDriver().findElement(By.xpath(XPathConstants.getXPath("SAVEBUTTON_XPATH"))));
+        item.click(XPathConstants.getXPath("SAVEBUTTON_XPATH"));
         item.setText(XPathConstants.getXPath("SAVE_DESCRIPTION_XPATH"), "Test Discription");
         item.click(XPathConstants.getXPath("SAVE_POPUP_SAVE_XPATH"));
         if (!element.getElement(XPathConstants.getXPath("SAVE_SUCCESS_POPUP_XPATH")).isDisplayed()) {
