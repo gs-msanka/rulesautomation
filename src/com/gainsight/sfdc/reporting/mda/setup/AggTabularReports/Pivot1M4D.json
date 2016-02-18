@@ -58,7 +58,7 @@
       "ReportReadLimit" : 10,
       "DimensionBrowserReadLimit" : 1000,
       "reportName" : "JP_PivotReport",
-      "ReportId" : "9e6d82f7-f73c-45ee-954d-33c0a6e14a6a",
+      "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {
         "filters" : [

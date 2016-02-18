@@ -109,7 +109,7 @@
       ],
       "ReportReadLimit": 1000,
       "DimensionBrowserReadLimit": 1000,
-      "ReportId": 0,
+      "ReportId" : "",
       "reportName": "New Report",
       "nonAggregatedResult": false,
       "whereAdvanceFilter": {

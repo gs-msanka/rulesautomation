@@ -1,0 +1,17 @@
+String ssTitle = 'ssName';
+List<JBCXM__Report__c> ssList = [Select id from JBCXM__Report__c where JBCXM__Title__c=: ssTitle limit 1];
+	System.Debug('Count is:'+ssList.size());
+	List<String> reportSectionTitles = new List<String>{'Section Header Slide Title','Title Slide Title','Title and Content Slide Title', 'Two Content Slide Title', 'Comparision Slide Title'};
+	Decimal d = 1.0;
+
+	List<JBCXM__ReportSection__c> pbr11 = new List<JBCXM__ReportSection__c>();
+	for(Integer i=0;i<reportSectionTitles.size();i++){
+		JBCXM__ReportSection__c viewObj11 = new JBCXM__ReportSection__c(
+			JBCXM__Report__c = ssList[0].id,
+			JBCXM__Title__c = reportSectionTitles.get(i),
+			JBCXM__DisplayOrder__c = d
+		);
+		pbr11.add(viewObj11);
+		d = d+1.0;
+	}
+	insert pbr11;

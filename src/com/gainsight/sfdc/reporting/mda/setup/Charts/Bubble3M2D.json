@@ -58,7 +58,7 @@
       "ReportReadLimit" : 100,
       "DimensionBrowserReadLimit" : 1000,
       "reportName" : "JP_3M2D_Bubble",
-      "ReportId" : "0d37bde8-6f17-4460-bb7e-fea5d3a05427",
+      "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {
         "filters" : [

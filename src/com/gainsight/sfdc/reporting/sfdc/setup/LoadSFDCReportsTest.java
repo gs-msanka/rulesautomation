@@ -34,7 +34,6 @@ public class LoadSFDCReportsTest extends BaseTest{
     private final String CREATE_REPORTS_6M1D_SCRIPT = BASE_PATH+"CreateReportsWith6M1D.txt";
     private final String CREATE_REPORTS_COLORS_SCRIPT = BASE_PATH+"CreateReportsWithColors.txt";
     private final String CREATE_REPORTS_NORMALIZATION_SCRIPT = BASE_PATH+"CreateReportsWithNormalization.txt";
-    private final String CREATE_REPORTS_MULTIPLECOMBO_SCRIPT = BASE_PATH+"CreateReportsWithMultipleCombo.txt";
     private final String CREATE_REPORTS_SUMMARIZEDBY_SCRIPT = BASE_PATH+"CreateReportsWithSummarizedByOption.txt";
 
     @BeforeClass
@@ -199,32 +198,6 @@ public class LoadSFDCReportsTest extends BaseTest{
         Log.info("Executing the script to load reports with Normalizations ");
         sfdc.runApexCode(getNameSpaceResolvedFileContents(CREATE_REPORTS_NORMALIZATION_SCRIPT));
         Log.info("Completed the script to load reports with Normalizations ");
-    }
-
-    @Test
-    public void createreportsWithMultipleCombinations(){
-        Log.info("Executing the script to load reports with multiple combinations ");
-
-        SObject[] productPerformance = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Performance' and JBCXM__Category__c='Alert Reason'"));
-        SObject[] productAdoption = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Adoption' and JBCXM__Category__c='Alert Reason'"));
-        SObject[] productRelease = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Product Release' and JBCXM__Category__c='Alert Reason'"));
-        SObject[] expectationMismatch = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Expectation Mismatch' and JBCXM__Category__c='Alert Reason'"));
-
-        SObject[] open = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'Open' and JBCXM__Category__c = 'Alert Status'"));
-        SObject[] inProgress = sfdc.getRecords(resolveStrNameSpace("Select ID from JBCXM__Picklist__c where name = 'In Progress' and JBCXM__Category__c = 'Alert Status'"));
-
-        String tmpfileContents = getNameSpaceResolvedFileContents(CREATE_REPORTS_MULTIPLECOMBO_SCRIPT);
-
-        tmpfileContents = tmpfileContents.replaceAll("Product Performance", productPerformance[0].getId());
-        tmpfileContents = tmpfileContents.replaceAll("Product Adoption", productAdoption[0].getId());
-        tmpfileContents = tmpfileContents.replaceAll("Product Release", productRelease[0].getId());
-        tmpfileContents = tmpfileContents.replaceAll("Expectation Mismatch", expectationMismatch[0].getId());
-
-        tmpfileContents = tmpfileContents.replaceAll("Open", open[0].getId());
-        tmpfileContents = tmpfileContents.replaceAll("In Progress", inProgress[0].getId());
-
-        sfdc.runApexCode(resolveStrNameSpace(tmpfileContents));
-        Log.info("Completed the script to load reports with multiple combinations ");
     }
 
     @Test

@@ -1,0 +1,25 @@
+String ssReportID = 'successSnapshotID';
+Map<String,String> reportSectionAndDashboardMap = new Map<String,String>{
+		'Section Header Slide Title'=>'{"displayType":"Section Header"}',
+		'Title Slide Title'=>'{"displayType":"Title Slide"}',
+		'Title and Content Slide Title'=>'{"displayType":"Title and Content"}',
+		'Two Content Slide Title' => '{"displayType":"Two Content"}',
+		'Comparision Slide Title' => '{"displayType":"Comparison"}'
+		};
+
+//Delete[Select id from JBCXM__Dashboard__c where Name IN: reportSectionAndDashboardMap.values()];
+
+List<JBCXM__Dashboard__c> pbr11 = new List<JBCXM__Dashboard__c>();
+Map<String, JBCXM__ReportSection__c> reportSectionListMap = new Map<String, JBCXM__ReportSection__c> ();
+
+for(JBCXM__ReportSection__c rs: [Select id, JBCXM__Title__c from JBCXM__ReportSection__c where JBCXM__Title__c IN: reportSectionAndDashboardMap.keySet() and JBCXM__Report__C =: ssReportID]){
+    JBCXM__Dashboard__c viewObj11 = new JBCXM__Dashboard__c(
+        JBCXM__FilterConditions__c = reportSectionAndDashboardMap.get(rs.JBCXM__Title__c),
+        JBCXM__LayoutType__c = 'Report',
+        Name = reportSectionAndDashboardMap.get(rs.JBCXM__Title__c),
+        JBCXM__ReportSection__c = rs.id
+    );
+    pbr11.add(viewObj11);
+
+}
+insert pbr11;

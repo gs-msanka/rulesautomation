@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<suite name="Connectors Project" preserve-order="true">
+<suite name="Report Builder - Loading MDA Reports" preserve-order="true">
 
     <listeners>
         <listener class-name="com.gainsight.utils.AutTestListener" />
         <listener class-name="com.gainsight.utils.testlink.TestLinkListener" />
     </listeners>
 
+    <test verbose="3" name="Load SFDC Reports" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.reporting.sfdc.setup.LoadSFDCReportsTest" />
+        </classes>
+    </test>
 
-
-    <test verbose="3" name="Load To MDA MONGO" preserve-order="true">
+    <test verbose="3" name="Load MDA Reports - MONGO" preserve-order="true">
         <parameter name="dbStoreType" value="MONGO"/>
         <classes>
             <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReportsTest" />
         </classes>
     </test>
 
-    <test verbose="3" name="Load To MDA REDSHIFT" preserve-order="true">
+    <test verbose="3" name="Load MDA Reports - REDSHIFT" preserve-order="true">
         <parameter name="dbStoreType" value="REDSHIFT"/>
         <classes>
             <class name="com.gainsight.sfdc.reporting.mda.setup.LoadMDAReportsTest" />
         </classes>
     </test>
+
+    <test verbose="3" name="Load Success Snapshots" preserve-order="true">
+        <classes>
+            <class name="com.gainsight.sfdc.reporting.sfdc.setup.LoadSuccessSnapshots" />
+            <class name="com.gainsight.sfdc.reporting.tests.ReportingApiTest" />
+        </classes>
+    </test>
+
+
 
 </suite>
 

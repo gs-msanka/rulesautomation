@@ -48,7 +48,7 @@
       "ReportReadLimit" : 100,
       "DimensionBrowserReadLimit" : 1000,
       "reportName" : "JP_2M2D_Scatter",
-      "ReportId" : "c051f465-b655-48fc-aba5-0a482a09c717",
+      "ReportId" : "",
       "assetType" : "ANALYTICS",
       "whereAdvanceFilter" : {
         "filters" : [
