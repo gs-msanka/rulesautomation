@@ -8,7 +8,7 @@ Map<String, String> userNamesMap = new Map<String, String>{'JayaPrakashV' => 'jv
 	                                            'SaiRamP' => 'spulluri@gainsight.com',
 	                                            'SivaPrasadN' => 'snasika@gainsight.com',
 	                                            'RamyaK' => 'rkalisipudi@gainsight.com',
-	                                            'HiteshS' => 'hsharma@gainsight.com',
+	                                            'SreejithK' => 'skunchu@gainsight.com',
 	                                            'SunandP' => 'spadmanabhan@gainsight.com'};
 
 List<User> newUsers = new List<User>();
@@ -36,6 +36,7 @@ Integer existing= [SELECT count() FROM User WHERE Lastname=:uname AND Alias = 'A
 	        sampleUser.LanguageLocaleKey = 'en_US';
 	        sampleUser.UserPermissionsMobileUser = false;
 	        sampleUser.UserPermissionsSFContentUser = false;
+	        sampleUser.User_ExternalId__c=uname;
 	        newUsers.add(sampleUser);
     }
 }
