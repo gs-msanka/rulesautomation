@@ -411,9 +411,10 @@ public class SetupRuleActionPage extends BasePage {
             if (fieldMappingObject.isDefaultValue()) {
             	item.click(xpath + fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-hasDefaultValue')]");
             	if (fieldMappingObject.isDefaultBooleanValue()) {
-                    Log.info("Scrolling into webElement/locator: " +xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
-                    ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]"));
-            		item.click(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
+                    String checkboxPath=xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]";
+                    Log.info("Scrolling into webElement/locator: " +checkboxPath);
+                    ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(checkboxPath));
+            		item.click(checkboxPath);
 				}else {
 					element.setText(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input", fieldMappingObject.getDefaultValueInput());
 					element.getElement(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input").sendKeys(Keys.ENTER);
