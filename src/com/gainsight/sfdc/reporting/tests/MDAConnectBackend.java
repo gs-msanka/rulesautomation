@@ -100,10 +100,25 @@ public class MDAConnectBackend extends BaseTest {
 
 	}
 
+    /**
+     * It will take two jsons and input and compare them and throw proper error message, if there is a diff between those 2 jsons.
+     * @param expectedJSON
+     * @param actualJSON
+     */
     public void compareGivenJSON(String expectedJSON, String actualJSON) {
         JsonFluentAssert.assertThatJson(expectedJSON).when(Option.IGNORING_EXTRA_FIELDS).isEqualTo(actualJSON);
     }
 
+    /**
+     * It will take expected json(report data) as input and replace the db names. Same method will connect to mongodb and get the actual json(Report data). Compares the both jsons.
+     * We need to modify the input json in 2 ways. 1 is display names to db names and 2 nd one is Dates also we need to modify to actual date.
+     * Modifying the dates doing on parserJsonData method.
+     * @param tenantId
+     * @param reportInfo
+     * @param mongoUtil
+     * @param expectedData
+     * @throws IOException
+     */
     public void verifyData(String tenantId, ReportInfo reportInfo, MongoUtil mongoUtil,
                            String expectedData) throws IOException {
         Document document = new Document();
@@ -129,6 +144,11 @@ public class MDAConnectBackend extends BaseTest {
 
         expectedData = MDAConnectBackend.parserJsonData(expectedData);
 
+        /*
+        As there is no way to create pojos for input json. I am just considering the input json as string.
+        While replacing the display names to db names, Below logic will take care.
+        For understanding more about the below logic, please consider input json format.
+         */
         String newString = expectedData.substring(expectedData.indexOf("{", 5) + 1, expectedData.indexOf("}"));
         String[] arrayString = newString.split(":");
         int length = arrayString.length;
@@ -147,6 +167,16 @@ public class MDAConnectBackend extends BaseTest {
         compareGivenJSON(expectedData, actualData);
     }
 
+    /**
+     * It will take input as json and replace the dates to actual dates.
+     * Small info why we need this method. While loading the data to collection, we load dynamic dates.
+     * So actual report data also will depend on the day when we created the collections. So what i am doing was, for date fields in input json, i am giving values as 0, -1 etc..
+     * Replacing them dynamically. Below method will take care of replacing the dates dynamically.
+     * Need to write same kind of method for datetime aswell.
+     *
+     * @param inputJson
+     * @return
+     */
     public static String parserJsonData(String inputJson) {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(inputJson);

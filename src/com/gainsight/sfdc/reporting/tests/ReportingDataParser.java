@@ -31,6 +31,12 @@ public class ReportingDataParser {
         System.out.println(newJson);
     }
 
+
+    /**
+     * This method will prepare the hasmap, key as date and value as 0, -1 etc...
+     * based on this hashmap, will replace the 0, -1 to proper dates vice versa.
+     * @return
+     */
     public static HashMap getMap() {
 
 
@@ -49,7 +55,13 @@ public class ReportingDataParser {
 
     }
 
-
+    /**
+     * This method will help for creating the input json. It will take input as json and replace the actual dates to 0 , -1 etc .
+     * Small info why we need this method. If we run any report, we can get some data, but in that data, we can find actual dates for date field(2-18-2016).
+     * But we need to replaces those dates to 0, -1 etc. So run time we can replace with actual dates.
+     * @param inputJson
+     * @return
+     */
     public static String parserDate(String inputJson) {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(inputJson);
