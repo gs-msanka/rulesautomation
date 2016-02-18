@@ -202,10 +202,10 @@ public class WorkflowSetup extends BaseTest{
         return fDates;
     }
 
-    public String getTaskDateForPlaybook(int day) {
+    public String getTaskDateForPlaybook(double day) {
         Calendar sDate = Calendar.getInstance(userTimezone);
         Calendar eDate = Calendar.getInstance(userTimezone);
-        eDate.add(Calendar.DATE, day);
+        eDate.add(Calendar.DATE, (int)day);
         while(sDate.getTimeInMillis() <= eDate.getTimeInMillis()) {
             if(sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
                 eDate.add(Calendar.DATE, 1);

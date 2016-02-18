@@ -328,8 +328,7 @@ public class WorkFlowTest extends WorkflowSetup {
         	if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	}
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
        for(Task task : tasks) {
@@ -354,8 +353,7 @@ public class WorkFlowTest extends WorkflowSetup {
         	if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	task.setAssignee(users[i]); if(++i >=5) i=0;
         	}
 
@@ -380,8 +378,9 @@ public class WorkFlowTest extends WorkflowSetup {
         	if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           // String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
+
         	}
         
         //Applying Playbook and verifying tasks
@@ -397,7 +396,7 @@ public class WorkFlowTest extends WorkflowSetup {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -425,8 +424,7 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	}
 
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -449,8 +447,7 @@ public class WorkFlowTest extends WorkflowSetup {
        ArrayList<Task> tasks  = getTaskFromSFDC(testData.get("Playbook"));
         for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	}
         
         //Applying Playbook and verifying tasks
@@ -464,7 +461,7 @@ public class WorkFlowTest extends WorkflowSetup {
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -492,7 +489,7 @@ public class WorkFlowTest extends WorkflowSetup {
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
            }
         
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -515,7 +512,7 @@ public class WorkFlowTest extends WorkflowSetup {
        for(Task task : tasks) {
         	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         	}
         //Applying Playbook and verifying tasks
        workflowPage  = workflowPage.applyPlayBook(cta, testData.get("Playbook"), tasks,true);
@@ -528,7 +525,7 @@ public class WorkFlowTest extends WorkflowSetup {
        for(Task task : updatedTasks) {
           	if(task.getAssignee()==null) task.setAssignee(sfdcInfo.getUserFullName());
            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-           task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
           	}
        cta.setDueDate(getHighestTaskDate(tasks));
        workflowPage = workflowPage.applyPlayBook(cta, testData.get("UpdatedPlaybook"), updatedTasks,false);
@@ -1532,8 +1529,8 @@ public class WorkFlowTest extends WorkflowSetup {
             if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+           // String date=task.getDate().substring(0, task.getDate().indexOf("."));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
@@ -1558,8 +1555,7 @@ public class WorkFlowTest extends WorkflowSetup {
             if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,true,false);
@@ -1582,8 +1578,7 @@ public class WorkFlowTest extends WorkflowSetup {
             if(task.getAssignee()==null) {
                 task.setAssignee(sfdcInfo.getUserFullName());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
@@ -1614,8 +1609,7 @@ public class WorkFlowTest extends WorkflowSetup {
                 SObject[] assignee=sfdc.getRecords("select id,name from Users where Id in (select id from Account where name='"+cta.getCustomer()+"')");
                 task.setAssignee(assignee[0].getField("Name").toString());
             }
-            String date=task.getDate().substring(0, task.getDate().indexOf("."));
-            task.setDate(getTaskDateForPlaybook(Integer.valueOf(date)));
+            task.setDate(getTaskDateForPlaybook(Double.valueOf(task.getDate())));
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
