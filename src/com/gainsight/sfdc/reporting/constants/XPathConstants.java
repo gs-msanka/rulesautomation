@@ -93,6 +93,8 @@ class BaseXPathConstants {
 		XPATHCONSTANTS.put("DISPLAY", "//span[contains(text(),'Display')]/following-sibling::input");
 		XPATHCONSTANTS.put("SHOWMEEXPAND",
 				"//label[contains(text(),'Show me')]/following-sibling::div[@class='gs-rb-show-count']");
+		XPATHCONSTANTS.put("CONFIRM_POPUP",
+				"//div[contains(@class,'layout_popup')]");
 	}
 }
 

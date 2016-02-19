@@ -176,10 +176,14 @@ public class ReportingBasePage extends BasePage {
 	 * It will click on create new button.
 	 */
     public void createNewReport() {
+
         Log.info("Creting new report by clicking on new button ");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
 
-        jse.executeScript("arguments[0].click();", getDriver().findElement(By.xpath(XPathConstants.getXPath("NEW"))));
+        jse.executeScript("arguments[0].click();", element.getElement(XPathConstants.getXPath("NEW")));
+        if(element.isElementDisplayed(XPathConstants.getXPath("CONFIRM_POPUP"))) {
+            refreshPage();
+        }
     }
 
 	/**
