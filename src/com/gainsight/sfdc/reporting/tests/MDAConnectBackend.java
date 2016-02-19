@@ -155,7 +155,9 @@ public class MDAConnectBackend extends BaseTest {
         for (String field : arrayString) {
             if (length > 1) {
                 if (length == arrayString.length) {
-                    expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
+                    if(length>2){
+                        expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
+                    }
                 } else {
                     field = field.substring(field.indexOf(",") + 1);
                     expectedData = expectedData.replaceAll(field.substring(1, field.length() - 1) + "\"", displayDBNamesMap.get(field.substring(field.indexOf("\"") + 1, field.length() - 1)) + "\"");
