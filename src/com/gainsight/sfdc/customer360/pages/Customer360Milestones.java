@@ -1,10 +1,11 @@
 package com.gainsight.sfdc.customer360.pages;
 
-import java.util.HashMap;
-
 import com.gainsight.pageobject.util.Timer;
 import com.gainsight.testdriver.Log;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+
+import java.util.HashMap;
 
 
 public class Customer360Milestones extends Customer360Page {
@@ -62,6 +63,10 @@ public class Customer360Milestones extends Customer360Page {
 
     private void setDateInField(String date){
         item.clearAndSetText(DATE_FIELD, date);
+
+        String id = item.getElement(DATE_FIELD).getAttribute("id");
+        String Script = "j$(\"#"+id+"\").parent().click();";
+        ((JavascriptExecutor) getDriver()).executeScript(Script);
     }
 
     private void selectMileStone(String Milestone){
