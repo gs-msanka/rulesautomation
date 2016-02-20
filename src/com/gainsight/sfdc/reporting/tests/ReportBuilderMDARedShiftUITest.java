@@ -380,7 +380,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
 
     }
 
@@ -463,7 +463,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
 
     }
 
@@ -479,7 +479,7 @@ public class ReportBuilderMDARedShiftUITest extends BaseTest {
         reportingBasePage.createNewReport();
 
         reportingUtil.createReportFromUiAndVerifyBackedJSON(reportMaster, reportingBasePage, mongoUtil);
-        reportingUtil.verifyReportData(reportMaster, mongoUtil, str);
+        reportingUtil.verifyReportData(reportMaster, mongoUtil, null);
 
     }
 
