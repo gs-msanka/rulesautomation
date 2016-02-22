@@ -99,8 +99,8 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		SObject[] milestoneRecords=sfdc.getRecords("SELECT Id,C_Checkbox__c,Number_Auto__c, Name from Account where name in ("+names+") and isDeleted=false");
 		for (SObject milestoneRecord : milestoneRecords) {
 			String accountName =(String) milestoneRecord.getField("Name");
-			String actualTokenComments = (String) milestoneRecord.getField("C_Checkbox__c")+milestoneRecord.getField("Number_Auto__c")+
-					milestoneRecord.getField("Name");
+			String actualTokenComments = (String) milestoneRecord.getField("Name")+milestoneRecord.getField("Number_Auto__c")+
+					milestoneRecord.getField("C_Checkbox__c");
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(loadToMileStoneAction
 					.getSelectMilestone(), loadToMileStoneAction
 					.getMilestoneDate().getDateFieldValue(), actualTokenComments, accountName), "Check Milestone is created with correct configuration or not for account "+accountName+"");		
@@ -110,8 +110,8 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 		Assert.assertTrue(rulesUtil.runRule(rulesPojo.getRuleName()), "Check whether Rule ran successfully or not !");
 		for (SObject milestoneRecord : milestoneRecords) {
 			String accountName =(String) milestoneRecord.getField("Name");
-			String actualTokenComments = (String) milestoneRecord.getField("C_Checkbox__c")+milestoneRecord.getField("Number_Auto__c")+
-					milestoneRecord.getField("Name");
+			String actualTokenComments = (String) milestoneRecord.getField("Name")+milestoneRecord.getField("Number_Auto__c")+
+					milestoneRecord.getField("C_Checkbox__c");
 			Assert.assertTrue(rulesUtil.isMileStoneCreatedSuccessfully(loadToMileStoneAction
 					.getSelectMilestone(), loadToMileStoneAction
 					.getMilestoneDate().getDateFieldValue(), actualTokenComments+"\n"+" "+actualTokenComments, accountName), "Check Milestone is created with correct configuration or not for account "+accountName+"");		
@@ -246,8 +246,8 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	    SObject[] temp=sfdc.getRecords("SELECT C_lookup__r.Data_ExternalId__c,rules_c_Checkbox__c,rules_c_Number__c,rules_c_Text__c FROM C_Custom__c where C_lookup__r.Data_ExternalId__c in ("+names+")");
 	    for (SObject sObject : temp) {
 	    	// 3 token are added in testdata, so querying same fields to form comments at runtime
-	    	String tokenComments=(String)sObject.getField("rules_c_Checkbox__c")+sObject.getField("rules_c_Number__c")+sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString();
-	    	loadToFeatureAction.setComments(tokenComments);
+			String tokenComments = sObject.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString() + sObject.getField("rules_c_Number__c") + (String) sObject.getField("rules_c_Checkbox__c");
+			loadToFeatureAction.setComments(tokenComments);
 	    	loadToFeatureAction.getLicensed().setUpdateType((String) sObject.getField("rules_c_Checkbox__c"));
 	    	loadToFeatureAction.getEnabled().setUpdateType((String) sObject.getField("rules_c_Checkbox__c"));
 	    	rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
@@ -283,7 +283,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 	    for (SObject sObject : accounts) {
 			SObject[] temp=sfdc.getRecords("SELECT C_lookup__r.Data_ExternalId__c,rules_c_Checkbox__c,rules_c_Number__c,rules_c_Text__c FROM C_Custom__c where C_lookup__r.Data_ExternalId__c='"+sObject.getField("Data_ExternalId__c")+"'");
 			if (temp.length==1) {
-				String comments=(String)temp[0].getField("rules_c_Checkbox__c")+temp[0].getField("rules_c_Number__c")+temp[0].getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString();
+				String comments = temp[0].getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString() + temp[0].getField("rules_c_Number__c") + (String) temp[0].getField("rules_c_Checkbox__c");
 				loadToFeatureAction.setComments(comments);
 				rulesPojo.getSetupActions().get(0).setAction(mapper.convertValue(loadToFeatureAction, JsonNode.class));
 				Assert.assertTrue((rulesUtil.isFeatureCreatedSuccessfully(loadToFeatureAction, temp[0].getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString())),
@@ -294,7 +294,7 @@ public class LoadToMilestonesAndFeaturesTest extends BaseTest {
 					String checkboxType=(String) sObject2.getField("rules_c_Checkbox__c");
 					String numberType=(String) sObject2.getField("rules_c_Number__c");
 					String textType=(String) sObject2.getChild("C_lookup__r").getChild("Data_ExternalId__c").getValue().toString();
-					commentsList.add(checkboxType+numberType+textType);
+					commentsList.add(textType+numberType+checkboxType);
 					sObjectTemp=sObject2;
 				}
 				// Appending comments for two accounts and also inserting new line and space for comments, since comments are stored by appending new line and space in sfdc backend

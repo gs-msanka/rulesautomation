@@ -7,7 +7,7 @@
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "C_Custom Object",
-    "advancedLogic": "A"
+    "advancedLogic": ""
   },
   "setupActions": [
     {

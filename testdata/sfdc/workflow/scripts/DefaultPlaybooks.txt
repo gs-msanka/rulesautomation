@@ -159,9 +159,8 @@ pbTasks.addAll(pbs);
 insert pbTasks;
 
 public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String id, List<String> priority1, List<Integer> days1){
-    Integer i = 0;
+    Integer i = 0,nmbr = 0,d = 0;
     List<JBCXM__PlaybookTasks__c> pbTasks1 = new List<JBCXM__PlaybookTasks__c>();
-    Integer nmbr = 0;
     List<JBCXM__GSMetaInfo__c> dates=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='ASSIGN_DATE'];
     List<JBCXM__GSMetaInfo__c> skipOpts=[select id from JBCXM__GSMetaInfo__c where JBCXM__SystemName__c='Skip_all_weekends'];
 
@@ -174,6 +173,7 @@ public  List<JBCXM__PlaybookTasks__c> createTasks(List<String> taskList1, String
         	pt.JBCXM__Priority__c = priority1.get(i++);
         	pt.JBCXM__SkipOption__c = skipOpts.get(0).Id;
             pt.JBCXM__DisplayOrder__c = (++nmbr);
+            pt.JBCXM__DeltaDays__c = days1.get(d++);
             pbTasks1.add(pt);
         }
     return 	pbTasks1;

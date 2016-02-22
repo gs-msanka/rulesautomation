@@ -63,52 +63,52 @@ CTA61,CTA Account 3-1-GiribabuG-Risk,CTA Account 3-1,GiribabuG,-5,Risk,0,High,Up
 CTA62,CTA Account 3-1-GiribabuG-Risk,CTA Account 3-1,GiribabuG,-3,Risk,2,High,Other,New,,,
 CTA63,CTA Account 3-1-GiribabuG-Risk,CTA Account 3-1,GiribabuG,-22,Risk,-17,High,Sponsor Change,New,,,
 CTA64,CTA Account 3-1-GiribabuG-Risk,CTA Account 3-1,GiribabuG,-18,Risk,-13,High,Customer Concern,Closed Success,-7,2,0
-CTA65,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-9,Risk,-4,High,Code Red,New,,,
-CTA66,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-19,Event,-14,High,Activity,New,,,
-CTA67,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-29,Opportunity,-24,High,Upsell Opty,New,,5,4
-CTA68,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-39,Risk,-34,High,Other,Closed Success,-20,,
-CTA69,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-49,Event,-44,High,Sponsor Change,New,,,
-CTA70,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-59,Event,-54,High,Customer Concern,New,,5,3
-CTA71,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-69,Event,-64,High,Code Red,New,,,
-CTA72,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-79,Opportunity,-74,High,Activity,Closed Success,-60,,
-CTA73,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-89,Event,-84,High,Upsell Opty,New,,,
-CTA74,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-99,Opportunity,-94,High,Other,New,,,
-CTA75,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-109,Event,-104,Low,Sponsor Change,New,,,
-CTA76,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-119,Risk,-114,Low,Customer Concern,Closed Success,-100,,
-CTA77,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-129,Opportunity,-124,Low,Code Red,New,,,
-CTA78,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-139,Risk,-134,Low,Activity,New,,5,0
-CTA79,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-22,Risk,-17,Low,Upsell Opty,New,,,
-CTA80,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-33,Event,-28,Low,Other,Closed Success,-15,,
-CTA81,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-44,Risk,-39,Low,Sponsor Change,New,,,
-CTA82,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-55,Risk,-50,High,Customer Concern,New,,,
-CTA83,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-66,Event,-61,High,Code Red,New,,,
-CTA84,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-77,Risk,-72,High,Activity,Closed Success,-50,,
-CTA85,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-88,Event,-83,High,Upsell Opty,New,,,
-CTA86,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-99,Opportunity,-94,Medium,Other,New,,,
-CTA87,CTA Account 1-1-HiteshS-Opportunity,CTA Account 1-1,HiteshS,-1,Opportunity,4,High,Sponsor Change,New,,,
-CTA88,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-2,Event,3,Medium,Customer Concern,Closed Success,0,,
-CTA89,CTA Account 1-1-HiteshS-A1Risk,CTA Account 1-1,HiteshS,-17,Risk,-12,High,Code Red,New,,,
-CTA90,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-27,Event,-22,High,Activity,New,,,
-CTA91,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-28,Event,-23,Medium,Upsell Opty,New,,5,4
-CTA92,CTA Account 1-1-HiteshS-Event,CTA Account 1-1,HiteshS,-58,Event,-53,Low,Other,Closed Success,-40,,
-CTA93,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-49,Risk,-44,High,Sponsor Change,New,,,
-CTA94,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-90,Risk,-85,High,Customer Concern,New,,,
-CTA95,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-35,Risk,-30,High,Code Red,New,,,
-CTA96,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-45,Risk,-40,Low,Activity,Closed Success,-30,5,0
-CTA97,CTA Account 1-1-HiteshS-Risk,CTA Account 1-1,HiteshS,-44,Risk,-39,Low,Upsell Opty,New,,,
-CTA98,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-78,Opportunity,-73,Low,Other,New,,,
-CTA99,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-88,Opportunity,-83,Low,Sponsor Change,Closed Success,-60,,
-CTA100,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-98,Opportunity,-93,Low,Customer Concern,Closed Success,-80,5,0
-CTA101,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-108,Opportunity,-103,Medium,Code Red,New,,,
-CTA102,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-38,Opportunity,-33,Medium,Activity,New,,,
-CTA103,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-48,Opportunity,-43,Medium,Upsell Opty,Closed Success,-30,,
-CTA104,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-58,Opportunity,-53,Medium,Other,New,,,
-CTA105,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-9,Opportunity,-4,Medium,Sponsor Change,New,,7,3
-CTA106,CTA Account 3-1-HiteshS-Opportunity,CTA Account 3-1,HiteshS,-8,Opportunity,-3,High,Customer Concern,New,,,
-CTA107,CTA Account 3-1-HiteshS-Event,CTA Account 3-1,HiteshS,-17,Event,-2,High,Code Red,New,,,
-CTA108,CTA Account 3-1-HiteshS-Event,CTA Account 3-1,HiteshS,-18,Event,2,High,Activity,New,,,
-CTA109,CTA Account 3-1-HiteshS-Risk,CTA Account 3-1,HiteshS,-2,Risk,3,High,Upsell Opty,Closed Success,0,,
-CTA110,CTA Account 3-1-HiteshS-Risk,CTA Account 3-1,HiteshS,0,Risk,5,High,Other,New,,5,5
-CTA111,CTA Account 3-1-HiteshS-Risk,CTA Account 3-1,HiteshS,-42,Risk,-37,High,Sponsor Change,New,,,
-CTA112,CTA Account 3-1-HiteshS-Risk,CTA Account 3-1,HiteshS,-40,Risk,-35,High,Customer Concern,New,,,
-CTA113,CTA Account 3-1-HiteshS-Risk,CTA Account 3-1,HiteshS,-10,Risk,-5,High,Code Red,Closed Success,-1,3,0
+CTA65,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-9,Risk,-4,High,Code Red,New,,,
+CTA66,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-19,Event,-14,High,Activity,New,,,
+CTA67,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-29,Opportunity,-24,High,Upsell Opty,New,,5,4
+CTA68,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-39,Risk,-34,High,Other,Closed Success,-20,,
+CTA69,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-49,Event,-44,High,Sponsor Change,New,,,
+CTA70,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-59,Event,-54,High,Customer Concern,New,,5,3
+CTA71,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-69,Event,-64,High,Code Red,New,,,
+CTA72,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-79,Opportunity,-74,High,Activity,Closed Success,-60,,
+CTA73,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-89,Event,-84,High,Upsell Opty,New,,,
+CTA74,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-99,Opportunity,-94,High,Other,New,,,
+CTA75,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-109,Event,-104,Low,Sponsor Change,New,,,
+CTA76,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-119,Risk,-114,Low,Customer Concern,Closed Success,-100,,
+CTA77,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-129,Opportunity,-124,Low,Code Red,New,,,
+CTA78,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-139,Risk,-134,Low,Activity,New,,5,0
+CTA79,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-22,Risk,-17,Low,Upsell Opty,New,,,
+CTA80,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-33,Event,-28,Low,Other,Closed Success,-15,,
+CTA81,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-44,Risk,-39,Low,Sponsor Change,New,,,
+CTA82,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-55,Risk,-50,High,Customer Concern,New,,,
+CTA83,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-66,Event,-61,High,Code Red,New,,,
+CTA84,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-77,Risk,-72,High,Activity,Closed Success,-50,,
+CTA85,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-88,Event,-83,High,Upsell Opty,New,,,
+CTA86,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-99,Opportunity,-94,Medium,Other,New,,,
+CTA87,CTA Account 1-1-SreejithK-Opportunity,CTA Account 1-1,SreejithK,-1,Opportunity,4,High,Sponsor Change,New,,,
+CTA88,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-2,Event,3,Medium,Customer Concern,Closed Success,0,,
+CTA89,CTA Account 1-1-SreejithK-A1Risk,CTA Account 1-1,SreejithK,-17,Risk,-12,High,Code Red,New,,,
+CTA90,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-27,Event,-22,High,Activity,New,,,
+CTA91,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-28,Event,-23,Medium,Upsell Opty,New,,5,4
+CTA92,CTA Account 1-1-SreejithK-Event,CTA Account 1-1,SreejithK,-58,Event,-53,Low,Other,Closed Success,-40,,
+CTA93,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-49,Risk,-44,High,Sponsor Change,New,,,
+CTA94,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-90,Risk,-85,High,Customer Concern,New,,,
+CTA95,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-35,Risk,-30,High,Code Red,New,,,
+CTA96,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-45,Risk,-40,Low,Activity,Closed Success,-30,5,0
+CTA97,CTA Account 1-1-SreejithK-Risk,CTA Account 1-1,SreejithK,-44,Risk,-39,Low,Upsell Opty,New,,,
+CTA98,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-78,Opportunity,-73,Low,Other,New,,,
+CTA99,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-88,Opportunity,-83,Low,Sponsor Change,Closed Success,-60,,
+CTA100,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-98,Opportunity,-93,Low,Customer Concern,Closed Success,-80,5,0
+CTA101,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-108,Opportunity,-103,Medium,Code Red,New,,,
+CTA102,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-38,Opportunity,-33,Medium,Activity,New,,,
+CTA103,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-48,Opportunity,-43,Medium,Upsell Opty,Closed Success,-30,,
+CTA104,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-58,Opportunity,-53,Medium,Other,New,,,
+CTA105,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-9,Opportunity,-4,Medium,Sponsor Change,New,,7,3
+CTA106,CTA Account 3-1-SreejithK-Opportunity,CTA Account 3-1,SreejithK,-8,Opportunity,-3,High,Customer Concern,New,,,
+CTA107,CTA Account 3-1-SreejithK-Event,CTA Account 3-1,SreejithK,-17,Event,-2,High,Code Red,New,,,
+CTA108,CTA Account 3-1-SreejithK-Event,CTA Account 3-1,SreejithK,-18,Event,2,High,Activity,New,,,
+CTA109,CTA Account 3-1-SreejithK-Risk,CTA Account 3-1,SreejithK,-2,Risk,3,High,Upsell Opty,Closed Success,0,,
+CTA110,CTA Account 3-1-SreejithK-Risk,CTA Account 3-1,SreejithK,0,Risk,5,High,Other,New,,5,5
+CTA111,CTA Account 3-1-SreejithK-Risk,CTA Account 3-1,SreejithK,-42,Risk,-37,High,Sponsor Change,New,,,
+CTA112,CTA Account 3-1-SreejithK-Risk,CTA Account 3-1,SreejithK,-40,Risk,-35,High,Customer Concern,New,,,
+CTA113,CTA Account 3-1-SreejithK-Risk,CTA Account 3-1,SreejithK,-10,Risk,-5,High,Code Red,Closed Success,-1,3,0

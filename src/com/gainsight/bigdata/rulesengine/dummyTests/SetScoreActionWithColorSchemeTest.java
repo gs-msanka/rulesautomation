@@ -49,6 +49,7 @@ public class SetScoreActionWithColorSchemeTest extends BaseTest {
         scoreCardDomain = visualForcePageUrl + "scorecardsetup";
         rulesManagerPageUrl = visualForcePageUrl + "Rulesmanager";
         rulesManagerPage = new RulesManagerPage();
+        metaUtil.createExtIdFieldForScoreCards(sfdc);
         sfdc.runApexCode(getNameSpaceResolvedFileContents(SCORECARD_CLEAN_FILE));
         adminScorecardSection = new AdminScorecardSection("test");
         adminScorecardSection.openScoreCardSectionPage(scoreCardDomain);

@@ -11,6 +11,7 @@ import com.gainsight.bigdata.rulesengine.pojo.setupaction.*;
 import com.gainsight.bigdata.rulesengine.pojo.setupaction.FieldMapping.PickListMappings;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -124,7 +125,7 @@ public class SetupRuleActionPage extends BasePage {
      */
     public void clickOnActionButton() {
         try {
-            env.setTimeout(0);
+            env.setTimeout(3);
             if (element.getElement(NOACTION_YET).isDisplayed()) {
                 item.click(NOACTION_BUTTON);
             }
@@ -200,6 +201,8 @@ public class SetupRuleActionPage extends BasePage {
 		List<String> tokenList = Arrays.asList(ctaAction.getComments().split(","));
 		for (String token : tokenList) {
 			if (token.startsWith("@")) {
+                // Clicking inside comments div
+                item.click(COMMENTS);
 				element.setText(COMMENTS, token);
 				item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 			} else {
@@ -242,7 +245,8 @@ public class SetupRuleActionPage extends BasePage {
 			List<String> tokenList = Arrays.asList(loadToFeatureAction.getComments().split(","));
 			for (String token : tokenList) {
 				if (token.startsWith("@")) {
-					element.setText(COMMENTS, token);
+                    item.click(COMMENTS);
+                    element.setText(COMMENTS, token);
 					item.click(String.format(COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 				} else {
 					element.clearAndSetText(xpath + COMMENTS, token);
@@ -321,6 +325,9 @@ public class SetupRuleActionPage extends BasePage {
         clickOnActionButton();
         item.click(xpath + SELECT_BUTTON);
         selectValueInDropDown("Load to Milestone");
+        // scrolling into a particular webElement since, auto scroll is not happening
+        Log.info("Scrolling into webElement/locator: " +MILESTONE_LTM);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(MILESTONE_LTM));
         if (loadToMileStoneAction.getMilestoneDate().getType().contains("Show Field")) {
             item.click(xpath + SHOWFIELD_LTM);
             item.click(xpath + SHOEFIELD_SELECT_LTM);
@@ -337,7 +344,8 @@ public class SetupRuleActionPage extends BasePage {
 			List<String> tokenList = Arrays.asList(loadToMileStoneAction.getComments().split(","));
 			for (String token : tokenList) {
 				if (token.startsWith("@")) {
-					element.setText(COMMENTS, token);
+                    item.click(COMMENTS);
+                    element.setText(COMMENTS, token);
 					item.click(String.format(xpath + COMMENTS_TOKENS_DIV, token.substring(token.indexOf("@") + 1)));
 				} else {
 					element.clearAndSetText(xpath + COMMENTS, token);
@@ -403,7 +411,10 @@ public class SetupRuleActionPage extends BasePage {
             if (fieldMappingObject.isDefaultValue()) {
             	item.click(xpath + fieldMapping + "//following-sibling::div/descendant::input[contains(@class, 'gs-hasDefaultValue')]");
             	if (fieldMappingObject.isDefaultBooleanValue()) {
-            		item.click(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]");
+                    String checkboxPath=xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input[contains(@class, 'custom-value-check')]";
+                    Log.info("Scrolling into webElement/locator: " +checkboxPath);
+                    ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(checkboxPath));
+            		item.click(checkboxPath);
 				}else {
 					element.setText(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input", fieldMappingObject.getDefaultValueInput());
 					element.getElement(xpath + fieldMapping + "//parent::div/following-sibling::div/descendant::input").sendKeys(Keys.ENTER);
@@ -465,7 +476,11 @@ public class SetupRuleActionPage extends BasePage {
 		}
         String xpath = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]//div[@class='criteria-container'][" + c + "]";
         String criteriaButton = "//div[contains(@class,'setup-action-ctn')]/div[" + r + "]";
+        Log.info("scrolling till element: " +criteriaButton + CRITERIA);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(criteriaButton + CRITERIA));
         item.click(criteriaButton + CRITERIA);
+        Log.info("scrolling till element: " +xpath + CRITERIA_SHOWFIELD);
+        ((JavascriptExecutor)Application.getDriver()).executeScript("arguments[0].scrollIntoView(true);", element.getElement(xpath + CRITERIA_SHOWFIELD));
         item.click(xpath + CRITERIA_SHOWFIELD);
         selectValueInDropDown(fieldName, true);
         item.click(xpath + CRITERIA_SHOWFIELD_OPERATOR);
@@ -557,6 +572,8 @@ public class SetupRuleActionPage extends BasePage {
 		List<String> tokenList = Arrays.asList(closeCta.getComments().split(","));
 		for (String token : tokenList) {
 			if (token.startsWith("@")) {
+                // Clicking inside comments area div
+                item.click(CLOSECTA_COMMENTS);
 				element.setText(CLOSECTA_COMMENTS, token);
 				item.click(String.format("//div[contains(@class, 'close_ctn')]/descendant::div[contains(@class, 'alertComment')]/following-sibling::div/descendant::span[text()='%s']", token.substring(token.indexOf("@") + 1)));
 			} else {
