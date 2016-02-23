@@ -8,6 +8,7 @@ import java.util.Map;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.util.config.SfdcConfigProvider;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -292,6 +293,10 @@ public class MetaDataUtil {
         payLoad.put("params", mapper.writeValueAsString(payLoad1));
         Log.info(mapper.writeValueAsString(payLoad));
         ResponseObj responseObj = webAction.doPost(sfdcInfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
+		if(responseObj.getStatusCode() != HttpStatus.SC_OK) {
+			Log.info("If this error is printed then please check GSAutomationRestAPI.cls is deployed.");
+			throw new RuntimeException("Some thing wrong while providing permissions : "+responseObj.toString());
+		}
         Map<String, Object> resContent = new HashMap<>();
         resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
         if (!resContent.get("status").toString().equalsIgnoreCase("Success")) {
