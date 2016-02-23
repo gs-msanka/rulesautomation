@@ -294,7 +294,7 @@ public class MetaDataUtil {
         Log.info(mapper.writeValueAsString(payLoad));
         ResponseObj responseObj = webAction.doPost(sfdcInfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
 		if(responseObj.getStatusCode() != HttpStatus.SC_OK) {
-			Log.info("If this error is printed then please check GSAutomationRestAPI.cls is deployed.");
+			Log.info("Please check GSAutomationRestAPI.cls is deployed");
 			throw new RuntimeException("Some thing wrong while providing permissions : "+responseObj.toString());
 		}
         Map<String, Object> resContent = new HashMap<>();
