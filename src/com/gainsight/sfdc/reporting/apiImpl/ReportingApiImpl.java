@@ -49,6 +49,29 @@ public class ReportingApiImpl {
             throw new RuntimeException("Failed to export Success Snapshot - Unknown Error");
         }
         return nsResponseObj;
+    }
+
+    public NsResponseObj exportToCSVGetNsResponse(String reportId) throws Exception{
+        NsResponseObj nsResponseObj = null;
+        ResponseObj responseObj = wa.doGet(API_REPORT+reportId, header.getAllHeaders());
+        Log.info("Response Obj : " +responseObj.toString());
+        if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST
+                || responseObj.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { //internal server should be removed once the bug in the product is fixed.
+            nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            responseObj = wa.doPost(API_REPORT_EXPORT_EMAILDATA, header.getAllHeaders(),mapper.writeValueAsString(nsResponseObj.getData()));
+            Log.info("Response Obj from Export to CSV : " +responseObj.toString());
+            nsResponseObj = null;
+            if(responseObj.getStatusCode() == HttpStatus.SC_OK || responseObj.getStatusCode() == HttpStatus.SC_BAD_REQUEST
+                    || responseObj.getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { //internal server should be removed once the bug in the product is fixed.
+                nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
+            } else {
+                throw new RuntimeException("Failed to export to CSV format - Unknown Error");
+            }
+
+            return nsResponseObj;
+        } else {
+            throw new RuntimeException("Unable to find the report master for the given report id:"+reportId);
+        }
 
     }
 

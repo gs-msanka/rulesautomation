@@ -27,6 +27,7 @@ public interface ApiUrls extends NSURLs {
     String API_REPORT_PPTX_METADATA             = NS_URL + "/qbr/exports/pptx/documents/%s/metadata"; //Get the metadata of the PPTX file uploaded.
     String API_REPORT_DASHBOARD_TEST_EMAIL      = NS_URL + "/api/export/dashboard/pptx";               //Trigger the send email.
     String API_REPORT_EXPORT_PPT                = NS_URL + "/qbr/exports/reports/%s/pptx";             //Provided Report(Success Snapshot id) exported via Success Snapshot
+    String API_REPORT_EXPORT_EMAILDATA          = NS_URL + "/api/export/emailData";                    //Export the report to CSV format
 
 
     String API_RULE_RUN                         = NS_URL + "/api/eventrule";
