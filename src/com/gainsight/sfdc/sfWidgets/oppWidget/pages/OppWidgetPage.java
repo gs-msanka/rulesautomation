@@ -9,10 +9,10 @@ import com.gainsight.sfdc.sfWidgets.accWidget.pages.AccWidget_SummaryWidgetPage;
  */
 public class OppWidgetPage extends BasePage {
 
-	 private final String COCKPIT_SUBTAB="//a[@class='Cockpit']";
+	 private final String COCKPIT_SUBTAB="//a[@title='Cockpit']";
 	private final String COCKPIT_INDICATOR="//div[@class='gs_section_title']/h1[contains(text(),'Cockpit')]";
-	private final String FEATURES_TAB = "//a[@class='Features']";
-	private final String SUMMARY_TAB  = "//a[@class='Summary']";
+	private final String FEATURES_TAB = "//a[@title='Features']";
+	private final String SUMMARY_TAB  = "//a[@title='Summary']";
 	  	
 	public OppWidget_CockpitPage gotoCockpitSubTab(){
         item.click(COCKPIT_SUBTAB);
