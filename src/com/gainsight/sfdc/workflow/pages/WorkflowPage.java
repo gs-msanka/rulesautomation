@@ -241,8 +241,6 @@ public class WorkflowPage extends WorkflowBasePage {
             item.click(PLAYBOOK_SELECT);
             selectValueInDropDown("None");
         }
-        // moved date selection to end(just before save)..to check if due date is changing as per PB due date
-        field.clearAndSetText(CREATE_FORM_DUE_DATE, cta.getDueDate());
 	}
 
 

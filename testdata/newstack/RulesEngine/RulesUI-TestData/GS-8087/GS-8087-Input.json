@@ -7,7 +7,7 @@
   "setupRule": {
     "dataSource": "Native",
     "selectObject": "Relationship",
-    "advancedLogic": "A"
+    "advancedLogic": ""
   },
   "setupActions": [
     {

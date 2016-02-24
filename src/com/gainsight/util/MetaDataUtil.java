@@ -1,6 +1,8 @@
 package com.gainsight.util;
 
+import com.gainsight.http.WebAction;
 import com.gainsight.bigdata.pojo.ObjectFields;
+import org.apache.commons.httpclient.HttpStatus;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -290,6 +292,10 @@ public class MetaDataUtil {
         payLoad.put("params", mapper.writeValueAsString(payLoad1));
         Log.info(mapper.writeValueAsString(payLoad));
         ResponseObj responseObj = webAction.doPost(sfdcInfo.getEndpoint() + "/services/apexrest/GSAutomation/orgInfo/", header.getAllHeaders(), mapper.writeValueAsString(payLoad));
+		if(responseObj.getStatusCode() != HttpStatus.SC_OK) {
+			Log.info("Please check GSAutomationRestAPI.cls is deployed");
+			throw new RuntimeException("Some thing wrong while providing permissions : "+responseObj.toString());
+		}
         Map<String, Object> resContent = new HashMap<>();
         resContent = mapper.readValue(responseObj.getContent(), resContent.getClass());
         if (!resContent.get("status").toString().equalsIgnoreCase("Success")) {

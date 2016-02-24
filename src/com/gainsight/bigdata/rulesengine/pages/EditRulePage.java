@@ -75,6 +75,7 @@ public class EditRulePage extends BasePage {
             env.setTimeout(1);
             if (element.isElementDisplayed("//label[(contains(text(),'Relationship Type'))]")) {
                 item.click(RELATIONSHIP_TYPE);
+                wait.waitTillElementDisplayed("//input[contains(@title, '" + relationshipType + "')]/following-sibling::span[contains(text(), '" + relationshipType + "')]", MIN_TIME, MAX_TIME);
                 selectValueInDropDown(relationshipType);
             }
         } finally {
