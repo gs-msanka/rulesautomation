@@ -1,8 +1,6 @@
 package com.gainsight.util;
 
-import com.gainsight.http.WebAction;
 import com.gainsight.bigdata.pojo.ObjectFields;
-import org.apache.commons.httpclient.HttpStatus;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -14,6 +12,7 @@ import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.config.SfdcConfig;
 import com.gainsight.utils.config.ConfigProviderFactory;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -138,7 +137,7 @@ public class MetaDataUtil {
 	    
 		 if(objF.getLookups().size() > 0){
 			 for (HashMap<String,String> hm : objF.getLookups()){
-				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("ReleationShipName")});
+				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("relationshipName")});
 				 permFieldsList.add(hm.get("Name"));
 			 }
 		 }

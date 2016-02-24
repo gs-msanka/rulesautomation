@@ -333,7 +333,7 @@ public class RelatedListTest extends BaseTest {
         HashMap<String, String> e = new HashMap<>();
         e.put("Name", "lookupfieldname");
         e.put("ReferenceTo", "Account");
-        e.put("ReleationShipName", "relation_lookup_Test");
+        e.put("relationshipName", "relation_lookup_Test");
         lookups.add(e);
         objField.setLookups(lookups);
         metaDataUtil.createFieldsOnObject(sfdc, "sfdcrelatedlist__c", objField);
