@@ -1,33 +1,11 @@
 package com.gainsight.sfdc.customer360.test;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import com.gainsight.bigdata.NSTestBase;
-import com.gainsight.bigdata.dataload.enums.DataLoadOperationType;
-import com.gainsight.bigdata.dataload.pojo.DataLoadMetadata;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
-import com.gainsight.bigdata.pojo.CollectionInfo;
-import com.gainsight.bigdata.pojo.NsResponseObj;
 import com.gainsight.bigdata.pojo.ObjectFields;
-import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
-import com.gainsight.bigdata.util.CollectionUtil;
 import com.gainsight.sfdc.SalesforceMetadataClient;
-import com.gainsight.sfdc.administration.pages.AdminCustomer360Section;
-import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.adoption.tests.AdoptionDataSetup;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.RelatedList360;
@@ -36,8 +14,6 @@ import com.gainsight.sfdc.reporting.pages.ReportingBasePage;
 import com.gainsight.sfdc.reporting.utils.ReportingUtil;
 import com.gainsight.sfdc.tests.BaseTest;
 import com.gainsight.sfdc.util.datagen.DataETL;
-import com.gainsight.sfdc.util.datagen.FileProcessor;
-import com.gainsight.sfdc.util.datagen.JobInfo;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
 import com.gainsight.util.MetaDataUtil;
@@ -45,6 +21,13 @@ import com.gainsight.util.MongoDBDAO;
 import com.gainsight.utils.DataProviderArguments;
 import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.*;
 
 public class RelatedListTest extends BaseTest {
     private final String TEST_DATA_FILE = "testdata/sfdc/relatedlist/tests/RelatedList_360.xls";
@@ -55,6 +38,7 @@ public class RelatedListTest extends BaseTest {
     private final String CUSTOBJ_RL_CS360Section_SFDC_CONFIGURATION = Application.basedir + "/testdata/sfdc/relatedlist/scripts/custobjcs360sfdcRelatedListReport.txt";
     private final String CONTACTOBJ_RL_CS360Section_SFDC_CONFIGURATION = Application.basedir + "/testdata/sfdc/relatedlist/scripts/contactobjcs360sfdcRelatedListReport.txt";
     private final String CASEOBJ_RL_CS360Section_SFDC_CONFIGURATION = Application.basedir + "/testdata/sfdc/relatedlist/scripts/caseobjcs360sfdcRelatedListReport.txt";
+    private final String REPORTING_ACCOUNTS = Application.basedir + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt";
     private ObjectMapper mapper = new ObjectMapper();
     private MongoDBDAO mongoDBDAO = null;
     private GSDataImpl gsDataImpl;
@@ -73,7 +57,6 @@ public class RelatedListTest extends BaseTest {
     ObjectFields objectFields = new ObjectFields();
     List<HashMap<String, String>> lookups = null;
     String collectionName;
-
     @BeforeClass
     public void setUp() throws Exception {
         nsTestBase.init();
@@ -88,8 +71,8 @@ public class RelatedListTest extends BaseTest {
         creatingCustomObject();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
         nsTestBase.tenantAutoProvision();
-        sfdc.runApexCodeFromFile(new File(Application.basedir + "/testdata/newstack/reporting/ReportingUI_Scripts/Create_Accounts_Customers_Reporting.txt"));
-        CollectionInfo collectionInfoMongo = mapper.readValue((new FileReader(Application.basedir + "/testdata/sfdc/relatedlist/scripts/ReportCollectionInfoUIAutomationMongo.json")), CollectionInfo.class);
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(REPORTING_ACCOUNTS));
+        /*CollectionInfo collectionInfoMongo = mapper.readValue((new FileReader(Application.basedir + "/testdata/sfdc/relatedlist/scripts/ReportCollectionInfoUIAutomationMongo.json")), CollectionInfo.class);
         collectionInfoMongo.getCollectionDetails().setCollectionName("relatedList" + date);
         System.out.println("collectionName is " + collectionInfoMongo.getCollectionDetails().getCollectionName());
         collectionName = collectionInfoMongo.getCollectionDetails().getCollectionName();
@@ -102,7 +85,7 @@ public class RelatedListTest extends BaseTest {
         DataLoadMetadata metadata = CollectionUtil.getDBDataLoadMetaData(actualCollectionInfoMongo, new String[]{"ID", "AccountName", "ProductCode", "ProductName", "Date", "EventTimeStamp", "Active", "PageViews", "PageVisits", "FilesDownloaded", "NoofReportsRun", "NoofRulesTriggered", "NoofSchedulesCreated", "Industry"}, DataLoadOperationType.INSERT);
         Assert.assertTrue(gsDataImpl.isValidDataProvided(mapper.writeValueAsString(metadata), dataFile), "Data is not valid");
         NsResponseObj nsResponseObj2 = gsDataImpl.loadDataToMDA(mapper.writeValueAsString(metadata), dataFile);
-        Assert.assertTrue(nsResponseObj2.isResult(), "Data is not loaded,please check log for more details");
+        Assert.assertTrue(nsResponseObj2.isResult(), "Data is not loaded,please check log for more details");*/
 
     }
 
@@ -282,11 +265,11 @@ public class RelatedListTest extends BaseTest {
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
 
-    @TestInfo(testCaseIds = {"GS-200269"})
+   /* @TestInfo(testCaseIds = {"GS-200269"})
     @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_2")
     public void cusobjMdaDataVerification(HashMap<String, String> testData) throws Exception {
-            mongoDBDAO.deleteMongoDocumentFromReportMaster(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
+        mongoDBDAO.deleteMongoDocumentFromReportMaster(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
         ReportMaster reportMaster = mapper.readValue(new File(Application.basedir + "/testdata/newstack/reporting/data/RelatedListMDAData.json"), ReportMaster.class);
         reportingBasePage.openReportingPage(visualForcePageUrl + "ReportBuilder");
         reportMaster.getReportInfo().get(0).setReportReadLimit(tenantDetails.getReportReadLimit());
@@ -321,7 +304,7 @@ public class RelatedListTest extends BaseTest {
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for mda custom object in CS360");
 
 
-    }
+    }*/
 
     public void creatingCustomObject() throws Exception {
         customobj = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
@@ -352,11 +335,10 @@ public class RelatedListTest extends BaseTest {
         e.put("ReferenceTo", "Account");
         e.put("ReleationShipName", "relation_lookup_Test");
         lookups.add(e);
-        objectFields.setLookups(lookups);
-        metaDataUtil.createFieldsOnObject(sfdc, "sfdcrelatedlist__c", objectFields);
+        objField.setLookups(lookups);
+        metaDataUtil.createFieldsOnObject(sfdc, "sfdcrelatedlist__c", objField);
         String[] addFieldsPerm = new String[]{"ActiveUsers", "FNumber", "IsActive", "CurrencyField", "AccPercentage", "lookupfieldname"};
         metaUtil.addFieldPermissionsToUsers("sfdcrelatedlist__c", metaUtil.convertFieldNameToAPIName(addFieldsPerm), sfdcInfo, true);
-
 
     }
 

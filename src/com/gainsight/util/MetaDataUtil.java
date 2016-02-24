@@ -1,16 +1,6 @@
 package com.gainsight.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.gainsight.util.config.SfdcConfig;
-import com.gainsight.util.config.SfdcConfigProvider;
-import com.gainsight.utils.config.ConfigProviderFactory;
-import org.apache.commons.lang3.ArrayUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-
+import com.gainsight.bigdata.pojo.ObjectFields;
 import com.gainsight.http.Header;
 import com.gainsight.http.ResponseObj;
 import com.gainsight.http.WebAction;
@@ -20,7 +10,15 @@ import com.gainsight.sfdc.beans.SFDCInfo;
 import com.gainsight.sfdc.util.FileUtil;
 import com.gainsight.testdriver.Application;
 import com.gainsight.testdriver.Log;
-import com.gainsight.bigdata.pojo.ObjectFields;
+import com.gainsight.util.config.SfdcConfig;
+import com.gainsight.utils.config.ConfigProviderFactory;
+import org.apache.commons.lang3.ArrayUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MetaDataUtil {
 	public static SalesforceMetadataClient metadataClient ;
@@ -138,7 +136,7 @@ public class MetaDataUtil {
 	    
 		 if(objF.getLookups().size() > 0){
 			 for (HashMap<String,String> hm : objF.getLookups()){
-				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("relationshipName")});
+				 metadataClient.createLookupField(resolveStrNameSpace(Object), new String[]{hm.get("Name")}, new String[]{hm.get("ReferenceTo"),hm.get("ReleationShipName")});
 				 permFieldsList.add(hm.get("Name"));
 			 }
 		 }
