@@ -1527,6 +1527,7 @@ public class WorkFlowTest extends WorkflowSetup {
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        cta.setDueDate(getHighestTaskDate(tasks));
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         workflowPage.showCTATasks(cta);
         for(Task task : tasks) {
@@ -1575,6 +1576,7 @@ public class WorkFlowTest extends WorkflowSetup {
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        cta.setDueDate(getHighestTaskDate(tasks));
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         workflowPage.showCTATasks(cta);
         for(Task task : tasks) {
@@ -1606,6 +1608,7 @@ public class WorkFlowTest extends WorkflowSetup {
         }
         cta.setTaskCount(tasks.size());
         workflowPage.createCTAwithPlaybook(cta,testData.get("Playbook"),tasks,false,false);
+        cta.setDueDate(getHighestTaskDate(tasks));
         Assert.assertTrue(workflowPage.isCTADisplayed(cta), "Verifying Event CTA is created ");
         workflowPage.showCTATasks(cta);
         for(Task task : tasks) {
