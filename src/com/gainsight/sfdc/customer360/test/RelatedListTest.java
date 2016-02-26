@@ -3,9 +3,12 @@ package com.gainsight.sfdc.customer360.test;
 import com.gainsight.bigdata.NSTestBase;
 import com.gainsight.bigdata.gsData.apiImpl.GSDataImpl;
 import com.gainsight.bigdata.pojo.ObjectFields;
+import com.gainsight.bigdata.reportBuilder.pojos.ReportMaster;
 import com.gainsight.bigdata.tenantManagement.apiImpl.TenantManager;
 import com.gainsight.bigdata.tenantManagement.pojos.TenantDetails;
 import com.gainsight.sfdc.SalesforceMetadataClient;
+import com.gainsight.sfdc.administration.pages.AdminCustomer360Section;
+import com.gainsight.sfdc.administration.pages.AdministrationBasePage;
 import com.gainsight.sfdc.adoption.tests.AdoptionDataSetup;
 import com.gainsight.sfdc.customer360.pages.Customer360Page;
 import com.gainsight.sfdc.customer360.pages.RelatedList360;
@@ -23,10 +26,10 @@ import com.gainsight.utils.MongoUtil;
 import com.gainsight.utils.annotations.TestInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.*;
 
 public class RelatedListTest extends BaseTest {
@@ -59,18 +62,18 @@ public class RelatedListTest extends BaseTest {
     String collectionName;
     @BeforeClass
     public void setUp() throws Exception {
-        nsTestBase.init();
-        gsDataImpl = new GSDataImpl(NSTestBase.header);
+//        nsTestBase.init();
+//        gsDataImpl = new GSDataImpl(NSTestBase.header);
         basepage.login();
         reportingBasePage = new ReportingBasePage();
-        tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
-        TenantDetails.DBDetail schemaDBDetails = null;
-        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
-        schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
-        mongoUtil = new MongoUtil(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
+//        tenantDetails = tenantManager.getTenantDetail(sfdcInfo.getOrg(), null);
+//        TenantDetails.DBDetail schemaDBDetails = null;
+//        mongoDBDAO = new MongoDBDAO(nsConfig.getGlobalDBHost(), Integer.valueOf(nsConfig.getGlobalDBPort()), nsConfig.getGlobalDBUserName(), nsConfig.getGlobalDBPassword(), nsConfig.getGlobalDBDatabase());
+//        schemaDBDetails = mongoDBDAO.getSchemaDBDetail(tenantDetails.getTenantId());
+//        mongoUtil = new MongoUtil(schemaDBDetails.getDbServerDetails().get(0).getHost().split(":")[0], 27017, schemaDBDetails.getDbServerDetails().get(0).getUserName(), schemaDBDetails.getDbServerDetails().get(0).getPassword(), schemaDBDetails.getDbName());
         creatingCustomObject();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(ACCOUNT_CREATE_FILE));
-        nsTestBase.tenantAutoProvision();
+//        nsTestBase.tenantAutoProvision();
         sfdc.runApexCode(getNameSpaceResolvedFileContents(REPORTING_ACCOUNTS));
         /*CollectionInfo collectionInfoMongo = mapper.readValue((new FileReader(Application.basedir + "/testdata/sfdc/relatedlist/scripts/ReportCollectionInfoUIAutomationMongo.json")), CollectionInfo.class);
         collectionInfoMongo.getCollectionDetails().setCollectionName("relatedList" + date);
@@ -265,8 +268,8 @@ public class RelatedListTest extends BaseTest {
         Assert.assertTrue(rLPage.isNoDataMsgDisplayed(relatedListName));
     }
 
-   /* @TestInfo(testCaseIds = {"GS-200269"})
-    @Test(dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
+    @TestInfo(testCaseIds = {"GS-200269"})
+    @Test(enabled=false ,dataProviderClass = com.gainsight.utils.ExcelDataProvider.class, dataProvider = "excel")
     @DataProviderArguments(filePath = TEST_DATA_FILE, sheet = "RL_360_2")
     public void cusobjMdaDataVerification(HashMap<String, String> testData) throws Exception {
         mongoDBDAO.deleteMongoDocumentFromReportMaster(tenantManager.getTenantDetail(sfdcInfo.getOrg(), null).getTenantId(), "reportmaster", "Auto_");
@@ -304,7 +307,7 @@ public class RelatedListTest extends BaseTest {
         Assert.assertTrue(rLPage.isTableHeadersExisting(colHeaders, sfdcrelatedlistname), "table header data is not matching for mda custom object in CS360");
 
 
-    }*/
+    }
 
     public void creatingCustomObject() throws Exception {
         customobj = SalesforceMetadataClient.createDefault(sfdc.getMetadataConnection());
@@ -342,10 +345,10 @@ public class RelatedListTest extends BaseTest {
 
     }
 
-    @AfterClass
+    /*@AfterClass
     public void quit() {
         mongoUtil.closeConnection();
         mongoDBDAO.mongoUtil.closeConnection();
-    }
+    }*/
 
 }
