@@ -1,5 +1,5 @@
 {
-  "name": "No Strategy OutReach",
+  "name": "Email Strategy OutReach",
   "category": "default",
   "smartListId": "***",
   "smartListName": "***",
@@ -17,13 +17,13 @@
           "fromAddress": {
             "name": {
               "type": "field",
-              "field": "Account.Name",
-              "entity": "Contact",
-              "fieldName": "Account.Name",
-              "objectName": "Contact",
+              "field": "Name",
+              "entity": "Account",
+              "fieldName": "Name",
+              "objectName": "Account",
               "valueType": "STRING",
               "aggregation": "",
-              "label": "Contact ➝ Account ID Name"
+              "label": "Account ➝ Account Name"
             },
             "emailId": "agrandhi@gainsight.com",
             "replyTo": "agrandhi@gainsight.com"
@@ -36,16 +36,16 @@
                 "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
                 "value": {
                   "type": "field",
-                  "field": "Name",
-                  "fieldName": "Name",
-                  "entity": "Contact",
+                  "field": "JBCXM__CustomerInfo__r.p_c_Email__c",
+                  "fieldName": "p_c_Email__c",
+                  "entity": "Account",
                   "alias": "",
-                  "fieldType": "STRING",
-                  "label": "Full Name",
+                  "fieldType": "EMAIL",
+                  "label": "p_c_Email",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Full Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Customer Info ➝ p_c_Email",
+                  "objectName": "JBCXM__CustomerInfo__c"
                 }
               },
               {
@@ -54,30 +54,30 @@
                   "type": "field",
                   "field": "Name",
                   "fieldName": "Name",
-                  "entity": "Contact",
+                  "entity": "Account",
                   "alias": "",
                   "fieldType": "STRING",
-                  "label": "Full Name",
+                  "label": "Account Name",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Full Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Account ➝ Account Name",
+                  "objectName": "Account"
                 }
               },
               {
                 "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
                 "value": {
                   "type": "field",
-                  "field": "Account.Name",
-                  "fieldName": "Account.Name",
-                  "entity": "Contact",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Account",
                   "alias": "",
-                  "fieldType": "TEXT",
-                  "label": "Account ID Name",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Account ID Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Account ➝ Account Name",
+                  "objectName": "Account"
                 }
               },
               {

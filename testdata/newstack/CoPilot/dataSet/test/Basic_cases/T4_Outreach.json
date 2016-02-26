@@ -1,5 +1,5 @@
 {
-  "name": "No Strategy OutReach",
+  "name": "User Strategy OutReach",
   "category": "default",
   "smartListId": "***",
   "smartListName": "***",
@@ -17,13 +17,13 @@
           "fromAddress": {
             "name": {
               "type": "field",
-              "field": "Account.Name",
-              "entity": "Contact",
-              "fieldName": "Account.Name",
-              "objectName": "Contact",
+              "field": "Name",
+              "entity": "Account",
+              "fieldName": "Name",
+              "objectName": "Account",
               "valueType": "STRING",
               "aggregation": "",
-              "label": "Contact ➝ Account ID Name"
+              "label": "Account ➝ Account Name"
             },
             "emailId": "agrandhi@gainsight.com",
             "replyTo": "agrandhi@gainsight.com"
@@ -36,48 +36,48 @@
                 "name": "embd::6fd5ef90-9baa-4cd7-a132-c7db6f2ad714",
                 "value": {
                   "type": "field",
-                  "field": "Name",
-                  "fieldName": "Name",
-                  "entity": "Contact",
+                  "field": "JBCXM__CustomerInfo__r.CreatedBy.Name",
+                  "fieldName": "CreatedBy.Name",
+                  "entity": "Account",
                   "alias": "",
-                  "fieldType": "STRING",
-                  "label": "Full Name",
+                  "fieldType": "TEXT",
+                  "label": "Created By ID Name",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Full Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Customer Info ➝ Created By ID Name",
+                  "objectName": "JBCXM__CustomerInfo__c"
                 }
               },
               {
                 "name": "embd::5b84d9fa-ab21-4924-b5da-013e23f39af4",
                 "value": {
                   "type": "field",
-                  "field": "Name",
-                  "fieldName": "Name",
-                  "entity": "Contact",
+                  "field": "JBCXM__CustomerInfo__r.CreatedById",
+                  "fieldName": "CreatedById",
+                  "entity": "Account",
                   "alias": "",
-                  "fieldType": "STRING",
-                  "label": "Full Name",
+                  "fieldType": "REFERENCE",
+                  "label": "Created By ID",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Full Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Customer Info ➝ Created By ID",
+                  "objectName": "JBCXM__CustomerInfo__c"
                 }
               },
               {
                 "name": "subj::43e4a77a-ea21-4962-a69a-dc57203dbe03",
                 "value": {
                   "type": "field",
-                  "field": "Account.Name",
-                  "fieldName": "Account.Name",
-                  "entity": "Contact",
+                  "field": "Name",
+                  "fieldName": "Name",
+                  "entity": "Account",
                   "alias": "",
-                  "fieldType": "TEXT",
-                  "label": "Account ID Name",
+                  "fieldType": "STRING",
+                  "label": "Account Name",
                   "aggregation": "",
                   "valueType": "STRING",
-                  "fieldLabel": "Contact ➝ Account ID Name",
-                  "objectName": "Contact"
+                  "fieldLabel": "Account ➝ Account Name",
+                  "objectName": "Account"
                 }
               },
               {
