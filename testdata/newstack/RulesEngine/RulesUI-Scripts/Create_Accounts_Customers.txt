@@ -16,10 +16,11 @@ List<JBCXM__PickList__c> pkList = [SELECT id FROM JBCXM__PickList__c WHERE JBCXM
                                  JBCXM__SystemName__c = 'ActiveCustomer'];
 List<JBCXM__CustomerInfo__c> custList = new List<JBCXM__CustomerInfo__c>();
 JBCXM__CustomerInfo__c cust = null;
+Integer i = 1;
 for(Account acc : [SELECT id FROM Account where name like 'RULESUI Account%']) {
-            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = acc.id, JBCXM__Status__c  = (pkList.get(0)).id);
+            cust = new JBCXM__CustomerInfo__c(JBCXM__Account__c  = acc.id, JBCXM__Status__c  = (pkList.get(0)).id, JBCXM__MRR__c =i*10);
 			custList.add(cust);
-    
+            i++;
 }
 
 insert custList;
