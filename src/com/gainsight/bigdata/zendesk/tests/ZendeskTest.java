@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class ZendeskTest extends NSTestBase {
         dataETL.execute(jobInfo);
     }
 
-    @Test
+    @Test()
     @TestInfo(testCaseIds = {"GS-6191"})
     public void zendeskOrgToAccountLookUp() throws Exception {
         TicketLookup ticketLookup = mapper.readValue(new File(Application.basedir + "/testdata/newstack/Zendesk/data/TC1.json"), TicketLookup.class);
@@ -63,7 +64,7 @@ public class ZendeskTest extends NSTestBase {
         Assert.assertTrue(result, "lookup is not created, please check");
     }
 
-    @Test
+    @Test()
     @TestInfo(testCaseIds = {"GS-6191"})
     public void deleteZendeskOrganizationLookup() throws Exception {
         String organizationID = env.getProperty("zendesk.organization");
@@ -73,7 +74,7 @@ public class ZendeskTest extends NSTestBase {
 
     @Test
     @TestInfo(testCaseIds = {"GS-6199", "GS-6200"})
-    public void CreateAndlinkCTA() throws Exception {
+    public void createAndlinkCTA() throws Exception {
         sfdc.runApexCode("Delete [SELECT Id,Name FROM JBCXM__CTA__c where name='Test CTA - Created from Zendesk'];");
         SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false"));
         Map<String, String> valuesMap = new HashMap<String, String>();
@@ -114,7 +115,7 @@ public class ZendeskTest extends NSTestBase {
 
     @Test
     @TestInfo(testCaseIds = {"GS-6199", "GS-6200"})
-    public void CreateAndUnlinkCTA() throws Exception {
+    public void createAndUnlinkCTA() throws Exception {
         sfdc.runApexCode("Delete [SELECT Id,Name FROM JBCXM__CTA__c where name='Test CTA - Created from Zendesk'];");
         SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false"));
         Map<String, String> valuesMap = new HashMap<String, String>();
@@ -185,6 +186,28 @@ public class ZendeskTest extends NSTestBase {
 
     @Test
     @TestInfo(testCaseIds = {"GS-6195"})
+    public void getSummaryWidgetConfig() throws Exception {
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/scripts/CreateWidgets.txt"));
+        SObject[] customerID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__CustomerName__c FROM JBCXM__CustomerInfo__c where JBCXM__CustomerName__c='Zendesk Account 1' and isDeleted=false limit 1")));
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        valuesMap.put("CustomerID", customerID[0].getId());
+        String payload = "{\"params\":\"{\\\"action\\\":\\\"summary.getsummaryconfig\\\",\\\"custInfo\\\":{\\\"customerId\\\":\\\"${CustomerID}\\\",\\\"section\\\":{\\\"label\\\":\\\"Summary\\\",\\\"msg\\\":\\\"\\\",\\\"name\\\":\\\"Summary\\\",\\\"type\\\":\\\"Standard\\\"},\\\"sections\\\":[{\\\"label\\\":\\\"Summary\\\",\\\"msg\\\":\\\"\\\",\\\"name\\\":\\\"Summary\\\",\\\"type\\\":\\\"Standard\\\"}]}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String actualPayload = sub.replace(payload);
+
+        NsResponseObj response = zendeskImpl.zendeskSfdcProxy(actualPayload);
+        Assert.assertTrue(response.isResult(), "Result is not correct, please check response for more details");
+        JsonNode data = mapper.readTree(response.getData().toString());
+        String actualSummaryWidgetConfig = data.get("dataObj").findValue(resolveStrNameSpace("JBCXM__CustomConfig__c")).asText();
+        Log.info("Summary Widget Config for customer is " + actualSummaryWidgetConfig);
+
+        String expectedSummaryWidgetConfig = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195-WidgetConfig.txt"));
+        //Asserting Summary Widget Configuration for this account with actual and expected json's
+        JsonFluentAssert.assertThatJson(actualSummaryWidgetConfig).isEqualTo(expectedSummaryWidgetConfig);
+    }
+
+    @Test
+    @TestInfo(testCaseIds = {"GS-6195"})
     public void getLeftPanelWidgetData() throws Exception {
         sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/scripts/CreateWidgets.txt"));
         SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false"));
@@ -204,5 +227,86 @@ public class ZendeskTest extends NSTestBase {
         String expectedAttributesData = FileUtils.readFileToString(new File(Application.basedir + "/testdata/newstack/Zendesk/ExpectedData/GS-6195.txt"));
         //Asserting all left panel widget details for this account via actual and expected jsonNodes
         JsonFluentAssert.assertThatJson(actualData).isEqualTo(expectedAttributesData);
+    }
+
+    @Test
+    @TestInfo(testCaseIds = {"GS-6195"})
+    public void getAllSummaryWidgetDetails() throws Exception {
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/Zendesk/scripts/CreateWidgets.txt"));
+        SObject[] account = sfdc.getRecords(("SELECT ID,Name FROM Account where name='Zendesk Account 1' and isDeleted=false limit 1"));
+        SObject[] openCasesWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c where JBCXM__SystemName__c='OPENCASES' and isDeleted=false limit 1")));
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        valuesMap.put("AccountID", account[0].getId());
+        valuesMap.put("WidgetID", openCasesWidgetID[0].getId());
+        String payload = "{\"params\":\"{\\\"action\\\":\\\"summary.getsinglefieldaggregation\\\",\\\"custInfo\\\":{\\\"widgetid\\\":\\\"${WidgetID}\\\",\\\"accountId\\\":\\\"${AccountID}\\\"}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String actualPayload = sub.replace(payload);
+
+        // Validating OPENCASES WIDGET Data
+        NsResponseObj response = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload));
+        Assert.assertTrue(response.isResult(), "Result is not correct, please check response for more details");
+        JsonNode data = mapper.readTree(response.getData().toString());
+        Assert.assertTrue(data.get("success").asBoolean(), "Data is not success, please check response for more details");
+        int actualData = data.get("dataObj").get("total").asInt();
+        Log.info("Total number of open cases shown in Summary widget is: " + actualData);
+        Assert.assertEquals(actualData, sfdc.getRecordCount("SELECT ID, IsClosed,AccountId,Account.Name FROM Case where Account.Name='Zendesk Account 1' and isDeleted=false"));
+
+        // Validating OPEN CTA's WIDGET Data
+        Map<String, String> valuesMap2 = new HashMap<String, String>();
+        valuesMap2.put("AccountID", account[0].getId());
+        SObject[] openCtaWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='OCTA' and isDeleted=false limit 1")));
+        valuesMap2.put("WidgetID", openCtaWidgetID[0].getId());
+        String payload2 = "{\"params\":\"{\\\"action\\\":\\\"summary.getoctaData\\\",\\\"custInfo\\\":{\\\"accountId\\\":\\\"${AccountID}\\\",\\\"widgetid\\\":\\\"${WidgetID}\\\"}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub2 = new StrSubstitutor(valuesMap2);
+        String actualPayload2 = sub2.replace(payload2);
+        NsResponseObj response2 = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload2));
+        Assert.assertTrue(response2.isResult(), "Result is not correct, please check response for more details");
+        JsonNode data2 = mapper.readTree(response2.getData().toString());
+        Assert.assertTrue(data2.get("success").asBoolean(), "Data is not success, please check response for more details");
+
+        int riskCTA = data2.get("dataObj").get("Risk").findValue("Value").asInt();
+        int opportunityCTA = data2.get("dataObj").get("Opportunity").findValue("Value").asInt();
+        int eventCTA = data2.get("dataObj").get("Event").findValue("Value").asInt();
+        Assert.assertEquals(riskCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Risk' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Risk CTA's in widget are not matching");
+        Assert.assertEquals(opportunityCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Opportunity' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Opportunity CTA's in widget are not matching");
+        Assert.assertEquals(eventCTA, sfdc.getRecordCount(resolveStrNameSpace("SELECT Id,JBCXM__ClosedDate__c,JBCXM__TypeName__c,JBCXM__Account__r.Name FROM JBCXM__CTA__c where JBCXM__TypeName__c='Event' and JBCXM__Account__r.Name='Zendesk Account 1' and JBCXM__ClosedDate__c=null and isDeleted=false")), "Event CTA's in widget are not matching");
+
+        // Validating Health Score shown in summary widget for the customer
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/apex_scripts/scorecard/Scorecard_CleanUp.txt"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/CoPilot/ApexScripts/Scorecard_Enable.apex"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/testdata/newstack/CoPilot/ApexScripts/Scorecard_PopulateDatas.apex"));
+        sfdc.runApexCode(getNameSpaceResolvedFileContents(Application.basedir + "/apex_scripts/scorecard/Scorecard_enable_numeric.apex"));
+
+        // Updating overall score "63" to the customer "Zendesk Account 1"
+        sfdc.runApexCode(resolveStrNameSpace("JBCXM__ScoringSchemeDefinition__c scheme=[SELECT Id,JBCXM__Score__c FROM JBCXM__ScoringSchemeDefinition__c where JBCXM__Score__c=63.0 limit 1];\n" +
+                "JBCXM__CustomerInfo__c customer = [select Id,JBCXM__CurScoreId__c,JBCXM__CustomerName__c from JBCXM__CustomerInfo__c where JBCXM__CustomerName__c='Zendesk Account 1' and isDeleted=false limit 1];\n" +
+                "customer.JBCXM__CurScoreId__c=scheme.Id;\n" +
+                "update customer;"));
+
+        Map<String, String> valuesMap4 = new HashMap<String, String>();
+        valuesMap4.put("AccountID", account[0].getId());
+        String payload4 = "{\"params\":\"{\\\"action\\\":\\\"scorecard.getData\\\",\\\"data\\\":{\\\"accountId\\\":\\\"${AccountID}\\\"}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub4 = new StrSubstitutor(valuesMap4);
+        String actualPayload4 = sub4.replace(payload4);
+        NsResponseObj response4 = zendeskImpl.zendeskSfdcProxy(actualPayload4);
+        JsonNode data4 = mapper.readTree(response4.getData().toString());
+        int actualOverallScore = data4.get("dataObj").get("account").findValue("curScore").asInt();
+        Assert.assertEquals(actualOverallScore, 63, "Overall Score showing in widget is not matching");
+
+        // Validating ENGAGEMENT count in Summary Widget
+        Map<String, String> valuesMap3 = new HashMap<String, String>();
+        valuesMap3.put("AccountID", account[0].getId());
+        SObject[] engagementWidgetID = sfdc.getRecords((resolveStrNameSpace("SELECT Id,JBCXM__SystemName__c FROM JBCXM__Widgets__c  where JBCXM__SystemName__c='ENGAGEMENT' and isDeleted=false limit 1")));
+        valuesMap3.put("WidgetID", engagementWidgetID[0].getId());
+        String payload3 = "{\"params\":\"{\\\"action\\\":\\\"summary.getusagedata\\\",\\\"custInfo\\\":{\\\"accountId\\\":\\\"${AccountID}\\\",\\\"widgetid\\\":\\\"${WidgetID}\\\"}}\",\"actionType\":\"\"}";
+        StrSubstitutor sub3 = new StrSubstitutor(valuesMap3);
+        String actualPayload3 = sub3.replace(payload3);
+        NsResponseObj response3 = zendeskImpl.zendeskSfdcProxy(resolveStrNameSpace(actualPayload3));
+        Assert.assertTrue(response3.isResult(), "Result is not correct, please check response for more details");
+        JsonNode data3 = mapper.readTree(response3.getData().toString());
+        Assert.assertTrue(data3.get("success").asBoolean(), "Data is not success, please check response for more details");
+
+        int actualUsers = data3.get("dataObj").get("userCount").asInt();
+        Assert.assertEquals(actualUsers, 0);
     }
 }
