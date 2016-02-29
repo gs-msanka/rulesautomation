@@ -245,6 +245,9 @@ public class TenantManager {
                 if (responseObj.getStatusCode() == HttpStatus.SC_OK) {
                     NsResponseObj nsResponseObj = mapper.readValue(responseObj.getContent(), NsResponseObj.class);
                     tenantDetail = mapper.convertValue(nsResponseObj.getData(), TenantDetails.class);
+                } else {
+                    Log.error("Failed to get tenant info.");
+                    throw new RuntimeException(responseObj.toString());
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get Tenant Information");
@@ -267,6 +270,9 @@ public class TenantManager {
                             }
                         }
                     }
+                } else {
+                    Log.error("Failed to get tenant info.");
+                    throw new RuntimeException(responseObj.toString());
                 }
             } catch (Exception e) {
                 Log.error("Some Exception in request " + e);
